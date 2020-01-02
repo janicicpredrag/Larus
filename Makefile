@@ -85,13 +85,11 @@ qmake: FORCE
 
 qmake_all: FORCE
 
-
 all: Makefile $(TARGET)
 
 clean: compiler_clean 
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
-
 
 compiler_clean: 
 

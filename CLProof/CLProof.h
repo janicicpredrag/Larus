@@ -75,7 +75,7 @@ private:
 class ByAssumption : public CLProofEnd
 {
 public:
-    ByAssumption(ConjunctionFormula& f) { SetConjunctionFormula(f); }
+    ByAssumption(const ConjunctionFormula& f) { SetConjunctionFormula(f); }
 // fixme, make private
 };
 

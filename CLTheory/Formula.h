@@ -26,7 +26,11 @@ public:
     string GetName() const { return mName; }
     void SetName(const string& name) { mName = name; }
     bool Read(const string& s);
-    void SetArg(size_t i, const string& s) { mArgs[i]=s; }
+    void SetArg(size_t i, const string& s) {
+        if (mArgs.size() <= i)
+            mArgs.resize(i+1);
+        mArgs[i]=s;
+    }
     bool Equals(const Fact& f) const;
 
     bool operator<(const Fact &rhs) const {

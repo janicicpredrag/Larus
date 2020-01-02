@@ -21,7 +21,7 @@ using namespace std;
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
 
-extern vector < pair < string, vector<string> > > euclids_thms;
+extern vector < pair < string, vector<string> > > euclids_thms1;
 extern vector<string> EuclidAxioms;
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
         // ex->ToFile(&proof, sFileName);
-        proof.Simplify();
+  //      proof.Simplify();
         ex->ToFile(theorem, theoremName, instantiation, &proof, sFileName2);
         excoq = new ProofExport2Coq;
         excoq->ToFile(theorem, theoremName, instantiation, &proof, sFileName3);
@@ -198,10 +198,10 @@ int main(int argc, char *argv[])
 //    ProveFromTPTPATheory(EuclidAxioms, namesOfAxiomsToBeUsed, "lemma_congruenceflip");
 
     unsigned numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = euclids_thms.size(); i<size && i<50; i++) {
-        string thm = euclids_thms[i].first;
+    for (size_t i = 0, size = euclids_thms1.size(); i<size && i<50; i++) {
+        string thm = euclids_thms1[i].first;
         cout << endl << " Proving " << thm << " ... ";
-        vector<string> axioms = euclids_thms[i].second;
+        vector<string> axioms = euclids_thms1[i].second;
         if (ProveFromTPTPATheory(EuclidAxioms, axioms, thm))
             numberProved++;
         else

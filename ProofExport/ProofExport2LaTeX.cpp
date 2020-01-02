@@ -6,17 +6,18 @@
 
 void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
-    outfile << "forall (";
+    outfile << "% Proof of: forall (";
     for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        outfile << " (" << cl.GetUnivVar(i) << " )";
+        outfile << " (" << cl.GetUnivVar(i) << ")";
     OutputConjFormula(outfile, cl.GetPremises());
     OutputImplication(outfile);
 
     outfile << "exists (";
     for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
-        outfile << " (" << cl.GetExistVar(i) << " )";
+        outfile << " (" << cl.GetExistVar(i) << ")";
     OutputDNF(outfile, cl.GetGoal());
     outfile << "))";
+    outfile << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -74,15 +75,12 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
 {
     if (p.NumOfAssumptions() > 0)
     {
-        outfile << "\\proofstep{" << level << "}{Assumptions: ";
         for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
+            outfile << "\\proofstep{" << level << "}{Assumption: ";
             outfile << "$";
             OutputFact(outfile, p.GetAssumption(i));
-            outfile << "$";
-            if (i+1 < size)
-                outfile << ", ";
+            outfile << "$ }" << endl;
         }
-        outfile << "}" << endl;
     }
 
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
@@ -95,7 +93,17 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
             OutputConjFormula(outfile, get<0>(p.GetMP(i)));
             outfile << "$, ";
         }
-        outfile << "by axiom " << get<2>(p.GetMP(i)) << ") }" << endl;
+        outfile << "by axiom " << get<2>(p.GetMP(i)) << ";" << endl;
+
+        vector<pair<string,string>> instantiation = get<3>(p.GetMP(i));
+        outfile << "{\\tiny ";
+        for (size_t j = 0; j != instantiation.size(); j++) {
+            outfile << instantiation[j].first << " to " << instantiation[j].second;
+            if (j + 1 != instantiation.size())
+                outfile << ", ";
+        }
+        outfile << "}";
+        outfile << ") }" << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }

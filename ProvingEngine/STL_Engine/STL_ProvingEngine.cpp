@@ -313,7 +313,7 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs)
 
         for (vector<ConjunctionFormula>::const_iterator kt = dnf.GetDNF()->begin(); kt != dnf.GetDNF()->end(); ++kt) {
            #ifdef DEBUG_OUTPUT
-            // cout << "broj : " << (kt - it->first.GetDNF()->begin())+1 << endl;
+            // cout << "number : " << (kt - it->first.GetDNF()->begin())+1 << endl;
             cout << "proving the case: " << *kt << endl;
             #endif
             mpDB->SetDatabase(oldDB);

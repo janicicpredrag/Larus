@@ -82,6 +82,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, const map<string,string>
 void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 {
     outfile << endl << endl << "Qed." << endl << endl;
+    outfile << endl << endl << "End Euclid." << endl << endl;
 }
 
 // ---------------------------------------------------------------------------------

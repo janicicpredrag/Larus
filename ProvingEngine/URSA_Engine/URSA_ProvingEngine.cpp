@@ -93,7 +93,7 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 
 // ---------------------------------------------------------------------------------------
 
-bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& /* proof */)
+bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
     // CLProofEnd* pe;
     ofstream ursaFile;
@@ -101,7 +101,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& /
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
-    ursaFile << "nProofLen = 5;" << endl << endl;
+    ursaFile << "minimize(nProofLen, 1, 1000);" << endl << endl;
 
     unsigned enumerator = 0;
     ursaFile << "/* Predicate symbols */" << endl;
@@ -270,8 +270,91 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& /
 
     system("./ursa < prove.urs -l8");
 
-    ursaFile.close();
+    vector<Fact> proofTrace;
+    vector<string> sPredicates;
+    sPredicates.resize(mpT->mSignature.size());
+    int i=0;
+    for(map<string,unsigned>::iterator it = mpT->mSignature.begin(); it !=mpT-> mSignature.end(); it++)
+        sPredicates[i++] = (*it).first;
+    vector<string> sConstants;
+    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
+        sConstants.push_back(*it);
+    }
+    for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++) {
+        sConstants.push_back(*it);
+    }
 
+    ifstream ursaproof("sat-proof.txt",ios::in);
+    if (ursaproof.good())
+    {
+        string str;
+        while(getline(ursaproof, str))
+        {
+            istringstream ss(str);
+            int nNesting, nAxiom, nPredicate, nArgs[10];
+            ss >> nNesting >> nAxiom >> nPredicate;
+            for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++) {
+                ss >> nArgs[i];
+            }
+            if (nAxiom == 0) {
+                Fact f;
+                f.SetName(sPredicates[nPredicate]);
+                for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,string(1,'a'+nArgs[i]));
+                // Assumptions already added
+                // proof.AddAssumption(f);
+                proofTrace.push_back(f);
+            }
+            else if (nAxiom >= 4) {
+                Fact f;
+                f.SetName(string(sPredicates[nPredicate]));
+                for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,string(1,'a'+nArgs[i]));
+
+                DNFFormula d;
+                ConjunctionFormula cfconc;
+                cfconc.Add(f);
+                d.Add(cfconc);
+
+                int nFrom1, nFrom2;
+                getline(ursaproof, str);
+                istringstream ss1(str);
+                ss1 >> nFrom1 >> nFrom2;
+                ConjunctionFormula cfPremises;
+                if (nFrom1 != -1 && nFrom1 != 99)
+                    cfPremises.Add(proofTrace[nFrom1]);
+                if (nFrom2 != -1 && nFrom2 != 99)
+                    cfPremises.Add(proofTrace[nFrom2]);
+
+                int inst[mpT->mCLaxioms[nAxiom-4].first.GetNumOfUnivVars()];
+                getline(ursaproof, str);
+                istringstream ss2(str);
+                vector<pair<string,string>> instantiation;
+                for(size_t i=0; i< mpT->mCLaxioms[nAxiom-4].first.GetNumOfUnivVars(); i++) {
+                    ss2 >> inst[i];
+                    const string UnivVar = mpT->mCLaxioms[nAxiom-4].first.GetUnivVar(i);
+                    instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
+                }
+
+                proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-4].second, instantiation);
+                proofTrace.push_back(f);
+            }
+        }
+        CLProofEnd* pe;
+        pe  = new ByAssumption(formula.GetElement(0));
+        proof.SetProofEnd(pe);
+
+    }
+
+/*
+    proof.SetProofEnd(pe);
+    CLProof* proof = new CLProof;
+    bool bProved = ProveFromPremises(formula, *proof);
+    if (bProved) {
+       (*pcs)->AddSubproof(*proof);
+*/
+
+    ursaFile.close();
     return true;
 }
 

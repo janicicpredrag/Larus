@@ -5,19 +5,20 @@ using namespace std;
 
 
 vector< pair<string, vector<string>>> euclids_thms1 = {
-    {"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub"} }
+    {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },
+    //{"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub"} }
 };
 
 vector< pair<string, vector<string>>> euclids_thms = {
- /* {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive"} },
+  {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive"} },
   {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric"} },
   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"} },
   {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },
   {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
   {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity"} },
   {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive"} },
-  {"lemma_doublereverse" , {"cn_equalityreverse", "lemma_congruencetransitive", "lemma_congruencesymmetric"} }, */
-  {"lemma_congruenceflip" , {"cn_equalityreverse", "lemma_congruencetransitive"} } /*,
+  {"lemma_doublereverse" , {"cn_equalityreverse", "lemma_congruencetransitive", "lemma_congruencesymmetric"} },
+  {"lemma_congruenceflip" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
   {"lemma_localextension" , {"cn_eq1c","cn_equalityreflexive", "postulate_Euclid3", "defn_inside", "postulate_line_circle", "axiom_circle_center_radius"} },
   {"lemma_betweennesspreserved" , {"lemma_betweennotequal", "axiom_nocollapse", "lemma_localextension", "lemma_congruencesymmetric", "cn_congruencetransitive", "axiom_5_line", "cn_equalityreflexive", "cn_equalitysub"} },
   {"lemma_differenceofparts" , {"cn_equalitysub", "lemma_congruencesymmetric", "axiom_nocollapse", "cn_equalityreflexive", "cn_congruencereflexive", "lemma_congruencetransitive", "axiom_betweennessidentity", "lemma_inequalitysymmetric", "lemma_localextension", "cn_equalityreverse", "axiom_betweennesssymmetry", "cn_sumofparts", "axiom_innertransitivity", "axiom_5_line", "lemma_doublereverse"} },
@@ -251,5 +252,5 @@ vector< pair<string, vector<string>>> euclids_thms = {
   {"lemma_radiiequal" , {"axiom_circle_center_radius", "lemma_congruencesymmetric", "lemma_congruencetransitive"} },
   {"proposition_III_02" , {"lemma_radiiequal", "axiom_betweennesssymmetry", "cn_equalityreflexive", "defn_inside", "lemma_equalitysymmetric", "cn_equalitysub", "postulate_line_circle", "defn_triangle", "defn_isosceles", "proposition_05", "lemma_betweennotequal", "lemma_inequalitysymmetric", "lemma_ray4", "lemma_NCdistinct", "lemma_equalangleshelper", "lemma_equalanglessymmetric", "lemma_NCorder", "defn_collinear", "lemma_collinearorder", "lemma_NChelper", "proposition_16", "lemma_ABCequalsCBA", "lemma_angleorderrespectscongruence2", "lemma_equalanglesNC", "proposition_19", "lemma_lessthancongruence", "cn_congruencereflexive", "defn_lessthan", "lemma_trichotomy2", "lemma_lessthancongruence2", "axiom_circle_center_radius", "lemma_outerconnectivity", "lemma_3_6a", "axiom_betweennessidentity", "lemma_congruenceflip", "lemma_collinearmidpoint", "lemma_ondiameter"} },
   {"proposition_III_03A" , {"lemma_radiiequal", "defn_midpoint", "defn_collinear", "lemma_collinearorder", "lemma_congruenceflip", "cn_equalitysub", "lemma_inequalitysymmetric", "defn_rightangle", "lemma_congruencesymmetric", "axiom_betweennesssymmetry"} },
-  {"proposition_III_03B" , {"lemma_radiiequal", "lemma_NCorder", "defn_triangle", "defn_isosceles", "proposition_05", "lemma_betweennotequal", "lemma_inequalitysymmetric", "lemma_ray4", "axiom_betweennesssymmetry", "lemma_NCdistinct", "cn_equalityreflexive", "lemma_equalanglesreflexive", "lemma_equalangleshelper", "lemma_equalanglessymmetric", "lemma_equalanglestransitive", "lemma_Euclid4", "lemma_rightangleNC", "lemma_ABCequalsCBA", "cn_congruencereflexive", "defn_collinear", "lemma_collinearorder", "lemma_NChelper", "proposition_26B", "lemma_congruenceflip", "defn_midpoint"} }*/
+  {"proposition_III_03B" , {"lemma_radiiequal", "lemma_NCorder", "defn_triangle", "defn_isosceles", "proposition_05", "lemma_betweennotequal", "lemma_inequalitysymmetric", "lemma_ray4", "axiom_betweennesssymmetry", "lemma_NCdistinct", "cn_equalityreflexive", "lemma_equalanglesreflexive", "lemma_equalangleshelper", "lemma_equalanglessymmetric", "lemma_equalanglestransitive", "lemma_Euclid4", "lemma_rightangleNC", "lemma_ABCequalsCBA", "cn_congruencereflexive", "defn_collinear", "lemma_collinearorder", "lemma_NChelper", "proposition_26B", "lemma_congruenceflip", "defn_midpoint"} }
 };
