@@ -324,7 +324,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             }
 
             ss >> nBranching >> nPredicate;
-            for(size_t i=0; i < 4 /*mpT->mArity[sPredicates[nPredicate]]*/; i++) {
+            for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++) {
                 ss >> nArgs[i];
             }
             if (nAxiom == 0) {

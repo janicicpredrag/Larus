@@ -89,16 +89,10 @@ void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
- //   for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
- //       outfile << "\"";
- //       OutputFact(outfile, p.GetAssumption(i));
- //       outfile << "\" ";
- //   }
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "assert (";
         OutputDNF(outfile, get<1>(p.GetMP(i)));
         outfile << ") ";
-//        OutputConjFormula(outfile, get<0>(p.GetMP(i)));
         outfile << " by applying (" << get<2>(p.GetMP(i));
         vector<pair<string,string>> inst = get<3>(p.GetMP(i));
         for (size_t j = 0, size = inst.size(); j < size; j++) {
