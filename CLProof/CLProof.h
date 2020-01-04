@@ -63,7 +63,7 @@ public:
     const CLProof& GetSubproof(size_t i) const { assert(i<mCases.GetSize()); return mSubproofs[i]; }
     void AddSubproof(CLProof& proof) { mSubproofs.push_back(proof); }
     void SimplifySubproof(set<Fact>& relevant, size_t i) { assert(i<mCases.GetSize()); mSubproofs[i].Simplify(relevant); }
-    void SetCases(DNFFormula& dnf) { mCases = dnf; }
+    void SetCases(const DNFFormula& dnf) { mCases = dnf; }
     size_t GetNumOfCases() const { return mCases.GetSize(); }
     const DNFFormula& GetCases() const { return mCases; }
 private:

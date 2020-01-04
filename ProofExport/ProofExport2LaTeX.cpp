@@ -96,9 +96,9 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
         outfile << "by axiom " << get<2>(p.GetMP(i)) << ";" << endl;
 
         vector<pair<string,string>> instantiation = get<3>(p.GetMP(i));
-        outfile << "{\\tiny ";
+        outfile << "{\\scriptsize ";
         for (size_t j = 0; j != instantiation.size(); j++) {
-            outfile << instantiation[j].first << " to " << instantiation[j].second;
+            outfile << instantiation[j].first << " $\\mapsto$ " << instantiation[j].second;
             if (j + 1 != instantiation.size())
                 outfile << ", ";
         }

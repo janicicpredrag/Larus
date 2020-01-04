@@ -3,6 +3,17 @@
 
 using namespace std;
 
+vector< pair<string, vector<string>>> test_thms = {
+    {"goal_to_be_proved" , { "ax1", "ax2"} }
+};
+
+vector<string> TestAxioms =
+{
+    "fof(ax1, axiom, ![ X ] : ( p(X) => q(X) | r(X)))",
+    "fof(ax2, axiom, ![ X ] : ( q(X) => r(X)))",
+    "fof(goal_to_be_proved, conjecture, ![ X ] : (p(X) => r(X) ))"
+};
+
 /*
 vector< pair<string, vector<string>>> euclids_thms = {
     {"goal_to_be_proved" , { "initial_model", "pbbbbb", "congruence1", "congruence2", "congruence3", "congruence4", "congruence5" } }

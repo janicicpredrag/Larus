@@ -95,7 +95,15 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 
 bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
-    // CLProofEnd* pe;
+    EncodeProof(formula);
+    system("./ursa < prove.urs -l8");  // Find a proof
+    return DecodeProof(formula, "sat-proof.txt",  proof);
+}
+
+// ---------------------------------------------------------------------------------------
+
+void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
+{
     ofstream ursaFile;
     ursaFile.open ("prove.urs");
 
@@ -267,33 +275,56 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
     ursaFile <<"                                                                                                                                        " << endl;
     ursaFile <<"assert(bProofCorrect);                                                                                                                  " << endl;
     ursaFile << endl;
+    ursaFile.close();
+}
 
-    system("./ursa < prove.urs -l8");
+// ---------------------------------------------------------------------------------------
 
+bool URSA_ProvingEngine::DecodeProof(const DNFFormula& formula, const string& sEncodedProofFile, CLProof& proof)
+{
     vector<Fact> proofTrace;
     vector<string> sPredicates;
+    vector<string> sConstants;
+
     sPredicates.resize(mpT->mSignature.size());
     int i=0;
     for(map<string,unsigned>::iterator it = mpT->mSignature.begin(); it !=mpT-> mSignature.end(); it++)
         sPredicates[i++] = (*it).first;
-    vector<string> sConstants;
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
+    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
         sConstants.push_back(*it);
-    }
-    for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++) {
+    for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         sConstants.push_back(*it);
-    }
 
-    ifstream ursaproof("sat-proof.txt",ios::in);
+    ifstream ursaproof(sEncodedProofFile,ios::in);
+
+    DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, proof);
+    ursaproof.close();
+    return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, const vector<string>& sConstants,
+                                        ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof)
+{
+    CaseSplit* pcs;
+    string str;
+
     if (ursaproof.good())
     {
-        string str;
         while(getline(ursaproof, str))
         {
             istringstream ss(str);
-            int nNesting, nAxiom, nPredicate, nArgs[10];
-            ss >> nNesting >> nAxiom >> nPredicate;
-            for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++) {
+            int nNesting, nAxiom, nPredicate, nBranching, nArgs[10];
+            ss >> nNesting >> nAxiom ;
+            if (nAxiom == 1001) {
+                ByAssumption* pe = new ByAssumption(formula.GetElement(0));
+                proof.SetProofEnd(pe);
+                return true;
+            }
+
+            ss >> nBranching >> nPredicate;
+            for(size_t i=0; i < 4 /*mpT->mArity[sPredicates[nPredicate]]*/; i++) {
                 ss >> nArgs[i];
             }
             if (nAxiom == 0) {
@@ -305,16 +336,56 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
                 // proof.AddAssumption(f);
                 proofTrace.push_back(f);
             }
+            else if (nAxiom == 1) {
+                Fact f;
+                f.SetName(sPredicates[nPredicate]);
+                for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,string(1,'a'+nArgs[i]));
+                proofTrace.push_back(f);
+
+                CLProof subproof;
+                subproof.AddAssumption(f); // add first case
+                DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
+                pcs->AddSubproof(subproof);
+            }
+            else if (nAxiom == 2) {
+                Fact f;
+                f.SetName(sPredicates[nPredicate]);
+                for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,string(1,'a'+nArgs[i]));
+                CLProof subproof;
+                subproof.AddAssumption(f); // add second case
+                DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
+                pcs->AddSubproof(subproof);
+            }
+            else if (nAxiom == 3) {
+                proof.SetProofEnd(pcs);
+                getline(ursaproof, str);  // read conclusion line for case split
+                return true;
+            }
             else if (nAxiom >= 4) {
                 Fact f;
                 f.SetName(string(sPredicates[nPredicate]));
                 for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
                     f.SetArg(i,string(1,'a'+nArgs[i]));
-
                 DNFFormula d;
-                ConjunctionFormula cfconc;
-                cfconc.Add(f);
-                d.Add(cfconc);
+                ConjunctionFormula cfconc1, cfconc2;
+                cfconc1.Add(f);
+                d.Add(cfconc1);
+
+                if (nBranching) {
+                    ss >> nPredicate;
+                    for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++) {
+                        ss >> nArgs[i];
+                    }
+                    f.SetName(string(sPredicates[nPredicate]));
+                    for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
+                        f.SetArg(i,string(1,'a'+nArgs[i]));
+                    cfconc2.Add(f);
+                    d.Add(cfconc2);
+                    pcs = new CaseSplit;
+                    pcs->SetCases(d);
+                }
 
                 int nFrom1, nFrom2;
                 getline(ursaproof, str);
@@ -335,29 +406,29 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
                     const string UnivVar = mpT->mCLaxioms[nAxiom-4].first.GetUnivVar(i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-
                 proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-4].second, instantiation);
                 proofTrace.push_back(f);
             }
         }
-        CLProofEnd* pe;
+  /*      CLProofEnd* pe;
         pe  = new ByAssumption(formula.GetElement(0));
-        proof.SetProofEnd(pe);
-
+        proof.SetProofEnd(pe);*/
     }
-
 /*
-    proof.SetProofEnd(pe);
-    CLProof* proof = new CLProof;
-    bool bProved = ProveFromPremises(formula, *proof);
-    if (bProved) {
-       (*pcs)->AddSubproof(*proof);
-*/
+        CLProof* proof = new CLProof;
+        bool bProved = ProveFromPremises(formula, *proof);
+        mpDB->GetDatabaseCases()->resize(old_size_cases-1);
+        if (bProved) {
+            (*pcs)->AddSubproof(*proof);
+        }
+        else
+            return false;
+    }
+    (*pcs)->SetCases(dnf);
 
-    ursaFile.close();
+
+*/
     return true;
 }
-
-// ---------------------------------------------------------------------------------------
 
 

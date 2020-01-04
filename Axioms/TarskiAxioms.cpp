@@ -38,7 +38,7 @@ vector<string> TarskiAxioms =
 };
 
 
-vector<string> TestAxioms =
+vector<string> TestAxioms1 =
 {
     "(! [A,B,P,Q,R,S] : ((cong(A,B,P,Q) & cong(A,B,R,S)) => cong(P,Q,R,S)))",
     "(p(X) & q(Y))   => r(X,Y,Z) | (Ca(X,Z)&Cb(Y,Z))",
