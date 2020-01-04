@@ -9,7 +9,6 @@ ProofExport2Coq::ProofExport2Coq()
 
 void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name)
 {
-    outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
     outfile << "Section Euclid." << endl;
     outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
@@ -89,6 +88,11 @@ void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
+    // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
+    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
+        outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
+    }
+    outfile << endl;
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "assert (";
         OutputDNF(outfile, get<1>(p.GetMP(i)));

@@ -4,12 +4,15 @@
 using namespace std;
 
 
-vector< pair<string, vector<string>>> euclids_thms1 = {
-    {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },
+vector< pair<string, vector<string>>> euclids_thms = {
+    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
+    {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity"} },
+    {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive"} }
+
     //{"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub"} }
 };
 
-vector< pair<string, vector<string>>> euclids_thms = {
+vector< pair<string, vector<string>>> euclids_thms1 = {
   {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive"} },
   {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric"} },
   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"} },
