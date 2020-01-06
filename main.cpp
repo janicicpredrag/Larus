@@ -71,7 +71,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         cout << "Theorem proved! " << endl;
         string sFileName("proofs/PROOF" + theoremName + "proof.tex");
         string sFileName2("proofs/PROOF" + theoremName + "proof-simpl.tex");
-        string sFileName3("proofs/PROOF" + theoremName + "proof.coq");
+        string sFileName3("proofs/PROOF" + theoremName + "proof.v");
 
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
