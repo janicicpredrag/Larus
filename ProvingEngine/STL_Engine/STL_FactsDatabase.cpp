@@ -311,18 +311,16 @@ bool STLFactsDatabase::HoldsDisjunction(const DNFFormula& dnf, ConjunctionFormul
 
             ConjunctionFormula conj1 = dnf.GetElement(j);
             ConjunctionFormula conj2 = it->first.GetElement(j);
-
             if (conj1.GetSize() != conj2.GetSize()) {
                 wrong = true;
                 AuxFacts.clear();
             }
-
             for (size_t k = 0; k != conj1.GetSize() && !wrong; k++)
                 if (!MatchFact(conj1.GetElement(k), conj2.GetElement(k), instantiation, false, AuxFacts)) {
                     wrong = true;
                     AuxFacts.clear();
                 }
-            j++;
+            // j++;
         }
         if (wrong)
             continue;
@@ -347,7 +345,6 @@ bool STLFactsDatabase::MatchConjunction(const ConjunctionFormula& conj, Conjunct
                 instantiation = instantiation1;
                 return true;
             }
-
         }
 
         if (MatchFact(conj.GetElement(i), *it, instantiation1, checkingPremises, AuxFacts)) {
@@ -382,26 +379,7 @@ bool STLFactsDatabase::MatchFact(const Fact& f1, const Fact& f2, map<string,stri
                 if (*it == f2.GetArg(j))
                     found = true;
             if (!found) { // FIXME, the find below should work!
-                string d = f2.GetArg(j);
-                set<string>::iterator ii = mpT->mConstantsPermissible.find(d);
-
-                set<string>::iterator jj = mpT->mConstantsPermissible.end();
-
-                set<string>::iterator kk = mpT->mConstantsPermissible.find("c");
-
-                set<string>::iterator kk1 = mpT->mConstantsPermissible.find("b");
-
-                set<string>::iterator kk2 = mpT->mConstantsPermissible.find("a");
-
-                set<string>::iterator kk3 = mpT->mConstantsPermissible.find("d");
-
-                set<string>::iterator jj2 = mpT->mConstantsPermissible.end();
-
-                //out << "end " << *jj << " " << *jj2 << endl;
-
-                if (d == "d")
-                    cout << 3;
-
+                //string d = f2.GetArg(j);
                 //if (mConstantsPermissible.find(f2.GetArg(j)) != mConstantsPermissible.end())
                 //    assert(false);
                 return false;

@@ -60,7 +60,7 @@ void ProofExport2Isabelle::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, const map<string,string>& /*instantiation*/)
+void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, const CLFormula& /* cl */, const string& /* theoremName*/, const map<string,string>& /*instantiation*/, const CLProof& /*p*/)
 {
     outfile << "proof - " << endl << endl;
 }

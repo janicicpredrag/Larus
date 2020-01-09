@@ -95,15 +95,13 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 
 bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
-    EncodeProof(formula);
     if (system(NULL)) {
-        system("rm sat-proof.txt"); // do not attempt to read some old proof representation
+        EncodeProof(formula);
+        if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
+            cout << "The old file sat-proof.txt has been deleted." << endl;
         if (system("./ursa < prove.urs -c -l8"))  // Find a proof
             return false;
-        int r = DecodeProof(formula, "sat-proof.txt",  proof);
-        //if (r && !system("rm sat-proof.txt"))
-        if (r)
-           return true;
+        return (DecodeProof(formula, "sat-proof.txt",  proof));
     }
     return false;
 }

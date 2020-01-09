@@ -13,9 +13,9 @@ class STL_ProvingEngine : public ProvingEngine
 {
 public:
     STL_ProvingEngine(Theory *T);
-    ~STL_ProvingEngine();
+    virtual ~STL_ProvingEngine();
 
-    virtual void AddPremise(const Fact& f);
+    void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
 
     bool ApplyAxiom(const CLFormula& ax,  ConjunctionFormula& fin, DNFFormula& mp, vector< pair<string,string> >& instantiation)

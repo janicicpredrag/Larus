@@ -9,17 +9,16 @@ class ProofExport
 {
 public:
     ProofExport() {}
-    ~ProofExport() {}
+    virtual ~ProofExport() {}
 
-    void ToFile(const CLFormula& theorem, const string theoremName, const map<string,string> instantiation, CLProof* proof, string sFileName)
+    void ToFile(const CLFormula& theorem, const string theoremName, const map<string,string> instantiation, CLProof& proof, string sFileName)
     {
         ofstream outfile;
         outfile.open (sFileName);
         if (!outfile)
             return;
-        OutputCLFormula(outfile, theorem, theoremName);
-        OutputPrologue(outfile, instantiation);
-        OutputProof(outfile, *proof, 0);
+        OutputPrologue(outfile, theorem, theoremName, instantiation, proof);
+        OutputProof(outfile, proof, 0);
         OutputEpilogue(outfile);
         outfile.close();
     }
@@ -71,7 +70,7 @@ public:
     virtual void OutputOr(ofstream& outfile) = 0;
     virtual void OutputFact(ofstream& outfile, const Fact& f) = 0;
 
-    virtual void OutputPrologue(ofstream& outfile, const map<string,string>& instantiation) = 0;
+    virtual void OutputPrologue(ofstream& outfile, const CLFormula& cl, const string& theoremName, const map<string,string>& instantiation, const CLProof& p) = 0;
     virtual void OutputProof(ofstream& outfile, const CLProof& p, unsigned level) = 0;
     virtual void OutputEpilogue(ofstream& outfile) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level) = 0;

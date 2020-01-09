@@ -16,6 +16,8 @@ class FactsDatabase
 {
 public:
     FactsDatabase(Theory* T) { mpT = T; }
+    virtual ~FactsDatabase() {}
+
     virtual void AddFact(const Fact& f) = 0;
     virtual void AddCases(const DNFFormula& f) = 0;
 

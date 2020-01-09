@@ -16,7 +16,7 @@ private:
     void OutputOr(ofstream& outfile);
     void OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name);
 
-    void OutputPrologue(ofstream& outfile, const map<string,string>& instantiation);
+    void OutputPrologue(ofstream& outfile, const CLFormula& cl, const string& theoremName, const map<string,string>& instantiation, const CLProof& p);
     void OutputProof(ofstream& outfile, const CLProof& p, unsigned level);
     void OutputEpilogue(ofstream& outfile);
     void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level);

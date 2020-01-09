@@ -10,6 +10,7 @@ class ProvingEngine
 {
 public:
     ProvingEngine() {}
+    virtual ~ProvingEngine() {}
 
     virtual void AddPremise(const Fact& f) = 0;
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
