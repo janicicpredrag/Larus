@@ -4,10 +4,23 @@
 using namespace std;
 
 
+
+
 vector< pair<string, vector<string>>> euclids_thms = {
-    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
-    {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity"} },
-    {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive"} }
+   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"} },
+   {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },
+   {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive"} },
+   {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
+   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
+   {"lemma_3_6b" , {"axiom_betweennesssymmetry", "lemma_3_5b"} },
+   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
+   
+   {"proposition_test" , {"defisosceles", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} }
+
+//   {"proposition_05" , {"defisosceles", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} }
+
+  //  {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity"} },
+  //  {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive"} }
 
     //{"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub"} }
 };
