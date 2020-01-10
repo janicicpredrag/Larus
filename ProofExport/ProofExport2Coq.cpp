@@ -69,9 +69,13 @@ void ProofExport2Coq::OutputOr(ofstream& outfile)
 void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation, const CLProof& p)
 {
        // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
+    outfile << "Require Import CLProver.euclidean_axioms." << endl;
+    outfile << "Require Import CLProver.general_tactics." << endl;
+    outfile << "(* " << endl;
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
         outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
     outfile << endl;
+    outfile << "*) " << endl << endl;
 
     outfile << "Section Euclid." << endl;
     outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
@@ -82,14 +86,15 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula&  cl , c
     for(map<string,string>::const_iterator it = instantiation.begin(); it != instantiation.end(); it++)
         outfile << " " << it->second ;
     outfile << "." << endl;
+    outfile << "intros." <<endl;
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 {
-    outfile << endl << endl << "Qed." << endl << endl;
-    outfile << endl << endl << "End Euclid." << endl << endl;
+    outfile << endl << "Qed." << endl << endl;
+    outfile << endl << "End Euclid." << endl << endl;
 }
 
 // ---------------------------------------------------------------------------------
