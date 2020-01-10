@@ -18,10 +18,13 @@
 
 using namespace std;
 
+const int URSA_Engine = 1;
+
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
 
 extern vector < pair < string, vector<string> > > euclids_thms;
+extern vector < pair < string, vector<string> > > euclids_thms1;
 extern vector<string> EuclidAxioms;
 extern vector < pair < string, vector<string> > > test_thms;
 extern vector<string> TestAxioms;
@@ -75,11 +78,13 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
 
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
-        // ex->ToFile(&proof, sFileName);
-  //      proof.Simplify();
-        ex->ToFile(theorem, theoremName, instantiation, &proof, sFileName2);
+        ex->ToFile(theorem, theoremName, instantiation, proof, sFileName);
+        proof.Simplify();
+        ex->ToFile(theorem, theoremName, instantiation, proof, sFileName2);
         excoq = new ProofExport2Coq;
-        excoq->ToFile(theorem, theoremName, instantiation, &proof, sFileName3);
+        excoq->ToFile(theorem, theoremName, instantiation, proof, sFileName3);
+        delete ex;
+        delete excoq;
     }
     else
         cout << "Theorem not proved!" << endl;
@@ -132,9 +137,14 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
         else
             return false;
     }
-    URSA_ProvingEngine engine(&T);
-    // STL_ProvingEngine engine(&T);
-    return ProveTheorem(T, &engine, theorem, theoremName);
+    ProvingEngine* engine;
+    if (URSA_Engine)
+        engine = new URSA_ProvingEngine(&T);
+    else
+        engine = new STL_ProvingEngine(&T);
+    int r = ProveTheorem(T, engine, theorem, theoremName);
+    delete engine;
+    return r;
 }
 
 /*void RunTest()
@@ -194,11 +204,8 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-int main(int argc, char *argv[])
+int main(int /* argc */, char** /* argv*/)
 {
-//    const vector<string>& namesOfAxiomsToBeUsed = { "cn_equalityreverse", "cn_congruencereflexive", "cn_congruencetransitive" };
-//    ProveFromTPTPATheory(EuclidAxioms, namesOfAxiomsToBeUsed, "lemma_congruenceflip");
-
     unsigned numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = euclids_thms.size(); i<size && i<50; i++) {
         string thm = euclids_thms[i].first;
@@ -210,17 +217,10 @@ int main(int argc, char *argv[])
             numberNotProved++;
         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << endl;
     }
-     return 0;
+    return 0;
 
-    // ProveFromTPTPAAxioms(EuclidAxioms,"fof(lemma_congruenceflip,conjecture,( ! [A,B,C,D] : (cong(A,B,C,D)) => (cong(B,A,D,C) & cong(B,A,C,D) & cong(A,B,D,C))))");
-    // RunTest();
-    //ProveFromTPTPAAxioms(TarskiAxioms, "fof(th31, thm, (! [A,B] : (cong(A,A,B,B))))");
-    //ProveFromTPTPAAxioms(TarskiAxioms, "fof(th32, thm, (! [A,B,C] : (bet(A,B,C)=>bet(C,B,A))))");
-    //ProveFromTPTPAAxioms(TarskiAxioms, "fof(th31, thm, (! [A,B,C,D] : (bet(A,B,D) & bet(B,C,D) => bet(A,B,C))))");
-    // ProveFromTPTPAAxioms(TarskiAxioms, "fof(th31, thm, (! [A,B,C,D] : (bet(A,B,C) & bet(A,C,D) => bet(B,C,D))))");
-
+/*
     if (argc == 1) {
-        //    ProveFromTPTPAAxioms(EuclidAxioms,"fof(proposition\_01, conjecture,(  ! [A,B,C] : (neq(A,B)) => ? [X] : (equilateral(A,B,X) & triangle(A,B,X))))");
         ProveFromTPTPAAxioms(EuclidAxioms,"fof(lemma_congruenceflip,conjecture,( ! [A,B,C,D] : (cong(A,B,C,D)) => (cong(B,A,D,C) & cong(B,A,C,D) & cong(A,B,D,C))))");
     }
     else {
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
             cout << "Cannot read the input file " << argv[1] << ".";
         ProveFromTPTPAAxioms(EuclidAxioms, s);
     }
-    return 0;
+    return 0;*/
 }
 
 

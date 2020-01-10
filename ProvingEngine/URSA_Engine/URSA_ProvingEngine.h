@@ -11,7 +11,8 @@ class URSA_ProvingEngine : public ProvingEngine
 {
 public:
     URSA_ProvingEngine(Theory *pT);
-    virtual void AddPremise(const Fact& f);
+
+    void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit);
 
@@ -21,7 +22,6 @@ private:
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);
     bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, const vector<string>& sConstants,
                         ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof);
-
 
     string mURSAstringPremises;
     string mURSAstringAxioms;

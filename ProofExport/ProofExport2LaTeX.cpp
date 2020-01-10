@@ -6,9 +6,6 @@
 
 void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
-    outfile << "% Proof of: forall (";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        outfile << " (" << cl.GetUnivVar(i) << ")";
     OutputConjFormula(outfile, cl.GetPremises());
     OutputImplication(outfile);
 
@@ -50,8 +47,18 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, const map<string,string>& /*instantiation*/)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/, const CLProof& p)
 {
+    outfile << "% Proof of: forall (";
+    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
+        outfile << " (" << cl.GetUnivVar(i) << ")";
+    OutputCLFormula(outfile, cl, theoremName);
+
+    outfile << "% Using axioms:" << endl;
+    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
+        outfile << "% " << get<2>(p.GetMP(i)) << endl;
+    outfile << endl;
+
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
     outfile << "\\begin{document}" << endl << endl;

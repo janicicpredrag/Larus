@@ -9,9 +9,6 @@ ProofExport2Coq::ProofExport2Coq()
 
 void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name)
 {
-    outfile << "Section Euclid." << endl;
-    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
-
     outfile << "Theorem " << name << " : ";
     outfile << "forall ";
     for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
@@ -67,8 +64,16 @@ void ProofExport2Coq::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, const map<string,string>& instantiation)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula& /* cl */, const string& /* theoremName*/, const map<string,string>& instantiation, const CLProof& p)
 {
+    outfile << "Section Euclid." << endl;
+    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+
+    // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
+    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
+        outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
+    outfile << endl;
+
     outfile << "Proof. " << endl;
     outfile << "intros";
     for(map<string,string>::const_iterator it = instantiation.begin(); it != instantiation.end(); it++)
@@ -88,10 +93,6 @@ void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
-    // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
-    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-        outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
-    }
     outfile << endl;
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "assert (";
