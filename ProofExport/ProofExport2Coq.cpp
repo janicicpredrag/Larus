@@ -13,9 +13,12 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
     outfile << "forall ";
     for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
         outfile << cl.GetUnivVar(i) << " ";
-    outfile << ", (";
-    OutputConjFormula(outfile, cl.GetPremises());
-    outfile << ")";
+    outfile << ", ";
+    for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
+           OutputFact(outfile, cl.GetPremises().GetElement(i));
+           if(i+1<cl.GetPremises().GetSize())
+               outfile << " -> ";
+    }
     OutputImplication(outfile);
 
     if (cl.GetNumOfExistVars() > 0) {
@@ -40,7 +43,6 @@ void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
     }
     outfile << " ";
 }
-
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputImplication(ofstream& outfile)
@@ -64,16 +66,17 @@ void ProofExport2Coq::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula& /* cl */, const string& /* theoremName*/, const map<string,string>& instantiation, const CLProof& p)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation, const CLProof& p)
 {
-    outfile << "Section Euclid." << endl;
-    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
-
-    // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
+       // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
         outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
     outfile << endl;
 
+    outfile << "Section Euclid." << endl;
+    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+
+    OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
     outfile << "intros";
     for(map<string,string>::const_iterator it = instantiation.begin(); it != instantiation.end(); it++)
