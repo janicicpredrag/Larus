@@ -100,7 +100,7 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
             OutputConjFormula(outfile, get<0>(p.GetMP(i)));
             outfile << "$, ";
         }
-        outfile << "by axiom " << get<2>(p.GetMP(i)) << ";" << endl;
+        outfile << "by axiom " << get<2>(p.GetMP(i)) << "; ";
 
         vector<pair<string,string>> instantiation = get<3>(p.GetMP(i));
         outfile << "{\\scriptsize ";

@@ -97,8 +97,8 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
 {
     if (system(NULL)) {
         EncodeProof(formula);
-        if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
-            cout << "The old file sat-proof.txt has been deleted." << endl;
+//        if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
+//            cout << "The old file sat-proof.txt has been deleted." << endl;
         if (system("./ursa < prove.urs -c -l8"))  // Find a proof
             return false;
         return (DecodeProof(formula, "sat-proof.txt",  proof));
@@ -259,7 +259,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bPrevStepGoal = (nP[nProofStep-1][0]==nP[nProofLen][0]) && !bCases[nProofLen-1];                                                     " << endl;
     ursaFile <<"      for (nInd = 0; nInd < nMaxArg; nInd++)                                                                                            " << endl;
     ursaFile <<"          bPrevStepGoal &&= (nA[nProofStep-1][nInd]==nA[nProofLen][nInd]);                                                              " << endl;
-    ursaFile <<                                                                                                                                              endl;
+    ursaFile <<"   bPrevStepGoal ||= (nP[nProofStep-1][0] == nFALSE);                                                                                   " << endl;
+
     ursaFile <<"   bFirstCase = (bCases[nProofStep-1] && nAxiomApplied[nProofStep]==nFirstCase);                                                        " << endl;
     ursaFile <<"   bFirstCase &&= (nNesting[nProofStep] == (nNesting[nProofStep-1]<<1)) && (nP[nProofStep][0]==nP[nProofStep-1][0]);                    " << endl;
     ursaFile <<"   for (nInd = 0; nInd < nMaxArg; nInd++)                                                                                               " << endl;
@@ -279,6 +280,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nProofLen][0]) && !bCases[nProofStep];                                                         " << endl;
     ursaFile <<"   for (nInd = 0; nInd < nMaxArg; nInd++)                                                                                               " << endl;
     ursaFile <<"       bGoalReached &&= (nA[nProofStep][nInd]==nA[nProofLen][nInd]);                                                                    " << endl;
+    ursaFile <<"   bGoalReached ||= (nP[nProofStep][0] == nFALSE);                                                                                   " << endl;
+
     ursaFile <<"   /* Conclusion of case split */                                                                                                       " << endl;
     ursaFile <<"   bStepCorrect ||= (bPrevStepGoal && bGoalReached && (nNesting[nProofStep-1] & 1 == 1) &&                                              " << endl;
     ursaFile <<"                     nNesting[nProofStep] == (nNesting[nProofStep-1]>>1) && !bCases[nProofStep]                                         " << endl;
@@ -333,6 +336,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             ss >> nNesting >> nAxiom ;
             if (nAxiom == 999) {
                 ByAssumption* pe = new ByAssumption(formula.GetElement(0));
+                proof.SetProofEnd(pe);
+                return true;
+            }
+            if (nAxiom == 998) {
+                EFQ* pe = new EFQ();
                 proof.SetProofEnd(pe);
                 return true;
             }

@@ -10,7 +10,7 @@ vector< pair<string, vector<string>>> test_thms = {
 vector<string> TestAxioms =
 {
     "fof(ax1, axiom, ![ X ] : ( p(X) => r(X) | q(X)))",
-    "fof(ax2, axiom, ![ X ] : ( q(X) => r(X)))",
+    "fof(ax2, axiom, ![ X ] : ( q(X) => $false))",
     "fof(goal_to_be_proved, conjecture, ![ X ] : (p(X) => r(X) ))"
 };
 
