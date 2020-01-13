@@ -324,23 +324,29 @@ bool URSA_ProvingEngine::DecodeProof(const DNFFormula& formula, const string& sE
 bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, const vector<string>& sConstants,
                                         ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof)
 {
+    enum StepKind { eAssumption, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eNumberOfStepKinds };
+
     CaseSplit* pcs;
     string str;
-
     if (ursaproof.good())
     {
-
         while(getline(ursaproof, str))
         {
             istringstream ss(str);
             int nNesting, nAxiom, nPredicate, nBranching, nArgs[10];
             ss >> nNesting >> nAxiom ;
-            if (nAxiom == 999) {
+
+            if (nAxiom == eQEDbyCases) {
+                proof.SetProofEnd(pcs);
+                // getline(ursaproof, str);  // read conclusion line for case split
+                return true;
+            }
+            if (nAxiom == eQEDbyAssumption) {
                 ByAssumption* pe = new ByAssumption(formula.GetElement(0));
                 proof.SetProofEnd(pe);
                 return true;
             }
-            if (nAxiom == 998) {
+            if (nAxiom == eQEDbyEFQ) {
                 EFQ* pe = new EFQ();
                 proof.SetProofEnd(pe);
                 return true;
@@ -349,7 +355,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             ss >> nBranching >> nPredicate;
             for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
                 ss >> nArgs[i];
-            if (nAxiom == 0) {
+            if (nAxiom == eAssumption) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
@@ -358,7 +364,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 // proof.AddAssumption(f);
                 proofTrace.push_back(f);
             }
-            else if (nAxiom == 1) {
+            else if (nAxiom == eFirstCase) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
@@ -370,7 +376,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
                 pcs->AddSubproof(subproof);
             }
-            else if (nAxiom == 2) {
+            else if (nAxiom == eSecondCase) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
@@ -382,12 +388,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
                 pcs->AddSubproof(subproof);
             }
-            else if (nAxiom == 3) {
-                proof.SetProofEnd(pcs);
-                getline(ursaproof, str);  // read conclusion line for case split
-                return true;
-            }
-            else if (nAxiom >= 4) {
+            else if (nAxiom >= eNumberOfStepKinds) {
                 Fact f;
                 f.SetName(string(sPredicates[nPredicate]));
                 for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
@@ -422,16 +423,16 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 if (nFrom2 != -1 && nFrom2 != 99)
                     cfPremises.Add(proofTrace[nFrom2]);
 
-                int inst[mpT->mCLaxioms[nAxiom-4].first.GetNumOfUnivVars()];
+                int inst[mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars()];
                 getline(ursaproof, str);
                 istringstream ss2(str);
                 vector<pair<string,string>> instantiation;
-                for(size_t i=0; i< mpT->mCLaxioms[nAxiom-4].first.GetNumOfUnivVars(); i++) {
+                for(size_t i=0; i< mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars(); i++) {
                     ss2 >> inst[i];
-                    const string UnivVar = mpT->mCLaxioms[nAxiom-4].first.GetUnivVar(i);
+                    const string UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-4].second, instantiation);
+                proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation);
 
             }
         }
