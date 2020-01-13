@@ -96,7 +96,7 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
         outfile << "$ (";
         if (get<0>(p.GetMP(i)).GetSize() > 0)
         {
-            outfile << "from $ "; \
+            outfile << "from $"; \
             OutputConjFormula(outfile, get<0>(p.GetMP(i)));
             outfile << "$, ";
         }

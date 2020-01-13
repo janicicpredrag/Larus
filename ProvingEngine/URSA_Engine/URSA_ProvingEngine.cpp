@@ -329,6 +329,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
 
     if (ursaproof.good())
     {
+
         while(getline(ursaproof, str))
         {
             istringstream ss(str);
@@ -368,18 +369,18 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 subproof.AddAssumption(f); // add first case
                 DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
                 pcs->AddSubproof(subproof);
-                proofTrace.push_back(f);
             }
             else if (nAxiom == 2) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
                     f.SetArg(i,string(1,'a'+nArgs[i]));
+                proofTrace.push_back(f);
+
                 CLProof subproof;
                 subproof.AddAssumption(f); // add second case
                 DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, subproof);
                 pcs->AddSubproof(subproof);
-                proofTrace.push_back(f);
             }
             else if (nAxiom == 3) {
                 proof.SetProofEnd(pcs);
@@ -409,6 +410,8 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                     pcs->SetCases(d);
                 }
 
+                proofTrace.push_back(f); // this is not used if the axiom is branching
+
                 int nFrom1, nFrom2;
                 getline(ursaproof, str);
                 istringstream ss1(str);
@@ -429,7 +432,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-4].second, instantiation);
-                proofTrace.push_back(f); // this is not used if the axiom is branching
+
             }
         }
     }
