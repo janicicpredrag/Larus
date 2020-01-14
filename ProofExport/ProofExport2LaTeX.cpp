@@ -123,7 +123,7 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, u
         OutputProof(outfile, cs->GetSubproof(i), level+1);
     outfile << "\\proofstep{" << level << "}{Proved by case split! (by $";
     OutputDNF(outfile, cs->GetCases());
-    outfile << " $)) }" << endl;
+    outfile << " $)}" << endl;
 }
 
 // ---------------------------------------------------------------------------------

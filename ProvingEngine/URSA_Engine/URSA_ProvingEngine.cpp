@@ -112,6 +112,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 {
     ofstream ursaFile;
     ursaFile.open ("prove.urs");
+    bool bConstantFalseUsed = false;
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
@@ -125,6 +126,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     for (map<string,unsigned>::iterator i = mpT->mSignature.begin(); i != mpT->mSignature.end(); i++) {
         ursaFile << "n" << ToUpper(i->first) << " = " << enumerator++ << ";" << endl;
         ursaFile << "nArity[n" << ToUpper(i->first) << "] = " <<  mpT->mArity[i->first] << ";" << endl << endl;
+        if (mpT->mArity[i->first] == 0)
+            bConstantFalseUsed = true;
     }
     ursaFile << "/* Intro constants */" << endl;
     enumerator = 0;
@@ -259,7 +262,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bPrevStepGoal = (nP[nProofStep-1][0]==nP[nProofLen][0]) && !bCases[nProofLen-1];                                                     " << endl;
     ursaFile <<"      for (nInd = 0; nInd < nMaxArg; nInd++)                                                                                            " << endl;
     ursaFile <<"          bPrevStepGoal &&= (nA[nProofStep-1][nInd]==nA[nProofLen][nInd]);                                                              " << endl;
-    ursaFile <<"   bPrevStepGoal ||= (nP[nProofStep-1][0] == nFALSE);                                                                                   " << endl;
+    if (bConstantFalseUsed)
+        ursaFile <<"   bPrevStepGoal ||= (nP[nProofStep-1][0] == nFALSE);                                                                                   " << endl;
 
     ursaFile <<"   bFirstCase = (bCases[nProofStep-1] && nAxiomApplied[nProofStep]==nFirstCase);                                                        " << endl;
     ursaFile <<"   bFirstCase &&= (nNesting[nProofStep] == (nNesting[nProofStep-1]<<1)) && (nP[nProofStep][0]==nP[nProofStep-1][0]);                    " << endl;
@@ -280,7 +284,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nProofLen][0]) && !bCases[nProofStep];                                                         " << endl;
     ursaFile <<"   for (nInd = 0; nInd < nMaxArg; nInd++)                                                                                               " << endl;
     ursaFile <<"       bGoalReached &&= (nA[nProofStep][nInd]==nA[nProofLen][nInd]);                                                                    " << endl;
-    ursaFile <<"   bGoalReached ||= (nP[nProofStep][0] == nFALSE);                                                                                   " << endl;
+    if (bConstantFalseUsed)
+        ursaFile <<"   bGoalReached ||= (nP[nProofStep][0] == nFALSE);                                                                                   " << endl;
 
     ursaFile <<"   /* Conclusion of case split */                                                                                                       " << endl;
     ursaFile <<"   bStepCorrect ||= (bPrevStepGoal && bGoalReached && (nNesting[nProofStep-1] & 1 == 1) &&                                              " << endl;
