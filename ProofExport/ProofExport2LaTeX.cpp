@@ -47,7 +47,7 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/, const CLProof& p)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/)
 {
     outfile << "% Proof of: forall (";
     for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
@@ -55,8 +55,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, const CLFormula& cl, c
     OutputCLFormula(outfile, cl, theoremName);
 
     outfile << "% Using axioms:" << endl;
-    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
-        outfile << "% " << get<2>(p.GetMP(i)) << endl;
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
+        outfile << "% " << get<1>(T.Axiom(i)) << endl;
     outfile << endl;
 
     outfile << "\\documentclass{article}" << endl;

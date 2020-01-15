@@ -14,6 +14,21 @@ void Theory::AddAxiom(CLFormula& axiom, string name)
     mCLaxioms.push_back(pair<CLFormula,string>(axiom,name));
 }
 
+
+// --------------------------------------------------------------
+
+size_t Theory::NumberOfAxioms() const
+{
+    return mCLaxioms.size();
+}
+
+// --------------------------------------------------------------
+
+const pair<CLFormula,string>& Theory::Axiom(size_t i) const
+{
+    return mCLaxioms[i];
+}
+
 // --------------------------------------------------------------
 
 void Theory::AddConstant(string s)

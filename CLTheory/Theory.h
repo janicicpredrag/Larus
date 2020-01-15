@@ -19,6 +19,8 @@ public:
 
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
+    size_t NumberOfAxioms() const;
+    const pair<CLFormula,string>& Axiom(size_t i) const;
 
     void AddConstant(string s);
     string GetNewConstant();

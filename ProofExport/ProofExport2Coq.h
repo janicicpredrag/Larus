@@ -23,7 +23,7 @@ private:
 //    }
 
 
-    void OutputPrologue(ofstream& outfile, const CLFormula& cl, const string& theoremName, const map<string,string>& instatiation, const CLProof& p);
+    void OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& instatiation);
     void OutputProof(ofstream& outfile, const CLProof& p, unsigned level);
     void OutputEpilogue(ofstream& outfile);
     void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level);

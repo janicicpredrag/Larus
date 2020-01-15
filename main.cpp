@@ -78,11 +78,11 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
 
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
-        ex->ToFile(theorem, theoremName, instantiation, proof, sFileName);
+        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         proof.Simplify();
-        ex->ToFile(theorem, theoremName, instantiation, proof, sFileName2);
+        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         excoq = new ProofExport2Coq;
-        excoq->ToFile(theorem, theoremName, instantiation, proof, sFileName3);
+        excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
         delete ex;
         delete excoq;
     }
