@@ -7,12 +7,15 @@ ProofExport2Coq::ProofExport2Coq()
 
 }
 
-void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name)
+void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
-    outfile << "Theorem " << name << " : ";
-    outfile << "forall ";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        outfile << cl.GetUnivVar(i) << " ";
+    // outfile << "Theorem " << name << " : ";
+    if (cl.GetNumOfUnivVars() > 0)
+    {
+        outfile << "forall ";
+        for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
+            outfile << cl.GetUnivVar(i) << " ";
+    }
     outfile << ", ";
     for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
            OutputFact(outfile, cl.GetPremises().GetElement(i));
@@ -80,12 +83,13 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     outfile << "Section Euclid." << endl;
     outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
  
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
-        outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : " << get<0>(T.Axiom(i)) << "." << endl; //here we should have Coq's syntax
-    outfile << endl;
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+        outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : ";
+        OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
+    }
     outfile << endl << endl;
 
-
+    outfile << "Theorem " << theoremName << " : ";
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
     outfile << "intros";
@@ -114,9 +118,8 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
         outfile << ") ";
         outfile << " by applying (" << get<2>(p.GetMP(i));
         vector<pair<string,string>> inst = get<3>(p.GetMP(i));
-        for (size_t j = 0, size = inst.size(); j < size; j++) {
+        for (size_t j = 0, size = inst.size(); j < size; j++)
             outfile << " " << inst[j].second;
-        }
         outfile << " )." << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
