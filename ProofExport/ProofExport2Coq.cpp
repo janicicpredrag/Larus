@@ -76,14 +76,15 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
        // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
     outfile << "Require Import CLProver.euclidean_axioms." << endl;
     outfile << "Require Import CLProver.general_tactics." << endl;
-    outfile << "(* " << endl;
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
-        outfile << "Require " << get<1>(T.Axiom(i)) << "." << endl;
-    outfile << endl;
-    outfile << "*) " << endl << endl;
-
+    outfile <<  endl;
     outfile << "Section Euclid." << endl;
     outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+ 
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
+        outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : " << get<0>(T.Axiom(i)) << "." << endl; //here we should have Coq's syntax
+    outfile << endl;
+    outfile << endl << endl;
+
 
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
