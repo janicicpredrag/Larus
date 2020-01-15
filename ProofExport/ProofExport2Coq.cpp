@@ -71,14 +71,14 @@ void ProofExport2Coq::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation, const CLProof& p)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation)
 {
        // outfile << "Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6a." << endl;
     outfile << "Require Import CLProver.euclidean_axioms." << endl;
     outfile << "Require Import CLProver.general_tactics." << endl;
     outfile << "(* " << endl;
-    for (size_t i = 0, size = p.NumOfMPs(); i < size; i++)
-        outfile << "Require " << get<2>(p.GetMP(i)) << "." << endl;
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
+        outfile << "Require " << get<1>(T.Axiom(i)) << "." << endl;
     outfile << endl;
     outfile << "*) " << endl << endl;
 
