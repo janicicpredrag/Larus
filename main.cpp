@@ -207,11 +207,12 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
 int main(int /* argc */, char** /* argv*/)
 {
     unsigned numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = test_thms.size(); i<size && i<50; i++) {
-        string thm = test_thms[i].first;
+    vector< pair<string, vector<string>>> case_study = euclids_thms;
+    for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
+        string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... ";
-        vector<string> axioms = test_thms[i].second;
-        if (ProveFromTPTPATheory(TestAxioms, axioms, thm))
+        vector<string> axioms = case_study[i].second;
+        if (ProveFromTPTPATheory(EuclidAxioms, axioms, thm))
             numberProved++;
         else
             numberNotProved++;
