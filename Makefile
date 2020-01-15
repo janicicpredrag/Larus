@@ -20,7 +20,11 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 LINK          = g++
+<<<<<<< HEAD
 LFLAGS        = -m64 
+=======
+LFLAGS        = -m64
+>>>>>>> a15b0b11a1a86da28169765e377d2fc65f582de2
 LIBS          = $(SUBLIBS) 
 #-L/usr/X11R6/lib64 
 
