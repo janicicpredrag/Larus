@@ -45,3 +45,11 @@ Ltac applying t :=
 apply t;assumption.
 
 Ltac conclude := solve [intuition].
+
+Ltac contradict :=
+ match goal with
+ | H: False |- _ => elim H
+ end.
+
+Tactic Notation "by" "cases" "on" constr(t) :=
+(let H := hyp_of_type t in decompose [or] H; clear H).

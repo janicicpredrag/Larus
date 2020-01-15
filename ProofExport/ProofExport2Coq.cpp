@@ -37,11 +37,16 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
 
 void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
 {
-    outfile << f.GetName();
+    if (f.GetName().compare("false") == 0)
+        outfile << "False";
+    else
+    {
+        outfile << f.GetName();
+    }
     for (size_t i=0; i<f.GetArity(); i++) {
         outfile << " " << f.GetArg(i);
     }
-    outfile << " ";
+    //outfile << " ";
 }
 // ---------------------------------------------------------------------------------
 
@@ -120,13 +125,13 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level)
 {
-    outfile << "by cases on ";
+    outfile << "by cases on (";
     OutputDNF(outfile, cs->GetCases());
-    outfile << endl;
+    outfile << ")." << endl;
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
         outfile << "- {" << endl;
         OutputProof(outfile, cs->GetSubproof(i), level+1);
-        outfile << "- }" << endl;
+        outfile << "  }" << endl;
     }
     // outfile << "' have ?thesis by auto" << endl;
 }
