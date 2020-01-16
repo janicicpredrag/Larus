@@ -10,7 +10,6 @@ vector< pair<string, vector<string>>> euclids_thms_working = {
    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
    {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
    {"lemma_3_6b" , {"axiom_betweennesssymmetry", "lemma_3_5b"} },
-   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
    {"lemma_3_5b" , {"axiom_innertransitivity", "lemma_3_7a"} },
    {"lemma_congruenceflip1" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
    {"lemma_congruenceflip2" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
