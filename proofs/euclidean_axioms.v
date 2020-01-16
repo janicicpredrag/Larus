@@ -2,7 +2,7 @@ Class euclidean_neutral :=
 {
   Point : Type;
   Circle : Type;
-  Cong : Point -> Point -> Point -> Point -> Prop;
+  cong : Point -> Point -> Point -> Point -> Prop;
   betS : Point -> Point -> Point -> Prop;
   PA : Point;
   PB : Point;
@@ -13,26 +13,26 @@ Class euclidean_neutral :=
   TE A B C := ~ (neq A B /\ neq B C /\ ~ betS A B C);
   nCol A B C := neq A B /\ neq A C /\ neq B C /\ ~ betS A B C /\ ~ betS A C B /\ ~ betS B A C;
   Col A B C := (eq A B \/ eq A C \/ eq B C \/ betS B A C \/ betS A B C \/ betS A C B);
-  Cong_3 A B C a b c := Cong A B a b /\ Cong B C b c /\ Cong A C a c;
+  cong_3 A B C a b c := cong A B a b /\ cong B C b c /\ cong A C a c;
   TS P A B Q := exists X, betS P X Q /\ Col A B X /\ nCol A B P;
   Triangle A B C := nCol A B C;
 
-  OnCirc B J := exists X Y U, CI J U X Y /\ Cong U B X Y;
-  InCirc P J := exists X Y U V W, CI J U V W /\ (eq P U \/ (betS U Y X /\ Cong U X V W /\ Cong U P U Y));
-  OutCirc P J := exists X U V W, CI J U V W /\ betS U X P /\ Cong U X V W;
+  OnCirc B J := exists X Y U, CI J U X Y /\ cong U B X Y;
+  InCirc P J := exists X Y U V W, CI J U V W /\ (eq P U \/ (betS U Y X /\ cong U X V W /\ cong U P U Y));
+  OutCirc P J := exists X U V W, CI J U V W /\ betS U X P /\ cong U X V W;
 
   cn_congruencetransitive :
-   forall B C D E P Q, Cong P Q B C -> Cong P Q D E -> Cong B C D E;
+   forall B C D E P Q, cong P Q B C -> cong P Q D E -> cong B C D E;
   cn_congruencereflexive :
-   forall A B, Cong A B A B;
+   forall A B, cong A B A B;
   cn_equalityreverse :
-   forall A B, Cong A B B A;
+   forall A B, cong A B B A;
   cn_sumofparts :
-   forall A B C a b c, Cong A B a b -> Cong B C b c -> betS A B C -> betS a b c -> Cong A C a c;
+   forall A B C a b c, cong A B a b -> cong B C b c -> betS A B C -> betS a b c -> cong A C a c;
   cn_stability :
    forall A B, ~ neq A B -> eq A B;
   axiom_circle_center_radius :
-   forall A B C J P, CI J A B C -> OnCirc P J -> Cong A P B C;
+   forall A B C J P, CI J A B C -> OnCirc P J -> cong A P B C;
   axiom_lower_dim : nCol PA PB PC;
   axiom_betweennessidentity :
    forall A B, ~ betS A B A;
@@ -46,12 +46,12 @@ Class euclidean_neutral :=
     betS A B D -> betS A C D -> ~ betS A B C -> ~ betS A C B ->
     eq B C;
   axiom_nocollapse :
-   forall A B C D, neq A B -> Cong A B C D -> neq C D;
+   forall A B C D, neq A B -> cong A B C D -> neq C D;
   axiom_5_line :
    forall A B C D a b c d,
-    Cong B C b c -> Cong A D a d -> Cong B D b d ->
-    betS A B C -> betS a b c -> Cong A B a b ->
-    Cong D C d c;
+    cong B C b c -> cong A D a d -> cong B D b d ->
+    betS A B C -> betS a b c -> cong A B a b ->
+    cong D C d c;
   postulate_Pasch_inner :
    forall A B C P Q,
     betS A P C -> betS B Q C -> nCol A C B ->
