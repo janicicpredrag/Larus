@@ -101,22 +101,21 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     for(map<string,string>::const_iterator it = instantiation.begin(); it != instantiation.end(); it++)
         outfile << " " << it->second ;
     outfile << "." << endl;
-    outfile << "intros." <<endl;
+    outfile << "intros." << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 {
-    outfile << endl << "Qed." << endl << endl;
-    outfile << endl << "End Euclid." << endl << endl;
+    outfile << "Qed." << endl << endl;
+    outfile <<  "End Euclid." << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
-    outfile << endl;
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "assert (";
         OutputDNF(outfile, get<1>(p.GetMP(i)));
