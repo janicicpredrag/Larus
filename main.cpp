@@ -24,6 +24,7 @@ const int URSA_Engine = 1;
 // A!=B replaced by neq(A,B)
 
 extern vector < pair < string, vector<string> > > euclids_thms;
+extern vector < pair < string, vector<string> > > euclids_thms_working;
 extern vector < pair < string, vector<string> > > euclids_thms1;
 extern vector<string> EuclidAxioms;
 extern vector < pair < string, vector<string> > > test_thms;
@@ -137,6 +138,9 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
         else
             return false;
     }
+    
+    CLFormula::Normalize(theorem);
+
     ProvingEngine* engine;
     if (URSA_Engine)
         engine = new URSA_ProvingEngine(&T);
@@ -207,7 +211,7 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
 int main(int /* argc */, char** /* argv*/)
 {
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = euclids_thms;
+    vector< pair<string, vector<string>>> case_study = euclids_thms_working;
     for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... ";

@@ -6,6 +6,8 @@ using namespace std;
 vector<string> EuclidAxioms =
 {   
     "fof(proposition_test,conjecture,( ! [A,B,C] : (triangle(A,B,C) & nCol(C,A,B) => congA(A,B,C,A,C,B) ) ))",
+    "fof(proposition_test2,conjecture,( ! [A,B,C] : (isosceles(A,B,C) & nCol(C,A,B) => triangle(A,B,C) ) ))",
+   
     "fof(cn_eq1b, axiom, ! [A,B] : ( neq(A,B) | eq(A,B) ))",
     "fof(cn_eq1c, axiom, ! [A,B] : ( neq(A,B) => neq(B,A) ))",
     "fof(cn_eq2b, axiom, ! [A,B,C] : ( betS(A,B,C) | nbetS(A,B,C)))",
@@ -87,6 +89,9 @@ vector<string> EuclidAxioms =
     "fof(defsameside,axiom,! [ P,Q,A,B] : oS(P,Q,A,B) => ? [ X,U,V] :  ( col(A,B,U) & col(A,B,V) & betS(P,U,X) & betS(Q,V,X) & nCol(A,B,P) & nCol(A,B,Q) ) )",
     "fof(defsameside2,axiom,! [ P,Q,A,B, X,U,V] :  ( col(A,B,U) & col(A,B,V) & betS(P,U,X) & betS(Q,V,X) & nCol(A,B,P) & nCol(A,B,Q) )  => oS(P,Q,A,B))",
     "fof(defisosceles,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( triangle(A,B,C) & cong(A,B,A,C) ) )",
+    "fof(defisosceles1,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( triangle(A,B,C)  ) )",
+    "fof(defisosceles2,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( cong(A,B,A,C) ) )",
+ 
     "fof(defisosceles2,axiom,! [ A,B,C] :  ( triangle(A,B,C) & cong(A,B,A,C) )  => isosceles(A,B,C))",
     "fof(defcut,axiom,! [ A,B,C,D,E] : cut(A,B,C,D,E) =>  ( betS(A,E,B) & betS(C,E,D) & nCol(A,B,C) & nCol(A,B,D) ) )",
     "fof(defcut2,axiom,! [ A,B,C,D,E] :  ( betS(A,E,B) & betS(C,E,D) & nCol(A,B,C) & nCol(A,B,D) )  => cut(A,B,C,D,E))",
@@ -152,6 +157,12 @@ vector<string> EuclidAxioms =
 
         "fof(lemma_doublereverse,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(D,C,B,A) & cong(B,A,D,C)))))",
     "fof(lemma_congruenceflip,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(B,A,D,C) & cong(B,A,C,D) & cong(A,B,D,C)))))",
+    "fof(lemma_congruenceflip1,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(B,A,D,C) ))))",
+    "fof(lemma_congruenceflip2,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(B,A,C,D) ))))",
+    "fof(lemma_congruenceflip3,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(A,B,D,C) ))))",
+
+
+
     "fof(lemma_localextension,conjecture,(  ! [A,B,Q] : ((neq(A,B) & neq(B,Q)) => ? [X] : (betS(A,B,X) & cong(B,X,B,Q)))))",
     "fof(lemma_betweennesspreserved,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & cong(B,C,Xb,Xc) & betS(A,B,C)) => (betS(Xa,Xb,Xc)))))",
     "fof(lemma_differenceofparts,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & betS(A,B,C) & betS(Xa,Xb,Xc)) => (cong(B,C,Xb,Xc)))))",

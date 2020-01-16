@@ -15,7 +15,7 @@ Class euclidean_neutral :=
   Col A B C := (eq A B \/ eq A C \/ eq B C \/ betS B A C \/ betS A B C \/ betS A C B);
   cong_3 A B C a b c := cong A B a b /\ cong B C b c /\ cong A C a c;
   TS P A B Q := exists X, betS P X Q /\ Col A B X /\ nCol A B P;
-  Triangle A B C := nCol A B C;
+  triangle A B C := nCol A B C;
 
   OnCirc B J := exists X Y U, CI J U X Y /\ cong U B X Y;
   InCirc P J := exists X Y U V W, CI J U V W /\ (eq P U \/ (betS U Y X /\ cong U X V W /\ cong U P U Y));

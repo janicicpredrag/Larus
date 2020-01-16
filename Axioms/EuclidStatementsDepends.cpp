@@ -3,19 +3,32 @@
 
 using namespace std;
 
-
-
-
-vector< pair<string, vector<string>>> euclids_thms = {
+vector< pair<string, vector<string>>> euclids_thms_working = {
    {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"}},
    {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },
    {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive"} },
    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity"} },
    {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
    {"lemma_3_6b" , {"axiom_betweennesssymmetry", "lemma_3_5b"} },
-   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} }
-   
-   //{"proposition_test" , {"defisosceles", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} }
+   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a"} },
+   {"lemma_3_5b" , {"axiom_innertransitivity", "lemma_3_7a"} },
+   {"lemma_congruenceflip1" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
+   {"lemma_congruenceflip2" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
+   {"lemma_congruenceflip3" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
+
+};
+
+vector< pair<string, vector<string>>> euclids_thms = {
+ 
+ //  {"lemma_TCreflexive" , {"cn_congruencereflexive", "defn_trianglecongruence"} },
+ //  {"lemma_supplementsymmetric" , {"defn_supplement", "axiom_betweennesssymmetry", "lemma_ray5"} },
+  {"lemma_congruenceflip" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
+
+ //  {"lemma_squarerectangle" , {"lemma_squareparallelogram", "defn_square", "lemma_PGrectangle"} }, 
+ //  {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric"} },
+ 
+  // {"proposition_test" , {"defisosceles1", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} },
+  // {"proposition_test2" , {"defisosceles1", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} }
 
 //   {"proposition_05" , {"defisosceles", "defisosceles2", "deftriangle", "deftriangle2", "lemma_congruencesymmetric", "lemma_collinearorder", "lemma_ABCequalsCBA", "proposition_04modified1", "proposition_04modified2"} }
 

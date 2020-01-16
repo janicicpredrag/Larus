@@ -129,6 +129,7 @@ public:
     void ClearUnivVars() { mUniversalVars.clear(); }
     void ClearExistVars() {  mExistentialVars.clear(); }
 
+    static void Normalize(const CLFormula& f);
 
 private:
     ConjunctionFormula mA;

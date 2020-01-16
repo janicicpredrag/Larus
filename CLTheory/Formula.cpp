@@ -448,3 +448,30 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 }
 
 // ---------------------------------------------------------------------------------------
+
+void CLFormula::Normalize(const CLFormula &f)
+{
+    cout << "Premises: " << f.GetPremises().GetSize() << endl;
+    cout << "Dijuncts: " << f.GetGoal().GetDNF()->size() << endl;
+    if (f.GetPremises().GetSize() > 2)
+    {
+        cout << "Too many premises.";
+        assert(false);
+    }
+    if (f.GetGoal().GetDNF()->size() > 2)
+    {
+        cout << "Too many disjuncts.";
+        assert(false);
+    }
+    for(size_t i=0, size = f.GetGoal().GetSize(); i < size; i++)
+    {
+        cout << "Conjuncts in goal " << i << " : " << f.GetGoal().GetDNF()[i].size() << endl;
+        cout << "size : " << f.GetGoal().GetElement(i).GetSize() << endl;
+        if (f.GetGoal().GetElement(i).GetSize() > 2)
+        {
+            cout << "Too many conjuncts.";
+            assert(false);
+        }
+    }
+}
+
