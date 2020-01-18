@@ -116,7 +116,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
-    ursaFile << "minimize(nProofLen, 1, 10);" << endl << endl;
+    ursaFile << "minimize(nProofLen, 1,30);" << endl << endl;
 
     unsigned enumerator = 0;
     ursaFile << "/* Predicate symbols */" << endl;
