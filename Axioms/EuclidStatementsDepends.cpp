@@ -3,6 +3,12 @@
 
 using namespace std;
 
+vector< pair<string, vector<string>>> col_thms = {
+  {"ex1", {"col_swap1","col_swap2", "col_triv", "neq_swap", "col_trans"}}
+
+};
+
+
 vector< pair<string, vector<string>>> euclids_thms_working = {
    {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"}},
    {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive"} },

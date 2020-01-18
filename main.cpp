@@ -26,7 +26,9 @@ const int URSA_Engine = 1;
 extern vector < pair < string, vector<string> > > euclids_thms;
 extern vector < pair < string, vector<string> > > euclids_thms_working;
 extern vector < pair < string, vector<string> > > euclids_thms1;
+extern vector < pair < string, vector<string> > > col_thms;
 extern vector<string> EuclidAxioms;
+extern vector<string> ColAxioms;
 extern vector < pair < string, vector<string> > > test_thms;
 extern vector<string> TestAxioms;
 
@@ -211,12 +213,12 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
 int main(int /* argc */, char** /* argv*/)
 {
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = euclids_thms_working;
+    vector< pair<string, vector<string>>> case_study = col_thms;
     for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... ";
-        vector<string> axioms = case_study[i].second;
-        if (ProveFromTPTPATheory(EuclidAxioms, axioms, thm))
+        vector<string> depends = case_study[i].second;
+        if (ProveFromTPTPATheory(ColAxioms, depends, thm))
             numberProved++;
         else
             numberNotProved++;
