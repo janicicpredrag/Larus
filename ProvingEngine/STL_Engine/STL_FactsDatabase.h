@@ -33,7 +33,7 @@ private:
     bool FindFact(const Fact& );
     bool FindInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation);
     bool NextInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation);
-    bool PremisesTrueInInstantiation(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator> current, map<string,string>& instantiation);
+    bool PremisesTrueInInstantiation(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string,string>& instantiation);
 
     bool MatchConjunction(const ConjunctionFormula& conj, ConjunctionFormula& conj_inst, size_t
                           i, map<string,string>& instantiation, bool checkingPremises, vector<Fact>& AuxFacts);

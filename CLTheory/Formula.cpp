@@ -1,5 +1,6 @@
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
+#include <assert.h>
 
 // ---------------------------------------------------------------------------------------
 
@@ -447,31 +448,40 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
     return true;
 }
 
+
 // ---------------------------------------------------------------------------------------
 
-void CLFormula::Normalize(const CLFormula &f)
+
+void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& output) const
 {
-    cout << "Premises: " << f.GetPremises().GetSize() << endl;
-    cout << "Dijuncts: " << f.GetGoal().GetSize() << endl;
+    // f is now "this"
+
+    cout << "Premises: " << GetPremises().GetSize() << endl;
+    cout << "Dijuncts: " << GetGoal().GetSize() << endl;
  /*   if (f.GetPremises().GetSize() > 2)
     {
         cout << "Too many premises.";
         assert(false);
     } */
-    if (f.GetGoal().GetSize() > 2)
+    if (GetGoal().GetSize() > 2)
     {
         cout << "Too many disjuncts.";
         assert(false);
     }
-    for(size_t i=0, size = f.GetGoal().GetSize(); i < size; i++)
+    for(size_t i=0, size = GetGoal().GetSize(); i < size; i++)
     {
-        cout << "Conjuncts in goal " << i << " : " << f.GetGoal().GetDNF()[i].size() << endl;
-        cout << "size : " << f.GetGoal().GetElement(i).GetSize() << endl;
-        if (f.GetGoal().GetElement(i).GetSize() > 1)
+        cout << "Conjuncts in goal " << i << " : " << GetGoal().GetDNF()[i].size() << endl;
+        cout << "size : " << GetGoal().GetElement(i).GetSize() << endl;
+        if (GetGoal().GetElement(i).GetSize() > 1)
         {
             cout << "Too many conjuncts.";
             assert(false);
         }
     }
+    // the names of aux predicates could be name+"1" etc
+
+    output.push_back(pair<CLFormula,string>(*this,name));
+
 }
 
+// ---------------------------------------------------------------------------------------

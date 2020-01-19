@@ -72,7 +72,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                 #ifdef DEBUG_OUTPUT
                 //cout << "Trying ax " << it->second << endl;
                 #endif
-                //if ("lemma_congruencesymmetric" == it->second)
+                //if ("col_trans" == it->second)
                 //    cout << " ima " << endl;
 
                 vector<pair<string,string>> instantiation;
@@ -188,8 +188,6 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         }
                     }
                 }
-
-
 
             if (!success && mpT->NumberOfConstantsWaiting() < l) {
                 for (vector<pair<CLFormula,string> >::iterator it=mpT->mCLaxioms.begin(); it != mpT->mCLaxioms.end(); ++it) {

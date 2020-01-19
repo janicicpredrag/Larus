@@ -129,7 +129,7 @@ public:
     void ClearUnivVars() { mUniversalVars.clear(); }
     void ClearExistVars() {  mExistentialVars.clear(); }
 
-    static void Normalize(const CLFormula& f);
+    void Normalize(const string& name, vector< pair<CLFormula,string> >& output) const;
 
 private:
     ConjunctionFormula mA;
@@ -223,8 +223,6 @@ string SkipSpaces(const string& str);
 string ToUpper(const string& str);
 bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t type);
 bool ReadSetOfTPTPStatements(Theory *pT, const vector<string>& statements);
-
-
 
 // ---------------------------------------------------------------------------------------
 

@@ -154,7 +154,7 @@ bool STLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, 
                 return true;
              }
        }
-        while (NextInstantiationOfUnivVars(cl, fin, current, VarsNotInPremises, instantiation));
+       while (NextInstantiationOfUnivVars(cl, fin, current, VarsNotInPremises, instantiation));
     }
     return false;
 }
@@ -257,6 +257,9 @@ bool STLFactsDatabase::NextInstantiationOfUnivVars(const CLFormula& cl, Conjunct
                 if (i==0)
                     return false;
 
+                //for (size_t k=0; k<NoConjuncts; k++)
+                //    cout << " c[k]" << *current[k] << " -";
+
                 simple_check = true;
                 for (size_t k=0; simple_check && k<NoConjuncts; k++)
                     if (!PartialMatchFact(conj.GetElement(k), *current[k], instantiation))
@@ -272,7 +275,7 @@ bool STLFactsDatabase::NextInstantiationOfUnivVars(const CLFormula& cl, Conjunct
 
 // ---------------------------------------------------------------------------------------
 
-bool STLFactsDatabase::PremisesTrueInInstantiation(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator> current, map<string,string>& instantiation)
+bool STLFactsDatabase::PremisesTrueInInstantiation(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string,string>& instantiation)
 {
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
