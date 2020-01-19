@@ -14,14 +14,10 @@
 
 // #include "bezem.h"
 
-#define TIME_LIMIT 5
+const int TIME_LIMIT = 50;
+const int URSA_Engine = 0;
 
 using namespace std;
-
-const int URSA_Engine = 1;
-
-// A=B replaced by eq(A,B)
-// A!=B replaced by neq(A,B)
 
 extern vector < pair < string, vector<string> > > euclids_thms;
 extern vector < pair < string, vector<string> > > euclids_thms_working;
@@ -31,6 +27,11 @@ extern vector<string> EuclidAxioms;
 extern vector<string> ColAxioms;
 extern vector < pair < string, vector<string> > > test_thms;
 extern vector<string> TestAxioms;
+
+// A=B replaced by eq(A,B)
+// A!=B replaced by neq(A,B)
+
+
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -92,8 +93,11 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
     else
         cout << "Theorem not proved!" << endl;
 
-    clock_t end = clock();
-    double elapsed_secs = double(end - startTime) / CLOCKS_PER_SEC;
+    clock_t current = clock();
+    double elapsed_secs = double(current - startTime) / CLOCKS_PER_SEC;
+    if (elapsed_secs > TIME_LIMIT)
+        cout << "[TIME LIMIT EXCEEDED!]" << endl;
+
     cout << "Elapsed time: " << elapsed_secs << endl;
     return proved;
 }
@@ -117,18 +121,21 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
+bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
 {
     Theory T;
     CLFormula theorem;
     string statementName;
+
     for(size_t i=0, size = theory.size(); i < size; i++) {
         CLFormula cl;
         string s = theory[i];
         if (ReadTPTPStatement(s, cl, statementName, 2)) {
             for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
                 if (statementName == namesOfAxiomsToBeUsed[j]) {
-                    T.AddAxiom(cl,statementName);
+                    vector< pair<CLFormula,string> > normalizedAxioms;
+                    cl.Normalize(statementName, normalizedAxioms);
+                    T.AddAxioms(normalizedAxioms);
                     break;
                 }
             }
@@ -141,7 +148,8 @@ bool ProveFromTPTPATheory(const vector<string>& theory, const vector<string>& na
             return false;
     }
     
-    CLFormula::Normalize(theorem);
+    vector< pair<CLFormula,string> > output;
+    theorem.Normalize(theoremName, output);
 
     ProvingEngine* engine;
     if (URSA_Engine)
@@ -218,7 +226,7 @@ int main(int /* argc */, char** /* argv*/)
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... ";
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPATheory(ColAxioms, depends, thm))
+        if (ProveFromTPTPTheory(ColAxioms, depends, thm))
             numberProved++;
         else
             numberNotProved++;
