@@ -16,10 +16,10 @@ nNEQCOL = 3;
 nArity[nNEQCOL] = 3;
 
 /* Intro constants */
-nD = 0;
-nA = 1;
-nB = 2;
-nC = 3;
+nA = 0;
+nB = 1;
+nC = 2;
+nD = 3;
 
 /* *************************** Axioms *************************** */          
 /* General form:                                                  */          
@@ -99,24 +99,62 @@ nBinding[nAxiomsCount][2*nMaxArg+0] = 1; /* 1th univ var */
 nBinding[nAxiomsCount][2*nMaxArg+1] = 0; /* 1th univ var */
 
 nAxiomsCount++;
-/* ***** Axiom (! [A,B,C] : ((neqcol(P,Q,A) and colcol(P,Q,B,C)) => ((col(A,B,C))))) (axiom name: col_trans) ***** */ 
-nAxiomUniVars[nAxiomsCount]         = 3; /* number of univ quantifiers */
+/* ***** Axiom (! [P,Q,A,B,C] : ((neqcol(P,Q,A) and colcol(P,Q,B,C)) => ((col(A,B,C))))) (axiom name: col_trans1) ***** */ 
+nAxiomUniVars[nAxiomsCount]         = 5; /* number of univ quantifiers */
 nAxiomExiVars[nAxiomsCount]         = 0; /* number of exi quantifiers */
 nAxiomPremises[nAxiomsCount]        = 2; /* number of premises         */
 bAxiomBranching[nAxiomsCount]       = false; /* axiom is branching or not */
 nPredicate[nAxiomsCount][0]         = nNEQCOL; /* first predicate in premises */
-nBinding[nAxiomsCount][0]           = 18446744073709551615; /* 1th univ var */
-nBinding[nAxiomsCount][1]           = 18446744073709551615; /* 1th univ var */
-nBinding[nAxiomsCount][2]           = 0; /* 1th univ var */
+nBinding[nAxiomsCount][0]           = 0; /* 1th univ var */
+nBinding[nAxiomsCount][1]           = 1; /* 1th univ var */
+nBinding[nAxiomsCount][2]           = 2; /* 1th univ var */
 nPredicate[nAxiomsCount][1]         = nCOLCOL; /* second predicate in premises */
-nBinding[nAxiomsCount][nMaxArg+0]   = 18446744073709551615; /* 1th univ var */
-nBinding[nAxiomsCount][nMaxArg+1]   = 18446744073709551615; /* 1th univ var */
-nBinding[nAxiomsCount][nMaxArg+2]   = 1; /* 1th univ var */
-nBinding[nAxiomsCount][nMaxArg+3]   = 2; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+0]   = 0; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+1]   = 1; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+2]   = 3; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+3]   = 4; /* 1th univ var */
 nPredicate[nAxiomsCount][2]         = nCOL; /* first predicate in goal */
+nBinding[nAxiomsCount][2*nMaxArg+0] = 2; /* 1th univ var */
+nBinding[nAxiomsCount][2*nMaxArg+1] = 3; /* 1th univ var */
+nBinding[nAxiomsCount][2*nMaxArg+2] = 4; /* 1th univ var */
+
+nAxiomsCount++;
+/* ***** Axiom (! [P,Q,A] : ((neq(P,Q) and col(P,Q,A)) => ((neqcol(P,Q,A))))) (axiom name: col_trans_aux1) ***** */ 
+nAxiomUniVars[nAxiomsCount]         = 3; /* number of univ quantifiers */
+nAxiomExiVars[nAxiomsCount]         = 0; /* number of exi quantifiers */
+nAxiomPremises[nAxiomsCount]        = 2; /* number of premises         */
+bAxiomBranching[nAxiomsCount]       = false; /* axiom is branching or not */
+nPredicate[nAxiomsCount][0]         = nNEQ; /* first predicate in premises */
+nBinding[nAxiomsCount][0]           = 0; /* 1th univ var */
+nBinding[nAxiomsCount][1]           = 1; /* 1th univ var */
+nPredicate[nAxiomsCount][1]         = nCOL; /* second predicate in premises */
+nBinding[nAxiomsCount][nMaxArg+0]   = 0; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+1]   = 1; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+2]   = 2; /* 1th univ var */
+nPredicate[nAxiomsCount][2]         = nNEQCOL; /* first predicate in goal */
 nBinding[nAxiomsCount][2*nMaxArg+0] = 0; /* 1th univ var */
 nBinding[nAxiomsCount][2*nMaxArg+1] = 1; /* 1th univ var */
 nBinding[nAxiomsCount][2*nMaxArg+2] = 2; /* 1th univ var */
+
+nAxiomsCount++;
+/* ***** Axiom (! [P,Q,B,C] : ((col(P,Q,B) and col(P,Q,C)) => ((colcol(P,Q,B,C))))) (axiom name: col_trans_aux2) ***** */ 
+nAxiomUniVars[nAxiomsCount]         = 4; /* number of univ quantifiers */
+nAxiomExiVars[nAxiomsCount]         = 0; /* number of exi quantifiers */
+nAxiomPremises[nAxiomsCount]        = 2; /* number of premises         */
+bAxiomBranching[nAxiomsCount]       = false; /* axiom is branching or not */
+nPredicate[nAxiomsCount][0]         = nCOL; /* first predicate in premises */
+nBinding[nAxiomsCount][0]           = 0; /* 1th univ var */
+nBinding[nAxiomsCount][1]           = 1; /* 1th univ var */
+nBinding[nAxiomsCount][2]           = 2; /* 1th univ var */
+nPredicate[nAxiomsCount][1]         = nCOL; /* second predicate in premises */
+nBinding[nAxiomsCount][nMaxArg+0]   = 0; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+1]   = 1; /* 1th univ var */
+nBinding[nAxiomsCount][nMaxArg+2]   = 3; /* 1th univ var */
+nPredicate[nAxiomsCount][2]         = nCOLCOL; /* first predicate in goal */
+nBinding[nAxiomsCount][2*nMaxArg+0] = 0; /* 1th univ var */
+nBinding[nAxiomsCount][2*nMaxArg+1] = 1; /* 1th univ var */
+nBinding[nAxiomsCount][2*nMaxArg+2] = 2; /* 1th univ var */
+nBinding[nAxiomsCount][2*nMaxArg+3] = 3; /* 1th univ var */
 
 /* ******************************* Premises ****************************** */
 /* *********************************************************************** */
