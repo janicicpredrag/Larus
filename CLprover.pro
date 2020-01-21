@@ -23,30 +23,31 @@ SOURCES += main.cpp \
     Axioms/BezemAxioms.cpp \
     Axioms/EuclidElements.cpp \
     Axioms/EuclidStatementsDepends.cpp \
+    ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
     ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
     ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
-    ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
+    ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
+    ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
     ProofExport/ProofExport2Coq.cpp \
     ProofExport/ProofExport2Isabelle.cpp \
     ProofExport/ProofExport2LaTeX.cpp \
-    ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
-    ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp
+
 
 HEADERS += \
     CLTheory/Formula.h \
     CLTheory/Theory.h \
     CLProof/CLProof.h \
-    ProvingEngine/ProvingEngine.h \
     ProvingEngine/FactsDatabase.h \
+    ProvingEngine/ProvingEngine.h \
     ProvingEngine/STL_Engine/STL_FactsDatabase.h \
     ProvingEngine/STL_Engine/STL_ProvingEngine.h \
+    ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+    ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
     ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
     ProofExport/ProofExport.h \
     ProofExport/ProofExport2Coq.h \
     ProofExport/ProofExport2Isabelle.h \
     ProofExport/ProofExport2LaTeX.h \
-    ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
-    ProvingEngine/SQL_Engine/SQL_ProvingEngine.h
 
 
 
