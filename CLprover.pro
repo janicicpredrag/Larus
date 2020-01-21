@@ -28,7 +28,9 @@ SOURCES += main.cpp \
     ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
     ProofExport/ProofExport2Coq.cpp \
     ProofExport/ProofExport2Isabelle.cpp \
-    ProofExport/ProofExport2LaTeX.cpp
+    ProofExport/ProofExport2LaTeX.cpp \
+    ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
+    ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp
 
 HEADERS += \
     CLTheory/Formula.h \
@@ -42,7 +44,9 @@ HEADERS += \
     ProofExport/ProofExport.h \
     ProofExport/ProofExport2Coq.h \
     ProofExport/ProofExport2Isabelle.h \
-    ProofExport/ProofExport2LaTeX.h
+    ProofExport/ProofExport2LaTeX.h \
+    ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+    ProvingEngine/SQL_Engine/SQL_ProvingEngine.h
 
 
 

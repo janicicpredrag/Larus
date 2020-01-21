@@ -1,6 +1,6 @@
-#include "STL_ProvingEngine.h"
 #include "CLProof/CLProof.h"
-#include "STL_FactsDatabase.h"
+#include "SQL_ProvingEngine.h"
+#include "SQL_FactsDatabase.h"
 #include <string>
 #include <set>
 
@@ -9,28 +9,28 @@
 
 // ---------------------------------------------------------------------------------------
 
-STL_ProvingEngine::STL_ProvingEngine(Theory *T)
+SQL_ProvingEngine::SQL_ProvingEngine(Theory *T)
 {
-    mpDB = new STLFactsDatabase(T);
+    mpDB = new SQLFactsDatabase(T);
     mpT = T;
 }
 
 // ---------------------------------------------------------------------------------------
 
-STL_ProvingEngine::~STL_ProvingEngine()
+SQL_ProvingEngine::~SQL_ProvingEngine()
 {
     delete mpDB;
 }
 // ---------------------------------------------------------------------------------------
 
-void STL_ProvingEngine::AddPremise(const Fact& f)
+void SQL_ProvingEngine::AddPremise(const Fact& f)
 {
     mpDB->AddFact(f);
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
+bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
     CLProofEnd* pe;
     bool success;
@@ -210,10 +210,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                 }
             }
 
-            if (!success && mpT->NumberOfConstantsWaiting() > 0) {
-                // cout << " nova dodata " << endl;
+            if (!success && mpT->NumberOfConstantsWaiting() > 0)
                 success = mpT->MakeNextConstantPermissible();
-            }
 
             if (!success && mpT->NumberOfConstantsWaiting() < l) {
                 for (vector<pair<CLFormula,string> >::iterator it=mpT->mCLaxioms.begin(); it != mpT->mCLaxioms.end(); ++it) {
@@ -245,7 +243,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyEFQ()
+bool SQL_ProvingEngine::ApplyEFQ()
 {
     for (set<Fact>::iterator it=mpDB->GetDatabase()->begin(); it != mpDB->GetDatabase()->end(); ++it)  {
         if (it->GetName() == "false")
@@ -256,7 +254,7 @@ bool STL_ProvingEngine::ApplyEFQ()
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyByAssumption(const DNFFormula& f, ConjunctionFormula& fin)
+bool SQL_ProvingEngine::ApplyByAssumption(const DNFFormula& f, ConjunctionFormula& fin)
 {
     vector<Fact> AuxFacts;
     if (mpDB->HoldsDisjunction(f, fin, AuxFacts))
@@ -270,7 +268,7 @@ bool STL_ProvingEngine::ApplyByAssumption(const DNFFormula& f, ConjunctionFormul
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyExcludedMiddle(DNFFormula& mp)
+bool SQL_ProvingEngine::ApplyExcludedMiddle(DNFFormula& mp)
 {
     if (GetDatabase()->ApplyExcludedMiddle(mp))
     {
@@ -282,7 +280,7 @@ bool STL_ProvingEngine::ApplyExcludedMiddle(DNFFormula& mp)
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs)
+bool SQL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs)
 {
     *pcs = new CaseSplit;
     size_t old_size_cases = mpDB->GetDatabaseCases()->size();

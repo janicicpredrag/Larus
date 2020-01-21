@@ -4,9 +4,9 @@
 
 #include "CLTheory/Theory.h"
 #include "CLTheory/Formula.h"
-#include "ProvingEngine/STL_Engine/STL_FactsDatabase.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
+#include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProofExport/ProofExport2Coq.h"
@@ -14,8 +14,11 @@
 
 // #include "bezem.h"
 
+enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
+const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 const int TIME_LIMIT = 50;
-const int URSA_Engine = 1;
+
+
 
 using namespace std;
 
@@ -152,10 +155,15 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     theorem.Normalize(theoremName, output);
 
     ProvingEngine* engine;
-    if (URSA_Engine)
-        engine = new URSA_ProvingEngine(&T);
-    else
+    if (PROVING_ENGINE == STL_Engine)
         engine = new STL_ProvingEngine(&T);
+    else if (PROVING_ENGINE == SQL_Engine)
+        engine = new SQL_ProvingEngine(&T);
+    else if (PROVING_ENGINE == URSA_Engine)
+        engine = new URSA_ProvingEngine(&T);
+    else // default
+        engine = new STL_ProvingEngine(&T);
+
     int r = ProveTheorem(T, engine, theorem, theoremName);
     delete engine;
     return r;

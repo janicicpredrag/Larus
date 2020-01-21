@@ -57,7 +57,6 @@ bool STLFactsDatabase::ApplyExcludedMiddle(DNFFormula& fout)
         }
     }
 
-
     if (false)
     for(set<string>::iterator it = mpT->mConstantsPermissible.begin(); it!=mpT->mConstantsPermissible.end(); it++) {
         for(set<string>::iterator jt = it; jt!=mpT->mConstantsPermissible.end(); jt++) {
