@@ -77,12 +77,6 @@ first: all
 $(TARGET):  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
-Makefile: CLprover.pro 
-		CLprover.pro 
-	$(QMAKE) -o Makefile CLprover.pro
-CLprover.pro:
-qmake: FORCE
-	@$(QMAKE) -o Makefile CLprover.pro
 
 qmake_all: FORCE
 
