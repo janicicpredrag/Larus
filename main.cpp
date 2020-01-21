@@ -15,7 +15,7 @@
 // #include "bezem.h"
 
 enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
-const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
+const enum ePROVING_ENGINE PROVING_ENGINE = STL_Engine;
 const int TIME_LIMIT = 50;
 
 
