@@ -11,11 +11,10 @@ vector<string> ColAxioms =
      "fof(col_swap2, axiom, ! [A,B,C] : col(A,B,C) => col(B,C,A) )",
      "fof(col_triv, axiom, ! [A,B] : col(A,B,B) )",
      "fof(neq_swap, axiom, ! [A,B] : neq(A,B) => neq(B,A) )",
-  //   "fof(col_trans, axiom, ! [A,B,C] : neq(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C) => col(A,B,C) )",
-     "fof(col_trans1, axiom, ! [P,Q,A,B,C] : neqcol(P,Q,A) & colcol(P,Q,B,C) => col(A,B,C) )",
-     "fof(col_trans_aux1, axiom, ! [P,Q,A] : neq(P,Q) & col(P,Q,A) => neqcol(P,Q,A) )",
-     "fof(col_trans_aux2, axiom, ! [P,Q,B,C] : col(P,Q,B) & col(P,Q,C) => colcol(P,Q,B,C) )",
-
+     "fof(col_trans, axiom, ! [P,Q,A,B,C] : neq(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C) => col(A,B,C) )",
+//     "fof(col_trans1, axiom, ! [P,Q,A,B,C] : neqcol(P,Q,A) & colcol(P,Q,B,C) => col(A,B,C) )",
+//     "fof(col_trans_aux1, axiom, ! [P,Q,A] : neq(P,Q) & col(P,Q,A) => neqcol(P,Q,A) )",
+//     "fof(col_trans_aux2, axiom, ! [P,Q,B,C] : col(P,Q,B) & col(P,Q,C) => colcol(P,Q,B,C) )",
      "fof(ex1, conjecture, ! [A,B,C,D] : neq(A,B) & col(A,B,C) & col(A,B,D) => col(A,C,D) )"
 };
 

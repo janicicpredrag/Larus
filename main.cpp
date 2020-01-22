@@ -94,7 +94,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         cout << "Theorem not proved!" << endl;
 
     clock_t current = clock();
-    double elapsed_secs = double(current - startTime) / CLOCKS_PER_SEC;
+    float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
     if (elapsed_secs > TIME_LIMIT)
         cout << "[TIME LIMIT EXCEEDED!]" << endl;
 

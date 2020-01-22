@@ -439,10 +439,10 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 for(size_t i=0; i< mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars(); i++) {
                     ss2 >> inst[i];
                     const string UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
-                    instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
+                    if (inst[i] < (int)sConstants.size())
+                        instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 proof.AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation);
-
             }
         }
     }

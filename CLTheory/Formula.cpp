@@ -454,8 +454,9 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 
 void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& output) const
 {
-    cout << "Premises: " << GetPremises().GetSize() << endl;
-    cout << "Dijuncts: " << GetGoal().GetSize() << endl;
+    unsigned count_aux = 0;
+    // cout << "Premises: " << GetPremises().GetSize() << endl;
+    // cout << "Dijuncts: " << GetGoal().GetSize() << endl;
 
     // output.clear();
 
@@ -481,15 +482,23 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
             DNFFormula disj;
             disj.Add(conj1);
             CLFormula axiom(conj,disj);
-            axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
-            axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
-            output.push_back(pair<CLFormula,string>(axiom, "aux"));
+            for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
+            {
+                bool bAlreadyThere = false;
+                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                    if (axiom.mUniversalVars[k] == current.GetArg(j))
+                        bAlreadyThere = true;
+                if (!bAlreadyThere)
+                    axiom.mUniversalVars.push_back(current.GetArg(j));
+            }
+            output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
         }
         premises.Clear();
         premises.Add(current);
         premises.Add(GetPremises().GetElement(numPremises-1));
     }
 
+    /* P => (C1 & C2 & C3) | ... gives  axioms: C123 => C1, C123 => C2 ... */
     size_t numGoalDisjuncts = GetGoal().GetSize();
     vector<Fact> disjuncts;
     disjuncts.resize(numGoalDisjuncts);
@@ -507,9 +516,16 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
                 DNFFormula disj;
                 disj.Add(conj1);
                 CLFormula axiom(conj,disj);
-                axiom.mUniversalVars = mUniversalVars; // todo: we should delete redundant quantifiers
-                axiom.mUniversalVars.insert(axiom.mUniversalVars.end(), mExistentialVars.begin(), mExistentialVars.end());
-                output.push_back(pair<CLFormula,string>(axiom, "aux"));
+                for(size_t j=0; j < disjuncts[i].GetArity(); j++) // quantify only occuring variables
+                {
+                    bool bAlreadyThere = false;
+                    for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                        if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
+                            bAlreadyThere = true;
+                    if (!bAlreadyThere)
+                        axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
+                }
+                output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
             }
         }
         else {
@@ -529,11 +545,19 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
             disj.Add(conj1);
             disj.Add(conj2);
             ConjunctionFormula conj;
-            conj.Add(MergeFacts(current, disjuncts[i]));
+            current = MergeFacts(current, disjuncts[i]);
+            conj.Add(current);
             CLFormula axiom(conj,disj);
-            axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
-            axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
-            output.push_back(pair<CLFormula,string>(axiom, "aux"));
+            for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
+            {
+                bool bAlreadyThere = false;
+                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                    if (axiom.mUniversalVars[k] == current.GetArg(j))
+                        bAlreadyThere = true;
+                if (!bAlreadyThere)
+                    axiom.mUniversalVars.push_back(current.GetArg(j));
+            }
+            output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
         }
         ConjunctionFormula conj1;
         conj1.Add(current);
@@ -543,15 +567,20 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
         goal.Add(conj1);
         goal.Add(conj2);
         CLFormula axiom(premises,goal);
-        axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
-        axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
-        output.push_back(pair<CLFormula,string>(axiom, "aux"));
+        axiom.mUniversalVars = mUniversalVars;
+        axiom.mExistentialVars = mExistentialVars;
+        output.push_back(pair<CLFormula,string>(axiom, name));
     }
     else {
-        DNFFormula goal = GetGoal();
+        DNFFormula goal;
+        for(size_t i=0; i < disjuncts.size(); i++) {
+            ConjunctionFormula c;
+            c.Add(disjuncts[i]);
+            goal.Add(c);
+        }
         CLFormula cl(premises,goal);
-        cl.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
-        cl.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
+        cl.mUniversalVars = mUniversalVars;
+        cl.mExistentialVars = mExistentialVars;
         output.push_back(pair<CLFormula,string>(cl,name));
     }
 }
