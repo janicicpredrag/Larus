@@ -454,34 +454,126 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 
 void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& output) const
 {
-    // f is now "this"
-
     cout << "Premises: " << GetPremises().GetSize() << endl;
     cout << "Dijuncts: " << GetGoal().GetSize() << endl;
- /*   if (f.GetPremises().GetSize() > 2)
+
+    // output.clear();
+
+    /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
+    ConjunctionFormula premises;
+    size_t numPremises = GetPremises().GetSize();
+    if (numPremises <= 2) {
+        premises = GetPremises();
+    }
+    else
     {
         cout << "Too many premises.";
-        assert(false);
-    } */
-    if (GetGoal().GetSize() > 2)
-    {
-        cout << "Too many disjuncts.";
-        assert(false);
-    }
-    for(size_t i=0, size = GetGoal().GetSize(); i < size; i++)
-    {
-        cout << "Conjuncts in goal " << i << " : " << GetGoal().GetDNF()[i].size() << endl;
-        cout << "size : " << GetGoal().GetElement(i).GetSize() << endl;
-        if (GetGoal().GetElement(i).GetSize() > 1)
+        // assert(false);
+        Fact current = GetPremises().GetElement(0);
+        for(size_t i=1; i < numPremises-1; i++) // todo: we should reorder the facts, so we get a smaller arity at the end
         {
-            cout << "Too many conjuncts.";
-            assert(false);
+            ConjunctionFormula conj;
+            conj.Add(current);
+            conj.Add(GetPremises().GetElement(i));
+            ConjunctionFormula conj1;
+            current = MergeFacts(current, GetPremises().GetElement(i));
+            conj1.Add(current);
+            DNFFormula disj;
+            disj.Add(conj1);
+            CLFormula axiom(conj,disj);
+            axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
+            axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
+            output.push_back(pair<CLFormula,string>(axiom, "aux"));
+        }
+        premises.Clear();
+        premises.Add(current);
+        premises.Add(GetPremises().GetElement(numPremises-1));
+    }
+
+    size_t numGoalDisjuncts = GetGoal().GetSize();
+    vector<Fact> disjuncts;
+    disjuncts.resize(numGoalDisjuncts);
+    for(size_t i=0; i < numGoalDisjuncts; i++) {
+        size_t numConjuncts = GetGoal().GetElement(i).GetSize();
+        if (numConjuncts > 1) {
+            Fact current = GetGoal().GetElement(i).GetElement(0);
+            for(size_t j=1; j < numConjuncts; j++)
+                disjuncts[i] = MergeFacts(current, GetGoal().GetElement(i).GetElement(j));
+            for(size_t j=0; j < numConjuncts; j++) {
+                ConjunctionFormula conj;
+                conj.Add(disjuncts[i]);
+                ConjunctionFormula conj1;
+                conj1.Add(GetGoal().GetElement(i).GetElement(j));
+                DNFFormula disj;
+                disj.Add(conj1);
+                CLFormula axiom(conj,disj);
+                axiom.mUniversalVars = mUniversalVars; // todo: we should delete redundant quantifiers
+                axiom.mUniversalVars.insert(axiom.mUniversalVars.end(), mExistentialVars.begin(), mExistentialVars.end());
+                output.push_back(pair<CLFormula,string>(axiom, "aux"));
+            }
+        }
+        else {
+            disjuncts[i] = GetGoal().GetElement(i).GetElement(0);
         }
     }
-    // the names of aux predicates could be name+"1" etc
 
-    output.push_back(pair<CLFormula,string>(*this,name));
-
+    if (numGoalDisjuncts > 2) {
+        /* P => C1 | C2 | C3 gives  axioms: P => C12 | C3, C12 => C1 | C2 */
+        Fact current = disjuncts[0];
+        for(size_t i=1; i < numGoalDisjuncts-1; i++)  {
+            ConjunctionFormula conj1;
+            conj1.Add(current);
+            ConjunctionFormula conj2;
+            conj2.Add(disjuncts[i]);
+            DNFFormula disj;
+            disj.Add(conj1);
+            disj.Add(conj2);
+            ConjunctionFormula conj;
+            conj.Add(MergeFacts(current, disjuncts[i]));
+            CLFormula axiom(conj,disj);
+            axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
+            axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
+            output.push_back(pair<CLFormula,string>(axiom, "aux"));
+        }
+        ConjunctionFormula conj1;
+        conj1.Add(current);
+        ConjunctionFormula conj2;
+        conj2.Add(disjuncts[numGoalDisjuncts-1]);
+        DNFFormula goal;
+        goal.Add(conj1);
+        goal.Add(conj2);
+        CLFormula axiom(premises,goal);
+        axiom.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
+        axiom.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
+        output.push_back(pair<CLFormula,string>(axiom, "aux"));
+    }
+    else {
+        DNFFormula goal = GetGoal();
+        CLFormula cl(premises,goal);
+        cl.mUniversalVars = mUniversalVars;     // todo: we should delete redundant quantifiers
+        cl.mExistentialVars = mExistentialVars; // todo: we should delete redundant quantifiers
+        output.push_back(pair<CLFormula,string>(cl,name));
+    }
 }
 
 // ---------------------------------------------------------------------------------------
+
+Fact CLFormula::CLFormula::MergeFacts(Fact a, Fact b)
+{
+    Fact f;
+    f.SetName(a.GetName()+"_"+b.GetName());
+
+    for (size_t i = 0; i<a.GetArity(); i++)
+        f.SetArg(i,a.GetArg(i));
+
+    size_t s = f.GetArity();
+    for (size_t i = 0; i<b.GetArity(); i++) {
+        bool alreadyThere = false;
+        for (size_t j = 0; j<f.GetArity() && !alreadyThere; j++)
+            if (f.GetArg(j) == b.GetArg(i))
+                alreadyThere = true;
+        if (!alreadyThere)
+            f.SetArg(s++, b.GetArg(i));
+    }
+    return f;
+}

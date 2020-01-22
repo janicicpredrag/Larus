@@ -56,7 +56,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
 
     outfile << "% Using axioms:" << endl;
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
-        outfile << "% " << get<1>(T.Axiom(i)) << endl;
+        outfile << "% " << get<1>(T.Axiom(i)) << " : " << get<0>(T.Axiom(i)) <<  endl;
     outfile << endl;
 
     outfile << "\\documentclass{article}" << endl;

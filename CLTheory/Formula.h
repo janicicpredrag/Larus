@@ -130,6 +130,7 @@ public:
     void ClearExistVars() {  mExistentialVars.clear(); }
 
     void Normalize(const string& name, vector< pair<CLFormula,string> >& output) const;
+    static Fact MergeFacts(Fact a, Fact b);
 
 private:
     ConjunctionFormula mA;

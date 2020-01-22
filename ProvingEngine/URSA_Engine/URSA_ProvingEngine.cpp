@@ -123,9 +123,13 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
         EncodeAxiom(it->first, it->second);
 
+    unsigned nMaxArity = 0;
+
     for (map<string,unsigned>::iterator i = mpT->mSignature.begin(); i != mpT->mSignature.end(); i++) {
         ursaFile << "n" << ToUpper(i->first) << " = " << enumerator++ << ";" << endl;
         ursaFile << "nArity[n" << ToUpper(i->first) << "] = " <<  mpT->mArity[i->first] << ";" << endl << endl;
+        if (mpT->mArity[i->first] > nMaxArity)
+            nMaxArity = mpT->mArity[i->first];
         if (mpT->mArity[i->first] == 0)
             bConstantFalseUsed = true;
     }
@@ -145,7 +149,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     s << "/* forall ... exist ... P0(...) and P1(...) => P2(...) OR P3(...) */          " << endl;
     s << "/* ************************************************************** */          " << endl << endl;
     s << "/* predicates have nMaxArg args maximally; can be changed here: */            " << endl;
-    s << "nMaxArg = 4;                                                                  " << endl << endl;
+    s << "nMaxArg = " << nMaxArity << ";                                                                  " << endl << endl;
     s << "nPremisesCount=0;                                                             " << endl << endl;
     s << "nAxiomsCount=0;                                                               " << endl;
     s << "nAssumption = nAxiomsCount;    /* Axiom=0, for Assumptions                  */" << endl << endl;

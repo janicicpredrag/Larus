@@ -12,13 +12,11 @@
 #include "ProofExport/ProofExport2Coq.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 
-// #include "bezem.h"
-
 enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
-const enum ePROVING_ENGINE PROVING_ENGINE = STL_Engine;
+
+const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
+
 const int TIME_LIMIT = 50;
-
-
 
 using namespace std;
 
@@ -33,7 +31,6 @@ extern vector<string> TestAxioms;
 
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
-
 
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -116,10 +113,8 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
     CLFormula cl;
     string thmName;
     if (ReadTPTPStatement(strTheorem, cl, thmName, 2))
-    {
-        ProveTheorem(T, &engine, cl, thmName);
-    }
-    return true;
+        return ProveTheorem(T, &engine, cl, thmName);
+    return false;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -136,10 +131,14 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         if (ReadTPTPStatement(s, cl, statementName, 2)) {
             for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
                 if (statementName == namesOfAxiomsToBeUsed[j]) {
-                    vector< pair<CLFormula,string> > normalizedAxioms;
-                    cl.Normalize(statementName, normalizedAxioms);
-                    T.AddAxioms(normalizedAxioms);
-                    break;
+                    if (PROVING_ENGINE != URSA_Engine)
+                        T.AddAxiom(cl,statementName);
+                    else {
+                        vector< pair<CLFormula,string> > normalizedAxioms;
+                        cl.Normalize(statementName, normalizedAxioms);
+                        T.AddAxioms(normalizedAxioms);
+                        break;
+                    }
                 }
             }
             if (statementName == theoremName) {
@@ -151,8 +150,8 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
             return false;
     }
     
-    vector< pair<CLFormula,string> > output;
-    theorem.Normalize(theoremName, output);
+    //vector< pair<CLFormula,string> > output;
+    //theorem.Normalize(theoremName, output);
 
     ProvingEngine* engine;
     if (PROVING_ENGINE == STL_Engine)
@@ -168,61 +167,6 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     delete engine;
     return r;
 }
-
-/*void RunTest()
-{
-    FactsDatabase db;
-    ProvingEngine engine(&db);
-    CLFormula cl[10];
-
-    for(size_t i=0, size = TestAxioms.size(); i < size; i++) {
-        if (cl[i].Read(TestAxioms[i])) {
-            cout << "CL successfuly read: " << cl[i] << endl;
-            engine.AddAxiom(cl[i],string("CL"+to_string(i)));
-        }
-        else
-            cout << "fail  " << endl;
-    }
-    db.AddFact(Fact("p(c)"));
-    db.AddConstant(string("c"));
-    db.AddFact(Fact("a(d)"));
-    db.AddConstant(string("d"));
-
-    ConjunctionFormula b1;
-    b1.Add(Fact("q(d)"));
-    DNFFormula b;
-    b.Add(b1);
-    cout << b << endl;
-
-    CLProof proof;
-    clock_t startTime = clock();
-
-    engine.SetStartTimeAndLimit(startTime, TIME_LIMIT);
-    if (engine.ProveFromPremises(b, proof)) {
-        cout << "Theorem proved! " << endl;
-        string sFileName("dokaz.tex");
-        string sFileName2("dokaz-simpl.tex");
-        string sFileName3("dokaz.coq");
-        string sFileName4("dokaz.isabelle");
-
-        ProofExport *ex, *excoq, *exIsabelle;
-        ex = new ProofExport2LaTeX;
-        ex->ToFile(&proof, sFileName);
-        proof.Simplify();
-        ex->ToFile(&proof, sFileName2);
-        excoq = new ProofExport2Coq;
-        excoq->ToFile(&proof, sFileName3);
-        exIsabelle = new ProofExport2Isabelle;
-        exIsabelle->ToFile(&proof, sFileName4);
-    }
-    else
-        cout << "Theorem not proved!" << endl;
-
-    clock_t end = clock();
-    double elapsed_secs = double(end - startTime) / CLOCKS_PER_SEC;
-    cout << "Elapsed time: " << elapsed_secs << endl;
-}
-*/
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
