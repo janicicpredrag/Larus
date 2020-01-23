@@ -4,7 +4,8 @@
 using namespace std;
 
 vector< pair<string, vector<string>>> col_thms = {
-  {"ex1", {"col_swap1","col_swap2", "col_triv", "neq_swap", "col_trans", /* "col_trans1", "col_trans_aux1", "col_trans_aux2"*/}}
+  {"ex1", {"col_swap1","col_swap2", "col_triv", "col_trans"}},
+  {"ex2", {"col_swap1","col_swap2", "col_triv",  "col_trans"}}
 
 };
 
