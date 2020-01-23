@@ -97,9 +97,9 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
 {
     if (system(NULL)) {
         EncodeProof(formula);
-//        if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
-//            cout << "The old file sat-proof.txt has been deleted." << endl;
-        if (system("./ursa < prove.urs -c -l8"))  // Find a proof
+        if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
+            cout << "The old file sat-proof.txt has been deleted." << endl;
+        if (system("./ursa < prove.urs -c -l8 -sminisat"))  // Find a proof
             return false;
         return (DecodeProof(formula, "sat-proof.txt",  proof));
     }
