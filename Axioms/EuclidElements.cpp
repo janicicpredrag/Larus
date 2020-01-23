@@ -16,7 +16,7 @@ vector<string> ColAxioms =
 //     "fof(col_trans_aux1, axiom, ! [P,Q,A] : neq(P,Q) & col(P,Q,A) => neqcol(P,Q,A) )",
 //     "fof(col_trans_aux2, axiom, ! [P,Q,B,C] : col(P,Q,B) & col(P,Q,C) => colcol(P,Q,B,C) )",
      "fof(ex1, conjecture, ! [A,B,C,D] : neq(A,B) & col(A,B,C) & col(A,B,D) => col(A,C,D) )",
-     "fof(ex2, conjecture, ![X A B C U V ] : neq(A,B) & neq(C,X) & neq(B,X) & col(X,A,B) & col(X, C, X) & col(U,A,B) & col(V,C,X) => col(U, B, X) )"
+     "fof(ex2, conjecture, ![X , A , B , C , U , V ] : neq(A,B) & neq(C,X) & neq(B,X) & col(X,A,B) & col(X, C, X) & col(U,A,B) & col(V,C,X) => col(U, B, X) )"
 
 };
 

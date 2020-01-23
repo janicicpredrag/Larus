@@ -468,7 +468,7 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
     }
     else
     {
-        cout << "Too many premises.";
+        //cout << "Too many premises.";
         // assert(false);
         Fact current = GetPremises().GetElement(0);
         for(size_t i=1; i < numPremises-1; i++) // todo: we should reorder the facts, so we get a smaller arity at the end
