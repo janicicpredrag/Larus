@@ -24,10 +24,12 @@ vector<string> EuclidAxioms =
 {   
     "fof(proposition_test,conjecture,( ! [A,B,C] : (triangle(A,B,C) & nCol(C,A,B) => congA(A,B,C,A,C,B) ) ))",
     "fof(proposition_test2,conjecture,( ! [A,B,C] : (isosceles(A,B,C) & nCol(C,A,B) => triangle(A,B,C) ) ))",
-   
-    "fof(cn_eq1b, axiom, ! [A,B] : ( neq(A,B) | eq(A,B) ))",
-    "fof(cn_eq1c, axiom, ! [A,B] : ( neq(A,B) => neq(B,A) ))",
-    "fof(cn_eq2b, axiom, ! [A,B,C] : ( betS(A,B,C) | nbetS(A,B,C)))",
+
+    "fof(cn_eq1a, axiom, ! [A,B] : ( eq(A,B) & neq(A,B) => $false ))",
+    "fof(cn_eq1b, axiom, ! [A,B] : ( eq(A,B) | neq(A,B) ))",
+    "fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A) ))",
+    "fof(cn_eq1d, axiom, ! [A,B] : ( neq(A,B) => neq(B,A) ))",
+
     "fof(cn_equalitytransitive,axiom, ! [A,B,C] : (( eq(A,C) & eq(B,C) )  => eq(A,B)) )",
     "fof(cn_congruencetransitive,axiom, ! [B,C,D,E,P,Q] : (( cong(P,Q,B,C) & cong(P,Q,D,E) )  => cong(B,C,D,E)) )",
     "fof(cn_equalityreflexive,axiom, ! [A] : (eq(A,A)) )",
