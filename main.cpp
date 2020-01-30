@@ -83,7 +83,8 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
-        proof.Simplify();
+        if (PROVING_ENGINE != URSA_Engine)
+            proof.Simplify();
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         excoq = new ProofExport2Coq;
         excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);

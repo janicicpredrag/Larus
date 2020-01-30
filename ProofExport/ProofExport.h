@@ -12,7 +12,7 @@ public:
     ProofExport() {}
     virtual ~ProofExport() {}
 
-    void ToFile(Theory& T, const CLFormula& theorem, const string theoremName, const map<string,string> instantiation, CLProof& proof, string sFileName)
+    void ToFile(Theory& T, const CLFormula& theorem, const string theoremName, const map<string,string> instantiation, const CLProof& proof, string sFileName)
     {
         ofstream outfile;
         outfile.open (sFileName);

@@ -11,11 +11,23 @@
 
 //#define DEBUG_OUTPUT
 
+// ---------------------------------------------------------------------------------------
+
 string itos(unsigned int i)
 {
    stringstream ss;
    ss << i;
    return ss.str();
+}
+
+// ---------------------------------------------------------------------------------------
+
+string makeVarName(unsigned int v)
+{
+    if (v>20)
+        return "X_{"+itos(v)+"}";
+    else
+        return string(1,'a'+v);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -370,7 +382,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
-                    f.SetArg(i,string(1,'a'+nArgs[i]));
+                    f.SetArg(i,makeVarName(nArgs[i]));
                 // Assumptions already added
                 // proof.AddAssumption(f);
                 proofTrace.push_back(f);
@@ -379,7 +391,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
                 for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
-                    f.SetArg(i,string(1,'a'+nArgs[i]));
+                    f.SetArg(i,makeVarName(nArgs[i]));
                 proofTrace.push_back(f);
 
                 CLProof *subproof = new CLProof;
@@ -390,12 +402,8 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             else if (nAxiom == eSecondCase) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
-                for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++){
-                    if (nArgs[i]>20)
-                        f.SetArg(i,"X_{"+itos(nArgs[i])+"}");
-                    else
-                        f.SetArg(i,string(1,'a'+nArgs[i]));
-                }
+                for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,makeVarName(nArgs[i]));
                 proofTrace.push_back(f);
 
                 CLProof *subproof = new CLProof;
@@ -406,12 +414,8 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             else if (nAxiom >= eNumberOfStepKinds) {
                 Fact f;
                 f.SetName(string(sPredicates[nPredicate]));
-                for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++) {
-                    if (nArgs[i]>20)
-                        f.SetArg(i,"X_{"+itos(nArgs[i])+"}");
-                    else
-                    f.SetArg(i,string(1,'a'+nArgs[i]));
-                }
+                for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
+                    f.SetArg(i,makeVarName(nArgs[i]));
                 DNFFormula d;
                 ConjunctionFormula cfconc1, cfconc2;
                 cfconc1.Add(f);
@@ -422,12 +426,8 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                     for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
                         ss >> nArgs[i];
                     f.SetName(string(sPredicates[nPredicate]));
-                    for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++) {
-                        if (nArgs[i]>20)
-                            f.SetArg(i,"X_{"+itos(nArgs[i])+"}");
-                        else
-                            f.SetArg(i,string(1,'a'+nArgs[i]));
-                    }
+                    for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
+                        f.SetArg(i,makeVarName(nArgs[i]));
                     cfconc2.Add(f);
                     d.Add(cfconc2);
                     pcs = new CaseSplit;
