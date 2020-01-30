@@ -97,9 +97,14 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     outfile << "Theorem " << theoremName << " : ";
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
-    outfile << "intros";
-    for(map<string,string>::const_iterator it = instantiation.begin(); it != instantiation.end(); it++)
-        outfile << " " << it->second ;
+    outfile << "intros ";
+    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
+    {
+        // outfile << cl.GetUnivVar(i);
+        outfile << instantiation.find(cl.GetUnivVar(i))->second;
+        if (i < size - 1)
+            outfile << " ";
+    }
     outfile << "." << endl;
     outfile << "intros." << endl;
 }

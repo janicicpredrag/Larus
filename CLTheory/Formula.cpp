@@ -463,7 +463,7 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
     /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
     ConjunctionFormula premises;
     size_t numPremises = GetPremises().GetSize();
-    if (numPremises <= 2) {
+    if (numPremises <= 15) {
         premises = GetPremises();
     }
     else
@@ -507,7 +507,8 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
         if (numConjuncts > 1) {
             Fact current = GetGoal().GetElement(i).GetElement(0);
             for(size_t j=1; j < numConjuncts; j++)
-                disjuncts[i] = MergeFacts(current, GetGoal().GetElement(i).GetElement(j));
+               current = MergeFacts(current, GetGoal().GetElement(i).GetElement(j));
+            disjuncts[i] = current;
             for(size_t j=0; j < numConjuncts; j++) {
                 ConjunctionFormula conj;
                 conj.Add(disjuncts[i]);
@@ -516,8 +517,7 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
                 DNFFormula disj;
                 disj.Add(conj1);
                 CLFormula axiom(conj,disj);
-                for(size_t j=0; j < disjuncts[i].GetArity(); j++) // quantify only occuring variables
-                {
+                for(size_t j=0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
                     bool bAlreadyThere = false;
                     for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
                         if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
@@ -587,7 +587,7 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
 
 // ---------------------------------------------------------------------------------------
 
-Fact CLFormula::CLFormula::MergeFacts(Fact a, Fact b)
+Fact CLFormula::CLFormula::MergeFacts(const Fact a, const Fact b)
 {
     Fact f;
     f.SetName(a.GetName()+"_"+b.GetName());

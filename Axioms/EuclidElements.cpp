@@ -29,6 +29,7 @@ vector<string> EuclidAxioms =
     "fof(cn_eq1b, axiom, ! [A,B] : ( eq(A,B) | neq(A,B) ))",
     "fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A) ))",
     "fof(cn_eq1d, axiom, ! [A,B] : ( neq(A,B) => neq(B,A) ))",
+    "fof(cn_cong1b, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) | ncong(A,B,C,D) ))",
 
     "fof(cn_equalitytransitive,axiom, ! [A,B,C] : (( eq(A,C) & eq(B,C) )  => eq(A,B)) )",
     "fof(cn_congruencetransitive,axiom, ! [B,C,D,E,P,Q] : (( cong(P,Q,B,C) & cong(P,Q,D,E) )  => cong(B,C,D,E)) )",
