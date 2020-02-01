@@ -147,8 +147,10 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
                 cout << cl << endl;
             }
         }
-        else
-            return false;
+        else {
+            cout << "Not a CL formula, exiting..." << endl;
+            return false;        
+        }
     }
     
     //vector< pair<CLFormula,string> > output;
@@ -174,10 +176,10 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
 int main(int /* argc */, char** /* argv*/)
 {
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = /* test_thms */ euclids_thms1;
+    vector< pair<string, vector<string>>> case_study = /*test_thms*/  euclids_thms1;
     for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
         string thm = case_study[i].first;
-        cout << endl << " Proving " << thm << " ... ";
+        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
         if (ProveFromTPTPTheory( /*TestAxioms */ EuclidAxioms , depends, thm))
             numberProved++;
