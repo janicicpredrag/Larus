@@ -109,9 +109,6 @@ vector<string> EuclidAxioms =
     "fof(defsameside,axiom,! [ P,Q,A,B] : oS(P,Q,A,B) => ? [ X,U,V] :  ( col(A,B,U) & col(A,B,V) & betS(P,U,X) & betS(Q,V,X) & nCol(A,B,P) & nCol(A,B,Q) ) )",
     "fof(defsameside2,axiom,! [ P,Q,A,B, X,U,V] :  ( col(A,B,U) & col(A,B,V) & betS(P,U,X) & betS(Q,V,X) & nCol(A,B,P) & nCol(A,B,Q) )  => oS(P,Q,A,B))",
     "fof(defisosceles,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( triangle(A,B,C) & cong(A,B,A,C) ) )",
-    "fof(defisosceles1,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( triangle(A,B,C)  ) )",
-    "fof(defisosceles2,axiom,! [ A,B,C] : isosceles(A,B,C) =>  ( cong(A,B,A,C) ) )",
- 
     "fof(defisosceles2,axiom,! [ A,B,C] :  ( triangle(A,B,C) & cong(A,B,A,C) )  => isosceles(A,B,C))",
     "fof(defcut,axiom,! [ A,B,C,D,E] : cut(A,B,C,D,E) =>  ( betS(A,E,B) & betS(C,E,D) & nCol(A,B,C) & nCol(A,B,D) ) )",
     "fof(defcut2,axiom,! [ A,B,C,D,E] :  ( betS(A,E,B) & betS(C,E,D) & nCol(A,B,C) & nCol(A,B,D) )  => cut(A,B,C,D,E))",
