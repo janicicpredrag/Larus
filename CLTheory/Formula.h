@@ -109,7 +109,7 @@ class CLFormula
 {
 public:
     CLFormula()  {  }
-    CLFormula(ConjunctionFormula& a, DNFFormula& b)  { mA=a; mB=b; }
+    CLFormula(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
     friend ostream& operator<<(ostream& os, const CLFormula& f);
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
@@ -130,6 +130,7 @@ public:
     void ClearExistVars() {  mExistentialVars.clear(); }
 
     void Normalize(const string& name, vector< pair<CLFormula,string> >& output) const;
+    void NormalizeGoal(const string& name, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const Fact a, const Fact b);
 
 private:

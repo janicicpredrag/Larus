@@ -401,7 +401,6 @@ string ToUpper(const string& str)
 // ---------------------------------------------------------------------------------------
 
 bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t type) {
-
     size_t pos1, pos2;
     if(s.substr(0,4) != "fof(")
         return false;
@@ -586,6 +585,90 @@ void CLFormula::Normalize(const string& name, vector< pair<CLFormula,string> >& 
 }
 
 // ---------------------------------------------------------------------------------------
+
+void CLFormula::NormalizeGoal(const string& name, vector< pair<CLFormula,string> >& output) const
+{
+    unsigned count_aux = 0;
+    /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */
+    size_t numGoalDisjuncts = GetGoal().GetSize();
+    vector<Fact> disjuncts;
+    disjuncts.resize(numGoalDisjuncts);
+    for(size_t i=0; i < numGoalDisjuncts; i++) {
+        size_t numConjuncts = GetGoal().GetElement(i).GetSize();
+        if (numConjuncts > 1) {
+            Fact current = GetGoal().GetElement(i).GetElement(0);
+            for(size_t j=1; j < numConjuncts; j++)
+               current = MergeFacts(current, GetGoal().GetElement(i).GetElement(j));
+            disjuncts[i] = current;
+            ConjunctionFormula conj;
+            conj.Add(disjuncts[i]);
+            DNFFormula disj;
+            disj.Add(conj);
+            CLFormula axiom(GetGoal().GetElement(i),disj);
+            for(size_t j=0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
+                bool bAlreadyThere = false;
+                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                    if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
+                        bAlreadyThere = true;
+                if (!bAlreadyThere)
+                    axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
+            }
+            output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
+        }
+        else {
+            disjuncts[i] = GetGoal().GetElement(i).GetElement(0);
+        }
+    }
+
+    if (numGoalDisjuncts > 2) {
+        /* P => C1 | C2 | C3 gives  axioms: C1 => C12, C2 => C12... and the new goal: P => C12 */
+        Fact current = disjuncts[0];
+        for(size_t i=1; i < numGoalDisjuncts-1; i++)
+            current = MergeFacts(current, disjuncts[i]);
+        for(size_t i=0; i < numGoalDisjuncts; i++)  {
+            ConjunctionFormula conj;
+            conj.Add(disjuncts[i]);
+            ConjunctionFormula conj1;
+            conj1.Add(current);
+            DNFFormula disj;
+            disj.Add(conj1);
+            CLFormula axiom(conj,disj);
+            for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
+            {
+                bool bAlreadyThere = false;
+                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                    if (axiom.mUniversalVars[k] == current.GetArg(j))
+                        bAlreadyThere = true;
+                if (!bAlreadyThere)
+                    axiom.mUniversalVars.push_back(current.GetArg(j));
+            }
+            output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
+        }
+        ConjunctionFormula conj;
+        conj.Add(current);
+        DNFFormula goal;
+        goal.Add(conj);
+        CLFormula axiom(GetPremises(),goal);
+        axiom.mUniversalVars = mUniversalVars;
+        axiom.mExistentialVars = mExistentialVars;
+        output.push_back(pair<CLFormula,string>(axiom, name));
+    }
+    else {
+        DNFFormula goal;
+        for(size_t i=0; i < disjuncts.size(); i++) {
+            ConjunctionFormula c;
+            c.Add(disjuncts[i]);
+            goal.Add(c);
+        }
+        CLFormula cl(GetPremises(),goal);
+        cl.mUniversalVars = mUniversalVars;
+        cl.mExistentialVars = mExistentialVars;
+        output.push_back(pair<CLFormula,string>(cl,name));
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+
 
 Fact CLFormula::CLFormula::MergeFacts(const Fact a, const Fact b)
 {
