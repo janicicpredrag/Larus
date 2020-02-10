@@ -136,7 +136,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
     ursaFile << "minimize(nProofLen, 1,30);" << endl << endl;
-    //ursaFile << "nProofLen = 12;" << endl << endl;
+    //ursaFile << "nProofLen = 11;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
@@ -386,6 +386,9 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
 {
     enum StepKind { eAssumption, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
+    Fact dummy;
+    dummy.SetName("dummy");
+
     CaseSplit* pcs;
     string str;
     if (ursaproof.good())
@@ -402,21 +405,25 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             if (nAxiom == eQEDbyCases) {
                 proof.SetProofEnd(pcs);
                 // getline(ursaproof, str);  // read conclusion line for case split
+                proofTrace.push_back(dummy);
                 return true;
             }
             if (nAxiom == eQEDbyAssumption) {
                 ByAssumption* pe = new ByAssumption(formula.GetElement(0));
                 proof.SetProofEnd(pe);
+                proofTrace.push_back(dummy);
                 return true;
             }
             if (nAxiom == eQEDbyEFQ) {
                 EFQ* pe = new EFQ();
                 proof.SetProofEnd(pe);
+                proofTrace.push_back(dummy);
                 return true;
             }
             if (nAxiom == eQEDbyNegIntro) { // fixme - when eQEDbyNegIntro is supported
                 EFQ* pe = new EFQ();
                 proof.SetProofEnd(pe);
+                proofTrace.push_back(dummy);
                 return true;
             }
 
@@ -471,11 +478,12 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 d.Add(cfconc1);
 
                 if (nBranching) {
+                    Fact f;
                     ss >> nPredicate;
                     for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
                         ss >> nArgs[i];
                     f.SetName(string(sPredicates[nPredicate]));
-                    for(size_t i=0; i< mpT->mArity[sPredicates[nPredicate]]; i++)
+                    for(size_t i=0; i < mpT->mArity[sPredicates[nPredicate]]; i++)
                         f.SetArg(i,makeVarName(nArgs[i]));
                     cfconc2.Add(f);
                     d.Add(cfconc2);

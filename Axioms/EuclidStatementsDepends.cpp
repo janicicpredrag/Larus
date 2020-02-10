@@ -25,7 +25,7 @@ vector< pair<string, vector<string>>> euclids_thms_working = {
 };
 
 vector< pair<string, vector<string>>> euclids_thms = {
- 
+
  //  {"lemma_TCreflexive" , {"cn_congruencereflexive", "deftrianglecongruence", "deftrianglecongruence2",  "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
  //  {"lemma_supplementsymmetric" , {"defsupplement", "defsupplement2",  "axiom_betweennesssymmetry", "lemma_ray5", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_congruenceflip" , {"cn_equalityreverse", "lemma_congruencetransitive"} } ,
@@ -45,21 +45,23 @@ vector< pair<string, vector<string>>> euclids_thms = {
 };
 
 vector< pair<string, vector<string>>> euclids_thms1 = {
-
+//    {"proposition_01" , {"postulate_Euclid3", "lemma_inequalitysymmetric", "lemma_localextension", "lemma_congruenceflip", "cn_congruencereflexive", "defoutside", "defoutside2", "cn_equalityreflexive", "definside", "definside2a", "definside2b", "defon", "defon2",  "postulate_circle_circle", "axiom_circle_center_radius", "lemma_congruencesymmetric", "lemma_congruencetransitive", "cn_equalityreverse", "defequilateral", "defequilateral2",  "axiom_nocollapse", "lemma_partnotequalwhole", "defcollinear", "defcollinear2", "deftriangle", "deftriangle2",  "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_NCdistinct" , {"defcollinear", "defcollinear2", "lemma_inequalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
-      {"lemma_NCdistinct" , {"defcollinear", "defcollinear2", "lemma_inequalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
-//      {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-//  {"lemma_partnotequalwhole" , {"lemma_betweennotequal", "lemma_inequalitysymmetric", "postulate_Euclid2", "axiom_betweennesssymmetry", "lemma_3_7b", "lemma_extensionunique", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"  , "cn_cong1b" } }
-//  {"lemma_localextension" , {"cn_eq1c","cn_equalityreflexive", "postulate_Euclid3", "definside", "definside2a", "definside2b", "postulate_line_circle", "axiom_circle_center_radius", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
+//    {"lemma_NCdistinct" , {"defcollinear", "defcollinear2", "lemma_inequalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+//    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+//    {"lemma_partnotequalwhole" , {"lemma_betweennotequal", "lemma_inequalitysymmetric", "postulate_Euclid2", "axiom_betweennesssymmetry", "lemma_3_7b", "lemma_extensionunique", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"  , "cn_cong1b" } }
+//    {"lemma_localextension" , {"cn_equalityreflexive", "postulate_Euclid3", "definside", "definside2a", "definside2b", "postulate_line_circle", "axiom_circle_center_radius", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_ray4" , {"lemma_equalitysymmetric", "lemma_extension", "axiom_betweennesssymmetry", "axiom_innertransitivity", "defray", "defray2",  "cn_equalitysub", "lemma_3_7b", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
 //    {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
-/*
+//  {"lemma_betweennesspreserved" , {"lemma_betweennotequal", "axiom_nocollapse", "lemma_localextension", "lemma_congruencesymmetric", "cn_congruencetransitive", "axiom_5_line", "cn_equalityreflexive", "cn_equalitysub", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+// {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 
-     {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
+    {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+
+    /*
+
+  {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive" , "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_congruencetransitive" , {"lemma_congruencesymmetric", "cn_congruencetransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },

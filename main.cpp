@@ -123,12 +123,13 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
 bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
 {
     Theory T;
-    CLFormula cl, theorem;
+    CLFormula theorem;
     string statementName;
 
     for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
+            CLFormula cl;
             if (ReadTPTPStatement(theory[i], cl, statementName, 2)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
                 if (PROVING_ENGINE != URSA_Engine)
@@ -149,6 +150,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
 
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
+        CLFormula cl;
         if (ReadTPTPStatement(theory[i], cl, statementName, 2)
             && statementName == theoremName) {
             theorem = cl;
@@ -192,19 +194,22 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
 
 int main(int /* argc */, char** /* argv*/)
 {
-    // CLFormula cl;
-    // string thmName;
-    // bool r = ReadTPTPStatement("fof(axiom_congruentequal,axiom, ! [A,B,C,Ca,Cb,Cc] : (cong_3(A,B,C,Ca,Cb,Cc))  =>  (eT(A,B,C,Ca,Cb,Cc)))", cl, thmName, 2);
-    // cout << r;
+    //CLFormula cl;
+    //string thmName;
+    //bool r = ReadTPTPStatement("fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A)))", cl, thmName, 2);
+    //cout << cl << endl;
+    //cout << r << endl;
+    //vector< pair<CLFormula,string> > output;
+    //cl.NormalizeGoal(thmName, output);
     //return 0;
 
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = /*test_thms*/  euclids_thms1;
+    vector< pair<string, vector<string>>> case_study = /* test_thms */   euclids_thms1;
     for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory( /*TestAxioms */ EuclidAxioms , depends, thm))
+        if (ProveFromTPTPTheory(  /*TestAxioms */ EuclidAxioms , depends, thm))
             numberProved++;
         else
             numberNotProved++;
