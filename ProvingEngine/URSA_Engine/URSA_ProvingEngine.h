@@ -20,7 +20,7 @@ private:
     void EncodeAxiom(CLFormula& axiom, string name);
     void EncodeProof(const DNFFormula& formula);
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);
-    bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, const vector<string>& sConstants,
+    bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
                         ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof);
 
     string mURSAstringPremises;

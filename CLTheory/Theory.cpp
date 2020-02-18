@@ -64,16 +64,23 @@ int Theory::GetSymbolArity(string p)
 
 string Theory::GetNewConstant()
 {
-    miConstantsCounter++;
-    if (miConstantsCounter < 10) {
+    return GetConstantName(miConstantsCounter++);
+}
+
+// --------------------------------------------------------------
+
+string Theory::GetConstantName(unsigned id) const
+{
+    if (id < 27) {
         string s = "a";
-        s[0] += miConstantsCounter - 1;
+        s[0] += id;
         return s;
     }
     stringstream ss;
     ss << miConstantsCounter;
     return "p" + ss.str();
 }
+
 
 // --------------------------------------------------------------
 

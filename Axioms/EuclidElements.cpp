@@ -30,6 +30,9 @@ vector<string> EuclidAxioms =
     "fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A)))",
     "fof(cn_eq1d, axiom, ! [A,B] : ( neq(A,B) => neq(B,A)))",
     "fof(cn_cong1b, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) | ncong(A,B,C,D)))",
+    "fof(cn_bet1a, axiom, ! [A,B,C] : ( betS(A,B,C) & nbetS(A,B,C) => $false ))",
+    "fof(cn_bet_eq, axiom, ! [A,B,C,X,Y,Z] : ( eq(A,X) & eq(B,Y) & eq(C,Z) & betS(A,B,C) => betS(X,Y,Z)  ))",
+
 
     "fof(cn_equalitytransitive,axiom, ! [A,B,C] : (( eq(A,C) & eq(B,C))  => eq(A,B)))",
     "fof(cn_congruencetransitive,axiom, ! [B,C,D,E,P,Q] : (( cong(P,Q,B,C) & cong(P,Q,D,E))  => cong(B,C,D,E)))",
@@ -167,7 +170,9 @@ vector<string> EuclidAxioms =
     "fof(lemma_congruencesymmetric,conjecture,(  ! [A,B,C,D] : ((cong(B,C,A,D)) => (cong(A,D,B,C)))))",
     "fof(lemma_congruencetransitive,conjecture,(  ! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => (cong(A,B,E,F)))))",
     "fof(lemma_3_6a,conjecture,(  ! [A,B,C,D] : ((betS(A,B,C) & betS(A,C,D)) => (betS(B,C,D)))))",
-    "fof(lemma_betweennotequal,conjecture,(  ! [A,B,C] : ((betS(A,B,C)) => (neq(B,C) & neq(A,B) & neq(A,C)))))",
+  //  "fof(lemma_betweennotequal,conjecture,(  ! [A,B,C] : ((betS(A,B,C)) => (neq(B,C) & neq(A,B) & neq(A,C)))))",
+    "fof(lemma_betweennotequal,conjecture,(  ! [A,B,C] : ((betS(A,B,C)) => (neq(B,C)))))",
+
     "fof(lemma_extensionunique,conjecture,(  ! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F)) => (eq(E,F))))",
 
     //    "fof(lemma_extensionunique,conjecture,(  ! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F) & neq(E,F)) => $false ))",

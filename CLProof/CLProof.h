@@ -13,13 +13,14 @@ using namespace std;
 class ModusPonens;
 class CLProofEnd;
 
+typedef std::tuple< ConjunctionFormula, DNFFormula, std::string, std::vector< std::pair <std::string,std::string> >, std::vector< std::pair <std::string,std::string> > >  MP_Step;
 
 class CLProof
 {
 public:
     CLProof();
     void AddAssumption(const Fact& f);
-    void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation);
+    void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses);
     void SetProofEnd(CLProofEnd *p);
 
     void Simplify();
@@ -28,7 +29,7 @@ public:
     size_t NumOfAssumptions() const;
     const Fact& GetAssumption(size_t i) const;
     int NumOfMPs() const;
-    std::tuple < ConjunctionFormula, DNFFormula, std::string, std::vector< std::pair < std::string, std::string > > > GetMP(size_t i) const;
+    MP_Step GetMP(size_t i) const;
     const CLProofEnd* GetProofEnd() const { return mpProofEnd; }
 
     bool Relevant(const set<Fact>& relevant, const Fact& f);
@@ -39,7 +40,7 @@ public:
 private:
     CLFormula mGoal;
     vector<Fact> mAssumptions;
-    std::vector< std::tuple< ConjunctionFormula, DNFFormula, std::string, std::vector< std::pair <std::string,std::string> > > > mMPs;
+    std::vector<MP_Step> mMPs;
     CLProofEnd* mpProofEnd;
 };
 

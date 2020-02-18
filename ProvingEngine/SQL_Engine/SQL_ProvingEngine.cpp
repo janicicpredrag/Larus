@@ -78,7 +78,8 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                 vector<pair<string,string>> instantiation;
                 if (ApplyAxiom(it->first, from, mp, instantiation))
                 {
-                    proof.AddMPstep(from, mp, it->second, instantiation);
+                    vector<pair<string,string>> new_witnesses; // none in this case
+                    proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                     #ifdef DEBUG_OUTPUT
                     cout << "Non-branching, non-exi " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                     #endif
@@ -98,7 +99,8 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                     vector<pair<string,string>> instantiation;
                     if (mpDB->GetDatabaseCases()->size() == 0 && ApplyAxiom(it->first, from, mp, instantiation))
                     {
-                        proof.AddMPstep(from, mp, it->second, instantiation);
+                        vector<pair<string,string>> new_witnesses; // none in this case
+                        proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                         #ifdef DEBUG_OUTPUT
                         cout << "Branching, non-exi: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                         #endif
@@ -123,7 +125,7 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
             }
         }
 
-        if (false && !success)
+        /*if (false && !success)
         {
             if (ApplyExcludedMiddle(mp))
             {
@@ -134,7 +136,7 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                 proof.AddMPstep(from, mp, "excluded midle", instantiation);
                 success = true;
             }
-        }
+        }*/
 
         size_t l = 5;
         while (!success && l < 100)
@@ -155,7 +157,14 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         vector<pair<string,string>> instantiation;
                         if (ApplyAxiom(it->first, from, mp, instantiation))
                         {
-                            proof.AddMPstep(from, mp, it->second, instantiation);
+                            vector<pair<string,string>> new_witnesses;
+                            for (size_t j = 0; j < it->first.GetNumOfExistVars(); j++)
+                                for (size_t k = 0; k < instantiation.size(); k++)
+                                    if (it->first.GetExistVar(j) == instantiation[k].first) {
+                                        new_witnesses.push_back(pair<string,string>(instantiation[k].first, instantiation[k].second));
+                                        break;
+                                    }
+                            proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                             #ifdef DEBUG_OUTPUT
                             cout << "Non-branching, exi, with premises: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                             #endif
@@ -176,7 +185,14 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         vector<pair<string,string>> instantiation;
                         if (mpDB->GetDatabaseCases()->size() == 0 && ApplyAxiom(it->first, from, mp, instantiation))
                         {
-                            proof.AddMPstep(from, mp, it->second, instantiation);
+                            vector<pair<string,string>> new_witnesses;
+                            for (size_t j = 0; j < it->first.GetNumOfExistVars(); j++)
+                                for (size_t k = 0; k < instantiation.size(); k++)
+                                    if (it->first.GetExistVar(j) == instantiation[k].first) {
+                                        new_witnesses.push_back(pair<string,string>(instantiation[k].first, instantiation[k].second));
+                                        break;
+                                    }
+                            proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                             #ifdef DEBUG_OUTPUT
                             cout << "Branching, exi, with premises: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                             #endif
@@ -197,7 +213,14 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         vector<pair<string,string>> instantiation;
                         if (mpDB->GetDatabaseCases()->size() == 0 && ApplyAxiom(it->first, from, mp, instantiation))
                         {
-                            proof.AddMPstep(from, mp, it->second, instantiation);
+                            vector<pair<string,string>> new_witnesses;
+                            for (size_t j = 0; j < it->first.GetNumOfExistVars(); j++)
+                                for (size_t k = 0; k < instantiation.size(); k++)
+                                    if (it->first.GetExistVar(j) == instantiation[k].first) {
+                                        new_witnesses.push_back(pair<string,string>(instantiation[k].first, instantiation[k].second));
+                                        break;
+                                    }
+                            proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                             #ifdef DEBUG_OUTPUT
                             cout << "Univ var, Exi, no premises: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                             #endif
@@ -222,7 +245,14 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         vector<pair<string,string>> instantiation;
                         if (mpDB->GetDatabaseCases()->size() == 0 && ApplyAxiom(it->first, from, mp, instantiation))
                         {
-                            proof.AddMPstep(from, mp, it->second, instantiation);
+                            vector<pair<string,string>> new_witnesses;
+                            for (size_t j = 0; j < it->first.GetNumOfExistVars(); j++)
+                                for (size_t k = 0; k < instantiation.size(); k++)
+                                    if (it->first.GetExistVar(j) == instantiation[k].first) {
+                                        new_witnesses.push_back(pair<string,string>(instantiation[k].first, instantiation[k].second));
+                                        break;
+                                    }
+                            proof.AddMPstep(from, mp, it->second, instantiation, new_witnesses);
                             #ifdef DEBUG_OUTPUT
                             cout << "No univ var, Exi, no premises: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
                             #endif

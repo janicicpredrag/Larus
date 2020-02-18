@@ -51,16 +51,14 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
 //    {"lemma_NCdistinct" , {"defcollinear", "defcollinear2", "lemma_inequalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_3_6a" , {"axiom_betweennesssymmetry", "axiom_innertransitivity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_partnotequalwhole" , {"lemma_betweennotequal", "lemma_inequalitysymmetric", "postulate_Euclid2", "axiom_betweennesssymmetry", "lemma_3_7b", "lemma_extensionunique", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"  , "cn_cong1b" } }
-//    {"lemma_localextension" , {"cn_equalityreflexive", "postulate_Euclid3", "definside", "definside2a", "definside2b", "postulate_line_circle", "axiom_circle_center_radius", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+    {"lemma_localextension" , {"cn_equalityreflexive", "postulate_Euclid3", "definside", "definside2a", "definside2b", "postulate_line_circle", "axiom_circle_center_radius", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_ray4" , {"lemma_equalitysymmetric", "lemma_extension", "axiom_betweennesssymmetry", "axiom_innertransitivity", "defray", "defray2",  "cn_equalitysub", "lemma_3_7b", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
 //    {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
 //  {"lemma_betweennesspreserved" , {"lemma_betweennotequal", "axiom_nocollapse", "lemma_localextension", "lemma_congruencesymmetric", "cn_congruencetransitive", "axiom_5_line", "cn_equalityreflexive", "cn_equalitysub", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 // {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
-    {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
-    /*
-
+//   {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+//    {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d", "cn_bet1a" , "cn_bet_eq" } }
+/*
   {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive" , "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
@@ -73,7 +71,7 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
   {"lemma_betweennotequal" , { "cn_eq1c", "cn_equalitysub", "lemma_3_6a", "axiom_betweennessidentity", "axiom_innertransitivity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_betweennesspreserved" , {"lemma_betweennotequal", "axiom_nocollapse", "lemma_localextension", "lemma_congruencesymmetric", "cn_congruencetransitive", "axiom_5_line", "cn_equalityreflexive", "cn_equalitysub", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_differenceofparts" , {"cn_equalitysub", "lemma_congruencesymmetric", "axiom_nocollapse", "cn_equalityreflexive", "cn_congruencereflexive", "lemma_congruencetransitive", "axiom_betweennessidentity", "lemma_inequalitysymmetric", "lemma_localextension", "cn_equalityreverse", "axiom_betweennesssymmetry", "cn_sumofparts", "axiom_innertransitivity", "axiom_5_line", "lemma_doublereverse", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
-//  {"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
+  {"lemma_3_7a" , {"lemma_betweennotequal", "lemma_localextension", "lemma_congruencesymmetric", "lemma_3_6a", "lemma_extensionunique", "cn_equalitysub", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_3_5b" , {"axiom_innertransitivity", "lemma_3_7a", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_3_6b" , {"axiom_betweennesssymmetry", "lemma_3_5b", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_3_7b" , {"axiom_betweennesssymmetry", "lemma_3_7a", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },

@@ -7,14 +7,14 @@ ProofExport2Coq::ProofExport2Coq()
 
 }
 
+// ---------------------------------------------------------------------------------
+
 void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
     // outfile << "Theorem " << name << " : ";
-    if (cl.GetNumOfUnivVars() > 0)
-    {
+    if (cl.GetNumOfUnivVars() > 0) {
         outfile << "forall ";
-        for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        {
+        for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
             outfile << cl.GetUnivVar(i);
             if (i < size - 1)
                 outfile << " ";
@@ -22,9 +22,9 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
     }
     outfile << ", ";
     for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
-           OutputFact(outfile, cl.GetPremises().GetElement(i));
-           if(i+1<cl.GetPremises().GetSize())
-               outfile << " -> ";
+        OutputFact(outfile, cl.GetPremises().GetElement(i));
+        if(i+1<cl.GetPremises().GetSize())
+            outfile << " -> ";
     }
     if (cl.GetPremises().GetSize() != 0)
         OutputImplication(outfile);
@@ -40,7 +40,6 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
     outfile << "." << endl;
 }
 
-
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
@@ -48,12 +47,10 @@ void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
     if (f.GetName().compare("false") == 0)
         outfile << "False";
     else
-    {
         outfile << f.GetName();
-    }
-    for (size_t i=0; i<f.GetArity(); i++) {
+    for (size_t i=0; i<f.GetArity(); i++)
         outfile << " " << f.GetArg(i);
-    }
+
     //outfile << " ";
 }
 // ---------------------------------------------------------------------------------
@@ -86,7 +83,6 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     outfile <<  endl;
     outfile << "Section Euclid." << endl;
     outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
- 
 
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : ";
@@ -98,8 +94,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
     outfile << "intros ";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-    {
+    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
         // outfile << cl.GetUnivVar(i);
         outfile << instantiation.find(cl.GetUnivVar(i))->second;
         if (i < size - 1)
@@ -122,14 +117,37 @@ void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
+        vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+        if (new_witnesses.size() > 0)
+            outfile << "let Tf:=fresh in" << endl;
         outfile << "assert (";
+        if (new_witnesses.size() > 0) {
+            outfile << "Tf:exists";
+            for (size_t j = 0; j != new_witnesses.size(); j++)
+                outfile << " " << new_witnesses[j].second;
+            outfile << ", ";
+        }
+
         OutputDNF(outfile, get<1>(p.GetMP(i)));
         outfile << ") ";
-        outfile << " by applying (" << get<2>(p.GetMP(i));
+        outfile << "by applying (" << get<2>(p.GetMP(i));
         vector<pair<string,string>> inst = get<3>(p.GetMP(i));
         for (size_t j = 0, size = inst.size(); j < size; j++)
             outfile << " " << inst[j].second;
-        outfile << " )." << endl;
+        outfile << ")";
+
+        if (new_witnesses.size() > 0) {
+            outfile << "; destruct Tf as [";
+            for (size_t j = 0; j != new_witnesses.size(); j++) {
+                outfile << new_witnesses[j].second;
+                if (j < new_witnesses.size()-1)
+                    outfile << "[";
+            }
+            for (size_t j = 0; j != new_witnesses.size(); j++)
+                outfile << "]";
+            outfile << ";spliter";
+        }
+        outfile << "." << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }
@@ -153,8 +171,8 @@ void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, uns
 
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByAssumption* /* ba */, unsigned /* level*/)
 {
-  //  outfile << "from ";
-  //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
+    //  outfile << "from ";
+    //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
     outfile << "conclude." << endl;
 }
 

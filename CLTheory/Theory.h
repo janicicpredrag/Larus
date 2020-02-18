@@ -25,6 +25,7 @@ public:
 
     void AddConstant(string s);
     string GetNewConstant();
+    string GetConstantName(unsigned id) const;
     bool IsConstant(string s) const;
     size_t NumberOfConstantsWaiting();
     bool MakeNextConstantPermissible();

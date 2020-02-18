@@ -32,14 +32,14 @@ const Fact& CLProof::GetAssumption(size_t i) const
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation)
+void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses)
 {
-    mMPs.push_back(tuple < ConjunctionFormula, DNFFormula, string, vector < pair < string, string > > >(from,mp,name,instantiation));
+    mMPs.push_back(tuple < ConjunctionFormula, DNFFormula, string, vector < pair < string, string > >, vector < pair < string, string > > >(from,mp,name,instantiation, new_witnesses));
 }
 
 // ---------------------------------------------------------------------------------
 
-tuple < ConjunctionFormula, DNFFormula, string, vector < pair<string,string> > > CLProof::GetMP(size_t i) const
+MP_Step CLProof::GetMP(size_t i) const
 {
     assert(i<mMPs.size());
     return mMPs[i];
