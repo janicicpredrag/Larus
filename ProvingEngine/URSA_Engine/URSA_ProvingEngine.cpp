@@ -81,14 +81,14 @@ void URSA_ProvingEngine::EncodeAxiom(CLFormula& axiom, string name)
         }
     }
     mURSAstringAxioms += s.str();
-
-    //mCLaxioms.push_back(pair<CLFormula,string>(axiom,name));
 }
 
 // ---------------------------------------------------------------------------------------
 
 void URSA_ProvingEngine::AddPremise(const Fact& f)
 {
+    mpT->AddSymbol(f.GetName(), f.GetArity());
+
     stringstream s;
     s << "/* Premise " << f << " */" << endl;
     s << "nNesting[nPremisesCount] = 1;" << endl;
@@ -106,10 +106,17 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
     if (system(NULL)) {
+
+        if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
+            mpT->AddSymbol(formula.GetElement(0).GetElement(0).GetName(), formula.GetElement(0).GetElement(0).GetArity());
+        if (formula.GetSize()>1)
+            mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
+
         EncodeProof(formula);
         if (!system("rm sat-proof.txt")) // do not attempt to read some old proof representation
             cout << "The old file sat-proof.txt has been deleted." << endl;
-        if (system("./ursa < prove.urs -c -l8 -sminisat"))  // Find a proof
+        const string sCall = "timeout " + to_string(mTimeLimit) + " ./ursa < prove.urs -c -l8 -sminisat";
+        if (system(sCall.c_str()))  // Find a proof
             return false;
         return (DecodeProof(formula, "sat-proof.txt",  proof));
     }
@@ -126,7 +133,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
     ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
-    //ursaFile << "nProofLen = 30;" << endl << endl;
+    //ursaFile << "nProofLen = 1;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
@@ -395,7 +402,6 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
 
             if (nAxiom == eQEDbyCases) {
                 proof.SetProofEnd(pcs);
-                // getline(ursaproof, str);  // read conclusion line for case split
                 proofTrace.push_back(dummy);
                 return true;
             }

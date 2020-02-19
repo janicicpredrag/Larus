@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 10;
+const int TIME_LIMIT = 60;
 
 using namespace std;
 
@@ -83,9 +83,10 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
-        if (PROVING_ENGINE != URSA_Engine)
+        if (PROVING_ENGINE != URSA_Engine) {
             proof.Simplify();
-        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
+            ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
+        }
         excoq = new ProofExport2Coq;
         excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
         delete ex;
@@ -136,7 +137,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
                     T.AddAxiom(cl,statementName);
                 else {
                     vector< pair<CLFormula,string> > normalizedAxioms;
-                    cl.Normalize(statementName, normalizedAxioms);
+                    cl.Normalize(to_string(j+1), statementName, normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
                 }
                 found = true;
@@ -159,7 +160,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
             }
             else {
                 vector< pair<CLFormula,string> > output;
-                theorem.NormalizeGoal(theoremName, output);
+                theorem.NormalizeGoal(to_string(0), theoremName, output);
                 if (output.size()>1) {
                     for(size_t j=0; j<output.size()-1; j++)
                         T.AddAxiom(output[j].first, output[j].second);
@@ -205,7 +206,7 @@ int main(int /* argc */, char** /* argv*/)
 
     unsigned numberProved = 0, numberNotProved = 0;
     vector< pair<string, vector<string>>> case_study = /* test_thms */   euclids_thms1;
-    for (size_t i = 0, size = case_study.size(); i<size && i<50; i++) {
+    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
