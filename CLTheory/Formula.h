@@ -129,9 +129,9 @@ public:
     void ClearUnivVars() { mUniversalVars.clear(); }
     void ClearExistVars() {  mExistentialVars.clear(); }
 
-    void Normalize(const string& name, const string& prefix, vector< pair<CLFormula,string> >& output) const;
-    void NormalizeGoal(const string& name, const string& prefix, vector< pair<CLFormula,string> >& output) const;
-    static Fact MergeFacts(const string& prefix, const Fact a, const Fact b);
+    void Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
+    void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
+    static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
 private:
     ConjunctionFormula mA;

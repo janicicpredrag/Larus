@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 60;
+const int TIME_LIMIT = 30;
 
 using namespace std;
 
@@ -137,7 +137,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
                     T.AddAxiom(cl,statementName);
                 else {
                     vector< pair<CLFormula,string> > normalizedAxioms;
-                    cl.Normalize(to_string(j+1), statementName, normalizedAxioms);
+                    cl.Normalize(statementName, to_string(j+1), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
                 }
                 found = true;
@@ -160,7 +160,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
             }
             else {
                 vector< pair<CLFormula,string> > output;
-                theorem.NormalizeGoal(to_string(0), theoremName, output);
+                theorem.NormalizeGoal(theoremName, to_string(0), output);
                 if (output.size()>1) {
                     for(size_t j=0; j<output.size()-1; j++)
                         T.AddAxiom(output[j].first, output[j].second);

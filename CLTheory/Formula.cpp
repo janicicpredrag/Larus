@@ -351,6 +351,10 @@ bool Fact::Read(const string& s)
     pos2 = s.find(')',0);
     if (pos1 == string::npos || pos2 == string::npos)
         return false;
+
+    if (s.find('(',pos1+1) != string::npos)
+        return false;
+
     mName = s.substr(0, pos1);
 
     pos1++;
@@ -451,7 +455,7 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 // ---------------------------------------------------------------------------------------
 
 
-void CLFormula::Normalize(const string& name, const string& prefix, vector< pair<CLFormula,string> >& output) const
+void CLFormula::Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
 {
     unsigned count_aux = 0;
     // cout << "Premises: " << GetPremises().GetSize() << endl;
@@ -476,7 +480,7 @@ void CLFormula::Normalize(const string& name, const string& prefix, vector< pair
             conj.Add(current);
             conj.Add(GetPremises().GetElement(i));
             ConjunctionFormula conj1;
-            current = MergeFacts(prefix, current, GetPremises().GetElement(i));
+            current = MergeFacts(suffix, current, GetPremises().GetElement(i));
             conj1.Add(current);
             DNFFormula disj;
             disj.Add(conj1);
@@ -506,7 +510,7 @@ void CLFormula::Normalize(const string& name, const string& prefix, vector< pair
         if (numConjuncts > 1) {
             Fact current = GetGoal().GetElement(i).GetElement(0);
             for(size_t j=1; j < numConjuncts; j++)
-               current = MergeFacts(prefix, current, GetGoal().GetElement(i).GetElement(j));
+               current = MergeFacts(suffix, current, GetGoal().GetElement(i).GetElement(j));
             disjuncts[i] = current;
             for(size_t j=0; j < numConjuncts; j++) {
                 ConjunctionFormula conj;
@@ -544,7 +548,7 @@ void CLFormula::Normalize(const string& name, const string& prefix, vector< pair
             disj.Add(conj1);
             disj.Add(conj2);
             ConjunctionFormula conj;
-            current = MergeFacts(prefix, current, disjuncts[i]);
+            current = MergeFacts(suffix, current, disjuncts[i]);
             conj.Add(current);
             CLFormula axiom(conj,disj);
             for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
@@ -586,7 +590,7 @@ void CLFormula::Normalize(const string& name, const string& prefix, vector< pair
 
 // ---------------------------------------------------------------------------------------
 
-void CLFormula::NormalizeGoal(const string& name, const string& prefix, vector< pair<CLFormula,string> >& output) const
+void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
 {
     unsigned count_aux = 0;
     /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */
@@ -598,7 +602,7 @@ void CLFormula::NormalizeGoal(const string& name, const string& prefix, vector< 
         if (numConjuncts > 1) {
             Fact current = GetGoal().GetElement(i).GetElement(0);
             for(size_t j=1; j < numConjuncts; j++)
-               current = MergeFacts(prefix, current, GetGoal().GetElement(i).GetElement(j));
+               current = MergeFacts(suffix, current, GetGoal().GetElement(i).GetElement(j));
             disjuncts[i] = current;
             ConjunctionFormula conj;
             conj.Add(disjuncts[i]);
@@ -624,7 +628,7 @@ void CLFormula::NormalizeGoal(const string& name, const string& prefix, vector< 
         /* P => C1 | C2 | C3 gives  axioms: C1 => C12, C2 => C12... and the new goal: P => C12 */
         Fact current = disjuncts[0];
         for(size_t i=1; i < numGoalDisjuncts-1; i++)
-            current = MergeFacts(prefix, current, disjuncts[i]);
+            current = MergeFacts(suffix, current, disjuncts[i]);
         for(size_t i=0; i < numGoalDisjuncts; i++)  {
             ConjunctionFormula conj;
             conj.Add(disjuncts[i]);
@@ -670,10 +674,10 @@ void CLFormula::NormalizeGoal(const string& name, const string& prefix, vector< 
 // ---------------------------------------------------------------------------------------
 
 
-Fact CLFormula::CLFormula::MergeFacts(const string& prefix, const Fact a, const Fact b)
+Fact CLFormula::CLFormula::MergeFacts(const string& suffix, const Fact a, const Fact b)
 {
     Fact f;
-    f.SetName(prefix + a.GetName()+"_"+b.GetName());
+    f.SetName(a.GetName()+"_"+b.GetName() +"_"+ suffix);
 
     for (size_t i = 0; i<a.GetArity(); i++)
         f.SetArg(i,a.GetArg(i));
