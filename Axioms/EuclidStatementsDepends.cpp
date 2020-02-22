@@ -63,14 +63,11 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
 
 //    {"lemma_trichotomy1" , {"lemma_inequalitysymmetric", "lemma_extension", "axiom_betweennesssymmetry", "lemma_betweennotequal", "cn_congruencereflexive", "deflessthan", "deflessthan2",  "lemma_lessthancongruence", "lemma_outerconnectivity", "cn_equalitysub", "lemma_congruencetransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d", "cn_bet1a" , "cn_bet1b" } }
 
+  //  {"lemma_samenotopposite" , {"lemma_samesidesymmetric", "lemma_planeseparation", "defoppositeside", "defoppositeside2",  "axiom_betweennessidentity", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
 
-//    {"lemma_supplementsymmetric" , {"defsupplement", "defsupplement2",  "axiom_betweennesssymmetry", "lemma_ray5", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+    {"lemma_NChelper" , {"defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinear4", "lemma_inequalitysymmetric", "lemma_collinearorder", "lemma_collinear5", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d", "cn_col1b", "cn_col1a"} }
 
-  //  {"lemma_rayimpliescollinear" , {"defray", "defray2",  "lemma_betweennotequal", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinear4", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
- //   {"lemma_PGsymmetric" , {"defparallelogram", "defparallelogram2",  "lemma_parallelsymmetric", "lemma_parallelflip", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
-
-
+/*
   {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_inequalitysymmetric" , {"lemma_equalitysymmetric", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive" , "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
@@ -314,5 +311,5 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
   {"proposition_III_02" , {"lemma_radiiequal", "axiom_betweennesssymmetry", "cn_equalityreflexive", "definside", "definside2a", "definside2b", "lemma_equalitysymmetric", "cn_equalitysub", "postulate_line_circle", "deftriangle", "deftriangle2",  "defisosceles", "defisosceles2",  "proposition_05", "lemma_betweennotequal", "lemma_inequalitysymmetric", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "lemma_NCdistinct", "lemma_equalangleshelper", "lemma_equalanglessymmetric", "lemma_NCorder", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinearorder", "lemma_NChelper", "proposition_16", "lemma_ABCequalsCBA", "lemma_angleorderrespectscongruence2", "lemma_equalanglesNC", "proposition_19", "lemma_lessthancongruence", "cn_congruencereflexive", "deflessthan", "deflessthan2",  "lemma_trichotomy2", "lemma_lessthancongruence2", "axiom_circle_center_radius", "lemma_outerconnectivity", "lemma_3_6a", "axiom_betweennessidentity", "lemma_congruenceflip", "lemma_collinearmidpoint", "lemma_ondiameter", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"proposition_III_03A" , {"lemma_radiiequal", "defmidpoint", "defmidpoint2",  "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinearorder", "lemma_congruenceflip", "cn_equalitysub", "lemma_inequalitysymmetric", "defrightangle", "defrightangle2",  "lemma_congruencesymmetric", "axiom_betweennesssymmetry", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },
   {"proposition_III_03B" , {"lemma_radiiequal", "lemma_NCorder", "deftriangle", "deftriangle2",  "defisosceles", "defisosceles2",  "proposition_05", "lemma_betweennotequal", "lemma_inequalitysymmetric", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "axiom_betweennesssymmetry", "lemma_NCdistinct", "cn_equalityreflexive", "lemma_equalanglesreflexive", "lemma_equalangleshelper", "lemma_equalanglessymmetric", "lemma_equalanglestransitive", "lemma_Euclid4", "lemma_rightangleNC", "lemma_ABCequalsCBA", "cn_congruencereflexive", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinearorder", "lemma_NChelper", "proposition_26B", "lemma_congruenceflip", "defmidpoint", "defmidpoint2"} }
-
+*/
 };
