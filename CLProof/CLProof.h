@@ -73,6 +73,19 @@ private:
 };
 
 
+class ByNegIntro : public CLProofEnd
+{
+public:
+    ByNegIntro(const Fact& f) { mAssumption = f; }
+    void AddSubproof(CLProof& proof) { mSubproof = proof; }
+    const CLProof& GetSubproof() const { return mSubproof; }
+    const Fact& GetAssumption() const { return mAssumption; }
+private:
+    Fact mAssumption;
+    CLProof mSubproof;
+};
+
+
 class ByAssumption : public CLProofEnd
 {
 public:

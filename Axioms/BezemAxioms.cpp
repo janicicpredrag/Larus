@@ -3,12 +3,22 @@
 
 using namespace std;
 
+vector< pair<string, vector<string>>> test_negintro = {
+    {"goal_to_be_proved" , { "ax1", "ax2"} }
+};
+
+vector<string> TestAxiomsnegintro = {
+    "fof(ax1, axiom, ![ X ] : ( p(X) => $false))",
+    "fof(ax2, axiom, ![ X ] : ( aux(X) & r(X) => p(X)))",
+    "fof(goal_to_be_proved, conjecture, ![ X ] : (aux(X) => nr(X) ))"
+};
+
+
 vector< pair<string, vector<string>>> test_thms = {
     {"goal_to_be_proved" , { "ax1", "ax2"} }
 };
 
-vector<string> TestAxioms =
-{
+vector<string> TestAxioms = {
     "fof(ax1, axiom, ![ X ] : ( p(X) => r(X) | q(X)))",
     "fof(ax2, axiom, ![ X ] : ( q(X) => $false))",
     "fof(goal_to_be_proved, conjecture, ![ X ] : (p(X) => r(X) ))"

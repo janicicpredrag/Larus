@@ -185,6 +185,15 @@ void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, unsi
 
 // ---------------------------------------------------------------------------------
 
+void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level)
+{
+    OutputProof(outfile, bni->GetSubproof(), level+1);
+    outfile << "by NegIntro!" << endl;
+}
+
+// ---------------------------------------------------------------------------------
+
+
 
 
 

@@ -22,7 +22,7 @@ private:
     void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level);
     void OutputProofEnd(ofstream& outfile, const ByAssumption* ba, unsigned level);
     void OutputProofEnd(ofstream& outfile, const EFQ* efq, unsigned level);
-
+    void OutputProofEnd(ofstream& outfile, const ByNegIntro* /*bni*/, unsigned level);
 
 
 

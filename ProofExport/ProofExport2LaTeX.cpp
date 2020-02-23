@@ -156,6 +156,17 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, un
     outfile << "\\proofstep{" << level << "}{Proved by EFQ!}" << endl;
 }
 
+
+// ---------------------------------------------------------------------------------
+
+void ProofExport2LaTeX::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level)
+{
+    OutputProof(outfile, bni->GetSubproof(), level+1);
+    outfile << "\\proofstep{" << level << "}{Proved by NegIntro! ($";
+    OutputFact(outfile, bni-> GetAssumption());
+    outfile << "$ assumed, its negation must hold)}" << endl;
+}
+
 // ---------------------------------------------------------------------------------
 
 

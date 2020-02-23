@@ -51,6 +51,9 @@ public:
 
     void OutputProofEndGeneric(ofstream& outfile, const CLProofEnd* proofEnd, unsigned level)
     {
+        if (proofEnd == NULL)
+            return;
+
         const CaseSplit* pe = dynamic_cast<const CaseSplit*>(proofEnd);
         if(pe)
             OutputProofEnd(outfile, pe, level);
@@ -62,6 +65,12 @@ public:
                 const EFQ* efq = dynamic_cast<const EFQ*>(proofEnd);
                 if (efq)
                    OutputProofEnd(outfile, efq, level);
+                else {
+                    const ByNegIntro* bni = dynamic_cast<const ByNegIntro*>(proofEnd);
+                    if (bni)
+                       OutputProofEnd(outfile, bni, level);
+                }
+
             }
         }
     }
@@ -77,6 +86,7 @@ public:
     virtual void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const ByAssumption* ba, unsigned level) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const EFQ* efq, unsigned level) = 0;
+    virtual void OutputProofEnd(ofstream& outfile, const ByNegIntro* ni, unsigned level) = 0;
 
 };
 

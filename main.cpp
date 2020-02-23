@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 130;
+const int TIME_LIMIT = 120;
 
 using namespace std;
 
@@ -28,6 +28,9 @@ extern vector<string> EuclidAxioms;
 extern vector<string> ColAxioms;
 extern vector < pair < string, vector<string> > > test_thms;
 extern vector<string> TestAxioms;
+extern vector < pair < string, vector<string> > > test_negintro;
+extern vector<string> TestAxiomsnegintro;
+
 
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
@@ -205,12 +208,12 @@ int main(int /* argc */, char** /* argv*/)
     //return 0;
 
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = /* test_thms */   euclids_thms1;
+    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1 /*  test_negintro */;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */ EuclidAxioms , depends, thm))
+        if (ProveFromTPTPTheory(  /*TestAxioms */  EuclidAxioms   /*TestAxiomsnegintro */, depends, thm))
             numberProved++;
         else
             numberNotProved++;
