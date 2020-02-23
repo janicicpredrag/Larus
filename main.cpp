@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 120;
+const int TIME_LIMIT = 260;
 
 using namespace std;
 

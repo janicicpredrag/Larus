@@ -30,8 +30,11 @@ vector<string> EuclidAxioms =
     "fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A)))",
     "fof(cn_eq1d, axiom, ! [A,B] : ( neq(A,B) => neq(B,A)))",
     "fof(cn_cong1b, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) | ncong(A,B,C,D)))",
+    "fof(cn_cong1a, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) & ncong(A,B,C,D) => $false ))",
     "fof(cn_col1b, axiom, ! [A,B,C] : ( col(A,B,C) | nCol(A,B,C)))",
     "fof(cn_col1a, axiom, ! [A,B,C] : ( col(A,B,C) & nCol(A,B,C) => $false ))",
+    "fof(cn_lt1b, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) | nlt(A,B,C,D)))",
+    "fof(cn_lt1a, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) & nlt(A,B,C,D) => $false ))",
     "fof(cn_bet1b, axiom, ! [A,B,C] : ( betS(A,B,C) | nbetS(A,B,C)))",
     "fof(cn_bet1a, axiom, ! [A,B,C] : ( betS(A,B,C) & nbetS(A,B,C) => $false ))",
     "fof(cn_bet_eq, axiom, ! [A,B,C,X,Y,Z] : ( eq(A,X) & eq(B,Y) & eq(C,Z) & betS(A,B,C) => betS(X,Y,Z)  ))",
@@ -240,7 +243,7 @@ vector<string> EuclidAxioms =
     // trying another encoding:
     "fof(lemma_twolines2,conjecture,(  ! [A,B,C,D,P,Q] : ((neq(A,B) & neq(C,D) & col(P,A,B) & col(P,C,D) & col(Q,A,B) & col(Q,C,D)) => ((col(A,C,D) & col(B,C,D)) || eq(P,Q)))))",
     
-    "fof(lemma_supplements,conjecture,(  ! [A,B,C,D,F,Xa,Xb,Xc,Xd,Xf] : ((congA(A,B,C,Xa,Xb,Xc) & supp(A,B,C,D,F) & supp(Xa,Xb,Xc,Xd,Xf)) => (congA(D,B,F,Xd,Xb,Xf)))))",
+    "fof(lemma_supplements,conjecture,(  ! [A,B,C,D,F,Xadeflessthan,Xb,Xc,Xd,Xf] : ((congA(A,B,C,Xa,Xb,Xc) & supp(A,B,C,D,F) & supp(Xa,Xb,Xc,Xd,Xf)) => (congA(D,B,F,Xd,Xb,Xf)))))",
     "fof(lemma_supplementsymmetric,conjecture,(  ! [A,B,C,D,E] : ((supp(A,B,C,E,D)) => (supp(D,B,E,C,A)))))",
     "fof(lemma_collinearitypreserved,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((col(A,B,C) & cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & cong(B,C,Xb,Xc)) => (col(Xa,Xb,Xc)))))",
     "fof(lemma_trichotomy2,conjecture,(  ! [A,B,C,D] : ((lt(A,B,C,D)) => (nlt(C,D,A,B)))))",

@@ -218,12 +218,15 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << endl;
 
 
-    // fixme
-    ursaFile << "bHasOpposite[nNCOL] = true;"                                                                << endl;
-    ursaFile << "nOpposite[nNCOL] = nCOL;"                                                                << endl;
+    // fixme, make for a general case
+ //   ursaFile << "bHasOpposite[nNLT] = true;"                                                                << endl;
+ //   ursaFile << "nOpposite[nNLT] = nLT;"                                                                << endl;
 
     //  ursaFile << "bHasOpposite[nNR] = true;"                                                                << endl;
   //  ursaFile << "nOpposite[nNR] = nR;"                                                                << endl;
+
+//    ursaFile << "bHasOpposite[nNTS] = true;"                                                                << endl;
+//    ursaFile << "nOpposite[nNTS] = nTS;"                                                                << endl;
 
 
     ursaFile << "/* ******************* Proof specification ****************** */ "                                                                << endl;
@@ -263,8 +266,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       /* Matching disjuncts in conclusions (one or two) */ "                                                                      << endl;
     ursaFile <<"       nGoalIndex = nAxiomPremises[nAxiom]; "                                                                                      << endl;
     ursaFile <<"       bMatchConclusion = (nP[nProofStep][0]==nPredicate[nAxiom][nGoalIndex]); "                                                   << endl;
-    ursaFile <<"       for (nInd = 0; nInd < nMaxArg; nInd++) "                                                                                    << endl;
+    ursaFile <<"       for (nInd = 0; nInd < nMaxArg; nInd++) { "                                                                                    << endl;
     ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd]==nInst[nProofStep][nBinding[nAxiom][nGoalIndex*nMaxArg+nInd]]); "             << endl;
+    ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd] <= (nProofStep<<2)); "                                                        << endl;
+    ursaFile <<"       } "                                                                                                                         << endl;
+
     ursaFile <<"       b = bAxiomBranching[nAxiom] && (nP[nProofStep][1]==nPredicate[nAxiom][nGoalIndex+1]); "                                     << endl;
     ursaFile <<"       for (nInd = 0; nInd < nMaxArg; nInd++) "                                                                                    << endl;
     ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd]==nInst[nProofStep][nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd]]); "                << endl;
@@ -292,17 +298,6 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   for (nInd = 0; nInd < nMaxArg; nInd++) "                                                                                        << endl;
     ursaFile <<"      bNegIntroStep &&= (nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "                                                             << endl;
     ursaFile <<                                                                                                                                       endl;
-
-    ursaFile <<"   bMatchNegIntroEnd = false;  "                                                                                       << endl;
-    ursaFile <<"   for (nI = nProofStep; nI < nFinalStep; nI++) { "                                                                          << endl;
-    ursaFile <<"      b = ((nNesting[nProofStep] >> 1)== nNesting[nI]) "                                                                      << endl;
-    ursaFile <<"          && !bCases[nI] "                                                                                                          << endl;
-    ursaFile <<"          && nAxiomApplied[nI] == nQEDbyNegIntro; "                                                                                                          << endl;
-    ursaFile <<"      bMatchNegIntroEnd ||= b;  "                                                                                       << endl;
-    ursaFile <<"   } "                                                                                                                             << endl;
-    ursaFile <<"      bNegIntroStep &&= bMatchNegIntroEnd; "                                                             << endl;
-
-
     ursaFile <<"   bFirstCaseStep = (nAxiomApplied[nProofStep] == nFirstCase) "                                                                    << endl;
     ursaFile <<"                    && bCases[nProofStep-1] "                                                                                      << endl;
     ursaFile <<"                    && !bCases[nProofStep] "                                                                                       << endl;
