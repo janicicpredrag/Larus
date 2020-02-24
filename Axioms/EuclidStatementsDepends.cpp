@@ -61,9 +61,12 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
 //    {"lemma_extensionunique" , { "cn_eq1c", "cn_congruencereflexive", "lemma_congruencesymmetric", "axiom_5_line", "axiom_nocollapse", "cn_equalityreflexive", "cn_eq1a", /*"cn_eq1b",*/ "cn_eq1c", "cn_eq1d"} }
 //    {"lemma_samenotopposite" , {"lemma_samesidesymmetric", "lemma_planeseparation", "defoppositeside", "defoppositeside2",  "axiom_betweennessidentity" , "cn_bet1a" } }
 
-  //   {"lemma_trichotomy2" , {"deflessthan",  "lemma_congruencesymmetric", "lemma_lessthancongruence", "lemma_3_6b", "lemma_partnotequalwhole", /*"cn_lt1b" , "cn_lt1a",*/ "cn_cong1a" } }
+     {"lemma_trichotomy2" , {"deflessthan",  "lemma_congruencesymmetric", "lemma_lessthancongruence", "lemma_3_6b", "lemma_partnotequalwhole", /*"cn_lt1b" , "cn_lt1a",*/ /* "cn_cong1a"  */} }
 
   //{"lemma_collinear1" , {"defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_equalitysymmetric", "axiom_betweennesssymmetry", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} }
+
+  //  {"lemma_RTsymmetric" , {"deftworightangles", "deftworightangles2",  "lemma_supplementsymmetric", "lemma_equalanglesNC", "lemma_ABCequalsCBA", "lemma_equalanglestransitive"} }
+
 
 /*
   {"lemma_equalitysymmetric" , {"cn_equalityreflexive", "cn_equalitytransitive", "cn_eq1a", "cn_eq1b", "cn_eq1c", "cn_eq1d"} },

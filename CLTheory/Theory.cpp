@@ -49,15 +49,32 @@ void Theory::AddConstant(string s)
 
 void Theory::AddSymbol(string p, unsigned arity)
 {
-    mSignature[p] = mSignature.size()+1;
-    mArity[p] = arity;
+    // This is ugly convention: predicates with names beginning with 'n' are negated versions
+//    mSignature[p] = mSignature.size()+1;
+//    mArity[p] = arity;
+
+    for(size_t i = 0; i<mSignature.size(); i++)
+        if (mSignature[i].first == p)
+            return;
+    if (p == "false") {
+        mSignature.push_back(pair<string,unsigned>("false",0));
+    } else if (p[0] != 'n') {
+        mSignature.push_back(pair<string,unsigned>(p,arity));
+        mSignature.push_back(pair<string,unsigned>("n"+p, arity));
+    } else {
+        mSignature.push_back(pair<string,unsigned>(p.substr(1,p.size()-1),arity));
+        mSignature.push_back(pair<string,unsigned>(p,arity));
+    }
 }
 
 // --------------------------------------------------------------
 
-int Theory::GetSymbolArity(string p)
+size_t Theory::GetSymbolArity(string p)
 {
-    return mArity[p];
+    for(size_t i = 0; i<mSignature.size(); i++)
+        if (mSignature[i].first == p)
+            return mSignature[i].second;
+    return 0;
 }
 
 // --------------------------------------------------------------

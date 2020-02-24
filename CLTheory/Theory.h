@@ -15,7 +15,7 @@ class Theory {
     friend class STLProvingEngine;
 
 public:
-    Theory() { miConstantsCounter = 0; }
+    Theory() { miConstantsCounter = 0; AddSymbol("false", 0); }
 
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
@@ -31,7 +31,7 @@ public:
     bool MakeNextConstantPermissible();
 
     void AddSymbol(string p, unsigned arity);
-    int GetSymbolArity(string p);
+    size_t GetSymbolArity(string p);
 
     void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars);
     void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars);
@@ -40,8 +40,7 @@ public:
     vector< pair<CLFormula,string> > mCLaxioms;
     set<string> mConstants;
     set<string> mConstantsPermissible;
-    map<string,unsigned> mSignature;
-    map<string,unsigned> mArity;
+    vector<pair<string,unsigned>> mSignature;
 
 
 protected:

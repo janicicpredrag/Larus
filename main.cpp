@@ -208,7 +208,7 @@ int main(int /* argc */, char** /* argv*/)
     //return 0;
 
     unsigned numberProved = 0, numberNotProved = 0;
-    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1 /*  test_negintro */;
+    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
