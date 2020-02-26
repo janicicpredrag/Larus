@@ -112,6 +112,10 @@ void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
     outfile <<  "End Euclid." << endl;
 }
 
+std::string Indent(unsigned level)
+{
+    return (std::string(3*level, ' '));
+}
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
@@ -119,8 +123,8 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
         if (new_witnesses.size() > 0)
-            outfile << "let Tf:=fresh in" << endl;
-        outfile << "assert (";
+            outfile << Indent(level) << "let Tf:=fresh in" << endl;
+        outfile << Indent(level) << "assert (";
         if (new_witnesses.size() > 0) {
             outfile << "Tf:exists";
             for (size_t j = 0; j != new_witnesses.size(); j++)
@@ -156,31 +160,31 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level)
 {
-    outfile << "by cases on (";
+    outfile << Indent(level) << "by cases on (";
     OutputDNF(outfile, cs->GetCases());
     outfile << ")." << endl;
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
-        outfile << "- {" << endl;
+        outfile << Indent(level) << "- {" << endl;
         OutputProof(outfile, cs->GetSubproof(i), level+1);
-        outfile << "  }" << endl;
+        outfile << Indent(level) << "  }" << endl;
     }
     // outfile << "' have ?thesis by auto" << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByAssumption* /* ba */, unsigned /* level*/)
+void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByAssumption* /* ba */, unsigned level)
 {
     //  outfile << "from ";
     //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
-    outfile << "conclude." << endl;
+    outfile << Indent(level) << "conclude." << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, unsigned /*level*/)
+void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, unsigned level)
 {
-    outfile << "contradict. " << endl;
+    outfile << Indent(level) << "contradict. " << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -188,7 +192,7 @@ void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, unsi
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level)
 {
     OutputProof(outfile, bni->GetSubproof(), level+1);
-    outfile << "by NegIntro!" << endl;
+    outfile << Indent(level) << "contradiction." << endl;
 }
 
 // ---------------------------------------------------------------------------------
