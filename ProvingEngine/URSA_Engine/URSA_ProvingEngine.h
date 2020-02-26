@@ -1,6 +1,7 @@
 #ifndef SATPROVINGENGINE_H
 #define SATPROVINGENGINE_H
 
+#include <string>
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "ProvingEngine/ProvingEngine.h"

@@ -25,18 +25,19 @@ vector<string> EuclidAxioms =
     "fof(proposition_test,conjecture,( ! [A,B,C] : (triangle(A,B,C) & nCol(C,A,B) => congA(A,B,C,A,C,B))))",
     "fof(proposition_test2,conjecture,( ! [A,B,C] : (isosceles(A,B,C) & nCol(C,A,B) => triangle(A,B,C))))",
 
-    "fof(cn_eq1a, axiom, ! [A,B] : ( eq(A,B) & neq(A,B) => $false ))",
+    //"fof(cn_eq1a, axiom, ! [A,B] : ( eq(A,B) & neq(A,B) => $false ))",
+    //"fof(cn_col1a, axiom, ! [A,B,C] : ( col(A,B,C) & nCol(A,B,C) => $false ))",
+    //"fof(cn_cong1a, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) & ncong(A,B,C,D) => $false ))",
+    //"fof(cn_bet1a, axiom, ! [A,B,C] : ( betS(A,B,C) & nbetS(A,B,C) => $false ))",
+
     "fof(cn_eq1b, axiom, ! [A,B] : ( eq(A,B) | neq(A,B)))",
     "fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A)))",
     "fof(cn_eq1d, axiom, ! [A,B] : ( neq(A,B) => neq(B,A)))",
     "fof(cn_cong1b, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) | ncong(A,B,C,D)))",
-    "fof(cn_cong1a, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) & ncong(A,B,C,D) => $false ))",
     "fof(cn_col1b, axiom, ! [A,B,C] : ( col(A,B,C) | nCol(A,B,C)))",
-    "fof(cn_col1a, axiom, ! [A,B,C] : ( col(A,B,C) & nCol(A,B,C) => $false ))",
     "fof(cn_lt1b, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) | nlt(A,B,C,D)))",
     "fof(cn_lt1a, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) & nlt(A,B,C,D) => $false ))",
     "fof(cn_bet1b, axiom, ! [A,B,C] : ( betS(A,B,C) | nbetS(A,B,C)))",
-    "fof(cn_bet1a, axiom, ! [A,B,C] : ( betS(A,B,C) & nbetS(A,B,C) => $false ))",
     "fof(cn_bet_eq, axiom, ! [A,B,C,X,Y,Z] : ( eq(A,X) & eq(B,Y) & eq(C,Z) & betS(A,B,C) => betS(X,Y,Z)  ))",
 
 

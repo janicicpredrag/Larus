@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 260;
+const int TIME_LIMIT = 500;
 
 using namespace std;
 
@@ -152,6 +152,8 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         }
     }
 
+    T.AddNegAxioms();
+
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
@@ -251,23 +253,10 @@ assert (neq b c)  by applying (lemma_betweennotequal_aux_0 b c a ).
 b c a should go in the same order as corresponding variables in
 the axiom?
 
->(I think variables which have been introduced on the
-> go using an existential lemma were missing).
-
-
->     Can the name HX be recycled within one proof:
->       > let HX := fresh in
->     ?
->
-> This means : let HX be a fresh name in the current context ! so the same
-> HX can be reused, it will be instantiated by Coq using a fresh name.
-
 >     We also need some support for equalities. Do you explicitely
 >     state properties of equalities in the proofs?
 >
 > In the euclids proofs, as soon as we know a=b we can substitute a for b
 > in the assumptions and the goal.... this is maybe hard to implement in ursa.
 
-I have an idea how to implemente neg-Intro. And then I should
-normalize goals. And then we might be able to prove more theorems..
 */

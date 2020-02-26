@@ -11,6 +11,11 @@ void Theory::SetAxioms(vector<pair<CLFormula,string>>& axioms)
 
 void Theory::AddAxiom(CLFormula& axiom, string name)
 {
+    for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++)
+        AddSymbol(axiom.GetPremises().GetElement(j).GetName(), axiom.GetPremises().GetElement(j).GetArity());
+    for (size_t j = 0; j < axiom.GetGoal().GetSize(); j++)
+        for (size_t k = 0; k < axiom.GetGoal().GetElement(j).GetSize(); k++)
+            AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(), axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
     mCLaxioms.push_back(pair<CLFormula,string>(axiom,name));
 }
 
@@ -20,7 +25,40 @@ void Theory::AddAxiom(CLFormula& axiom, string name)
 void Theory::AddAxioms(vector< pair<CLFormula,string> >& axioms)
 {
     for (size_t i=0; i<axioms.size(); i++)
-        mCLaxioms.push_back(axioms[i]);
+        AddAxiom(axioms[i].first, axioms[i].second);
+}
+
+
+// --------------------------------------------------------------
+
+void Theory::AddNegAxioms()
+{
+    // add the axiom  R(...) & nR(...) => false for every predicate symbol
+    for (size_t i=1; i < mSignature.size(); i+=2) {
+
+        // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
+        if (mSignature[i].first.find('_',0) != string::npos)
+            continue;
+
+        ConjunctionFormula premises;
+        DNFFormula conclusion;
+        ConjunctionFormula conc0;
+        Fact a,b;
+        // ugly convention: in the signature R and nR go one after another
+        a.SetName(mSignature[i].first);
+        for (size_t j=0; j < mSignature[i].second; j++)
+            a.SetArg(j,string(1,'A'+j));
+        premises.Add(a);
+        a.SetName(mSignature[i+1].first);
+        premises.Add(a);
+        b.SetName("false");
+        conc0.Add(b);
+        conclusion.Add(conc0);
+        CLFormula axiom(premises,conclusion);
+        for (size_t j=0; j < mSignature[i].second; j++)
+            axiom.AddUnivVar(string(1,'A'+j));
+        AddAxiom(axiom, mSignature[i].first+"_neg_elim");
+    }
 }
 
 
