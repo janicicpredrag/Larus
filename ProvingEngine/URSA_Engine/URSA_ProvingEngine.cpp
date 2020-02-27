@@ -38,13 +38,13 @@ void URSA_ProvingEngine::SetStartTimeAndLimit(clock_t& startTime, unsigned timeL
 
 // ---------------------------------------------------------------------------------------
 
-void URSA_ProvingEngine::EncodeAxiom(CLFormula& axiom, string name)
+void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
 {
     stringstream s;
 
     s << endl;
     s << "nAxiomsCount++;" << endl;
-    s << "/* ***** Axiom " << axiom << " (axiom name: " << name << ") ***** */ "                                          << endl;
+    s << "/* " << no << ". ***** Axiom " << axiom << " (axiom name: " << name << ") ***** */ "                                          << endl;
     s << "nAxiomUniVars[nAxiomsCount]         = " << axiom.GetNumOfUnivVars() << "; /* number of univ quantifiers */"      << endl;
     s << "nAxiomExiVars[nAxiomsCount]         = " << axiom.GetNumOfExistVars() << "; /* number of exi quantifiers */"      << endl;
     s << "nAxiomPremises[nAxiomsCount]        = " << axiom.GetPremises().GetSize() << "; /* number of premises         */" << endl;
@@ -131,11 +131,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
     ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
-    //ursaFile << "nProofLen = 5;" << endl << endl;
+    //ursaFile << "nProofLen = 13;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
-        EncodeAxiom(it->first, it->second);
+        EncodeAxiom(it-mpT->mCLaxioms.begin(), it->first, it->second);
 
     unsigned nMaxArity = 0;
     unsigned enumerator = 0;

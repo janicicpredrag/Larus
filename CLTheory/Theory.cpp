@@ -31,11 +31,10 @@ void Theory::AddAxioms(vector< pair<CLFormula,string> >& axioms)
 
 // --------------------------------------------------------------
 
-void Theory::AddNegAxioms()
+void Theory::AddNegElimAxioms()
 {
     // add the axiom  R(...) & nR(...) => false for every predicate symbol
     for (size_t i=1; i < mSignature.size(); i+=2) {
-
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
@@ -61,6 +60,142 @@ void Theory::AddNegAxioms()
     }
 }
 
+// --------------------------------------------------------------
+
+void Theory::AddExcludedMiddleAxioms()
+{
+    // add the axiom  R(...) | nR(...) for every predicate symbol
+    for (size_t i=1; i < mSignature.size(); i+=2) {
+        // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
+        if (mSignature[i].first.find('_',0) != string::npos)
+            continue;
+
+        ConjunctionFormula premises;
+        DNFFormula conclusion;
+        ConjunctionFormula conc0, conc1;
+        Fact a,b;
+        // ugly convention: in the signature R and nR go one after another
+        a.SetName(mSignature[i].first);
+        for (size_t j=0; j < mSignature[i].second; j++)
+            a.SetArg(j,string(1,'A'+j));
+        conc0.Add(a);
+        b.SetName(mSignature[i+1].first);
+        for (size_t j=0; j < mSignature[i].second; j++)
+            b.SetArg(j,string(1,'A'+j));
+        conc1.Add(b);
+        conclusion.Add(conc0);
+        conclusion.Add(conc1);
+        CLFormula axiom(premises,conclusion);
+        for (size_t j=0; j < mSignature[i].second; j++)
+            axiom.AddUnivVar(string(1,'A'+j));
+        AddAxiom(axiom, mSignature[i].first+"_excluded_middle");
+    }
+}
+
+
+// --------------------------------------------------------------
+
+void Theory::AddEqSubAxioms()
+{
+    // add the axiom  eq(A,B) & R(..A..) => R(..B..) false for every predicate symbol
+    for (size_t i=1; i < mSignature.size(); i++) {
+        // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
+        if (mSignature[i].first.find('_',0) != string::npos)
+            continue;
+
+        for (size_t j=0; j < mSignature[i].second; j++) {
+            ConjunctionFormula premises;
+            DNFFormula conclusion;
+            ConjunctionFormula conc0;
+            Fact a,b,c;
+            a.SetName("eq"); // This is ugly: it is assumed that equality is denoted eq
+            a.SetArg(0,string(1,'A'+j));
+            a.SetArg(1,"X");
+            premises.Add(a);
+            b.SetName(mSignature[i].first);
+            for (size_t k=0; k < mSignature[i].second; k++)
+                b.SetArg(k,string(1,'A'+k));
+            premises.Add(b);
+            c.SetName(mSignature[i].first);
+            for (size_t k=0; k < mSignature[i].second; k++)
+                c.SetArg(k, string(1,'A'+k));
+            c.SetArg(j,"X");
+            conc0.Add(c);
+            conclusion.Add(conc0);
+            CLFormula axiom(premises,conclusion);
+            for (size_t k=0; k < mSignature[i].second; k++)
+                axiom.AddUnivVar(string(1,'A'+k));
+            axiom.AddUnivVar("X");
+            AddAxiom(axiom, mSignature[i].first+"_EqSub_"+to_string(j));
+        }
+    }
+}
+
+
+// --------------------------------------------------------------
+
+void Theory::AddAxiomEqSymm()
+{
+    ConjunctionFormula premises;
+    DNFFormula conclusion;
+    ConjunctionFormula conc0;
+    Fact a,b;
+    a.SetName("eq"); // This is ugly: it is assumed that equality is denoted eq
+    a.SetArg(0,"A");
+    a.SetArg(1,"B");
+    premises.Add(a);
+    b.SetName("eq");
+    b.SetArg(0,"B");
+    b.SetArg(1,"A");
+    conc0.Add(b);
+    conclusion.Add(conc0);
+    CLFormula axiom(premises,conclusion);
+    axiom.AddUnivVar("A");
+    axiom.AddUnivVar("B");
+    AddAxiom(axiom, "EqSymmetric");
+}
+
+// --------------------------------------------------------------
+
+void Theory::AddAxiomNEqSymm()
+{
+    ConjunctionFormula premises;
+    DNFFormula conclusion;
+    ConjunctionFormula conc0;
+    Fact a,b;
+    a.SetName("neq"); // This is ugly: it is assumed that equality is denoted eq
+    a.SetArg(0,"A");
+    a.SetArg(1,"B");
+    premises.Add(a);
+    b.SetName("neq");
+    b.SetArg(0,"B");
+    b.SetArg(1,"A");
+    conc0.Add(b);
+    conclusion.Add(conc0);
+    CLFormula axiom(premises,conclusion);
+    axiom.AddUnivVar("A");
+    axiom.AddUnivVar("B");
+    AddAxiom(axiom, "NEqSymmetric");
+}
+
+
+// --------------------------------------------------------------
+
+void Theory::AddAxiomEqReflexive()
+{
+    ConjunctionFormula premises;
+    DNFFormula conclusion;
+    ConjunctionFormula conc0;
+    Fact b;
+    b.SetName("eq");
+    b.SetArg(0,"A");
+    b.SetArg(1,"A");
+    conc0.Add(b);
+    conclusion.Add(conc0);
+    CLFormula axiom(premises,conclusion);
+    axiom.AddUnivVar("A");
+    AddAxiom(axiom, "EqReflexive");
+}
 
 // --------------------------------------------------------------
 

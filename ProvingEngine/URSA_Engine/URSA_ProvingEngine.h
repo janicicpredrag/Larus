@@ -18,7 +18,7 @@ public:
     virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit);
 
 private:
-    void EncodeAxiom(CLFormula& axiom, string name);
+    void EncodeAxiom(size_t no, CLFormula& axiom, string name);
     void EncodeProof(const DNFFormula& formula);
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);
     bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,

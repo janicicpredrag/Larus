@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 500;
+const int TIME_LIMIT = 60;
 
 using namespace std;
 
@@ -152,7 +152,12 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         }
     }
 
-    T.AddNegAxioms();
+    T.AddAxiomEqSymm();
+    T.AddAxiomNEqSymm();
+    T.AddAxiomEqReflexive();
+    T.AddNegElimAxioms();
+    T.AddExcludedMiddleAxioms();
+    T.AddEqSubAxioms();
 
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
@@ -260,3 +265,4 @@ the axiom?
 > in the assumptions and the goal.... this is maybe hard to implement in ursa.
 
 */
+
