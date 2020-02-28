@@ -156,9 +156,10 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
     T.AddNegElimAxioms();
-    T.AddExcludedMiddleAxioms();
+    T.AddEqExcludedMiddleAxiom();
+ /*   T.AddExcludedMiddleAxioms();
     T.AddEqSubAxioms();
-
+*/
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;

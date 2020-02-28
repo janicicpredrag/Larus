@@ -36,8 +36,9 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
     }
     OutputDNF(outfile, cl.GetGoal());
     if (cl.GetNumOfExistVars() > 0)
-        outfile << ")" << endl;
-    outfile << "." << endl;
+        outfile << ")";
+    outfile << ".";
+    outfile << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -191,8 +192,15 @@ void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, unsi
 
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level)
 {
+    outfile << Indent(level) << "assert (~ ";
+    OutputFact(outfile, bni->GetAssumption());
+    outfile <<  ")." << endl;
+    outfile << Indent(level+1) << "{" << endl;
+    outfile << Indent(level+1) << "intro." << endl;
     OutputProof(outfile, bni->GetSubproof(), level+1);
-    outfile << Indent(level) << "contradiction." << endl;
+    outfile << Indent(level+1) << "contradict." << endl;
+    outfile << Indent(level+1) << "}" << endl;
+    outfile << Indent(level) << "close." << endl;
 }
 
 // ---------------------------------------------------------------------------------

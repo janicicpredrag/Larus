@@ -256,22 +256,22 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       bMatchConclusion = (nP[nProofStep][0]==nPredicate[nAxiom][nGoalIndex]); "                                                   << endl;
     ursaFile <<"       for (nInd = 0; nInd < nMaxArg; nInd++) { "                                                                                  << endl;
     ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd]==nInst[nProofStep][nBinding[nAxiom][nGoalIndex*nMaxArg+nInd]]); "             << endl;
- //   ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd] <= (nProofStep<<3)); "                                                        << endl;
+    ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd] < ((nProofStep+2)<<3)); "                                                        << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
 
     ursaFile <<"       b = bAxiomBranching[nAxiom] && (nP[nProofStep][1]==nPredicate[nAxiom][nGoalIndex+1]); "                                     << endl;
     ursaFile <<"       for (nInd = 0; nInd < nMaxArg; nInd++) { "                                                                                  << endl;
     ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd]==nInst[nProofStep][nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd]]); "                << endl;
-//    ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd] <= (nProofStep<<3)); "                                                << endl;
+    ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd] < ((nProofStep+2)<<3)); "                                                << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile <<"       bMatchConclusion &&= ((!bAxiomBranching[nAxiom] && !bCases[nProofStep]) || (bCases[nProofStep] && b)); "                    << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"       /* Introducing fresh constants if the axioms used has existential quantifiers */ "                                          << endl;
     ursaFile <<"       bMatchExiQuantifiers = true; "                                                                                              << endl;
     ursaFile <<"       for (nL=0; nL<nAxiomExiVars[nAxiom]; nL++) { "                                                                              << endl;
-    ursaFile <<"           /* The id of a new constant is (nProofStep<<2) + nL, ie. 4*nProofStep+nL - so they don't overlap, "                     << endl;
+    ursaFile <<"           /* The id of a new constant is (nProofStep<<2) + nL, ie. 8*nProofStep+nL - so they don't overlap, "                     << endl;
     ursaFile <<"              unless some axioms introduces >4 witnesses */ "                                                                      << endl;
-    ursaFile <<"           bMatchExiQuantifiers &&= nInst[nProofStep][nAxiomUniVars[nAxiom]+nL] == (nProofStep<<3) + nL;  /* fresh constants */ "  << endl;
+    ursaFile <<"           bMatchExiQuantifiers &&= nInst[nProofStep][nAxiomUniVars[nAxiom]+nL] == ((nProofStep+1)<<3) + nL;  /* fresh constants */ "  << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile                                                                                                                                       << endl;
     ursaFile <<"       /* The MP proof step is correct if it was derived by using some axiom  */ "                                                 << endl;

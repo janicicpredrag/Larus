@@ -20,11 +20,12 @@ public:
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
     void AddAxioms(vector< pair<CLFormula,string> >& axioms);
-    void AddNegElimAxioms();
-    void AddExcludedMiddleAxioms();
     void AddAxiomEqSymm();
     void AddAxiomNEqSymm();
     void AddAxiomEqReflexive();
+    void AddEqExcludedMiddleAxiom(); // this one is redundant if AddExcludedMiddleAxioms() is used
+    void AddNegElimAxioms();
+    void AddExcludedMiddleAxioms();
     void AddEqSubAxioms();
     size_t NumberOfAxioms() const;
     const pair<CLFormula,string>& Axiom(size_t i) const;

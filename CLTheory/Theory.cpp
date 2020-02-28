@@ -60,6 +60,7 @@ void Theory::AddNegElimAxioms()
     }
 }
 
+
 // --------------------------------------------------------------
 
 void Theory::AddExcludedMiddleAxioms()
@@ -92,6 +93,30 @@ void Theory::AddExcludedMiddleAxioms()
     }
 }
 
+// --------------------------------------------------------------
+
+void Theory::AddEqExcludedMiddleAxiom()
+{
+    ConjunctionFormula premises;
+    DNFFormula conclusion;
+    ConjunctionFormula conc0, conc1;
+    Fact a,b;
+    // ugly convention: in the signature R and nR go one after another
+    a.SetName("eq");
+    a.SetArg(0,"A");
+    a.SetArg(1,"B");
+    conc0.Add(a);
+    b.SetName("neq");
+    b.SetArg(0,"A");
+    b.SetArg(1,"B");
+    conc1.Add(b);
+    conclusion.Add(conc0);
+    conclusion.Add(conc1);
+    CLFormula axiom(premises,conclusion);
+    axiom.AddUnivVar("A");
+    axiom.AddUnivVar("B");
+    AddAxiom(axiom, "eq_excluded_middle");
+}
 
 // --------------------------------------------------------------
 
