@@ -7,16 +7,16 @@ using namespace std;
 
 vector<string> ColAxioms =
 {   
-     "fof(col_swap1, axiom, ! [A,B,C] : col(A,B,C) => col(B,A,C))",
-     "fof(col_swap2, axiom, ! [A,B,C] : col(A,B,C) => col(B,C,A))",
+     "fof(col_swap1, axiom, ! [A,B,C] : (col(A,B,C) => col(B,A,C)))",
+     "fof(col_swap2, axiom, ! [A,B,C] : (col(A,B,C) => col(B,C,A)))",
      "fof(col_triv, axiom, ! [A,B] : col(A,B,B))",
 //     "fof(neq_swap, axiom, ! [A,B] : neq(A,B) => neq(B,A))",
-     "fof(col_trans, axiom, ! [P,Q,A,B,C] : neq(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C) => col(A,B,C))",
+     "fof(col_trans, axiom, ! [P,Q,A,B,C] : ((neq(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C)) => col(A,B,C)))",
 //     "fof(col_trans1, axiom, ! [P,Q,A,B,C] : neqcol(P,Q,A) & colcol(P,Q,B,C) => col(A,B,C))",
 //     "fof(col_trans_aux1, axiom, ! [P,Q,A] : neq(P,Q) & col(P,Q,A) => neqcol(P,Q,A))",
 //     "fof(col_trans_aux2, axiom, ! [P,Q,B,C] : col(P,Q,B) & col(P,Q,C) => colcol(P,Q,B,C))",
-     "fof(ex1, conjecture, ! [A,B,C,D] : neq(A,B) & col(A,B,C) & col(A,B,D) => col(A,C,D))",
-     "fof(ex2, conjecture, ![X , A , B , C , U , V ] : neq(A,B) & neq(C,X) & neq(B,X) & col(X,A,B) & col(X, C, X) & col(U,A,B) & col(V,C,X) => col(U, B, X))"
+     "fof(ex1, conjecture, ! [A,B,C,D] : ((neq(A,B) & col(A,B,C) & col(A,B,D)) => col(A,C,D)))",
+     "fof(ex2, conjecture, ![X , A , B , C , U , V ] : ((neq(A,B) & neq(C,X) & neq(B,X) & col(X,A,B) & col(X, C, X) & col(U,A,B) & col(V,C,X)) => col(U, B, X)))"
 
 };
 
@@ -36,9 +36,9 @@ vector<string> EuclidAxioms =
     "fof(cn_cong1b, axiom, ! [A,B,C,D] : ( cong(A,B,C,D) | ncong(A,B,C,D)))",
     "fof(cn_col1b, axiom, ! [A,B,C] : ( col(A,B,C) | nCol(A,B,C)))",
     "fof(cn_lt1b, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) | nlt(A,B,C,D)))",
-    "fof(cn_lt1a, axiom, ! [A,B,C,D] : ( lt(A,B,C,D) & nlt(A,B,C,D) => $false ))",
+    "fof(cn_lt1a, axiom, ! [A,B,C,D] : ( (lt(A,B,C,D) & nlt(A,B,C,D)) => $false ))",
     "fof(cn_bet1b, axiom, ! [A,B,C] : ( betS(A,B,C) | nbetS(A,B,C)))",
-    "fof(cn_bet_eq, axiom, ! [A,B,C,X,Y,Z] : ( eq(A,X) & eq(B,Y) & eq(C,Z) & betS(A,B,C) => betS(X,Y,Z)  ))",
+    "fof(cn_bet_eq, axiom, ! [A,B,C,X,Y,Z] : ( (eq(A,X) & eq(B,Y) & eq(C,Z) & betS(A,B,C)) => betS(X,Y,Z)  ))",
 
 
     "fof(cn_equalitytransitive,axiom, ! [A,B,C] : (( eq(A,C) & eq(B,C))  => eq(A,B)))",
@@ -62,12 +62,12 @@ vector<string> EuclidAxioms =
     "fof(postulate_Pasch_inner, axiom, ! [A,B,C,P,Q] : (( betS(A,P,C) & betS(B,Q,C) & nCol(A,C,B))  => ? [X] : ( ( betS(A,X,Q) & betS(B,X,P)))))",
     "fof(postulate_Pasch_outer,axiom, ! [A,B,C,P,Q] : (( betS(A,P,C) & betS(B,C,Q) & nCol(B,Q,A))  => ? [X] : ( ( betS(A,X,Q) & betS(B,P,X)))))",
     "fof(postulate_Euclid2,axiom, ! [A,B] : ( neq(A,B)   => ? [X] : ( betS(A,B,X))))",
-    "fof(postulate_Euclid3,axiom, ! [A,B] : ( neq(A,B))  => ? [X] : ( ( cI(X,A,A,B))))",
-    "fof(postulate_line_circle,axiom, ! [A,B,C,K,P,Q] : ( cI(K,C,P,Q) & inCirc(B,K) & neq(A,B))  => ? [X,Y] : ( ( col(A,B,X) & betS(A,B,Y) & onCirc(X,K) & onCirc(Y,K) & betS(X,B,Y))))",
-    "fof(postulate_circle_circle,axiom, ! [C,D,F,G,J,K,P,Q,R,S] : ( cI(J,C,R,S) & inCirc(P,J) & outCirc(Q,J) & cI(K,D,F,G) & onCirc(P,K) & onCirc(Q,K))  => ? [X] : ( ( onCirc(X,J) & onCirc(X,K))))",
+    "fof(postulate_Euclid3,axiom, ! [A,B] : ( neq(A,B)  => ? [X] : ( ( cI(X,A,A,B)))))",
+    "fof(postulate_line_circle,axiom, ! [A,B,C,K,P,Q] : (( cI(K,C,P,Q) & inCirc(B,K) & neq(A,B))  => ? [X,Y] : ( ( col(A,B,X) & betS(A,B,Y) & onCirc(X,K) & onCirc(Y,K) & betS(X,B,Y)))))",
+    "fof(postulate_circle_circle,axiom, ! [C,D,F,G,J,K,P,Q,R,S] : (( cI(J,C,R,S) & inCirc(P,J) & outCirc(Q,J) & cI(K,D,F,G) & onCirc(P,K) & onCirc(Q,K))  => ? [X] : ( ( onCirc(X,J) & onCirc(X,K)))))",
     "fof(postulate_Euclid5,axiom, ! [Ca,P,Q,R,S,T] : (( betS(R,T,S) & betS(P,T,Q) & betS(R,Ca,Q) & cong(P,T,Q,T) & cong(T,R,T,S) & nCol(P,Q,S))  => ? [X] : ( ( betS(P,Ca,X) & betS(S,Q,X)))))",
     "fof(axiom_circle_center_radius,axiom, ! [A,B,C,J,P] : (( cI(J,A,B,C) & onCirc(P,J))  =>  ( cong(A,P,B,C))))",
-    "fof(axiom_congruentequal,axiom, ! [A,B,C,Ca,Cb,Cc] : (cong_3(A,B,C,Ca,Cb,Cc))  =>  (eT(A,B,C,Ca,Cb,Cc)))",
+    "fof(axiom_congruentequal,axiom, ! [A,B,C,Ca,Cb,Cc] : (cong_3(A,B,C,Ca,Cb,Cc)  =>  eT(A,B,C,Ca,Cb,Cc)))",
 //"fof(axiom_ETpermutation,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(A,Bsub,C,Cb,Cc,Ca) & eT(A,B,C,Ca,Cc,Cb) & eT(A,B,C,Cb,Ca,Cc) & eT(A,B,C,Cc,Cb,Ca) & eT(A,B,C,Cc,Ca,Cb))))",
 //"fof(axiom_ETsymmetric,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(Ca,Cb,Cc,A,B,C))))",
 //"fof(axiom_EFpermutation,axiom, ! [A,B,C,D,Ca,Cb,Cc,Cd] : (( eF(A,B,C,D,Ca,Cb,Cc,Cd))  =>  ( eF(A,B,C,D,Cb,Cc,Cd,Ca) & eF(A,B,C,D,Cd,Cc,Cb,Ca) & eF(A,B,C,D,Cc,Cd,Ca,Cb) & eF(A,B,C,D,Cb,Ca,Cd,Cc) & eF(A,B,C,D,Cd,Ca,Cb,Cc) & eF(A,B,C,D,Cc,Cb,Ca,Cd) & eF(A,B,C,D,Ca,Cd,Cc,Cb))))",
@@ -94,11 +94,11 @@ vector<string> EuclidAxioms =
     "fof(defcollinear2e,axiom,! [ A,B,C] :  ( betS(A,B,C) => col(A,B,C)))",
     "fof(defcollinear2f,axiom,! [ A,B,C] :  ( betS(A,C,B) => col(A,B,C)))",
 
-    "fof(defnoncollinear,axiom,! [ A,B,C] : nCol(A,B,C) =>  ( neq(A,B) & neq(A,C) & neq(B,C) & nbetS(A,B,C) & nbetS(A,C,B) & nbetS(B,A,C)))",
-    "fof(defnoncollinear2,axiom,! [ A,B,C] :  ( neq(A,B) & neq(A,C) & neq(B,C) & nbetS(A,B,C) & nbetS(A,C,B) & nbetS(B,A,C))  => nCol(A,B,C))",
+    "fof(defnoncollinear,axiom,! [ A,B,C] : (nCol(A,B,C) =>  ( neq(A,B) & neq(A,C) & neq(B,C) & nbetS(A,B,C) & nbetS(A,C,B) & nbetS(B,A,C))))",
+    "fof(defnoncollinear2,axiom,! [ A,B,C] : ( ( neq(A,B) & neq(A,C) & neq(B,C) & nbetS(A,B,C) & nbetS(A,C,B) & nbetS(B,A,C))  => nCol(A,B,C)))",
     "fof(definside,axiom,! [ P,J] : ( inCirc(P,J) => ? [ X,Y,U,V,W] :  ( (cI(J,U,V,W) & eq(P,U)) | (cI(J,U,V,W) & betS(U,Y,X) & cong(U,X,V,W) & cong(U,P,U,Y)))))",
-    "fof(definside2a,axiom,! [ P,J,X,Y,U,V,W] :  ( cI(J,U,V,W) & eq(P,U))  => inCirc(P,J))",
-    "fof(definside2b,axiom,! [ P,J,X,Y,U,V,W] :  ( cI(J,U,V,W) & betS(U,Y,X) & cong(U,X,V,W) & cong(U,P,U,Y)  => inCirc(P,J)))",
+    "fof(definside2a,axiom,! [ P,J,X,Y,U,V,W] :  ( (cI(J,U,V,W) & eq(P,U))  => inCirc(P,J)))",
+    "fof(definside2b,axiom,! [ P,J,X,Y,U,V,W] :  ( (cI(J,U,V,W) & betS(U,Y,X) & cong(U,X,V,W) & cong(U,P,U,Y))  => inCirc(P,J)))",
     "fof(defoutside,axiom,! [ P,J] : outCirc(P,J) => ? [ X,U,V,W] :  ( cI(J,U,V,W) & betS(U,X,P) & cong(U,X,V,W)))",
     "fof(defoutside2,axiom,! [ P,J, X,U,V,W] :  ( cI(J,U,V,W) & betS(U,X,P) & cong(U,X,V,W))  => outCirc(P,J))",
     "fof(defon,axiom,! [ B,J] : onCirc(B,J) => ? [ X,Y,U] :  ( cI(J,U,X,Y) & cong(U,B,X,Y)))",
