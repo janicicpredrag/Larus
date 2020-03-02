@@ -65,7 +65,7 @@ vector<string> EuclidAxioms =
     "fof(postulate_Euclid3,axiom, ! [A,B] : ( neq(A,B))  => ? [X] : ( ( cI(X,A,A,B))))",
     "fof(postulate_line_circle,axiom, ! [A,B,C,K,P,Q] : ( cI(K,C,P,Q) & inCirc(B,K) & neq(A,B))  => ? [X,Y] : ( ( col(A,B,X) & betS(A,B,Y) & onCirc(X,K) & onCirc(Y,K) & betS(X,B,Y))))",
     "fof(postulate_circle_circle,axiom, ! [C,D,F,G,J,K,P,Q,R,S] : ( cI(J,C,R,S) & inCirc(P,J) & outCirc(Q,J) & cI(K,D,F,G) & onCirc(P,K) & onCirc(Q,K))  => ? [X] : ( ( onCirc(X,J) & onCirc(X,K))))",
-    "fof(postulate_Euclid5,axiom, ! [Ca,p,q,r,s,t] : (( betS(r,t,s) & betS(p,t,q) & betS(r,Ca,q) & cong(p,t,q,t) & cong(t,r,t,s) & nCol(p,q,s))  => ? [X] : ( ( betS(p,Ca,X) & betS(s,q,X)))))",
+    "fof(postulate_Euclid5,axiom, ! [Ca,P,Q,R,S,T] : (( betS(R,T,S) & betS(P,T,Q) & betS(R,Ca,Q) & cong(P,T,Q,T) & cong(T,R,T,S) & nCol(P,Q,S))  => ? [X] : ( ( betS(P,Ca,X) & betS(S,Q,X)))))",
     "fof(axiom_circle_center_radius,axiom, ! [A,B,C,J,P] : (( cI(J,A,B,C) & onCirc(P,J))  =>  ( cong(A,P,B,C))))",
     "fof(axiom_congruentequal,axiom, ! [A,B,C,Ca,Cb,Cc] : (cong_3(A,B,C,Ca,Cb,Cc))  =>  (eT(A,B,C,Ca,Cb,Cc)))",
 //"fof(axiom_ETpermutation,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(A,Bsub,C,Cb,Cc,Ca) & eT(A,B,C,Ca,Cc,Cb) & eT(A,B,C,Cb,Ca,Cc) & eT(A,B,C,Cc,Cb,Ca) & eT(A,B,C,Cc,Ca,Cb))))",
@@ -247,7 +247,7 @@ vector<string> EuclidAxioms =
     // trying another encoding:
     "fof(lemma_twolines2,conjecture,(  ! [A,B,C,D,P,Q] : ((neq(A,B) & neq(C,D) & col(P,A,B) & col(P,C,D) & col(Q,A,B) & col(Q,C,D)) => ((col(A,C,D) & col(B,C,D)) || eq(P,Q)))))",
     
-    "fof(lemma_supplements,conjecture,(  ! [A,B,C,D,F,Xadeflessthan,Xb,Xc,Xd,Xf] : ((congA(A,B,C,Xa,Xb,Xc) & supp(A,B,C,D,F) & supp(Xa,Xb,Xc,Xd,Xf)) => (congA(D,B,F,Xd,Xb,Xf)))))",
+    "fof(lemma_supplements,conjecture,(  ! [A,B,C,D,F,Xa,Xb,Xc,Xd,Xf] : ((congA(A,B,C,Xa,Xb,Xc) & supp(A,B,C,D,F) & supp(Xa,Xb,Xc,Xd,Xf)) => (congA(D,B,F,Xd,Xb,Xf)))))",
     "fof(lemma_supplementsymmetric,conjecture,(  ! [A,B,C,D,E] : ((supp(A,B,C,E,D)) => (supp(D,B,E,C,A)))))",
     "fof(lemma_collinearitypreserved,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((col(A,B,C) & cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & cong(B,C,Xb,Xc)) => (col(Xa,Xb,Xc)))))",
     "fof(lemma_trichotomy2,conjecture,(  ! [A,B,C,D] : ((lt(A,B,C,D)) => (nlt(C,D,A,B)))))",
