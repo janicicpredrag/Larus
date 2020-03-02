@@ -218,8 +218,10 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     ofstream outfile;
     outfile.open ("tptp-problems/" + theoremName + ".tptp");
     if (!outfile)
-        return false;
-
+        {
+            cout << "Problem open the output file." << endl;
+            return false;
+        }
     for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
@@ -284,7 +286,7 @@ void RunCaseStudy(vector< pair<string, vector<string>>> case_study, vector<strin
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */  EuclidAxioms   /*TestAxiomsnegintro */, depends, thm))
+        if (ProveFromTPTPTheory(  /*TestAxioms */  theory   /*TestAxiomsnegintro */, depends, thm))
             numberProved++;
         else
             numberNotProved++;
@@ -303,8 +305,8 @@ int main(int /* argc */, char** /* argv*/)
     //cl.NormalizeGoal(thmName, output);
     //return 0;
 
-    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms_working  /*  test_negintro */;
-    RunCaseStudy(case_study,EuclidAxioms);
+    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
+//    RunCaseStudy(case_study,EuclidAxioms);
     ExportCaseStudyToTPTP(case_study,EuclidAxioms);
 
     return 0;
