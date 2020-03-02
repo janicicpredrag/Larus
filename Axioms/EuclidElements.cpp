@@ -191,7 +191,7 @@ vector<string> EuclidAxioms =
     "fof(lemma_betweennotequal,conjecture,(  ! [A,B,C] : ((betS(A,B,C)) => (neq(B,C) & neq(A,B) & neq(A,C)))))",
     //"fof(lemma_betweennotequal,conjecture,(  ! [A,B,C] : ((betS(A,B,C)) => (neq(B,C)))))",
 
-    "fof(lemma_extensionunique,conjecture,(  ! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F)) => (eq(E,F))))",
+    "fof(lemma_extensionunique,conjecture,(  ! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F)) => (eq(E,F)))))",
 
     //    "fof(lemma_extensionunique,conjecture,(  ! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F) & neq(E,F)) => $false ))",
 
@@ -245,7 +245,7 @@ vector<string> EuclidAxioms =
     "fof(lemma_tworays,conjecture,(  ! [A,B,C] : ((out(A,B,C) & out(B,A,C)) => (betS(A,C,B)))))",
     //"fof(lemma_twolines2,conjecture,(  ! [A,B,C,D,P,Q] : ((neq(A,B) & neq(C,D) & col(P,A,B) & col(P,C,D) & col(Q,A,B) & col(Q,C,D) & n(col(A,C,D) & col(B,C,D))) => (eq(P,Q)))))",
     // trying another encoding:
-    "fof(lemma_twolines2,conjecture,(  ! [A,B,C,D,P,Q] : ((neq(A,B) & neq(C,D) & col(P,A,B) & col(P,C,D) & col(Q,A,B) & col(Q,C,D)) => ((col(A,C,D) & col(B,C,D)) || eq(P,Q)))))",
+    "fof(lemma_twolines2,conjecture,(  ! [A,B,C,D,P,Q] : ((neq(A,B) & neq(C,D) & col(P,A,B) & col(P,C,D) & col(Q,A,B) & col(Q,C,D)) => ((col(A,C,D) & col(B,C,D)) | eq(P,Q)))))",
     
     "fof(lemma_supplements,conjecture,(  ! [A,B,C,D,F,Xa,Xb,Xc,Xd,Xf] : ((congA(A,B,C,Xa,Xb,Xc) & supp(A,B,C,D,F) & supp(Xa,Xb,Xc,Xd,Xf)) => (congA(D,B,F,Xd,Xb,Xf)))))",
     "fof(lemma_supplementsymmetric,conjecture,(  ! [A,B,C,D,E] : ((supp(A,B,C,E,D)) => (supp(D,B,E,C,A)))))",
