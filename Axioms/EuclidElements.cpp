@@ -277,11 +277,11 @@ vector<string> EuclidAxioms =
     "fof(proposition_03,conjecture,(  ! [A,B,C,D,E,F] : ((lt(C,D,A,B) & cong(E,F,A,B)) => ? [X] : (betS(E,X,F) & cong(E,X,C,D)))))",
     "fof(proposition_04,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc) & congA(A,B,C,Xa,Xb,Xc) & congA(A,C,B,Xa,Xc,Xb)))))",
 
-    "fof(proposition_04modified1a,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc)))))",
-    "fof(proposition_04modified1b,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,B,C,Xa,Xb,Xc)))))",
-    "fof(proposition_04modified1c,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,C,B,Xa,Xc,Xb)))))",
+ //   "fof(proposition_04modified1a,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc)))))",
+ //   "fof(proposition_04modified1b,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,B,C,Xa,Xb,Xc)))))",
+ //   "fof(proposition_04modified1c,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,C,B,Xa,Xc,Xb)))))",
 
-    "fof(proposition_04modified2,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) => congcong(A,B,Xa,Xb,A,C,Xa,Xc)))))",
+//    "fof(proposition_04modified2,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) => congcong(A,B,Xa,Xb,A,C,Xa,Xc)))))",
  
     "fof(lemma_equalangleshelper,conjecture,(  ! [A,B,C,Xa,Xb,Xc,Xp,Xq] : ((congA(A,B,C,Xa,Xb,Xc) & out(Xb,Xa,Xp) & out(Xb,Xc,Xq)) => (congA(A,B,C,Xp,Xb,Xq)))))",
     "fof(lemma_equalanglestransitive,conjecture,(  ! [A,B,C,D,E,F,P,Q,R] : ((congA(A,B,C,D,E,F) & congA(D,E,F,P,Q,R)) => (congA(A,B,C,P,Q,R)))))",
