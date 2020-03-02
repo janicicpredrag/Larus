@@ -12,9 +12,6 @@ vector<string> ColAxioms =
      "fof(col_triv, axiom, ! [A,B] : col(A,B,B))",
 //     "fof(neq_swap, axiom, ! [A,B] : neq(A,B) => neq(B,A))",
      "fof(col_trans, axiom, ! [P,Q,A,B,C] : ((neq(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C)) => col(A,B,C)))",
-//     "fof(col_trans1, axiom, ! [P,Q,A,B,C] : neqcol(P,Q,A) & colcol(P,Q,B,C) => col(A,B,C))",
-//     "fof(col_trans_aux1, axiom, ! [P,Q,A] : neq(P,Q) & col(P,Q,A) => neqcol(P,Q,A))",
-//     "fof(col_trans_aux2, axiom, ! [P,Q,B,C] : col(P,Q,B) & col(P,Q,C) => colcol(P,Q,B,C))",
      "fof(ex1, conjecture, ! [A,B,C,D] : ((neq(A,B) & col(A,B,C) & col(A,B,D)) => col(A,C,D)))",
      "fof(ex2, conjecture, ![X , A , B , C , U , V ] : ((neq(A,B) & neq(C,X) & neq(B,X) & col(X,A,B) & col(X, C, X) & col(U,A,B) & col(V,C,X)) => col(U, B, X)))"
 
@@ -86,7 +83,7 @@ vector<string> EuclidAxioms =
 //    "fof(defunequal,axiom,! [ A,B] : neq(A,B) =>  ( neq(A,B)))",
 //    "fof(defunequal2,axiom,! [ A,B] :  ( neq(A,B))  => neq(A,B))",
     "fof(defcollinear,axiom,! [ A,B,C] : ( col(A,B,C) =>  ( eq(A,B) | eq(A,C) | eq(B,C) | betS(B,A,C) | betS(A,B,C) | betS(A,C,B))))",
-//    "fof(defcollinear2,axiom,! [ A,B,C] :  ( (eq(A,B) | eq(A,C) | eq(B,C) | betS(B,A,C) | betS(A,B,C) | betS(A,C,B)))  => col(A,B,C))",
+// Not CL form:  "fof(defcollinear2,axiom,! [ A,B,C] :  ( (eq(A,B) | eq(A,C) | eq(B,C) | betS(B,A,C) | betS(A,B,C) | betS(A,C,B)))  => col(A,B,C))",
     "fof(defcollinear2a,axiom,! [ A,B,C] :  ( eq(A,B) => col(A,B,C)))",
     "fof(defcollinear2b,axiom,! [ A,B,C] :  ( eq(A,C) => col(A,B,C)))",
     "fof(defcollinear2c,axiom,! [ A,B,C] :  ( eq(B,C) => col(A,B,C)))",
@@ -234,7 +231,7 @@ vector<string> EuclidAxioms =
     "fof(lemma_ray1,conjecture,(  ! [A,B,P] : ((out(A,B,P)) => ((betS(A,P,B) | eq(B,P) | betS(A,B,P))))))",
     "fof(lemma_ray3,conjecture,(  ! [B,C,D,V] : ((out(B,C,D) & out(B,C,V)) => (out(B,D,V)))))",
     "fof(lemma_raystrict,conjecture,(  ! [A,B,C] : ((out(A,B,C)) => (neq(A,C)))))",
-    //"fof(lemma_ray4,conjecture,(  ! [A,B,E] : (((betS(A,E,B) | eq(E,B) | betS(A,B,E)) & neq(A,B)) => (out(A,B,E)))))",
+    // not CL form: "fof(lemma_ray4,conjecture,(  ! [A,B,E] : (((betS(A,E,B) | eq(E,B) | betS(A,B,E)) & neq(A,B)) => (out(A,B,E)))))",
     "fof(lemma_ray4_1,conjecture,(  ! [A,B,E] : ((betS(A,E,B) & neq(A,B)) => (out(A,B,E)))))",
     "fof(lemma_ray4_2,conjecture,(  ! [A,B,E] : ((eq(E,B) & neq(A,B)) => (out(A,B,E)))))",
     "fof(lemma_ray4_3,conjecture,(  ! [A,B,E] : ((betS(A,B,E) & neq(A,B)) => (out(A,B,E)))))",
@@ -275,14 +272,7 @@ vector<string> EuclidAxioms =
     "fof(lemma_equalanglesNC,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congA(A,B,C,Xa,Xb,Xc)) => (nCol(Xa,Xb,Xc)))))",
     "fof(lemma_ondiameter,conjecture,(  ! [D,F,K,M,N,P,Q] : ((cI(K,F,P,Q) & cong(F,D,P,Q) & cong(F,M,P,Q) & betS(D,F,M) & betS(D,N,M)) => (inCirc(N,K)))))",
     "fof(proposition_03,conjecture,(  ! [A,B,C,D,E,F] : ((lt(C,D,A,B) & cong(E,F,A,B)) => ? [X] : (betS(E,X,F) & cong(E,X,C,D)))))",
-    "fof(proposition_04,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc) & congA(A,B,C,Xa,Xb,Xc) & congA(A,C,B,Xa,Xc,Xb)))))",
-
- //   "fof(proposition_04modified1a,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc)))))",
- //   "fof(proposition_04modified1b,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,B,C,Xa,Xb,Xc)))))",
- //   "fof(proposition_04modified1c,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((congcong(A,B,Xa,Xb,A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (congA(A,C,B,Xa,Xc,Xb)))))",
-
-//    "fof(proposition_04modified2,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) => congcong(A,B,Xa,Xb,A,C,Xa,Xc)))))",
- 
+    "fof(proposition_04,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => (cong(B,C,Xb,Xc) & congA(A,B,C,Xa,Xb,Xc) & congA(A,C,B,Xa,Xc,Xb)))))", 
     "fof(lemma_equalangleshelper,conjecture,(  ! [A,B,C,Xa,Xb,Xc,Xp,Xq] : ((congA(A,B,C,Xa,Xb,Xc) & out(Xb,Xa,Xp) & out(Xb,Xc,Xq)) => (congA(A,B,C,Xp,Xb,Xq)))))",
     "fof(lemma_equalanglestransitive,conjecture,(  ! [A,B,C,D,E,F,P,Q,R] : ((congA(A,B,C,D,E,F) & congA(D,E,F,P,Q,R)) => (congA(A,B,C,P,Q,R)))))",
     "fof(lemma_equalanglesreflexive,conjecture,(  ! [A,B,C] : ((nCol(A,B,C)) => (congA(A,B,C,A,B,C)))))",
