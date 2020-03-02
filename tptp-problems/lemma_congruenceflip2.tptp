@@ -1,4 +1,0 @@
-fof(cn_equalityreverse,axiom, ! [A,B] : (cong(A,B,B,A))).
-fof(lemma_congruencetransitive,axiom,(  ! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => (cong(A,B,E,F))))).
-%Goal : 
-fof(lemma_congruenceflip2,conjecture,(  ! [A,B,C,D] : ((cong(A,B,C,D)) => (cong(B,A,C,D))))).
