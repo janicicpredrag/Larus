@@ -209,6 +209,13 @@ std::string replaceFirstOccurrence(std::string& s,const std::string& toReplace,c
     return s.replace(pos, toReplace.length(), replaceWith);
 }
 
+void OutputAxioms(ofstream& outfile, string pred_name) {
+    outfile << "fof(" << pred_name << "_excl_middle, axiom, ! [A,B] : (" << pred_name << "(A,B) | n" << pred_name << "(A,B)))." << endl;
+    outfile << "fof(" << pred_name << "_neq_elim, axiom,  ! [A,B] : ((eq(A,B) & neq(A,B)) => $false))." << endl;
+  
+    return;
+}
+
 bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
 {
     Theory T;
@@ -239,12 +246,22 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
             return false;
         }
     }
- /*
+
+    outfile << "fof(eq_symm, axiom, ! [A,B] : (eq(A,B) => eq(B,A)))." << endl;
+    outfile << "fof(neq_symm, axiom, ! [A,B] : (neq(A,B) => neq(B,A)))." << endl;
+    outfile << "fof(eq_refl, axiom, ! [A,B] : (eq(A,B) => eq(B,A)))." << endl;
+    outfile << "fof(eq_neq_f, axiom,  ! [A,B] : ((eq(A,B) & neq(A,B)) => $false))." << endl;
+    outfile << "fof(eq_excl_middle, axiom, ! [A,B] : (eq(A,B) | neq(A,B)))." << endl;
+    OutputAxioms(outfile, "cong");
+
     T.AddAxiomEqSymm();
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
     T.AddNegElimAxioms();
-    T.AddEqExcludedMiddleAxiom(); */
+    T.AddEqExcludedMiddleAxiom(); 
+    for(size_t i=0, size = T.NumberOfAxioms(); i < size; i++) {
+        cout << T.Axiom(i).first << endl;
+    }
  /*   T.AddExcludedMiddleAxioms();
     T.AddEqSubAxioms();
 */
@@ -263,9 +280,10 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         cout << "Missing conjecture " << theoremName << " or not a CL formula. Exiting..." << endl;
         return false;
     }
-
+    outfile.close();
     return true;
 }
+
 // ---------------------------------------------------------------------------------------------------------------------------
 void ExportCaseStudyToTPTP(vector< pair<string, vector<string>>> case_study, vector<string>& theory) {
    cout << endl << "Exporting to TPTP" << endl;
