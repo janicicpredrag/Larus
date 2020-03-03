@@ -62,10 +62,11 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
 //    {"lemma_lessthanbetween" , {"deflessthan", "deflessthan2",  "lemma_betweennotequal", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3", "lemma_ray5", "lemma_layoffunique"   } }
 
 
-    {"lemma_squareflip" , {"defsquare",  "defsquare2",   "lemma_congruenceflip", "lemma_8_2"   } }
+//    {"lemma_squareflip" , {"defsquare",  "defsquare2",   "lemma_congruenceflip", "lemma_8_2"   } }
 
+    {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"    } }
 
-    /*
+/*
   // ordered by Coq proof size:
   {"lemma_equalitysymmetric" , { "cn_equalitytransitive"   } },
   {"lemma_inequalitysymmetric" , {    } },

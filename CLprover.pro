@@ -31,6 +31,7 @@ SOURCES += main.cpp \
     ProofExport/ProofExport2Coq.cpp \
     ProofExport/ProofExport2Isabelle.cpp \
     ProofExport/ProofExport2LaTeX.cpp \
+    ProvingEngine/EQ_Engine/EQ_ProvingEngine.cpp
 
 
 HEADERS += \
@@ -48,6 +49,7 @@ HEADERS += \
     ProofExport/ProofExport2Coq.h \
     ProofExport/ProofExport2Isabelle.h \
     ProofExport/ProofExport2LaTeX.h \
+    ProvingEngine/EQ_Engine/EQ_ProvingEngine.h
 
 
 

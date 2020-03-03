@@ -7,16 +7,17 @@
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
 #include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
+#include "ProvingEngine/EQ_Engine/EQ_ProvingEngine.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProofExport/ProofExport2Coq.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 
-enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
+enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine, EQ_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 100;
+const float TIME_LIMIT = 30;
 
 using namespace std;
 
@@ -188,17 +189,18 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         engine = new SQL_ProvingEngine(&T);
     else if (PROVING_ENGINE == URSA_Engine)
         engine = new URSA_ProvingEngine(&T);
+    else if (PROVING_ENGINE == EQ_Engine)
+        engine = new EQ_ProvingEngine(&T);
     else // default
         engine = new STL_ProvingEngine(&T);
 
     T.AddAxiomEqSymm();
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
-          T.AddNegElimAxioms();
+    T.AddNegElimAxioms();
 
     int r = ProveTheorem(T, engine, theorem, theoremName);
     if (!r) {
-            // T.AddNegElimAxioms();
         // T.AddEqExcludedMiddleAxiom();
         T.AddEqSubAxioms();
         cerr << "   second attempt " << endl;
@@ -214,7 +216,97 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     return r;
 }
 
+std::string replaceFirstOccurrence(std::string& s,const std::string& toReplace,const std::string& replaceWith)
+{
+    std::size_t pos = s.find(toReplace);
+    if (pos == std::string::npos) return s;
+    return s.replace(pos, toReplace.length(), replaceWith);
+}
+
+bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
+{
+    Theory T;
+    CLFormula theorem;
+    string statementName;
+
+    ofstream outfile;
+    outfile.open ("tptp-problems/" + theoremName + ".tptp");
+    if (!outfile)
+        {
+            cout << "Problem open the output file." << endl;
+            return false;
+        }
+    for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
+        bool found = false;
+        for(size_t i=0, size = theory.size(); i < size && !found; i++) {
+            CLFormula cl;
+            if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+                && statementName == namesOfAxiomsToBeUsed[j]) {
+                string s = theory[i];
+                replaceFirstOccurrence(s,"conjecture","axiom");
+                outfile << s << "." << endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "Missing axiom " << namesOfAxiomsToBeUsed[j] << " or not a CL formula. Exiting..." << endl;
+            return false;
+        }
+    }
+ /*
+    T.AddAxiomEqSymm();
+    T.AddAxiomNEqSymm();
+    T.AddAxiomEqReflexive();
+    T.AddNegElimAxioms();
+    T.AddEqExcludedMiddleAxiom(); */
+ /*   T.AddExcludedMiddleAxioms();
+    T.AddEqSubAxioms();
+*/
+    bool found = false;
+    for(size_t i=0, size = theory.size(); i < size && !found; i++) {
+        CLFormula cl;
+        if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+            && statementName == theoremName) {
+            theorem = cl;
+            outfile << "%Goal : " << endl;
+            outfile << theory[i] << "." << endl;
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "Missing conjecture " << theoremName << " or not a CL formula. Exiting..." << endl;
+        return false;
+    }
+
+    return true;
+}
 // ---------------------------------------------------------------------------------------------------------------------------
+void ExportCaseStudyToTPTP(vector< pair<string, vector<string>>> case_study, vector<string>& theory) {
+   cout << endl << "Exporting to TPTP" << endl;
+    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+        string thm = case_study[i].first;
+        cout << " Exporting " << thm << " ... " << endl;
+        vector<string> depends = case_study[i].second;
+        if (!OutputToTPTPfile(theory,depends,thm))
+        {
+            cout << "Failed!" << endl;
+        }
+    }
+}
+
+void RunCaseStudy(vector< pair<string, vector<string>>> case_study, vector<string>& theory) {
+    unsigned numberProved = 0, numberNotProved = 0;
+    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+        string thm = case_study[i].first;
+        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
+        vector<string> depends = case_study[i].second;
+        if (ProveFromTPTPTheory(  /*TestAxioms */  theory   /*TestAxiomsnegintro */, depends, thm))
+            numberProved++;
+        else
+            numberNotProved++;
+        cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+    }
+}
 
 int main(int /* argc */, char** /* argv*/)
 {
@@ -227,8 +319,8 @@ int main(int /* argc */, char** /* argv*/)
     //cl.NormalizeGoal(thmName, output);
     //return 0;
 
-    unsigned numberProved = 0, numberNotProved = 0;
     vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
+    int numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
@@ -243,6 +335,10 @@ int main(int /* argc */, char** /* argv*/)
         }
         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
     }
+
+//    RunCaseStudy(case_study,EuclidAxioms);
+//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+
     return 0;
 
 /*
