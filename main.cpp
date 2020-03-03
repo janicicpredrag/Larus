@@ -254,7 +254,6 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         if (ReadTPTPStatement(theory[i], cl, statementName, 2)
             && statementName == theoremName) {
             theorem = cl;
-            outfile << "%Goal : " << endl;
             outfile << theory[i] << "." << endl;
             found = true;
         }
