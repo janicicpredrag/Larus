@@ -166,7 +166,7 @@ inline ostream& operator<<(ostream& os, const ConjunctionFormula& f)
     for (size_t i = 0; i < f.GetSize(); i++) {
         os << f.GetElement(i);
         if (i != f.GetSize()-1)
-            os << " and ";
+            os << " & ";
     }
     os << ")";
     return os;
@@ -179,7 +179,7 @@ inline ostream& operator<<(ostream& os, const DNFFormula& f)
     for (size_t i = 0; i < f.GetSize(); i++) {
         os << f.GetElement(i);
         if (i != f.GetSize()-1)
-           os << " or ";
+           os << " | ";
     }
     os << ")";
     return os;
@@ -208,8 +208,15 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
         }
         os << "] : ";
     }
-
-    os << "(" << f.mA << " => " << f.mB << ")";
+    if (f.mA.GetSize() >0)
+    {
+        os << "(" << f.mA << " => " << f.mB << ")";
+    }
+    else
+    {
+        os <<  f.mB;   
+    }
+    
     if (f.mUniversalVars.size() > 0)
         os << ")";
     if (f.mExistentialVars.size() > 0)
