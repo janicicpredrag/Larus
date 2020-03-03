@@ -262,7 +262,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     T.AddExcludedMiddleAxioms();
     T.AddEqSubAxioms();
     for(size_t i=0, size = T.NumberOfAxioms(); i < size; i++) {
-        cout << "fof(" << T.Axiom(i).second <<",axiom, " << T.Axiom(i).first << ")." << endl;
+        outfile << "fof(" << T.Axiom(i).second <<",axiom, " << T.Axiom(i).first << ")." << endl;
     }
  /*   T.AddExcludedMiddleAxioms();
     T.AddEqSubAxioms();

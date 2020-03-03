@@ -208,8 +208,15 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
         }
         os << "] : ";
     }
-
-    os << "(" << f.mA << " => " << f.mB << ")";
+    if (f.mA.GetSize() >0)
+    {
+        os << "(" << f.mA << " => " << f.mB << ")";
+    }
+    else
+    {
+        os <<  f.mB;   
+    }
+    
     if (f.mUniversalVars.size() > 0)
         os << ")";
     if (f.mExistentialVars.size() > 0)
