@@ -291,9 +291,9 @@ string Theory::GetConstantName(unsigned id) const
         s[0] += id;
         return s;
     }
-    stringstream ss;
-    ss << miConstantsCounter;
-    return "p" + ss.str();
+    // stringstream ss;
+    // ss << miConstantsCounter;
+    return "p" + to_string(id);
 }
 
 

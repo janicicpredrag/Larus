@@ -17,6 +17,8 @@ class Theory {
 public:
     Theory() { miConstantsCounter = 0; AddSymbol("false", 0); }
 
+    void Reset() { miConstantsCounter = 0; mConstants.clear(); mConstantsPermissible.clear(); AddSymbol("false", 0); }
+
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
     void AddAxioms(vector< pair<CLFormula,string> >& axioms);

@@ -131,9 +131,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
     ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
-    //ursaFile << "nProofLen = 13;" << endl << endl;
+    //ursaFile << "nProofLen = 10;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
+
+    mURSAstringAxioms = "";
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
         EncodeAxiom(it-mpT->mCLaxioms.begin(), it->first, it->second);
 

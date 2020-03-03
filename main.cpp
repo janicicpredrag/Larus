@@ -16,7 +16,7 @@ enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine };
 
 const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const int TIME_LIMIT = 60;
+const int TIME_LIMIT = 100;
 
 using namespace std;
 
@@ -40,6 +40,7 @@ extern vector<string> TestAxiomsnegintro;
 
 bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName)
 {
+    T.Reset();
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)
     {
@@ -148,18 +149,11 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         }
         if (!found) {
             cout << "Missing axiom " << namesOfAxiomsToBeUsed[j] << " or not a CL formula. Exiting..." << endl;
+            cerr << "Missing axiom " << namesOfAxiomsToBeUsed[j] << " or not a CL formula. Exiting..." << endl;
             return false;
         }
     }
 
-    T.AddAxiomEqSymm();
-    T.AddAxiomNEqSymm();
-    T.AddAxiomEqReflexive();
-    T.AddNegElimAxioms();
-    T.AddEqExcludedMiddleAxiom();
- /*   T.AddExcludedMiddleAxioms();
-    T.AddEqSubAxioms();
-*/
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
@@ -197,7 +191,25 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     else // default
         engine = new STL_ProvingEngine(&T);
 
+    T.AddAxiomEqSymm();
+    T.AddAxiomNEqSymm();
+    T.AddAxiomEqReflexive();
+          T.AddNegElimAxioms();
+
     int r = ProveTheorem(T, engine, theorem, theoremName);
+    if (!r) {
+            // T.AddNegElimAxioms();
+        // T.AddEqExcludedMiddleAxiom();
+        T.AddEqSubAxioms();
+        cerr << "   second attempt " << endl;
+        r = ProveTheorem(T, engine, theorem, theoremName);
+    }
+    if (!r) {
+        T.AddExcludedMiddleAxioms();
+        cerr << "   third attempt " << endl;
+        r = ProveTheorem(T, engine, theorem, theoremName);
+    }
+
     delete engine;
     return r;
 }
@@ -221,10 +233,14 @@ int main(int /* argc */, char** /* argv*/)
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */  EuclidAxioms   /*TestAxiomsnegintro */, depends, thm))
+        if (ProveFromTPTPTheory(  /*TestAxioms */  EuclidAxioms   /*TestAxiomsnegintro */, depends, thm)) {
             numberProved++;
-        else
+            cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+        }
+        else {
             numberNotProved++;
+            cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+        }
         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
     }
     return 0;
@@ -247,23 +263,13 @@ int main(int /* argc */, char** /* argv*/)
     return 0;*/
 }
 
-
-
 /* save args in ursa spec */
-
-
 
 /*
 For instance, here:
 assert (neq b c)  by applying (lemma_betweennotequal_aux_0 b c a ).
 b c a should go in the same order as corresponding variables in
 the axiom?
-
->     We also need some support for equalities. Do you explicitely
->     state properties of equalities in the proofs?
->
-> In the euclids proofs, as soon as we know a=b we can substitute a for b
-> in the assumptions and the goal.... this is maybe hard to implement in ursa.
 
 */
 
