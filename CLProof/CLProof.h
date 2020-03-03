@@ -13,7 +13,7 @@ using namespace std;
 class ModusPonens;
 class CLProofEnd;
 
-typedef std::tuple< ConjunctionFormula, DNFFormula, std::string, std::vector< std::pair <std::string,std::string> >, std::vector< std::pair <std::string,std::string> > >  MP_Step;
+typedef tuple < ConjunctionFormula, DNFFormula, string, vector< pair <string, string> >, vector< pair <string,string> > >  MP_Step;
 
 class CLProof
 {

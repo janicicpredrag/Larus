@@ -15,7 +15,7 @@
 
 enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine, EQ_Engine };
 
-const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
+const enum ePROVING_ENGINE PROVING_ENGINE = EQ_Engine;
 
 const float TIME_LIMIT = 30;
 
@@ -237,7 +237,8 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     string statementName;
 
     ofstream outfile;
-    outfile.open ("tptp-problems/" + theoremName + ".tptp");
+    string outfilename = "tptp-problems/" + theoremName + ".tptp";
+    outfile.open (outfilename.c_str());
     if (!outfile)
         {
             cout << "Problem open the output file." << endl;
@@ -300,7 +301,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
-void ExportCaseStudyToTPTP(vector< pair<string, vector<string>>> case_study, vector<string>& theory) {
+void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory) {
    cout << endl << "Exporting to TPTP" << endl;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
@@ -313,7 +314,7 @@ void ExportCaseStudyToTPTP(vector< pair<string, vector<string>>> case_study, vec
     }
 }
 
-void RunCaseStudy(vector< pair<string, vector<string>>> case_study, vector<string>& theory) {
+void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory) {
     unsigned numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
@@ -338,7 +339,7 @@ int main(int /* argc */, char** /* argv*/)
     //cl.NormalizeGoal(thmName, output);
     //return 0;
 
-    vector< pair<string, vector<string>>> case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
+    vector< pair<string, vector<string> > > case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
     int numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;

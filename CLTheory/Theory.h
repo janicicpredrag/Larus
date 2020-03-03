@@ -49,7 +49,7 @@ public:
     vector< pair<CLFormula,string> > mCLaxioms;
     set<string> mConstants;
     set<string> mConstantsPermissible;
-    vector<pair<string,unsigned>> mSignature;
+    vector< pair<string,unsigned> > mSignature;
 
 
 protected:

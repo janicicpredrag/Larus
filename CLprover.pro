@@ -4,13 +4,13 @@
 #
 #-------------------------------------------------
 
-#QT       += core
+#QT       -= core
 
 #QT       -= gui
 
 TARGET = CLprover
-CONFIG   += console
-CONFIG   -= app_bundle
+CONFIG   += console c++11
+CONFIG   -= app_bundle qt
 
 TEMPLATE = app
 
@@ -28,11 +28,10 @@ SOURCES += main.cpp \
     ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
     ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
     ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
+    ProvingEngine/EQ_Engine/EQ_ProvingEngine.cpp \
     ProofExport/ProofExport2Coq.cpp \
     ProofExport/ProofExport2Isabelle.cpp \
-    ProofExport/ProofExport2LaTeX.cpp \
-    ProvingEngine/EQ_Engine/EQ_ProvingEngine.cpp
-
+    ProofExport/ProofExport2LaTeX.cpp
 
 HEADERS += \
     CLTheory/Formula.h \
@@ -45,11 +44,12 @@ HEADERS += \
     ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
     ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
     ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
+    ProvingEngine/EQ_Engine/EQ_ProvingEngine.h \
     ProofExport/ProofExport.h \
     ProofExport/ProofExport2Coq.h \
     ProofExport/ProofExport2Isabelle.h \
-    ProofExport/ProofExport2LaTeX.h \
-    ProvingEngine/EQ_Engine/EQ_ProvingEngine.h
+    ProofExport/ProofExport2LaTeX.h
+
 
 
 

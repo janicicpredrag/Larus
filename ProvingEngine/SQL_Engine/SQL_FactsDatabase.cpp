@@ -29,7 +29,7 @@ bool SQLFactsDatabase::ApplyExcludedMiddle(DNFFormula& fout)
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool SQLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, DNFFormula& fout, vector<pair<string,string>>& orderedInstantiation)
+bool SQLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, DNFFormula& fout, vector<pair<string,string> >& orderedInstantiation)
 {
     return false;
 }
