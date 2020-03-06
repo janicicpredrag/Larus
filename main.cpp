@@ -31,11 +31,19 @@ extern vector < pair < string, vector<string> > > test_thms;
 extern vector<string> TestAxioms;
 extern vector < pair < string, vector<string> > > test_negintro;
 extern vector<string> TestAxiomsnegintro;
+extern vector < pair < string, vector<string> > > test_trivial;
+extern vector<string> TrivialAxioms;
 
 
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
 
+string itos(unsigned int i)
+{
+    stringstream ss;
+    ss << i;
+    return ss.str();
+}
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -88,7 +96,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         ProofExport *ex, *excoq;
         ex = new ProofExport2LaTeX;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
-        if (PROVING_ENGINE != URSA_Engine) {
+        if (PROVING_ENGINE != URSA_Engine && PROVING_ENGINE != EQ_Engine) {
             proof.Simplify();
             ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         }
@@ -198,6 +206,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
     T.AddNegElimAxioms();
+
 
     int r = ProveTheorem(T, engine, theorem, theoremName);
     if (!r) {
@@ -339,13 +348,13 @@ int main(int /* argc */, char** /* argv*/)
     //cl.NormalizeGoal(thmName, output);
     //return 0;
 
-    vector< pair<string, vector<string> > > case_study = /* test_thms */    euclids_thms1  /*  test_negintro */;
+    vector< pair<string, vector<string> > > case_study =   euclids_thms1   /* test_trivial */  ;
     int numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */  EuclidAxioms   /*TestAxiomsnegintro */, depends, thm)) {
+        if (ProveFromTPTPTheory(    EuclidAxioms    /* TrivialAxioms */ , depends, thm)) {
             numberProved++;
             cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
         }

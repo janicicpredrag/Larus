@@ -3,6 +3,17 @@
 
 using namespace std;
 
+vector< pair<string, vector<string>>> test_trivial = {
+    {"goal_to_be_proved" , { "ax1" , "ax2"} }
+};
+
+vector<string> TrivialAxioms = {
+    "fof(ax1, axiom, ![ X ] : ( p(X) => q(X) ))",
+    "fof(ax2, axiom, ![ X ] : ( q(X) => r(X) ))",
+    "fof(goal_to_be_proved, conjecture, ![ X ] : (p(X) => r(X) ))"
+};
+
+
 vector< pair<string, vector<string>>> test_negintro = {
     {"goal_to_be_proved" , { "ax1", "ax2" } }
 };

@@ -66,7 +66,10 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
 
     {"lemma_congruencesymmetric" , {"cn_congruencereflexive", "cn_congruencetransitive"    } }
 
-    /*
+//    {"lemma_equalitysymmetric" , { "cn_equalitytransitive"   } }
+
+
+/*
   // ordered by Coq proof size:
   {"lemma_equalitysymmetric" , { "cn_equalitytransitive"   } },
   {"lemma_inequalitysymmetric" , {    } },
@@ -159,8 +162,6 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
   {"lemma_fiveline" , {"defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f",  "lemma_congruencesymmetric", "axiom_nocollapse",  "axiom_betweennesssymmetry", "lemma_congruenceflip", "lemma_betweennesspreserved", "axiom_5_line", "lemma_interior5"   } },
   {"lemma_twolines" , {"defcut", "defcut2",  "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinearorder", "lemma_betweennotequal", "lemma_collinear4", "lemma_collinear1", "axiom_betweennesssymmetry"   } },
   {"lemma_ray" , {"lemma_ray2", "defray", "defray2",  "lemma_betweennotequal", "lemma_extension", "cn_equalityreverse", "lemma_congruencetransitive", "axiom_betweennesssymmetry", "deflessthan", "deflessthan2",  "lemma_lessthancongruence", "lemma_3_7b", "axiom_innertransitivity", "lemma_congruencesymmetric", "lemma_extensionunique",  "axiom_connectivity", "lemma_inequalitysymmetric"   } },
-<<<<<<< HEAD
-=======
   {"lemma_ray1" , {"lemma_inequalitysymmetric", "lemma_ray"   } },
   {"lemma_ray3" , {"defray", "defray2",  "axiom_betweennesssymmetry", "lemma_3_6a", "lemma_3_7a", "lemma_outerconnectivity"   } },
   {"lemma_raystrict" , {"defray", "defray2",  "lemma_betweennotequal"   } },
@@ -169,11 +170,9 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
     {"lemma_ray4_1" , {  "lemma_extension", "axiom_betweennesssymmetry", "axiom_innertransitivity", "defray", "defray2",   "lemma_3_7b"   } },
     {"lemma_ray4_2" , {  "lemma_extension", "axiom_betweennesssymmetry", "axiom_innertransitivity", "defray", "defray2",   "lemma_3_7b"   } },
     {"lemma_ray4_3" , {  "lemma_extension", "axiom_betweennesssymmetry", "axiom_innertransitivity", "defray", "defray2",   "lemma_3_7b"   } },
-
   {"lemma_ray5" , {"lemma_ray1", "lemma_raystrict", "lemma_ray4_1", "lemma_ray4_2", "lemma_ray4_3"   } },
   {"lemma_rayimpliescollinear" , {"defray", "defray2",  "lemma_betweennotequal", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_collinear4"   } },
   {"lemma_tworays" , {"lemma_raystrict", "lemma_ray1", "axiom_betweennesssymmetry", "axiom_innertransitivity", "axiom_betweennessidentity"   } },
->>>>>>> ecd5b09169a970beef8237e5f2990c3664837686
 //  {"lemma_twolines2" , {"lemma_inequalitysymmetric", "lemma_collinearorder", "lemma_collinear4",     } },
 //  {"lemma_supplements" , {"defsupplement", "defsupplement2",  "defequalangles", "defequalangles2",  "lemma_raystrict", "lemma_inequalitysymmetric", "lemma_extension", "lemma_congruencesymmetric", "lemma_congruencetransitive", "lemma_congruenceflip", "axiom_5_line", "lemma_ray1", "axiom_betweennesssymmetry", "lemma_3_7a",  "lemma_3_6a", "defray", "defray2",  "lemma_3_7b", "axiom_innertransitivity", "lemma_rayimpliescollinear", "lemma_collinearorder", "lemma_collinear4", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f", "lemma_betweennotequal", "lemma_ray3"   } },
   {"lemma_collinearitypreserved" , {"cn_equalityreverse", "lemma_congruencetransitive", "lemma_congruencesymmetric", "defcollinear", "defcollinear2a", "defcollinear2b", "defcollinear2c", "defcollinear2d", "defcollinear2e", "defcollinear2f",  "axiom_nocollapse",  "lemma_betweennesspreserved"   } },

@@ -13,15 +13,6 @@
 
 // ---------------------------------------------------------------------------------------
 
-string itos(unsigned int i)
-{
-    stringstream ss;
-    ss << i;
-    return ss.str();
-}
-
-// ---------------------------------------------------------------------------------------
-
 URSA_ProvingEngine::URSA_ProvingEngine(Theory *pT)
 {
     mpT = pT;
@@ -127,8 +118,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
-    ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
-    // ursaFile << "nProofLen = 15;" << endl << endl;
+    //ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
+    ursaFile << "nProofLen = 15;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
 
