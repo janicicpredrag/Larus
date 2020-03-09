@@ -232,13 +232,6 @@ std::string replaceFirstOccurrence(std::string& s,const std::string& toReplace,c
     return s.replace(pos, toReplace.length(), replaceWith);
 }
 
-void OutputAxioms(ofstream& outfile, string pred_name) {
-    outfile << "fof(" << pred_name << "_excl_middle, axiom, ! [A,B] : (" << pred_name << "(A,B) | n" << pred_name << "(A,B)))." << endl;
-    outfile << "fof(" << pred_name << "_neq_elim, axiom,  ! [A,B] : ((eq(A,B) & neq(A,B)) => $false))." << endl;
-  
-    return;
-}
-
 bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName)
 {
     Theory T;
@@ -261,7 +254,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
                 && statementName == namesOfAxiomsToBeUsed[j]) {
                 string s = theory[i];
                 replaceFirstOccurrence(s,"conjecture","axiom");
-                outfile << s << "." << endl;
+ //               outfile << "toto:" << s << "." << endl;
                 T.AddAxiom(cl,statementName);
                 found = true;
             }
@@ -272,13 +265,6 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         }
     }
 
-    outfile << "fof(eq_symm, axiom, ! [A,B] : (eq(A,B) => eq(B,A)))." << endl;
-    outfile << "fof(neq_symm, axiom, ! [A,B] : (neq(A,B) => neq(B,A)))." << endl;
-    outfile << "fof(eq_refl, axiom, ! [A,B] : (eq(A,B) => eq(B,A)))." << endl;
-    outfile << "fof(eq_neq_f, axiom,  ! [A,B] : ((eq(A,B) & neq(A,B)) => $false))." << endl;
-    outfile << "fof(eq_excl_middle, axiom, ! [A,B] : (eq(A,B) | neq(A,B)))." << endl;
-    OutputAxioms(outfile, "cong");
-
     T.AddAxiomEqSymm();
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
@@ -286,12 +272,11 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     T.AddEqExcludedMiddleAxiom(); 
     T.AddExcludedMiddleAxioms();
     T.AddEqSubAxioms();
+
     for(size_t i=0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "fof(" << T.Axiom(i).second <<",axiom, " << T.Axiom(i).first << ")." << endl;
     }
- /*   T.AddExcludedMiddleAxioms();
-    T.AddEqSubAxioms();
-*/
+
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
