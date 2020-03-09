@@ -262,6 +262,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
                 string s = theory[i];
                 replaceFirstOccurrence(s,"conjecture","axiom");
                 outfile << s << "." << endl;
+                T.AddAxiom(cl,statementName);
                 found = true;
             }
         }
@@ -349,24 +350,24 @@ int main(int /* argc */, char** /* argv*/)
     //return 0;
 
     vector< pair<string, vector<string> > > case_study =   euclids_thms1   /* test_trivial */  ;
-    int numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
-        string thm = case_study[i].first;
-        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
-        vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(    EuclidAxioms    /* TrivialAxioms */ , depends, thm)) {
-            numberProved++;
-            cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-        }
-        else {
-            numberNotProved++;
-            cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-        }
-        cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    }
+    // int numberProved = 0, numberNotProved = 0;
+    // for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+    //     string thm = case_study[i].first;
+    //     cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
+    //     vector<string> depends = case_study[i].second;
+    //     if (ProveFromTPTPTheory(    EuclidAxioms    /* TrivialAxioms */ , depends, thm)) {
+    //         numberProved++;
+    //         cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+    //     }
+    //     else {
+    //         numberNotProved++;
+    //         cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+    //     }
+    //     cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+    // }
 
 //    RunCaseStudy(case_study,EuclidAxioms);
-//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
 
     return 0;
 
