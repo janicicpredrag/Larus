@@ -65,7 +65,7 @@ vector<string> EuclidAxioms =
     "fof(postulate_Euclid5,axiom, ! [Ca,P,Q,R,S,T] : (( betS(R,T,S) & betS(P,T,Q) & betS(R,Ca,Q) & cong(P,T,Q,T) & cong(T,R,T,S) & ncol(P,Q,S))  => ? [X] : ( ( betS(P,Ca,X) & betS(S,Q,X)))))",
     "fof(axiom_circle_center_radius,axiom, ! [A,B,C,J,P] : (( cI(J,A,B,C) & onCirc(P,J))  =>  ( cong(A,P,B,C))))",
     "fof(axiom_congruentequal,axiom, ! [A,B,C,Ca,Cb,Cc] : (cong_3(A,B,C,Ca,Cb,Cc)  =>  eT(A,B,C,Ca,Cb,Cc)))",
-    "fof(axiom_ETpermutation,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(A,Bsub,C,Cb,Cc,Ca) & eT(A,B,C,Ca,Cc,Cb) & eT(A,B,C,Cb,Ca,Cc) & eT(A,B,C,Cc,Cb,Ca) & eT(A,B,C,Cc,Ca,Cb))))",
+    "fof(axiom_ETpermutation,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(A,B,C,Cb,Cc,Ca) & eT(A,B,C,Ca,Cc,Cb) & eT(A,B,C,Cb,Ca,Cc) & eT(A,B,C,Cc,Cb,Ca) & eT(A,B,C,Cc,Ca,Cb))))",
     "fof(axiom_ETsymmetric,axiom, ! [A,B,C,Ca,Cb,Cc] : (( eT(A,B,C,Ca,Cb,Cc))  =>  ( eT(Ca,Cb,Cc,A,B,C))))",
     "fof(axiom_EFpermutation,axiom, ! [A,B,C,D,Ca,Cb,Cc,Cd] : (( eF(A,B,C,D,Ca,Cb,Cc,Cd))  =>  ( eF(A,B,C,D,Cb,Cc,Cd,Ca) & eF(A,B,C,D,Cd,Cc,Cb,Ca) & eF(A,B,C,D,Cc,Cd,Ca,Cb) & eF(A,B,C,D,Cb,Ca,Cd,Cc) & eF(A,B,C,D,Cd,Ca,Cb,Cc) & eF(A,B,C,D,Cc,Cb,Ca,Cd) & eF(A,B,C,D,Ca,Cd,Cc,Cb))))",
     "fof(axiom_halvesofequals,axiom, ! [A,B,C,D,Ca,Cb,Cc,Cd] : (( eT(A,B,C,B,C,D) & tS(A,B,C,D) & eT(Ca,Cb,Cc,Cb,Cc,Cd) & tS(Ca,Cb,Cc,Cd) & eF(A,B,D,C,Ca,Cb,Cd,Cc))  =>  ( eT(A,B,C,Ca,Cb,Cc))))",
@@ -92,7 +92,7 @@ vector<string> EuclidAxioms =
     "fof(axiom_paste3_3_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,Cm,Cd) & eq(Cm,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
     "fof(axiom_paste3_3_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,Cm,Cd) & eq(Cm,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
 
-    "fof(axiom_paste4,axiom, ! [A,B,C,D,F,G,H,J,K,L,M,P,Ce,m] : (( eF(A,B,m,D,F,K,H,G) & eF(D,B,Ce,C,G,H,M,L) & betS(A,P,C) & betS(B,P,D) & betS(K,H,M) & betS(F,G,L) & betS(B,m,D) & betS(B,Ce,C) & betS(F,J,M) & betS(K,J,L))  =>  ( eF(A,B,C,D,F,K,M,L))))",
+    "fof(axiom_paste4,axiom, ! [A,B,C,D,F,G,H,J,K,L,M,P,Ce,Cm] : (( eF(A,B,Cm,D,F,K,H,G) & eF(D,B,Ce,C,G,H,M,L) & betS(A,P,C) & betS(B,P,D) & betS(K,H,M) & betS(F,G,L) & betS(B,Cm,D) & betS(B,Ce,C) & betS(F,J,M) & betS(K,J,L))  =>  ( eF(A,B,C,D,F,K,M,L))))",
 //    "fof(defunequal,axiom,! [ A,B] : neq(A,B) =>  ( neq(A,B)))",
 //    "fof(defunequal2,axiom,! [ A,B] :  ( neq(A,B))  => neq(A,B))",
     "fof(defcollinear,axiom,! [ A,B,C] : ( col(A,B,C) =>  ( eq(A,B) | eq(A,C) | eq(B,C) | betS(B,A,C) | betS(A,B,C) | betS(A,C,B))))",
