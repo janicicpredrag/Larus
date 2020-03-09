@@ -45,7 +45,7 @@ vector<string> TestAxioms1 =
     "p(X) =>q(X)",
     "Ca(X) => (p(X) | r(X))",
     "r(X) => q(X)",
-    "(p(X) & ~p(X))  =>  false ",
+    "(p(X) & ~p(X))  =>  $false ",
     "Ca(X) => proba(Y)",
     "p(X) =>t(X)"
 };

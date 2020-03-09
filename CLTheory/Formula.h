@@ -146,14 +146,19 @@ private:
 // ---------------------------------------------------------------------------------------
 inline ostream& operator<<(ostream& os, const Fact& f)
 {
-    os << f.GetName();
-    if (f.GetArity() > 0) {
-        os << "(";
-        for (size_t i = 0; i < f.GetArity(); i++) {
-            os << f.GetArg(i);
-            if (i != f.GetArity()-1)
-                os << ",";
-        }
+    if (f.GetName() == "false")
+    {
+        os << "$false";
+    }
+    else
+        os << f.GetName();
+        if (f.GetArity() > 0) {
+            os << "(";
+            for (size_t i = 0; i < f.GetArity(); i++) {
+                os << f.GetArg(i);
+                if (i != f.GetArity()-1)
+                    os << ",";
+         }
         os << ")";
     }
     return os;

@@ -56,7 +56,9 @@ void Theory::AddNegElimAxioms()
         CLFormula axiom(premises,conclusion);
         for (size_t j=0; j < mSignature[i].second; j++)
             axiom.AddUnivVar(string(1,'A'+j));
-        AddAxiom(axiom, mSignature[i].first+"_neg_elim");
+        string sname(mSignature[i].first);
+        sname[0] = std::tolower(sname[0]);
+        AddAxiom(axiom, sname+"_neg_elim");
     }
 }
 
@@ -127,7 +129,6 @@ void Theory::AddEqSubAxioms()
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
-
         for (size_t j=0; j < mSignature[i].second; j++) {
             ConjunctionFormula premises;
             DNFFormula conclusion;
