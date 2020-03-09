@@ -230,7 +230,7 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
 
 string SkipSpaces(const string& str);
 string ToUpper(const string& str);
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t type);
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& type);
 bool ReadSetOfTPTPStatements(Theory *pT, const vector<string>& statements);
 
 // ---------------------------------------------------------------------------------------

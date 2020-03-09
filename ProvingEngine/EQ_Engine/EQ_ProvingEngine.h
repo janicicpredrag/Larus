@@ -53,6 +53,9 @@ private:
     bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
                         ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof, bool bNegIntro);
 
+    string app(string s, unsigned arg1);
+    string app(string s, unsigned arg1, unsigned arg2);
+    string appeq(string arg1, string arg2);
 
     unsigned mnMaxArity;
     unsigned mnMaxPremises;
@@ -81,9 +84,11 @@ private:
     map<string, unsigned> PREDICATE;
     map<unsigned, unsigned> ARITY;
     map<string, unsigned> CONSTANTS;
+
+    set<string> DECLARATIONS;
+
     string mURSAstringPremises;
     string mURSAstringAxioms;
-    string msConstraint;
 };
 
 #endif // EQPROVINGENGINE_H

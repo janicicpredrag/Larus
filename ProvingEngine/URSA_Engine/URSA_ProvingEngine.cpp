@@ -118,8 +118,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
-    //ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
-    ursaFile << "nProofLen = 15;" << endl << endl;
+    ursaFile << "minimize(nProofLen, 1, 30);" << endl << endl;
+    //ursaFile << "nProofLen = 15;" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
 

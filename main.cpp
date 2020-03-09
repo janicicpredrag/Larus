@@ -15,9 +15,9 @@
 
 enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine, EQ_Engine };
 
-const enum ePROVING_ENGINE PROVING_ENGINE = EQ_Engine;
+const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
 
-const float TIME_LIMIT = 30;
+const float TIME_LIMIT = 40;
 
 using namespace std;
 
@@ -117,6 +117,84 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
     return proved;
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+bool ProveTPTPConjecture(const string inputFile)
+{
+    ifstream tptpconjecture(inputFile,ios::in);
+    string s, str;
+    if (tptpconjecture.good()) {
+        while(getline(tptpconjecture, s)) {
+            if (s.at(0) != '%')
+                str += s;
+        }
+    }
+    tptpconjecture.close();
+
+    string statementName, theoremName;
+    Theory T;
+    CLFormula cl, theorem;
+    size_t noAxioms = 0;
+
+    string strfof ("fof");
+    size_t found1 = str.find(strfof);
+
+    while (found1 != std::string::npos) {
+        size_t found2 = str.find(".", found1+1);
+        if (found2 == string::npos)
+            return false;
+        s = str.substr(found1, found2);
+        size_t type = 2;
+        if (ReadTPTPStatement(s, cl, statementName, type)) {
+            if (type == 0) {
+                if (PROVING_ENGINE == URSA_Engine || PROVING_ENGINE == EQ_Engine) {
+                    vector< pair<CLFormula,string> > normalizedAxioms;
+                    cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
+                    T.AddAxioms(normalizedAxioms);
+                }
+                else
+                    T.AddAxiom(cl,statementName);
+            } else if (type == 1) {
+                theorem = cl;
+                theoremName = statementName;
+                if (PROVING_ENGINE == URSA_Engine || PROVING_ENGINE == EQ_Engine) {
+                    vector< pair<CLFormula,string> > output;
+                    theorem.NormalizeGoal(statementName, to_string(0), output);
+                    if (output.size()>1) {
+                        for(size_t j=0; j<output.size()-1; j++)
+                            T.AddAxiom(output[j].first, output[j].second);
+                    }
+                    theorem = output[output.size()-1].first;
+                    cout << theorem << endl;
+                }
+                else
+                    cout << theorem << endl;
+            }
+        }
+        str = str.substr(found2+1,str.size());
+        found1 = str.find(strfof);
+    }
+
+    ProvingEngine* engine;
+    if (PROVING_ENGINE == STL_Engine)
+        engine = new STL_ProvingEngine(&T);
+    else if (PROVING_ENGINE == SQL_Engine)
+        engine = new SQL_ProvingEngine(&T);
+    else if (PROVING_ENGINE == URSA_Engine)
+        engine = new URSA_ProvingEngine(&T);
+    else if (PROVING_ENGINE == EQ_Engine)
+        engine = new EQ_ProvingEngine(&T);
+    else // default
+        engine = new STL_ProvingEngine(&T);
+
+    int r = ProveTheorem(T, engine, theorem, theoremName);
+    delete engine;
+    return r;
+}
+
+
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
@@ -127,7 +205,8 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
     URSA_ProvingEngine engine(&T);
     CLFormula cl;
     string thmName;
-    if (ReadTPTPStatement(strTheorem, cl, thmName, 2))
+    size_t type = 2;
+    if (ReadTPTPStatement(strTheorem, cl, thmName, type))
         return ProveTheorem(T, &engine, cl, thmName);
     return false;
 }
@@ -144,15 +223,16 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
             CLFormula cl;
-            if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+            size_t type = 2;
+            if (ReadTPTPStatement(theory[i], cl, statementName, type)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
-                if (PROVING_ENGINE != URSA_Engine)
-                    T.AddAxiom(cl,statementName);
-                else {
+                if (PROVING_ENGINE == URSA_Engine || PROVING_ENGINE == EQ_Engine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(j+1), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
                 }
+                else
+                    T.AddAxiom(cl,statementName);
                 found = true;
             }
         }
@@ -166,13 +246,11 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
-        if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+        size_t type = 2;
+        if (ReadTPTPStatement(theory[i], cl, statementName, type)
             && statementName == theoremName) {
             theorem = cl;
-            if (PROVING_ENGINE != URSA_Engine) {
-                cout << theorem << endl;
-            }
-            else {
+            if (PROVING_ENGINE == URSA_Engine || PROVING_ENGINE == EQ_Engine) {
                 vector< pair<CLFormula,string> > output;
                 theorem.NormalizeGoal(theoremName, to_string(0), output);
                 if (output.size()>1) {
@@ -182,6 +260,8 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
                 theorem = output[output.size()-1].first;
                 cout << theorem << endl;
             }
+            else
+                cout << theorem << endl;
             found = true;
         }
     }
@@ -257,7 +337,8 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
             CLFormula cl;
-            if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+            size_t type = 2;
+            if (ReadTPTPStatement(theory[i], cl, statementName, type)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
                 string s = theory[i];
                 replaceFirstOccurrence(s,"conjecture","axiom");
@@ -294,7 +375,8 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
-        if (ReadTPTPStatement(theory[i], cl, statementName, 2)
+        size_t type = 2;
+        if (ReadTPTPStatement(theory[i], cl, statementName, type)
             && statementName == theoremName) {
             theorem = cl;
             outfile << theory[i] << "." << endl;
@@ -337,8 +419,19 @@ void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<str
     }
 }
 
-int main(int /* argc */, char** /* argv*/)
+int main(int argc , char** argv)
 {
+    if (argc >= 2) {
+        bool b = ProveTPTPConjecture(argv[1]);
+        if (b)
+            cout << "Proved! " << endl;
+        else
+            cout << "NOT proved! " << endl;
+    }
+    return 0;
+
+
+
     //CLFormula cl;
     //string thmName;
     //bool r = ReadTPTPStatement("fof(cn_eq1c, axiom, ! [A,B] : ( eq(A,B) => eq(B,A)))", cl, thmName, 2);

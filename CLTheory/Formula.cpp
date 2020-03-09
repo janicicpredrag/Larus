@@ -404,7 +404,7 @@ string ToUpper(const string& str)
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t type) {
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& type) {
     size_t pos1, pos2;
     if(s.substr(0,4) != "fof(")
         return false;
@@ -422,6 +422,12 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t typ
     if (type == 1)
         if (SkipSpaces(ss) != string("conjecture"))
             return false;
+
+    if (SkipSpaces(ss) == string("axiom"))
+        type = 0;
+    if (SkipSpaces(ss) == string("conjecture"))
+        type = 1;
+
 
     ss = s.substr(pos2+1,s.size()-pos2-2);
     // cout << "text: " << axname << " : " << ss << endl;
@@ -445,7 +451,8 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
     for(size_t i=0, size = statements.size(); i < size; i++) {
         CLFormula cl;
         string s = statements[i];
-        if (ReadTPTPStatement(s, cl, statementName, 0))
+        size_t type = 0;
+        if (ReadTPTPStatement(s, cl, statementName, type))
             T->AddAxiom(cl, statementName);
     }
     return true;
