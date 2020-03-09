@@ -80,17 +80,17 @@ vector<string> EuclidAxioms =
     "fof(axiom_paste2,axiom, ! [A,B,C,D,E,M,Ca,Cb,Cc,Cd,Ce,m] : ( (betS(B,C,D) & betS(Cb,Cc,Cd) & eT(C,D,E,Cc,Cd,Ce) & eF(A,B,C,E,Ca,Cb,Cc,Ce) & betS(A,M,D) & betS(B,M,E) & betS(Ca,m,Cd) & betS(Cb,m,Ce))  =>  eF(A,B,D,E,Ca,Cb,Cd,Ce) ))",
  // paste_3 is splitted in three axioms to remove the disjunction
  //  "fof(axiom_paste3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & (betS(A,M,B) | eq(A,M) | eq(M,B)) & betS(Cc,m,Cd) & (betS(Ca,m,Cb) | eq(Ca,m) | eq(m,Cb)))  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_1_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,m,Cd) & betS(Ca,m,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_1_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,m,Cd) & betS(Ca,m,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_1_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,m,Cd) & betS(Ca,m,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_1_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,Cm,Cd) & betS(Ca,Cm,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_1_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,Cm,Cd) & betS(Ca,Cm,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_1_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,Cm,Cd) & betS(Ca,Cm,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
  
-    "fof(axiom_paste3_2_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,m,Cd) & eq(Ca,m)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_2_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,m,Cd) & eq(Ca,m)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_2_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,m,Cd) & eq(Ca,m)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_2_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,Cm,Cd) & eq(Ca,Cm)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_2_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,Cm,Cd) & eq(Ca,Cm)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_2_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,Cm,Cd) & eq(Ca,Cm)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
 
-    "fof(axiom_paste3_3_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,m,Cd) & eq(m,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_3_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,m,Cd) & eq(m,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
-    "fof(axiom_paste3_3_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,m,Cd) & eq(m,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_3_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,Cm,Cd) & eq(Cm,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_3_2,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(A,M)     & betS(Cc,Cm,Cd) & eq(Cm,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
+    "fof(axiom_paste3_3_3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & eq(M,B)     & betS(Cc,Cm,Cd) & eq(Cm,Cb)      )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
 
     "fof(axiom_paste4,axiom, ! [A,B,C,D,F,G,H,J,K,L,M,P,Ce,m] : (( eF(A,B,m,D,F,K,H,G) & eF(D,B,Ce,C,G,H,M,L) & betS(A,P,C) & betS(B,P,D) & betS(K,H,M) & betS(F,G,L) & betS(B,m,D) & betS(B,Ce,C) & betS(F,J,M) & betS(K,J,L))  =>  ( eF(A,B,C,D,F,K,M,L))))",
 //    "fof(defunequal,axiom,! [ A,B] : neq(A,B) =>  ( neq(A,B)))",
