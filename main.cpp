@@ -1,6 +1,7 @@
 #include <string>
 #include <ctype.h>
 #include <iostream>
+#include <string.h>
 
 #include "CLTheory/Theory.h"
 #include "CLTheory/Formula.h"
@@ -407,14 +408,41 @@ void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<str
 
 int main(int argc , char** argv)
 {
+    string filename;
+    int timeout;
     if (argc >= 2) {
-        bool b = ProveTPTPConjecture(argv[1]);
-        if (b)
-            cout << "Proved! " << endl;
-        else
-            cout << "NOT proved! " << endl;
+
+        for (int i = 1; i < argc; i++) {
+            if (!strcmp(argv[i], "-tptp")) {
+                if (i+1 >= argc) {
+                    cout << "Wrong arguments" << endl;
+                    return -1;
+                }
+                filename = argv[i+1];
+            }
+            if (!strcmp(argv[i], "-timeout")) {
+                if (i+1 >= argc) {
+                    cout << "Wrong arguments" << endl;
+                    return -1;
+                }
+                timeout = atoi(argv[i+1]);
+            }
+        }
+
+        bool b = false;
+        if (filename != "")
+            b = ProveTPTPConjecture(filename);
+        if (b) {
+            cout << "% SZS status Theorem" << endl;
+            return 0;
+        }
+        else {
+            cout << "% SZS status GaveUp" << endl;
+            return -1;
+        }
     }
-    return 0;
+
+
 
 
 
