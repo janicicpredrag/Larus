@@ -127,7 +127,6 @@ void Theory::AddEqSubAxioms()
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
-
         for (size_t j=0; j < mSignature[i].second; j++) {
             ConjunctionFormula premises;
             DNFFormula conclusion;
