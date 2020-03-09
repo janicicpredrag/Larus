@@ -77,7 +77,7 @@ vector<string> EuclidAxioms =
     "fof(axiom_paste1,axiom, ! [A,B,C,D,E,Ca,Cb,Cc,Cd,Ce] : (( betS(A,B,C) & betS(Ca,Cb,Cc) & betS(E,D,C) & betS(Ce,Cd,Cc) & eT(B,C,D,Cb,Cc,Cd) & eF(A,B,D,E,Ca,Cb,Cd,Ce))  =>  ( eT(A,C,E,Ca,Cc,Ce))))",
     "fof(axiom_deZolt1,axiom, ! [B,C,D,E] : (( betS(B,E,D))  =>  ( neT(D,B,C,E,B,C))))",
     "fof(axiom_deZolt2,axiom, ! [A,B,C,E,F] : (( triangle(A,B,C) & betS(B,E,A) & betS(B,F,C))  =>  ( neT(A,B,C,E,B,F))))",
-    "fof(axiom_paste2,axiom, ! [A,B,C,D,E,M,Ca,Cb,Cc,Cd,Ce,m] : ( (betS(B,C,D) & betS(Cb,Cc,Cd) & eT(C,D,E,Cc,Cd,Ce) & eF(A,B,C,E,Ca,Cb,Cc,Ce) & betS(A,M,D) & betS(B,M,E) & betS(Ca,m,Cd) & betS(Cb,m,Ce))  =>  eF(A,B,D,E,Ca,Cb,Cd,Ce) ))",
+    "fof(axiom_paste2,axiom, ! [A,B,C,D,E,M,Ca,Cb,Cc,Cd,Ce,Cm] : ( (betS(B,C,D) & betS(Cb,Cc,Cd) & eT(C,D,E,Cc,Cd,Ce) & eF(A,B,C,E,Ca,Cb,Cc,Ce) & betS(A,M,D) & betS(B,M,E) & betS(Ca,Cm,Cd) & betS(Cb,Cm,Ce))  =>  eF(A,B,D,E,Ca,Cb,Cd,Ce) ))",
  // paste_3 is splitted in three axioms to remove the disjunction
  //  "fof(axiom_paste3,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,m] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & (betS(A,M,B) | eq(A,M) | eq(M,B)) & betS(Cc,m,Cd) & (betS(Ca,m,Cb) | eq(Ca,m) | eq(m,Cb)))  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
     "fof(axiom_paste3_1_1,axiom, ! [A,B,C,D,M,Ca,Cb,Cc,Cd,Cm] : (( eT(A,B,C,Ca,Cb,Cc) & eT(A,B,D,Ca,Cb,Cd) & betS(C,M,D) & betS(A,M,B) & betS(Cc,Cm,Cd) & betS(Ca,Cm,Cb) )  =>  ( eF(A,C,B,D,Ca,Cc,Cb,Cd))))",
