@@ -56,7 +56,7 @@ vector< pair<string, vector<string>>> euclids_thms1 = {
   //{"lemma_ray1" , {"lemma_inequalitysymmetric", "lemma_ray"   } }
 
 
-      // {"lemma_oppositesideflip" , {"defoppositeside", "defoppositeside2",  "lemma_NCorder", "lemma_collinearorder"   } }
+//      {"lemma_oppositesideflip" , {"defoppositeside", "defoppositeside2",  "lemma_NCorder", "lemma_collinearorder" , "deftogethergreater"  } }
 
 
 

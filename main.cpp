@@ -16,9 +16,9 @@
 
 enum ePROVING_ENGINE { STL_Engine, SQL_Engine, URSA_Engine, EQ_Engine };
 
-const enum ePROVING_ENGINE PROVING_ENGINE = URSA_Engine;
+const enum ePROVING_ENGINE PROVING_ENGINE = EQ_Engine;
 
-const float TIME_LIMIT = 40;
+const float TIME_LIMIT = 10;
 
 using namespace std;
 
@@ -48,7 +48,7 @@ string itos(unsigned int i)
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName)
+bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit)
 {
     T.Reset();
     map<string,string> instantiation;
@@ -85,7 +85,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
     }*/
 
     clock_t startTime = clock();
-    engine->SetStartTimeAndLimit(startTime, TIME_LIMIT);
+    engine->SetStartTimeAndLimit(startTime, timelimit);
     bool proved = false;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = true;
@@ -121,7 +121,7 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveTPTPConjecture(const string inputFile)
+bool ProveTPTPConjecture(const string inputFile, size_t timelimit)
 {
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
@@ -167,10 +167,8 @@ bool ProveTPTPConjecture(const string inputFile)
                             T.AddAxiom(output[j].first, output[j].second);
                     }
                     theorem = output[output.size()-1].first;
-                    cout << theorem << endl;
                 }
-                else
-                    cout << theorem << endl;
+                cout << theoremName << ":" << theorem << endl;
             }
         }
         str = str.substr(found2+1,str.size());
@@ -189,7 +187,7 @@ bool ProveTPTPConjecture(const string inputFile)
     else // default
         engine = new STL_ProvingEngine(&T);
 
-    int r = ProveTheorem(T, engine, theorem, theoremName);
+    int r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
     delete engine;
     return r;
 }
@@ -208,7 +206,7 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem)
     string thmName;
     size_t type = 2;
     if (ReadTPTPStatement(strTheorem, cl, thmName, type))
-        return ProveTheorem(T, &engine, cl, thmName);
+        return ProveTheorem(T, &engine, cl, thmName, TIME_LIMIT);
     return false;
 }
 
@@ -289,17 +287,17 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     T.AddNegElimAxioms();
 
 
-    int r = ProveTheorem(T, engine, theorem, theoremName);
+    int r = ProveTheorem(T, engine, theorem, theoremName, TIME_LIMIT);
     if (!r) {
         // T.AddEqExcludedMiddleAxiom();
         T.AddEqSubAxioms();
         cerr << "   second attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName);
+        r = ProveTheorem(T, engine, theorem, theoremName, TIME_LIMIT);
     }
     if (!r) {
         T.AddExcludedMiddleAxioms();
         cerr << "   third attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName);
+        r = ProveTheorem(T, engine, theorem, theoremName, TIME_LIMIT);
     }
 
     delete engine;
@@ -409,7 +407,7 @@ void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<str
 int main(int argc , char** argv)
 {
     string filename;
-    int timeout;
+    int timeout = -1;
     if (argc >= 2) {
 
         for (int i = 1; i < argc; i++) {
@@ -430,8 +428,11 @@ int main(int argc , char** argv)
         }
 
         bool b = false;
+        if (timeout <= 0)
+            timeout = TIME_LIMIT;
+
         if (filename != "")
-            b = ProveTPTPConjecture(filename);
+            b = ProveTPTPConjecture(filename, timeout);
         if (b) {
             cout << "% SZS status Theorem" << endl;
             return 0;
@@ -441,9 +442,6 @@ int main(int argc , char** argv)
             return -1;
         }
     }
-
-
-
 
 
     //CLFormula cl;
@@ -456,24 +454,24 @@ int main(int argc , char** argv)
     //return 0;
 
     vector< pair<string, vector<string> > > case_study =   euclids_thms1   /* test_trivial */  ;
-    // int numberProved = 0, numberNotProved = 0;
-    // for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
-    //     string thm = case_study[i].first;
-    //     cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
-    //     vector<string> depends = case_study[i].second;
-    //     if (ProveFromTPTPTheory(    EuclidAxioms    /* TrivialAxioms */ , depends, thm)) {
-    //         numberProved++;
-    //         cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    //     }
-    //     else {
-    //         numberNotProved++;
-    //         cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    //     }
-    //     cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    // }
+    int numberProved = 0, numberNotProved = 0;
+    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+        string thm = case_study[i].first;
+        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
+        vector<string> depends = case_study[i].second;
+        if (ProveFromTPTPTheory(    EuclidAxioms    /* TrivialAxioms */ , depends, thm)) {
+            numberProved++;
+            cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+        }
+        else {
+            numberNotProved++;
+            cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+         }
+         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
+    }
 
 //    RunCaseStudy(case_study,EuclidAxioms);
-    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
 
     return 0;
 
