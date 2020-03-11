@@ -44,9 +44,10 @@ public:
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit);
+    virtual PROVING_ENGINE GetKind() { return eEQ_ProvingEngine; }
 
 private:
-    void EncodeAxiom(size_t no, CLFormula& axiom, string name);
+    void EncodeAxiom(CLFormula& axiom, string name);
     void EncodeProof(const DNFFormula& formula, unsigned nProofLen);
     bool ReadModel(const string& sModelFile, const string& sEncodedProofFile);
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);

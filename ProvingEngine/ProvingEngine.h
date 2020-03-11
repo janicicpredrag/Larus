@@ -3,6 +3,7 @@
 
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
+#include "common.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ public:
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
     virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
         { mStartTime = startTime; mTimeLimit = timeLimit; }
+    virtual PROVING_ENGINE GetKind() = 0;
 
     virtual void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)
         { mpT->InstantiateFact(f, instantiation, fout, bInstantiateVars);  }

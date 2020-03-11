@@ -114,6 +114,7 @@ public:
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
     bool Read(const string& s);
+    bool ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B) const;
 
     size_t GetNumOfUnivVars() const { return mUniversalVars.size(); }
     const string& GetUnivVar(size_t i) const { return mUniversalVars[i]; }

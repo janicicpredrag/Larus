@@ -5,6 +5,7 @@
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "ProvingEngine/ProvingEngine.h"
+#include "common.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ public:
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit);
+    virtual PROVING_ENGINE GetKind() { return eURSA_ProvingEngine; }
 
 private:
     void EncodeAxiom(size_t no, CLFormula& axiom, string name);
