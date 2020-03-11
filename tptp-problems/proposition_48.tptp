@@ -1,0 +1,172 @@
+fof(deftriangle,axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((ncol(A,B,C)))))).
+fof(deftriangle2,axiom, (! [A,B,C] : ((ncol(A,B,C)) => ((triangle(A,B,C)))))).
+fof(lemma_NCdistinct,axiom, (! [A,B,C] : ((ncol(A,B,C)) => ((neq(A,B) & neq(B,C) & neq(A,C) & neq(B,A) & neq(C,B) & neq(C,A)))))).
+fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
+fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((neq(A,B) & neq(P,Q)) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((eq(A,B)) | (eq(A,C)) | (eq(B,C)) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((eq(A,B)) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((eq(A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((eq(B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
+fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
+fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C) & neq(A,B) & neq(A,C)))))).
+fof(lemma_NChelper,axiom, (! [A,B,C,P,Q] : ((ncol(A,B,C) & col(A,B,P) & col(A,B,Q) & neq(P,Q)) => ((ncol(P,Q,C)))))).
+fof(lemma_NCorder,axiom, (! [A,B,C] : ((ncol(A,B,C)) => ((ncol(B,A,C) & ncol(B,C,A) & ncol(C,A,B) & ncol(A,C,B) & ncol(C,B,A)))))).
+fof(proposition_11B,axiom, (! [A,B,C,P] : (? [X] : ((betS(A,C,B) & ncol(A,B,P)) => ((per(A,C,X) & tS(X,A,B,P))))))).
+fof(lemma_rightangleNC,axiom, (! [A,B,C] : ((per(A,B,C)) => ((ncol(A,B,C)))))).
+fof(lemma_layoff,axiom, (! [A,B,C,D] : (? [X] : ((neq(A,B) & neq(C,D)) => ((out(A,B,X) & cong(A,X,C,D))))))).
+fof(lemma_8_3,axiom, (! [A,B,C,D] : ((per(A,B,C) & out(B,C,D)) => ((per(A,B,D)))))).
+fof(proposition_46,axiom, (! [A,B,R] : (? [X,Y] : ((neq(A,B) & ncol(A,B,R)) => ((sQ(A,B,X,Y) & tS(Y,A,B,R) & pG(A,B,X,Y))))))).
+fof(lemma_oppositesideflip,axiom, (! [A,B,P,Q] : ((tS(P,A,B,Q)) => ((tS(P,B,A,Q)))))).
+fof(proposition_47,axiom, (! [A,B,C,D,E,F,G,H,K] : (? [X,Y] : ((triangle(A,B,C) & per(B,A,C) & sQ(A,B,F,G) & tS(G,B,A,C) & sQ(A,C,K,H) & tS(H,C,A,B) & sQ(B,C,E,D) & tS(D,C,B,A)) => ((pG(B,X,Y,D) & betS(B,X,C) & pG(X,C,E,Y) & betS(D,Y,E) & eF(A,B,F,G,B,X,Y,D) & eF(A,C,K,H,X,C,E,Y))))))).
+fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))).
+fof(lemma_squaresequal,axiom, (! [A,B,C,D,Xa,Xb,Xc,Xd] : ((cong(A,B,Xa,Xb) & sQ(A,B,C,D) & sQ(Xa,Xb,Xc,Xd)) => ((eF(A,B,C,D,Xa,Xb,Xc,Xd)))))).
+fof(cn_congruencereflexive,axiom, (! [A,B] : ((cong(A,B,A,B))))).
+fof(axiom_EFtransitive,axiom, (! [A,B,C,D,P,Q,R,S,Ca,Cb,Cc,Cd] : ((eF(A,B,C,D,Ca,Cb,Cc,Cd) & eF(Ca,Cb,Cc,Cd,P,Q,R,S)) => ((eF(A,B,C,D,P,Q,R,S)))))).
+fof(axiom_EFsymmetric,axiom, (! [A,B,C,D,Ca,Cb,Cc,Cd] : ((eF(A,B,C,D,Ca,Cb,Cc,Cd)) => ((eF(Ca,Cb,Cc,Cd,A,B,C,D)))))).
+fof(axiom_betweennesssymmetry,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((betS(C,B,A)))))).
+fof(defsquare,axiom, (! [A,B,C,D] : ((sQ(A,B,C,D)) => ((cong(A,B,C,D) & cong(A,B,B,C) & cong(A,B,D,A) & per(D,A,B) & per(A,B,C) & per(B,C,D) & per(C,D,A)))))).
+fof(defsquare2,axiom, (! [A,B,C,D] : ((cong(A,B,C,D) & cong(A,B,B,C) & cong(A,B,D,A) & per(D,A,B) & per(A,B,C) & per(B,C,D) & per(C,D,A)) => ((sQ(A,B,C,D)))))).
+fof(lemma_collinearright,axiom, (! [A,B,C,D] : ((per(A,B,D) & col(A,B,C) & neq(C,B)) => ((per(C,B,D)))))).
+fof(lemma_PGrotate,axiom, (! [A,B,C,D] : ((pG(A,B,C,D)) => ((pG(B,C,D,A)))))).
+fof(lemma_PGrectangle,axiom, (! [A,B,C,D] : ((pG(A,C,D,B) & per(B,A,C)) => ((rE(A,C,D,B)))))).
+fof(lemma_rectanglerotate,axiom, (! [A,B,C,D] : ((rE(A,B,C,D)) => ((rE(B,C,D,A)))))).
+fof(lemma_paste5,axiom, (! [B,C,D,E,L,M,Xb,Xc,Xd,Xe,Xl,Xm] : ((eF(B,M,L,D,Xb,Xm,Xl,Xd) & eF(M,C,E,L,Xm,Xc,Xe,Xl) & betS(B,M,C) & betS(Xb,Xm,Xc) & betS(E,L,D) & betS(Xe,Xl,Xd) & rE(M,C,E,L) & rE(Xm,Xc,Xe,Xl)) => ((eF(B,C,E,D,Xb,Xc,Xe,Xd)))))).
+fof(proposition_48A,axiom, (! [A,B,C,D,Xa,Xb,Xc,Xd] : ((sQ(A,B,C,D) & sQ(Xa,Xb,Xc,Xd) & eF(A,B,C,D,Xa,Xb,Xc,Xd)) => ((cong(A,B,Xa,Xb)))))).
+fof(proposition_08,axiom, (! [A,B,C,D,E,F] : ((triangle(A,B,C) & triangle(D,E,F) & cong(A,B,D,E) & cong(A,C,D,F) & cong(B,C,E,F)) => ((congA(B,A,C,E,D,F) & congA(C,B,A,F,E,D) & congA(A,C,B,D,F,E)))))).
+fof(lemma_equaltorightisright,axiom, (! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & congA(Xa,Xb,Xc,A,B,C)) => ((per(Xa,Xb,Xc)))))).
+fof(eqSymmetric,axiom, (! [A,B] : ((eq(A,B)) => ((eq(B,A)))))).
+fof(neqSymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
+fof(eqReflexive,axiom, (! [A] : ((eq(A,A))))).
+fof(triangle_neg_elim,axiom, (! [A,B,C] : ((triangle(A,B,C) & ntriangle(A,B,C)) => (($false))))).
+fof(col_neg_elim,axiom, (! [A,B,C] : ((col(A,B,C) & ncol(A,B,C)) => (($false))))).
+fof(eq_neg_elim,axiom, (! [A,B] : ((eq(A,B) & neq(A,B)) => (($false))))).
+fof(betS_neg_elim,axiom, (! [A,B,C] : ((betS(A,B,C) & nbetS(A,B,C)) => (($false))))).
+fof(cong_neg_elim,axiom, (! [A,B,C,D] : ((cong(A,B,C,D) & ncong(A,B,C,D)) => (($false))))).
+fof(per_neg_elim,axiom, (! [A,B,C] : ((per(A,B,C) & nper(A,B,C)) => (($false))))).
+fof(tS_neg_elim,axiom, (! [A,B,C,D] : ((tS(A,B,C,D) & ntS(A,B,C,D)) => (($false))))).
+fof(out_neg_elim,axiom, (! [A,B,C] : ((out(A,B,C) & nout(A,B,C)) => (($false))))).
+fof(sQ_neg_elim,axiom, (! [A,B,C,D] : ((sQ(A,B,C,D) & nsQ(A,B,C,D)) => (($false))))).
+fof(pG_neg_elim,axiom, (! [A,B,C,D] : ((pG(A,B,C,D) & npG(A,B,C,D)) => (($false))))).
+fof(eF_neg_elim,axiom, (! [A,B,C,D,E,F,G,H] : ((eF(A,B,C,D,E,F,G,H) & neF(A,B,C,D,E,F,G,H)) => (($false))))).
+fof(rE_neg_elim,axiom, (! [A,B,C,D] : ((rE(A,B,C,D) & nrE(A,B,C,D)) => (($false))))).
+fof(congA_neg_elim,axiom, (! [A,B,C,D,E,F] : ((congA(A,B,C,D,E,F) & ncongA(A,B,C,D,E,F)) => (($false))))).
+fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
+fof(triangle_excluded_middle,axiom, (! [A,B,C] : ((triangle(A,B,C)) | (ntriangle(A,B,C))))).
+fof(col_excluded_middle,axiom, (! [A,B,C] : ((col(A,B,C)) | (ncol(A,B,C))))).
+fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
+fof(betS_excluded_middle,axiom, (! [A,B,C] : ((betS(A,B,C)) | (nbetS(A,B,C))))).
+fof(cong_excluded_middle,axiom, (! [A,B,C,D] : ((cong(A,B,C,D)) | (ncong(A,B,C,D))))).
+fof(per_excluded_middle,axiom, (! [A,B,C] : ((per(A,B,C)) | (nper(A,B,C))))).
+fof(tS_excluded_middle,axiom, (! [A,B,C,D] : ((tS(A,B,C,D)) | (ntS(A,B,C,D))))).
+fof(out_excluded_middle,axiom, (! [A,B,C] : ((out(A,B,C)) | (nout(A,B,C))))).
+fof(sQ_excluded_middle,axiom, (! [A,B,C,D] : ((sQ(A,B,C,D)) | (nsQ(A,B,C,D))))).
+fof(pG_excluded_middle,axiom, (! [A,B,C,D] : ((pG(A,B,C,D)) | (npG(A,B,C,D))))).
+fof(eF_excluded_middle,axiom, (! [A,B,C,D,E,F,G,H] : ((eF(A,B,C,D,E,F,G,H)) | (neF(A,B,C,D,E,F,G,H))))).
+fof(rE_excluded_middle,axiom, (! [A,B,C,D] : ((rE(A,B,C,D)) | (nrE(A,B,C,D))))).
+fof(congA_excluded_middle,axiom, (! [A,B,C,D,E,F] : ((congA(A,B,C,D,E,F)) | (ncongA(A,B,C,D,E,F))))).
+fof(triangle_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & triangle(A,B,C)) => ((triangle(X,B,C)))))).
+fof(triangle_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & triangle(A,B,C)) => ((triangle(A,X,C)))))).
+fof(triangle_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & triangle(A,B,C)) => ((triangle(A,B,X)))))).
+fof(ntriangle_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & ntriangle(A,B,C)) => ((ntriangle(X,B,C)))))).
+fof(ntriangle_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & ntriangle(A,B,C)) => ((ntriangle(A,X,C)))))).
+fof(ntriangle_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & ntriangle(A,B,C)) => ((ntriangle(A,B,X)))))).
+fof(col_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & col(A,B,C)) => ((col(X,B,C)))))).
+fof(col_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & col(A,B,C)) => ((col(A,X,C)))))).
+fof(col_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & col(A,B,C)) => ((col(A,B,X)))))).
+fof(ncol_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & ncol(A,B,C)) => ((ncol(X,B,C)))))).
+fof(ncol_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & ncol(A,B,C)) => ((ncol(A,X,C)))))).
+fof(ncol_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & ncol(A,B,C)) => ((ncol(A,B,X)))))).
+fof(eq_EqSub_0,axiom, (! [A,B,X] : ((eq(A,X) & eq(A,B)) => ((eq(X,B)))))).
+fof(eq_EqSub_1,axiom, (! [A,B,X] : ((eq(B,X) & eq(A,B)) => ((eq(A,X)))))).
+fof(neq_EqSub_0,axiom, (! [A,B,X] : ((eq(A,X) & neq(A,B)) => ((neq(X,B)))))).
+fof(neq_EqSub_1,axiom, (! [A,B,X] : ((eq(B,X) & neq(A,B)) => ((neq(A,X)))))).
+fof(betS_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & betS(A,B,C)) => ((betS(X,B,C)))))).
+fof(betS_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & betS(A,B,C)) => ((betS(A,X,C)))))).
+fof(betS_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & betS(A,B,C)) => ((betS(A,B,X)))))).
+fof(nbetS_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & nbetS(A,B,C)) => ((nbetS(X,B,C)))))).
+fof(nbetS_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & nbetS(A,B,C)) => ((nbetS(A,X,C)))))).
+fof(nbetS_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & nbetS(A,B,C)) => ((nbetS(A,B,X)))))).
+fof(cong_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & cong(A,B,C,D)) => ((cong(X,B,C,D)))))).
+fof(cong_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & cong(A,B,C,D)) => ((cong(A,X,C,D)))))).
+fof(cong_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & cong(A,B,C,D)) => ((cong(A,B,X,D)))))).
+fof(cong_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & cong(A,B,C,D)) => ((cong(A,B,C,X)))))).
+fof(ncong_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & ncong(A,B,C,D)) => ((ncong(X,B,C,D)))))).
+fof(ncong_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & ncong(A,B,C,D)) => ((ncong(A,X,C,D)))))).
+fof(ncong_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & ncong(A,B,C,D)) => ((ncong(A,B,X,D)))))).
+fof(ncong_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & ncong(A,B,C,D)) => ((ncong(A,B,C,X)))))).
+fof(per_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & per(A,B,C)) => ((per(X,B,C)))))).
+fof(per_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & per(A,B,C)) => ((per(A,X,C)))))).
+fof(per_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & per(A,B,C)) => ((per(A,B,X)))))).
+fof(nper_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & nper(A,B,C)) => ((nper(X,B,C)))))).
+fof(nper_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & nper(A,B,C)) => ((nper(A,X,C)))))).
+fof(nper_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & nper(A,B,C)) => ((nper(A,B,X)))))).
+fof(tS_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & tS(A,B,C,D)) => ((tS(X,B,C,D)))))).
+fof(tS_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & tS(A,B,C,D)) => ((tS(A,X,C,D)))))).
+fof(tS_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & tS(A,B,C,D)) => ((tS(A,B,X,D)))))).
+fof(tS_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & tS(A,B,C,D)) => ((tS(A,B,C,X)))))).
+fof(ntS_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & ntS(A,B,C,D)) => ((ntS(X,B,C,D)))))).
+fof(ntS_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & ntS(A,B,C,D)) => ((ntS(A,X,C,D)))))).
+fof(ntS_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & ntS(A,B,C,D)) => ((ntS(A,B,X,D)))))).
+fof(ntS_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & ntS(A,B,C,D)) => ((ntS(A,B,C,X)))))).
+fof(out_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & out(A,B,C)) => ((out(X,B,C)))))).
+fof(out_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & out(A,B,C)) => ((out(A,X,C)))))).
+fof(out_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & out(A,B,C)) => ((out(A,B,X)))))).
+fof(nout_EqSub_0,axiom, (! [A,B,C,X] : ((eq(A,X) & nout(A,B,C)) => ((nout(X,B,C)))))).
+fof(nout_EqSub_1,axiom, (! [A,B,C,X] : ((eq(B,X) & nout(A,B,C)) => ((nout(A,X,C)))))).
+fof(nout_EqSub_2,axiom, (! [A,B,C,X] : ((eq(C,X) & nout(A,B,C)) => ((nout(A,B,X)))))).
+fof(sQ_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & sQ(A,B,C,D)) => ((sQ(X,B,C,D)))))).
+fof(sQ_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & sQ(A,B,C,D)) => ((sQ(A,X,C,D)))))).
+fof(sQ_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & sQ(A,B,C,D)) => ((sQ(A,B,X,D)))))).
+fof(sQ_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & sQ(A,B,C,D)) => ((sQ(A,B,C,X)))))).
+fof(nsQ_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & nsQ(A,B,C,D)) => ((nsQ(X,B,C,D)))))).
+fof(nsQ_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & nsQ(A,B,C,D)) => ((nsQ(A,X,C,D)))))).
+fof(nsQ_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & nsQ(A,B,C,D)) => ((nsQ(A,B,X,D)))))).
+fof(nsQ_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & nsQ(A,B,C,D)) => ((nsQ(A,B,C,X)))))).
+fof(pG_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & pG(A,B,C,D)) => ((pG(X,B,C,D)))))).
+fof(pG_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & pG(A,B,C,D)) => ((pG(A,X,C,D)))))).
+fof(pG_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & pG(A,B,C,D)) => ((pG(A,B,X,D)))))).
+fof(pG_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & pG(A,B,C,D)) => ((pG(A,B,C,X)))))).
+fof(npG_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & npG(A,B,C,D)) => ((npG(X,B,C,D)))))).
+fof(npG_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & npG(A,B,C,D)) => ((npG(A,X,C,D)))))).
+fof(npG_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & npG(A,B,C,D)) => ((npG(A,B,X,D)))))).
+fof(npG_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & npG(A,B,C,D)) => ((npG(A,B,C,X)))))).
+fof(eF_EqSub_0,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(A,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(X,B,C,D,E,F,G,H)))))).
+fof(eF_EqSub_1,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(B,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,X,C,D,E,F,G,H)))))).
+fof(eF_EqSub_2,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(C,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,X,D,E,F,G,H)))))).
+fof(eF_EqSub_3,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(D,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,C,X,E,F,G,H)))))).
+fof(eF_EqSub_4,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(E,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,C,D,X,F,G,H)))))).
+fof(eF_EqSub_5,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(F,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,C,D,E,X,G,H)))))).
+fof(eF_EqSub_6,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(G,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,C,D,E,F,X,H)))))).
+fof(eF_EqSub_7,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(H,X) & eF(A,B,C,D,E,F,G,H)) => ((eF(A,B,C,D,E,F,G,X)))))).
+fof(neF_EqSub_0,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(A,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(X,B,C,D,E,F,G,H)))))).
+fof(neF_EqSub_1,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(B,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,X,C,D,E,F,G,H)))))).
+fof(neF_EqSub_2,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(C,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,X,D,E,F,G,H)))))).
+fof(neF_EqSub_3,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(D,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,C,X,E,F,G,H)))))).
+fof(neF_EqSub_4,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(E,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,C,D,X,F,G,H)))))).
+fof(neF_EqSub_5,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(F,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,C,D,E,X,G,H)))))).
+fof(neF_EqSub_6,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(G,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,C,D,E,F,X,H)))))).
+fof(neF_EqSub_7,axiom, (! [A,B,C,D,E,F,G,H,X] : ((eq(H,X) & neF(A,B,C,D,E,F,G,H)) => ((neF(A,B,C,D,E,F,G,X)))))).
+fof(rE_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & rE(A,B,C,D)) => ((rE(X,B,C,D)))))).
+fof(rE_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & rE(A,B,C,D)) => ((rE(A,X,C,D)))))).
+fof(rE_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & rE(A,B,C,D)) => ((rE(A,B,X,D)))))).
+fof(rE_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & rE(A,B,C,D)) => ((rE(A,B,C,X)))))).
+fof(nrE_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & nrE(A,B,C,D)) => ((nrE(X,B,C,D)))))).
+fof(nrE_EqSub_1,axiom, (! [A,B,C,D,X] : ((eq(B,X) & nrE(A,B,C,D)) => ((nrE(A,X,C,D)))))).
+fof(nrE_EqSub_2,axiom, (! [A,B,C,D,X] : ((eq(C,X) & nrE(A,B,C,D)) => ((nrE(A,B,X,D)))))).
+fof(nrE_EqSub_3,axiom, (! [A,B,C,D,X] : ((eq(D,X) & nrE(A,B,C,D)) => ((nrE(A,B,C,X)))))).
+fof(congA_EqSub_0,axiom, (! [A,B,C,D,E,F,X] : ((eq(A,X) & congA(A,B,C,D,E,F)) => ((congA(X,B,C,D,E,F)))))).
+fof(congA_EqSub_1,axiom, (! [A,B,C,D,E,F,X] : ((eq(B,X) & congA(A,B,C,D,E,F)) => ((congA(A,X,C,D,E,F)))))).
+fof(congA_EqSub_2,axiom, (! [A,B,C,D,E,F,X] : ((eq(C,X) & congA(A,B,C,D,E,F)) => ((congA(A,B,X,D,E,F)))))).
+fof(congA_EqSub_3,axiom, (! [A,B,C,D,E,F,X] : ((eq(D,X) & congA(A,B,C,D,E,F)) => ((congA(A,B,C,X,E,F)))))).
+fof(congA_EqSub_4,axiom, (! [A,B,C,D,E,F,X] : ((eq(E,X) & congA(A,B,C,D,E,F)) => ((congA(A,B,C,D,X,F)))))).
+fof(congA_EqSub_5,axiom, (! [A,B,C,D,E,F,X] : ((eq(F,X) & congA(A,B,C,D,E,F)) => ((congA(A,B,C,D,E,X)))))).
+fof(ncongA_EqSub_0,axiom, (! [A,B,C,D,E,F,X] : ((eq(A,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(X,B,C,D,E,F)))))).
+fof(ncongA_EqSub_1,axiom, (! [A,B,C,D,E,F,X] : ((eq(B,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(A,X,C,D,E,F)))))).
+fof(ncongA_EqSub_2,axiom, (! [A,B,C,D,E,F,X] : ((eq(C,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(A,B,X,D,E,F)))))).
+fof(ncongA_EqSub_3,axiom, (! [A,B,C,D,E,F,X] : ((eq(D,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(A,B,C,X,E,F)))))).
+fof(ncongA_EqSub_4,axiom, (! [A,B,C,D,E,F,X] : ((eq(E,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(A,B,C,D,X,F)))))).
+fof(ncongA_EqSub_5,axiom, (! [A,B,C,D,E,F,X] : ((eq(F,X) & ncongA(A,B,C,D,E,F)) => ((ncongA(A,B,C,D,E,X)))))).
+fof(proposition_48,conjecture,(  ! [A,B,C,D,E,F,G,H,K,L,M] : ((triangle(A,B,C) & sQ(A,B,F,G) & sQ(A,C,K,H) & sQ(B,C,E,D) & betS(B,M,C) & betS(E,L,D) & eF(A,B,F,G,B,M,L,D) & eF(A,C,K,H,M,C,E,L) & rE(M,C,E,L)) => (per(B,A,C))))).
