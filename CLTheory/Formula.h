@@ -98,8 +98,11 @@ public:
     bool Read(const string& s);
     const vector<ConjunctionFormula>* GetDNF() const { return &mDNF; }
     bool Equals(const DNFFormula& f) const;
+    void Clear() { mDNF.clear(); }
 
 private:
+    bool MatchingBrackets(const string& v) const;
+
     vector<ConjunctionFormula> mDNF; // fixme
 };
 
@@ -114,7 +117,8 @@ public:
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
     bool Read(const string& s);
-    bool ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B) const;
+    bool ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B);
+    bool MatchingBrackets(const string& v) const;
 
     size_t GetNumOfUnivVars() const { return mUniversalVars.size(); }
     const string& GetUnivVar(size_t i) const { return mUniversalVars[i]; }
@@ -133,6 +137,8 @@ public:
     void Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
+
+    void Clear() { mA.Clear(); mB.Clear(); ClearUnivVars(); ClearExistVars(); }
 
 private:
     ConjunctionFormula mA;

@@ -63,14 +63,21 @@ bool DNFFormula::Read(const string& s)
         Add(c);
         return true;
     }
-
     size_t pos1, pos2, pos;
+    pos = s0.size();
+    while (s0[0] == '(' && s0[pos-1] == ')') {
+        if (!MatchingBrackets(s0.substr(1, pos-2)))
+            break;
+        s0 = s0.substr(1, pos-2);
+        pos = s0.size();
+    }
+
     pos1 = 0;
     pos2 = s0.size();
-    if (s0[0] == '(' and s0[pos2-1]==')') {
+/*    if (s0[0] == '(' and s0[pos2-1]==')') {
         if (Read(s.substr(1, pos2-2)))
             return true;
-    }
+    }*/
     while(pos1<pos2) {
         pos = s0.find('|',pos1);
         if (pos != string::npos) {
@@ -112,6 +119,27 @@ bool DNFFormula::Equals(const DNFFormula& f) const
     }
     return true;
 }
+
+// ---------------------------------------------------------------------------------------
+
+bool DNFFormula::MatchingBrackets(const string& v) const
+{
+    size_t pos = v.find('>');
+    if (pos != string::npos)
+        return false;
+    string s = v;
+    int count = 0;
+    for (size_t i=0; i<s.size(); i++) {
+        if (s[i] == '(')
+            count++;
+        else if (s[i] == ')')
+            count--;
+        if (count < 0)
+            return false;
+    }
+    return (count==0);
+}
+
 
 // ---------------------------------------------------------------------------------------
 
@@ -191,16 +219,21 @@ bool CLFormula::Read(const string& s)
             s0 = s0.substr(pos+1, s0.size()-pos-1);
     }
 
-
-    pos = s0.find('?');
-    if (pos != string::npos) {
-        ClearExistVars();
-
+    p = s0.find('?');
+    pp = s0.find('>');
+    pos = s0.size();
+    while (s0[0] == '(' && s0[pos-1] == ')') {
+        if (p == string::npos && !MatchingBrackets(s0.substr(1, pos-2)))
+            break;
+        if (p != string::npos && pp != string::npos && (pp < p) && !MatchingBrackets(s0.substr(1, pos-2)))
+            break;
+        s0 = s0.substr(1, pos-2);
         pos = s0.size();
-        while (s0[0] == '(' && s0[pos-1] == ')') {
-          s0 = s0.substr(1, pos-2);
-          pos = s0.size();
-        }
+    }
+
+    //pos = s0.find('?');
+    if (s0[0] == '?') {
+        ClearExistVars();
 
         pos = s0.find('[');
         if (pos == string::npos)
@@ -255,60 +288,143 @@ bool CLFormula::Read(const string& s)
     return false;
 }
 
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::MatchingBrackets(const string& v) const
+{
+    size_t pos = v.find('>');
+    if (pos == string::npos) {
+        string s = v;
+        int count = 0;
+        for (size_t i=0; i<s.size(); i++) {
+            if (s[i] == '(')
+                count++;
+            else if (s[i] == ')')
+                count--;
+            if (count < 0)
+                return false;
+        }
+        return (count==0);
+    }
+
+    string s = v.substr(0,pos);
+    int count = 0;
+    for (size_t i=0; i<s.size(); i++) {
+        if (s[i] == '(')
+            count++;
+        else if (s[i] == ')')
+            count--;
+        if (count < 0)
+            return false;
+    }
+    if (count)
+        return false;
+    s = v.substr(pos+1,v.size()-pos);
+    count = 0;
+    for (size_t i=0; i<s.size(); i++) {
+        if (s[i] == '(')
+            count++;
+        else if (s[i] == ')')
+            count--;
+        if (count < 0)
+            return false;
+    }
+    if (count)
+        return false;
+    return true;
+}
+
 
 // ---------------------------------------------------------------------------------------
 
-bool CLFormula::ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B) const
+bool CLFormula::ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B)
 {
     string s0 = v;
-    size_t pos = s0.find_last_of('>');
+    size_t pos2, p, pp, pos = s0.find_last_of('>');
     if (pos == string::npos || s0.at(pos-1) != '=') {
-        ConjunctionFormula A;
-        DNFFormula B;
-        if (B.Read(s0))
-            return true;
+        A.Clear();
         pos = s0.size();
         while (s0[0] == '(' && s0[pos-1] == ')') {
-          s0 = s0.substr(1, pos-2);
-          if (B.Read(s0))
-              return true;
-          pos = s0.size();
+            if (!MatchingBrackets(s0.substr(1, pos-2)))
+                break;
+            s0 = s0.substr(1, pos-2);
+            pos = s0.size();
         }
-
-        return false;
+        return (B.Read(s0));
     }
     else {
+
+        pos = s0.size();
+        while (s0[0] == '(' && s0[pos-1] == ')') {
+            if (!MatchingBrackets(s0.substr(1, pos-2)))
+                break;
+            s0 = s0.substr(1, pos-2);
+            pos = s0.size();
+        }
+        pos = s0.find_last_of('>');
+
         string s1 = s0.substr(0, pos-1);
         string s2 = s0.substr(pos+1, s0.size()-pos);
 
         pos = s1.size();
-        if (A.Read(s1)) {
-            if (B.Read(s2))
-                return true;
-            pos = s2.size();
-            while (s2[0] == '(' && s2[pos-1] == ')') {
-              s2 = s2.substr(1, pos-2);
-              if (B.Read(s2))
-                  return true;
-              pos = s2.size();
-            }
-        }
         while (s1[0] == '(' && s1[pos-1] == ')') {
-          s1 = s1.substr(1, pos-2);
-          if (A.Read(s1)) {
-              if (B.Read(s2))
-                  return true;
-              pos = s2.size();
-              while (s2[0] == '(' && s2[pos-1] == ')') {
-                s2 = s2.substr(1, pos-2);
-                if (B.Read(s2))
-                    return true;
-                pos = s2.size();
-              }
-          }
-          pos = s1.size();
+            if (!MatchingBrackets(s1.substr(1, pos-2)))
+                break;
+            s1 = s1.substr(1, pos-2);
+            pos = s1.size();
         }
-        return false;
+        pos = s2.size();
+        while (s2[0] == '(' && s2[pos-1] == ')') {
+            if (!MatchingBrackets(s2.substr(1, pos-2)))
+                break;
+            s2 = s2.substr(1, pos-2);
+            pos = s2.size();
+        }
+
+        if (!A.Read(s1))
+            return false;
+
+        if (s2[0] == '?') {
+            ClearExistVars();
+
+            pos = s2.find('[');
+            if (pos == string::npos)
+                return false;
+            pos2 = s2.find(']');
+            if (pos == string::npos)
+                return false;
+            p = pos;
+            string varname;
+            while(p<pos2) {
+                pp = s2.find(',',p+1);
+                if (pp == string::npos || pp>pos2) {
+                    varname = s2.substr(p+1, pos2-p-1);
+                    p = pos2;
+                }
+                else {
+                    varname = s2.substr(p+1, pp-p-1);
+                    p = pp;
+                }
+                AddExistVar(varname);
+            }
+            pos = s2.find(':',pos2);
+            if (pos == string::npos)
+                return false;
+            else
+                s2 = s2.substr(pos+1, s2.size()-pos-1);
+        }
+        pos = s2.size();
+        while (s2[0] == '(' && s2[pos-1] == ')') {
+            if (!MatchingBrackets(s2.substr(1, pos-2)))
+                break;
+            s2 = s2.substr(1, pos-2);
+            pos = s2.size();
+        }
+
+        if (!B.Read(s2))
+            return false;
+
+        return true;
     }
     return false;
 }
@@ -418,6 +534,8 @@ string ToUpper(const string& str)
 bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& type) {
     size_t pos1, pos2;
     string ss = SkipSpaces(s);
+
+    cl.Clear();
 
     if(ss.substr(0,4) != "fof(")
         return false;

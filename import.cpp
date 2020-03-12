@@ -122,13 +122,15 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
     string s, str;
     if (tptpconjecture.good()) {
         while(getline(tptpconjecture, s)) {
-            if (s.at(0) != '%')
+            if (s != "" && s.at(0) != '%')
                 str += s;
         }
         tptpconjecture.close();
     }
-    else
+    else {
+        cout << "Bad or missing input file!" << endl;
         return false;
+    }
 
     string statementName, theoremName;
     Theory T;
@@ -150,6 +152,10 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
+                    /*cout << "input : " << s << endl;
+                    for (int i=0; i<normalizedAxioms.size(); i++)
+                        cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                    cout << endl;*/
                 }
                 else
                     T.AddAxiom(cl,statementName);
@@ -173,6 +179,11 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
 
         str = str.substr(found2+1,str.size()-found2-1);
         found1 = str.find(strfof);
+    }
+
+    if (theoremName == "") {
+        cout << "No conjecture given! " << endl;
+        return false;
     }
 
     ProvingEngine* engine;

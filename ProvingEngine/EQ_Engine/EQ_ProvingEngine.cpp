@@ -127,9 +127,11 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         if (formula.GetSize()>1)
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
+        unsigned l = 2, r = 24, s, best = 0;
+
         time_t start_time = time(NULL);
-        /* unsigned l = 1, best = 0;
-        while(l <= 20)  {
+
+        while(l <= 30)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
 
@@ -138,11 +140,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
             cout << "Trying proof length " << l << endl;
-            int ret = system(sCall.c_str());
-            if (ret == 124)
-                cout << "Timeout!" << l << endl;
-            if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
-                l = 1+l;
+            int rv = system(sCall.c_str());
+            if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
+                l *= 2;
             }
             else {
                 cout << "Found a proof of the length " << l << "!" << endl;
@@ -150,12 +150,10 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
             }
         }
-        if (best > 0) {
-            cout << "Best found proof: of the length " << best << "!" << endl;
-            return DecodeProof(formula, "smt-proof.txt",  proof);
-        }*/
 
-        unsigned l = 1, r = 24, s, best = 0;
+        r = 0;
+        l = best/2; r = best;
+        // unsigned l = 1, r = 24, s, best = 0;
         while(l <= r)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
