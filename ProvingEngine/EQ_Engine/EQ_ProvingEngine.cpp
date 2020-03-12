@@ -25,7 +25,7 @@ EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
+void EQ_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
 {
     mStartTime = startTime;
     mTimeLimit = timeLimit;
@@ -127,20 +127,24 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         if (formula.GetSize()>1)
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
-        unsigned l = 2, r = 24, s, best = 0;
-
         time_t start_time = time(NULL);
+        unsigned l, r, s, best = 0;
 
+        l = 1;
         while(l <= 30)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
+            if (remainingTime <= 0)
+                break;
 
             EncodeProof(formula, l);
-            if (!system("rm smt-model.txt")) // do not attempt to read some old proof representation
-                cout << "The old file smt-proof.txt has been deleted." << endl;
+            int rv;
+            rv = system("rm smt-model.txt");
+            // if (!rv) // do not attempt to read some old proof representation
+            //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
             cout << "Trying proof length " << l << endl;
-            int rv = system(sCall.c_str());
+            rv = system(sCall.c_str());
             if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
                 l *= 2;
             }
@@ -151,9 +155,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             }
         }
 
-        r = 0;
+
         l = best/2; r = best;
-        // unsigned l = 1, r = 24, s, best = 0;
+        // l = 1; r = 15;
         while(l <= r)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
@@ -163,12 +167,13 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
             s = (l+r)/2;
             EncodeProof(formula, s);
-            system("rm smt-model.txt");
-            // if (!ret) // do not attempt to read some old proof representation
+            int rv;
+            rv = system("rm smt-model.txt");
+            // if (!rv) // do not attempt to read some old proof representation
             //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << s << "; ";
-            int rv = system(sCall.c_str());
+            cout << "Trying proof length " << s << "; " << flush;
+            rv = system(sCall.c_str());
             if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
                 l = s+1;
                 cout << endl;

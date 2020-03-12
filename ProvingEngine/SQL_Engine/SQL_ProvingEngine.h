@@ -18,7 +18,7 @@ public:
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
-    virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
+    virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
         { mStartTime = startTime; mTimeLimit = timeLimit;
           mpDB->SetStartTimeAndLimit(startTime, timeLimit); }
     virtual PROVING_ENGINE GetKind() { return eSQL_ProvingEngine; }

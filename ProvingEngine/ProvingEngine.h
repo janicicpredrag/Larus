@@ -18,8 +18,7 @@ public:
 
     virtual void AddPremise(const Fact& f) = 0;
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
-    virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
-        { mStartTime = startTime; mTimeLimit = timeLimit; }
+    virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit) = 0;
     virtual PROVING_ENGINE GetKind() = 0;
 
     virtual void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)

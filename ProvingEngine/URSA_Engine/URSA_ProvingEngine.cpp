@@ -20,7 +20,7 @@ URSA_ProvingEngine::URSA_ProvingEngine(Theory *pT)
 
 // ---------------------------------------------------------------------------------------
 
-void URSA_ProvingEngine::SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
+void URSA_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
 {
     mStartTime = startTime;
     mTimeLimit = timeLimit;

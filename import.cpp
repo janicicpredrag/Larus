@@ -43,7 +43,9 @@ string itos(unsigned int i)
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit)
+
+
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit)
 {
     T.Reset();
     map<string,string> instantiation;
@@ -77,11 +79,10 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
         fout.Add(conj);
     }*/
 
-    clock_t startTime = clock();
-    engine->SetStartTimeAndLimit(startTime, timelimit);
-    bool proved = false;
+    engine->SetStartTimeAndLimit(clock(), timelimit);
+    ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
-        proved = true;
+        proved = eConjectureProved;
         // cout << "Theorem proved! " << endl;
         string sFileName("proofs/PROOF" + theoremName + ".tex");
         string sFileName2("proofs/PROOF" + theoremName + "-simpl.tex");
@@ -102,21 +103,15 @@ bool ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, co
     // else
     //    cout << "Theorem not proved!" << endl;
 
-    clock_t current = clock();
-    float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
-    if (elapsed_secs > timelimit)
-        cout << "[TIME LIMIT EXCEEDED!]" << endl;
-
-    cout << "Elapsed time: " << elapsed_secs << endl;
     return proved;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit)
+ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit)
 {
     if (input_format != eTPTP)
-        return false;
+        return eWrongFormatParameter;
 
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
@@ -127,10 +122,8 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
         }
         tptpconjecture.close();
     }
-    else {
-        cout << "Bad or missing input file!" << endl;
-        return false;
-    }
+    else
+        return eBadOrMissingInputFile;
 
     string statementName, theoremName;
     Theory T;
@@ -143,7 +136,7 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
     while (found1 != string::npos) {
         size_t found2 = str.find(".", found1+1);
         if (found2 == string::npos)
-            return false;
+            return eErrorReadingAxioms;
         s = str.substr(found1, found2);
         size_t type = 2;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
@@ -171,20 +164,18 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
                     }
                     theorem = output[output.size()-1].first;
                 }
-                cout << theoremName << ":" << theorem << endl;
+                cout << endl << "Proving theorem: " << theoremName << ":" << theorem << endl;
             }
         }
         else
-            return false;
+            return eErrorReadingAxioms;
 
         str = str.substr(found2+1,str.size()-found2-1);
         found1 = str.find(strfof);
     }
 
-    if (theoremName == "") {
-        cout << "No conjecture given! " << endl;
-        return false;
-    }
+    if (theoremName == "")
+        return eNoConjectureGiven;
 
     ProvingEngine* engine;
     if (proving_engine == eSTL_ProvingEngine)
@@ -198,8 +189,9 @@ bool ProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROV
     else // default
         engine = new STL_ProvingEngine(&T);
 
-    int r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
     delete engine;
+
     return r;
 }
 
