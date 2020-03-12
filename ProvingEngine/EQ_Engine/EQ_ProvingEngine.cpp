@@ -572,7 +572,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eAssumption << " = Assumption; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0; i<ARITY[predicate1];i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eNegIntro) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eNegIntro << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -581,7 +581,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eNegIntro << " = Neg Intro; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0;i< ARITY[predicate1]; i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eFirstCase) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eFirstCase << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -590,7 +590,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eFirstCase << " = First case; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0; i<ARITY[predicate1];i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eSecondCase) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eSecondCase << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -599,7 +599,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eSecondCase << " = Second case; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0;i<ARITY[predicate1]; i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eQEDbyCases) {
           proofTxt << setw(4) << right << nesting << setw(4) << right  << eQEDbyCases;
@@ -654,7 +654,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
              proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << "=MP-axiom:" << axiom << "); Branching: no; " << "p" << predicate1 << "(";
              for(unsigned i=0;i<ARITY[predicate1]; i++)
                 proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-                proofTxt << ") ***/" << endl;
+             proofTxt << ") ***/" << endl;
           }
           else {
               s = app("nP", proofStep, 1);
@@ -663,20 +663,20 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
                   s = app("nA", proofStep, mnMaxArity+i);
                   arg[1][i] = nmodel[s];
               }
-             proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
-             for(unsigned i=0; i<ARITY[predicate1]; i++)
-                proofTxt << setw(4) << right <<  arg[0][i];
-             proofTxt << setw(5) << right << predicate2;
-             for(unsigned i=0;i<ARITY[predicate2]; i++)
-                proofTxt << setw(4) << right << arg[1][i];
-             proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << " = MP-axiom:" << axiom << "; Branching: yes; " << "p" << predicate1 << "(";
-             for(unsigned i=0; i<ARITY[predicate1];i++)
-                proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-                proofTxt << ") or ";
-             proofTxt << "p" << predicate2 << "(";
-             for(unsigned i=0;i<ARITY[predicate2];i++)
-                proofTxt << string(1,'a'+arg[1][i]) << (i+1<ARITY[predicate2] ? "," : "");
-                proofTxt << ") ***/" << endl;
+              proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
+              for(unsigned i=0; i<ARITY[predicate1]; i++)
+                 proofTxt << setw(4) << right <<  arg[0][i];
+              proofTxt << setw(5) << right << predicate2;
+              for(unsigned i=0;i<ARITY[predicate2]; i++)
+                 proofTxt << setw(4) << right << arg[1][i];
+              proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << " = MP-axiom:" << axiom << "; Branching: yes; " << "p" << predicate1 << "(";
+              for(unsigned i=0; i<ARITY[predicate1];i++)
+                 proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
+              proofTxt << ") or ";
+              proofTxt << "p" << predicate2 << "(";
+              for(unsigned i=0;i<ARITY[predicate2];i++)
+                 proofTxt << string(1,'a'+arg[1][i]) << (i+1<ARITY[predicate2] ? "," : "");
+              proofTxt << ") ***/" << endl;
           }
 
           proofTxt << setw(40) << right << " ";
