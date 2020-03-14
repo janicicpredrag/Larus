@@ -158,7 +158,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
         l = best/2; r = best;
         // l = 1; r = 15;
-        while(l <= r)  {
+        while(best && l <= r)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
            // cout << "remaining time " << remainingTime << endl;
