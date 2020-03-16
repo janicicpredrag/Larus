@@ -10,7 +10,7 @@
 
 TARGET = CLprover
 CONFIG   += console c++11
-CONFIG   -= app_bundle qt
+CONFIG   -= app_bundle
 
 TEMPLATE = app
 
@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     ProvingEngine/EQ_Engine/EQ_ProvingEngine.cpp \
     ProofExport/ProofExport2Coq.cpp \
     ProofExport/ProofExport2Isabelle.cpp \
-    ProofExport/ProofExport2LaTeX.cpp
+    ProofExport/ProofExport2LaTeX.cpp \
+    import.cpp
 
 HEADERS += \
     CLTheory/Formula.h \
@@ -48,7 +49,8 @@ HEADERS += \
     ProofExport/ProofExport.h \
     ProofExport/ProofExport2Coq.h \
     ProofExport/ProofExport2Isabelle.h \
-    ProofExport/ProofExport2LaTeX.h
+    ProofExport/ProofExport2LaTeX.h \
+    common.h
 
 
 

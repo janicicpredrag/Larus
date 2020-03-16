@@ -8,9 +8,9 @@
 
 using namespace std;
 
-#define MAX_PREMISES 20
-#define MAX_ARITY 20
-#define MAX_AXIOMS 100
+#define MAX_PREMISES 50
+#define MAX_ARITY 50
+#define MAX_AXIOMS 1000
 #define MAX_PROOF_LENGTH 100
 
 /*
@@ -43,10 +43,11 @@ public:
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
-    virtual void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit);
+    virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit);
+    virtual PROVING_ENGINE GetKind() { return eEQ_ProvingEngine; }
 
 private:
-    void EncodeAxiom(size_t no, CLFormula& axiom, string name);
+    void EncodeAxiom(CLFormula& axiom, string name);
     void EncodeProof(const DNFFormula& formula, unsigned nProofLen);
     bool ReadModel(const string& sModelFile, const string& sEncodedProofFile);
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);

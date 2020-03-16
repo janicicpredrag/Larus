@@ -25,7 +25,7 @@ public:
     virtual bool ApplyExcludedMiddle(DNFFormula& fout) = 0;
 
     virtual bool HoldsDisjunction(const DNFFormula& dnf, ConjunctionFormula& fin, vector<Fact>& AuxFacts) = 0;
-    void SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
+    void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
         { mStartTime = startTime; mTimeLimit = timeLimit; }
 
 protected:
