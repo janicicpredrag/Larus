@@ -20,6 +20,7 @@ public:
     Fact() { }
     Fact(string& n, const vector<string>& a) { mName = n; mArgs = a; }
     Fact (const Fact &f) { mName = f.mName; mArgs = f.mArgs; }
+    Fact& operator=(const Fact& f) { mName = f.mName; mArgs = f.mArgs; return *this; }
     Fact (const string& s);
     size_t GetArity() const { return mArgs.size(); }
     string GetArg(size_t i) const { return (mArgs.size()>i ? mArgs[i] : "null"); }
@@ -66,8 +67,9 @@ class ConjunctionFormula
 {
 public:
     ConjunctionFormula() {}
-    ConjunctionFormula(vector<Fact>& cf) { mConjunction = cf; }
     ConjunctionFormula(const ConjunctionFormula &cf) { mConjunction = cf.mConjunction; }
+    ConjunctionFormula& operator=(const ConjunctionFormula& cf) { mConjunction = cf.mConjunction; return *this; }
+    ConjunctionFormula(vector<Fact>& cf) { mConjunction = cf; }
     size_t GetSize() const { return mConjunction.size(); }
     Fact GetElement(size_t i) const { return (mConjunction.size()>i ? mConjunction[i] : mConjunction[0]); }
     void Add(const Fact& f) { mConjunction.push_back(f); }
@@ -98,8 +100,11 @@ public:
     bool Read(const string& s);
     const vector<ConjunctionFormula>* GetDNF() const { return &mDNF; }
     bool Equals(const DNFFormula& f) const;
+    void Clear() { mDNF.clear(); }
 
 private:
+    bool MatchingBrackets(const string& v) const;
+
     vector<ConjunctionFormula> mDNF; // fixme
 };
 
@@ -114,6 +119,8 @@ public:
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
     bool Read(const string& s);
+    bool ReadImplication(const string& v, ConjunctionFormula& A, DNFFormula& B);
+    bool MatchingBrackets(const string& v) const;
 
     size_t GetNumOfUnivVars() const { return mUniversalVars.size(); }
     const string& GetUnivVar(size_t i) const { return mUniversalVars[i]; }
@@ -133,6 +140,8 @@ public:
     void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
+    void Clear() { mA.Clear(); mB.Clear(); ClearUnivVars(); ClearExistVars(); }
+
 private:
     ConjunctionFormula mA;
     DNFFormula mB;
@@ -146,11 +155,10 @@ private:
 // ---------------------------------------------------------------------------------------
 inline ostream& operator<<(ostream& os, const Fact& f)
 {
-    if (f.GetName() == "false")
-    {
+    if (f.GetName() == "false") {
         os << "$false";
     }
-    else
+    else {
         os << f.GetName();
         if (f.GetArity() > 0) {
             os << "(";
@@ -158,8 +166,9 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 os << f.GetArg(i);
                 if (i != f.GetArity()-1)
                     os << ",";
-         }
-        os << ")";
+            }
+            os << ")";
+        }
     }
     return os;
 }

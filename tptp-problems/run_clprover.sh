@@ -1,13 +1,15 @@
 #!/bin/sh
 echo "running vampire on all files."
-time=1
+i=0
+time=30
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="clprover-results-$today.out"
 summary="clprover-summary-$today.out"
 for file in *.tptp
 do
-  echo "Trying file $file ..." | tee -a $filename    
-  ../CLprover -tptp "$file" | tee -a $filename
+  echo No: $i; echo "Trying file $file ..." | tee -a $filename    
+  ../CLprover -l"$time" -tptp "$file" -ssmt | tee -a $filename
+  ((i++))
 done
 echo "Time given: $time" | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary

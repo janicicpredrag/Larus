@@ -8,6 +8,7 @@
 #include "CLProof/CLProof.h"
 #include "EQ_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
+#include "common.h"
 
 
 //#define DEBUG_OUTPUT
@@ -24,7 +25,7 @@ EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::SetStartTimeAndLimit(clock_t& startTime, unsigned timeLimit)
+void EQ_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
 {
     mStartTime = startTime;
     mTimeLimit = timeLimit;
@@ -57,7 +58,7 @@ string EQ_ProvingEngine::appeq(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
+void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom, string name)
 {
     mnAxiomsCount++;
     nAxiomUniVars[mnAxiomsCount] = axiom.GetNumOfUnivVars();
@@ -126,24 +127,26 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         if (formula.GetSize()>1)
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
-
         time_t start_time = time(NULL);
+        unsigned l, r, s, best = 0;
 
-        /* unsigned l = 1, best = 0;
-        while(l <= 20)  {
+        l = 1;
+        while(l <= 30)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
+            if (remainingTime <= 0)
+                break;
 
             EncodeProof(formula, l);
-            if (!system("rm smt-model.txt")) // do not attempt to read some old proof representation
-                cout << "The old file smt-proof.txt has been deleted." << endl;
+            int rv;
+            rv = system("rm smt-model.txt");
+            // if (!rv) // do not attempt to read some old proof representation
+            //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
             cout << "Trying proof length " << l << endl;
-            int ret = system(sCall.c_str());
-            if (ret == 124)
-                cout << "Timeout!" << l << endl;
-            if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
-                l = 1+l;
+            rv = system(sCall.c_str());
+            if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
+                l *= 2;
             }
             else {
                 cout << "Found a proof of the length " << l << "!" << endl;
@@ -151,40 +154,38 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
             }
         }
-        if (best > 0) {
-            cout << "Best found proof: of the length " << best << "!" << endl;
-            return DecodeProof(formula, "smt-proof.txt",  proof);
-        }*/
 
 
-
-        unsigned l = 1, r = 24, s, best = 0;
-        while(l <= r)  {
-
+        l = best/2; r = best;
+        // l = 1; r = 15;
+        while(best && l <= r)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
-
            // cout << "remaining time " << remainingTime << endl;
             if (remainingTime <= 0)
                 break;
 
             s = (l+r)/2;
             EncodeProof(formula, s);
-            if (!system("rm smt-model.txt")) // do not attempt to read some old proof representation
-                cout << "The old file smt-proof.txt has been deleted." << endl;
+            int rv;
+            rv = system("rm smt-model.txt");
+            // if (!rv) // do not attempt to read some old proof representation
+            //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << s << endl;
-            system(sCall.c_str());
-            if (!ReadModel("smt-model.txt", "smt-proof.txt"))  // Find a model
+            cout << "Trying proof length " << s << "; " << flush;
+            rv = system(sCall.c_str());
+            if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
                 l = s+1;
+                cout << endl;
+            }
             else {
-                cout << "Found a proof of the length " << s << "!" << endl;
+                cout << "Found!" << endl;
                 best = s;
                 r = s-1;
             }
         }
         if (best > 0) {
-            cout << "Best found proof: of the length " << best << "!" << endl;
+            cout << "Best found proof: of the length " << best << endl;
             ret = DecodeProof(formula, "smt-proof.txt",  proof);
         }
     }
@@ -224,23 +225,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
         if (it->first.GetPremises().GetSize() > mnMaxPremises)
             mnMaxPremises = it->first.GetPremises().GetSize();
-
-    /*
-    for (unsigned i=0; i<=mnPremisesCount+nProofLen; i++) {
-        smtFile << "(declare-const " + app("nNesting", i) + " Int)" << endl;
-        smtFile << "(declare-const " + app("nAxiomApplied", i) + " Int)" << endl;
-        smtFile << "(declare-const " + app("bCases", i) +  " Bool)" << endl;
-        for (unsigned j=0; j<mnMaxPremises; j++)
-            smtFile << "(declare-const " + app("nFrom", i, j) + " Int)" << endl;
-        for (unsigned j=0; j<mnMaxPremises; j++)
-            smtFile << "(declare-const " + app("nP", i, j) + " Int)" << endl;
-        for (unsigned j=0; j<mnMaxArity*2; j++)
-            smtFile << "(declare-const " + app("nA", i, j) + " Int)" << endl;
-        for (unsigned j=0; j<mnMaxPremises*mnMaxArity; j++)
-            smtFile << "(declare-const " + app("nInst" , i, j) + " Int)" << endl;
-    }
-    */
-
     for (size_t i = 0; i<mpT->mSignature.size(); i++)
         smtFile << "(declare-const n" + ToUpper(mpT->mSignature[i].first) + " Int)" << endl;
     for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
@@ -263,11 +247,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     enum StepKind { eAssumption, eNegIntroStart, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
     sPreabmle += "\n";
-
     sPreabmle += "; **************************** Axioms ******************************* \n";
     mnAxiomsCount = eNumberOfStepKinds-1;
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
-        EncodeAxiom(it-mpT->mCLaxioms.begin(), it->first, it->second);
+        EncodeAxiom(it->first, it->second);
     sPreabmle += "\n";
 
     enumerator = 0;
@@ -281,8 +264,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         CONSTANTS["n" + ToUpper(*it)] = enumerator++;
     }
     sPreabmle += "\n";
-
-
     sPreabmle += "; **************************** Premises ******************************* \n";
     sPreabmle += mURSAstringPremises;
 
@@ -301,17 +282,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++)
             sPreabmle += "(assert (= " + app("nA", nFinalStep, i) + " n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + ")) \n";
     sPreabmle += "\n";
-/*
-    unsigned nFirst = 0;
-    unsigned nSecond = 0;
-    unsigned nCases = 0;
-    unsigned nConclude = 0;
-    unsigned nNegIntro = 0;
-    unsigned nConcludeNegIntro = 0;
-    unsigned nNegIntroCheck = 1;
-    bool bBranchingCorrect = true;
-    bool bProofCorrect = true;
-*/
+
     string snFirst;
     string snSecond;
     string snCases;
@@ -384,7 +355,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sbMatchExiQuantifiers +=
                        appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL), itos(((nProofStep+1)<<3) + nL));
           }
-
           /* The MP proof step is correct if it was derived by using some axiom  */
           sbMPStep += "\n(and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                          appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
@@ -412,26 +382,26 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                           appeq(app("nP", nProofStep, 0),app("nP", nProofStep-1, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
             sbFirstCaseStep += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep-1, nInd));
-        sbFirstCaseStep += ")";
+       sbFirstCaseStep += ")";
 
-        string sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 0)) +
+       string sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 0)) +
                                   "(not " + app("bCases", nProofStep-1) + ")";
-        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-           sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
-        sbPrevStepGoal += ")";
+       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+          sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
+       sbPrevStepGoal += ")";
 
-        string sbMatchBranchingForSecondCase = "(or false ";
-        for (unsigned nI = mnPremisesCount; nI+1 < nProofStep; nI++) {
-            string sb = appeq(app("nNesting", nProofStep), "(+ (* " + app("nNesting", nI) + " 2) 1)") +
-                        app("bCases", nI) +
-                        appeq(app("nP", nProofStep, 0), app("nP", nI, 1));
-            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-                sb += appeq(app("nA", nProofStep, nInd), app("nA",nI,mnMaxArity+nInd));
-            sbMatchBranchingForSecondCase += "(and " + sb + ")";
-        }
-        sbMatchBranchingForSecondCase += ")";
+       string sbMatchBranchingForSecondCase = "(or false ";
+       for (unsigned nI = mnPremisesCount; nI+1 < nProofStep; nI++) {
+          string sb = appeq(app("nNesting", nProofStep), "(+ (* " + app("nNesting", nI) + " 2) 1)") +
+                            app("bCases", nI) +
+                      appeq(app("nP", nProofStep, 0), app("nP", nI, 1));
+          for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+             sb += appeq(app("nA", nProofStep, nInd), app("nA",nI,mnMaxArity+nInd));
+          sbMatchBranchingForSecondCase += "(and " + sb + ")";
+       }
+       sbMatchBranchingForSecondCase += ")";
 
-        string sbSecondCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) +
+       string sbSecondCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) +
                                     sbMatchBranchingForSecondCase +
                                     sbPrevStepGoal +
                                     "(or " + appeq(app("nAxiomApplied", nProofStep-1), itos(eQEDbyCases)) +
@@ -441,14 +411,13 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                     "(not " + app("bCases", nProofStep) + ")" +
                                     appeq(app("nNesting", nProofStep), "(+ " + app("nNesting", nProofStep-1) + " 1)") + ")";
 
-        string sbGoalReached = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) +
+       string sbGoalReached = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) +
                                          "(not " + app("bCases", nProofStep) + ")";
-        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-            sbGoalReached += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, nInd));
-        sbGoalReached += ")";
+       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+          sbGoalReached += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, nInd));
+       sbGoalReached += ")";
 
-
-        string sbQEDbyCasesStep = "(and " + sbPrevStepGoal +
+       string sbQEDbyCasesStep = "(and " + sbPrevStepGoal +
                   "(or " + appeq(app("nNesting", nProofStep-1), "3") +
                         appeq(app("nNesting", nProofStep-1), "5") +
                         appeq(app("nNesting", nProofStep-1), "7") +
@@ -463,18 +432,17 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                  "(not " + app("bCases", nProofStep) + ")" +
                  appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyCases)) + ")";
 
-
-        string sbQEDbyAssumptionStep = "(and " + sbPrevStepGoal +
+       string sbQEDbyAssumptionStep = "(and " + sbPrevStepGoal +
                 appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +
                 sbGoalReached + " (not " + app("bCases", nProofStep) + ")" +
                 appeq(app("nAxiomApplied", nProofStep),itos(eQEDbyAssumption)) + ")";
 
-        string sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), " nFALSE") +
+       string sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), " nFALSE") +
                          appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
                          sbGoalReached + " " + "(not " + app("bCases", nProofStep) + ") " +
                          appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyEFQ)) + ")";
 
-        string sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), "nFALSE") +
+       string sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), "nFALSE") +
             "(or " + appeq(app("nNesting", nProofStep-1), "(* 2 " + app("nNesting", nProofStep) + ")") +
                      appeq(app("nNesting", nProofStep-1), "(+ 1 (* 2 " + app("nNesting", nProofStep) + "))") + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +
@@ -482,21 +450,19 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                  "(not "+ app("bCases",nProofStep) + ")" +
                  appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyNegIntro))  + ")";
 
-        snCases +=    "(ite " + app("bCases",nProofStep) + " 1 0)";
-        snFirst +=    "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eFirstCase))  + " 1 0)";
-        snSecond +=   "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) + " 1 0)";
-        snConclude += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyCases)) + " 1 0)";
+       snCases +=    "(ite " + app("bCases",nProofStep) + " 1 0)";
+       snFirst +=    "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eFirstCase))  + " 1 0)";
+       snSecond +=   "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) + " 1 0)";
+       snConclude += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyCases)) + " 1 0)";
 
-        snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntroStart)) + "  1 0)";
-        snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyNegIntro)) + " -1 0)";
-        //snNegIntroCheck = "(+ 1 " + snNegIntroCheck+ ")";
-        sbBranchingCorrect += "(or " + appeq("(+ 1 " + snNegIntroCheck+ ")", "2") + appeq("(+ 1 " + snNegIntroCheck+ ")", "1") + ")";
+       snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntroStart)) + "  1 0)";
+       snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyNegIntro)) + " -1 0)";
+       //snNegIntroCheck = "(+ 1 " + snNegIntroCheck+ ")";
+       sbBranchingCorrect += "(or " + appeq("(+ 1 " + snNegIntroCheck+ ")", "2") + appeq("(+ 1 " + snNegIntroCheck+ ")", "1") + ")";
 
-     //   cout <<  snNegIntroCheck << endl;
-
-        /* ... the proof step is correct if it was one of cases from some case split */
-        sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
-                                    sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep +  ")";
+       /* ... the proof step is correct if it was one of cases from some case split */
+       sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
+                                  sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep +  ")";
     }
 
     for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
@@ -504,17 +470,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                        appeq(app("nAxiomApplied", nProofStep+1), itos(eFirstCase)) + ")";
 
     sbBranchingCorrect += appeq("(+ " + snFirst + ")", "(+ " + snSecond + ")") +
-                           appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
-                           appeq("(+ " + snCases + ")", "(+ " + snConclude + ")");
+                          appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
+                          appeq("(+ " + snCases + ")", "(+ " + snConclude + ")");
     sbBranchingCorrect += appeq("(+ 1 " + snNegIntroCheck+ ")", itos(1));
     sbBranchingCorrect += ")";
-
 
     string sbFinalStepGoal = "(or " + appeq(app("nAxiomApplied", nFinalStep), itos(eQEDbyCases)) +
                                       appeq(app("nAxiomApplied", nFinalStep), itos(eQEDbyAssumption)) +
                                       appeq(app("nAxiomApplied", nFinalStep), itos(eQEDbyEFQ)) +
                                       appeq(app("nAxiomApplied", nFinalStep), itos(eQEDbyNegIntro)) +
-                             ")";
+                              ")";
 
     for(set<string>::iterator it = DECLARATIONS.begin(); it!=DECLARATIONS.end(); it++) {
         smtFile << "(declare-const " + *it + ((*it).at(0) == 'n' ? " Int)" : " Bool)") << endl;
@@ -607,7 +572,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eAssumption << " = Assumption; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0; i<ARITY[predicate1];i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eNegIntro) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eNegIntro << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -616,7 +581,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eNegIntro << " = Neg Intro; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0;i< ARITY[predicate1]; i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eFirstCase) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eFirstCase << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -625,7 +590,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eFirstCase << " = First case; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0; i<ARITY[predicate1];i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eSecondCase) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eSecondCase << setw(4) << right << "0" << setw(5) << right << predicate1;
@@ -634,7 +599,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eSecondCase << " = Second case; Branching: no; " << "p" << predicate1 << "(";
           for(unsigned i=0;i<ARITY[predicate1]; i++)
             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-            proofTxt << ") ***/" << endl;
+          proofTxt << ") ***/" << endl;
       }
       else if (axiom == eQEDbyCases) {
           proofTxt << setw(4) << right << nesting << setw(4) << right  << eQEDbyCases;
@@ -689,7 +654,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
              proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << "=MP-axiom:" << axiom << "); Branching: no; " << "p" << predicate1 << "(";
              for(unsigned i=0;i<ARITY[predicate1]; i++)
                 proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-                proofTxt << ") ***/" << endl;
+             proofTxt << ") ***/" << endl;
           }
           else {
               s = app("nP", proofStep, 1);
@@ -698,20 +663,20 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
                   s = app("nA", proofStep, mnMaxArity+i);
                   arg[1][i] = nmodel[s];
               }
-             proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
-             for(unsigned i=0; i<ARITY[predicate1]; i++)
-                proofTxt << setw(4) << right <<  arg[0][i];
-             proofTxt << setw(5) << right << predicate2;
-             for(unsigned i=0;i<ARITY[predicate2]; i++)
-                proofTxt << setw(4) << right << arg[1][i];
-             proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << " = MP-axiom:" << axiom << "; Branching: yes; " << "p" << predicate1 << "(";
-             for(unsigned i=0; i<ARITY[predicate1];i++)
-                proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
-                proofTxt << ") or ";
-             proofTxt << "p" << predicate2 << "(";
-             for(unsigned i=0;i<ARITY[predicate2];i++)
-                proofTxt << string(1,'a'+arg[1][i]) << (i+1<ARITY[predicate2] ? "," : "");
-                proofTxt << ") ***/" << endl;
+              proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
+              for(unsigned i=0; i<ARITY[predicate1]; i++)
+                 proofTxt << setw(4) << right <<  arg[0][i];
+              proofTxt << setw(5) << right << predicate2;
+              for(unsigned i=0;i<ARITY[predicate2]; i++)
+                 proofTxt << setw(4) << right << arg[1][i];
+              proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << " = MP-axiom:" << axiom << "; Branching: yes; " << "p" << predicate1 << "(";
+              for(unsigned i=0; i<ARITY[predicate1];i++)
+                 proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
+              proofTxt << ") or ";
+              proofTxt << "p" << predicate2 << "(";
+              for(unsigned i=0;i<ARITY[predicate2];i++)
+                 proofTxt << string(1,'a'+arg[1][i]) << (i+1<ARITY[predicate2] ? "," : "");
+              proofTxt << ") ***/" << endl;
           }
 
           proofTxt << setw(40) << right << " ";
