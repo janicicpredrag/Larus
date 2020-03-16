@@ -3,8 +3,8 @@ echo "running vampire on all files."
 i=0
 time=30
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
-filename="results-$today.out"
-summary="summary-$today.out"
+filename="clprover-results-$today.out"
+summary="clprover-summary-$today.out"
 for file in *.tptp
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename    
