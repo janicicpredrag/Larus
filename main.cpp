@@ -38,6 +38,7 @@ extern vector<string> TrivialAxioms;
 
 int main(int argc , char** argv)
 {
+
     INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
     PROVING_ENGINE eEngine = DEFAULT_ENGINE;
     float time_limit = DEFAULT_TIME_LIMIT;

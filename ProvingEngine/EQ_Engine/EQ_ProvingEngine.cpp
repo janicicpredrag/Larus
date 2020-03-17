@@ -411,11 +411,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbSameProofBranch += ")";
            string sn;
            for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
-                sn += appeq(app("nP", nProofStep, 0), itos(i));
-           string sb1 = appeq(app("nP",n_from,0),app("nPP",nProofStep)) +
-                        // "(< "+ app("nPP",nProofStep) + " " + itos(mpT->mSignature.size())+ ")" +
-                        "(or " + sn + ")";
-                        // (nPP[nProofStep] & 1) == 1);
+                sn += appeq(app("nP", n_from, 0), itos(i));
+           string sb1 = appeq(app("nP",n_from,0),app("nPP",nProofStep)) + "(or " + sn + ")";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                 sb1 += appeq(app("nA", n_from, nInd), app("nBB", nProofStep, nInd));
            string sb2 = appeq(app("nP", n_from, 0), "(+ 1 " + app("nPP", nProofStep)+ ")");
