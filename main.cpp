@@ -33,7 +33,6 @@ extern vector<string> TestAxiomsnegintro;
 extern vector < pair < string, vector<string> > > test_trivial;
 extern vector<string> TrivialAxioms;
 
-
 // A=B replaced by eq(A,B)
 // A!=B replaced by neq(A,B)
 

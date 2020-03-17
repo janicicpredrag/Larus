@@ -1,0 +1,16 @@
+fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((eq(A,B)) | (eq(A,C)) | (eq(B,C)) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((eq(A,B)) => ((Col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((eq(A,C)) => ((Col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((eq(B,C)) => ((Col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(lemma_collinear4,axiom, (! [A,B,C,D] : ((col(A,B,C) & col(A,B,D) & neq(A,B)) => ((col(B,C,D)))))).
+fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
+fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
+fof(lemma_collinear5,axiom, (! [A,B,C,D,E] : ((neq(A,B) & col(A,B,C) & col(A,B,D) & col(A,B,E)) => ((col(C,D,E)))))).
+fof(Col_excluded_middle,axiom, (! [A,B,C] : ((Col(A,B,C)) | (nCol(A,B,C))))).
+fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
+fof(betS_excluded_middle,axiom, (! [A,B,C] : ((betS(A,B,C)) | (nbetS(A,B,C))))).
+fof(col_excluded_middle,axiom, (! [A,B,C] : ((col(A,B,C)) | (ncol(A,B,C))))).
+fof(lemma_NChelper,conjecture,(  ! [A,B,C,P,Q] : ((ncol(A,B,C) & col(A,B,P) & col(A,B,Q) & neq(P,Q)) => (ncol(P,Q,C))))).
