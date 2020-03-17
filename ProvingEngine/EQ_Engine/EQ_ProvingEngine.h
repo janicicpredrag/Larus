@@ -74,13 +74,13 @@ private:
     unsigned nBinding[MAX_AXIOMS][MAX_PREMISES*MAX_ARITY];
 
     // Proof steps  (same arrays used as in URSA specification)
-    unsigned nNesting[MAX_PROOF_LENGTH];
+/*    unsigned nNesting[MAX_PROOF_LENGTH];
     bool bCases[MAX_PROOF_LENGTH];
     unsigned nAxiomApplied[MAX_PROOF_LENGTH];
     unsigned nP[MAX_PROOF_LENGTH][2];
     unsigned nA[MAX_PROOF_LENGTH][MAX_ARITY];
     unsigned nFrom[MAX_PROOF_LENGTH][MAX_PREMISES];
-    unsigned nInst[MAX_PROOF_LENGTH][MAX_PREMISES*MAX_ARITY];
+    unsigned nInst[MAX_PROOF_LENGTH][MAX_PREMISES*MAX_ARITY];*/
 
     map<string, unsigned> PREDICATE;
     map<unsigned, unsigned> ARITY;

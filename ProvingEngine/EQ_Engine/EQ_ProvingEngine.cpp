@@ -13,7 +13,7 @@
 
 //#define DEBUG_OUTPUT
 
-enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
+enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eNegElim, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
 // ---------------------------------------------------------------------------------------
 
@@ -98,13 +98,13 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom, string name)
 void EQ_ProvingEngine::AddPremise(const Fact& f)
 {
     mpT->AddSymbol(f.GetName(), f.GetArity());
-    nNesting[mnPremisesCount] = 1;
+  /*  nNesting[mnPremisesCount] = 1;
     bCases[mnPremisesCount]  = false;
     nAxiomApplied[mnPremisesCount] = eAssumption;
     nP[mnPremisesCount][0] = PREDICATE["n" + ToUpper(f.GetName())];
     for (size_t i=0; i<f.GetArity(); i++)
-        nA[mnPremisesCount][i] = CONSTANTS[f.GetArg(i)];
-
+        nA[mnPremisesCount][i] = CONSTANTS["n" + ToUpper(f.GetArg(i))];
+*/
     mURSAstringPremises += "(assert (= " + app("nNesting", mnPremisesCount) + " 1))\n";
     mURSAstringPremises += "(assert (= " + app("bCases", mnPremisesCount) + " false))\n";
     mURSAstringPremises += "(assert (= " + app("nAxiomApplied", mnPremisesCount) + " " + itos(eAssumption) + "))\n";
@@ -130,8 +130,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
 
-        l = 1;
-        while(l <= 30)  {
+        l = 3;
+        while(l <= 3)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
             if (remainingTime <= 0)
@@ -145,7 +145,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
             cout << "Trying proof length " << l << endl;
             rv = system(sCall.c_str());
-            if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
+            if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
                 l *= 2;
             }
             else {
@@ -156,9 +156,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         }
 
 
-        l = best/2; r = best;
+        l = best/2+1; r = best;
         // l = 1; r = 15;
-        while(best && l <= r)  {
+        while(best && l <= r && l!=best)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
            // cout << "remaining time " << remainingTime << endl;
@@ -244,8 +244,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
             mnMaxArity = mpT->mSignature[i].second;
     }
 
-    enum StepKind { eAssumption, eNegIntroStart, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
-
     sPreabmle += "\n";
     sPreabmle += "; **************************** Axioms ******************************* \n";
     mnAxiomsCount = eNumberOfStepKinds-1;
@@ -257,11 +255,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     sPreabmle += "; **************************** Constants ******************************* \n";
     for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
         sPreabmle += "(assert (= n" + ToUpper(*it) + " " + itos(enumerator) + "))\n";
-        CONSTANTS["n" + ToUpper(*it)] = enumerator++;
+        CONSTANTS[*it] = enumerator++;
     }
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++) {
         sPreabmle += "(assert (= n" + ToUpper(*it) + " " + itos(enumerator) + "))\n";
-        CONSTANTS["n" + ToUpper(*it)] = enumerator++;
+        CONSTANTS[*it] = enumerator++;
     }
     sPreabmle += "\n";
     sPreabmle += "; **************************** Premises ******************************* \n";
@@ -276,8 +274,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     sPreabmle += "(assert (= " + app("nNesting", nFinalStep) + " 1)) \n";
     sPreabmle += "(assert (= " + app("bCases", nFinalStep) + " false)) \n";
     sPreabmle += "(assert (= " + app("nP", nFinalStep, 0) + " n" + ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ")) \n";
-    for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++)
+    for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++) {
+       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
+            sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " Int) \n";
         sPreabmle += "(assert (= " + app("nA", nFinalStep, i) + " n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + ")) \n";
+    }
     if (formula.GetSize()>1)
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++)
             sPreabmle += "(assert (= " + app("nA", nFinalStep, i) + " n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + ")) \n";
@@ -300,7 +301,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (unsigned nProofStep = mnPremisesCount; nProofStep<mnPremisesCount+nProofLen; nProofStep++) {
 
        sbMPStep = "\n(or false ";
-       for (unsigned nAxiom = 8; nAxiom <= mnAxiomsCount /*&& nProofStep + 1!= mnPremisesCount+nProofLen*/; nAxiom++) {
+       for (unsigned nAxiom = eNumberOfStepKinds; nAxiom <= mnAxiomsCount /*&& nProofStep + 1!= mnPremisesCount+nProofLen*/; nAxiom++) {
 
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), itos(nAxiom));
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
@@ -359,14 +360,88 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           sbMPStep += "\n(and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                          appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
        }
+
+
+       //  P(Arg1,,,Argn) & nEQ(Arg1,x) => P(X,...Argn)
+       sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eEQSub));
+       string sbMatchPremise1 = "(or false ";
+       string sbMatchPremise2 = "(or false ";
+       for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
+           string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
+           for (unsigned nI = 1, nJ = 2; nI <= 5; nI++, nJ *= 2)
+              sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
+                                         "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
+           sbSameProofBranch += ")";
+           string sb2 = "(and " + appeq(app("nP", n_from, 0), "nEQ");
+           sb2 += "(or (and " + appeq(app("nA", n_from, 0), app("nAA", nProofStep)) + appeq(app("nA",n_from,1), app("nXX", nProofStep)) + ")" +
+                      "(and " + appeq(app("nA", n_from, 0), app("nXX", nProofStep)) + appeq(app("nA",n_from,1), app("nAA", nProofStep)) + "))";
+           sb2 += ")";
+           for (unsigned nJ = 0; nJ < mnMaxArity; nJ++) {
+               string sb1 = "(and " + appeq(app("nP", n_from, 0), app("nP", nProofStep,0));
+               for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+                   if (nInd!=nJ)
+                        sb1 += appeq(app("nA", n_from, nInd), app("nA", nProofStep, nInd));
+               sb1 += appeq(app("nA", n_from, nJ), app("nAA", nProofStep));
+               sb1 += appeq(app("nA", nProofStep, nJ), app("nXX",nProofStep));
+               sb1 += ")";
+               sbMatchPremise1 += "(and "+ appeq(app("nFrom",nProofStep,0), itos(n_from)) + sb1 + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
+               sbMatchPremise2 += "(and "+ appeq(app("nFrom",nProofStep,1), itos(n_from)) + sb2 + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
+           }
+       }
+       sbMatchPremise1 += ")";
+       sbMatchPremise2 += ")";
+       sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
+       sbMatchConclusion = "";
+       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+           sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
+       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion +
+                    appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+
+
+
+       //  P(Arg1,,,Argn) & ~P(X,...Argn) => false
+       sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eNegElim));
+       sbMatchPremise1 = "(or false ";
+       sbMatchPremise2 = "(or false ";
+       for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
+           string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
+           for (unsigned nI = 1, nJ = 2; nI <= 5; nI++, nJ *= 2)
+              sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
+                                         "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
+           sbSameProofBranch += ")";
+           string sn;
+           for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
+                sn += appeq(app("nP", nProofStep, 0), itos(i));
+           string sb1 = appeq(app("nP",n_from,0),app("nPP",nProofStep)) +
+                        // "(< "+ app("nPP",nProofStep) + " " + itos(mpT->mSignature.size())+ ")" +
+                        "(or " + sn + ")";
+                        // (nPP[nProofStep] & 1) == 1);
+           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+                sb1 += appeq(app("nA", n_from, nInd), app("nBB", nProofStep, nInd));
+           string sb2 = appeq(app("nP", n_from, 0), "(+ 1 " + app("nPP", nProofStep)+ ")");
+           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+             sb2 += appeq(app("nA",n_from,nInd),app("nBB",nProofStep,nInd));
+           sbMatchPremise1 += "(and "+ appeq(app("nFrom",nProofStep,0), itos(n_from)) + sb1 + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
+           sbMatchPremise2 += "(and "+ appeq(app("nFrom",nProofStep,1), itos(n_from)) + sb2 + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
+       }
+       sbMatchPremise1 += ")";
+       sbMatchPremise2 += ")";
+       sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
+       sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nFALSE");
+       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion +
+                    appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+
+
+
        sbMPStep += ")";
 
-       string sbNegIntroStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntroStart)) +
+
+       string sbNegIntroStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntro)) +
                                          "(not " + app("bCases", nProofStep) + ") " +
                                          appeq(app("nNesting", nProofStep), "(* 2 " + app("nNesting", nProofStep-1) + ")") +
                                          appeq(app("nNesting", nProofStep), "2") +
                                          //  (nP[" + itos(nProofStep) + "][0]" & 1 == 1) " + TODO/DONE
-                                         appeq("(+ " + app("nP", nProofStep, 0) + " " + itos(eNegIntroStart) + ")", app("nP", nFinalStep, 0));
+                                         appeq("(+ " + app("nP", nProofStep, 0) + " " + itos(eNegIntro) + ")", app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
        string sn;
@@ -455,7 +530,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        snSecond +=   "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) + " 1 0)";
        snConclude += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyCases)) + " 1 0)";
 
-       snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntroStart)) + "  1 0)";
+       snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntro)) + "  1 0)";
        snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyNegIntro)) + " -1 0)";
        //snNegIntroCheck = "(+ 1 " + snNegIntroCheck+ ")";
        sbBranchingCorrect += "(or " + appeq("(+ 1 " + snNegIntroCheck+ ")", "2") + appeq("(+ 1 " + snNegIntroCheck+ ")", "1") + ")";
@@ -506,6 +581,10 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
     unsigned n;
     ifstream smtmodel(sModelFile,ios::in);
     if (smtmodel.good()) {
+        if ( smtmodel.peek() == std::ifstream::traits_type::eof())  {
+            cout << "The model file is empty !" << endl;
+            return false;
+        }
         getline(smtmodel, str);
         istringstream ss(str);
         ss >> s;
@@ -616,6 +695,79 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
       else if (axiom == eQEDbyNegIntro) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eQEDbyNegIntro;
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind: QED by NegIntro; ***/" << endl;
+      }
+      else if (axiom == eEQSub) {
+          string sfrom1, sfrom2 = "";
+          unsigned noPremises;
+          int numberOfUnivVars;
+
+          noPremises = 2;
+          numberOfUnivVars = ARITY[predicate1];
+
+          for (unsigned i = 0; i<noPremises; i++) {
+             s = app("nFrom", proofStep, i);
+             if (nmodel.find(s) == nmodel.end())
+               assert(false);
+             int from = nmodel[s];
+             sfrom1 += itos(from) + " ";
+             if (i > 0)
+                sfrom2 += " and ";
+             sfrom2 += "(" + itos(from) + ")";
+          }
+
+          proofTxt << setw(4) << right << nesting << setw(4) << right << axiom << setw(4) << right << "0" << setw(5) << right << predicate1;
+          for(size_t i=0; i<ARITY[predicate1]; i++)
+             proofTxt << setw(4) << right <<  arg[0][i];
+          proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << "=MP-axiom:" << axiom << "); Branching: no; " << "p" << predicate1 << "(";
+          for(size_t i=0;i<ARITY[predicate1];i++)
+             proofTxt << string(1,'a'+arg[0][i]) << (i+1 < ARITY[predicate1] ? "," : "");
+          proofTxt << ") ***/" << endl;
+
+          proofTxt << setw(40) << right << " ";
+          proofTxt << sfrom1 << "  /*** From steps: " << sfrom2 << " ***/" << endl;
+
+          proofTxt << setw(40) << right << " ";
+          for(int i=0; i<numberOfUnivVars; i++)
+              proofTxt << i << " ";
+          proofTxt << arg[0][0] << " ";
+          proofTxt << "/*** Instantiation ***/" << endl;
+      }
+      else if (axiom == eNegElim) {
+          string sfrom1, sfrom2 = "";
+          unsigned noPremises;
+          int numberOfUnivVars;
+
+          noPremises = 2;
+
+          for (unsigned i = 0; i<noPremises; i++) {
+             s = app("nFrom", proofStep, i);
+             if (nmodel.find(s) == nmodel.end())
+               assert(false);
+             int predicate_from = nmodel[s];
+             if (predicate_from == -1)
+                assert(false);
+             numberOfUnivVars = ARITY[predicate_from];
+             sfrom1 += itos(predicate_from) + " ";
+             if (i > 0)
+                sfrom2 += " and ";
+             sfrom2 += "(" + itos(predicate_from) + ")";
+          }
+
+          proofTxt << setw(4) << right << nesting << setw(4) << right << axiom << setw(4) << right << "0" << setw(5) << right << predicate1;
+          for(size_t i=0; i<ARITY[predicate1]; i++)
+             proofTxt << setw(4) << right <<  arg[0][i];
+          proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << "=MP-axiom:" << axiom << "); Branching: no; " << "p" << predicate1 << "(";
+          for(size_t i=0;i<ARITY[predicate1];i++)
+             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
+          proofTxt << ") ***/" << endl;
+
+          proofTxt << setw(40) << right << " ";
+          proofTxt << sfrom1 << "  /*** From steps: " << sfrom2 << " ***/" << endl;
+
+          proofTxt << setw(40) << right << " ";
+          for(int i=0; i<numberOfUnivVars; i++)
+              proofTxt << i << " ";
+          proofTxt << "/*** Instantiation ***/" << endl;
       }
       else {
           string sfrom1, sfrom2 = "";
@@ -731,8 +883,6 @@ bool EQ_ProvingEngine::DecodeProof(const DNFFormula& formula, const string& sEnc
 bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
                                         ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof, bool bNegIntro)
 {
-    enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
-
     Fact dummy;
     dummy.SetName("dummy");
 
@@ -827,6 +977,48 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
                 if (!r)
                     return false;
                 pcs->AddSubproof(*subproof);
+            }
+            else if (nAxiom == eEQSub) {
+
+                Fact f;
+                f.SetName(string(sPredicates[nPredicate]));
+                for(size_t i=0; i< mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                    f.SetArg(i,mpT->GetConstantName(nArgs[i]));
+
+                DNFFormula d;
+                ConjunctionFormula cfconc1;
+                cfconc1.Add(f);
+                d.Add(cfconc1);
+
+                proofTrace.push_back(f); // this is not used if the axiom is branching
+
+                int nFrom;
+                getline(ursaproof, str);
+                istringstream ss1(str);
+                ConjunctionFormula cfPremises;
+                unsigned noPremises;
+                size_t numOfUnivVars;
+                noPremises = 2;
+                numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate])+1;
+                size_t numOfVars = numOfUnivVars;
+                for (unsigned int i = 0; i<noPremises; i++) {
+                    ss1 >> nFrom;
+                    if (nFrom != -1 && nFrom != 99)
+                        cfPremises.Add(proofTrace[nFrom]);
+                }
+                int inst[numOfVars];
+                getline(ursaproof, str);
+                istringstream ss2(str);
+                for(size_t i=0; i < numOfVars; i++)
+                    ss2 >> inst[i];
+
+                vector<pair<string,string>> instantiation;
+                vector<pair<string,string>> new_witnesses;
+                for(size_t i=0; i < numOfUnivVars; i++) {
+                    const string UnivVar = string(1,'A' + i);
+                    instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
+                }
+                proof.AddMPstep(cfPremises, d, "EqSub", instantiation, new_witnesses);
             }
             else if (nAxiom >= eNumberOfStepKinds) {
                 Fact f;
