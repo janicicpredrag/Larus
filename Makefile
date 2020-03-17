@@ -140,7 +140,6 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents /home/predrag/Qt5.10.0/5.10.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/EQ_Engine/EQ_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h common.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp Axioms/TarskiAxioms.cpp Axioms/BezemAxioms.cpp Axioms/EuclidElements.cpp Axioms/EuclidStatementsDepends.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/EQ_Engine/EQ_ProvingEngine.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp import.cpp $(DISTDIR)/
 
@@ -171,8 +170,8 @@ compiler_rcc_clean:
 compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
-moc_predefs.h: /home/predrag/Qt5.10.0/5.10.0/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /home/predrag/Qt5.10.0/5.10.0/gcc_64/mkspecs/features/data/dummy.cpp
+moc_predefs.h: 
+	g++ -pipe -O2 -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h 
 
 compiler_moc_header_make_all:
 compiler_moc_header_clean:
