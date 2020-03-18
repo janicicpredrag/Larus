@@ -286,16 +286,16 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     T.AddAxiomEqSymm();
     T.AddAxiomNEqSymm();
     T.AddAxiomEqReflexive();
-    T.AddNegElimAxioms();
+ //   T.AddNegElimAxioms();
 
-    int r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
-    if (!r) {
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+    if (false && r != eConjectureProved) {
         // T.AddEqExcludedMiddleAxiom();
-        T.AddEqSubAxioms();
+        //  T.AddEqSubAxioms();
         cerr << "   second attempt " << endl;
         r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
     }
-    if (!r) {
+    if (r != eConjectureProved) {
         T.AddExcludedMiddleAxioms();
         cerr << "   third attempt " << endl;
         r = ProveTheorem(T, engine, theorem, theoremName, timelimit);

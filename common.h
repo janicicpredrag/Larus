@@ -14,6 +14,8 @@ const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
 
+#define EQ_SUPPORT 1
+
 string itos(unsigned int i);
 
 #endif // COMMON_H

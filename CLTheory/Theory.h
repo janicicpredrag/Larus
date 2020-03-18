@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "Formula.h"
+#include "common.h"
 
 
 using namespace std;
@@ -15,7 +16,12 @@ class Theory {
     friend class STLProvingEngine;
 
 public:
-    Theory() { miConstantsCounter = 0; AddSymbol("false", 0); }
+    Theory() {
+        miConstantsCounter = 0;
+        AddSymbol("false", 0);
+        if (EQ_SUPPORT)
+            AddSymbol("eq", 2);
+    }
 
     void Reset() { miConstantsCounter = 0; mConstants.clear(); mConstantsPermissible.clear(); AddSymbol("false", 0); }
 
