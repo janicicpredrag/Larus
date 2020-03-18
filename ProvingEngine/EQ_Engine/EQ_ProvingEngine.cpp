@@ -130,8 +130,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
 
-        l = 3;
-        while(l <= 3)  {
+        l = 1;
+        while(l <= 30)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
             if (remainingTime <= 0)
@@ -307,11 +307,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n    (or  false ";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
+
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-                 for (unsigned nI = 1, nJ = 2; nI <= 5; nI++, nJ *= 2)
+                 // replace <= 3 by <=5 for deeper nesting (at three places)
+                 // for (unsigned nI = 1, nJ = 3; nI <= 2; nI++, nJ *= 2)
+
+                 for (unsigned nI = 1, nJ = 3; nI <= 2; nI++, nJ *= 2)
                     sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                                "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
                  sbSameProofBranch += ")";
+                 //string sbSameProofBranch = "true";
                  string sb = appeq(app("nP", n_from, 0), itos(nPredicate[nAxiom][nPremisesCounter]));
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
                  if (ar != 0) {
@@ -368,7 +373,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        string sbMatchPremise2 = "(or false ";
        for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
            string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-           for (unsigned nI = 1, nJ = 2; nI <= 5; nI++, nJ *= 2)
+           for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
               sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                          "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
            sbSameProofBranch += ")";
@@ -405,7 +410,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMatchPremise2 = "(or false ";
        for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
            string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-           for (unsigned nI = 1, nJ = 2; nI <= 5; nI++, nJ *= 2)
+           for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
               sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                          "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
            sbSameProofBranch += ")";
@@ -429,7 +434,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
 
 
-
        sbMPStep += ")";
 
 
@@ -437,7 +441,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                          "(not " + app("bCases", nProofStep) + ") " +
                                          appeq(app("nNesting", nProofStep), "(* 2 " + app("nNesting", nProofStep-1) + ")") +
                                          appeq(app("nNesting", nProofStep), "2") +
-                                         //  (nP[" + itos(nProofStep) + "][0]" & 1 == 1) " + TODO/DONE
+                                         //  (nP[" + itos(nProofStep) + "][0]" & 1 == 1) " + TODO/DONE as given below
                                          appeq("(+ " + app("nP", nProofStep, 0) + " " + itos(eNegIntro) + ")", app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
@@ -529,12 +533,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntro)) + "  1 0)";
        snNegIntroCheck += "(ite " + appeq(app("nAxiomApplied", nProofStep), itos(eQEDbyNegIntro)) + " -1 0)";
-       //snNegIntroCheck = "(+ 1 " + snNegIntroCheck+ ")";
        sbBranchingCorrect += "(or " + appeq("(+ 1 " + snNegIntroCheck+ ")", "2") + appeq("(+ 1 " + snNegIntroCheck+ ")", "1") + ")";
 
        /* ... the proof step is correct if it was one of cases from some case split */
        sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
-                                  sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep +  ")";
+                                  sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
     }
 
     for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
@@ -609,8 +612,6 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
             }
         }
     }
-
-//  enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
   ofstream proofTxt;
   proofTxt.open (sEncodedProofFile);
