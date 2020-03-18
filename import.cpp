@@ -350,13 +350,13 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         }
     }
 
-    T.AddAxiomEqSymm();
-    T.AddAxiomNEqSymm();
-    T.AddAxiomEqReflexive();
-    T.AddNegElimAxioms();
-    T.AddEqExcludedMiddleAxiom();
-    T.AddExcludedMiddleAxioms();
-    T.AddEqSubAxioms();
+    //T.AddAxiomEqSymm();
+    //T.AddAxiomNEqSymm();
+    ///T.AddAxiomEqReflexive();
+    //T.AddNegElimAxioms();
+    //T.AddEqExcludedMiddleAxiom();
+    //T.AddExcludedMiddleAxioms();
+    //T.AddEqSubAxioms();
 
     for(size_t i=0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "fof(" << T.Axiom(i).second <<",axiom, " << T.Axiom(i).first << ")." << endl;

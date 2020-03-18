@@ -158,8 +158,24 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     if (f.GetName() == "false") {
         os << "$false";
     }
-    else {
-        os << f.GetName();
+    else if (f.GetName() == "eq")
+    {
+        os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
+    }
+    else if (f.GetName() == "neq")    
+    {
+        os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
+    }
+    else
+    {
+        if (f.GetName()[0]=='n')
+        {
+            os << "~ (" << f.GetName().substr(1); 
+        }
+        else
+        {
+           os << f.GetName();
+        }
         if (f.GetArity() > 0) {
             os << "(";
             for (size_t i = 0; i < f.GetArity(); i++) {
@@ -167,8 +183,10 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 if (i != f.GetArity()-1)
                     os << ",";
             }
+            if (f.GetName()[0]=='n')
+                os << ")";
             os << ")";
-        }
+        }         
     }
     return os;
 }
