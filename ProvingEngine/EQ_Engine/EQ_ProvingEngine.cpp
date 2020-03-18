@@ -13,7 +13,7 @@
 
 //#define DEBUG_OUTPUT
 
-enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eNegElim, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
+enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eNegElim, eExcludedMiddle, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
 // ---------------------------------------------------------------------------------------
 
@@ -310,9 +310,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  // replace <= 3 by <=5 for deeper nesting (at three places)
-                 // for (unsigned nI = 1, nJ = 3; nI <= 2; nI++, nJ *= 2)
+                 // for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2) TODO!
 
-                 for (unsigned nI = 1, nJ = 3; nI <= 2; nI++, nJ *= 2)
+                 for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
                     sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                                "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
                  sbSameProofBranch += ")";
@@ -399,7 +399,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMatchConclusion = "";
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
-       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion +
+       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                     appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
 
 
@@ -430,7 +430,20 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMatchPremise2 += ")";
        sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
        sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nFALSE");
-       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion +
+       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+                    appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+
+
+       //  P(Arg1,,,Argn) | ~P(X,...Argn)
+       sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eExcludedMiddle));
+       string sn;
+       for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
+            sn += appeq(app("nP", nProofStep, 0), itos(i));
+       sbMatchConclusion = appeq( "(+ 1 " + app("nP",nProofStep,0) + ")", app("nP", nProofStep, 1));
+       sbMatchConclusion += "(or " + sn + ")";
+       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+            sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
+       sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + " " + app("bCases",nProofStep) + " " +
                     appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
 
 
@@ -445,7 +458,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                          appeq("(+ " + app("nP", nProofStep, 0) + " " + itos(eNegIntro) + ")", app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
-       string sn;
+       sn = "";
        for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
             sn += appeq(app("nP", nProofStep, 0), itos(i));
        sbNegIntroStep += "(or " + sn + ")";
@@ -767,6 +780,35 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
               proofTxt << i << " ";
           proofTxt << "/*** Instantiation ***/" << endl;
       }
+      else if (axiom == eExcludedMiddle) {
+          int numberOfUnivVars = ARITY[predicate1];
+
+          s = app("nP", proofStep, 1);
+          int predicate2 = nmodel[s];
+          for(unsigned i=0; i<ARITY[predicate2]; i++) {
+              s = app("nA", proofStep, mnMaxArity+i);
+              arg[1][i] = nmodel[s];
+          }
+          proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
+          for(unsigned i=0; i<ARITY[predicate1]; i++)
+             proofTxt << setw(4) << right <<  arg[0][i];
+          proofTxt << setw(5) << right << predicate2;
+          for(unsigned i=0;i<ARITY[predicate2]; i++)
+             proofTxt << setw(4) << right << arg[1][i];
+          proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << axiom << " = MP-axiom:" << axiom << "; Branching: yes; " << "p" << predicate1 << "(";
+          for(unsigned i=0; i<ARITY[predicate1];i++)
+             proofTxt << string(1,'a'+arg[0][i]) << (i+1<ARITY[predicate1] ? "," : "");
+          proofTxt << ") or ";
+          proofTxt << "p" << predicate2 << "(";
+          for(unsigned i=0;i<ARITY[predicate2];i++)
+             proofTxt << string(1,'a'+arg[1][i]) << (i+1<ARITY[predicate2] ? "," : "");
+          proofTxt << ") ***/" << endl;
+
+          proofTxt << setw(40) << right << " ";
+          for(int i=0; i<numberOfUnivVars; i++)
+              proofTxt << i << " ";
+          proofTxt << "/*** Instantiation ***/" << endl;
+      }
       else {
           string sfrom1, sfrom2 = "";
 
@@ -1017,6 +1059,49 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 proof.AddMPstep(cfPremises, d, "EqSub", instantiation, new_witnesses);
+            }
+            else if (nAxiom == eExcludedMiddle) {
+                Fact f;
+                f.SetName(string(sPredicates[nPredicate]));
+                for(size_t i=0; i< mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                    f.SetArg(i,mpT->GetConstantName(nArgs[i]));
+
+                DNFFormula d;
+                ConjunctionFormula cfconc1, cfconc2;
+                cfconc1.Add(f);
+                d.Add(cfconc1);
+
+                if (nBranching) {
+                    Fact f;
+                    ss >> nPredicate;
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                        ss >> nArgs[i];
+                    f.SetName(string(sPredicates[nPredicate]));
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                        f.SetArg(i,mpT->GetConstantName(nArgs[i]));
+                    cfconc2.Add(f);
+                    d.Add(cfconc2);
+                    pcs = new CaseSplit;
+                    pcs->SetCases(d);
+                }
+
+                proofTrace.push_back(f); // this is not used if the axiom is branching
+
+                size_t numOfVars = mpT->GetSymbolArity(sPredicates[nPredicate]);
+                int inst[numOfVars];
+                getline(ursaproof, str);
+                istringstream ss2(str);
+                for(size_t i=0; i < numOfVars; i++)
+                    ss2 >> inst[i];
+
+                vector<pair<string,string>> instantiation;
+                vector<pair<string,string>> new_witnesses;
+                for(size_t i=0; i < numOfVars; i++) {
+                    const string UnivVar = string(1,'A' + i);
+                    instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
+                }
+                 ConjunctionFormula cfPremises;
+                proof.AddMPstep(cfPremises, d, "ExcludedMiddle", instantiation, new_witnesses);
             }
             else if (nAxiom >= eNumberOfStepKinds) {
                 Fact f;
