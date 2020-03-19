@@ -12,8 +12,8 @@ fof(lemma_rightreverse,axiom, (! [A,B,C,D] : ((per(A,B,C) & betS(A,B,D) & cong(A
 fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
 fof(lemma_interior5,axiom, (! [A,B,C,D,Xa,Xb,Xc,Xd] : ((betS(A,B,C) & betS(Xa,Xb,Xc) & cong(A,B,Xa,Xb) & cong(B,C,Xb,Xc) & cong(A,D,Xa,Xd) & cong(C,D,Xc,Xd)) => ((cong(B,D,Xb,Xd)))))).
 fof(lemma_linereflectionisometry,axiom, (! [A,B,C,D,E,F] : ((per(B,A,C) & per(A,B,D) & betS(C,A,E) & betS(D,B,F) & cong(A,C,A,E) & cong(B,D,B,F)) => ((cong(C,D,E,F)))))).
+fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(per_excluded_middle,axiom, (! [A,B,C] : ((per(A,B,C)) | (nper(A,B,C))))).
 fof(betS_excluded_middle,axiom, (! [A,B,C] : ((betS(A,B,C)) | (nbetS(A,B,C))))).
 fof(cong_excluded_middle,axiom, (! [A,B,C,D] : ((cong(A,B,C,D)) | (ncong(A,B,C,D))))).
-fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(lemma_10_12,conjecture,(  ! [A,B,C,H] : ((per(A,B,C) & per(A,B,H) & cong(B,C,B,H)) => (cong(A,C,A,H))))).
