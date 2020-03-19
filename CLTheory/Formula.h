@@ -1,5 +1,7 @@
 #ifndef FORMULA_H
 #define FORMULA_H
+#define NATIVE_EQ 0
+#define NATIVE_NEG 0
 
 #include <string>
 #include <vector>
@@ -158,17 +160,17 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     if (f.GetName() == "false") {
         os << "$false";
     }
-    else if (f.GetName() == "eq")
+    else if (NATIVE_EQ && f.GetName() == "eq")
     {
         os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
     }
-    else if (f.GetName() == "neq")    
+    else if (NATIVE_EQ && f.GetName() == "neq")    
     {
         os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
     }
     else
     {
-        if (f.GetName()[0]=='n')
+        if (NATIVE_NEG && f.GetName()[0]=='n')
         {
             os << "~ (" << f.GetName().substr(1); 
         }
@@ -183,7 +185,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 if (i != f.GetArity()-1)
                     os << ",";
             }
-            if (f.GetName()[0]=='n')
+            if (NATIVE_NEG && f.GetName()[0]=='n')
                 os << ")";
             os << ")";
         }         
