@@ -38,7 +38,8 @@ extern vector<string> TrivialAxioms;
 
 int main(int argc , char** argv)
 {
-
+    vector< pair<string, vector<string> > > case_study =   euclids_thms1   ;
+    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
     INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
     PROVING_ENGINE eEngine = DEFAULT_ENGINE;
     float time_limit = DEFAULT_TIME_LIMIT;
