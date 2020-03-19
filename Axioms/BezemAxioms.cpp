@@ -28,13 +28,14 @@ vector<string> TestAxiomsnegintro = {
 
 
 vector< pair<string, vector<string>>> test_thms = {
-    {"goal_to_be_proved" , { "ax1", "ax2"} }
+    {"goal_to_be_proved" , { "ax2", "ax3"} }
 };
 
 vector<string> TestAxioms = {
-    "fof(ax1, axiom, ![ X ] : ( p(X) => r(X) | q(X)))",
+    "fof(ax1, axiom, ![ X ] : ( ppp(X) => r(X) | q(X)))",
     "fof(ax2, axiom, ![ X ] : ( q(X) => $false))",
-    "fof(goal_to_be_proved, conjecture, ![ X ] : (p(X) => r(X) ))"
+    "fof(ax3, axiom, ![ X ] : ( nq(X) => r(X)))",
+    "fof(goal_to_be_proved, conjecture, ![ X ] : (ppp(X) => r(X) ))"
 };
 
 /*

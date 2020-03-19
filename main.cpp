@@ -38,8 +38,10 @@ extern vector<string> TrivialAxioms;
 
 int main(int argc , char** argv)
 {
-    vector< pair<string, vector<string> > > case_study =   euclids_thms1   ;
+
+    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
     ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+
     INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
     PROVING_ENGINE eEngine = DEFAULT_ENGINE;
     float time_limit = DEFAULT_TIME_LIMIT;
@@ -135,13 +137,13 @@ int main(int argc , char** argv)
     }
 
 /*
-  vector< pair<string, vector<string> > > case_study =   euclids_thms1   ;
+  vector< pair<string, vector<string> > > case_study =   euclids_thms1 ;
     int numberProved = 0, numberNotProved = 0;
     for (size_t i = 0, size = case_study.size(); i<size; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(    EuclidAxioms  , depends, thm, eURSA_ProvingEngine, 30)) {
+        if (ProveFromTPTPTheory(    EuclidAxioms , depends, thm, eEQ_ProvingEngine, 30)) {
             numberProved++;
             cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
         }
@@ -152,6 +154,7 @@ int main(int argc , char** argv)
          cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
     }
 */
+
 //    RunCaseStudy(case_study,EuclidAxioms);
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
 
