@@ -2,13 +2,13 @@ fof(deftriangle,axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((~ (col(A,B,C))))))).
 fof(deftriangle2,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((triangle(A,B,C)))))).
 fof(lemma_NCdistinct,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((( A != B ) & ( B != C ) & ( A != C ) & ( B != A ) & ( C != B ) & ( C != A )))))).
 fof(proposition_10,axiom, (! [A,B] : (? [X] : ((( A != B )) => ((betS(A,X,B) & cong(X,A,X,B))))))).
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
 fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((( B != C ) & ( A != B ) & ( A != C )))))).
 fof(lemma_NChelper,axiom, (! [A,B,C,P,Q] : ((~ (col(A,B,C)) & col(A,B,P) & col(A,B,Q) & ( P != Q )) => ((~ (col(P,Q,C))))))).
@@ -44,4 +44,4 @@ fof(lemma_ray5,axiom, (! [A,B,C] : ((out(A,B,C)) => ((out(A,C,B)))))).
 fof(lemma_ray3,axiom, (! [B,C,D,V] : ((out(B,C,D) & out(B,C,V)) => ((out(B,D,V)))))).
 fof(lemma_ray1,axiom, (! [A,B,P] : ((out(A,B,P)) => ((betS(A,P,B)) | (( B = P )) | (betS(A,B,P)))))).
 fof(axiom_deZolt1,axiom, (! [B,C,D,E] : ((betS(B,E,D)) => ((~ (eT(D,B,C,E,B,C))))))).
-fof(proposition_39A,conjecture,(  ! [A,B,C,D,M] : ((triangle(A,B,C) & eT(A,B,C,D,B,C) & betS(A,M,C) & out(B,D,M)) => (par(A,D,B,C))))).
+fof(proposition_39A,conjecture,(! [A,B,C,D,M] : ((triangle(A,B,C) & eT(A,B,C,D,B,C) & betS(A,M,C) & out(B,D,M)) => ((par(A,D,B,C)))))).

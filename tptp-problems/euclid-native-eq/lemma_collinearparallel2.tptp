@@ -5,4 +5,4 @@ fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col
 fof(lemma_collinear4,axiom, (! [A,B,C,D] : ((col(A,B,C) & col(A,B,D) & ( A != B )) => ((col(B,C,D)))))).
 fof(lemma_collinearparallel,axiom, (! [A,B,C,Xc,Xd] : ((par(A,B,Xc,Xd) & col(Xc,Xd,C) & ( C != Xd )) => ((par(A,B,C,Xd)))))).
 fof(lemma_parallelflip,axiom, (! [A,B,C,D] : ((par(A,B,C,D)) => ((par(B,A,C,D) & par(A,B,D,C) & par(B,A,D,C)))))).
-fof(lemma_collinearparallel2,conjecture,(  ! [A,B,C,D,E,F] : ((par(A,B,C,D) & col(C,D,E) & col(C,D,F) & neq(E,F)) => (par(A,B,E,F))))).
+fof(lemma_collinearparallel2,conjecture,(! [A,B,C,D,E,F] : ((par(A,B,C,D) & col(C,D,E) & col(C,D,F) & ( E != F )) => ((par(A,B,E,F)))))).

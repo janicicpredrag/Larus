@@ -6,13 +6,13 @@ fof(deftriangle,axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((~ (col(A,B,C))))))).
 fof(deftriangle2,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((triangle(A,B,C)))))).
 fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
 fof(proposition_16,axiom, (! [A,B,C,D] : ((triangle(A,B,C) & betS(B,C,D)) => ((ltA(B,A,C,A,C,D) & ltA(C,B,A,A,C,D)))))).
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((( B != C ) & ( A != B ) & ( A != C )))))).
 fof(lemma_ray4_1,axiom, (! [A,B,E] : ((betS(A,E,B) & ( A != B )) => ((out(A,B,E)))))).
 fof(lemma_ray4_2,axiom, (! [A,B,E] : ((( E = B ) & ( A != B )) => ((out(A,B,E)))))).
@@ -31,4 +31,4 @@ fof(lemma_angleorderrespectscongruence2,axiom, (! [A,B,C,D,E,F,Xa,Xb,Xc] : ((ltA
 fof(cn_equalityreverse,axiom, (! [A,B] : ((cong(A,B,B,A))))).
 fof(lemma_lessthancongruence2,axiom, (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(A,B,E,F)) => ((lt(E,F,C,D)))))).
 fof(lemma_lessthancongruence,axiom, (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))).
-fof(lemma_legsmallerhypotenuse,conjecture,(  ! [A,B,C] : ((per(A,B,C)) => (lt(A,B,A,C) & lt(B,C,A,C))))).
+fof(lemma_legsmallerhypotenuse,conjecture,(! [A,B,C] : ((per(A,B,C)) => ((lt(A,B,A,C) & lt(B,C,A,C)))))).

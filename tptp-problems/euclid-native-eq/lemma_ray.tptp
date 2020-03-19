@@ -15,4 +15,4 @@ fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A
 fof(lemma_extensionunique,axiom, (! [A,B,E,F] : ((betS(A,B,E) & betS(A,B,F) & cong(B,E,B,F)) => ((( E = F )))))).
 fof(axiom_connectivity,axiom, (! [A,B,C,D] : ((betS(A,B,D) & betS(A,C,D) & ~ (betS(A,B,C)) & ~ (betS(A,C,B))) => ((( B = C )))))).
 fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((( A != B )) => ((( B != A )))))).
-fof(lemma_ray,conjecture,(  ! [A,B,P] : ((out(A,B,P) & neq(P,B) & nbetS(A,P,B)) => (betS(A,B,P))))).
+fof(lemma_ray,conjecture,(! [A,B,P] : ((out(A,B,P) & ( P != B ) & ~ (betS(A,P,B))) => ((betS(A,B,P)))))).

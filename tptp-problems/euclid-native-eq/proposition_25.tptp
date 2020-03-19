@@ -8,4 +8,4 @@ fof(lemma_equalanglessymmetric,axiom, (! [A,B,C,Xa,Xb,Xc] : ((congA(A,B,C,Xa,Xb,
 fof(proposition_04,axiom, (! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => ((cong(B,C,Xb,Xc) & congA(A,B,C,Xa,Xb,Xc) & congA(A,C,B,Xa,Xc,Xb)))))).
 fof(lemma_lessthancongruence2,axiom, (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(A,B,E,F)) => ((lt(E,F,C,D)))))).
 fof(lemma_angletrichotomy2,axiom, (! [A,B,C,D,E,F] : ((~ (col(A,B,C)) & ~ (col(D,E,F)) & ~ (congA(A,B,C,D,E,F)) & ~ (ltA(D,E,F,A,B,C))) => ((ltA(A,B,C,D,E,F)))))).
-fof(proposition_25,conjecture,(  ! [A,B,C,D,E,F] : ((triangle(A,B,C) & triangle(D,E,F) & cong(A,B,D,E) & cong(A,C,D,F) & lt(E,F,B,C)) => (ltA(E,D,F,B,A,C))))).
+fof(proposition_25,conjecture,(! [A,B,C,D,E,F] : ((triangle(A,B,C) & triangle(D,E,F) & cong(A,B,D,E) & cong(A,C,D,F) & lt(E,F,B,C)) => ((ltA(E,D,F,B,A,C)))))).

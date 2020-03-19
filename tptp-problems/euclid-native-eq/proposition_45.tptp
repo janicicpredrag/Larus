@@ -11,13 +11,13 @@ fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((( A != B )) => ((( B != A ))))
 fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))).
 fof(lemma_congruencetransitive,axiom, (! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => ((cong(A,B,E,F)))))).
 fof(axiom_betweennesssymmetry,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((betS(C,B,A)))))).
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(lemma_collinear4,axiom, (! [A,B,C,D] : ((col(A,B,C) & col(A,B,D) & ( A != B )) => ((col(B,C,D)))))).
 fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
 fof(lemma_NCorder,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((~ (col(B,A,C)) & ~ (col(B,C,A)) & ~ (col(C,A,B)) & ~ (col(A,C,B)) & ~ (col(C,B,A))))))).
@@ -43,9 +43,9 @@ fof(lemma_ray4_1,axiom, (! [A,B,E] : ((betS(A,E,B) & ( A != B )) => ((out(A,B,E)
 fof(lemma_ray4_2,axiom, (! [A,B,E] : ((( E = B ) & ( A != B )) => ((out(A,B,E)))))).
 fof(lemma_ray4_3,axiom, (! [A,B,E] : ((betS(A,B,E) & ( A != B )) => ((out(A,B,E)))))).
 fof(proposition_14,axiom, (! [A,B,C,D,E] : ((rT(A,B,C,D,B,E) & out(B,C,D) & tS(E,D,B,A)) => ((supp(A,B,C,D,E) & betS(A,B,E)))))).
-fof(proposition_30,axiom, (! [A,B,C,D,E,F,G,H,K] : ((par(A,B,E,F) & par(C,D,E,F) & betS(G,H,K) & Col(A,B,G) & Col(E,F,H) & Col(C,D,K) & ( A != G ) & ( E != H ) & ( C != K )) => ((par(A,B,C,D)))))).
+fof(proposition_30,axiom, (! [A,B,C,D,E,F,G,H,K] : ((par(A,B,E,F) & par(C,D,E,F) & betS(G,H,K) & col(A,B,G) & col(E,F,H) & col(C,D,K) & ( A != G ) & ( E != H ) & ( C != K )) => ((par(A,B,C,D)))))).
 fof(lemma_collinearparallel,axiom, (! [A,B,C,Xc,Xd] : ((par(A,B,Xc,Xd) & col(Xc,Xd,C) & ( C != Xd )) => ((par(A,B,C,Xd)))))).
-fof(lemma_Playfair,axiom, (! [A,B,C,D,E] : ((par(A,B,C,D) & par(A,B,C,E)) => ((Col(C,D,E)))))).
+fof(lemma_Playfair,axiom, (! [A,B,C,D,E] : ((par(A,B,C,D) & par(A,B,C,E)) => ((col(C,D,E)))))).
 fof(lemma_ray5,axiom, (! [A,B,C] : ((out(A,B,C)) => ((out(A,C,B)))))).
 fof(lemma_equalanglesreflexive,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((congA(A,B,C,A,B,C)))))).
 fof(lemma_equalangleshelper,axiom, (! [A,B,C,Xa,Xb,Xc,Xp,Xq] : ((congA(A,B,C,Xa,Xb,Xc) & out(Xb,Xa,Xp) & out(Xb,Xc,Xq)) => ((congA(A,B,C,Xp,Xb,Xq)))))).
@@ -61,4 +61,4 @@ fof(defray,axiom, (! [A,B,C] : (? [X] : ((out(A,B,C)) => ((betS(X,A,C) & betS(X,
 fof(defray2,axiom, (! [A,B,C,X] : ((betS(X,A,C) & betS(X,A,B)) => ((out(A,B,C)))))).
 fof(lemma_samesidesymmetric,axiom, (! [A,B,P,Q] : ((oS(P,Q,A,B)) => ((oS(Q,P,A,B) & oS(P,Q,B,A) & oS(Q,P,B,A)))))).
 fof(lemma_samesidecollinear,axiom, (! [A,B,C,P,Q] : ((oS(P,Q,A,B) & col(A,B,C) & ( A != C )) => ((oS(P,Q,A,C)))))).
-fof(proposition_45,conjecture,(  ! [A,B,C,D,E,J,K,N,O,R,S] : ((ncol(J,E,N) & ncol(A,B,D) & ncol(C,B,D) & betS(A,O,C) & betS(B,O,D) & neq(R,K) & ncol(K,R,S)) => ? [X,Z,U] : (pG(X,K,Z,U) & congA(X,K,Z,J,E,N) & eF(X,K,Z,U,A,B,C,D) & out(K,R,Z) & oS(X,S,K,Z))))).
+fof(proposition_45,conjecture,(! [A,B,C,D,E,J,K,N,O,R,S] : (? [X,Z,U] : ((~ (col(J,E,N)) & ~ (col(A,B,D)) & ~ (col(C,B,D)) & betS(A,O,C) & betS(B,O,D) & ( R != K ) & ~ (col(K,R,S))) => ((pG(X,K,Z,U) & congA(X,K,Z,J,E,N) & eF(X,K,Z,U,A,B,C,D) & out(K,R,Z) & oS(X,S,K,Z))))))).

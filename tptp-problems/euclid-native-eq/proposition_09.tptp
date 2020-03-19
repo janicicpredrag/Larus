@@ -1,12 +1,12 @@
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(lemma_layoff,axiom, (! [A,B,C,D] : (? [X] : ((( A != B ) & ( C != D )) => ((out(A,B,X) & cong(A,X,C,D))))))).
-fof(lemma_rayimpliescollinear,axiom, (! [A,B,C] : ((out(A,B,C)) => ((Col(A,B,C)))))).
+fof(lemma_rayimpliescollinear,axiom, (! [A,B,C] : ((out(A,B,C)) => ((col(A,B,C)))))).
 fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
 fof(lemma_raystrict,axiom, (! [A,B,C] : ((out(A,B,C)) => ((( A != C )))))).
 fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((( A != B )) => ((( B != A )))))).
@@ -26,4 +26,4 @@ fof(lemma_ABCequalsCBA,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((congA(A,B,C,C,
 fof(lemma_equalanglestransitive,axiom, (! [A,B,C,D,E,F,P,Q,R] : ((congA(A,B,C,D,E,F) & congA(D,E,F,P,Q,R)) => ((congA(A,B,C,P,Q,R)))))).
 fof(definterior,axiom, (! [A,B,C,P] : (? [X,Y] : ((inAngle(A,B,C,P)) => ((out(B,A,X) & out(B,C,Y) & betS(X,P,Y))))))).
 fof(definterior2,axiom, (! [A,B,C,P,X,Y] : ((out(B,A,X) & out(B,C,Y) & betS(X,P,Y)) => ((inAngle(A,B,C,P)))))).
-fof(proposition_09,conjecture,(  ! [A,B,C] : ((ncol(B,A,C)) => ? [X] : (congA(B,A,X,X,A,C) & inAngle(B,A,C,X))))).
+fof(proposition_09,conjecture,(! [A,B,C] : (? [X] : ((~ (col(B,A,C))) => ((congA(B,A,X,X,A,C) & inAngle(B,A,C,X))))))).

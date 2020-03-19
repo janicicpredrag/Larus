@@ -12,4 +12,4 @@ fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A
 fof(lemma_congruencetransitive,axiom, (! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => ((cong(A,B,E,F)))))).
 fof(lemma_layoffunique,axiom, (! [A,B,C,D] : ((out(A,B,C) & out(A,B,D) & cong(A,C,A,D)) => ((( C = D )))))).
 fof(lemma_lessthantransitive,axiom, (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & lt(C,D,E,F)) => ((lt(A,B,E,F)))))).
-fof(lemma_TTtransitive,conjecture,(  ! [A,B,C,D,E,F,G,H,P,Q,R,S] : ((tT(A,B,C,D,E,F,G,H) & tT(E,F,G,H,P,Q,R,S)) => (tT(A,B,C,D,P,Q,R,S))))).
+fof(lemma_TTtransitive,conjecture,(! [A,B,C,D,E,F,G,H,P,Q,R,S] : ((tT(A,B,C,D,E,F,G,H) & tT(E,F,G,H,P,Q,R,S)) => ((tT(A,B,C,D,P,Q,R,S)))))).

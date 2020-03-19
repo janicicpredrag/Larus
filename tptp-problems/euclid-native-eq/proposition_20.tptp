@@ -1,12 +1,12 @@
 fof(deftriangle,axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((~ (col(A,B,C))))))).
 fof(deftriangle2,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((triangle(A,B,C)))))).
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col(B,C,A) & col(C,A,B) & col(A,C,B) & col(C,B,A)))))).
 fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((( A != B )) => ((( B != A )))))).
 fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((( A != B ) & ( P != Q )) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
@@ -33,4 +33,4 @@ fof(lemma_angleorderrespectscongruence,axiom, (! [A,B,C,D,E,F,P,Q,R] : ((ltA(A,B
 fof(proposition_19,axiom, (! [A,B,C] : ((triangle(A,B,C) & ltA(B,C,A,A,B,C)) => ((lt(A,B,A,C)))))).
 fof(deftogethergreater,axiom, (! [A,B,C,D,E,F] : (? [X] : ((tG(A,B,C,D,E,F)) => ((betS(A,B,X) & cong(B,X,C,D) & lt(E,F,A,X))))))).
 fof(deftogethergreater2,axiom, (! [A,B,C,D,E,F,X] : ((betS(A,B,X) & cong(B,X,C,D) & lt(E,F,A,X)) => ((tG(A,B,C,D,E,F)))))).
-fof(proposition_20,conjecture,(  ! [A,B,C] : ((triangle(A,B,C)) => (tG(B,A,A,C,B,C))))).
+fof(proposition_20,conjecture,(! [A,B,C] : ((triangle(A,B,C)) => ((tG(B,A,A,C,B,C)))))).

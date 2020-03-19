@@ -5,4 +5,4 @@ fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col
 fof(lemma_equalanglessymmetric,axiom, (! [A,B,C,Xa,Xb,Xc] : ((congA(A,B,C,Xa,Xb,Xc)) => ((congA(Xa,Xb,Xc,A,B,C)))))).
 fof(lemma_angledistinct,axiom, (! [A,B,C,Xa,Xb,Xc] : ((congA(A,B,C,Xa,Xb,Xc)) => ((( A != B ) & ( B != C ) & ( A != C ) & ( Xa != Xb ) & ( Xb != Xc ) & ( Xa != Xc )))))).
 fof(lemma_trichotomy1,axiom, (! [A,B,C,D] : ((~ (lt(A,B,C,D)) & ~ (lt(C,D,A,B)) & ( A != B ) & ( C != D )) => ((cong(A,B,C,D)))))).
-fof(proposition_06,conjecture,(  ! [A,B,C] : ((triangle(A,B,C) & congA(A,B,C,A,C,B)) => (cong(A,B,A,C))))).
+fof(proposition_06,conjecture,(! [A,B,C] : ((triangle(A,B,C) & congA(A,B,C,A,C,B)) => ((cong(A,B,A,C)))))).

@@ -1,1 +1,1 @@
-fof(lemma_inequalitysymmetric,conjecture,(  ! [A,B] : ((neq(A,B)) => (neq(B,A))))).
+fof(lemma_inequalitysymmetric,conjecture,(! [A,B] : ((( A != B )) => ((( B != A )))))).

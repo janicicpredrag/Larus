@@ -13,4 +13,4 @@ fof(lemma_congruencetransitive,axiom, (! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(
 fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((( A != B ) & cong(A,B,C,D)) => ((( C != D )))))).
 fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((( A != B ) & ( P != Q )) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
 fof(lemma_doublereverse,axiom, (! [A,B,C,D] : ((cong(A,B,C,D)) => ((cong(D,C,B,A) & cong(B,A,D,C)))))).
-fof(lemma_rightreflection,conjecture,(  ! [A,B,C,E,Xa,Xb,Xc] : ((per(A,B,C) & midpoint(A,E,Xa) & midpoint(B,E,Xb) & midpoint(C,E,Xc)) => (per(Xa,Xb,Xc))))).
+fof(lemma_rightreflection,conjecture,(! [A,B,C,E,Xa,Xb,Xc] : ((per(A,B,C) & midpoint(A,E,Xa) & midpoint(B,E,Xb) & midpoint(C,E,Xc)) => ((per(Xa,Xb,Xc)))))).

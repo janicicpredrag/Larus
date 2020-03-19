@@ -36,16 +36,16 @@ fof(lemma_subtractequals,axiom, (! [A,B,C,D,E] : ((betS(A,B,C) & betS(A,D,E) & c
 fof(lemma_ondiameter,axiom, (! [D,F,K,M,N,P,Q] : ((cI(K,F,P,Q) & cong(F,D,P,Q) & cong(F,M,P,Q) & betS(D,F,M) & betS(D,N,M)) => ((inCirc(N,K)))))).
 fof(postulate_circle_circle,axiom, (! [C,D,F,G,J,K,P,Q,R,S] : (? [X] : ((cI(J,C,R,S) & inCirc(P,J) & outCirc(Q,J) & cI(K,D,F,G) & onCirc(P,K) & onCirc(Q,K)) => ((onCirc(X,J) & onCirc(X,K))))))).
 fof(axiom_circle_center_radius,axiom, (! [A,B,C,J,P] : ((cI(J,A,B,C) & onCirc(P,J)) => ((cong(A,P,B,C)))))).
-fof(defcollinear,axiom, (! [A,B,C] : ((Col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
-fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((Col(A,B,C)))))).
-fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((Col(A,B,C)))))).
-fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((Col(A,B,C)))))).
-fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((Col(A,B,C)))))).
+fof(defcollinear,axiom, (! [A,B,C] : ((col(A,B,C)) => ((( A = B )) | (( A = C )) | (( B = C )) | (betS(B,A,C)) | (betS(A,B,C)) | (betS(A,C,B)))))).
+fof(defcollinear2a,axiom, (! [A,B,C] : ((( A = B )) => ((col(A,B,C)))))).
+fof(defcollinear2b,axiom, (! [A,B,C] : ((( A = C )) => ((col(A,B,C)))))).
+fof(defcollinear2c,axiom, (! [A,B,C] : ((( B = C )) => ((col(A,B,C)))))).
+fof(defcollinear2d,axiom, (! [A,B,C] : ((betS(B,A,C)) => ((col(A,B,C)))))).
+fof(defcollinear2e,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((col(A,B,C)))))).
+fof(defcollinear2f,axiom, (! [A,B,C] : ((betS(A,C,B)) => ((col(A,B,C)))))).
 fof(cn_sumofparts,axiom, (! [A,B,C,E,F,G] : ((cong(A,B,E,F) & cong(B,C,F,G) & betS(A,B,C) & betS(E,F,G)) => ((cong(A,C,E,G)))))).
 fof(lemma_lessthancongruence2,axiom, (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(A,B,E,F)) => ((lt(E,F,C,D)))))).
 fof(lemma_trichotomy2,axiom, (! [A,B,C,D] : ((lt(A,B,C,D)) => ((~ (lt(C,D,A,B))))))).
 fof(deftriangle,axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((~ (col(A,B,C))))))).
 fof(deftriangle2,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((triangle(A,B,C)))))).
-fof(proposition_22,conjecture,(  ! [A,B,C,E,F,Xa,Xb,Xc] : ((tG(A,Xa,B,Xb,C,Xc) & tG(A,Xa,C,Xc,B,Xb) & tG(B,Xb,C,Xc,A,Xa) & neq(F,E)) => ? [X,Y] : (cong(F,X,B,Xb) & cong(F,Y,A,Xa) & cong(X,Y,C,Xc) & out(F,E,X) & triangle(F,X,Y))))).
+fof(proposition_22,conjecture,(! [A,B,C,E,F,Xa,Xb,Xc] : (? [X,Y] : ((tG(A,Xa,B,Xb,C,Xc) & tG(A,Xa,C,Xc,B,Xb) & tG(B,Xb,C,Xc,A,Xa) & ( F != E )) => ((cong(F,X,B,Xb) & cong(F,Y,A,Xa) & cong(X,Y,C,Xc) & out(F,E,X) & triangle(F,X,Y))))))).

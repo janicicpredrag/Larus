@@ -12,4 +12,4 @@ fof(cn_equalityreverse,axiom, (! [A,B] : ((cong(A,B,B,A))))).
 fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))).
 fof(lemma_partnotequalwhole,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((~ (cong(A,B,A,C))))))).
 fof(axiom_connectivity,axiom, (! [A,B,C,D] : ((betS(A,B,D) & betS(A,C,D) & ~ (betS(A,B,C)) & ~ (betS(A,C,B))) => ((( B = C )))))).
-fof(lemma_midpointunique,conjecture,(  ! [A,B,C,D] : ((midpoint(A,B,C) & midpoint(A,D,C)) => (eq(B,D))))).
+fof(lemma_midpointunique,conjecture,(! [A,B,C,D] : ((midpoint(A,B,C) & midpoint(A,D,C)) => ((( B = D )))))).

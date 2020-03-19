@@ -16,4 +16,4 @@ fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A
 fof(cn_sumofparts,axiom, (! [A,B,C,E,F,G] : ((cong(A,B,E,F) & cong(B,C,F,G) & betS(A,B,C) & betS(E,F,G)) => ((cong(A,C,E,G)))))).
 fof(axiom_5_line,axiom, (! [A,B,C,D,E,F,G,H] : ((betS(A,B,C) & betS(E,F,G) & cong(B,C,F,G) & cong(A,D,E,H) & cong(B,D,F,H) & cong(A,B,E,F)) => ((cong(D,C,H,G)))))).
 fof(lemma_ray5,axiom, (! [A,B,C] : ((out(A,B,C)) => ((out(A,C,B)))))).
-fof(lemma_equaltorightisright,conjecture,(  ! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & congA(Xa,Xb,Xc,A,B,C)) => (per(Xa,Xb,Xc))))).
+fof(lemma_equaltorightisright,conjecture,(! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & congA(Xa,Xb,Xc,A,B,C)) => ((per(Xa,Xb,Xc)))))).

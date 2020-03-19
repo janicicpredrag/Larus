@@ -19,4 +19,4 @@ fof(cn_congruencereflexive,axiom, (! [A,B] : ((cong(A,B,A,B))))).
 fof(lemma_equalanglesflip,axiom, (! [A,B,C,D,E,F] : ((congA(A,B,C,D,E,F)) => ((congA(C,B,A,F,E,D)))))).
 fof(proposition_26A,axiom, (! [A,B,C,D,E,F] : ((triangle(A,B,C) & triangle(D,E,F) & congA(A,B,C,D,E,F) & congA(B,C,A,E,F,D) & cong(B,C,E,F)) => ((cong(A,B,D,E) & cong(A,C,D,F) & congA(B,A,C,E,D,F)))))).
 fof(proposition_07,axiom, (! [A,B,C,D] : ((( A != B ) & cong(C,A,D,A) & cong(C,B,D,B) & oS(C,D,A,B)) => ((( C = D )))))).
-fof(proposition_39,conjecture,(  ! [A,B,C,D] : ((triangle(A,B,C) & triangle(D,B,C) & oS(A,D,B,C) & eT(A,B,C,D,B,C) & neq(A,D)) => (par(A,D,B,C))))).
+fof(proposition_39,conjecture,(! [A,B,C,D] : ((triangle(A,B,C) & triangle(D,B,C) & oS(A,D,B,C) & eT(A,B,C,D,B,C) & ( A != D )) => ((par(A,D,B,C)))))).

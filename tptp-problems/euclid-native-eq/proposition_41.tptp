@@ -10,4 +10,4 @@ fof(lemma_parallelflip,axiom, (! [A,B,C,D] : ((par(A,B,C,D)) => ((par(B,A,C,D) &
 fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((( A != B )) => ((( B != A )))))).
 fof(lemma_collinearparallel,axiom, (! [A,B,C,Xc,Xd] : ((par(A,B,Xc,Xd) & col(Xc,Xd,C) & ( C != Xd )) => ((par(A,B,C,Xd)))))).
 fof(proposition_37,axiom, (! [A,B,C,D] : ((par(A,D,B,C)) => ((eT(A,B,C,D,B,C)))))).
-fof(proposition_41,conjecture,(  ! [A,B,C,D,E] : ((pG(A,B,C,D) & col(A,D,E)) => (eT(A,B,C,E,B,C))))).
+fof(proposition_41,conjecture,(! [A,B,C,D,E] : ((pG(A,B,C,D) & col(A,D,E)) => ((eT(A,B,C,E,B,C)))))).

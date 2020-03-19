@@ -4,4 +4,4 @@ fof(lemma_supplementsymmetric,axiom, (! [A,B,C,D,E] : ((supp(A,B,C,E,D)) => ((su
 fof(lemma_equalanglesNC,axiom, (! [A,B,C,Xa,Xb,Xc] : ((congA(A,B,C,Xa,Xb,Xc)) => ((~ (col(Xa,Xb,Xc))))))).
 fof(lemma_ABCequalsCBA,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((congA(A,B,C,C,B,A)))))).
 fof(lemma_equalanglestransitive,axiom, (! [A,B,C,D,E,F,P,Q,R] : ((congA(A,B,C,D,E,F) & congA(D,E,F,P,Q,R)) => ((congA(A,B,C,P,Q,R)))))).
-fof(lemma_RTsymmetric,conjecture,(  ! [A,B,C,D,E,F] : ((rT(A,B,C,D,E,F)) => (rT(D,E,F,A,B,C))))).
+fof(lemma_RTsymmetric,conjecture,(! [A,B,C,D,E,F] : ((rT(A,B,C,D,E,F)) => ((rT(D,E,F,A,B,C)))))).

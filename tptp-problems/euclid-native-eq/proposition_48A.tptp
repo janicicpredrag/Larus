@@ -38,4 +38,4 @@ fof(axiom_ETtransitive,axiom, (! [A,B,C,P,Q,R,Ca,Cb,Cc] : ((eT(A,B,C,Ca,Cb,Cc) &
 fof(axiom_deZolt2,axiom, (! [A,B,C,E,F] : ((triangle(A,B,C) & betS(B,E,A) & betS(B,F,C)) => ((~ (eT(A,B,C,E,B,F))))))).
 fof(lemma_NCdistinct,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((( A != B ) & ( B != C ) & ( A != C ) & ( B != A ) & ( C != B ) & ( C != A )))))).
 fof(lemma_trichotomy1,axiom, (! [A,B,C,D] : ((~ (lt(A,B,C,D)) & ~ (lt(C,D,A,B)) & ( A != B ) & ( C != D )) => ((cong(A,B,C,D)))))).
-fof(proposition_48A,conjecture,(  ! [A,B,C,D,Xa,Xb,Xc,Xd] : ((sQ(A,B,C,D) & sQ(Xa,Xb,Xc,Xd) & eF(A,B,C,D,Xa,Xb,Xc,Xd)) => (cong(A,B,Xa,Xb))))).
+fof(proposition_48A,conjecture,(! [A,B,C,D,Xa,Xb,Xc,Xd] : ((sQ(A,B,C,D) & sQ(Xa,Xb,Xc,Xd) & eF(A,B,C,D,Xa,Xb,Xc,Xd)) => ((cong(A,B,Xa,Xb)))))).

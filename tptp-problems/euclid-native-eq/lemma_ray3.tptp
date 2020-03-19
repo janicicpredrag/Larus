@@ -4,4 +4,4 @@ fof(axiom_betweennesssymmetry,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((betS(C,B,A
 fof(lemma_3_6a,axiom, (! [A,B,C,D] : ((betS(A,B,C) & betS(A,C,D)) => ((betS(B,C,D)))))).
 fof(lemma_3_7a,axiom, (! [A,B,C,D] : ((betS(A,B,C) & betS(B,C,D)) => ((betS(A,C,D)))))).
 fof(lemma_outerconnectivity,axiom, (! [A,B,C,D] : ((betS(A,B,C) & betS(A,B,D) & ~ (betS(B,C,D)) & ~ (betS(B,D,C))) => ((( C = D )))))).
-fof(lemma_ray3,conjecture,(  ! [B,C,D,V] : ((out(B,C,D) & out(B,C,V)) => (out(B,D,V))))).
+fof(lemma_ray3,conjecture,(! [B,C,D,V] : ((out(B,C,D) & out(B,C,V)) => ((out(B,D,V)))))).

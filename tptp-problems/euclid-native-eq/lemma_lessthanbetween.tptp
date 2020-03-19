@@ -6,4 +6,4 @@ fof(lemma_ray4_2,axiom, (! [A,B,E] : ((( E = B ) & ( A != B )) => ((out(A,B,E)))
 fof(lemma_ray4_3,axiom, (! [A,B,E] : ((betS(A,B,E) & ( A != B )) => ((out(A,B,E)))))).
 fof(lemma_ray5,axiom, (! [A,B,C] : ((out(A,B,C)) => ((out(A,C,B)))))).
 fof(lemma_layoffunique,axiom, (! [A,B,C,D] : ((out(A,B,C) & out(A,B,D) & cong(A,C,A,D)) => ((( C = D )))))).
-fof(lemma_lessthanbetween,conjecture,(  ! [A,B,C] : ((lt(A,B,A,C) & out(A,B,C)) => (betS(A,B,C))))).
+fof(lemma_lessthanbetween,conjecture,(! [A,B,C] : ((lt(A,B,A,C) & out(A,B,C)) => ((betS(A,B,C)))))).

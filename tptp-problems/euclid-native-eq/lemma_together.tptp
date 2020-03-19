@@ -9,4 +9,4 @@ fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((( B != C ) & (
 fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((( A != B ) & cong(A,B,C,D)) => ((( C != D )))))).
 fof(deflessthan,axiom, (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS(C,X,D) & cong(C,X,A,B))))))).
 fof(deflessthan2,axiom, (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))).
-fof(lemma_together,conjecture,(  ! [A,B,C,D,F,G,P,Q,Xa,Xb,Xc] : ((tG(A,Xa,B,Xb,C,Xc) & cong(D,F,A,Xa) & cong(F,G,B,Xb) & betS(D,F,G) & cong(P,Q,C,Xc)) => (lt(P,Q,D,G) & neq(A,Xa) & neq(B,Xb) & neq(C,Xc))))).
+fof(lemma_together,conjecture,(! [A,B,C,D,F,G,P,Q,Xa,Xb,Xc] : ((tG(A,Xa,B,Xb,C,Xc) & cong(D,F,A,Xa) & cong(F,G,B,Xb) & betS(D,F,G) & cong(P,Q,C,Xc)) => ((lt(P,Q,D,G) & ( A != Xa ) & ( B != Xb ) & ( C != Xc )))))).
