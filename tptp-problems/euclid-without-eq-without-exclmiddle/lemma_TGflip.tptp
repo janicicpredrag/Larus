@@ -1,9 +1,9 @@
 fof(deftogethergreater,axiom, (! [A,B,C,D,E,F] : (? [X] : ((tG(A,B,C,D,E,F)) => ((betS(A,B,X) & cong(B,X,C,D) & lt(E,F,A,X))))))).
 fof(deftogethergreater2,axiom, (! [A,B,C,D,E,F,X] : ((betS(A,B,X) & cong(B,X,C,D) & lt(E,F,A,X)) => ((tG(A,B,C,D,E,F)))))).
-fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C)) & neq(A,B)) & neq(A,C))))))).
-fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B))) => ((neq(B,A))))))).
-fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B)) & cong(A,B,C,D)) => ((neq(C,D))))))).
-fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((neq(A,B)) & neq(P,Q))) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
+fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C) & neq(A,B) & neq(A,C)))))).
+fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
+fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B) & cong(A,B,C,D)) => ((neq(C,D)))))).
+fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((neq(A,B) & neq(P,Q)) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
 fof(cn_equalityreverse,axiom, (! [A,B] : ((cong(A,B,B,A))))).
 fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))).
 fof(lemma_congruencetransitive,axiom, (! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => ((cong(A,B,E,F)))))).

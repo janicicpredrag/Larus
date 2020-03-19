@@ -1,12 +1,12 @@
 fof(deflessthan,axiom, (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS(C,X,D) & cong(C,X,A,B))))))).
 fof(deflessthan2,axiom, (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))).
-fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C)) & neq(A,B)) & neq(A,C))))))).
-fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B)) & cong(A,B,C,D)) => ((neq(C,D))))))).
-fof(lemma_localextension,axiom, (! [A,B,Q] : (? [X] : ((neq(A,B)) & neq(B,Q))) => ((betS(A,B,X) & cong(B,X,B,Q))))))).
+fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C) & neq(A,B) & neq(A,C)))))).
+fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B) & cong(A,B,C,D)) => ((neq(C,D)))))).
+fof(lemma_localextension,axiom, (! [A,B,Q] : (? [X] : ((neq(A,B) & neq(B,Q)) => ((betS(A,B,X) & cong(B,X,B,Q))))))).
 fof(axiom_betweennesssymmetry,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((betS(C,B,A)))))).
-fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((neq(A,B)) & neq(P,Q))) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
-fof(axiom_betweennessidentity,axiom, (! [A,B] : ((nbetS(A,B,A)))))).
-fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B))) => ((neq(B,A))))))).
+fof(lemma_extension,axiom, (! [A,B,P,Q] : (? [X] : ((neq(A,B) & neq(P,Q)) => ((betS(A,B,X) & cong(B,X,P,Q))))))).
+fof(axiom_betweennessidentity,axiom, (! [A,B] : ((nbetS(A,B,A))))).
+fof(lemma_inequalitysymmetric,axiom, (! [A,B] : ((neq(A,B)) => ((neq(B,A)))))).
 fof(cn_equalityreverse,axiom, (! [A,B] : ((cong(A,B,B,A))))).
 fof(lemma_congruencetransitive,axiom, (! [A,B,C,D,E,F] : ((cong(A,B,C,D) & cong(C,D,E,F)) => ((cong(A,B,E,F)))))).
 fof(cn_sumofparts,axiom, (! [A,B,C,E,F,G] : ((cong(A,B,E,F) & cong(B,C,F,G) & betS(A,B,C) & betS(E,F,G)) => ((cong(A,C,E,G)))))).

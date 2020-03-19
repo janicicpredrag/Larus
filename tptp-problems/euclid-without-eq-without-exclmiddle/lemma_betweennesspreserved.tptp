@@ -1,6 +1,6 @@
-fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C)) & neq(A,B)) & neq(A,C))))))).
-fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B)) & cong(A,B,C,D)) => ((neq(C,D))))))).
-fof(lemma_localextension,axiom, (! [A,B,Q] : (? [X] : ((neq(A,B)) & neq(B,Q))) => ((betS(A,B,X) & cong(B,X,B,Q))))))).
+fof(lemma_betweennotequal,axiom, (! [A,B,C] : ((betS(A,B,C)) => ((neq(B,C) & neq(A,B) & neq(A,C)))))).
+fof(axiom_nocollapse,axiom, (! [A,B,C,D] : ((neq(A,B) & cong(A,B,C,D)) => ((neq(C,D)))))).
+fof(lemma_localextension,axiom, (! [A,B,Q] : (? [X] : ((neq(A,B) & neq(B,Q)) => ((betS(A,B,X) & cong(B,X,B,Q))))))).
 fof(lemma_congruencesymmetric,axiom, (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))).
 fof(cn_congruencetransitive,axiom, (! [B,C,D,E,P,Q] : ((cong(P,Q,B,C) & cong(P,Q,D,E)) => ((cong(B,C,D,E)))))).
 fof(axiom_5_line,axiom, (! [A,B,C,D,E,F,G,H] : ((betS(A,B,C) & betS(E,F,G) & cong(B,C,F,G) & cong(A,D,E,H) & cong(B,D,F,H) & cong(A,B,E,F)) => ((cong(D,C,H,G)))))).
