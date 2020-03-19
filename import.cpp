@@ -337,8 +337,8 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
             size_t type = 2;
             if (ReadTPTPStatement(theory[i], cl, statementName, type)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
-                string s = theory[i];
-                replaceFirstOccurrence(s,"conjecture","axiom");
+ //               string s = theory[i];
+ //               replaceFirstOccurrence(s,"conjecture","axiom");
  //               outfile << "toto:" << s << "." << endl;
                 T.AddAxiom(cl,statementName);
                 found = true;
@@ -369,7 +369,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         if (ReadTPTPStatement(theory[i], cl, statementName, type)
             && statementName == theoremName) {
             theorem = cl;
-            outfile << theory[i] << "." << endl;
+            outfile << "fof(" << statementName << ",conjecture," << cl << ")." << endl;
             found = true;
         }
     }
