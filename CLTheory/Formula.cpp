@@ -34,7 +34,10 @@ bool ConjunctionFormula::Read(const string& s)
                 pos1=pos+1;
             }
             else
-                return false;
+                {
+                    cout << "Error could not find & in : " << s0 << endl; 
+                    return false;
+                }
         }
         else {
             Fact fact;
@@ -43,7 +46,10 @@ bool ConjunctionFormula::Read(const string& s)
                 pos1=pos2;
             }
             else
-                return false;
+                {
+                    cout << "Error reading : " << s0.substr(pos1, pos2-pos1+1) << endl;
+                    return false;
+                }
             }
     }
     return true;
@@ -88,7 +94,10 @@ bool DNFFormula::Read(const string& s)
                pos1=pos+1;
             }
             else
-               return false;
+            {
+                cout << "Error reading : " << s0.substr(pos1, pos-pos1) << endl;
+                return false;
+            }
         } else {
             ConjunctionFormula c;
             if (c.Read(s0.substr(pos1, pos2-pos1+1))) {
@@ -96,7 +105,10 @@ bool DNFFormula::Read(const string& s)
                 pos1=pos2;
             }
             else
-                return false;
+                {
+                    cout << "Error reading : " << s0.substr(pos1, pos2-pos1+1) << endl;
+                    return false;
+                }
         }
     }
     return true;
@@ -194,10 +206,16 @@ bool CLFormula::Read(const string& s)
         ClearUnivVars();
         pos = s0.find('[');
         if (pos == string::npos)
-            return false;
+            {
+                cout << "Could not find [ in :" << s0 << endl;
+                return false;
+            }
         pos2 = s0.find(']');
         if (pos2 == string::npos)
-            return false;
+            {
+                cout << "Could not find ] in :" << s0 << endl;
+                return false;
+            }
         p = pos;
         string varname;
         while(p<pos2) {
@@ -214,7 +232,10 @@ bool CLFormula::Read(const string& s)
         }
         pos = s0.find(':',pos2);
         if (pos == string::npos)
-            return false;
+            {
+                cout << "Error coumld not find : in :" << s0 << endl;
+                return false;
+            }
         else
             s0 = s0.substr(pos+1, s0.size()-pos-1);
     }
@@ -237,10 +258,16 @@ bool CLFormula::Read(const string& s)
 
         pos = s0.find('[');
         if (pos == string::npos)
+        {
+            cout << "Error could not find [ in : " << s0 << endl;
             return false;
+        }
         pos2 = s0.find(']');
         if (pos == string::npos)
+        {
+            cout << "Error could not find ] in : " << s0 << endl;
             return false;
+        }
         p = pos;
         string varname;
         while(p<pos2) {
@@ -473,33 +500,55 @@ bool Fact::Read(const string& s)
 
     pos1 = s.find('(',0);
     if (pos1 == 0)
+    {
+        cout << "Name not found in : " << s << endl;
         return false;
+    }
+    if (pos1 == string::npos)
+    {
+        // we have a constant
+        mName = s;
+    }
+    else
+    {
+        pos2 = s.find(')',0);
+        if (pos2 == string::npos)
+        {
+            cout << "Ending parenthesis not found in : " << s << endl;
+            return false;
+        }
 
-    pos2 = s.find(')',0);
-    if (pos1 == string::npos || pos2 == string::npos)
-        return false;
+        if (s.find('(',pos1+1) != string::npos)
+        {
+            cout << "Error ( not found in : " << s << endl;
+            return false;
+        }
+        mName = s.substr(0, pos1);
 
-    if (s.find('(',pos1+1) != string::npos)
-        return false;
-
-    mName = s.substr(0, pos1);
-
-    pos1++;
-    pos2 = s.size();
-    while(pos1<pos2) {
-        pos = s.find(',',pos1);
-        if (pos == string::npos) {
-            pos = s.find(')',pos1);
+        pos1++;
+        pos2 = s.size();
+        while(pos1<pos2) {
+            pos = s.find(',',pos1);
             if (pos == string::npos) {
+            pos = s.find(')',pos1);
+                if (pos == string::npos) {
+                    cout << "Error ) not found in " << s << endl;
+                    return false;
+                }
+                if (pos < pos2-1)
+                  {
+                    cout << "Error ) should be the last character of :" << s << endl;
+                    return false;
+                  }
+            }
+            if (pos==pos1)
+            {
+                cout << "Error " << endl;
                 return false;
             }
-            if (pos < pos2-1)
-                return false;
+            mArgs.push_back(s.substr(pos1, pos-pos1));
+            pos1=pos+1;
         }
-        if (pos==pos1)
-            return false;
-        mArgs.push_back(s.substr(pos1, pos-pos1));
-        pos1=pos+1;
     }
     return true;
 }
@@ -538,22 +587,36 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
     cl.Clear();
 
     if(ss.substr(0,4) != "fof(")
-        return false;
+        {   
+            cout << "Only fof formulas are supported." << endl;
+            return false;
+        }
     pos1 = ss.find(',');
     if (pos1 == string::npos)
+    {
+        cout << "Error fof() should have three arguments." << endl;
         return false;
+    }
     axname = ss.substr(4,pos1-4);
     pos2 = ss.find(',', pos1+1);
     if (pos2 == string::npos)
+    {
+        cout << "Error fof() should have three arguments." << endl;
         return false;
+    }
     string s1 = ss.substr(pos1+1,pos2-pos1-1);
     if (type == 0)
         if (s1 != string("axiom"))
+        {
+            cout << "Error axiom expected, found : " << s1 << endl;
             return false;
+        }
     if (type == 1)
         if (s1 != string("conjecture"))
+        {
+            cout << "Error conjecture expected, found : " << s1 << endl;
             return false;
-
+        }
     if (s1 == string("axiom"))
         type = 0;
     if (s1 == string("conjecture"))

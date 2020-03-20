@@ -47,6 +47,9 @@ int main(int argc , char** argv)
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
 
+//    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
+//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+
     bool wrongInput = false;
 
     string inputFilename;
