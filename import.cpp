@@ -45,20 +45,18 @@ string itos(unsigned int i)
 
 
 
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit, unsigned max_nesting_depth)
 {
     T.Reset();
     map<string,string> instantiation;
-    for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)
-    {
+    for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
         string constantName = T.GetNewConstant();
         instantiation[theorem.GetUnivVar(i)] = constantName;
         T.AddConstant(constantName);
         T.MakeNextConstantPermissible();
     }
     CLProof proof;
-    for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)
-    {
+    for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
         Fact premiseFactInstantiated;
         T.InstantiateFact(theorem.GetPremises().GetElement(i), instantiation, premiseFactInstantiated, true);
         engine->AddPremise(premiseFactInstantiated);
@@ -80,6 +78,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     }*/
 
     engine->SetStartTimeAndLimit(clock(), timelimit);
+    engine->SetMaxNestingDepth(max_nesting_depth);
+
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
@@ -108,7 +108,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit)
+ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth)
 {
     if (input_format != eTPTP)
         return eWrongFormatParameter;
@@ -189,7 +189,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT inpu
     else // default
         engine = new STL_ProvingEngine(&T);
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
     delete engine;
 
     return r;
@@ -214,7 +214,7 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem,
 */
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit)
+bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth)
 {
     Theory T;
     CLFormula theorem;
@@ -288,17 +288,17 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     T.AddAxiomEqReflexive();
  //   T.AddNegElimAxioms();
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
     if (false && r != eConjectureProved) {
         // T.AddEqExcludedMiddleAxiom();
         //  T.AddEqSubAxioms();
         cerr << "   second attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+        r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
     }
     if (r != eConjectureProved) {
         T.AddExcludedMiddleAxioms();
         cerr << "   third attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName, timelimit);
+        r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
     }
 
     delete engine;
@@ -398,7 +398,7 @@ void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, v
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit) {
+void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth) {
     if (input_format != eTPTP) {
         cout << "Wrong input format!" << endl;
         return;
@@ -408,7 +408,7 @@ void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<str
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */  theory /*TestAxiomsnegintro */, depends, thm, proving_engine, timelimit))
+        if (ProveFromTPTPTheory(  /*TestAxioms */  theory /*TestAxiomsnegintro */, depends, thm, proving_engine, timelimit, max_nesting_depth))
             numberProved++;
         else
             numberNotProved++;

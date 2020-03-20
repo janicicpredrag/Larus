@@ -13,6 +13,7 @@ enum ReturnValue { eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingA
 const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
+const int DEFAULT_MAX_NESTING_DEPTH = 3;
 
 #define EQ_SUPPORT 1
 
