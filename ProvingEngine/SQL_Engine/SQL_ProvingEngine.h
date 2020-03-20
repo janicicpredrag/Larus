@@ -13,13 +13,13 @@ using namespace std;
 class SQL_ProvingEngine : public ProvingEngine
 {
 public:
-    SQL_ProvingEngine(Theory *T);
+    SQL_ProvingEngine(Theory *T, proverParams& params);
     virtual ~SQL_ProvingEngine();
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
-        { mStartTime = startTime; mTimeLimit = timeLimit;
+        { mStartTime = startTime; mParams.time_limit = timeLimit;
           mpDB->SetStartTimeAndLimit(startTime, timeLimit); }
     virtual PROVING_ENGINE GetKind() { return eSQL_ProvingEngine; }
 

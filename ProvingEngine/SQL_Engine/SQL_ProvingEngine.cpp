@@ -9,10 +9,11 @@
 
 // ---------------------------------------------------------------------------------------
 
-SQL_ProvingEngine::SQL_ProvingEngine(Theory *T)
+SQL_ProvingEngine::SQL_ProvingEngine(Theory *T, proverParams& params)
 {
     mpDB = new SQLFactsDatabase(T);
     mpT = T;
+    mParams = params;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     do {
         clock_t current = clock();
         double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-        if (elapsed_secs > mTimeLimit) {
+        if (elapsed_secs > mParams.time_limit) {
             //cout << "Time limit exceeded " << endl;
             return false;
         }
@@ -143,7 +144,7 @@ bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         {
             clock_t current = clock();
             double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-            if (elapsed_secs > mTimeLimit) {
+            if (elapsed_secs > mParams.time_limit) {
                 // cout << "Time limit exceeded " << endl;
                 return false;
             }

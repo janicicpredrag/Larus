@@ -9,10 +9,11 @@
 
 // ---------------------------------------------------------------------------------------
 
-STL_ProvingEngine::STL_ProvingEngine(Theory *T)
+STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams& params)
 {
     mpDB = new STLFactsDatabase(T);
     mpT = T;
+    mParams = params;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     do {
         clock_t current = clock();
         double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-        if (elapsed_secs > mTimeLimit) {
+        if (elapsed_secs > mParams.time_limit) {
             //cout << "Time limit exceeded " << endl;
             return false;
         }
@@ -138,7 +139,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         while (!success && l < 100) {
             clock_t current = clock();
             double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-            if (elapsed_secs > mTimeLimit) {
+            if (elapsed_secs > mParams.time_limit) {
                 // cout << "Time limit exceeded " << endl;
                 return false;
             }

@@ -13,13 +13,13 @@ using namespace std;
 class STL_ProvingEngine : public ProvingEngine
 {
 public:
-    STL_ProvingEngine(Theory *T);
+    STL_ProvingEngine(Theory *T, proverParams& params);
     virtual ~STL_ProvingEngine();
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
-        { mStartTime = startTime; mTimeLimit = timeLimit;
+        { mStartTime = startTime; mParams.time_limit = timeLimit;
           mpDB->SetStartTimeAndLimit(startTime, timeLimit); }
     virtual PROVING_ENGINE GetKind() { return eSTL_ProvingEngine; }
 

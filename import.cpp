@@ -45,7 +45,7 @@ string itos(unsigned int i)
 
 
 
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit, unsigned max_nesting_depth)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params)
 {
     T.Reset();
     map<string,string> instantiation;
@@ -77,8 +77,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         fout.Add(conj);
     }*/
 
-    engine->SetStartTimeAndLimit(clock(), timelimit);
-    engine->SetMaxNestingDepth(max_nesting_depth);
+    engine->SetStartTimeAndLimit(clock(), params.time_limit);
+    engine->SetMaxNestingDepth(params.max_nesting_depth);
 
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
@@ -108,9 +108,9 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth)
+ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& params)
 {
-    if (input_format != eTPTP)
+    if (params.input_format != eTPTP)
         return eWrongFormatParameter;
 
     ifstream tptpconjecture(inputFile,ios::in);
@@ -141,7 +141,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT inpu
         size_t type = 2;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
             if (type == 0) {
-                if (proving_engine == eURSA_ProvingEngine || proving_engine == eEQ_ProvingEngine) {
+                if (params.eEngine == eURSA_ProvingEngine || params.eEngine == eEQ_ProvingEngine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
@@ -155,7 +155,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT inpu
             } else if (type == 1) {
                 theorem = cl;
                 theoremName = statementName;
-                if (proving_engine == eURSA_ProvingEngine || proving_engine == eEQ_ProvingEngine) {
+                if (params.eEngine == eURSA_ProvingEngine || params.eEngine == eEQ_ProvingEngine) {
                     vector< pair<CLFormula,string> > output;
                     theorem.NormalizeGoal(statementName, to_string(0), output);
                     if (output.size()>1) {
@@ -178,18 +178,18 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT inpu
         return eNoConjectureGiven;
 
     ProvingEngine* engine;
-    if (proving_engine == eSTL_ProvingEngine)
-        engine = new STL_ProvingEngine(&T);
-    else if (proving_engine == eSQL_ProvingEngine)
-        engine = new SQL_ProvingEngine(&T);
-    else if (proving_engine == eURSA_ProvingEngine)
-        engine = new URSA_ProvingEngine(&T);
-    else if (proving_engine == eEQ_ProvingEngine)
-        engine = new EQ_ProvingEngine(&T);
+    if (params.eEngine== eSTL_ProvingEngine)
+        engine = new STL_ProvingEngine(&T,params);
+    else if (params.eEngine == eSQL_ProvingEngine)
+        engine = new SQL_ProvingEngine(&T,params);
+    else if (params.eEngine == eURSA_ProvingEngine)
+        engine = new URSA_ProvingEngine(&T,params);
+    else if (params.eEngine == eEQ_ProvingEngine)
+        engine = new EQ_ProvingEngine(&T,params);
     else // default
-        engine = new STL_ProvingEngine(&T);
+        engine = new STL_ProvingEngine(&T,params);
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, params);
     delete engine;
 
     return r;
@@ -214,6 +214,7 @@ bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem,
 */
 // ---------------------------------------------------------------------------------------------------------------------------
 
+/*
 bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth)
 {
     Theory T;
@@ -304,6 +305,7 @@ bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& nam
     delete engine;
     return r;
 }
+*/
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -398,22 +400,24 @@ void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, v
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+/*
 void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth) {
     if (input_format != eTPTP) {
         cout << "Wrong input format!" << endl;
         return;
     }
     unsigned numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+    for (size_t i = 0, size = case_study.size(); i<size; i++) {
         string thm = case_study[i].first;
         cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
         vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  /*TestAxioms */  theory /*TestAxiomsnegintro */, depends, thm, proving_engine, timelimit, max_nesting_depth))
+        if (ProveFromTPTPTheory(  theory , depends, thm, proving_engine, timelimit, max_nesting_depth))
             numberProved++;
         else
             numberNotProved++;
         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
     }
 }
+*/
 
 // ---------------------------------------------------------------------------------------------------------------------------

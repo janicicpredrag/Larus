@@ -13,33 +13,11 @@ using namespace std;
 #define MAX_AXIOMS 1000
 #define MAX_PROOF_LENGTH 100
 
-/*
-typedef struct AXIOM {
-    unsigned nAxiomUniVars;
-    unsigned nAxiomExiVars;
-    unsigned nAxiomPremises;
-    bool bAxiomBranching;
-    unsigned nPredicate[MAX_PREMISES];
-    unsigned nBinding[MAX_PREMISES*MAX_ARITY];
-} AXIOM;
-*/
-
-/*
-typedef struct PROOFSTEP {
-    unsigned nNesting;
-    bool bCases;
-    unsigned nAxiomApplied;
-    unsigned nP[2];
-    unsigned nA[MAX_ARITY];
-    unsigned nFrom[MAX_PREMISES];
-    unsigned nInst[MAX_PREMISES*MAX_ARITY];
-} PROOFSTEP;
-*/
 
 class EQ_ProvingEngine : public ProvingEngine
 {
 public:
-    EQ_ProvingEngine(Theory *pT);
+    EQ_ProvingEngine(Theory *pT, proverParams& params);
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
@@ -47,7 +25,7 @@ public:
     virtual PROVING_ENGINE GetKind() { return eEQ_ProvingEngine; }
 
 private:
-    void EncodeAxiom(CLFormula& axiom, string name);
+    void EncodeAxiom(CLFormula& axiom);
     void EncodeProof(const DNFFormula& formula, unsigned nProofLen);
     bool ReadModel(const string& sModelFile, const string& sEncodedProofFile);
     bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);

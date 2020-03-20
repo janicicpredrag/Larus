@@ -13,14 +13,14 @@ extern string itos(unsigned int i);
 class ProvingEngine
 {
 public:
-    ProvingEngine() { mMaxNestingDepth = DEFAULT_MAX_NESTING_DEPTH; }
+    ProvingEngine() {}
     virtual ~ProvingEngine() {}
 
     virtual void AddPremise(const Fact& f) = 0;
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit) = 0;
 
-    virtual void SetMaxNestingDepth(unsigned max_nesting_depth) { mMaxNestingDepth = max_nesting_depth; }
+    virtual void SetMaxNestingDepth(unsigned max_nesting_depth) { mParams.max_nesting_depth = max_nesting_depth; }
 
     virtual PROVING_ENGINE GetKind() = 0;
 
@@ -31,9 +31,13 @@ public:
 
 protected:
     clock_t mStartTime;
-    unsigned mTimeLimit;
 
-    unsigned mMaxNestingDepth;
+    // unsigned mTimeLimit;
+    // bool mbNativeEQ, mbNegElim, mbExcludedMiddle;
+    // unsigned mMaxNestingDepth;
+
+    proverParams mParams;
+
     Theory* mpT;
 };
 

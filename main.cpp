@@ -8,8 +8,8 @@
 #include "common.h"
 
 
-extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit, unsigned max_nesting_depth);
-extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth);
+extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params);
+extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& params);
 extern bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth);
 // extern bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit);
 extern string replaceFirstOccurrence(std::string& s,const std::string& toReplace,const std::string& replaceWith);
@@ -38,42 +38,61 @@ extern vector<string> TrivialAxioms;
 
 int main(int argc , char** argv)
 {
-    INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
-    PROVING_ENGINE eEngine = DEFAULT_ENGINE;
-    float time_limit = DEFAULT_TIME_LIMIT;
+    proverParams params;
+    params.input_format = DEFAULT_INPUT_FORMAT;
+    params.eEngine = DEFAULT_ENGINE;
+    params.time_limit = DEFAULT_TIME_LIMIT;
+    params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+    params.mbNativeEQ = DEFAULT_NATIVE_EQ;
+    params.mbNegElim =  DEFAULT_NEG_ELIM;
+    params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
+
     bool wrongInput = false;
-    int max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
 
     string inputFilename;
     if (argc >= 2) {
         for (int i = 1; i < argc; i++) {
             if (argv[i][0] == '-' && argv[i][1] == 'f') {
                 if (!strcmp(argv[i]+2, "tptp"))
-                    input_format = eTPTP;
+                    params.input_format = eTPTP;
                 else {
                     wrongInput = true;
                     break;
                 }
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'l') {
-                time_limit = atoi(argv[i]+2);
-                if (time_limit <= 0)
-                    time_limit = DEFAULT_TIME_LIMIT;
+                params.time_limit = atoi(argv[i]+2);
+                if (params.time_limit <= 0)
+                    params.time_limit = DEFAULT_TIME_LIMIT;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'n') {
-                max_nesting_depth = atoi(argv[i]+2);
-                if (max_nesting_depth < 0)
-                    max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+                int d = atoi(argv[i]+2);
+                if (d > 0)
+                    params.max_nesting_depth = d;
+                else
+                    params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'a') {
+                if (!strcmp(argv[i]+2, "eq"))
+                    params.mbNativeEQ = true;
+                else if (!strcmp(argv[i]+2, "negelim"))
+                    params.mbNegElim = true;
+                else if (!strcmp(argv[i]+2, "excludedmiddle"))
+                    params.mbExcludedMiddle =  true;
+                else {
+                    wrongInput = true;
+                    break;
+                }
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
-                    eEngine = eSTL_ProvingEngine;
+                    params.eEngine = eSTL_ProvingEngine;
                 else if (!strcmp(argv[i]+2, "sql"))
-                    eEngine = eSQL_ProvingEngine;
+                    params.eEngine = eSQL_ProvingEngine;
                 else if (!strcmp(argv[i]+2, "ursa"))
-                    eEngine = eURSA_ProvingEngine;
+                    params.eEngine = eURSA_ProvingEngine;
                 else if (!strcmp(argv[i]+2, "smt"))
-                    eEngine = eEQ_ProvingEngine;
+                    params.eEngine = eEQ_ProvingEngine;
                 else {
                     wrongInput = true;
                     break;
@@ -91,16 +110,16 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> -a<eq|negelim|excludedmiddle> filename \n" << endl;
         return false;
     }
 
     clock_t startTime = clock();
-    ReturnValue rv = ReadAndProveTPTPConjecture(inputFilename, input_format, eEngine, time_limit, max_nesting_depth);
+    ReturnValue rv = ReadAndProveTPTPConjecture(inputFilename, params);
     clock_t current = clock();
 
     float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
-    if (rv == eConjectureNotProved && elapsed_secs >= time_limit)
+    if (rv == eConjectureNotProved && elapsed_secs >= params.time_limit)
         rv = eTimeLimitExceeded;
     cout << "Elapsed time: " << elapsed_secs << endl;
 
