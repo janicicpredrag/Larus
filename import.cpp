@@ -323,7 +323,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     string statementName;
 
     ofstream outfile;
-    string outfilename = "tptp-problems/" + theoremName + ".tptp";
+    string outfilename = "tptp-problems/" + theoremName + ".p";
     outfile.open (outfilename.c_str());
     if (!outfile)
         {
