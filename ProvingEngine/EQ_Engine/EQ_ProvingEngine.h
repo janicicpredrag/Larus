@@ -62,8 +62,6 @@ private:
     unsigned mnMaxPremises;
     unsigned mnAxiomsCount;
     unsigned mnPremisesCount;
- //    AXIOM mAxioms[MAX_AXIOMS];
-  //  PROOFSTEP mProof[MAX_PROOF_LENGTH];
 
     // Axioms (same arrays used as in URSA specification)
     unsigned nAxiomUniVars[MAX_AXIOMS];   /* number of univ quantifiers */
@@ -72,15 +70,6 @@ private:
     unsigned bAxiomBranching[MAX_AXIOMS]; /* axiom is branching or not */
     unsigned nPredicate[MAX_AXIOMS][MAX_PREMISES];
     unsigned nBinding[MAX_AXIOMS][MAX_PREMISES*MAX_ARITY];
-
-    // Proof steps  (same arrays used as in URSA specification)
-/*    unsigned nNesting[MAX_PROOF_LENGTH];
-    bool bCases[MAX_PROOF_LENGTH];
-    unsigned nAxiomApplied[MAX_PROOF_LENGTH];
-    unsigned nP[MAX_PROOF_LENGTH][2];
-    unsigned nA[MAX_PROOF_LENGTH][MAX_ARITY];
-    unsigned nFrom[MAX_PROOF_LENGTH][MAX_PREMISES];
-    unsigned nInst[MAX_PROOF_LENGTH][MAX_PREMISES*MAX_ARITY];*/
 
     map<string, unsigned> PREDICATE;
     map<unsigned, unsigned> ARITY;

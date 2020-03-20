@@ -8,15 +8,15 @@
 #include "common.h"
 
 
-extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit);
-extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit);
-extern bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit);
+extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, size_t timelimit, unsigned max_nesting_depth);
+extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth);
+extern bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth);
 // extern bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit);
 extern string replaceFirstOccurrence(std::string& s,const std::string& toReplace,const std::string& replaceWith);
 
 extern bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName);
 extern void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory);
-extern void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory);
+//extern void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory);
 
 using namespace std;
 
@@ -38,14 +38,11 @@ extern vector<string> TrivialAxioms;
 
 int main(int argc , char** argv)
 {
-
-    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
-    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
-
     INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
     PROVING_ENGINE eEngine = DEFAULT_ENGINE;
     float time_limit = DEFAULT_TIME_LIMIT;
     bool wrongInput = false;
+    int max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
 
     string inputFilename;
     if (argc >= 2) {
@@ -62,6 +59,11 @@ int main(int argc , char** argv)
                 time_limit = atoi(argv[i]+2);
                 if (time_limit <= 0)
                     time_limit = DEFAULT_TIME_LIMIT;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'n') {
+                max_nesting_depth = atoi(argv[i]+2);
+                if (max_nesting_depth < 0)
+                    max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
@@ -89,12 +91,12 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> filename \n" << endl;
         return false;
     }
 
     clock_t startTime = clock();
-    ReturnValue rv = ReadAndProveTPTPConjecture(inputFilename, input_format, eEngine, time_limit);
+    ReturnValue rv = ReadAndProveTPTPConjecture(inputFilename, input_format, eEngine, time_limit, max_nesting_depth);
     clock_t current = clock();
 
     float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
@@ -154,6 +156,10 @@ int main(int argc , char** argv)
          cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
     }
 */
+
+//    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
+//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
+
 
 //    RunCaseStudy(case_study,EuclidAxioms);
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);

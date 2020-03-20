@@ -130,13 +130,14 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
 
-        l = 1;
-        while(l <= 30)  {
+        l = 9;
+        while(l <= 9)  {
             time_t current_time = time(NULL);
             double remainingTime = mTimeLimit - difftime(current_time, start_time);
             if (remainingTime <= 0)
                 break;
 
+            DECLARATIONS.clear();
             EncodeProof(formula, l);
             int rv;
             rv = system("rm smt-model.txt");
@@ -166,6 +167,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             s = (l+r)/2;
+            DECLARATIONS.clear();
             EncodeProof(formula, s);
             int rv;
             rv = system("rm smt-model.txt");
@@ -312,7 +314,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                  // replace <= 3 by <=5 for deeper nesting (at three places)
                  // for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2) TODO!
 
-                 for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
+                 for (unsigned nI = 1, nJ = 2; nI <= mMaxNestingDepth; nI++, nJ *= 2)
                     sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                                "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
                  sbSameProofBranch += ")";
@@ -373,7 +375,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        string sbMatchPremise2 = "(or false ";
        for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
            string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-           for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
+           for (unsigned nI = 1, nJ = 2; nI <= mMaxNestingDepth; nI++, nJ *= 2)
               sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                          "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
            sbSameProofBranch += ")";
@@ -410,7 +412,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMatchPremise2 = "(or false ";
        for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
            string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-           for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2)
+           for (unsigned nI = 1, nJ = 2; nI <= mMaxNestingDepth; nI++, nJ *= 2)
               sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                          "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
            sbSameProofBranch += ")";
@@ -629,7 +631,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
   ofstream proofTxt;
   proofTxt.open (sEncodedProofFile);
 
-   unsigned int proofStep=0;
+  unsigned int proofStep=0;
   for(;;) {
       int arg[2][20];
       string s = app("nP", proofStep, 0);
@@ -987,8 +989,17 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
                 bool r = DecodeSubproof(formula, sPredicates, sConstants, ursaproof, proofTrace, *subproof, true);
                 if (!r)
                     return false;
+
+                EFQ* pe = new EFQ();
+                subproof->SetProofEnd(pe);
+
                 pni = new ByNegIntro(f);
                 pni->AddSubproof(*subproof);
+
+                proof.SetProofEnd(pni);
+
+                proofTrace.push_back(dummy);
+                return true;
             }
             else if (nAxiom == eFirstCase) {
                 Fact f;
@@ -1059,6 +1070,49 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 proof.AddMPstep(cfPremises, d, "EqSub", instantiation, new_witnesses);
+            }
+            else if (nAxiom == eNegElim) {
+
+                Fact f;
+                f.SetName(string(sPredicates[nPredicate]));
+                for(size_t i=0; i< mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                    f.SetArg(i,mpT->GetConstantName(nArgs[i]));
+
+                DNFFormula d;
+                ConjunctionFormula cfconc1;
+                cfconc1.Add(f);
+                d.Add(cfconc1);
+
+                proofTrace.push_back(f); // this is not used if the axiom is branching
+
+                int nFrom;
+                getline(ursaproof, str);
+                istringstream ss1(str);
+                ConjunctionFormula cfPremises;
+                unsigned noPremises;
+                size_t numOfUnivVars;
+                noPremises = 2;
+                for (unsigned int i = 0; i<noPremises; i++) {
+                    ss1 >> nFrom;
+                    if (nFrom != -1 && nFrom != 99) {
+                        cfPremises.Add(proofTrace[nFrom]);
+                        numOfUnivVars = proofTrace[nFrom].GetArity();
+                    }
+                }
+                size_t numOfVars = numOfUnivVars;
+                int inst[numOfVars];
+                getline(ursaproof, str);
+                istringstream ss2(str);
+                for(size_t i=0; i < numOfVars; i++)
+                    ss2 >> inst[i];
+
+                vector<pair<string,string>> instantiation;
+                vector<pair<string,string>> new_witnesses;
+                for(size_t i=0; i < numOfUnivVars; i++) {
+                    const string UnivVar = string(1,'A' + i);
+                    instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
+                }
+                proof.AddMPstep(cfPremises, d, "NegElim", instantiation, new_witnesses);
             }
             else if (nAxiom == eExcludedMiddle) {
                 Fact f;
