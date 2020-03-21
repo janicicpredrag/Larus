@@ -2,6 +2,9 @@
 #include "CLTheory/Theory.h"
 #include <assert.h>
 
+// #define DEBUG_PARSER
+
+
 // ---------------------------------------------------------------------------------------
 
 bool ConjunctionFormula::Read(const string& s)
@@ -35,7 +38,9 @@ bool ConjunctionFormula::Read(const string& s)
             }
             else
                 {
+                    #ifdef DEBUG_PARSER
                     cout << "Error could not find & in : " << s0 << endl; 
+                    #endif
                     return false;
                 }
         }
@@ -47,7 +52,9 @@ bool ConjunctionFormula::Read(const string& s)
             }
             else
                 {
+                    #ifdef DEBUG_PARSER
                     cout << "Error reading : " << s0.substr(pos1, pos2-pos1+1) << endl;
+                    #endif
                     return false;
                 }
             }
@@ -95,7 +102,9 @@ bool DNFFormula::Read(const string& s)
             }
             else
             {
+                #ifdef DEBUG_PARSER
                 cout << "Error reading : " << s0.substr(pos1, pos-pos1) << endl;
+                #endif
                 return false;
             }
         } else {
@@ -104,11 +113,12 @@ bool DNFFormula::Read(const string& s)
                 Add(c);
                 pos1=pos2;
             }
-            else
-                {
-                    cout << "Error reading : " << s0.substr(pos1, pos2-pos1+1) << endl;
-                    return false;
-                }
+            else  {
+                #ifdef DEBUG_PARSER
+                cout << "Error reading : " << s0.substr(pos1, pos2-pos1+1) << endl;
+                #endif
+                return false;
+            }
         }
     }
     return true;
@@ -194,7 +204,9 @@ bool CLFormula::Read(const string& s)
 {
     string s0 = SkipSpaces(s);
     size_t pos, pos2, p, pp;
+    #ifdef DEBUG_PARSER
     cout << "Currently reading : " << s0 << endl;
+    #endif
     pos = s0.size();
     if (s0[0] == '(' && s0[pos-1] == ')') {
       if (Read(s0.substr(1, pos-2)))
@@ -205,15 +217,18 @@ bool CLFormula::Read(const string& s)
     if (pos != string::npos) {
         ClearUnivVars();
         pos = s0.find('[');
-        if (pos == string::npos)
-            {
+        if (pos == string::npos)  {
+                #ifdef DEBUG_PARSER
                 cout << "Could not find [ in :" << s0 << endl;
+                #endif
                 return false;
             }
         pos2 = s0.find(']');
         if (pos2 == string::npos)
             {
+                #ifdef DEBUG_PARSER
                 cout << "Could not find ] in :" << s0 << endl;
+                #endif
                 return false;
             }
         p = pos;
@@ -231,9 +246,10 @@ bool CLFormula::Read(const string& s)
             AddUnivVar(varname);
         }
         pos = s0.find(':',pos2);
-        if (pos == string::npos)
-            {
+        if (pos == string::npos)  {
+                #ifdef DEBUG_PARSER
                 cout << "Error coumld not find : in :" << s0 << endl;
+                #endif
                 return false;
             }
         else
@@ -259,13 +275,17 @@ bool CLFormula::Read(const string& s)
         pos = s0.find('[');
         if (pos == string::npos)
         {
+            #ifdef DEBUG_PARSER
             cout << "Error could not find [ in : " << s0 << endl;
+            #endif
             return false;
         }
         pos2 = s0.find(']');
         if (pos == string::npos)
         {
+            #ifdef DEBUG_PARSER
             cout << "Error could not find ] in : " << s0 << endl;
+            #endif
             return false;
         }
         p = pos;
@@ -492,7 +512,9 @@ Fact::Fact (const string& s)
 bool Fact::Read(const string& s)
 {
     size_t pos1, pos2, pos;
+    #ifdef DEBUG_PARSER
     cout << "Currently Reading fact : " << s << endl;
+    #endif
     if (s=="false") {
         mName = "false";
         return true;
@@ -501,7 +523,9 @@ bool Fact::Read(const string& s)
     pos1 = s.find('(',0);
     if (pos1 == 0)
     {
+        #ifdef DEBUG_PARSER
         cout << "Name not found in : " << s << endl;
+        #endif
         return false;
     }
     if (pos1 == string::npos)
@@ -514,13 +538,17 @@ bool Fact::Read(const string& s)
         pos2 = s.find(')',0);
         if (pos2 == string::npos)
         {
+            #ifdef DEBUG_PARSER
             cout << "Ending parenthesis not found in : " << s << endl;
+            #endif
             return false;
         }
 
         if (s.find('(',pos1+1) != string::npos)
         {
+            #ifdef DEBUG_PARSER
             cout << "Error ( not found in : " << s << endl;
+            #endif
             return false;
         }
         mName = s.substr(0, pos1);
@@ -532,18 +560,23 @@ bool Fact::Read(const string& s)
             if (pos == string::npos) {
             pos = s.find(')',pos1);
                 if (pos == string::npos) {
+                    #ifdef DEBUG_PARSER
                     cout << "Error ) not found in " << s << endl;
+                    #endif
                     return false;
                 }
-                if (pos < pos2-1)
-                  {
+                if (pos < pos2-1)     {
+                    #ifdef DEBUG_PARSER
                     cout << "Error ) should be the last character of :" << s << endl;
+                    #endif
                     return false;
                   }
             }
             if (pos==pos1)
             {
+                #ifdef DEBUG_PARSER
                 cout << "Error " << endl;
+                #endif
                 return false;
             }
             mArgs.push_back(s.substr(pos1, pos-pos1));
@@ -588,33 +621,43 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
 
     if(ss.substr(0,4) != "fof(")
         {   
+            #ifdef DEBUG_PARSER
             cout << "Only fof formulas are supported." << endl;
+            #endif
             return false;
         }
     pos1 = ss.find(',');
     if (pos1 == string::npos)
     {
+        #ifdef DEBUG_PARSER
         cout << "Error fof() should have three arguments." << endl;
+        #endif
         return false;
     }
     axname = ss.substr(4,pos1-4);
     pos2 = ss.find(',', pos1+1);
     if (pos2 == string::npos)
     {
+        #ifdef DEBUG_PARSER
         cout << "Error fof() should have three arguments." << endl;
+        #endif
         return false;
     }
     string s1 = ss.substr(pos1+1,pos2-pos1-1);
     if (type == 0)
         if (s1 != string("axiom"))
         {
+            #ifdef DEBUG_PARSER
             cout << "Error axiom expected, found : " << s1 << endl;
+            #endif
             return false;
         }
     if (type == 1)
         if (s1 != string("conjecture"))
         {
+            #ifdef DEBUG_PARSER
             cout << "Error conjecture expected, found : " << s1 << endl;
+            #endif
             return false;
         }
     if (s1 == string("axiom"))

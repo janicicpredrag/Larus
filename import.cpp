@@ -88,17 +88,21 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         string sFileName2("proofs/PROOF" + theoremName + "-simpl.tex");
         string sFileName3("proofs/PROOF" + theoremName + ".v");
 
-        ProofExport *ex, *excoq;
+        ProofExport *ex;
         ex = new ProofExport2LaTeX;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         if (engine->GetKind() != eURSA_ProvingEngine && engine->GetKind() != eEQ_ProvingEngine) {
             proof.Simplify();
             ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         }
+        delete ex;
+        /*
+        ProofExport *excoq;
         excoq = new ProofExport2Coq;
         excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
-        delete ex;
-        delete excoq;
+        delete excoq;*/
+
+
     }
     // else
     //    cout << "Theorem not proved!" << endl;
