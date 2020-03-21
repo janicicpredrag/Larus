@@ -194,7 +194,7 @@ bool CLFormula::Read(const string& s)
 {
     string s0 = SkipSpaces(s);
     size_t pos, pos2, p, pp;
-
+    cout << "Currently reading : " << s0 << endl;
     pos = s0.size();
     if (s0[0] == '(' && s0[pos-1] == ')') {
       if (Read(s0.substr(1, pos-2)))
@@ -492,7 +492,7 @@ Fact::Fact (const string& s)
 bool Fact::Read(const string& s)
 {
     size_t pos1, pos2, pos;
-
+    cout << "Currently Reading fact : " << s << endl;
     if (s=="false") {
         mName = "false";
         return true;
