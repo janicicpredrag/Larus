@@ -145,10 +145,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
-                    /*cout << "input : " << s << endl;
-                    for (int i=0; i<normalizedAxioms.size(); i++)
-                        cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
-                    cout << endl;*/
+                    // cout << "Input Axiom: " << s << endl;
+                    // for (size_t i=0; i<normalizedAxioms.size(); i++)
+                    //     cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                    // cout << endl;
                 }
                 else
                     T.AddAxiom(cl,statementName);

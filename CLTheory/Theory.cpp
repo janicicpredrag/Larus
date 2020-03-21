@@ -257,6 +257,9 @@ void Theory::AddSymbol(string p, unsigned arity)
             return;
     if (p == "false") {
         mSignature.push_back(pair<string,unsigned>("false",0));
+    }
+    else if (p == "true") {
+        mSignature.push_back(pair<string,unsigned>("true",0));
     } else if (p[0] != 'n') {
         mSignature.push_back(pair<string,unsigned>(p,arity));
         mSignature.push_back(pair<string,unsigned>("n"+p, arity));

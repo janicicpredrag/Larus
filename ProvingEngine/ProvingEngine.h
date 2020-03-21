@@ -30,15 +30,9 @@ public:
         { mpT->InstantiateGoal(f, instantiation, fout, bInstantiateVars); }
 
 protected:
-    clock_t mStartTime;
-
-    // unsigned mTimeLimit;
-    // bool mbNativeEQ, mbNegElim, mbExcludedMiddle;
-    // unsigned mMaxNestingDepth;
-
-    proverParams mParams;
-
     Theory* mpT;
+    proverParams mParams;
+    clock_t mStartTime;
 };
 
 #endif // PROVINGENGINE_H

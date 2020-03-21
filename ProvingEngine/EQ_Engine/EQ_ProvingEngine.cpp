@@ -140,13 +140,14 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             // if (!rv) // do not attempt to read some old proof representation
             //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << l << endl;
+            cout << "Trying proof length " << l << ";" << flush;
             rv = system(sCall.c_str());
             if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
                 l *= 2;
+                cout << endl;
             }
             else {
-                cout << "Found a proof of the length " << l << "!" << endl;
+                cout << " Found!" << endl;
                 best = l;
                 break;
             }
@@ -170,14 +171,14 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             // if (!rv) // do not attempt to read some old proof representation
             //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << s << "; " << flush;
+            cout << "Trying proof length " << s << ";" << flush;
             rv = system(sCall.c_str());
             if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
                 l = s+1;
                 cout << endl;
             }
             else {
-                cout << "Found!" << endl;
+                cout << " Found!" << endl;
                 best = s;
                 r = s-1;
             }
@@ -304,6 +305,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), itos(nAxiom));
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n    (or  false ";
+              sbMatchOnePremise += appeq(itos(nPredicate[nAxiom][nPremisesCounter]), "nTRUE");
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
 
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
@@ -360,8 +362,13 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL), itos(((nProofStep+1)<<3) + nL));
           }
           /* The MP proof step is correct if it was derived by using some axiom  */
-          sbMPStep += "\n(and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
+          if (nProofStep != 0)
+            sbMPStep += "\n(and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                          appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+          else
+            sbMPStep += "\n(and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
+                           appeq(app("nNesting", nProofStep), "1") + ")";
+
        }
 
        if (mParams.mbNativeEQ) {
@@ -397,9 +404,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchConclusion = "";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
-           sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+           if (nProofStep != 0)
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
-
+           else
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+                        appeq(app("nNesting", nProofStep), "1") + ")";
 
            //  eq(A,A)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eEQReflex));
@@ -407,8 +417,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
-           sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+           if (nProofStep != 0)
+              sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+           else
+              sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+                        appeq(app("nNesting", nProofStep), "1") + ")";
 
 
            //  eq(A,B) => eq(B,A)
@@ -432,8 +446,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchConclusion = "";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
-           sbMPStep += "\n(and " +  sbMatchPremises  + /* " "  + sbMatchConclusion +*/ "(not " + app("bCases",nProofStep) + ")" +
+           if (nProofStep != 0)
+               sbMPStep += "\n(and " +  sbMatchPremises  + /* " "  + sbMatchConclusion +*/ "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+           else
+               sbMPStep += "\n(and " +  sbMatchPremises  + /* " "  + sbMatchConclusion +*/ "(not " + app("bCases",nProofStep) + ")" +
+                        appeq(app("nNesting", nProofStep), "1") + ")";
        }
 
 
@@ -449,7 +467,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                              "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
                sbSameProofBranch += ")";
                string sn;
-               for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
+               for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
                     sn += appeq(app("nP", n_from, 0), itos(i));
                string sb1 = appeq(app("nP",n_from,0),app("nPP",nProofStep)) + "(or " + sn + ")";
                for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
@@ -464,8 +482,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremise2 += ")";
            sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
            sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nFALSE");
-           sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+           if (nProofStep != 0)
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+           else
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
+                        appeq(app("nNesting", nProofStep), "1") + ")";
        }
 
 
@@ -473,14 +495,18 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            //  P(Arg1,,,Argn) | ~P(X,...Argn)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eExcludedMiddle));
            string sn;
-           for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
+           for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
                 sn += appeq(app("nP", nProofStep, 0), itos(i));
            sbMatchConclusion = appeq( "(+ 1 " + app("nP",nProofStep,0) + ")", app("nP", nProofStep, 1));
            sbMatchConclusion += "(or " + sn + ")";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                 sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
-           sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + " " + app("bCases",nProofStep) + " " +
+           if (nProofStep != 0)
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + " " + app("bCases",nProofStep) + " " +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
+           else
+               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + " " + app("bCases",nProofStep) + " " +
+                    appeq(app("nNesting", nProofStep), "1") + ")";
        }
 
        sbMPStep += ")";
@@ -488,32 +514,42 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbNegIntroStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eNegIntro)) +
                                          "(not " + app("bCases", nProofStep) + ") " +
-                                         appeq(app("nNesting", nProofStep), "(* 2 " + app("nNesting", nProofStep-1) + ")") +
-                                         appeq(app("nNesting", nProofStep), "2") +
+                                      //   appeq(app("nNesting", nProofStep), "(* 2 " + app("nNesting", nProofStep-1) + ")") +
+                                         appeq(app("nNesting", nProofStep), "2") +  // only the special case
                                          //  (nP[" + itos(nProofStep) + "][0]" & 1 == 1) " + TODO/DONE as given below
                                          appeq("(+ " + app("nP", nProofStep, 0) + " " + itos(eNegIntro) + ")", app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
        string sn = "";
-       for (size_t i = 1; i<mpT->mSignature.size(); i+=2)
+       for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
             sn += appeq(app("nP", nProofStep, 0), itos(i));
        sbNegIntroStep += "(or " + sn + ")";
        sbNegIntroStep += ")";
 
-       string sbFirstCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eFirstCase)) +
+       string sbFirstCaseStep;
+       if (nProofStep == 0)
+           sbFirstCaseStep = "false";
+       else {
+           sbFirstCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eFirstCase)) +
                                           app("bCases", nProofStep-1)+ " " +
                                           "(not " + app("bCases", nProofStep) + ") " +
                                           appeq(app("nNesting", nProofStep), "(* 2 " + app("nNesting", nProofStep-1) + ")") +
                                           appeq(app("nP", nProofStep, 0),app("nP", nProofStep-1, 0));
-       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-            sbFirstCaseStep += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep-1, nInd));
-       sbFirstCaseStep += ")";
+           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+                sbFirstCaseStep += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep-1, nInd));
+           sbFirstCaseStep += ")";
+       }
 
-       string sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 0)) +
+       string sbPrevStepGoal;
+       if (nProofStep == 0)
+           sbPrevStepGoal = "false";
+       else {
+           sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 0)) +
                                   "(not " + app("bCases", nProofStep-1) + ")";
-       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-          sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
-       sbPrevStepGoal += ")";
+           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+              sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
+           sbPrevStepGoal += ")";
+       }
 
        string sbMatchBranchingForSecondCase = "(or false ";
        for (unsigned nI = mnPremisesCount; nI+1 < nProofStep; nI++) {
@@ -526,7 +562,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
        sbMatchBranchingForSecondCase += ")";
 
-       string sbSecondCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) +
+       string sbSecondCaseStep;
+       if (nProofStep == 0)
+           sbSecondCaseStep = "false";
+       else
+           sbSecondCaseStep = "(and " + appeq(app("nAxiomApplied", nProofStep), itos(eSecondCase)) +
                                     sbMatchBranchingForSecondCase +
                                     sbPrevStepGoal +
                                     "(or " + appeq(app("nAxiomApplied", nProofStep-1), itos(eQEDbyCases)) +
@@ -585,8 +625,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbBranchingCorrect += "(or " + appeq("(+ 1 " + snNegIntroCheck+ ")", "2") + appeq("(+ 1 " + snNegIntroCheck+ ")", "1") + ")";
 
        /* ... the proof step is correct if it was one of cases from some case split */
-       sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
+       if (nProofStep != 0)
+            sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
                                   sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
+       else
+           sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
+
     }
 
     for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
@@ -912,8 +956,9 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
 
           for (unsigned i = 0; i<noPremises; i++) {
              s = app("nFrom", proofStep, i);
-             if (nmodel.find(s) == nmodel.end())
-                assert(false);
+             if (nmodel.find(s) == nmodel.end()) {
+                 assert(mpT->mCLaxioms[axiom-eNumberOfStepKinds].first.GetPremises().GetElement(0).GetName() == "true");
+             }
              int from = nmodel[s];
              sfrom1 += itos(from) + " ";
              if (i > 0)
