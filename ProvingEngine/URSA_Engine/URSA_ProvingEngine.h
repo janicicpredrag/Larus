@@ -12,7 +12,7 @@ using namespace std;
 class URSA_ProvingEngine : public ProvingEngine
 {
 public:
-    URSA_ProvingEngine(Theory *pT);
+    URSA_ProvingEngine(Theory *pT, proverParams& params);
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);

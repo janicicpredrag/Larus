@@ -160,6 +160,9 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     if (f.GetName() == "false") {
         os << "$false";
     }
+    else if (f.GetName() == "true") {
+        os << "$true";
+    }
     else if (NATIVE_EQ && f.GetName() == "eq")
     {
         os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";

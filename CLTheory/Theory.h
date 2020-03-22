@@ -19,6 +19,7 @@ public:
     Theory() {
         miConstantsCounter = 0;
         AddSymbol("false", 0);
+        AddSymbol("true", 0);
         if (EQ_SUPPORT)
             AddSymbol("eq", 2);
     }

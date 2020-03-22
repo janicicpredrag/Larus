@@ -173,6 +173,8 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
         return true;
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
+    if (cl.GetPremises().GetSize() == 1 && cl.GetPremises().GetElement(0).GetName() == "true")
+        return true;
     if (mDatabase.size()==0 && NoConjuncts>0)
         return false;
 
