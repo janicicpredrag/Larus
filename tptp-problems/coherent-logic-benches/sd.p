@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  (p(a) & p(b) & p(c))). 
+fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  & p(a) & p(b) & p(c)).
 fof(goal_proved,axiom, ![ L] : ((i(a,L) & i(b,L) & i(c,L)) =>  goal )).
 fof(sortp,axiom, ![ P, L] : (i(P,L) => p(P) )).
 fof(sortl,axiom, ![ P, L] : (i(P,L) => l(L) )).

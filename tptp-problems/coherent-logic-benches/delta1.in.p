@@ -1,4 +1,4 @@
-fof(initial_model, axiom, t_phi_2  &  (dom(Y) & t_imp_2(Y))  &  (dom(Y) & t_imp_1(Y))). 
+fof(initial_model, axiom, t_phi_2  & dom(Y) & t_imp_2(Y)  & dom(Y) & t_imp_1(Y)).
 fof(pnnp_2,axiom, ![ X] : ((p_2(X) & notp_2(X)) =>  goal )).
 fof(pnnp_1,axiom, ![ X] : ((p_1(X) & notp_1(X)) =>  goal )).
 fof(ax_phi_2,axiom, ![ X] : ((dom(X) & t_phi_2) => t_or_2(X) )).
