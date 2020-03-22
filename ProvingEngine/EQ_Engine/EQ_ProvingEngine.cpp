@@ -309,9 +309,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
 
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
-                 // replace <= 3 by <=5 for deeper nesting (at three places)
-                 // for (unsigned nI = 1, nJ = 2; nI <= 3; nI++, nJ *= 2) TODO!
-
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
                     sbSameProofBranch += "(and  (>= " + app("nNesting", nProofStep) + " (* " + itos(nJ) + " " + app("nNesting", n_from) + "))" +
                                                "(< " + app("nNesting", nProofStep) + " (+ (* " + itos(nJ) + " " + app("nNesting", n_from)+ ")" + itos(nJ) + ")))";
