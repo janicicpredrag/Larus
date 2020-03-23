@@ -531,7 +531,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
     dummy.SetName("dummy");
 
     CaseSplit* pcs;
-    ByNegIntro* pni;
+    ByNegIntro* pni = nullptr;
     string str;
     if (ursaproof.good())
     {

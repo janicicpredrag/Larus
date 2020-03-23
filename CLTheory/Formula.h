@@ -1,7 +1,7 @@
 #ifndef FORMULA_H
 #define FORMULA_H
-#define NATIVE_EQ 0
-#define NATIVE_NEG 0
+#define NATIVE_EQ 1
+#define NATIVE_NEG 1
 
 #include <string>
 #include <vector>

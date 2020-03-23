@@ -1,14 +1,14 @@
 #!/bin/sh
-echo "running vampire on all files."
 i=0
 time=30
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="clprover-results-$today.out"
 summary="clprover-summary-$today.out"
-for file in *.tptp
+echo "running clprover on all files." | tee -a $filename
+for file in coherent-logic-benches/*.p
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename    
-  ../CLprover -l"$time" -tptp "$file" -ssmt | tee -a $filename
+  ../CLprover -l"$time" -tptp "$file" -sstl | tee -a $filename
   ((i++))
 done
 echo "Time given: $time" | tee -a $summary

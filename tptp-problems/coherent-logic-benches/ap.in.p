@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(c)). 
+fof(initial_model, axiom, dom(c)).
 fof(pffq,axiom, ![ X, Y, Z] : ((p(X) & f(X,Y) & f(Y,Z)) => q(Z) )).
 fof(qfp,axiom, ![ X, Y] : ((q(X) & f(X,Y)) => p(Y) )).
 fof(porq,axiom, ![ X] : (dom(X) => (p(X)|q(X)) )).
