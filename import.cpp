@@ -96,12 +96,12 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         }
         delete ex;
-
+/*
         ProofExport *excoq;
         excoq = new ProofExport2Coq;
         excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
         delete excoq;
-
+*/
 
     }
     // else
@@ -134,6 +134,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     CLFormula cl, theorem;
     size_t noAxioms = 0;
 
+    str = SkipSpaces(str);
+
     string strfof ("fof");
     size_t found1 = str.find(strfof);
 
@@ -141,7 +143,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         size_t found2 = str.find(".", found1+1);
         if (found2 == string::npos)
             return eErrorReadingAxioms;
-        s = str.substr(found1, found2);
+        s = str.substr(found1, found2-found1);
         size_t type = 2;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
             if (type == 0) {
@@ -149,10 +151,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
-                    // cout << "Input Axiom: " << s << endl;
-                    // for (size_t i=0; i<normalizedAxioms.size(); i++)
-                    //     cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
-                    // cout << endl;
+                    cout << "Input Axiom: " << s << endl;
+                    for (size_t i=0; i<normalizedAxioms.size(); i++)
+                         cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                     cout << endl;
                 }
                 else
                     T.AddAxiom(cl,statementName);

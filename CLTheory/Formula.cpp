@@ -630,7 +630,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
     if (pos1 == string::npos)
     {
         #ifdef DEBUG_PARSER
-        cout << "Error fof() should have three arguments." << endl;
+        cout << "Error: fof() should have three arguments." << endl;
         #endif
         return false;
     }
@@ -639,7 +639,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
     if (pos2 == string::npos)
     {
         #ifdef DEBUG_PARSER
-        cout << "Error fof() should have three arguments." << endl;
+        cout << "Error: fof() should have three arguments." << endl;
         #endif
         return false;
     }
@@ -648,7 +648,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
         if (s1 != string("axiom"))
         {
             #ifdef DEBUG_PARSER
-            cout << "Error axiom expected, found : " << s1 << endl;
+            cout << "Error: 'axiom' expected, found : " << s1 << endl;
             #endif
             return false;
         }
@@ -656,7 +656,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
         if (s1 != string("conjecture"))
         {
             #ifdef DEBUG_PARSER
-            cout << "Error conjecture expected, found : " << s1 << endl;
+            cout << "Error: conjecture expected, found : " << s1 << endl;
             #endif
             return false;
         }
