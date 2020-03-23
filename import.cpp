@@ -96,11 +96,11 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         }
         delete ex;
-        /*
+
         ProofExport *excoq;
         excoq = new ProofExport2Coq;
         excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
-        delete excoq;*/
+        delete excoq;
 
 
     }

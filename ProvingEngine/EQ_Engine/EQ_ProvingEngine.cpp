@@ -269,7 +269,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
     unsigned nFinalStep = mnPremisesCount+nProofLen-1;
     sPreabmle += "; *** Goal ***                                                         \n ";
-    // smtFile << "(assert (= nFinalStep " + itos(mnPremisesCount+nProofLen-1) + "))" << endl;
     sPreabmle += "(assert (= " + app("nNesting", nFinalStep) + " 1)) \n";
     sPreabmle += "(assert (= " + app("bCases", nFinalStep) + " false)) \n";
     sPreabmle += "(assert (= " + app("nP", nFinalStep, 0) + " n" + ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ")) \n";
@@ -342,8 +341,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           string sb;
           if (bAxiomBranching[nAxiom]) {
               sb =  appeq(app("nP" , nProofStep, 1), itos(nPredicate[nAxiom][nGoalIndex+1]));
-              for (unsigned nInd = 0; nInd < mnMaxArity; nInd++) {
-                  sb += appeq(app("nA", nProofStep, mnMaxArity+nInd), app("nInst", nProofStep, nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]));
+              for (unsigned nInd = 0; nInd < ARITY[nPredicate[nAxiom][nGoalIndex+1]]; nInd++) {
+                  sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
+                              app("nInst", nProofStep, nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]));
                   sb += "(< " + app("nA", nProofStep, mnMaxArity+nInd) + " " + itos((nProofStep+2)<<3) + ")";
               };
               sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
@@ -412,7 +412,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), itos(eEQReflex));
            sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nEQ") +
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
-           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+           for (unsigned nInd = 0; nInd < 2; nInd++)
                sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
            if (nProofStep != 0)
               sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
@@ -441,7 +441,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            }
            sbMatchPremises += sbMatchPremise1 + ")";
            sbMatchConclusion = "";
-           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+           for (unsigned nInd = 0; nInd < 2; nInd++)
                sbMatchConclusion += "(< " + app("nA",nProofStep,nInd) + " " + itos((nProofStep+2)<<3) + ")";
            if (nProofStep != 0)
                sbMPStep += "\n(and " +  sbMatchPremises  + /* " "  + sbMatchConclusion +*/ "(not " + app("bCases",nProofStep) + ")" +
@@ -537,13 +537,15 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbFirstCaseStep += ")";
        }
 
+       unsigned ArityFinal = formula.GetElement(0).GetElement(0).GetArity();
+
        string sbPrevStepGoal;
        if (nProofStep == 0)
            sbPrevStepGoal = "false";
        else {
            sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 0)) +
                                   "(not " + app("bCases", nProofStep-1) + ")";
-           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+           for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
               sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
            sbPrevStepGoal += ")";
        }
@@ -575,7 +577,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbGoalReached = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) +
                                          "(not " + app("bCases", nProofStep) + ")";
-       for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+       for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
           sbGoalReached += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, nInd));
        sbGoalReached += ")";
 
