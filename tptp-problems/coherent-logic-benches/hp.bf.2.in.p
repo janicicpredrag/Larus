@@ -1,4 +1,4 @@
-fof(initial_model, axiom, (dom(good) & dom(bad))  & dom(X1) & tAnd_19(X1) & tForall_17(X1)).
+fof(initial_model, axiom, dom(good) & dom(bad)  & dom(X1) & tAnd_19(X1) & tForall_17(X1)).
 fof(botALGORITHM,axiom, ![ V1] : ((tALGORITHM(V1) & fALGORITHM(V1)) =>  goal )).
 fof(botDECIDES,axiom, ![ V1, V2, V3] : ((tDECIDES(V1,V2,V3) & fDECIDES(V1,V2,V3)) =>  goal )).
 fof(botPROGRAM,axiom, ![ V1] : ((tPROGRAM(V1) & fPROGRAM(V1)) =>  goal )).
@@ -34,8 +34,8 @@ fof(ax25,axiom, ![ Y, W, V] : ((tPROGRAM(Y) & tHALTS3(W,Y,Y) & tHALTS2(V,Y)) => 
 fof(ax26,axiom, ![ W, Y, V] : ((tOr_72(W,Y,V) & tPROGRAM(Y) & tHALTS3(W,Y,Y)) => (fOUTPUTS(W,bad)|((tAnd_70(Y,V) & tHALTS2(V,Y)))) )).
 fof(ax28,axiom, ![ X, Y] : (tExists_22(X,Y) =>  ? [Z ]:  ((dom(Z) & fDECIDES(X,Y,Z))) )).
 fof(ax29,axiom, ![ W, Y] : (tExists_40(W,Y) =>  ? [Z ]:  ((dom(Z) & fDECIDES(W,Y,Z))) )).
-fof(ax30,axiom, ( $true  => (tForall_28| ? [W ]:  ((dom(W) & tAnd_36(W) & tPROGRAM(W)))) )).
-fof(ax31,axiom, ![ X] : (tOr_26(X) => (fALGORITHM(X)| ? [Y ]:  ((dom(Y) & tPROGRAM(Y) & tExists_22(X,Y)))) )).
+fof(ax30,axiom, ( $true  => (?[W] : tForall_28| ((dom(W) & tAnd_36(W) & tPROGRAM(W)))) )).
+fof(ax31,axiom, ![ X] : (tOr_26(X) => ? [Y]: (fALGORITHM(X)|  ((dom(Y) & tPROGRAM(Y) & tExists_22(X,Y)))) )).
 fof(ax32,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y ]:  ((dom(Y) & tPROGRAM(Y) & tExists_40(W,Y)))|tForall_54(W)) )).
 fof(ax33,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y, Z, V ]:  ((dom(Y) & dom(Z) & tOr_65(Y,Z,W)))| ((dom(V) & tPROGRAM(V) & tForall_76(W,V)))) )).
 fof(goal_to_be_proved,conjecture,( goal )).

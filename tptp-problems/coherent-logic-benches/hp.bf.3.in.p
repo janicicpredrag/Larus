@@ -35,8 +35,8 @@ fof(ax26,axiom, ![ Y, W, V] : ((tPROGRAM(Y) & tHALTS3(W,Y,Y) & tHALTS2(V,Y)) => 
 fof(ax27,axiom, ![ W, Y, V] : ((tOr_72(W,Y,V) & tPROGRAM(Y) & tHALTS3(W,Y,Y)) => (fOUTPUTS(W,bad)|((tAnd_70(Y,V) & tHALTS2(V,Y)))) )).
 fof(ax29,axiom, ![ X, Y] : (tExists_22(X,Y) =>  ? [Z ]:  ((dom(Z) & fDECIDES(X,Y,Z))) )).
 fof(ax30,axiom, ![ W, Y] : (tExists_40(W,Y) =>  ? [Z ]:  ((dom(Z) & fDECIDES(W,Y,Z))) )).
-fof(ax31,axiom, ( $true  => (tForall_28| ? [W ]:  ((dom(W) & tAnd_36(W) & tPROGRAM(W)))) )).
-fof(ax32,axiom, ![ X] : (tOr_26(X) => (fALGORITHM(X)| ? [Y ]:  ((dom(Y) & tPROGRAM(Y) & tExists_22(X,Y)))) )).
+fof(ax31,axiom, ( $true  => ? [W] :  (tForall_28|  ((dom(W) & tAnd_36(W) & tPROGRAM(W)))) )).
+fof(ax32,axiom, ![ X] : (tOr_26(X) => ? [Y] : (fALGORITHM(X)| ((dom(Y) & tPROGRAM(Y) & tExists_22(X,Y)))) )).
 fof(ax33,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y ]:  ((dom(Y) & tPROGRAM(Y) & tExists_40(W,Y)))|tForall_54(W)) )).
-fof(ax34,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y, Z ]:  ((dom(Y) & dom(Z) & tOr_65(Y,Z,W)))| ? [V ]:  ((dom(V) & tPROGRAM(V) & tForall_76(W,V)))) )).
+fof(ax34,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y, Z, V ]:  ((dom(Y) & dom(Z) & tOr_65(Y,Z,W)))| ((dom(V) & tPROGRAM(V) & tForall_76(W,V)))) )).
 fof(goal_to_be_proved,conjecture,( goal )).
