@@ -76,14 +76,26 @@ void ProofExport2Coq::OutputOr(ofstream& outfile)
 }
 
 // ---------------------------------------------------------------------------------
-
+std::string repeat(int n, string s) {
+    std::ostringstream os;
+    for(int i = 0; i < n; i++)
+        os << s;
+    return os.str();
+}
+//-----------------------------------------------------------------------------------
 void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation)
 {
-    outfile << "Require Import CLProver.euclidean_axioms." << endl;
-    outfile << "Require Import CLProver.general_tactics." << endl;
-    outfile <<  endl;
-    outfile << "Section Euclid." << endl;
-    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+ //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
+     outfile << "Require Import CLProver.general_tactics." << endl;
+     outfile <<  endl;
+     outfile << "Section Sec." << endl;
+///    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+
+    outfile << "Parameter MyT : Type." << endl;
+    for(std::vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
+    {
+        outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
+    }
 
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : ";
@@ -110,7 +122,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
 void ProofExport2Coq::OutputEpilogue(ofstream& outfile)
 {
     outfile << "Qed." << endl << endl;
-    outfile <<  "End Euclid." << endl;
+    outfile <<  "End Sec." << endl;
 }
 
 std::string Indent(unsigned level)
