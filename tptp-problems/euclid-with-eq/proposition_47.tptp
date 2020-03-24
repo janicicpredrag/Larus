@@ -43,7 +43,6 @@ fof(tP_neg_elim,axiom, (! [A,B,C,D] : ((tP(A,B,C,D) & ntP(A,B,C,D)) => (($false)
 fof(eq_neg_elim,axiom, (! [A,B] : ((eq(A,B) & neq(A,B)) => (($false))))).
 fof(meet_neg_elim,axiom, (! [A,B,C,D] : ((meet(A,B,C,D) & nmeet(A,B,C,D)) => (($false))))).
 fof(oS_neg_elim,axiom, (! [A,B,C,D] : ((oS(A,B,C,D) & noS(A,B,C,D)) => (($false))))).
-fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(triangle_excluded_middle,axiom, (! [A,B,C] : ((triangle(A,B,C)) | (ntriangle(A,B,C))))).
 fof(per_excluded_middle,axiom, (! [A,B,C] : ((per(A,B,C)) | (nper(A,B,C))))).
 fof(sQ_excluded_middle,axiom, (! [A,B,C,D] : ((sQ(A,B,C,D)) | (nsQ(A,B,C,D))))).

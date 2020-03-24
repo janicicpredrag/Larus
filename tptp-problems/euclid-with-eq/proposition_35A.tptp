@@ -105,7 +105,6 @@ fof(triangle_neg_elim,axiom, (! [A,B,C] : ((triangle(A,B,C) & ntriangle(A,B,C)) 
 fof(eT_neg_elim,axiom, (! [A,B,C,D,E,F] : ((eT(A,B,C,D,E,F) & neT(A,B,C,D,E,F)) => (($false))))).
 fof(eF_neg_elim,axiom, (! [A,B,C,D,E,F,G,H] : ((eF(A,B,C,D,E,F,G,H) & neF(A,B,C,D,E,F,G,H)) => (($false))))).
 fof(tS_neg_elim,axiom, (! [A,B,C,D] : ((tS(A,B,C,D) & ntS(A,B,C,D)) => (($false))))).
-fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(pG_excluded_middle,axiom, (! [A,B,C,D] : ((pG(A,B,C,D)) | (npG(A,B,C,D))))).
 fof(par_excluded_middle,axiom, (! [A,B,C,D] : ((par(A,B,C,D)) | (npar(A,B,C,D))))).
 fof(cong_excluded_middle,axiom, (! [A,B,C,D] : ((cong(A,B,C,D)) | (ncong(A,B,C,D))))).

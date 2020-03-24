@@ -8,6 +8,7 @@ fof(eqReflexive,axiom, (! [A] : ((eq(A,A))))).
 fof(pG_neg_elim,axiom, (! [A,B,C,D] : ((pG(A,B,C,D) & npG(A,B,C,D)) => (($false))))).
 fof(par_neg_elim,axiom, (! [A,B,C,D] : ((par(A,B,C,D) & npar(A,B,C,D)) => (($false))))).
 fof(eq_neg_elim,axiom, (! [A,B] : ((eq(A,B) & neq(A,B)) => (($false))))).
+fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(pG_excluded_middle,axiom, (! [A,B,C,D] : ((pG(A,B,C,D)) | (npG(A,B,C,D))))).
 fof(par_excluded_middle,axiom, (! [A,B,C,D] : ((par(A,B,C,D)) | (npar(A,B,C,D))))).
 fof(pG_EqSub_0,axiom, (! [A,B,C,D,X] : ((eq(A,X) & pG(A,B,C,D)) => ((pG(X,B,C,D)))))).
