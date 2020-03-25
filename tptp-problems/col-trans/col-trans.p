@@ -265,7 +265,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (,
+(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (
  wd( A, Y) &
  wd( P, Y) &
   wd( Q, Y) &
@@ -303,7 +303,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (,
+(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (
  wd( A, Y) &
  wd( P, Y) &
   wd( Q, Y) &
@@ -342,7 +342,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (,
+(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (
  wd( A, Y) &
  wd( P, Y) &
   wd( Q, Y) &
@@ -382,7 +382,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (,
+(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (
  wd( A, Y) &
  wd( P, Y) &
   wd( Q, Y) &
@@ -423,7 +423,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (,
+(! [A, B, C, Y, P, Z, Q, Qprime, Cprime] : ( (
  wd( A, Y) &
  wd( P, Y) &
   wd( Q, Y) &
@@ -550,7 +550,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, X, Cprime, Cprimeprime, P, T, U, V] : ( (,
+(! [A, B, C, X, Cprime, Cprimeprime, P, T, U, V] : ( (
  wd( A, B) &
  wd( C, X) &
   wd( A, P) &
@@ -573,7 +573,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, X, Cprime, Cprimeprime, P, T] : ( (
+(! [A, B, C, X, Cprime, Cprimeprime, P, T] : ( (
  wd( X, C) &
  wd( A, P) &
   wd( A, X) &
@@ -618,7 +618,7 @@ fof(pipo,conjecture,
  wd( T, B) &
   col( A, B, T) &
    col( R, X, P) &
-    col( T, X, B) & col( B, R, Q) & col( Q, T, P) ) => col( A, B, X) )))
+    col( T, X, B) & col( B, R, Q) & col( Q, T, P) ) => col( A, B, X)))
 ).
 
 fof(pipo,conjecture,
@@ -757,18 +757,18 @@ fof(pipo,conjecture,
             col( I, U, X) & col( I, Y, V) ) => col( X, A, B)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C , Q, x] : ( (
- wd( x, C) &
- wd( A, x) &
+(! [A, B, C , Q, X] : ( (
+ wd( X, C) &
+ wd( A, X) &
   wd( B, Q) &
    wd( Q, C) &
     wd( A, B) &
      wd( B, C) &
       wd( A, C) &
        wd( Q, A) &
-        col( Q, x, A) &
+        col( Q, X, A) &
          col( B, Q, C) &
-          col( A, x, C) & col( x, x, B) ) => col( A, B, C)))  ).
+          col( A, X, C) & col( X, X, B) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
 (! [A, B, C , P, Q] : ( (
@@ -801,18 +801,18 @@ fof(pipo,conjecture,
             col( I, Y, V) & col( I, X, U) ) => col( Y, A, B)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C , P, x] : ( (
+(! [A, B, C , P, X] : ( (
  wd( A, P) &
  wd( P, C) &
-  wd( x, C) &
-   wd( B, x) &
+  wd( X, C) &
+   wd( B, X) &
     wd( A, B) &
      wd( B, C) &
       wd( A, C) &
        wd( P, B) &
-        col( x, x, A) &
-         col( P, x, B) &
-          col( B, x, C) & col( A, P, C) ) => col( A, B, C)))  ).
+        col( X, X, A) &
+         col( P, X, B) &
+          col( B, X, C) & col( A, P, C) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
 (! [A, B, X, Y, U, V, I] : ( (
@@ -1036,7 +1036,7 @@ fof(pipo,conjecture,
  wd( B, C) &
   wd( A, C) &
    wd( C, Cprime) &
-    wd( B, Cprime) & col( Cprime, A, B) & col( C, B, Cprime) ) => col( A, B, C) )))
+    wd( B, Cprime) & col( Cprime, A, B) & col( C, B, Cprime) ) => col( A, B, C)))
 ).
 
 fof(pipo,conjecture,
@@ -1161,7 +1161,7 @@ fof(pipo,conjecture,
           col( M, C, D) & col( M, Dprime, D) ) => col( M, C, Dprime)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, C0, D0, M, Dprime, Mprime] : ( (,
+(! [A, B, C, D, C0, D0, M, Dprime, Mprime] : ( (
  wd( D, A) &
  wd( A, B) &
   wd( D, B) &
@@ -1191,16 +1191,16 @@ fof(pipo,conjecture,
  wd( A, B) &
   wd( B, C) &
    wd( A, C) &
-    col( D, E, A) & col( D, E, B) & col( D, E, C) ) => col( A, B, C) )))
+    col( D, E, A) & col( D, E, B) & col( D, E, C) ) => col( A, B, C)))
 ).
 
 fof(pipo,conjecture,
-(! [U, V, P , Q] : ( (
+(! [U, V, P, Q] : ( (
  wd( U, V) &
  wd( P, Q) & col( U, V, P) & col( U, V, Q) ) => col( P, Q, U)))  ).
 
 fof(pipo,conjecture,
-(! [P, Q, S , X, Y] : ( (
+(! [P, Q, S, X, Y] : ( (
  wd( P, X) &
  wd( S, X) &
   wd( Q, Y) &
@@ -1297,7 +1297,7 @@ fof(pipo,conjecture,
  wd( E, P) &
   wd( D, P) &
    wd( E, Eprime) &
-    wd( P, Eprime) & col( D, Eprime, P) & col( E, P, Eprime) ) => col( D, E, P) )))
+    wd( P, Eprime) & col( D, Eprime, P) & col( E, P, Eprime) ) => col( D, E, P)))
 ).
 
 fof(pipo,conjecture,
@@ -1428,7 +1428,7 @@ fof(pipo,conjecture,
  wd( M, X) &
   wd( X, Q) &
    wd( M, Q) &
-    col( A, B, M) & col( A, B, X) & col( M, X, Q) ) => col( A, B, Q) )))
+    col( A, B, M) & col( A, B, X) & col( M, X, Q) ) => col( A, B, Q)))
 ).
 
 fof(pipo,conjecture,
@@ -1518,7 +1518,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, Aprime, Cprime, Dprime, Fprime, A0, C0, D0, F0] : ( (,
+(! [A, B, C, D, E, F, Aprime, Cprime, Dprime, Fprime, A0, C0, D0, F0] : ( (
  wd( Cprime, B) &
  wd( C, B) &
   wd( Dprime, E) &
@@ -1556,7 +1556,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, Aprime, Cprime, Dprime, Fprime, A0, C0, D0, F0] : ( (,
+(! [A, B, C, D, E, F, Aprime, Cprime, Dprime, Fprime, A0, C0, D0, F0] : ( (
  wd( Cprime, B) &
  wd( C, B) &
   wd( Dprime, E) &
@@ -1665,7 +1665,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, F, P, X, Q, DD, FF] : ( (,
+(! [A, B, C, D, F, P, X, Q, DD, FF] : ( (
  wd( A, B) &
  wd( X, F) &
   wd( D, X) &
@@ -1682,7 +1682,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E F, P, Q, DD, FF, X, CC] : ( (,
+(! [A, B, C, D, E, F, P, Q, DD, FF, X, CC] : ( (
  wd( A, B) &
  wd( D, E) &
   wd( E, F) &
@@ -1703,7 +1703,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E F, P, Q, DD, FF, X, CC] : ( (,
+(! [A, B, C, D, E, F, P, Q, DD, FF, X, CC] : ( (
  wd( A, B) &
  wd( D, E) &
   wd( E, F) &
@@ -1725,7 +1725,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Bprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Bprimeprime, Cprimeprime] : ( (
  wd( B, M) &
  wd( A, Aprime) &
   wd( Aprime, C) &
@@ -1744,7 +1744,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Bprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Bprimeprime, Cprimeprime] : ( (
  wd( C, M) &
  wd( Bprimeprime, A) &
   wd( A, Aprime) &
@@ -1801,7 +1801,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C P, D0, D1, A0, D, A0prime, D0prime, Pprime] : ( (,
+(![A, B, C, P, D0, D1, A0, D, A0prime, D0prime, Pprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -2030,7 +2030,7 @@ fof(pipo,conjecture,
  wd( C, B) &
   wd( A, C) &
    wd( B, C0) &
-    col( A, B, C0) & col( P, A, C0) & col( B, C0, C) ) => col( A, B, C) )))
+    col( A, B, C0) & col( P, A, C0) & col( B, C0, C) ) => col( A, B, C)))
 ).
 
 fof(pipo,conjecture,
@@ -2418,7 +2418,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, D, T, Bprimeprime] : ( (
+(! [A, B, D, T, Bprimeprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( A, T) &
@@ -2502,7 +2502,7 @@ fof(pipo,conjecture,
                      col( T, Bprimeprimeprime, Bprime) &
                       col( Bprime, MB, Bprimeprime) &
                        col( B, MB, T) &
-                        col( Bprime, B, D) & col( T, D, A) ) => col( B, T, Bprimeprime)) 
+                        col( Bprime, B, D) & col( T, D, A) ) => col( B, T, Bprimeprime))) 
 ).
 
 fof(pipo,conjecture,
@@ -2593,7 +2593,7 @@ fof(pipo,conjecture,
 
 fof(pipo,conjecture,
 (! [A, B, C, Cprime] : ( (
- wd( A, B) & col( A, B, Cprime) & col( A, B, C) ) => col( A, Cprime, C))  ).
+ wd( A, B) & col( A, B, Cprime) & col( A, B, C) ) => col( A, Cprime, C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, C, Bprime] : ( (
@@ -2631,7 +2631,7 @@ fof(pipo,conjecture,
                         col( Bprime, MB, Bprimeprime) &
                          col( B, MB, T) &
                           col( Bprime, B, D) &
-                           col( T, D, A) ) => col( B, T, Bprimeprime)) 
+                           col( T, D, A) ) => col( B, T, Bprimeprime)))
 ).
 
 fof(pipo,conjecture,
@@ -2694,7 +2694,7 @@ fof(pipo,conjecture,
  wd( B, C) &
   wd( A, Aprime) &
    wd( A, C) &
-    wd( B, A) & col( Aprime, B, C) & col( A, B, C) ) => col( A, Aprime, B) )))
+    wd( B, A) & col( Aprime, B, C) & col( A, B, C) ) => col( A, Aprime, B)))
 ).
 
 fof(pipo,conjecture,
@@ -2860,7 +2860,7 @@ fof(pipo,conjecture,
  wd( B, C) &
   wd( A, Aprime) &
    wd( Aprime, C) &
-    wd( B, A) & col( A, B, C) & col( Aprime, B, C) ) => col( B, Aprime, A) )))
+    wd( B, A) & col( A, B, C) & col( Aprime, B, C) ) => col( B, Aprime, A)))
 ).
 
 fof(pipo,conjecture,
@@ -2962,7 +2962,7 @@ fof(pipo,conjecture,
           col( O, A, Bprime) & col( A, Bprime, C) ) => col( O, Bprime, B)))  ).
 
 fof(pipo,conjecture,
-(! [B C, D, T, Bprime, Bprimeprime, X, Y] : ( (
+(! [B, C, D, T, Bprime, Bprimeprime, X, Y] : ( (
  wd( B, C) &
  wd( B, D) &
   wd( B, T) &
@@ -3047,7 +3047,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [B C, D, T, Bprime, Bprimeprime, MB, X, Y, I] : ( (,
+(! [B, C, D, T, Bprime, Bprimeprime, MB, X, Y, I] : ( (
  wd( B, C) &
  wd( B, D) &
   wd( B, T) &
@@ -3143,7 +3143,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A1, A2, B1, B2, D1, D2, IAB, IAC, IBD] : ( (,
+(! [A1, A2, B1, B2, D1, D2, IAB, IAC, IBD] : ( (
  wd( IAB, IAC) &
  wd( IAB, IBD) &
   wd( IAC, IBD) &
@@ -3159,7 +3159,7 @@ fof(pipo,conjecture,
             col( IAB, IAC, A2) &
              col( IAB, IBD, B1) &
               col( IAB, IBD, B2) &
-               col( A1, A2, IBD) ) => col( IAC, IAB, IBD))  ).
+               col( A1, A2, IBD) ) => col( IAC, IAB, IBD))) ).
 
 fof(pipo,conjecture,
 (! [B, C, D, P, Q, C0, Q1, A1, C1, Y ] : ( (
@@ -3350,7 +3350,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A1, A2, B1, B2, C1, C2, IAB, IAC, IBD] : ( (,
+(! [A1, A2, B1, B2, C1, C2, IAB, IAC, IBD] : ( (
  wd( IAB, IAC) &
  wd( IAB, IBD) &
   wd( IAC, IBD) &
@@ -3366,7 +3366,7 @@ fof(pipo,conjecture,
             col( IAB, IAC, A2) &
              col( IAB, IBD, B1) &
               col( IAB, IBD, B2) &
-               col( B1, B2, IAC) ) => col( IAC, IAB, IBD))  ).
+               col( B1, B2, IAC) ) => col( IAC, IAB, IBD)))  ).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Bprime, Cprime] : ( (
@@ -3430,7 +3430,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C , D, T, x] : ( (
+(! [A, B, C , D, T, X] : ( (
  wd( A, D) &
  wd( B, D) &
   wd( C, D) &
@@ -3441,9 +3441,9 @@ fof(pipo,conjecture,
        wd( A, B) &
         wd( A, C) &
          wd( A, T) &
-          wd( x, A) &
-           col( A, B, x) &
-            col( x, T, A) &
+          wd( X, A) &
+           col( A, B, X) &
+            col( X, T, A) &
              col( B, D, C) & col( A, D, T) ) => col( B, C, T))) 
 ).
 
@@ -3628,7 +3628,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, T, X, Y, Z, M1, Z1] : ( (,
+(! [A, B, C, D, T, X, Y, Z, M1, Z1] : ( (
  wd( B, D) &
  wd( C, D) &
   wd( D, T) &
@@ -3752,7 +3752,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, F, G, H, I, Aprime, Aprimeprime] : ( (,
+(! [A, B, C, D, E, F, G, H, I, Aprime, Aprimeprime] : ( (
  wd( A, B) &
  wd( A, Aprime) &
   wd( C, B) &
@@ -3767,7 +3767,7 @@ fof(pipo,conjecture,
            col( A, B, C) & col( A, B, Aprime) ) => col( Aprime, C, B)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, T, X, Y, Z, M1, Z1] : ( (,
+(! [A, B, C, D, T, X, Y, Z, M1, Z1] : ( (
  wd( B, D) &
  wd( C, D) &
   wd( D, T) &
@@ -3832,7 +3832,7 @@ fof(pipo,conjecture,
             col( A, R, B) & col( P, Q, C) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, T, X, Y, Z, M1, Z1, x ] : ( (
+(! [A, B, C, D, T, X, Y, Z, M1, Z1, X ] : ( (
  wd( B, D) &
  wd( C, D) &
   wd( D, T) &
@@ -3853,14 +3853,14 @@ fof(pipo,conjecture,
                  wd( M1, Z1) &
                   col( A, B, M1) &
                    col( T, Y, Z) &
-                    col( A, B, x) &
+                    col( A, B, X) &
                      col( Y, M1, Z1) &
                       col( Y, T, X) &
                        col( B, D, C) & col( A, D, T) ) => col( T, Z, X))) 
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -3916,7 +3916,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -3948,7 +3948,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, T, X, Y, Z, M1, Z1] : ( (,
+(! [A, B, C, D, T, X, Y, Z, M1, Z1] : ( (
  wd( B, D) &
  wd( C, D) &
   wd( D, T) &
@@ -3991,7 +3991,7 @@ fof(pipo,conjecture,
           col( R, T, S) & col( P, T, Q) ) => col( S, Q, P)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4017,7 +4017,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4083,7 +4083,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4194,7 +4194,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A1, A2, P X, B1, B2, C1, C2, B3, C3] : ( (,
+(! [A1, A2, P, X, B1, B2, C1, C2, B3, C3] : ( (
  wd( P, A1) &
  wd( A1, X) &
   wd( P, X) &
@@ -4239,7 +4239,7 @@ fof(pipo,conjecture,
   wd( P, Q) & col( A, C, D) & col( B, C, D) ) => col( A, B, D)))  ).
 
 fof(pipo,conjecture,
-(! [A1, A2, P, X, B1, B2, C1, C2, C3] : ( (,
+(! [A1, A2, P, X, B1, B2, C1, C2, C3] : ( (
  wd( P, A1) &
  wd( A1, A2) &
   wd( A2, X) &
@@ -4302,7 +4302,7 @@ fof(pipo,conjecture,
            col( A, D, T) & col( A, C, T) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A1, A2, P, X, B1, B2, C1, C2, C3] : ( (,
+(! [A1, A2, P, X, B1, B2, C1, C2, C3] : ( (
  wd( P, A1) &
  wd( A1, A2) &
   wd( A2, X) &
@@ -4353,7 +4353,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, D, T, B, C, Y, X, Z1, M1] : ( (,
+(! [A, D, T, B, C, Y, X, Z1, M1] : ( (
  wd( A, D) &
  wd( D, T) &
   wd( A, B) &
@@ -4523,7 +4523,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C P, Q R, Cprime, Aprime, Bprime, X, y, Bprimeprime] : ( (,
+(! [A, B, C, P, Q, R, Cprime, Aprime, Bprime, X, Y, Bprimeprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4533,7 +4533,7 @@ fof(pipo,conjecture,
       wd( C, Cprime) &
        wd( A, Aprime) &
         wd( B, Bprime) &
-         wd( X, y) &
+         wd( X, Y) &
           wd( A, Bprimeprime) &
            wd( Bprime, Bprimeprime) &
             wd( Aprime, Bprimeprime) &
@@ -4549,8 +4549,8 @@ fof(pipo,conjecture,
                       wd( X, Bprime) &
                        wd( Q, B) &
                         wd( P, A) &
-                         wd( Aprime, y) &
-                          wd( Bprime, y) &
+                         wd( Aprime, Y) &
+                          wd( Bprime, Y) &
                            col( P, Q, Cprime) &
                             col( Aprime, Cprime, Q) &
                              col( Bprime, Cprime, P) &
@@ -4562,7 +4562,7 @@ fof(pipo,conjecture,
                                    col( X, Aprime, Bprime) &
                                     col( R, A, B) &
                                      col( Q, A, C) &
-                                      col( P, B, C) ) => col( Aprime, Bprime, Bprimeprime)) 
+                                      col( P, B, C) ) => col( Aprime, Bprime, Bprimeprime))) 
 ).
 
 fof(pipo,conjecture,
@@ -4655,7 +4655,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C P, Q R, Cprime, Aprime, Bprime, X, y, Bprimeprime] : ( (,
+(! [A, B, C P, Q R, Cprime, Aprime, Bprime, X, y, Bprimeprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4696,7 +4696,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, P, Q, C0, A0, Aprime] : ( (,
+(! [A, B, C, D, P, Q, C0, A0, Aprime] : ( (
  wd( C0, A) &
  wd( A, B) &
   wd( C0, B) &
@@ -4755,7 +4755,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C P, Q R, Cprime, Aprime, Bprime, X, y, Bprimeprime] : ( (,
+(! [A, B, C P, Q R, Cprime, Aprime, Bprime, X, y, Bprimeprime] : ( (
  wd( Q, C) &
  wd( P, C) &
   wd( Q, R) &
@@ -4835,7 +4835,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A1, A2, B1, B2, C1, C2, Q P, R M, C0] : ( (,
+(! [A1, A2, B1, B2, C1, C2, Q P, R M, C0] : ( (
  wd( Q, P) &
  wd( P, R) &
   wd( Q, R) &
@@ -5122,7 +5122,7 @@ fof(pipo,conjecture,
        col( B, Aprime, Bprime) & col( A, B, Aprime) ) => col( A, B, Bprime)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, F, P, Q, J, Q0, Qprime] : ( (,
+(! [A, B, C D, E, F, P, Q, J, Q0, Qprime] : ( (
  wd( P, Q) &
  wd( B, C) &
   wd( C, Q0) &
@@ -5605,7 +5605,7 @@ fof(pipo,conjecture,
  wd( U, Aprime) &
   wd( U, V) &
    wd( Aprime, V) &
-    wd( A, V) & col( U, P, Aprime) & col( Aprime, U, V) ) => col( U, V, P) )))
+    wd( A, V) & col( U, P, Aprime) & col( Aprime, U, V) ) => col( U, V, P)))
 ).
 
 fof(pipo,conjecture,
@@ -5656,7 +5656,7 @@ fof(pipo,conjecture,
  wd( O, P) &
   wd( Q1, O) &
    wd( Q1, Q2) &
-    wd( O, Q2) & col( Q1, O, Q2) & col( O, X, Q1) ) => col( Q1, Q2, X) )))
+    wd( O, Q2) & col( Q1, O, Q2) & col( O, X, Q1) ) => col( Q1, Q2, X)))
 ).
 
 fof(pipo,conjecture,
@@ -5889,7 +5889,7 @@ fof(pipo,conjecture,
    wd( H, A) & col( H, A, C) & col( A, B, C) ) => col( H, B, A)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, E, Eprime, T, Eprimeprime] : ( (
+(! [A, B, C, D, E, Eprime, T, Eprimeprime] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -5924,7 +5924,7 @@ fof(pipo,conjecture,
  wd( A, B) &
  wd( A, C) &
   wd( C, D) &
-   col( A, B, C) & col( A, M, B) & col( C, M, D) ) => col( A, M, C) )))
+   col( A, B, C) & col( A, M, B) & col( C, M, D) ) => col( A, M, C)))
 ).
 
 fof(pipo,conjecture,
@@ -5999,7 +5999,7 @@ fof(pipo,conjecture,
    wd( A, C) & col( B, A, Bprime) & col( A, Bprime, C) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, E, Eprime, T, Eprimeprime, Cprime, Dprime] : ( (,
+(! [A, B, C, D, E, Eprime, T, Eprimeprime, Cprime, Dprime] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -6101,7 +6101,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, E, Eprime, T, Eprimeprime, Cprime, Dprime] : ( (,
+(! [A, B, C, D, E, Eprime, T, Eprimeprime, Cprime, Dprime] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -6242,7 +6242,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, X, A, B, C, M1, M2, P1, P2] : ( (,
+(! [O, X, A, B, C, M1, M2, P1, P2] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -6385,7 +6385,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, E, F, P, Q, Pprime, Qprime] : ( (,
+(! [A, B, C, D, E, F, P, Q, Pprime, Qprime] : ( (
  wd( P, Q) &
  wd( B, Q) &
   wd( A, B) &
@@ -6405,7 +6405,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, X Y] : ( (,
+(! [A, B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, X Y] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -6644,7 +6644,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
+(! [A, B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -6747,7 +6747,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
+(! [A, B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -6895,7 +6895,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R Y] : ( (,
+(! [A, B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R Y] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -7022,7 +7022,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
+(! [A, B, C D, E, Eprime, T, Eprimeprime, Cprime, Dprime, R X, Y ] : ( (
  wd( C, D) &
  wd( A, B) &
   wd( A, C) &
@@ -7091,7 +7091,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [N M, P, Q, R, S, Pprime, Qprime, Rprime, Sprime] : ( (,
+(! [N M, P, Q, R, S, Pprime, Qprime, Rprime, Sprime] : ( (
  wd( N, M) &
  wd( M, P) &
   wd( P, Q) &
@@ -7188,7 +7188,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [N M, P, Q, R, S, Pprime, Qprime, Rprime, Sprime] : ( (,
+(! [N M, P, Q, R, S, Pprime, Qprime, Rprime, Sprime] : ( (
  wd( N, M) &
  wd( M, P) &
   wd( P, Q) &
@@ -7232,7 +7232,7 @@ fof(pipo,conjecture,
  wd( P, Q) &
   wd( P, Z1) &
    wd( Q, Z1) &
-    wd( Z1, Z2) & col( P, Q, Z1) & col( Z1, P, Z2) ) => col( Z1, Z2, Q) )))
+    wd( Z1, Z2) & col( P, Q, Z1) & col( Z1, P, Z2) ) => col( Z1, Z2, Q)))
 ).
 
 fof(pipo,conjecture,
@@ -7367,7 +7367,7 @@ fof(pipo,conjecture,
          col( B, C, Bprime) & col( Cprime, C, Bprime) ) => col( O, B, Bprime)))  ).
 
 fof(pipo,conjecture,
-(! [A, C, D, P, Q, X, Y, X0, Y0] : ( (,
+(! [A, C, D, P, Q, X, Y, X0, Y0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -7478,7 +7478,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, C, D, P, Q, X, Y, X0, Y0] : ( (,
+(! [A, C, D, P, Q, X, Y, X0, Y0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -7591,7 +7591,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (,
+(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (
  wd( Cprime, O) &
  wd( Bprime, O) &
   wd( B, O) &
@@ -7618,7 +7618,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, P, Q, R, Z, T, I, X0] : ( (,
+(! [A, B, C D, P, Q, R, Z, T, I, X0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -7642,7 +7642,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, E F, Aprime, Bprime, Eprime, Fprime, C1, C2, E1 ] : ( (
+(! [A, B, C D, E F, Aprime, Bprime, Eprime, Fprime, C1, C2, E1 ] : ( (
  wd( A, B) &
  wd( E1, B) &
   wd( B, C2) &
@@ -7659,7 +7659,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (,
+(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (
  wd( Cprime, O) &
  wd( Bprime, O) &
   wd( B, O) &
@@ -7687,7 +7687,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (,
+(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (
  wd( Cprime, O) &
  wd( Bprime, O) &
   wd( B, O) &
@@ -7810,7 +7810,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, P, Q, R, Z, T, I, X0] : ( (,
+(! [A, B, C D, P, Q, R, Z, T, I, X0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -7836,7 +7836,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (,
+(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (
  wd( Cprime, O) &
  wd( Bprime, O) &
   wd( B, O) &
@@ -7885,7 +7885,7 @@ fof(pipo,conjecture,
           col( P, R, Q) & col( C, R, Z) ) => col( P, Q, C)))  ).
 
 fof(pipo,conjecture,
-(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (,
+(! [O, B, C, Bprime, Cprime, X, Y, B0, C0] : ( (
  wd( Cprime, O) &
  wd( Bprime, O) &
   wd( B, O) &
@@ -7920,7 +7920,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, P, Q, R, Z, T, I, Y0] : ( (,
+(! [A, B, C D, P, Q, R, Z, T, I, Y0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -8060,7 +8060,7 @@ fof(pipo,conjecture,
  wd( O, P) &
   wd( A, B) &
    col( A, B, X) &
-    col( A, B, T) & col( T, X, Tprime) & col( A, B, T) ) => col( A, X, T) )))
+    col( A, B, T) & col( T, X, Tprime) & col( A, B, T) ) => col( A, X, T)))
 ).
 
 fof(pipo,conjecture,
@@ -8126,7 +8126,7 @@ fof(pipo,conjecture,
   col( Q, A, B) & col( A, B, X) & col( X, M, Q) ) => col( A, B, M)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C D, P, Q, R, Z, T, I, Y0] : ( (,
+(! [A, B, C D, P, Q, R, Z, T, I, Y0] : ( (
  wd( A, C) &
  wd( P, Q) &
   wd( C, D) &
@@ -8428,7 +8428,7 @@ fof(pipo,conjecture,
    wd( T, B) & col( A, B, T) & col( B, C, T) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A1, A2, B1, B2, C1, C2, P, Q, B3] : ( (,
+(! [A1, A2, B1, B2, C1, C2, P, Q, B3] : ( (
  wd( P, C1) &
  wd( P, Q) &
   wd( Q, C1) &
@@ -8749,7 +8749,7 @@ fof(pipo,conjecture,
     wd( D, C) & col( A, B, D) & col( D, A, C) ) => col( B, A, C)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, P, Q, C0, Q0, C1] : ( (,
+(! [A, B, C, D, P, Q, C0, Q0, C1] : ( (
  wd( P, C0) &
  wd( P, Q) &
   wd( P, Q0) &
@@ -8972,7 +8972,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A1, A2, B1, B2, C1, C2, P, Q, B3] : ( (,
+(! [A1, A2, B1, B2, C1, C2, P, Q, B3] : ( (
  wd( P, C1) &
  wd( P, Q) &
   wd( Q, C1) &
@@ -9290,7 +9290,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, P, Q, C0, Q0, C1, A0] : ( (,
+(! [A, B, C, D, P, Q, C0, Q0, C1, A0] : ( (
  wd( P, C0) &
  wd( P, Q) &
   wd( P, Q0) &
@@ -9552,7 +9552,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z] : ( (,
+(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z] : ( (
  wd( P, Q) &
  wd( A, B) &
   wd( B, C) &
@@ -9710,7 +9710,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, O P, Q, R ] : ( (
+(! [A, B, C D, A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, O P, Q, R ] : ( (
  wd( A, B) &
  wd( B, D) &
   wd( A, D) &
@@ -9774,7 +9774,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, O P, Q, R ] : ( (
+(! [A, B, C D, A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, O P, Q, R ] : ( (
  wd( A, B) &
  wd( B, D) &
   wd( A, D) &
@@ -10240,7 +10240,7 @@ fof(pipo,conjecture,
  wd( O, A0) &
  wd( B, A0) &
   wd( A0, A1) &
-   wd( O, B) & col( A0, O, A1) & col( A0, A1, B) ) => col( O, A0, B) )))
+   wd( O, B) & col( A0, O, A1) & col( A0, A1, B) ) => col( O, A0, B)))
 ).
 
 fof(pipo,conjecture,
@@ -10362,7 +10362,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z T] : ( (,
+(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z T] : ( (
  wd( P, Q) &
  wd( T, Z) &
   wd( B, Cprime) &
@@ -10388,7 +10388,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z T] : ( (,
+(! [P Q, A B, C, Dprime, Pprime, Cprime, Dprimeprime, Pprimeprime, Z T] : ( (
  wd( P, Q) &
  wd( T, Z) &
   wd( B, Cprime) &
@@ -10929,7 +10929,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C S, T U, G H, I, Bprime, Cprime, Pprime, Qprime, Rprime, Cprimeprime] : ( (
+(! [A, B, C S, T U, G H, I, Bprime, Cprime, Pprime, Qprime, Rprime, Cprimeprime] : ( (
  wd( A, Bprime) &
  wd( Bprime, Cprime) &
   wd( A, Cprime) &
@@ -11206,7 +11206,7 @@ fof(pipo,conjecture,
  col( A, B, P) & col( A, B, T) & col( T, P, A) ) => col( T, P, B)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11226,7 +11226,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime] : ( (
+(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime] : ( (
  wd( A, M1) &
  wd( A, Aprime) &
   wd( Bprime, A) &
@@ -11248,7 +11248,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11270,7 +11270,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (,
+(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (
  wd( M1, I) &
  wd( Bprimeprime, M1) &
   wd( Bprime, Aprimeprime) &
@@ -11299,7 +11299,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11322,7 +11322,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11373,7 +11373,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (,
+(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (
  wd( M1, I) &
  wd( Bprimeprime, M1) &
   wd( Bprime, Aprimeprime) &
@@ -11458,7 +11458,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11521,7 +11521,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11550,7 +11550,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (,
+(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (
  wd( M1, I) &
  wd( Bprimeprime, M1) &
   wd( Aprime, Bprime) &
@@ -11603,7 +11603,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (,
+(! [A, B, X, Y, T, PX, PY, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( A, T) &
   wd( PX, A) &
@@ -11635,7 +11635,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (,
+(! [A, B, Aprime, Bprime, M1, Bprimeprime, M2, Aprimeprime, I] : ( (
  wd( M1, I) &
  wd( Bprimeprime, M1) &
   wd( Aprime, Bprime) &
@@ -11702,14 +11702,14 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, D, E, C] : ( (
+(! [A, B, D, E, C] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( A, E) & (ColH A B D & (ColH A B E & (ColH A C D & ColH A B C
 ).
 
 fof(pipo,conjecture,
-(! [A B, D, E, C] : ( (
+(! [A, B, D, E, C] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( A, E) & (ColH A B D & (ColH A B E & (ColH A C E & ColH A B C
@@ -11736,7 +11736,7 @@ fof(pipo,conjecture,
  wd( A, B) & wd( A, D) & (ColH A B D & (ColH A C D & ColH A B C ).
 
 fof(pipo,conjecture,
-(! [A B, D, C, F] : ( (
+(! [A, B, D, C, F] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, A) &
@@ -11745,7 +11745,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, D, E, C] : ( (
+(! [A, B, D, E, C] : ( (
  wd( A, B) &
  wd( B, E) &
   wd( A, E) &
@@ -11772,7 +11772,7 @@ fof(pipo,conjecture,
  wd( A, Aprime) &
  wd( B, Bprime) &
   wd( B, A) &
-   wd( B, Aprime) & col( A, B, Bprime) & col( Aprime, B, Bprime) ) => col( B, A, Aprime) )))
+   wd( B, Aprime) & col( A, B, Bprime) & col( Aprime, B, Bprime) ) => col( B, A, Aprime)))
 ).
 
 fof(pipo,conjecture,
@@ -11828,7 +11828,7 @@ fof(pipo,conjecture,
         col( P, Q, Aprime) & col( P, Q, B) ) => col( B, Aprime, P)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11842,7 +11842,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11868,7 +11868,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11882,7 +11882,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11909,7 +11909,7 @@ fof(pipo,conjecture,
          col( P, Q, Cprime) & col( P, A, B) ) => col( Q, A, B)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11923,7 +11923,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G] : ( (
+(! [A, B, C, D, G] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -11996,7 +11996,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12011,7 +12011,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12078,7 +12078,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12093,7 +12093,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12109,7 +12109,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12138,7 +12138,7 @@ fof(pipo,conjecture,
           col( C, P, Q) & col( A, Bprime, C) ) => col( Bprime, C, P)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, I] : ( (
+(! [A, B, C, D, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12236,7 +12236,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G, E, F] : ( (
+(! [A, B, C, D, G, E, F] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12312,7 +12312,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G, E, F] : ( (
+(! [A, B, C, D, G, E, F] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12335,7 +12335,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, G, E, F] : ( (
+(! [A, B, C, D, G, E, F] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12423,7 +12423,7 @@ fof(pipo,conjecture,
            col( Cprime, A, D) & col( A, D, P) ) => col( C, A, D)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, E, F, I] : ( (
+(! [A, B, C, D, E, F, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12474,7 +12474,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, D, F] : ( (
+(! [A, B, C, D, F] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12558,7 +12558,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, G, E, F, I] : ( (
+(! [A, B, C D, G, E, F, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12589,7 +12589,7 @@ fof(pipo,conjecture,
    wd( A, P) & col( A, B, Bprime) & col( A, Bprime, P) ) => col( A, B, P)))  ).
 
 fof(pipo,conjecture,
-(! [A B, C D, G, E, F, I] : ( (
+(! [A, B, C D, G, E, F, I] : ( (
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -12646,7 +12646,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (,
+(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (
  wd( O, M) &
  wd( Oprime, M) &
   wd( A, B) &
@@ -12873,7 +12873,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (,
+(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (
  wd( C1, D1) &
  wd( C1, M) &
   wd( D1, M) &
@@ -12969,7 +12969,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (,
+(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (
  wd( C1, D1) &
  wd( C1, M) &
   wd( D1, M) &
@@ -13043,7 +13043,7 @@ fof(pipo,conjecture,
            col( P, Q, A) & col( A, B, C) ) => col( A, Aprime, P)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (,
+(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (
  wd( C1, D1) &
  wd( C1, M) &
   wd( D1, M) &
@@ -13118,7 +13118,7 @@ fof(pipo,conjecture,
            col( P, Q, B) & col( A, B, C) ) => col( Aprime, P, B)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (,
+(! [A, B, C, D, O, Oprime, M, C1, D1] : ( (
  wd( C1, D1) &
  wd( C1, M) &
   wd( D1, M) &
@@ -13223,15 +13223,15 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, D, E, F, x, Dprime] : ( (
+(! [A, B, D, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( D, E) &
    wd( D, Dprime) &
     wd( A, Dprime) &
      wd( E, A) &
-      wd( x, A) &
-       wd( x, D) &
+      wd( X, A) &
+       wd( X, D) &
         wd( F, A) &
          wd( F, D) &
           wd( E, F) &
@@ -13242,7 +13242,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [P, Q, A, B, C, Aprime, Cprime, T, BB] : ( (,
+(! [P, Q, A, B, C, Aprime, Cprime, T, BB] : ( (
  wd( P, Q) &
  wd( P, Aprime) &
   wd( P, B) &
@@ -13275,7 +13275,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, E, F, x, Dprime] : ( (
+(! [A, B, C, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( B, E) &
@@ -13283,8 +13283,8 @@ fof(pipo,conjecture,
     wd( C, Dprime) &
      wd( A, C) &
       wd( E, C) &
-       wd( x, C) &
-        wd( x, B) &
+       wd( X, C) &
+        wd( X, B) &
          wd( F, C) &
           wd( F, B) &
            wd( E, F) &
@@ -13367,7 +13367,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, x, Dprime] : ( (
+(! [A, B, C, D, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13380,8 +13380,8 @@ fof(pipo,conjecture,
          wd( C, D) &
           wd( F, C) &
            wd( F, D) &
-            wd( x, C) &
-             wd( x, D) &
+            wd( X, C) &
+             wd( X, D) &
               wd( E, F) &
                col( A, B, C) &
                 col( A, B, D) & col( D, C, Dprime) ) => col( A, C, D))) 
@@ -13425,7 +13425,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, x, Dprime] : ( (
+(! [A, B, C, D, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13438,8 +13438,8 @@ fof(pipo,conjecture,
          wd( C, D) &
           wd( F, C) &
            wd( F, D) &
-            wd( x, C) &
-             wd( x, D) &
+            wd( X, C) &
+             wd( X, D) &
               wd( E, F) &
                col( A, B, C) &
                 col( A, B, D) & col( D, C, Dprime) ) => col( B, C, D))) 
@@ -13466,7 +13466,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, x, Dprime] : ( (
+(! [A, B, C, D, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13475,8 +13475,8 @@ fof(pipo,conjecture,
      wd( A, C) &
       wd( B, D) &
        wd( C, D) &
-        wd( x, C) &
-         wd( x, D) &
+        wd( X, C) &
+         wd( X, D) &
           col( A, B, C) &
            col( A, B, D) & col( D, C, Dprime) ) => col( A, C, D)))  ).
 
@@ -13502,7 +13502,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, x, Dprime] : ( (
+(! [A, B, C, D, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13516,8 +13516,8 @@ fof(pipo,conjecture,
           wd( C, D) &
            wd( F, C) &
             wd( F, D) &
-             wd( x, C) &
-              wd( x, D) &
+             wd( X, C) &
+              wd( X, D) &
                wd( E, A) &
                 wd( B, F) &
                  col( A, B, C) &
@@ -13574,7 +13574,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, x, Dprime, Aprime] : ( (
+(! [A, B, C, D, X, Dprime, Aprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13583,8 +13583,8 @@ fof(pipo,conjecture,
      wd( A, C) &
       wd( B, D) &
        wd( C, D) &
-        wd( x, C) &
-         wd( x, D) &
+        wd( X, C) &
+         wd( X, D) &
           wd( A, Aprime) &
            wd( B, Aprime) &
             wd( A, A) &
@@ -13646,7 +13646,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, x, Dprime, Aprime] : ( (
+(! [A, B, C, D, X, Dprime, Aprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13655,8 +13655,8 @@ fof(pipo,conjecture,
      wd( A, C) &
       wd( B, D) &
        wd( C, D) &
-        wd( x, C) &
-         wd( x, D) &
+        wd( X, C) &
+         wd( X, D) &
           wd( A, Aprime) &
            wd( B, Aprime) &
             wd( A, A) &
@@ -13696,7 +13696,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, E, F, x, Dprime] : ( (
+(! [A, B, C, D, E, F, X, Dprime] : ( (
  wd( A, B) &
  wd( A, D) &
   wd( B, C) &
@@ -13710,8 +13710,8 @@ fof(pipo,conjecture,
           wd( C, D) &
            wd( F, C) &
             wd( F, D) &
-             wd( x, C) &
-              wd( x, D) &
+             wd( X, C) &
+              wd( X, D) &
                wd( A, E) &
                 wd( A, F) &
                  wd( B, E) &
@@ -13751,7 +13751,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [P, Q, A, B, C, Aprime, Bprime, Cprime, BB] : ( (,
+(! [P, Q, A, B, C, Aprime, Bprime, Cprime, BB] : ( (
  wd( P, Q) &
  wd( P, Aprime) &
   wd( P, Bprime) &
@@ -13861,7 +13861,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (,
+(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (
  wd( Pprime, K) &
  wd( P, K) &
   wd( P, Pprime) &
@@ -13887,7 +13887,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (,
+(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (
  wd( Pprime, K) &
  wd( P, K) &
   wd( P, Pprime) &
@@ -13913,7 +13913,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (,
+(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (
  wd( Pprime, K) &
  wd( P, K) &
   wd( P, Pprime) &
@@ -13955,7 +13955,7 @@ fof(pipo,conjecture,
     wd( A, D) & col( A, B, C) & col( A, B, D) ) => col( B, C, D)))  ).
 
 fof(pipo,conjecture,
-(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (,
+(! [B P, Bprime, Pprime, K, Bprime0, C1, Cprime, C, D] : ( (
  wd( Pprime, K) &
  wd( P, K) &
   wd( P, Pprime) &
@@ -13981,7 +13981,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
  wd( A, B) &
  wd( B, D) &
   wd( A, D) &
@@ -14013,7 +14013,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
  wd( A, B) &
  wd( B, D) &
   wd( A, D) &
@@ -14041,7 +14041,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, Aprimeprime, Cprimeprime, Dprimeprime] : ( (
  wd( A, B) &
  wd( B, D) &
   wd( A, D) &
@@ -14096,7 +14096,7 @@ fof(pipo,conjecture,
  wd( D, C) & col( A, B, D) & col( A, B, C) ) => col( B, C, D)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C , P, Q, x] : ( (
+(! [A, B, C , P, Q, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14104,7 +14104,7 @@ fof(pipo,conjecture,
     wd( Q, C) &
      wd( P, B) &
       wd( P, C) &
-       col( x, Q, P) &
+       col( X, Q, P) &
         col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => col( A, B, C))) 
 ).
 
@@ -14352,7 +14352,7 @@ fof(pipo,conjecture,
  wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) & M = A ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (,
+(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
  wd( A, B) &
  wd( A, Bprime) &
   wd( B, P) &
@@ -14388,7 +14388,7 @@ fof(pipo,conjecture,
  wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) & M = P ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (,
+(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
  wd( A, B) &
  wd( A, Bprime) &
   wd( B, P) &
@@ -14496,7 +14496,7 @@ fof(pipo,conjecture,
            col( A, B, D) & col( Cprime, C, D) ) => col( A, Bprime, C)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (,
+(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
  wd( A, B) &
  wd( A, Bprime) &
   wd( D, C) &
@@ -14519,7 +14519,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14529,7 +14529,7 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & R = B
 ).
@@ -14601,7 +14601,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14611,7 +14611,7 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & R = A
 ).
@@ -14647,7 +14647,7 @@ fof(pipo,conjecture,
     (ColH Z1 I Z2 & (ColH Y Z1 Z2 & (ColH X Z1 Z2 & ColH X Y Z2 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (,
+(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
  wd( A, B) &
  wd( A, Bprime) &
   wd( D, C) &
@@ -14681,7 +14681,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14691,13 +14691,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & P = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14707,13 +14707,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & P = B
 ).
 
 fof(pipo,conjecture,
-(! [A B, C O, X P, U V, Yaux, Y] : ( (
+(! [A, B, C O, X P, U V, Yaux, Y] : ( (
  wd( U, V) &
  wd( A, B) &
   wd( B, C) &
@@ -14727,7 +14727,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (,
+(! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
  wd( A, B) &
  wd( A, Bprime) &
   wd( D, C) &
@@ -14762,7 +14762,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14772,13 +14772,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & Q = C
 ).
 
 fof(pipo,conjecture,
-(! [A B, C Aprime, Bprime, Cprime, B0 P, Bprimeprime] : ( (
+(! [A, B, C Aprime, Bprime, Cprime, B0 P, Bprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14793,7 +14793,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14803,13 +14803,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & Q = A
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14819,13 +14819,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & A = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14835,13 +14835,13 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & B = C
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, Aprime, Bprime, Cprime, P] : ( (
+(! [A, B, C, Aprime, Bprime, Cprime, P] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14854,7 +14854,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14864,7 +14864,7 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) & col( C, P, B) & col( A, P, C) & A = B
 ).
@@ -14945,7 +14945,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -14955,7 +14955,7 @@ fof(pipo,conjecture,
       wd( P, C) &
        wd( R, A) &
         wd( R, B) &
-         col( x, Q, P) &
+         col( X, Q, P) &
           col( B, R, A) &
            col( C, Q, A) &
             col( C, P, B) & col( A, P, C) ) => col( A, B, C)))  ).
@@ -14986,7 +14986,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C Aprime, Bprime, Cprime, Bprimeprime, Cprimeprime] : ( (
+(! [A, B, C Aprime, Bprime, Cprime, Bprimeprime, Cprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -15084,7 +15084,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, P, Q, R, x] : ( (
+(! [A, B, C, P, Q, R, X] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -15095,19 +15095,19 @@ fof(pipo,conjecture,
        wd( R, A) &
         wd( R, B) &
          wd( A, P) &
-          wd( C, x) &
-           wd( x, A) &
-            wd( P, x) &
+          wd( C, X) &
+           wd( X, A) &
+            wd( P, X) &
              wd( Q, P) &
-              wd( Q, x) &
-               col( x, Q, P) &
+              wd( Q, X) &
+               col( X, Q, P) &
                 col( B, R, A) &
                  col( C, Q, A) &
                   col( C, P, B) &
-                   col( P, x, A) &
-                    col( P, x, B) &
+                   col( P, X, A) &
+                    col( P, X, B) &
                      col( P, A, B) &
-                      col( x, A, B) &
+                      col( X, A, B) &
                        col( P, Q, A) &
                         col( P, Q, B) & col( Q, A, B) ) => col( A, B, C))) 
 ).
@@ -15182,7 +15182,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15202,7 +15202,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15224,7 +15224,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15247,7 +15247,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15269,7 +15269,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15303,7 +15303,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15323,7 +15323,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15350,7 +15350,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15372,7 +15372,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15395,7 +15395,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15417,7 +15417,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, M, Aprimeprime, Cprimeprime] : ( (
  wd( Aprime, Bprime) &
  wd( Cprime, Bprime) &
   wd( B, Aprimeprime) &
@@ -15439,7 +15439,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, Q, I] : ( (
+(! [A, B, C, Q, I] : ( (
  wd( I, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -15456,7 +15456,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, I] : ( (
+(! [A, B, C, P, I] : ( (
  wd( P, I) &
  wd( A, B) &
   wd( A, C) &
@@ -15564,7 +15564,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, Q] : ( (
+(! [A, B, C, P, Q] : ( (
  wd( P, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -15579,7 +15579,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, Q] : ( (
+(! [A, B, C, P, Q] : ( (
  wd( P, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -15817,7 +15817,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, Q, I] : ( (
+(! [A, B, C, Q, I] : ( (
  wd( I, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -15835,7 +15835,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, I] : ( (
+(! [A, B, C, P, I] : ( (
  wd( P, I) &
  wd( A, B) &
   wd( A, C) &
@@ -15981,7 +15981,7 @@ fof(pipo,conjecture,
  wd( L21, L22) &
   col( L11, L12, Aprime) &
    col( L11, L12, Bprime) &
-    col( L11, L21, L22) & col( L12, L21, L22) ) => col( L21, L22, Aprime) )))
+    col( L11, L21, L22) & col( L12, L21, L22) ) => col( L21, L22, Aprime)))
 ).
 
 fof(pipo,conjecture,
@@ -15990,7 +15990,7 @@ fof(pipo,conjecture,
  wd( L21, L22) &
   col( L11, L12, A) &
    col( L11, L12, Bprime) &
-    col( L11, L21, L22) & col( L12, L21, L22) ) => col( L21, L22, Bprime) )))
+    col( L11, L21, L22) & col( L12, L21, L22) ) => col( L21, L22, Bprime)))
 ).
 
 fof(pipo,conjecture,
@@ -16034,7 +16034,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, Q] : ( (
+(! [A, B, C, P, Q] : ( (
  wd( P, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -16049,7 +16049,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, P, Q] : ( (
+(! [A, B, C, P, Q] : ( (
  wd( P, Q) &
  wd( A, B) &
   wd( A, C) &
@@ -16167,7 +16167,7 @@ fof(pipo,conjecture,
  wd( B, C) &
   wd( A, Aprime) &
    wd( Aprime, C) &
-    wd( B, A) & col( A, B, C) & col( Aprime, B, C) ) => col( B, Aprime, A) )))
+    wd( B, A) & col( A, B, C) & col( Aprime, B, C) ) => col( B, Aprime, A)))
 ).
 
 fof(pipo,conjecture,
@@ -16864,23 +16864,23 @@ fof(pipo,conjecture,
       col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & A = B ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & x = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, O, L, Lprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, O, L, Lprime] : ( (
  wd( B, O) &
  wd( C, O) &
   wd( Bprime, O) &
@@ -16905,23 +16905,23 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & x = B
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x = B
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, Aprime, Bprime, Cprime, O, L, Lprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, O, L, Lprime] : ( (
  wd( B, O) &
  wd( C, O) &
   wd( Bprime, O) &
@@ -16982,110 +16982,110 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & x0 = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x0 = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & x0 = A
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x0 = A
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & A = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & A = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & B = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & B = C
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, x, B) & col( A, x, B) & A = B
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) & A = B
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, x0, G, Gprime] : ( (
+(! [A, B, C, X, x0, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
-       col( x, G, A) &
+     wd( X, B) &
+      wd( X, C) &
+       col( X, G, A) &
         col( x0, G, B) &
-         col( x, Gprime, A) &
+         col( X, Gprime, A) &
           col( x0, Gprime, B) &
            col( C, x0, A) &
-            col( C, x, B) & col( A, x, B) ) => col( A, B, C)))  ).
+            col( C, X, B) & col( A, X, B) ) => col( A, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, G, Gprime] : ( (
+(! [A, B, C, X, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
-   wd( x, B) &
-    wd( x, C) &
-     col( x, G, A) &
-      col( x, Gprime, A) & col( C, B, A) & col( C, x, B) & x = C ).
+   wd( X, B) &
+    wd( X, C) &
+     col( X, G, A) &
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & x = C ).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime, Cprime, X ] : ( (
@@ -17111,14 +17111,14 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, G, Gprime] : ( (
+(! [A, B, C, X, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
-   wd( x, B) &
-    wd( x, C) &
-     col( x, G, A) &
-      col( x, Gprime, A) & col( C, B, A) & col( C, x, B) & x = B ).
+   wd( X, B) &
+    wd( X, C) &
+     col( X, G, A) &
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & x = B ).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime, Cprime, X ] : ( (
@@ -17144,14 +17144,14 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, G, Gprime] : ( (
+(! [A, B, C, X, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
-   wd( x, B) &
-    wd( x, C) &
-     col( x, G, A) &
-      col( x, Gprime, A) & col( C, B, A) & col( C, x, B) & A = C ).
+   wd( X, B) &
+    wd( X, C) &
+     col( X, G, A) &
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & A = C ).
 
 fof(pipo,conjecture,
 (! [O, A, B, Oprime, Aprime, Bprime, Cprime] : ( (
@@ -17176,14 +17176,14 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, G, Gprime] : ( (
+(! [A, B, C, X, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
-   wd( x, B) &
-    wd( x, C) &
-     col( x, G, A) &
-      col( x, Gprime, A) & col( C, B, A) & col( C, x, B) & B = C ).
+   wd( X, B) &
+    wd( X, C) &
+     col( X, G, A) &
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & B = C ).
 
 fof(pipo,conjecture,
 (! [O, A, B, Oprime, Aprime, Bprime, Cprime] : ( (
@@ -17207,14 +17207,14 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, x, G, Gprime] : ( (
+(! [A, B, C, X, G, Gprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
-   wd( x, B) &
-    wd( x, C) &
-     col( x, G, A) &
-      col( x, Gprime, A) & col( C, B, A) & col( C, x, B) & A = B ).
+   wd( X, B) &
+    wd( X, C) &
+     col( X, G, A) &
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & A = B ).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime] : ( (
@@ -18442,7 +18442,7 @@ fof(pipo,conjecture,
                                          col( N, A, B) &
                                           col( N, L, Bprime) &
                                            col( P, A, O) &
-                                            col( P, N, L) ) => col( P, O, Aprime) )))
+                                            col( P, N, L) ) => col( P, O, Aprime)))
 ).
 
 fof(pipo,conjecture,
@@ -18635,7 +18635,7 @@ fof(pipo,conjecture,
                                          col( N, A, B) &
                                           col( N, L, Bprime) &
                                            col( P, A, O) &
-                                            col( P, N, L) ) => col( P, N, Bprime) )))
+                                            col( P, N, L) ) => col( P, N, Bprime)))
 ).
 
 fof(pipo,conjecture,
@@ -19338,7 +19338,7 @@ fof(pipo,conjecture,
                                           col( P, A, N) &
                                            col( P, O, C) &
                                             col( P, N, C) &
-                                             col( N, A, C) ) => col( A, B, C) )))
+                                             col( N, A, C) ) => col( A, B, C)))
 ).
 
 fof(pipo,conjecture,
@@ -20182,27 +20182,27 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [B, C, G, x, x0] : ( (
+(! [B, C, G, X, x0] : ( (
  wd( G, B) &
  wd( B, C) &
   wd( G, C) &
    wd( x0, G) &
     wd( x0, C) &
-     wd( x, B) &
-      wd( x, C) &
+     wd( X, B) &
+      wd( X, C) &
        col( G, B, x0) &
-        col( x0, G, C) & col( x, B, C) ) => col( G, B, C)))  ).
+        col( x0, G, C) & col( X, B, C) ) => col( G, B, C)))  ).
 
 fof(pipo,conjecture,
-(! [A, C, G, x, x0] : ( (
+(! [A, C, G, X, x0] : ( (
  wd( A, G) &
  wd( G, C) &
   wd( A, C) &
    wd( x0, A) &
     wd( x0, C) &
-     wd( x, G) &
-      wd( x, C) &
-       col( G, A, x) & col( x0, A, C) & col( x, G, C) ) => col( A, G, C))) 
+     wd( X, G) &
+      wd( X, C) &
+       col( G, A, X) & col( x0, A, C) & col( X, G, C) ) => col( A, G, C))) 
 ).
 
 fof(pipo,conjecture,
@@ -20260,17 +20260,17 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, G, x, x0] : ( (
+(! [A, B, G, X, x0] : ( (
  wd( A, B) &
  wd( B, G) &
   wd( A, G) &
    wd( x0, A) &
     wd( x0, G) &
-     wd( x, B) &
-      wd( x, G) &
-       col( G, A, x) &
+     wd( X, B) &
+      wd( X, G) &
+       col( G, A, X) &
         col( G, B, x0) &
-         col( x, B, G) & col( x0, A, G) ) => col( A, B, G)))  ).
+         col( X, B, G) & col( x0, A, G) ) => col( A, B, G)))  ).
 
 fof(pipo,conjecture,
 (! [B, C, Gprime, Aprime, Gprimeprime, Cprime, I] : ( (
@@ -20292,7 +20292,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (,
+(! [A, B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -20318,7 +20318,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, G, Bprime, I, Cprime, Gprimeprime] : ( (
+(! [A, B, C, G, Bprime, I, Cprime, Gprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -20376,7 +20376,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (,
+(! [A, B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -20460,7 +20460,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (,
+(! [A, B, C, G, Gprime, Aprime, Bprime, Cprime, Gprimeprime, I] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -20495,7 +20495,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, G, Aprime, Aprimeprime, Bprime, Cprime] : ( (
+(! [A, B, C, G, Aprime, Aprimeprime, Bprime, Cprime] : ( (
  wd( A, G) &
  wd( A, B) &
   wd( B, C) &
@@ -20584,7 +20584,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, G, Bprimeprime, Bprime, Cprime] : ( (
+(! [A, B, G, Bprimeprime, Bprime, Cprime] : ( (
  wd( A, B) &
  wd( B, G) &
   wd( A, G) &
@@ -20650,7 +20650,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime] : ( (,
+(! [A, B, C, G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime] : ( (
  wd( G, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20676,7 +20676,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20714,7 +20714,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20752,7 +20752,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20790,7 +20790,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20828,7 +20828,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20865,7 +20865,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20902,7 +20902,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -20939,7 +20939,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -20976,7 +20976,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -21015,7 +21015,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -21054,7 +21054,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C, Aprime, Bprime, Cprime, Dprime, O, E, Eprime] : ( (,
+(! [A, B, C, Aprime, Bprime, Cprime, Dprime, O, E, Eprime] : ( (
  wd( A, Aprime) &
  wd( A, C) &
   wd( O, A) &
@@ -21163,7 +21163,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21200,7 +21200,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21237,7 +21237,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21274,7 +21274,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21311,7 +21311,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21348,7 +21348,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( Aprime, Bprimeprime) &
  wd( A, B) &
   wd( B, C) &
@@ -21385,7 +21385,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -21422,7 +21422,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -21461,7 +21461,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
+(! [A, B, C G, Aprime, Aprimeprime, Bprime, Cprime, Bprimeprime, Bprimeprimeprime] : ( (
  wd( A, B) &
  wd( B, C) &
   wd( A, C) &
@@ -21572,7 +21572,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21609,7 +21609,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21647,7 +21647,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21686,7 +21686,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21726,7 +21726,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21768,7 +21768,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21811,7 +21811,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21855,7 +21855,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Dprime, X Y, E, Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Dprime, X Y, E, Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -21982,7 +21982,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -22039,7 +22039,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -22097,7 +22097,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -22155,7 +22155,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (,
+(! [A, B, C D, Aprime, Bprime, Cprime, Dprime, X Y, E Z, Eprime] : ( (
  wd( X, A) &
  wd( X, Aprime) &
   wd( X, C) &
@@ -22214,7 +22214,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [A, B, C, G, H, O, Aprime, Bprime, Cprime] : ( (,
+(! [A, B, C, G, H, O, Aprime, Bprime, Cprime] : ( (
  wd( O, G) &
  wd( O, H) &
   wd( O, Aprime) &
@@ -22673,7 +22673,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, B, X, Y, C, Aprimeprime, Cprime, Aprime] : ( (,
+(! [O E, Eprime, B, X, Y, C, Aprimeprime, Cprime, Aprime] : ( (
  wd( B, O) &
  wd( O, Eprime) &
   wd( B, Cprime) &
@@ -22915,7 +22915,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( O, E) &
@@ -22937,7 +22937,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( O, E) &
@@ -22959,7 +22959,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( O, E) &
@@ -22981,7 +22981,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Pprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( O, E) &
@@ -23283,7 +23283,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, Oprime, Bprime, Cprime, A1] : ( (,
+(! [O E, Eprime, A, B, C, Oprime, Bprime, Cprime, A1] : ( (
  wd( O, E) &
  wd( Oprime, Eprime) &
   wd( O, Oprime) &
@@ -23305,7 +23305,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (,
+(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (
  wd( O, E) &
  wd( Oprime, Eprime) &
   wd( A, O) &
@@ -23325,7 +23325,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (,
+(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (
  wd( O, E) &
  wd( Oprime, Eprime) &
   wd( A, O) &
@@ -23350,7 +23350,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (,
+(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, A1] : ( (
  wd( O, E) &
  wd( Oprime, Eprime) &
   wd( A, O) &
@@ -23472,7 +23472,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23517,7 +23517,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23543,7 +23543,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23743,7 +23743,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23782,7 +23782,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23893,7 +23893,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23931,7 +23931,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -23970,7 +23970,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, Eprimeprime, A, B, C, Bprime, Bprimeprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -24083,7 +24083,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (
  wd( O, Eprime) &
  wd( A, O) &
   wd( B, O) &
@@ -24107,7 +24107,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (
  wd( O, Eprime) &
  wd( A, O) &
   wd( B, O) &
@@ -24130,7 +24130,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (,
+(! [O, E, Eprime, A, B, C, Aprime, Bprime, Cprime] : ( (
  wd( O, Eprime) &
  wd( A, O) &
   wd( B, O) &
@@ -24240,7 +24240,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, AB, BC, ABC] : ( (,
+(! [O, E, Eprime, A, B, C, AB, BC, ABC] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24383,7 +24383,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, Bprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, Bprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24405,7 +24405,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, BCprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, BCprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24425,7 +24425,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, Bprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, Cprime, Bprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24449,7 +24449,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, BC, ABC, Bprime, Cprime, BCprime] : ( (,
+(! [O E, Eprime, A B, C, BC, ABC, Bprime, Cprime, BCprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24470,7 +24470,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, ABC, Cprime, Bprime, BCprime] : ( (,
+(! [O E, Eprime, A B, C, AB, ABC, Cprime, Bprime, BCprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24491,7 +24491,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, AB, BC, ABC] : ( (,
+(! [O, E, Eprime, A, B, C, AB, BC, ABC] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24508,7 +24508,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Cprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24614,7 +24614,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, AB, ABC, BCprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, AB, ABC, BCprime, Bprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24633,7 +24633,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Bprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Bprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24654,7 +24654,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Bprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Bprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24676,7 +24676,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Cprime] : ( (,
+(! [O E, Eprime, A B, C, AB, BC, ABC, BCprime, Cprime] : ( (
  wd( A, O) &
  wd( B, O) &
   wd( C, O) &
@@ -24796,7 +24796,7 @@ fof(pipo,conjecture,
           col( O, Eprime, C) & col( O, Eprime, Aprime) ) => col( O, E, Eprime)))  ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, Aprime, B, C, Bprime, Bprimeprime] : ( (,
+(! [O, E, Eprime, A, Aprime, B, C, Bprime, Bprimeprime] : ( (
  wd( B, O) &
  wd( Aprime, O) &
   wd( B, Bprime) &
@@ -24858,7 +24858,7 @@ fof(pipo,conjecture,
           col( O, Eprime, C) & col( O, Eprime, C) ) => col( O, E, Eprime)))  ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprime, Cprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprime, Cprime, Dprime] : ( (
  wd( O, E) &
  wd( O, Eprime) &
   wd( E, Eprime) &
@@ -24990,7 +24990,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, Eprimeprime] : ( (,
+(! [O E, Eprime, A B, C, Oprime, Aprime, Bprime, Cprime, Eprimeprime] : ( (
  wd( O, E) &
  wd( Oprime, Eprime) &
   wd( A, O) &
@@ -26034,7 +26034,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, Bprimeprime, Dprime] : ( (,
+(! [O, E, Eprime, A, B, C, D, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26054,7 +26054,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26075,7 +26075,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26095,7 +26095,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, Bprime, Dprime] : ( (,
+(! [O, E, Eprime, A, B, C, D, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26116,7 +26116,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, Bprime, Dprime] : ( (,
+(! [O, E, Eprime, A, B, C, D, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26140,7 +26140,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26160,7 +26160,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, Bprimeprime, Dprime] : ( (,
+(! [O, E, Eprime, A, B, C, D, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26179,7 +26179,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26203,7 +26203,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26226,7 +26226,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26250,7 +26250,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26274,7 +26274,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26297,7 +26297,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26321,7 +26321,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26344,7 +26344,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26370,7 +26370,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26395,7 +26395,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26420,7 +26420,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26446,7 +26446,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26472,7 +26472,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, X, Bprimeprime, Bprime, Dprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26497,7 +26497,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (,
+(! [O E, Eprime, A, B, C, D, X, Bprimeprime, Bprime] : ( (
  wd( C, O) &
  wd( A, O) &
   wd( B, O) &
@@ -26600,7 +26600,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprime, X, Bprimeprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprime, X, Bprimeprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26622,7 +26622,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26649,7 +26649,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26676,7 +26676,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26701,7 +26701,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26724,7 +26724,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26747,7 +26747,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26770,7 +26770,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (,
+(! [O E, Eprime, A B, C, D, Bprime, X, Bprimeprime, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -26793,7 +26793,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (,
+(! [O E, Eprime, A, B, C, D, Bprime, X, Dprime] : ( (
  wd( C, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27271,7 +27271,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, U, Xu] : ( (,
+(! [O, E, Eprime, A, B, C, D, U, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27296,7 +27296,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C, D, U, Xu] : ( (,
+(! [O, E, Eprime, A, B, C, D, U, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27322,7 +27322,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27344,7 +27344,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27366,7 +27366,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27388,7 +27388,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27411,7 +27411,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27435,7 +27435,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (,
+(! [O E, Eprime, A, B, C, D, U, Bu, Xu] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27458,7 +27458,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (,
+(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27482,7 +27482,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (,
+(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27506,7 +27506,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (,
+(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -27530,7 +27530,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (,
+(! [O E, Eprime, A B, C, D, U, Bu, Xu, Du] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &
@@ -28018,7 +28018,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, D, A1, B1, C1, D1] : ( (,
+(! [O E, Eprime, P A, B C, D, A1, B1, C1, D1] : ( (
  wd( O, E) &
  wd( P, B) &
   wd( A, B) &
@@ -28099,7 +28099,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (,
+(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (
  wd( O, E) &
  wd( A, C) &
   wd( B, P) &
@@ -28132,7 +28132,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (,
+(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (
  wd( O, E) &
  wd( A, C) &
   wd( B, P) &
@@ -28161,7 +28161,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (,
+(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (
  wd( O, E) &
  wd( A, C) &
   wd( B, P) &
@@ -28190,7 +28190,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (,
+(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (
  wd( O, E) &
  wd( A, C) &
   wd( B, P) &
@@ -28219,7 +28219,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (,
+(! [O E, Eprime, P A, B C, A1, B1, C1, C1prime, M] : ( (
  wd( O, E) &
  wd( A, C) &
   wd( B, P) &
@@ -28906,7 +28906,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (,
+(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (
  wd( O, E) &
  wd( AB, O) &
   wd( H, A) &
@@ -28926,7 +28926,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (,
+(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (
  wd( O, E) &
  wd( AB, O) &
   wd( H, A) &
@@ -28945,7 +28945,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (,
+(! [O E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (
  wd( O, E) &
  wd( AB, O) &
   wd( H, A) &
@@ -29017,7 +29017,7 @@ fof(pipo,conjecture,
          col( E, A, Eprime) & col( Bprime, O, Eprime) ) => col( O, E, Eprime)))  ).
 
 fof(pipo,conjecture,
-(! [O E, S, U1, U2, X Y, P, PXprime, PY, PYprime] : ( (,
+(! [O E, S, U1, U2, X Y, P, PXprime, PY, PYprime] : ( (
  wd( O, X) &
  wd( O, Y) &
   wd( O, E) &
@@ -29035,7 +29035,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O E, S, U1, U2, X Y, PX, P, PXprime, PYprime] : ( (,
+(! [O E, S, U1, U2, X Y, PX, P, PXprime, PYprime] : ( (
  wd( O, X) &
  wd( O, Y) &
   wd( O, E) &
@@ -29494,7 +29494,7 @@ fof(pipo,conjecture,
        col( O, E, C1) & col( O, E, C2) ) => col( C1, O, C2)))  ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C1, C2, B1, B2] : ( (,
+(! [O, E, Eprime, A, B, C1, C2, B1, B2] : ( (
  wd( O, E) &
  wd( A, O) &
   wd( E, Eprime) &
@@ -29510,7 +29510,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [O, E, Eprime, A, B, C1, C2, B1, B2] : ( (,
+(! [O, E, Eprime, A, B, C1, C2, B1, B2] : ( (
  wd( O, E) &
  wd( A, O) &
   wd( E, Eprime) &
