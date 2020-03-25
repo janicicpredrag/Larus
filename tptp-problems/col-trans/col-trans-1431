@@ -1,0 +1,20 @@
+fof(pipo,conjecture,
+(! [O, E, Eprime, A, B, C, H, AB, Cprime, Hprime] : ( (
+ wd( O, E) &
+ wd( AB, O) &
+  wd( H, A) &
+   wd( C, A) &
+    wd( H, C) &
+     wd( E, Eprime) &
+      wd( O, Eprime) &
+       wd( Hprime, Cprime) &
+        wd( A, Cprime) &
+         wd( A, Hprime) &
+          wd( A, B) &
+           wd( C, B) &
+            col( C, H, H) &
+             col( A, B, H) &
+              col( O, E, AB) &
+               col( A, H, Cprime) & col( A, C, Hprime) ) => col( A, Cprime, B))) 
+).
+

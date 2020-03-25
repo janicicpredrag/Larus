@@ -1,0 +1,11 @@
+fof(pipo,conjecture,
+(! [A, B, C , P, T] : ( (
+ wd( P, B) &
+ wd( A, B) &
+  wd( C, B) &
+   wd( T, B) &
+    wd( T, B) &
+     col( T, B, P) &
+      col( P, B, A) & col( P, B, C) & col( B, A, T) ) => col( A, B, C))) 
+).
+

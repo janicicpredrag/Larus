@@ -1,0 +1,4 @@
+fof(pipo,conjecture,
+(! [A, B, D, C] : ( (
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(A, C, D)) => colH(A,  B,  C))) ).
+
