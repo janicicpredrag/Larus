@@ -46,24 +46,37 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
         s << "nPredicate[nAxiomsCount][" << j << "]         = " << "n"+ToUpper(axiom.GetPremises().GetElement(j).GetName()) + "; /* " << j << ". predicate in premises */" << endl;
         for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
-            s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) << "; /*" << i << ". universal variable */" << endl;
+            if ((int)axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
+                s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i))+1 << "; /*" << i+1 << ". universal variable */" << endl;
+            else {
+                s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = 0; /* constant */" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " <<  "n" << ToUpper(axiom.GetPremises().GetElement(j).GetArg(i)) << ";" << endl;
+            }
         }
     if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
         s << "nPredicate[nAxiomsCount][" << noPremises << "]         = " << "n"+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName()) + "; /* first predicate in goal */" << endl;
         for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-                s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) << "; /* 1th univ var */" << endl;
-            else
-                s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) << "; /* 1th univ var */" << endl;
+                s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
+            else if ((int)axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+                s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
+            else {
+                s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = 0; /* constant */" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << "n" << ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) << ";" << endl;
+            }
         }
     }
     if (axiom.GetGoal().GetSize()>1) {
         s << "nPredicate[nAxiomsCount][" << noPremises+1 << "]         = " << "n"+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName()) + "; /* second predicate in goal */" << endl;
         for (size_t i=0; i<axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-                s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) << "; /* 1th univ var */" << endl;
-            else
-                s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) << "; /* 1th univ var */" << endl;
+                s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
+            else if ((int)axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+                s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
+            else {
+                s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = 0; /* constant  */" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << "n" << ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) << ";" << endl;
+            }
         }
     }
     mURSAstringAxioms += s.str();
@@ -144,9 +157,9 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile << "/* Intro constants */" << endl;
     enumerator = 0;
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
+    for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
         ursaFile << "n" << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
-    for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
+    for (set<string>::const_iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         ursaFile << "n" << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
 
     stringstream s;
@@ -251,7 +264,10 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                bSameProofBranch ||= ((nNesting[nProofStep]>>nI)==nNesting[n_from]); "                                             << endl;
     ursaFile <<"             b = (nP[n_from][0]==nPredicate[nAxiom][nPremisesCounter]); "                                                          << endl;
     ursaFile <<"             for (nInd = 0; nInd < nArity[nPredicate[nAxiom][nPremisesCounter]]; nInd++) "                                         << endl;
-    ursaFile <<"                b &&= (nA[n_from][nInd]==nInst[nProofStep][nBinding[nAxiom][nPremisesCounter*nMaxArg+nInd]]); "                    << endl;
+    ursaFile <<"                b &&= ((nA[n_from][nInd]==nInst[nProofStep][nBinding[nAxiom][nPremisesCounter*nMaxArg+nInd]] && "                  << endl;
+    ursaFile <<"                                                            nBinding[nAxiom][nPremisesCounter*nMaxArg+nInd] != 0) "                << endl;
+    ursaFile <<"                    || (nA[n_from][nInd]==nAxiomArgument[nAxiom][nPremisesCounter*nMaxArg+nInd] && "                                              << endl;
+    ursaFile <<"                                                            nBinding[nAxiom][nPremisesCounter*nMaxArg+nInd] == 0));"               << endl;
     ursaFile <<"             bMatchOnePremise ||= (nFrom[nProofStep][nPremisesCounter] == n_from && b && bSameProofBranch && !bCases[n_from]); "   << endl;
     ursaFile <<"          } "                                                                                                                      << endl;
     ursaFile <<"          bMatchPremises &&= ((nAxiomPremises[nAxiom]>nPremisesCounter && bMatchOnePremise) || "                                   << endl;
@@ -261,13 +277,19 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       /* Matching disjuncts in conclusions (one or two) */ "                                                                      << endl;
     ursaFile <<"       nGoalIndex = nAxiomPremises[nAxiom]; "                                                                                      << endl;
     ursaFile <<"       bMatchConclusion = (nP[nProofStep][0]==nPredicate[nAxiom][nGoalIndex]); "                                                   << endl;
-    ursaFile <<"       for (nInd = 0; nInd < nArity[nPredicate[nAxiom][nGoalIndex]]; nInd++) { "                                                                                  << endl;
-    ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd]==nInst[nProofStep][nBinding[nAxiom][nGoalIndex*nMaxArg+nInd]]); "             << endl;
+    ursaFile <<"       for (nInd = 0; nInd < nArity[nPredicate[nAxiom][nGoalIndex]]; nInd++) { "                                                   << endl;
+    ursaFile <<"          bMatchConclusion &&= ((nA[nProofStep][nInd]==nInst[nProofStep][nBinding[nAxiom][nGoalIndex*nMaxArg+nInd]] && "           << endl;
+    ursaFile <<"                                                                         nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] != 0)"          << endl;
+    ursaFile <<"                             || (nA[nProofStep][nInd]==nAxiomArgument[nAxiom][nGoalIndex*nMaxArg+nInd] && "                     << endl;
+    ursaFile <<"                                 nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] == 0));"             << endl;
     ursaFile <<"          bMatchConclusion &&= (nA[nProofStep][nInd] < ((nProofStep+2)<<3)); "                                                     << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile <<"       b = bAxiomBranching[nAxiom] && (nP[nProofStep][1]==nPredicate[nAxiom][nGoalIndex+1]); "                                     << endl;
     ursaFile <<"       for (nInd = 0; nInd < nArity[nPredicate[nAxiom][nGoalIndex+1]]; nInd++) { "                                                                                  << endl;
-    ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd]==nInst[nProofStep][nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd]]); "                << endl;
+    ursaFile <<"          b &&= ((nA[nProofStep][nMaxArg+nInd]==nInst[nProofStep][nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd]] && "                << endl;
+    ursaFile <<"                                                                         nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] != 0)"          << endl;
+    ursaFile <<"                             || (nA[nProofStep][nInd]==nAxiomArgument[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] && "                     << endl;
+    ursaFile <<"                                 nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] == 0));"             << endl;
     ursaFile <<"          b &&= (nA[nProofStep][nMaxArg+nInd] < ((nProofStep+2)<<3)); "                                                << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile <<"       bMatchConclusion &&= ((!bAxiomBranching[nAxiom] && !bCases[nProofStep]) || (bCases[nProofStep] && b)); "                    << endl;
@@ -510,7 +532,7 @@ bool URSA_ProvingEngine::DecodeProof(const DNFFormula& formula, const string& sE
         sPredicates[i++] = mpT->mSignature[j].first;
 
     i = 0;
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
+    for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
         sConstants[i++] = *it;
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         sConstants[i++] = *it;
@@ -541,7 +563,7 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             string sProofStep;
             ss >> sProofStep;
 
-            int nNesting, nAxiom, nPredicate, nBranching, nArgs[10];
+            int nNesting, nAxiom, nPredicate, nBranching, nArgs[100];
             ss >> nNesting >> nAxiom ;
 
             if (nAxiom == eQEDbyCases) {

@@ -69,24 +69,37 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
         nPredicate[mnAxiomsCount][j] = PREDICATE["n"+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
         for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
-            nBinding[mnAxiomsCount][j*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i));
+            if ((int)axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
+                nBinding[mnAxiomsCount][j*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i))+1;
+            else {
+                nBinding[mnAxiomsCount][j*mnMaxArity+i] = 0;
+                nAxiomArgument[mnAxiomsCount][j*mnMaxArity+i] = "n" + ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
+            }
     }
     if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
         nPredicate[mnAxiomsCount][noPremises] = PREDICATE["n"+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
-            else
-                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
+                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
+            else if ((int)axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
+            else {
+                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = 0;
+                nAxiomArgument[mnAxiomsCount][noPremises*mnMaxArity+i] = "n" + ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
+            }
         }
     }
     if (axiom.GetGoal().GetSize()>1) {
         nPredicate[mnAxiomsCount][noPremises+1] = PREDICATE["n"+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-                nBinding[mnAxiomsCount][noPremises+1*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
-            else
-                nBinding[mnAxiomsCount][noPremises+1*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
+                nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1;
+            else if ((int)axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+                nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1;
+            else {
+                nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = 0;
+                nAxiomArgument[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = "n" + ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
+            }
         }
     }
 }
@@ -226,7 +239,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
             mnMaxPremises = it->first.GetPremises().GetSize();
     for (size_t i = 0; i<mpT->mSignature.size(); i++)
         smtFile << "(declare-const n" + ToUpper(mpT->mSignature[i].first) + " Int)" << endl;
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
+    for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
         smtFile << "(declare-const n" + ToUpper(*it) + " Int)" << endl;
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         smtFile << "(declare-const n" + ToUpper(*it) + " Int)" << endl;
@@ -252,7 +265,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
     enumerator = 0;
     sPreabmle += "; **************************** Constants ******************************* \n";
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
+    for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
         sPreabmle += "(assert (= n" + ToUpper(*it) + " " + itos(enumerator) + "))\n";
         CONSTANTS[*it] = enumerator++;
     }
@@ -316,8 +329,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                  string sb = appeq(app("nP", n_from, 0), itos(nPredicate[nAxiom][nPremisesCounter]));
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
                  if (ar != 0) {
-                     for (unsigned nInd = 0; nInd < ar; nInd++)
-                        sb += appeq(app("nA" , n_from, nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                     for (unsigned nInd = 0; nInd < ar; nInd++) {
+                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                            sb += appeq(app("nA" , n_from, nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                         else
+                            sb += appeq(app("nA" , n_from, nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                     }
                  }
                  sbMatchOnePremise += string("\n      (and ") +
                                                 appeq(app("nFrom", nProofStep, nPremisesCounter), itos(n_from)) +
@@ -333,8 +350,13 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           unsigned nGoalIndex = nAxiomPremises[nAxiom];
           sbMatchConclusion = appeq(app("nP", nProofStep,0), itos(nPredicate[nAxiom][nGoalIndex]));
           for (unsigned nInd = 0; nInd < ARITY[nPredicate[nAxiom][nGoalIndex]]; nInd++) {
-              sbMatchConclusion += appeq(app("nA" , nProofStep, nInd),
+              if (nBinding[nAxiom][nGoalIndex*mnMaxArity+nInd] != 0)
+                  sbMatchConclusion += appeq(app("nA" , nProofStep, nInd),
                                          app("nInst", nProofStep, nBinding[nAxiom][nGoalIndex*mnMaxArity+nInd]));
+              else
+                  sbMatchConclusion += appeq(app("nA" , nProofStep, nInd),
+                                       nAxiomArgument[nAxiom][nGoalIndex*mnMaxArity+nInd]);
+
               sbMatchConclusion += "(< " + app("nA", nProofStep, nInd) + " " + itos((nProofStep+2)<<3) + ")";
           };
 
@@ -342,8 +364,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           if (bAxiomBranching[nAxiom]) {
               sb =  appeq(app("nP" , nProofStep, 1), itos(nPredicate[nAxiom][nGoalIndex+1]));
               for (unsigned nInd = 0; nInd < ARITY[nPredicate[nAxiom][nGoalIndex+1]]; nInd++) {
-                  sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
+                  if (nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd] != 0)
+                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
                               app("nInst", nProofStep, nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]));
+                  else
+                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
+                                nAxiomArgument[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]);
                   sb += "(< " + app("nA", nProofStep, mnMaxArity+nInd) + " " + itos((nProofStep+2)<<3) + ")";
               };
               sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
@@ -1038,7 +1064,7 @@ bool EQ_ProvingEngine::DecodeProof(const DNFFormula& formula, const string& sEnc
         sPredicates[i++] = mpT->mSignature[j].first;
 
     i = 0;
-    for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
+    for (vector<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
         sConstants[i++] = *it;
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         sConstants[i++] = *it;
@@ -1069,7 +1095,7 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
             string sProofStep;
             ss >> sProofStep;
 
-            int nNesting, nAxiom, nPredicate, nBranching, nArgs[10];
+            int nNesting, nAxiom, nPredicate, nBranching, nArgs[100];
             ss >> nNesting >> nAxiom ;
 
             if (nAxiom == eQEDbyCases) {

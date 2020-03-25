@@ -71,7 +71,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         for (vector<pair<CLFormula,string> >::iterator it=mpT->mCLaxioms.begin(); it != mpT->mCLaxioms.end(); ++it) {
             if (it->first.GetNumOfExistVars() == 0 && it->first.GetGoal().GetSize()==1) {
 #ifdef DEBUG_OUTPUT
-                //cout << "Trying ax " << it->second << endl;
+                // cout << "Trying ax " << it->second << endl;
 #endif
                 //if ("col_trans" == it->second)
                 //    cout << " ima " << endl;

@@ -241,7 +241,9 @@ const pair<CLFormula,string>& Theory::Axiom(size_t i) const
 
 void Theory::AddConstant(string s)
 {
-    mConstants.insert(s);
+    //    mConstants.insert(s);
+    if (!IsConstant(s))
+        mConstants.push_back(s);
 }
 
 // --------------------------------------------------------------
@@ -281,23 +283,32 @@ size_t Theory::GetSymbolArity(string p)
 
 // --------------------------------------------------------------
 
-string Theory::GetNewConstant()
+string Theory::MakeNewConstant()
 {
-    return GetConstantName(miConstantsCounter++);
+    // return GetConstantName(miConstantsCounter++);
+    unsigned id = mConstants.size() + 1;
+    string s;
+    if (id < 27) {
+        s = "a";
+        s[0] += id;
+    }
+    else
+        s = "p" + to_string(id);
+    mConstants.push_back(s);
+    return s;
 }
 
 // --------------------------------------------------------------
 
 string Theory::GetConstantName(unsigned id) const
 {
-    if (id < 27) {
+    return mConstants[id];
+/*    if (id < 27) {
         string s = "a";
         s[0] += id;
         return s;
     }
-    // stringstream ss;
-    // ss << miConstantsCounter;
-    return "p" + to_string(id);
+    return "p" + to_string(id);*/
 }
 
 
@@ -305,8 +316,15 @@ string Theory::GetConstantName(unsigned id) const
 
 bool Theory::IsConstant(string s) const
 {
-    return ((mConstants.find(s) != mConstants.end()) ||
-            (mConstantsPermissible.find(s) != mConstantsPermissible.end()));
+    /* return ((mConstants.find(s) != mConstants.end()) ||
+        (mConstantsPermissible.find(s) != mConstantsPermissible.end()));*/
+    for (vector<string>::const_iterator it = mConstants.begin(); it != mConstants.end(); it++)
+        if (*it == s)
+            return true;
+    for (set<string>::iterator it = mConstantsPermissible.begin(); it != mConstantsPermissible.end(); it++)
+        if (*it == s)
+            return true;
+    return false;
 }
 
 // --------------------------------------------------------------
@@ -366,8 +384,8 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
         if (instantiation.find(f.GetArg(i)) == instantiation.end()) {
             if (!IsConstant(f.GetArg(i)) && bInstantiateVars)
             {
-                string newc = GetNewConstant();
-                AddConstant(newc);
+                string newc = MakeNewConstant();
+                // AddConstant(newc);
                 instantiation[f.GetArg(i)] = newc;
                 fout.SetArg(i, instantiation[f.GetArg(i)]);
             }

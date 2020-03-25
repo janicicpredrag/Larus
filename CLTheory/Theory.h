@@ -40,7 +40,7 @@ public:
     const pair<CLFormula,string>& Axiom(size_t i) const;
 
     void AddConstant(string s);
-    string GetNewConstant();
+    string MakeNewConstant();
     string GetConstantName(unsigned id) const;
     bool IsConstant(string s) const;
     size_t NumberOfConstantsWaiting();
@@ -54,7 +54,8 @@ public:
     void InstantiateGoalDisj(const CLFormula& cl, size_t i, map<string,string>& instantiation, ConjunctionFormula& fout, bool bInstantiateVars);
 
     vector< pair<CLFormula,string> > mCLaxioms;
-    set<string> mConstants;
+    // set<string> mConstants;
+    vector<string> mConstants;
     set<string> mConstantsPermissible;
     vector< pair<string,unsigned> > mSignature;
 

@@ -132,8 +132,8 @@ public:
     void AddUnivVar(const string& varName) { mUniversalVars.push_back(varName); }
     void AddExistVar(const string& varName) { mExistentialVars.push_back(varName); }
 
-    size_t UnivVarOrdinalNumber(string v) const;
-    size_t ExistVarOrdinalNumber(string v) const;
+    int UnivVarOrdinalNumber(string v) const;
+    int ExistVarOrdinalNumber(string v) const;
 
     void ClearUnivVars() { mUniversalVars.clear(); }
     void ClearExistVars() {  mExistentialVars.clear(); }

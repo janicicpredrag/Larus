@@ -47,12 +47,11 @@ string itos(unsigned int i)
 
 ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params)
 {
-    T.Reset();
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
-        string constantName = T.GetNewConstant();
+        string constantName = T.MakeNewConstant();
+        // T.AddConstant(constantName);
         instantiation[theorem.GetUnivVar(i)] = constantName;
-        T.AddConstant(constantName);
         T.MakeNextConstantPermissible();
     }
     CLProof proof;
@@ -146,6 +145,20 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         s = str.substr(found1, found2-found1);
         size_t type = 2;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
+
+            for (unsigned i = 0; i<cl.GetPremises().GetSize(); i++)
+                for (unsigned j = 0; j<cl.GetPremises().GetElement(i).GetArity(); j++)
+                    if (cl.ExistVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
+                        cl.UnivVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1)
+                     T.AddConstant(cl.GetPremises().GetElement(i).GetArg(j));
+
+            for (unsigned i = 0; i<cl.GetGoal().GetSize(); i++)
+                for (unsigned j = 0; j<cl.GetGoal().GetElement(i).GetSize(); j++)
+                    for (unsigned k = 0; k<cl.GetGoal().GetElement(i).GetElement(j).GetArity(); k++)
+                    if (cl.ExistVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1 &&
+                        cl.UnivVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1)
+                     T.AddConstant(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k));
+
             if (type == 0) {
                 if (params.eEngine == eURSA_ProvingEngine || params.eEngine == eEQ_ProvingEngine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;

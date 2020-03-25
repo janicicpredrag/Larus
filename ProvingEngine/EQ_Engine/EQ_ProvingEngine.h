@@ -8,8 +8,8 @@
 
 using namespace std;
 
-#define MAX_PREMISES 50
-#define MAX_ARITY 50
+#define MAX_PREMISES 100
+#define MAX_ARITY 100
 #define MAX_AXIOMS 1000
 #define MAX_PROOF_LENGTH 100
 
@@ -48,6 +48,7 @@ private:
     unsigned bAxiomBranching[MAX_AXIOMS]; /* axiom is branching or not */
     unsigned nPredicate[MAX_AXIOMS][MAX_PREMISES];
     unsigned nBinding[MAX_AXIOMS][MAX_PREMISES*MAX_ARITY];
+    string nAxiomArgument[MAX_AXIOMS][MAX_PREMISES*MAX_ARITY];
 
     map<string, unsigned> PREDICATE;
     map<unsigned, unsigned> ARITY;

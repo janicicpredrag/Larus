@@ -480,7 +480,7 @@ bool CLFormula::ReadImplication(const string& v, ConjunctionFormula& A, DNFFormu
 
 // ---------------------------------------------------------------------------------------
 
-size_t CLFormula::UnivVarOrdinalNumber(string v) const
+int CLFormula::UnivVarOrdinalNumber(string v) const
 {
     for (size_t i = 0; i<GetNumOfUnivVars(); i++)
         if (v == GetUnivVar(i))
@@ -490,7 +490,7 @@ size_t CLFormula::UnivVarOrdinalNumber(string v) const
 
 // ---------------------------------------------------------------------------------------
 
-size_t CLFormula::ExistVarOrdinalNumber(string v) const
+int CLFormula::ExistVarOrdinalNumber(string v) const
 {
     for (size_t i = 0; i<GetNumOfExistVars(); i++)
         if (v == GetExistVar(i))
@@ -709,7 +709,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
     /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
     ConjunctionFormula premises;
     size_t numPremises = GetPremises().GetSize();
-    if (numPremises <= 15) {
+    if (numPremises <= 25) {
         premises = GetPremises();
     }
     else
@@ -730,12 +730,14 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
             CLFormula axiom(conj,disj);
             for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
             {
-                bool bAlreadyThere = false;
-                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-                    if (axiom.mUniversalVars[k] == current.GetArg(j))
-                        bAlreadyThere = true;
-                if (!bAlreadyThere)
-                    axiom.mUniversalVars.push_back(current.GetArg(j));
+                if (UnivVarOrdinalNumber(current.GetArg(j))!=-1 || ExistVarOrdinalNumber(current.GetArg(j))!=-1) {
+                    bool bAlreadyThere = false;
+                    for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                        if (axiom.mUniversalVars[k] == current.GetArg(j))
+                            bAlreadyThere = true;
+                    if (!bAlreadyThere)
+                        axiom.mUniversalVars.push_back(current.GetArg(j));
+                }
             }
             output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
         }
@@ -764,12 +766,14 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                 disj.Add(conj1);
                 CLFormula axiom(conj,disj);
                 for(size_t j=0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
-                    bool bAlreadyThere = false;
-                    for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-                        if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
-                            bAlreadyThere = true;
-                    if (!bAlreadyThere)
-                        axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
+                    if (UnivVarOrdinalNumber(current.GetArg(j))!=-1 || ExistVarOrdinalNumber(current.GetArg(j))!=-1) {
+                        bool bAlreadyThere = false;
+                        for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                            if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
+                                bAlreadyThere = true;
+                        if (!bAlreadyThere)
+                            axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
+                    }
                 }
                 output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
             }
@@ -796,12 +800,14 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
             CLFormula axiom(conj,disj);
             for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
             {
-                bool bAlreadyThere = false;
-                for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-                    if (axiom.mUniversalVars[k] == current.GetArg(j))
-                        bAlreadyThere = true;
-                if (!bAlreadyThere)
-                    axiom.mUniversalVars.push_back(current.GetArg(j));
+                if (UnivVarOrdinalNumber(current.GetArg(j))!=-1 || ExistVarOrdinalNumber(current.GetArg(j))!=-1) {
+                    bool bAlreadyThere = false;
+                    for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+                        if (axiom.mUniversalVars[k] == current.GetArg(j))
+                            bAlreadyThere = true;
+                    if (!bAlreadyThere)
+                        axiom.mUniversalVars.push_back(current.GetArg(j));
+                }
             }
             output.push_back(pair<CLFormula,string>(axiom, name+"_aux_"+std::to_string(count_aux++)));
         }
