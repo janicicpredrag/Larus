@@ -30,7 +30,7 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
         OutputImplication(outfile);
 
     if (cl.GetNumOfExistVars() > 0) {
-        outfile << "exists (* foo *) ";
+        outfile << "exists ";
         for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
             outfile << " " << cl.GetExistVar(i);
         outfile << ",";
