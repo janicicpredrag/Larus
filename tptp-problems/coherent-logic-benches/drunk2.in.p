@@ -8,4 +8,4 @@ fof(ax003,axiom, (t_IMP_003 => (fNEG_PSI0|t_EXISTS_004) )).
 fof(ax005,axiom, ![ A] : ((dom(A) & t_FORALL_005) => (tD1(A) & tNEG_PSI0) )).
 fof(ax007,axiom, ![ A] : ((dom(A) & t_FORALL_007) => (tGOAL0|fD1(A)|fNOTD1(A)) )).
 fof(ax004,axiom, (t_EXISTS_004 =>  ? [A ]:  ((dom(A) & tNOTD1(A))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(drinker2,conjecture,( goal )).

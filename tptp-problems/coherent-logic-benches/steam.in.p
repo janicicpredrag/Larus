@@ -17,4 +17,4 @@ fof(axiom_14,axiom, ![ X, Y] : (('Bird'(X) & 'Caterpillar'(Y)) => eats(X,Y) )).
 fof(axiom_15,axiom, ![ X] : ('Snail'(X) =>  ? [Y ]:  ((dom(Y) & 'Plant'(Y) & eats(X,Y))) )).
 fof(axiom_16,axiom, ![ X] : ('Caterpillar'(X) =>  ? [Y ]:  ((dom(Y) & 'Plant'(Y) & eats(X,Y))) )).
 fof(axiom_17,axiom, ![ X, Y, U, V] : (('Animal'(X) & 'Animal'(Y) & smaller(Y,X) & 'Plant'(U) & 'Plant'(V) & eats(Y,V)) => (eats(X,U)|eats(X,Y)) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(steam,conjecture,( goal )).

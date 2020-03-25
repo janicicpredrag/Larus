@@ -21,4 +21,4 @@ fof(papp1,axiom, ![ A, B, C, L, D, E, F, M, G, N, O, H, P, Q, I, R, S] : ((col(A
 fof(unique,axiom, ![ P, L, M, Q] : ((pl(P,L) & pl(P,M) & pl(Q,L) & pl(Q,M)) => (ep(P,Q)|el(L,M)) )).
 fof(line,axiom, ![ P, Q] : ((ep(P,P) & ep(Q,Q)) =>  ? [L ]:  ((dom(L) & pl(P,L) & pl(Q,L))) )).
 fof(point,axiom, ![ L, M] : ((el(L,L) & el(M,M)) =>  ? [P ]:  ((dom(P) & pl(P,L) & pl(P,M))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(p2p1,conjecture,( goal )).

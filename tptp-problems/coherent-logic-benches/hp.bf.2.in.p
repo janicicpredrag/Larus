@@ -38,4 +38,4 @@ fof(ax30,axiom, ( $true  => (?[W] : tForall_28| ((dom(W) & tAnd_36(W) & tPROGRAM
 fof(ax31,axiom, ![ X] : (tOr_26(X) => ? [Y]: (fALGORITHM(X)|  ((dom(Y) & tPROGRAM(Y) & tExists_22(X,Y)))) )).
 fof(ax32,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y ]:  ((dom(Y) & tPROGRAM(Y) & tExists_40(W,Y)))|tForall_54(W)) )).
 fof(ax33,axiom, ![ W] : (tPROGRAM(W) => ( ? [Y, Z, V ]:  ((dom(Y) & dom(Z) & tOr_65(Y,Z,W)))| ((dom(V) & tPROGRAM(V) & tForall_76(W,V)))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(hpbf2,conjecture,( goal )).

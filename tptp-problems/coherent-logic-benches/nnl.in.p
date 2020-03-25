@@ -11,4 +11,4 @@ fof(ax07,axiom, ![ A, B] : ((dom(A) & dom(B)) => (fEQUALISH(A,B)|tTRANSITIVE_REF
 fof(ax08,axiom, ![ A, B, C] : ((tREWRITE(A,B) & tREWRITE(A,C)) =>  ? [D ]:  ((dom(D) & tTRANSITIVE_REFLEXIVE_REWRITE(B,D) & tTRANSITIVE_REFLEXIVE_REWRITE(C,D))) )).
 fof(ax09,axiom, ![ A, B, C] : ((tREWRITE(a,A) & tTRANSITIVE_REFLEXIVE_REWRITE(A,B) & tTRANSITIVE_REFLEXIVE_REWRITE(A,C)) =>  ? [D ]:  ((dom(D) & tTRANSITIVE_REFLEXIVE_REWRITE(B,D) & tTRANSITIVE_REFLEXIVE_REWRITE(C,D))) )).
 fof(ax10,axiom, ![ A, B] : ((tTRANSITIVE_REFLEXIVE_REWRITE(A,B) & fEQUALISH(A,B)) =>  ? [C ]:  ((dom(C) & tREWRITE(A,C) & tTRANSITIVE_REFLEXIVE_REWRITE(C,B))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(nnl,conjecture,( goal )).

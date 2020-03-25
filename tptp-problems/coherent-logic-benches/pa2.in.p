@@ -5,4 +5,4 @@ fof(nullplus,axiom, ![ X] : (nat(X) => my_plus(num_0,X,X) )).
 fof(plussucc,axiom, ![ X, Y, Z, Y1, Z1] : ((my_plus(X,Y,Z) & s(Y,Y1) & s(Z,Z1)) => my_plus(X,Y1,Z1) )).
 fof(induction_instance,axiom, ![ X] : ((nat(X) & my_plus(num_0,num_0,num_0)) => ? [Y] : (my_plus(num_0,X,X)| ((dom(X) & dom(Y) & my_plus(num_0,X,X) & s(X,Y) & notplus(num_0,Y,Y)))) )).
 fof(succ,axiom, ![ X] : (nat(X) =>  ? [Y ]:  ((dom(Y) & nat(Y) & s(X,Y))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(pa2,conjecture,( goal )).

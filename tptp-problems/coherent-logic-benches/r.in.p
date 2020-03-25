@@ -4,4 +4,4 @@ fof(gclique,axiom, ![ X, Y, Z] : ((g(X,Y) & g(Y,Z) & g(X,Z)) =>  goal )).
 fof(no_overlap,axiom, ![ X, Y] : ((r(X,Y) & g(X,Y)) =>  goal )).
 fof(eq_tran,axiom, ![ X, Y, Z] : ((lt(X,Y) & lt(Y,Z)) => lt(X,Z) )).
 fof(partition,axiom, ![ X, Y] : (lt(X,Y) => (r(X,Y)|g(X,Y)) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(r,conjecture,( goal )).

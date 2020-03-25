@@ -8,4 +8,4 @@ fof(npnp,axiom, ![ X, Y] : ((p(X,Y) & np(X,Y)) =>  goal )).
 fof(ponp,axiom, ![ X, Y] : ((dom(X) & dom(Y)) => (p(X,Y)|np(X,Y)) )).
 fof(nqnq,axiom, ![ X, Y] : ((q(X,Y) & nq(X,Y)) =>  goal )).
 fof(qonq,axiom, ![ X, Y] : ((dom(X) & dom(Y)) => (q(X,Y)|nq(X,Y)) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(classic43,conjecture,( goal )).

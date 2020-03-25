@@ -15,4 +15,4 @@ fof(ih_slt2,axiom, ![ N, M, Y] : (aux0(N,M,Y) =>  ? [U ]:  ((dom(U) & mInus(n,M,
 fof(lo_len1,axiom, ![ X, Y, Z] : ((r(X,Y) & r(X,Z)) =>  ? [N ]:  ((dom(N) & aux1(N,Y,Z))) )).
 fof(lo_len2,axiom, ![ N, Y, Z] : (aux1(N,Y,Z) =>  ? [M ]:  ((dom(M) & aux2(M,N,Y,Z))) )).
 fof(lo_len3,axiom, ![ M, N, Y, Z] : (aux2(M,N,Y,Z) =>  ? [U ]:  ((dom(U) & l_e(M,M) & l_e(M,N) & rn(N,Y,U) & rn(M,Z,U))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(len,conjecture,( goal )).

@@ -7,4 +7,4 @@ fof(e_in_re,axiom, ![ X, Y] : (e(X,Y) => re(X,Y) )).
 fof(r_in_re,axiom, ![ X, Y] : (r(X,Y) => re(X,Y) )).
 fof(e_or_r,axiom, ![ X, Y] : (re(X,Y) => (e(X,Y)|r(X,Y)) )).
 fof(c_r_s,axiom, ![ X, Y, Z] : ((r(X,Y) & s(X,Z)) =>  ? [U ]:  ((dom(U) & s(Y,U) & r(Z,U))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(ce,conjecture,( goal )).

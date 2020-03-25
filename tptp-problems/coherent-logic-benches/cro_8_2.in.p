@@ -24,4 +24,4 @@ fof(gap3,axiom, ( $true  => (i(a3,b1b2)|i(b2,a3a1)) )).
 fof(unique,axiom, ![ P, L, M, Q] : ((i(P,L) & i(P,M) & i(Q,L) & i(Q,M)) => (e(P,Q)|e(L,M)) )).
 fof(meet,axiom, ![ L, M] : ((l(L) & l(M)) =>  ? [P ]:  ((dom(P) & i(P,L) & i(P,M))) )).
 fof(join,axiom, ![ P, Q] : ((p(P) & p(Q)) =>  ? [L ]:  ((dom(L) & i(P,L) & i(Q,L))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(cro_8_2,conjecture,( goal )).

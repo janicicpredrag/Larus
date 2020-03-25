@@ -6,4 +6,4 @@ fof(ax007,axiom, ![ A] : (dom(A) => t_IMP_008(A) )).
 fof(ax008,axiom, ![ A] : ((t_IMP_008(A) & tD1(A) & tNOTD1(A)) => tGOAL0 )).
 fof(ax003,axiom, (tNEG_PSI0 => t_EXISTS_004 )).
 fof(ax004,axiom, (t_EXISTS_004 =>  ? [A ]:  ((dom(A) & tNOTD1(A))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(d_horn,conjecture,( goal )).

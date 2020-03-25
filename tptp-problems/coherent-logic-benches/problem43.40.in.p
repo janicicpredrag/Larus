@@ -13,4 +13,4 @@ fof(ax08,axiom, ![ Y, X] : (tOr_25(Y,X) => (fQ(X,Y)|fQ(Y,X)) )).
 fof(ax09,axiom, ![ Y, Z, X] : ((dom(Y) & fP(Z,X)) => fAnd_6(X,Z,Y) )).
 fof(ax10,axiom, ![ X, Z, Y] : ((dom(X) & fP(Z,Y)) => fAnd_6(X,Z,Y) )).
 fof(ax11,axiom, ![ X, Y] : (tExists_21(X,Y) =>  ? [Z ]:  ((dom(Z) & tOr_15(X,Z,Y) & tOr_17(X,Z,Y))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(problem4340,conjecture,( goal )).

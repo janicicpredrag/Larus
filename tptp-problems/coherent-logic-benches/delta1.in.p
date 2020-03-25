@@ -10,4 +10,4 @@ fof(ax_or_1,axiom, ![ X] : (t_or_1(X) => t_and_1(X) )).
 fof(ax_and_1,axiom, ![ X] : (t_and_1(X) => (p_1(X) & t_ex_1) )).
 fof(ax_ex_1,axiom, (t_ex_1 =>  ? [Y ]:  ((dom(Y) & notp_1(Y))) )).
 fof(ax_imp_1,axiom, ![ Y] : ((t_imp_1(Y) & t_ex_1) => (dom(Y) & notp_1(Y)) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(delta1,conjecture,( goal )).

@@ -20,4 +20,4 @@ fof(unique,axiom, ![ P, L, M, Q] : ((i(P,L) & i(P,M) & i(Q,L) & i(Q,M)) => (e(P,
 fof(join,axiom, ![ P, Q] : ((p(P) & p(Q)) =>  ? [L ]:  ((dom(L) & i(P,L) & i(Q,L))) )).
 fof(meet,axiom, ![ L, M] : ((l(L) & l(M)) =>  ? [P ]:  ((dom(P) & i(P,L) & i(P,M))) )).
 fof(papp,axiom, ![ A, L, B, C, D, M, E, F, N, G, O, X, H, Y, S, I, T] : ((i(A,L) & i(B,L) & i(C,L) & i(D,M) & i(E,M) & i(F,M) & i(B,N) & i(F,N) & i(G,N) & i(C,O) & i(E,O) & i(G,O) & i(C,X) & i(D,X) & i(H,X) & i(A,Y) & i(F,Y) & i(H,Y) & i(A,S) & i(E,S) & i(I,S) & i(B,T) & i(D,T) & i(I,T)) => ?[U]: (e(N,O)|e(X,Y)|e(S,T)| ((dom(U) & i(G,U) & i(H,U) & i(I,U)))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(cro_case2,conjecture,( goal )).

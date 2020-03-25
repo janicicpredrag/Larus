@@ -6,4 +6,4 @@ fof(r_or_rr,axiom, ![ X, Y] : (rt(X,Y) => ?[U] :  (r(X,Y)| ((dom(U) & rt(X,U) & 
 fof(ih_1,axiom, ![ X, Y] : ((rt(a,X) & rt(X,b) & s(a,Y)) =>  ? [U ]:  ((dom(U) & s(X,U) & rt(Y,U))) )).
 fof(ih_2,axiom, ![ X, Y] : ((rt(a,X) & rt(X,b) & s(X,Y)) =>  ? [U ]:  ((dom(U) & s(b,U) & rt(Y,U))) )).
 fof(c_r_s,axiom, ![ X, Y, Z] : ((r(X,Y) & s(X,Z)) =>  ? [U ]:  ((dom(U) & s(Y,U) & r(Z,U))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(ct,conjecture,( goal )).
