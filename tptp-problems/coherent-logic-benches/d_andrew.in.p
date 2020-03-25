@@ -10,4 +10,4 @@ fof(ax008,axiom, ![ A] : (t_IMP_008(A) => (f_AND_009(A)|tGOAL0) )).
 fof(ax009,axiom, ![ A] : (f_AND_009(A) => (fD1(A)|fNOTD1(A)) )).
 fof(ax003,axiom, ( $true  => (fNEG_PSI0|t_EXISTS_004) )).
 fof(ax004,axiom, (t_EXISTS_004 =>  ? [A ]:  ((dom(A) & tNOTD1(A))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(d_andrew,conjecture,( goal )).

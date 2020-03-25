@@ -7,4 +7,4 @@ fof(qeq,axiom, ![ X, Y] : ((q(X) & eq(X,Y)) => q(Y) )).
 fof(porq,axiom, ![ X] : (dom(X) => (p(X)|q(X)) )).
 fof(finish,axiom, ![ X] : ((p(X) & q(X)) =>  goal )).
 fof(func,axiom, ![ X] : (dom(X) =>  ? [Y ]:  ((dom(Y) & f(X,Y))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(ape,conjecture,( goal )).

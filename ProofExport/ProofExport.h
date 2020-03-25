@@ -17,7 +17,10 @@ public:
         ofstream outfile;
         outfile.open (sFileName);
         if (!outfile)
+        {   
+            cout << "Failed to open output file:" << sFileName << endl;
             return;
+        }
         OutputPrologue(outfile, T, theorem, theoremName, instantiation);
         OutputProof(outfile, proof, 0);
         OutputEpilogue(outfile);

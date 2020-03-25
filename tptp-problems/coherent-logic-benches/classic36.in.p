@@ -6,4 +6,4 @@ fof(hifpj,axiom, ![ X, Y, Z] : ((p(X,Y) & j(Y,Z)) => h(X,Z) )).
 fof(hifpg,axiom, ![ X, Y, Z] : ((p(X,Y) & g(Y,Z)) => h(X,Z) )).
 fof(jser,axiom, ![ X] : (dom(X) =>  ? [Y ]:  ((dom(Y) & j(X,Y))) )).
 fof(gser,axiom, ![ X] : (dom(X) =>  ? [Y ]:  ((dom(Y) & g(X,Y))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(classic36,conjecture,( goal )).

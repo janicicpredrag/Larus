@@ -26,7 +26,6 @@ fof(congA_neg_elim,axiom, (! [A,B,C,D,E,F] : ((congA(A,B,C,D,E,F) & ncongA(A,B,C
 fof(ltA_neg_elim,axiom, (! [A,B,C,D,E,F] : ((ltA(A,B,C,D,E,F) & nltA(A,B,C,D,E,F)) => (($false))))).
 fof(lt_neg_elim,axiom, (! [A,B,C,D] : ((lt(A,B,C,D) & nlt(A,B,C,D)) => (($false))))).
 fof(eq_neg_elim,axiom, (! [A,B] : ((eq(A,B) & neq(A,B)) => (($false))))).
-fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(triangle_excluded_middle,axiom, (! [A,B,C] : ((triangle(A,B,C)) | (ntriangle(A,B,C))))).
 fof(col_excluded_middle,axiom, (! [A,B,C] : ((col(A,B,C)) | (ncol(A,B,C))))).
 fof(cong_excluded_middle,axiom, (! [A,B,C,D] : ((cong(A,B,C,D)) | (ncong(A,B,C,D))))).

@@ -45,7 +45,6 @@ fof(betS_neg_elim,axiom, (! [A,B,C] : ((betS(A,B,C) & nbetS(A,B,C)) => (($false)
 fof(lt_neg_elim,axiom, (! [A,B,C,D] : ((lt(A,B,C,D) & nlt(A,B,C,D)) => (($false))))).
 fof(cut_neg_elim,axiom, (! [A,B,C,D,E] : ((cut(A,B,C,D,E) & ncut(A,B,C,D,E)) => (($false))))).
 fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
-fof(eq_excluded_middle,axiom, (! [A,B] : ((eq(A,B)) | (neq(A,B))))).
 fof(equilateral_excluded_middle,axiom, (! [A,B,C] : ((equilateral(A,B,C)) | (nequilateral(A,B,C))))).
 fof(triangle_excluded_middle,axiom, (! [A,B,C] : ((triangle(A,B,C)) | (ntriangle(A,B,C))))).
 fof(col_excluded_middle,axiom, (! [A,B,C] : ((col(A,B,C)) | (ncol(A,B,C))))).

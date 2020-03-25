@@ -10,4 +10,4 @@ fof(ax6,axiom, ![ A, B] : (tEQUALISH(A,B) => tREFLEXIVE_REWRITE(A,B) )).
 fof(ax7,axiom, ![ A, B] : (tREWRITE(A,B) => tREFLEXIVE_REWRITE(A,B) )).
 fof(ax8,axiom, ![ A, B] : (tREFLEXIVE_REWRITE(A,B) => (tEQUALISH(A,B)|tREWRITE(A,B)) )).
 fof(ax9,axiom, ![ A, B, C] : ((tREWRITE(A,B) & tREWRITE(A,C)) =>  ? [D ]:  ((dom(D) & tREWRITE(B,D) & tREWRITE(C,D))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(dpa,conjecture,( goal )).

@@ -8,4 +8,4 @@ fof(trans_rr,axiom, ![ X, Y, Z] : ((rr(X,Y) & rr(Y,Z)) => rr(X,Z) )).
 fof(strip,axiom, ![ X, Y, Z] : ((r(X,Y) & rr(X,Z)) =>  ? [U ]:  ((dom(U) & rr(Y,U) & rr(Z,U))) )).
 fof(ih_cfl,axiom, ![ X, Z] : ((r(a,X) & rr(X,b) & rr(X,Z)) =>  ? [U ]:  ((dom(U) & rr(b,U) & rr(Z,U))) )).
 fof(e_or_rrr,axiom, ![ X, Y] : (rr(X,Y) => ?[Z] : (e(X,Y)|  ((dom(Z) & r(X,Z) & rr(Z,Y)))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(trs,conjecture,( goal )).

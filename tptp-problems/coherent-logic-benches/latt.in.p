@@ -13,4 +13,4 @@ fof(assoc_m,axiom, ![ X, Y, U, Z, V, W] : ((m(X,Y,U) & m(U,Z,V) & m(Y,Z,W)) => m
 fof(assoc_j,axiom, ![ X, Y, U, Z, V, W] : ((j(X,Y,U) & j(U,Z,V) & j(Y,Z,W)) => j(X,W,V) )).
 fof(lo_le_distr,axiom, ![ Y, Z, T, X, U, V, W, P] : ((j(Y,Z,T) & m(X,T,U) & m(X,Y,V) & m(X,Z,W) & j(V,W,P)) => lt(U,P) )).
 fof(do_latt,axiom, ![ X, Y] : ((dom(X) & dom(Y)) =>  ? [U ]:  ((dom(U) & m(X,Y,U))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(latt,conjecture,( goal )).

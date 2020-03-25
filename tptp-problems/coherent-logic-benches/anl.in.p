@@ -13,4 +13,4 @@ fof(ih_comr,axiom, ![ X, Y, Z] : ((r(a,X) & rr(X,Y) & ss(X,Z)) =>  ? [U ]:  ((do
 fof(ih_coms,axiom, ![ X, Y, Z] : ((s(a,X) & rr(X,Y) & ss(X,Z)) =>  ? [U ]:  ((dom(U) & ss(Y,U) & rr(Z,U))) )).
 fof(e_or_rrr,axiom, ![ X, Y] : (rr(X,Y) => ?[Z] : (e(X,Y)|  ((dom(Z) & r(X,Z) & rr(Z,Y)))) )).
 fof(e_or_sss,axiom, ![ X, Y] : (ss(X,Y) => ?[Z] : (e(X,Y)|  ((dom(Z) & s(X,Z) & ss(Z,Y)))) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(anl,conjecture,( goal )).

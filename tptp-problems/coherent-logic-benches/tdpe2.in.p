@@ -14,4 +14,4 @@ fof(ax05,axiom, ![ B, C, D] : (tAnd_24(B,C,D) => (tTRANSITIVE_REFLEXIVE_REWRITE(
 fof(ax17,axiom, ![ A, B] : (tTRANSITIVE_REFLEXIVE_REWRITE(A,B) => (tEQUALISH(A,B)|tExists_30(A,B)) )).
 fof(ax20,axiom, ![ A, B] : (tExists_30(A,B) =>  ? [C ]:  ((dom(C) & tAnd_28(A,C,B))) )).
 fof(ax02,axiom, ![ A, C, B] : (tAnd_28(A,C,B) => (tREWRITE(A,C) & tTRANSITIVE_REFLEXIVE_REWRITE(C,B)) )).
-fof(goal_to_be_proved,conjecture,( goal )).
+fof(tdpe2,conjecture,( goal )).
