@@ -169,8 +169,8 @@ bool STLFactsDatabase::FindFact(const Fact& f)
 
 bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation)
 {
-    if (cl.GetNumOfUnivVars() == 0)
-        return true;
+  //  if (cl.GetNumOfUnivVars() == 0)
+  //      return true;
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
     if (cl.GetPremises().GetSize() == 1 && cl.GetPremises().GetElement(0).GetName() == "true")
@@ -199,10 +199,10 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
 
 bool STLFactsDatabase::NextInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation)
 {
-    if (/*mConstantsPermissible.empty() &&*/ cl.GetNumOfUnivVars() == 0)
-        return false;
-    if (mpT->mConstantsPermissible.empty())
-        return false;
+ //   if (/*mConstantsPermissible.empty() &&*/ cl.GetNumOfUnivVars() == 0)
+ //       return false;
+    // if (mpT->mConstantsPermissible.empty())
+    //    return false;
 
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
