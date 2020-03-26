@@ -1,3 +1,9 @@
+fof(col_swap1, axiom, ! [A,B,C] : (col(A,B,C) => col(B,A,C))).
+fof(col_swap2, axiom, ! [A,B,C] : (col(A,B,C) => col(B,C,A))).
+fof(col_triv, axiom, ! [A,B] : col(A,B,B)).
+fof(wd_swap, axiom, ! [A,B] : (wd(A,B) => wd(B,A))).
+fof(col_trans, axiom, ! [P,Q,A,B,C] : ((wd(P,Q) & col(P,Q,A) & col(P,Q,B) & col(P,Q,C)) => col(A,B,C))).
+
 fof(pipo,conjecture,
 (! [A, B, C, D] : ( (
  wd( A, B) &
