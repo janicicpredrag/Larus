@@ -50,9 +50,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
         string constantName = T.MakeNewConstant();
-        // T.AddConstant(constantName);
         instantiation[theorem.GetUnivVar(i)] = constantName;
-        T.MakeNextConstantPermissible();
+//        T.MakeNextConstantPermissible();
     }
     CLProof proof;
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
