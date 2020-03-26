@@ -102,7 +102,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
 
             cout << "Verifying Coq proof ... " << flush;
-            string s = "coqc -q  " + sFileName3;
+            string s = "coqc -R proofs CLProver -q  " + sFileName3;
             int rv = system(s.c_str());
             if (!rv)
                 cout << "Correct!" << endl;
