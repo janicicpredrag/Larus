@@ -46,6 +46,7 @@ int main(int argc , char** argv)
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
+    params.mbCoq =  DEFAULT_COQ;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
@@ -58,6 +59,14 @@ int main(int argc , char** argv)
             if (argv[i][0] == '-' && argv[i][1] == 'f') {
                 if (!strcmp(argv[i]+2, "tptp"))
                     params.input_format = eTPTP;
+                else {
+                    wrongInput = true;
+                    break;
+                }
+            }
+            if (argv[i][0] == '-' && argv[i][1] == 'v') {
+                if (!strcmp(argv[i]+2, "coq"))
+                    params.mbCoq = true;
                 else {
                     wrongInput = true;
                     break;

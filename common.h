@@ -20,6 +20,7 @@ const unsigned DEFAULT_MAX_NESTING_DEPTH = 3;
 const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
+const bool DEFAULT_COQ = false;
 
 typedef struct proverParams {
     INPUT_FORMAT input_format;
@@ -29,6 +30,7 @@ typedef struct proverParams {
     bool mbNativeEQ;
     bool mbNegElim;
     bool mbExcludedMiddle;
+    bool mbCoq;
 } proverParams;
 
 
