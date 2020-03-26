@@ -85,7 +85,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         // cout << "Theorem proved! " << endl;
         string sFileName("proofs/PROOF" + theoremName + ".tex");
         string sFileName2("proofs/PROOF" + theoremName + "-simpl.tex");
-        string sFileName3("proofs/PROOF" + theoremName + ".v");
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
@@ -96,12 +95,21 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         }
         delete ex;
 
-        ProofExport *excoq;
-        excoq = new ProofExport2Coq;
-        excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
-        delete excoq;
+        if (params.mbCoq) {
+            string sFileName3("proofs/PROOF" + theoremName + ".v");
+            ProofExport *excoq;
+            excoq = new ProofExport2Coq;
+            excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
 
-
+            cout << "Verifying Coq proof ... " << flush;
+            string s = "coqc -q  " + sFileName3;
+            int rv = system(s.c_str());
+            if (!rv)
+                cout << "Correct!" << endl;
+            else
+                cout << "Wrong!" << endl;
+            delete excoq;
+        }
     }
     // else
     //    cout << "Theorem not proved!" << endl;
