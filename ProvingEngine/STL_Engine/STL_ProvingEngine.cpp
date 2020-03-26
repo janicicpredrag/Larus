@@ -40,7 +40,9 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         clock_t current = clock();
         double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
         if (elapsed_secs > mParams.time_limit) {
-            //cout << "Time limit exceeded " << endl;
+#ifdef DEBUG_OUTPUT
+            cout << "Time limit exceeded " << endl;
+#endif
             return false;
         }
 
@@ -71,7 +73,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         for (vector<pair<CLFormula,string> >::iterator it=mpT->mCLaxioms.begin(); it != mpT->mCLaxioms.end(); ++it) {
             if (it->first.GetNumOfExistVars() == 0 && it->first.GetGoal().GetSize()==1) {
 #ifdef DEBUG_OUTPUT
-                // cout << "Trying ax " << it->second << endl;
+                cout << "Trying ax " << it->second << endl;
 #endif
                 //if ("col_trans" == it->second)
                 //    cout << " ima " << endl;
