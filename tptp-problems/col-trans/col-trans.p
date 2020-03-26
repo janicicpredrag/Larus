@@ -11008,8 +11008,9 @@ fof(pipo,conjecture,
  wd( Aprime, Bprime) &
  wd( A, B) &
   wd( X, Y) &
-   colh(A, B, X) &
-    colh(A, B, Y) & (ColH Aprime Bprime X & (ColH Aprime Bprime Y & ColH A B Aprime ).
+   colH(A, B, X) &
+    colH(A, B, Y) & colH(Aprime,Bprime,X) & colH(Aprime,Bprime,Y)) => colH(A,B,Aprime)))
+).
 
 fof(pipo,conjecture,
 (! [A1, A2, P, Q, X, Y, B1, C1] : ( (
@@ -11087,7 +11088,7 @@ fof(pipo,conjecture,
  wd( P, C) &
   wd( A, C) &
    wd( B, A) &
-    wd( A, C) & wd( B, C) & colh(A, P, C) & colh(B, A, C) & ColH B C P
+    wd( A, C) & wd( B, C) & colH(A, P, C) & colH(B, A, C) ) => colH(B, C, P)))
 ).
 
 fof(pipo,conjecture,
@@ -11198,7 +11199,7 @@ fof(pipo,conjecture,
 
 fof(pipo,conjecture,
 (! [A, B, T , P] : ( (
- wd( A, B) & col( A, B, P) & col( A, B, T) ) => col( T, P, A))  ).
+ wd( A, B) & col( A, B, P) & col( A, B, T) ) => col( T, P, A)))  ).
 
 fof(pipo,conjecture,
 (! [A, B, T , P] : ( (
@@ -11705,35 +11706,35 @@ fof(pipo,conjecture,
 (! [A, B, D, E, C] : ( (
  wd( A, B) &
  wd( A, D) &
-  wd( A, E) & colh(A, B, D) & colh(A, B, E) & colh(A, C, D) & ColH A B C
+  wd( A, E) & colH(A, B, D) & colH(A, B, E) & colH(A, C, D) )=> colH(A, B, C)))
 ).
 
 fof(pipo,conjecture,
 (! [A, B, D, E, C] : ( (
  wd( A, B) &
  wd( A, D) &
-  wd( A, E) & colh(A, B, D) & colh(A, B, E) & colh(A, C, E) & ColH A B C
+  wd( A, E) & colH(A, B, D) & colH(A, B, E) & colH(A, C, E) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C] : ( (
- wd( A, B) & wd( A, D) & colh(A, B, D) & colh(D, C, A) & colh(A, B, C)).
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(D, C, A) ) => colH(A, B, C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C] : ( (
- wd( A, B) & wd( A, D) & colh(A, B, D) & colh(A, C, D) & colh(A, B, C)).
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(A, C, D) ) => colH(A, B, C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C] : ( (
- wd( A, B) & wd( A, D) & colh(A, B, D) & colh(A, C, D) & colh(A, B, C)).
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(A, C, D) ) => colH(A, B, C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C] : ( (
- wd( A, B) & wd( A, D) & colh(A, B, D) & colh(C, A, D) & colh(A, B, C)).
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(C, A, D) ) => colH(A, B, C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C] : ( (
- wd( A, B) & wd( A, D) & colh(A, B, D) & colh(A, C, D) & colh(A, B, C)).
+ wd( A, B) & wd( A, D) & colH(A, B, D) & colH(A, C, D)) => colH(A,  B,  C))) ).
 
 fof(pipo,conjecture,
 (! [A, B, D, C, F] : ( (
@@ -11741,7 +11742,7 @@ fof(pipo,conjecture,
  wd( A, D) &
   wd( B, A) &
    wd( A, F) &
-    wd( B, F) & colh(A, B, D) & colh(B, A, F) & colh(A, C, F) & ColH A B C
+    wd( B, F) & colH(A, B, D) & colH(B, A, F) & colH(A, C, F) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -11750,7 +11751,7 @@ fof(pipo,conjecture,
  wd( B, E) &
   wd( A, E) &
    wd( A, B) &
-    wd( A, D) & colh(A, B, E) & colh(A, B, D) & colh(A, C, E) & ColH A B C
+    wd( A, D) & colH(A, B, E) & colH(A, B, D) & colH(A, C, E) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -11763,8 +11764,8 @@ fof(pipo,conjecture,
      wd( B, A) &
       wd( A, F) &
        wd( B, F) &
-        colh(A, B, E) &
-         colh(A, B, D) & colh(B, A, F) & colh(A, C, F) & ColH A B C
+        colH(A, B, E) &
+         colH(A, B, D) & colH(B, A, F) & colH(A, C, F) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -11838,7 +11839,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(B, G, C) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(B, G, C) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -11852,7 +11853,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(B, G, A) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(B, G, A) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -11878,7 +11879,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(A, B, D) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(A, B, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -11892,7 +11893,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(A, D, G) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(A, D, G) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -11919,7 +11920,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(B, C, D) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(B, C, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -11933,7 +11934,7 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colh(A, B, C) & colh(B, D, G) & colh(C, D, G) & ColH A C D
+         colH(A, B, C) & colH(B, D, G) & colH(C, D, G) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12007,7 +12008,7 @@ fof(pipo,conjecture,
        wd( I, C) &
         wd( B, C) &
          wd( A, I) &
-          colh(A, B, C) & colh(B, I, C) & colh(A, D, I) & ColH A C D
+          colH(A, B, C) & colH(B, I, C) & colH(A, D, I) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12022,8 +12023,8 @@ fof(pipo,conjecture,
        wd( I, C) &
         wd( B, C) &
          wd( A, I) &
-          colh(A, B, C) &
-           colh(B, I, C) & colh(A, D, I) & colh(B, C, D) & ColH A C D
+          colH(A, B, C) &
+           colH(B, I, C) & colH(A, D, I) & colH(B, C, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12089,7 +12090,7 @@ fof(pipo,conjecture,
        wd( I, C) &
         wd( B, C) &
          wd( A, I) &
-          colh(A, B, C) & colh(B, I, C) & colh(A, D, I) & ColH A C D
+          colH(A, B, C) & colH(B, I, C) & colH(A, D, I) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12104,8 +12105,8 @@ fof(pipo,conjecture,
        wd( I, C) &
         wd( B, C) &
          wd( A, I) &
-          colh(A, B, C) &
-           colh(B, I, C) & colh(A, D, I) & colh(B, C, D) & ColH A C D
+          colH(A, B, C) &
+           colH(B, I, C) & colH(A, D, I) & colH(B, C, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12120,7 +12121,7 @@ fof(pipo,conjecture,
        wd( I, A) &
         wd( B, A) &
          wd( C, I) &
-          colh(A, B, C) & colh(B, I, A) & colh(C, D, I) & ColH A C D
+          colH(A, B, C) & colH(B, I, A) & colH(C, D, I) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12149,8 +12150,8 @@ fof(pipo,conjecture,
        wd( I, A) &
         wd( B, A) &
          wd( C, I) &
-          colh(A, B, C) &
-           colh(B, I, A) & colh(C, D, I) & colh(A, B, D) & ColH A C D
+          colH(A, B, C) &
+           colH(B, I, A) & colH(C, D, I) & colH(A, B, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12214,8 +12215,8 @@ fof(pipo,conjecture,
          wd( G, E) &
           wd( E, C) &
            wd( G, C) &
-            colh(A, B, C) &
-             colh(B, D, G) & colh(G, E, C) & colh(A, G, E) & ColH A C D
+            colH(A, B, C) &
+             colH(B, D, G) & colH(G, E, C) & colH(A, G, E) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12232,7 +12233,7 @@ fof(pipo,conjecture,
          wd( G, F) &
           wd( F, A) &
            wd( G, A) &
-            colh(A, B, F) & colh(G, E, F) & colh(G, F, A) & ColH A G E
+            colH(A, B, F) & colH(G, E, F) & colH(G, F, A) ) => colH(A,  G,  E)))
 ).
 
 fof(pipo,conjecture,
@@ -12253,9 +12254,9 @@ fof(pipo,conjecture,
              wd( F, A) &
               wd( G, A) &
                wd( C, F) &
-                colh(A, B, C) &
-                 colh(B, D, G) &
-                  colh(G, E, C) & colh(G, F, A) & colh(C, E, F) & ColH A C D
+                colH(A, B, C) &
+                 colH(B, D, G) &
+                  colH(G, E, C) & colH(G, F, A) & colH(C, E, F) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12329,9 +12330,9 @@ fof(pipo,conjecture,
              wd( F, A) &
               wd( G, A) &
                wd( C, F) &
-                colh(A, B, C) &
-                 colh(B, D, G) &
-                  colh(G, E, C) & colh(G, F, A) & colh(A, C, F) & ColH A C D
+                colH(A, B, C) &
+                 colH(B, D, G) &
+                  colH(G, E, C) & colH(G, F, A) & colH(A, C, F) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12352,9 +12353,9 @@ fof(pipo,conjecture,
              wd( F, A) &
               wd( G, A) &
                wd( C, F) &
-                colh(A, B, C) &
-                 colh(B, D, G) &
-                  colh(G, E, C) & colh(G, F, A) & colh(C, F, G) & ColH A C D
+                colH(A, B, C) &
+                 colH(B, D, G) &
+                  colH(G, E, C) & colH(G, F, A) & colH(C, F, G) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12434,8 +12435,8 @@ fof(pipo,conjecture,
        wd( A, I) &
         wd( I, E) &
          wd( A, E) &
-          colh(A, B, C) &
-           colh(A, I, E) & colh(C, D, F) & colh(C, F, I) & ColH C D I
+          colH(A, B, C) &
+           colH(A, I, E) & colH(C, D, F) & colH(C, F, I) ) => colH(C,  D,  I)))
 ).
 
 fof(pipo,conjecture,
@@ -12470,7 +12471,7 @@ fof(pipo,conjecture,
        wd( A, D) &
         wd( D, E) &
          wd( A, E) &
-          colh(A, B, C) & colh(A, D, E) & colh(A, E, C) & ColH A C D
+          colH(A, B, C) & colH(A, D, E) & colH(A, E, C) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12481,7 +12482,7 @@ fof(pipo,conjecture,
    wd( B, D) &
     wd( A, D) &
      wd( C, D) &
-      wd( C, F) & wd( B, D) & colh(A, B, C) & colh(B, C, D) & ColH A C D
+      wd( C, F) & wd( B, D) & colH(A, B, C) & colH(B, C, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12497,7 +12498,7 @@ fof(pipo,conjecture,
         wd( D, E) &
          wd( A, E) &
           wd( B, D) &
-           colh(A, B, C) & colh(A, D, E) & colh(A, B, D) & ColH A C D
+           colH(A, B, C) & colH(A, D, E) & colH(A, B, D) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12533,7 +12534,7 @@ fof(pipo,conjecture,
         wd( D, E) &
          wd( A, E) &
           wd( B, D) &
-           colh(A, B, C) & colh(A, D, E) & colh(B, D, E) & ColH A C D
+           colH(A, B, C) & colH(A, D, E) & colH(B, D, E) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12576,9 +12577,9 @@ fof(pipo,conjecture,
               wd( E, I) &
                wd( I, C) &
                 wd( E, C) &
-                 colh(A, B, C) &
-                  colh(B, D, G) &
-                   colh(G, E, C) & colh(E, I, C) & colh(D, B, C) & ColH A C D
+                 colH(A, B, C) &
+                  colH(B, D, G) &
+                   colH(G, E, C) & colH(E, I, C) & colH(D, B, C) ) => colH(A,  C,  D)))
 ).
 
 fof(pipo,conjecture,
@@ -12609,11 +12610,11 @@ fof(pipo,conjecture,
                 wd( G, I) &
                  wd( I, E) &
                   wd( G, E) &
-                   colh(A, B, C) &
-                    colh(B, D, G) &
-                     colh(G, E, C) &
-                      colh(G, F, A) &
-                       colh(G, I, E) & colh(G, E, F) & ColH A G E
+                   colH(A, B, C) &
+                    colH(B, D, G) &
+                     colH(G, E, C) &
+                      colH(G, F, A) &
+                       colH(G, I, E) & colH(G, E, F) ) => colH(A,  G,  E)))
 ).
 
 fof(pipo,conjecture,
@@ -14003,13 +14004,13 @@ fof(pipo,conjecture,
                   wd( Aprimeprime, Bprime) &
                    wd( Bprime, Dprimeprime) &
                     wd( Aprimeprime, Dprimeprime) &
-                     colh(A, B, D) &
-                      (ColH Aprime Bprime Dprime &
-                       (ColH Bprime Aprime Aprimeprime &
-                        (ColH Bprime Cprime Cprimeprime &
-                         (ColH Bprime Dprime Dprimeprime &
-                          (ColH Aprimeprime Bprime Dprimeprime &
-                           (ColH Aprimeprime Cprimeprime Dprimeprime & ColH Aprime Bprime Cprime
+                     colH(A, B, D) &
+                      colH(Aprime,Bprime,Dprime) &
+                       colH(Bprime,Aprime,Aprimeprime) &
+                        colH(Bprime,Cprime,Cprimeprime) &
+                         colH(Bprime,Dprime,Dprimeprime) &
+                          colH(Aprimeprime,Bprime,Dprimeprime) &
+                           colH(Aprimeprime,Cprimeprime,Dprimeprime) ) => colH(Aprime,Bprime,Cprime)))
 ).
 
 fof(pipo,conjecture,
@@ -14035,9 +14036,9 @@ fof(pipo,conjecture,
                   wd( Aprimeprime, Cprimeprime) &
                    wd( Cprimeprime, Dprimeprime) &
                     wd( Aprimeprime, Dprimeprime) &
-                     colh(A, B, D) &
-                      (ColH Aprime Bprime Dprime &
-                       (ColH Aprimeprime Bprime Dprimeprime & colh(D, B, C) & ColH A B C
+                     colH(A, B, D) &
+                      colH(Aprime,Bprime,Dprime) &
+                       colH(Aprimeprime,Bprime,Dprimeprime) & colH(D, B, C) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -14069,20 +14070,20 @@ fof(pipo,conjecture,
                         wd( Aprimeprime, Cprimeprime) &
                          wd( Cprimeprime, Dprimeprime) &
                           wd( Aprimeprime, Dprimeprime) &
-                           colh(A, B, D) &
-                            (ColH Aprime Bprime Dprime &
-                             (ColH Bprime Aprime Aprimeprime &
-                              (ColH Bprime Cprime Cprimeprime &
-                               (ColH Bprime Dprime Dprimeprime &
-                                (ColH Aprimeprime Bprime Dprimeprime &
-                                 (ColH Dprimeprime Bprime Cprimeprime & ColH Aprime Bprime Cprime
+                           colH(A, B, D) &
+                            colH(Aprime,Bprime,Dprime) &
+                             colH(Bprime,Aprime,Aprimeprime) &
+                              colH(Bprime,Cprime,Cprimeprime) &
+                               colH(Bprime,Dprime,Dprimeprime) &
+                                colH(Aprimeprime,Bprime,Dprimeprime) &
+                                 colH(Dprimeprime,Bprime,Cprimeprime) ) => colH(Aprime,Bprime,Cprime)))
 ).
 
 fof(pipo,conjecture,
 (! [A, B, X, Y, C, I] : ( (
  wd( X, Y) &
  wd( A, B) &
-  wd( A, C) & wd( B, C) & colh(A, C, B) & colh(A, I, C) & ColH A I B
+  wd( A, C) & wd( B, C) & colH(A, C, B) & colH(A, I, C) ) => colH(A,  I,  B)))
 ).
 
 fof(pipo,conjecture,
@@ -14114,8 +14115,8 @@ fof(pipo,conjecture,
  wd( B, D) &
   wd( D, E) &
    wd( B, E) &
-    wd( B, C) & wd( A, C) & col( A, B, D) & col( A, B, E) & A = B
-).
+    wd( B, C) & wd( A, C) & col( A, B, D) & col( A, B, E) & eq( A, B) ))
+)).
 
 fof(pipo,conjecture,
 (! [A, B, C , D, E] : ( (
@@ -14133,7 +14134,7 @@ fof(pipo,conjecture,
  wd( O, Z) &
   wd( Z, O) &
    wd( O, Zprime) &
-    wd( Z, Zprime) & (ColH O X Zprime & (ColH Z O Zprime & colh(O, X, Z)).
+    wd( Z, Zprime) & colH(O,X,Zprime) & colH(Z,O,Zprime)) => colH(O, X, Z))) ).
 
 fof(pipo,conjecture,
 (! [O, X, Y, Z, Zprime] : ( (
@@ -14143,7 +14144,7 @@ fof(pipo,conjecture,
    wd( Z, O) &
     wd( O, Zprime) &
      wd( Z, Zprime) &
-      (ColH Z O Zprime & (ColH O Y Zprime & (ColH Z O Zprime & colh(Y, O, Z)).
+      colH(Z,O,Zprime) & colH(O,Y,Zprime) & colH(Z,O,Zprime) ) => colH(Y, O, Z))) ).
 
 fof(pipo,conjecture,
 (! [O, X, Y, Z, Zprime] : ( (
@@ -14151,7 +14152,7 @@ fof(pipo,conjecture,
  wd( Z, O) &
   wd( O, Zprime) &
    wd( Z, Zprime) &
-    (ColH Z O Zprime & (ColH O Y Zprime & (ColH Z O Zprime & colh(Y, O, Z)).
+    colH(Z,O,Zprime) & colH(O,Y,Zprime) & colH(Z,O,Zprime)) => colH(Y, O, Z))) ).
 
 fof(pipo,conjecture,
 (! [X, Y, Z, Xprime, Zprime] : ( (
@@ -14160,7 +14161,7 @@ fof(pipo,conjecture,
   wd( Xprime, Zprime) &
    wd( Z, Xprime) &
     wd( Z, Zprime) &
-     (ColH Xprime X Xprime & (ColH Z Xprime Zprime & (ColH Y Xprime Zprime & ColH Y Xprime Z ).
+     colH(Xprime,X,Xprime) & colH(Z,Xprime,Zprime) & colH(Y,Xprime,Zprime)) => colH(Y, Xprime, Z))) ).
 
 fof(pipo,conjecture,
 (! [O, X, Y, Z, Zprime, Xprime] : ( (
@@ -14171,8 +14172,8 @@ fof(pipo,conjecture,
     wd( Z, Zprime) &
      wd( O, Xprime) &
       wd( O, Z) &
-       (ColH Z O Zprime &
-        (ColH Y Xprime Zprime & (ColH O X Xprime & (ColH Xprime O Z & ColH Z O X
+       colH(Z,O,Zprime) &
+        colH(Y,Xprime,Zprime) & colH(O,X,Xprime) & colH(Xprime,O,Z)) => colH(Z, O, X)))
 ).
 
 fof(pipo,conjecture,
@@ -14184,8 +14185,8 @@ fof(pipo,conjecture,
     wd( Z, Zprime) &
      wd( O, Xprime) &
       wd( O, Z) &
-       (ColH Z O Zprime &
-        (ColH Y Xprime Zprime & (ColH O X Xprime & (ColH O Xprime Z & ColH X O Z
+       colH(Z,O,Zprime) &
+        colH(Y,Xprime,Zprime) & colH(O,X,Xprime) & colH(O,Xprime,Z)) => colH(X, O, Z)))
 ).
 
 fof(pipo,conjecture,
@@ -14209,14 +14210,14 @@ fof(pipo,conjecture,
 (! [H, O, L, I] : ( (
  wd( O, H) &
  wd( O, I) &
-  wd( H, I) & wd( O, L) & colh(I, O, H) & colh(O, L, I) & ColH H O L
+  wd( H, I) & wd( O, L) & colH(I, O, H) & colH(O, L, I) ) => colH(H,  O,  L)))
 ).
 
 fof(pipo,conjecture,
 (! [H, O, L, I] : ( (
  wd( O, H) &
  wd( O, I) &
-  wd( H, I) & wd( O, L) & colh(I, O, H) & colh(O, L, I) & ColH H O L
+  wd( H, I) & wd( O, L) & colH(I, O, H) & colH(O, L, I) ) => colH(H,  O,  L)))
 ).
 
 fof(pipo,conjecture,
@@ -14227,7 +14228,7 @@ fof(pipo,conjecture,
    wd( O, I) &
     wd( Oprime, Lprimeprime) &
      wd( Oprime, Lprimeprime) &
-      wd( Oprime, Hprime) & (ColH Oprime Lprime Lprimeprime & (ColH Oprime Hprime Lprimeprime & ColH Hprime Oprime Lprime
+      wd( Oprime, Hprime) & colH(Oprime,Lprime,Lprimeprime) & colH(Oprime,Hprime,Lprimeprime) ) => colH(Hprime,Oprime,Lprime)))
 ).
 
 fof(pipo,conjecture,
@@ -14245,7 +14246,7 @@ fof(pipo,conjecture,
           col( A, D, Cprime) & col( Bprime, D, Cprime) ) => col( A, C, D)))  ).
 
 fof(pipo,conjecture,
-(! [H, O, L Hprime, Oprime, Lprime, Lprimeprime, I Iprime] : ( (
+(! [H, O, L, Hprime, Oprime, Lprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Lprimeprime) &
  wd( Oprime, Lprime) &
   wd( O, H) &
@@ -14254,12 +14255,12 @@ fof(pipo,conjecture,
      wd( Iprime, Lprimeprime) &
       wd( O, L) &
        wd( Oprime, Lprimeprime) &
-        (ColH Oprime Lprime Lprimeprime &
-         (ColH Oprime Iprime Hprime & colh(O, I, H) & colh(O, I, L) & ColH H O L
+        colH(Oprime,Lprime,Lprimeprime) &
+         colH(Oprime,Iprime,Hprime) & colH(O, I, H) & colH(O, I, L) ) => colH(H, O, L)))
 ).
 
 fof(pipo,conjecture,
-(! [H, O, L Hprime, Oprime, Lprime, Lprimeprime, I Iprime] : ( (
+(! [H, O, L, Hprime, Oprime, Lprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Lprimeprime) &
  wd( Oprime, Lprime) &
   wd( O, H) &
@@ -14268,8 +14269,8 @@ fof(pipo,conjecture,
      wd( Iprime, Lprimeprime) &
       wd( O, L) &
        wd( Oprime, Lprimeprime) &
-        (ColH Oprime Lprime Lprimeprime &
-         (ColH Oprime Iprime Hprime & colh(O, I, H) & (ColH Oprime Iprime Lprimeprime & ColH Hprime Oprime Lprime
+        colH(Oprime,Lprime,Lprimeprime) &
+         colH(Oprime,Iprime,Hprime) & colH(O, I, H) & colH(Oprime,Iprime,Lprimeprime)) => colH(Hprime,Oprime,Lprime)))
 ).
 
 fof(pipo,conjecture,
@@ -14293,7 +14294,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I Iprime] : ( (
+(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Kprimeprime) &
  wd( Oprime, Kprime) &
   wd( Oprime, Lprimeprime) &
@@ -14304,14 +14305,14 @@ fof(pipo,conjecture,
        wd( Iprime, Lprimeprime) &
         wd( O, K) &
          wd( O, L) &
-          (ColH Oprime Kprime Kprimeprime &
-           (ColH Oprime Lprime Lprimeprime &
-            (ColH Oprime Iprime Hprime &
-             colh(O, I, H) & (ColH Oprime Kprimeprime Lprimeprime & ColH Kprime Oprime Lprime
+          colH(Oprime,Kprime,Kprimeprime) &
+           colH(Oprime,Lprime,Lprimeprime) &
+            colH(Oprime,Iprime,Hprime) &
+             colH(O, I, H) & colH(Oprime,Kprimeprime,Lprimeprime)) => colH(Kprime,Oprime,Lprime)))
 ).
 
 fof(pipo,conjecture,
-(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I Iprime] : ( (
+(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Kprimeprime) &
  wd( Oprime, Kprime) &
   wd( Oprime, Lprimeprime) &
@@ -14322,13 +14323,13 @@ fof(pipo,conjecture,
        wd( Iprime, Lprimeprime) &
         wd( O, K) &
          wd( O, L) &
-          (ColH Oprime Kprime Kprimeprime &
-           (ColH Oprime Lprime Lprimeprime &
-            (ColH Oprime Iprime Hprime &
-             colh(O, I, H) & (ColH Hprime Lprimeprime Oprime & ColH Hprime Oprime Lprime ).
+          colH(Oprime,Kprime,Kprimeprime) &
+           colH(Oprime,Lprime,Lprimeprime) &
+            colH(Oprime,Iprime,Hprime) &
+             colH(O, I, H) & colH(Hprime,Lprimeprime,Oprime) ) => colH(Hprime,Oprime,Lprime))) ).
 
 fof(pipo,conjecture,
-(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I Iprime] : ( (
+(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Kprimeprime) &
  wd( Oprime, Kprime) &
   wd( Oprime, Lprimeprime) &
@@ -14340,16 +14341,16 @@ fof(pipo,conjecture,
         wd( O, K) &
          wd( O, L) &
           wd( Oprime, Lprimeprime) &
-           (ColH Oprime Kprime Kprimeprime &
-            (ColH Oprime Lprime Lprimeprime &
-             (ColH Oprime Iprime Hprime &
-              colh(O, I, H) & (ColH Oprime Lprimeprime Hprime & ColH Hprime Oprime Lprime
+           colH(Oprime,Kprime,Kprimeprime) &
+            colH(Oprime,Lprime,Lprimeprime) &
+             colH(Oprime,Iprime,Hprime) &
+              colH(O, I, H) & colH(Oprime,Lprimeprime,Hprime)) => colH(Hprime,Oprime,Lprime)))
 ).
 
 fof(pipo,conjecture,
 (! [A, P, M] : ( (
  wd( P, P) &
- wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) & M = A ).
+ wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) ) => M = A ))).
 
 fof(pipo,conjecture,
 (! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
@@ -14380,12 +14381,12 @@ fof(pipo,conjecture,
 fof(pipo,conjecture,
 (! [A, P, M] : ( (
  wd( P, P) &
- wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) & A = P ).
+ wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) ) => A = P ))).
 
 fof(pipo,conjecture,
 (! [A, P, M] : ( (
  wd( P, P) &
- wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) & M = P ).
+ wd( M, P) & wd( A, P) & wd( M, A) & col( M, A, P) ) => M = P ))).
 
 fof(pipo,conjecture,
 (! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
@@ -14415,7 +14416,7 @@ fof(pipo,conjecture,
 ).
 
 fof(pipo,conjecture,
-(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I Iprime] : ( (
+(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Kprimeprime) &
  wd( Oprime, Kprime) &
   wd( Oprime, Lprimeprime) &
@@ -14431,16 +14432,16 @@ fof(pipo,conjecture,
             wd( Iprime, Lprimeprime) &
              wd( Kprimeprime, Lprimeprime) &
               wd( K, O) &
-               (ColH Oprime Kprime Kprimeprime &
-                (ColH Oprime Lprime Lprimeprime &
-                 colh(K, I, L) &
-                  (ColH Oprime Iprime Hprime &
-                   colh(O, I, H) &
-                    (ColH Kprimeprime Iprime Lprimeprime & colh(K, O, I) & ColH K O L
+               colH(Oprime,Kprime,Kprimeprime) &
+                colH(Oprime,Lprime,Lprimeprime) &
+                 colH(K, I, L) &
+                  colH(Oprime,Iprime,Hprime) &
+                   colH(O, I, H) &
+                    colH(Kprimeprime,Iprime,Lprimeprime) & colH(K, O, I) ) => colH(K,  O,  L)))
 ).
 
 fof(pipo,conjecture,
-(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I Iprime] : ( (
+(! [H, K, O, L, Hprime, Kprime, Oprime, Lprime, Kprimeprime, Lprimeprime, I, Iprime] : ( (
  wd( Oprime, Kprimeprime) &
  wd( Oprime, Kprime) &
   wd( Oprime, Lprimeprime) &
@@ -14456,12 +14457,12 @@ fof(pipo,conjecture,
             wd( Iprime, Lprimeprime) &
              wd( Kprimeprime, Lprimeprime) &
               wd( K, O) &
-               (ColH Oprime Kprime Kprimeprime &
-                (ColH Oprime Lprime Lprimeprime &
-                 colh(K, I, L) &
-                  (ColH Oprime Iprime Hprime &
-                   colh(O, I, H) &
-                    (ColH Kprimeprime Iprime Lprimeprime & (ColH Kprimeprime Oprime Iprime & ColH Kprime Oprime Lprime
+               colH(Oprime,Kprime,Kprimeprime) &
+                colH(Oprime,Lprime,Lprimeprime) &
+                 colH(K, I, L) &
+                  colH(Oprime,Iprime,Hprime) &
+                   colH(O, I, H) &
+                    colH(Kprimeprime,Iprime,Lprimeprime) & colH(Kprimeprime,Oprime,Iprime)) => colH(Kprime,Oprime,Lprime)))
 ).
 
 fof(pipo,conjecture,
@@ -14531,7 +14532,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & R = B
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => R = B)))
 ).
 
 fof(pipo,conjecture,
@@ -14542,7 +14543,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SH O L & ColH H O L
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SH, O, L )=> colH(H, O, L)
 ).
 
 fof(pipo,conjecture,
@@ -14553,7 +14554,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SHprime Oprime Lprime & ColH Hprime Oprime Lprime
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SHprime,Oprime,Lprime) & ColH Hprime Oprime Lprime
 ).
 
 fof(pipo,conjecture,
@@ -14564,7 +14565,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SH O K & ColH H O K
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SH, O, K )=> colH(H, O, K)
 ).
 
 fof(pipo,conjecture,
@@ -14575,7 +14576,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SHprime Oprime Kprime & ColH Hprime Oprime Kprime
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SHprime,Oprime,Kprime) & ColH Hprime Oprime Kprime
 ).
 
 fof(pipo,conjecture,
@@ -14586,7 +14587,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH O L SH & ColH H O L
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(O, L, SH) => colH(H, O, L)
 ).
 
 fof(pipo,conjecture,
@@ -14597,7 +14598,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH Oprime Lprime SHprime & ColH Hprime Oprime Lprime
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(Oprime,Lprime,SHprime) & ColH Hprime Oprime Lprime
 ).
 
 fof(pipo,conjecture,
@@ -14613,7 +14614,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & R = A
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => R = A)))
 ).
 
 fof(pipo,conjecture,
@@ -14624,7 +14625,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SH O K & ColH H O K
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SH, O, K )=> colH(H, O, K)
 ).
 
 fof(pipo,conjecture,
@@ -14635,7 +14636,7 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      (ColH H O SH & (ColH Hprime Oprime SHprime & (ColH SHprime Oprime Kprime & ColH Hprime Oprime Kprime
+      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SHprime,Oprime,Kprime) & ColH Hprime Oprime Kprime
 ).
 
 fof(pipo,conjecture,
@@ -14643,8 +14644,8 @@ fof(pipo,conjecture,
  wd( Z1, I) &
  wd( I, Z2) &
   wd( Z1, Z2) &
-   colh(X, I, Y) &
-    (ColH Z1 I Z2 & (ColH Y Z1 Z2 & (ColH X Z1 Z2 & ColH X Y Z2 ).
+   colH(X, I, Y) &
+    colH(Z1, I, Z2) & colH(Y, Z1, Z2) & colH(X, Z1, Z2) => colH(X, Y, Z2) ).
 
 fof(pipo,conjecture,
 (! [A, B, C, D, Bprime, Cprime, P, Q, Pprime] : ( (
@@ -14693,7 +14694,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & P = C
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => P = C)))
 ).
 
 fof(pipo,conjecture,
@@ -14709,7 +14710,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & P = B
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => P = B)))
 ).
 
 fof(pipo,conjecture,
@@ -14723,7 +14724,7 @@ fof(pipo,conjecture,
       wd( P, X) &
        wd( O, Yaux) &
         wd( O, Y) &
-         wd( O, Yaux) & (ColH O Yaux Y & colh(O, X, Y) & ColH Yaux O X
+         wd( O, Yaux) & colH(O,Yaux,Y) & colH(O, X, Y) & ColH Yaux O X
 ).
 
 fof(pipo,conjecture,
@@ -14774,7 +14775,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & Q = C
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => Q = C)))
 ).
 
 fof(pipo,conjecture,
@@ -14789,7 +14790,7 @@ fof(pipo,conjecture,
        wd( Cprime, P) &
         wd( Bprime, P) &
          wd( Aprime, Bprimeprime) &
-          wd( Aprime, B0) & (ColH Bprime Cprime P & (ColH Aprime Cprime P & ColH Aprime Bprime Cprime
+          wd( Aprime, B0) & colH(Bprime,Cprime,P) & colH(Aprime,Cprime,P) & ColH Aprime Bprime Cprime
 ).
 
 fof(pipo,conjecture,
@@ -14805,7 +14806,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & Q = A
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => Q = A)))
 ).
 
 fof(pipo,conjecture,
@@ -14821,7 +14822,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & A = C
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -14837,7 +14838,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & B = C
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -14850,7 +14851,7 @@ fof(pipo,conjecture,
      wd( Aprime, Cprime) &
       wd( Bprime, Cprime) &
        wd( Cprime, P) &
-        wd( Bprime, P) & (ColH Bprime Cprime P & (ColH P Aprime Cprime & ColH Aprime Bprime Cprime
+        wd( Bprime, P) & colH(Bprime,Cprime,P) & colH(P,Aprime,Cprime) & ColH Aprime Bprime Cprime
 ).
 
 fof(pipo,conjecture,
@@ -14866,7 +14867,7 @@ fof(pipo,conjecture,
         wd( R, B) &
          col( X, Q, P) &
           col( B, R, A) &
-           col( C, Q, A) & col( C, P, B) & col( A, P, C) & A = B
+           col( C, Q, A) & col( C, P, B) & col( A, P, C) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -14888,10 +14889,10 @@ fof(pipo,conjecture,
               wd( O1, B1) &
                wd( O2, B2prime) &
                 wd( O2, B2) &
-                 (ColH O1 A1 A1prime &
-                  (ColH O2 A2 A2prime &
-                   (ColH O1 B1 B1prime &
-                    (ColH O2 B2 B2prime & (ColH O1 A1prime B1prime & ColH O1 A1 B1
+                 colH(O1,A1,A1prime) &
+                  colH(O2,A2,A2prime) &
+                   colH(O1,B1,B1prime) &
+                    colH(O2,B2,B2prime) & colH(O1,A1prime,B1prime) => colH(O1, A1, B1)
 ).
 
 fof(pipo,conjecture,
@@ -14913,10 +14914,10 @@ fof(pipo,conjecture,
               wd( O1, B1) &
                wd( O2, B2prime) &
                 wd( O2, B2) &
-                 (ColH O1 A1 A1prime &
-                  (ColH O2 A2 A2prime &
-                   (ColH O1 B1 B1prime &
-                    (ColH O2 B2 B2prime & (ColH O2 A2prime B2prime & ColH O2 A2 B2
+                 colH(O1,A1,A1prime) &
+                  colH(O2,A2,A2prime) &
+                   colH(O1,B1,B1prime) &
+                    colH(O2,B2,B2prime) & colH(O2,A2prime,B2prime) => colH(O2, A2, B2)
 ).
 
 fof(pipo,conjecture,
@@ -14938,10 +14939,10 @@ fof(pipo,conjecture,
               wd( O1, B1) &
                wd( O2, B2prime) &
                 wd( O2, B2) &
-                 (ColH O1 A1 A1prime &
-                  (ColH O2 A2 A2prime &
-                   (ColH O1 B1 B1prime &
-                    (ColH O2 B2 B2prime & (ColH O1 A1prime B1prime & ColH O1 A1 B1
+                 colH(O1,A1,A1prime) &
+                  colH(O2,A2,A2prime) &
+                   colH(O1,B1,B1prime) &
+                    colH(O2,B2,B2prime) & colH(O1,A1prime,B1prime) => colH(O1, A1, B1)
 ).
 
 fof(pipo,conjecture,
@@ -14979,10 +14980,10 @@ fof(pipo,conjecture,
               wd( O1, B1) &
                wd( O2, B2prime) &
                 wd( O2, B2) &
-                 (ColH O1 A1 A1prime &
-                  (ColH O2 A2 A2prime &
-                   (ColH O1 B1 B1prime &
-                    (ColH O2 B2 B2prime & (ColH O2 A2prime B2prime & ColH O2 A2 B2
+                 colH(O1,A1,A1prime) &
+                  colH(O2,A2,A2prime) &
+                   colH(O1,B1,B1prime) &
+                    colH(O2,B2,B2prime) & colH(O2,A2prime,B2prime) => colH(O2, A2, B2)
 ).
 
 fof(pipo,conjecture,
@@ -15000,10 +15001,10 @@ fof(pipo,conjecture,
           wd( Aprime, Bprime) &
            wd( Bprime, Cprimeprime) &
             wd( Aprime, Cprimeprime) &
-             colh(A, B, C) &
-              (ColH Aprime Cprime Bprimeprime &
-               (ColH Aprime Bprimeprime Cprime &
-                (ColH Aprime Bprime Cprimeprime & (ColH Bprime Cprimeprime Cprime & ColH Aprime Bprime Cprime
+             colH(A, B, C) &
+              colH(Aprime,Cprime,Bprimeprime) &
+               colH(Aprime,Bprimeprime,Cprime) &
+                colH(Aprime,Bprime,Cprimeprime) & colH(Bprime,Cprimeprime,Cprime) & ColH Aprime Bprime Cprime
 ).
 
 fof(pipo,conjecture,
@@ -15042,10 +15043,10 @@ fof(pipo,conjecture,
              wd( Bprime, Cprime) &
               wd( Aprime, Cprime) &
                wd( Aprime, Dprime) &
-                colh(A, B, C) &
-                 colh(A, B, C) &
-                  (ColH Aprime Bprime Cprime &
-                   (ColH Aprime Bprime Cprime & (ColH Aprime Cprime Dprime & ColH Aprime Bprime Dprime
+                colH(A, B, C) &
+                 colH(A, B, C) &
+                  colH(Aprime,Bprime,Cprime) &
+                   colH(Aprime,Bprime,Cprime) & colH(Aprime,Cprime,Dprime) & ColH Aprime Bprime Dprime
 ).
 
 fof(pipo,conjecture,
@@ -15346,7 +15347,7 @@ fof(pipo,conjecture,
 (! [A, B, X, Y, C, I] : ( (
  wd( X, Y) &
  wd( A, B) &
-  wd( A, C) & wd( B, C) & colh(A, C, B) & colh(A, I, C) & ColH A I B
+  wd( A, C) & wd( B, C) & colH(A, C, B) & colH(A, I, C) ) => colH(A,  I,  B)))
 ).
 
 fof(pipo,conjecture,
@@ -15452,7 +15453,7 @@ fof(pipo,conjecture,
          wd( C, Q) &
           wd( B, I) &
            wd( I, C) &
-            wd( B, C) & colh(B, I, C) & colh(B, Q, C) & ColH B I Q
+            wd( B, C) & colH(B, I, C) & colH(B, Q, C) ) => colH(B,  I,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15470,7 +15471,7 @@ fof(pipo,conjecture,
           wd( B, I) &
            wd( I, C) &
             wd( B, C) &
-             wd( P, I) & colh(B, I, C) & colh(B, P, C) & ColH B P I
+             wd( P, I) & colH(B, I, C) & colH(B, P, C) ) => colH(B,  P,  I)))
 ).
 
 fof(pipo,conjecture,
@@ -15490,7 +15491,7 @@ fof(pipo,conjecture,
             wd( B, C) &
              wd( P, I) &
               wd( Q, I) &
-               colh(B, I, C) & colh(P, Q, I) & colh(B, C, P) & ColH B P Q
+               colH(B, I, C) & colH(P, Q, I) & colH(B, C, P) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15510,18 +15511,18 @@ fof(pipo,conjecture,
             wd( B, C) &
              wd( P, I) &
               wd( Q, I) &
-               colh(B, I, C) & colh(P, Q, I) & colh(B, C, Q) & ColH C P Q
+               colH(B, I, C) & colH(P, Q, I) & colH(B, C, Q) ) => colH(C,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
 (! [A, P, M] : ( (
  wd( P, A) &
- wd( P, P) & wd( M, A) & wd( M, P) & col( P, A, M) & M = P ).
+ wd( P, P) & wd( M, A) & wd( M, P) & col( P, A, M) ) => M = P )))).
 
 fof(pipo,conjecture,
 (! [A, P, M] : ( (
  wd( P, A) &
- wd( P, P) & wd( M, A) & wd( M, P) & col( P, A, M) & M = A ).
+ wd( P, P) & wd( M, A) & wd( M, P) & col( P, A, M) ) => M = A )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, P, Q, I] : ( (
@@ -15540,7 +15541,7 @@ fof(pipo,conjecture,
             wd( B, C) &
              wd( P, I) &
               wd( Q, I) &
-               colh(B, I, C) & colh(P, Q, I) & colh(B, I, P) & ColH B P Q
+               colH(B, I, C) & colH(P, Q, I) & colH(B, I, P) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15560,7 +15561,7 @@ fof(pipo,conjecture,
             wd( B, C) &
              wd( P, I) &
               wd( Q, I) &
-               colh(B, I, C) & colh(P, Q, I) & colh(B, I, Q) & ColH B P Q
+               colH(B, I, C) & colH(P, Q, I) & colH(B, I, Q) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15575,7 +15576,7 @@ fof(pipo,conjecture,
        wd( B, Q) &
         wd( C, P) &
          wd( C, Q) &
-          colh(P, B, C) & colh(C, P, B) & colh(B, C, Q) & ColH B P Q
+          colH(P, B, C) & colH(C, P, B) & colH(B, C, Q) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15590,7 +15591,7 @@ fof(pipo,conjecture,
        wd( B, Q) &
         wd( C, P) &
          wd( C, Q) &
-          colh(P, B, C) & colh(C, P, B) & colh(B, C, Q) & ColH C P Q
+          colH(P, B, C) & colH(C, P, B) & colH(B, C, Q) ) => colH(C,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15673,7 +15674,7 @@ fof(pipo,conjecture,
              wd( I, C) &
               wd( C, B) &
                wd( I, B) &
-                colh(P, I, Q) & colh(I, C, B) & colh(C, P, I) & ColH B P Q
+                colH(P, I, Q) & colH(I, C, B) & colH(C, P, I) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15694,7 +15695,7 @@ fof(pipo,conjecture,
              wd( I, C) &
               wd( C, B) &
                wd( I, B) &
-                colh(P, I, Q) & colh(I, C, B) & colh(C, Q, I) & ColH B P Q
+                colH(P, I, Q) & colH(I, C, B) & colH(C, Q, I) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15766,7 +15767,7 @@ fof(pipo,conjecture,
              wd( I, B) &
               wd( B, C) &
                wd( I, C) &
-                colh(P, I, Q) & colh(I, B, C) & colh(B, P, I) & ColH B P Q
+                colH(P, I, Q) & colH(I, B, C) & colH(B, P, I) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15787,7 +15788,7 @@ fof(pipo,conjecture,
              wd( I, B) &
               wd( B, C) &
                wd( I, C) &
-                colh(P, I, Q) & colh(I, B, C) & colh(B, Q, I) & ColH B P Q
+                colH(P, I, Q) & colH(I, B, C) & colH(B, Q, I) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15831,7 +15832,7 @@ fof(pipo,conjecture,
           wd( A, I) &
            wd( I, B) &
             wd( A, B) &
-             colh(A, I, B) & colh(I, Q, I) & colh(A, Q, B) & ColH A I Q
+             colH(A, I, B) & colH(I, Q, I) & colH(A, Q, B) ) => colH(A,  I,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15850,7 +15851,7 @@ fof(pipo,conjecture,
            wd( I, B) &
             wd( A, B) &
              wd( P, I) &
-              colh(A, I, B) & colh(P, I, I) & colh(A, P, B) & ColH A P I
+              colH(A, I, B) & colH(P, I, I) & colH(A, P, B) ) => colH(A,  P,  I)))
 ).
 
 fof(pipo,conjecture,
@@ -15870,7 +15871,7 @@ fof(pipo,conjecture,
             wd( A, B) &
              wd( P, I) &
               wd( Q, I) &
-               colh(A, I, B) & colh(P, Q, I) & colh(A, B, P) & ColH A P Q
+               colH(A, I, B) & colH(P, Q, I) & colH(A, B, P) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15890,7 +15891,7 @@ fof(pipo,conjecture,
             wd( A, B) &
              wd( P, I) &
               wd( Q, I) &
-               colh(A, I, B) & colh(P, Q, I) & colh(A, B, Q) & ColH B P Q
+               colH(A, I, B) & colH(P, Q, I) & colH(A, B, Q) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15910,7 +15911,7 @@ fof(pipo,conjecture,
             wd( A, B) &
              wd( P, I) &
               wd( Q, I) &
-               colh(A, I, B) & colh(P, Q, I) & colh(A, I, P) & ColH A P Q
+               colH(A, I, B) & colH(P, Q, I) & colH(A, I, P) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15930,7 +15931,7 @@ fof(pipo,conjecture,
             wd( A, B) &
              wd( P, I) &
               wd( Q, I) &
-               colh(A, I, B) & colh(P, Q, I) & colh(A, I, Q) & ColH A P Q
+               colH(A, I, B) & colH(P, Q, I) & colH(A, I, Q) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -15951,7 +15952,7 @@ fof(pipo,conjecture,
              wd( P, I) &
               wd( Q, I) &
                wd( C, I) &
-                colh(A, I, B) & colh(P, Q, I) & colh(A, C, I) & ColH A B C
+                colH(A, I, B) & colH(P, Q, I) & colH(A, C, I) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -15972,7 +15973,7 @@ fof(pipo,conjecture,
              wd( B, Q) &
               wd( C, P) &
                wd( C, Q) &
-                colh(P, I, Q) & colh(I, B, A) & colh(B, P, I) & ColH A P Q
+                colH(P, I, Q) & colH(I, B, A) & colH(B, P, I) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -16011,7 +16012,7 @@ fof(pipo,conjecture,
              wd( B, Q) &
               wd( C, P) &
                wd( C, Q) &
-                colh(P, I, Q) & colh(I, B, A) & colh(B, Q, I) & ColH A P Q
+                colH(P, I, Q) & colH(I, B, A) & colH(B, Q, I) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -16030,7 +16031,7 @@ fof(pipo,conjecture,
            wd( C, P) &
             wd( C, Q) &
              wd( C, I) &
-              colh(I, B, A) & colh(A, B, I) & colh(A, C, I) & ColH A B C
+              colH(I, B, A) & colH(A, B, I) & colH(A, C, I) ) => colH(A,  B,  C)))
 ).
 
 fof(pipo,conjecture,
@@ -16045,7 +16046,7 @@ fof(pipo,conjecture,
        wd( B, Q) &
         wd( C, P) &
          wd( C, Q) &
-          colh(P, A, B) & colh(B, P, A) & colh(A, B, Q) & ColH A P Q
+          colH(P, A, B) & colH(B, P, A) & colH(A, B, Q) ) => colH(A,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -16060,7 +16061,7 @@ fof(pipo,conjecture,
        wd( B, Q) &
         wd( C, P) &
          wd( C, Q) &
-          colh(P, A, B) & colh(B, P, A) & colh(A, B, Q) & ColH B P Q
+          colH(P, A, B) & colH(B, P, A) & colH(A, B, Q) ) => colH(B,  P,  Q)))
 ).
 
 fof(pipo,conjecture,
@@ -16582,7 +16583,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & I = C
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => I = C)))
 ).
 
 fof(pipo,conjecture,
@@ -16713,7 +16714,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & I = B
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -16729,7 +16730,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & J = C
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => J = C)))
 ).
 
 fof(pipo,conjecture,
@@ -16745,7 +16746,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & J = A
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -16761,7 +16762,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & A = C
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -16777,7 +16778,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & B = C
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -16793,7 +16794,7 @@ fof(pipo,conjecture,
         col( J, G, B) &
          col( C, J, A) &
           col( C, I, B) &
-           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) & A = B
+           col( Gprime, A, I) & col( Gprime, B, J) & col( A, I, B) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -16821,7 +16822,7 @@ fof(pipo,conjecture,
    wd( I, B) &
     wd( I, C) &
      col( I, G, A) &
-      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & I = C ).
+      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) ) => I = C )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, I, G, Gprime] : ( (
@@ -16831,7 +16832,7 @@ fof(pipo,conjecture,
    wd( I, B) &
     wd( I, C) &
      col( I, G, A) &
-      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & I = B ).
+      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) ) => I = B )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, I, G, Gprime] : ( (
@@ -16841,7 +16842,7 @@ fof(pipo,conjecture,
    wd( I, B) &
     wd( I, C) &
      col( I, G, A) &
-      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & A = C ).
+      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) ) => A = C )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, I, G, Gprime] : ( (
@@ -16851,7 +16852,7 @@ fof(pipo,conjecture,
    wd( I, B) &
     wd( I, C) &
      col( I, G, A) &
-      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & B = C ).
+      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) ) => B = C )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, I, G, Gprime] : ( (
@@ -16861,7 +16862,7 @@ fof(pipo,conjecture,
    wd( I, B) &
     wd( I, C) &
      col( I, G, A) &
-      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) & A = B ).
+      col( C, B, A) & col( C, I, B) & col( Gprime, A, I) ) => A = B )))).
 
 fof(pipo,conjecture,
 (! [A, B, C, X, x0, G, Gprime] : ( (
@@ -16876,7 +16877,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => x = C)))
 ).
 
 fof(pipo,conjecture,
@@ -16917,7 +16918,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x = B
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => x = B)))
 ).
 
 fof(pipo,conjecture,
@@ -16994,7 +16995,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x0 = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => x0 = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17010,7 +17011,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & x0 = A
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => x0 = A)))
 ).
 
 fof(pipo,conjecture,
@@ -17026,7 +17027,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & A = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17042,7 +17043,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & B = C
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17058,7 +17059,7 @@ fof(pipo,conjecture,
         col( x0, G, B) &
          col( X, Gprime, A) &
           col( x0, Gprime, B) &
-           col( C, x0, A) & col( C, X, B) & col( A, X, B) & A = B
+           col( C, x0, A) & col( C, X, B) & col( A, X, B) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17085,7 +17086,7 @@ fof(pipo,conjecture,
    wd( X, B) &
     wd( X, C) &
      col( X, G, A) &
-      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & x = C ).
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) ) => x = C )))).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime, Cprime, X ] : ( (
@@ -17118,7 +17119,7 @@ fof(pipo,conjecture,
    wd( X, B) &
     wd( X, C) &
      col( X, G, A) &
-      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & x = B ).
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) ) => x = B )))).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime, Cprime, X ] : ( (
@@ -17151,7 +17152,7 @@ fof(pipo,conjecture,
    wd( X, B) &
     wd( X, C) &
      col( X, G, A) &
-      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & A = C ).
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) ) => A = C )))).
 
 fof(pipo,conjecture,
 (! [O, A, B, Oprime, Aprime, Bprime, Cprime] : ( (
@@ -17183,7 +17184,7 @@ fof(pipo,conjecture,
    wd( X, B) &
     wd( X, C) &
      col( X, G, A) &
-      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & B = C ).
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) ) => B = C )))).
 
 fof(pipo,conjecture,
 (! [O, A, B, Oprime, Aprime, Bprime, Cprime] : ( (
@@ -17214,7 +17215,7 @@ fof(pipo,conjecture,
    wd( X, B) &
     wd( X, C) &
      col( X, G, A) &
-      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) & A = B ).
+      col( X, Gprime, A) & col( C, B, A) & col( C, X, B) ) => A = B )))).
 
 fof(pipo,conjecture,
 (! [O, A, B, C, Oprime, Aprime, Bprime] : ( (
@@ -17332,7 +17333,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & K = B
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17373,7 +17374,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & K = A
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -17416,7 +17417,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & I = C
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => I = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17460,7 +17461,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & I = B
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17475,7 +17476,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & G = A
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => G = A)))
 ).
 
 fof(pipo,conjecture,
@@ -17490,7 +17491,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & G = C
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => G = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17505,7 +17506,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & A = C
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17520,7 +17521,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & B = C
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17535,7 +17536,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( I, G, A) &
-          col( A, G, C) & col( B, K, A) & col( C, I, B) & A = B
+          col( A, G, C) & col( B, K, A) & col( C, I, B) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17569,7 +17570,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = D
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = D)))
 ).
 
 fof(pipo,conjecture,
@@ -17588,7 +17589,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & K = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17607,7 +17608,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & K = A
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -17652,7 +17653,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & I = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => I = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17671,7 +17672,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & I = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17700,7 +17701,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & J = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => J = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17744,7 +17745,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & J = A
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -17809,7 +17810,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17828,7 +17829,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & B = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -17867,7 +17868,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( I, A, B) &
              col( D, C, B) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -17956,7 +17957,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & K = B
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18004,7 +18005,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & K = A
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18019,7 +18020,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & G = B
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => G = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18034,7 +18035,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & G = C
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => G = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18049,7 +18050,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & J = C
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => J = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18085,7 +18086,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & J = A
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18100,7 +18101,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & A = C
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18115,7 +18116,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & B = C
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18130,7 +18131,7 @@ fof(pipo,conjecture,
        wd( K, A) &
         wd( K, B) &
          col( B, J, G) &
-          col( B, C, G) & col( A, B, K) & col( A, C, J) & A = B
+          col( B, C, G) & col( A, B, K) & col( A, C, J) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18230,7 +18231,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & B = D
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => B = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18271,7 +18272,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = D
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18333,7 +18334,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & K = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18374,7 +18375,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & K = A
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18393,7 +18394,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & I = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => I = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18461,7 +18462,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & I = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18480,7 +18481,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & J = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => J = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18548,7 +18549,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & J = A
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18567,7 +18568,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18586,7 +18587,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & B = C
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -18654,7 +18655,7 @@ fof(pipo,conjecture,
            wd( D, C) &
             col( J, B, A) &
              col( D, C, A) &
-              col( A, B, K) & col( A, C, J) & col( B, C, I) & A = B
+              col( A, B, K) & col( A, C, J) & col( B, C, I) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18738,7 +18739,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & K = B
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18754,7 +18755,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & K = A
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18818,7 +18819,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & I = D
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => I = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18834,7 +18835,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & I = B
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -18850,7 +18851,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & J = D
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => J = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18866,7 +18867,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & J = A
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -18930,7 +18931,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & B = D
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => B = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18946,7 +18947,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & A = D
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => A = D)))
 ).
 
 fof(pipo,conjecture,
@@ -18962,7 +18963,7 @@ fof(pipo,conjecture,
         wd( K, B) &
          col( D, B, J) &
           col( D, A, I) &
-           col( K, A, B) & col( I, B, D) & col( J, A, D) & A = B
+           col( K, A, B) & col( I, B, D) & col( J, A, D) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
@@ -19054,7 +19055,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & D = G
+                       col( I, B, C) & col( G, A, D) ) => D = G)))
 ).
 
 fof(pipo,conjecture,
@@ -19124,7 +19125,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & J = G
+                       col( I, B, C) & col( G, A, D) ) => J = G)))
 ).
 
 fof(pipo,conjecture,
@@ -19288,7 +19289,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & I = G
+                       col( I, B, C) & col( G, A, D) ) => I = G)))
 ).
 
 fof(pipo,conjecture,
@@ -19366,7 +19367,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & A = G
+                       col( I, B, C) & col( G, A, D) ) => A = G)))
 ).
 
 fof(pipo,conjecture,
@@ -19394,7 +19395,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & B = D
+                       col( I, B, C) & col( G, A, D) ) => B = D)))
 ).
 
 fof(pipo,conjecture,
@@ -19468,7 +19469,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & B = G
+                       col( I, B, C) & col( G, A, D) ) => B = G)))
 ).
 
 fof(pipo,conjecture,
@@ -19496,7 +19497,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & A = D
+                       col( I, B, C) & col( G, A, D) ) => A = D)))
 ).
 
 fof(pipo,conjecture,
@@ -19570,7 +19571,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & K = B
+                       col( I, B, C) & col( G, A, D) ) => K = B)))
 ).
 
 fof(pipo,conjecture,
@@ -19644,7 +19645,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & K = A
+                       col( I, B, C) & col( G, A, D) ) => K = A)))
 ).
 
 fof(pipo,conjecture,
@@ -19672,7 +19673,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & I = C
+                       col( I, B, C) & col( G, A, D) ) => I = C)))
 ).
 
 fof(pipo,conjecture,
@@ -19744,7 +19745,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & I = B
+                       col( I, B, C) & col( G, A, D) ) => I = B)))
 ).
 
 fof(pipo,conjecture,
@@ -19772,7 +19773,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & J = C
+                       col( I, B, C) & col( G, A, D) ) => J = C)))
 ).
 
 fof(pipo,conjecture,
@@ -19843,7 +19844,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & J = A
+                       col( I, B, C) & col( G, A, D) ) => J = A)))
 ).
 
 fof(pipo,conjecture,
@@ -19871,7 +19872,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & A = C
+                       col( I, B, C) & col( G, A, D) ) => A = C)))
 ).
 
 fof(pipo,conjecture,
@@ -19945,7 +19946,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & B = C
+                       col( I, B, C) & col( G, A, D) ) => B = C)))
 ).
 
 fof(pipo,conjecture,
@@ -20021,7 +20022,7 @@ fof(pipo,conjecture,
                     col( G, C, D) &
                      col( K, A, B) &
                       col( J, A, C) &
-                       col( I, B, C) & col( G, A, D) & A = B
+                       col( I, B, C) & col( G, A, D) ) => A = B)))
 ).
 
 fof(pipo,conjecture,
