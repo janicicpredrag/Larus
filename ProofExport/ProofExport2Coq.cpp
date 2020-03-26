@@ -19,8 +19,9 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
             if (i < size - 1)
                 outfile << " ";
         }
+        outfile << ", ";
     }
-    outfile << ", ";
+
     for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
         OutputFact(outfile, cl.GetPremises().GetElement(i));
         if(i+1<cl.GetPremises().GetSize())
