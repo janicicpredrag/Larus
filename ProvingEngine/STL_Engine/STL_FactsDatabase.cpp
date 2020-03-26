@@ -199,10 +199,10 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
 
 bool STLFactsDatabase::NextInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation)
 {
- //   if (/*mConstantsPermissible.empty() &&*/ cl.GetNumOfUnivVars() == 0)
- //       return false;
-    // if (mpT->mConstantsPermissible.empty())
-    //    return false;
+   // if (/*mConstantsPermissible.empty() &&*/ cl.GetNumOfUnivVars() == 0)
+   //     return false;
+    if (mpT->mConstantsPermissible.empty())
+        return false;
 
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
@@ -238,9 +238,11 @@ bool STLFactsDatabase::NextInstantiationOfUnivVars(const CLFormula& cl, Conjunct
                 if (elapsed_secs > mTimeLimit)
                     return false;
 
-                for (map<string,string>::iterator it = instantiation.begin(); it!=instantiation.end(); it++) {
-                   if (VarsNotInPremises.find(it->first) == VarsNotInPremises.end())
-                       instantiation.erase(it);
+                for (map<string,string>::iterator jt = instantiation.begin(); jt!=instantiation.end(); ) {
+                   if (VarsNotInPremises.find(jt->first) == VarsNotInPremises.end())
+                       jt = instantiation.erase(jt);
+                   else
+                       jt++;
                 }
                 conj_inst.Clear();
 
