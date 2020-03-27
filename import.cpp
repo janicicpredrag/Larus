@@ -45,7 +45,7 @@ string itos(unsigned int i)
 
 
 
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params)
 {
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
@@ -83,20 +83,23 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
         // cout << "Theorem proved! " << endl;
-        string sFileName("theorems/proofs/PROOF" + theoremName + ".tex");
-        string sFileName2("theorems/proofs/PROOF" + theoremName + "-simpl.tex");
+        string sFileName("proofs/PROOF" + theoremFileName + ".tex");
+        string sFileName2("proofs/PROOF" + theoremFileName + "-simpl.tex");
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
+
         if (engine->GetKind() != eURSA_ProvingEngine && engine->GetKind() != eEQ_ProvingEngine) {
             proof.Simplify();
             ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
         }
+
+
         delete ex;
 
         if (params.mbCoq) {
-            string sFileName3("theorems/proofs/PROOF" + theoremName + ".v");
+            string sFileName3("proofs/PROOF" + theoremFileName + ".v");
             ProofExport *excoq;
             excoq = new ProofExport2Coq;
             excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
@@ -141,7 +144,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     {
                         string filename = s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
                         cout << "Including file : " << filename << endl;
-                        ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
+                    //    ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
+                        ifstream input_file(filename,ios::in);
                         if (input_file.good())
                         {
                             string ss;
@@ -227,7 +231,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     }
                     theorem = output[output.size()-1].first;
                 }
-                cout << endl << "Proving theorem: " << theoremName << ":" << theorem << endl;
+                cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
             }
         }
         else
@@ -252,7 +256,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     else // default
         engine = new STL_ProvingEngine(&T,params);
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, params);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params);
     delete engine;
 
     return r;
