@@ -1,3 +1,5 @@
+include(col-axioms.ax).
+
 fof(pipo,conjecture,
 (! [A, D, T , B, C] : ( (
  wd( A, D) &

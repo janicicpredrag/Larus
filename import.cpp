@@ -126,9 +126,43 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
     if (tptpconjecture.good()) {
-        while(getline(tptpconjecture, s)) {
+        while(getline(tptpconjecture, s)) { 
             if (s != "" && s.at(0) != '%')
-                str += s;
+            {
+                // we assume include command are on a single line and filename does not contain closing parenthesis.
+                // we do not support nested inclusion.
+                string str_input = string("input");   
+                size_t found_input = s.find(str_input);
+                if (found_input != string::npos)
+                {
+                    size_t found_dot = s.find(").", found_input+1);
+                    if (found_input != string::npos)
+                    {
+                        string filename = s.substr(found_input+str_input.size()+1, found_dot - found_input -str_input.size()-1);
+                        cout << "Including file : " << filename << endl;
+                        ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
+                        if (input_file.good())
+                        {
+                            string ss;
+                            while(getline(input_file, ss)) { 
+                                if (ss!= "" && ss.at(0) != '%')
+                                    str += ss;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Error reading input file :" << filename << endl;
+                            return eBadOrMissingInputFile;
+                        }
+                    }
+                    else
+                    {
+                        str +=s;
+                    }                    
+                }
+                else
+                    str += s;
+            }
         }
         tptpconjecture.close();
     }
@@ -144,6 +178,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
     string strfof ("fof");
     size_t found1 = str.find(strfof);
+
 
     while (found1 != string::npos) {
         size_t found2 = str.find(".", found1+1);

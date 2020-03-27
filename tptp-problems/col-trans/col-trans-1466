@@ -1,3 +1,5 @@
+include(col-axioms.ax).
+
 fof(pipo,conjecture,
 (! [A, C, G, H, P, Q, R, D] : ( (
  wd( G, H) &
@@ -11,4 +13,4 @@ fof(pipo,conjecture,
         wd( Q, R) &
          wd( P, R) &
           col( D, G, H) &
-           col( C, H, D) & col( P, Q, R) ) => col( G, H, C)))  )
+           col( C, H, D) & col( P, Q, R) ) => col( G, H, C)))  ).
