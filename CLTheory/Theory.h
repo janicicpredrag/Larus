@@ -24,7 +24,7 @@ public:
             AddSymbol("eq", 2);
     }
 
-    void Reset() { miConstantsCounter = 0; mConstants.clear(); mConstantsPermissible.clear(); AddSymbol("false", 0); }
+    void Reset();
 
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
@@ -45,6 +45,7 @@ public:
     bool IsConstant(string s) const;
     size_t NumberOfConstantsWaiting();
     bool MakeNextConstantPermissible();
+    void StoreInitialConstants();
 
     void AddSymbol(string p, unsigned arity);
     size_t GetSymbolArity(string p);
@@ -56,6 +57,7 @@ public:
     vector< pair<CLFormula,string> > mCLaxioms;
     // set<string> mConstants;
     vector<string> mConstants;
+    vector<string> mInitialConstants;
     set<string> mConstantsPermissible;
     vector< pair<string,unsigned> > mSignature;
 

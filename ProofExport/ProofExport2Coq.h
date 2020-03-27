@@ -16,13 +16,6 @@ private:
     void OutputAnd(ofstream& outfile);
     void OutputOr(ofstream& outfile);
     void OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name);
-//    {
-//        OutputConjFormula(outfile, cl.GetPremises());
-//        OutputImplication(outfile);
-//        OutputDNF(outfile, cl.GetGoal());
-//    }
-
-
     void OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& instatiation);
     void OutputProof(ofstream& outfile, const CLProof& p, unsigned level);
     void OutputEpilogue(ofstream& outfile);
@@ -30,7 +23,6 @@ private:
     void OutputProofEnd(ofstream& outfile, const ByAssumption* ba, unsigned level);
     void OutputProofEnd(ofstream& outfile, const EFQ* efq, unsigned);
     void OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level);
-    //virtual void OutputCLFormula(ofstream& outfile, const CLFormula& cl);
 
 };
 

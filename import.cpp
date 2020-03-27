@@ -53,6 +53,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         instantiation[theorem.GetUnivVar(i)] = constantName;
 //        T.MakeNextConstantPermissible();
     }
+    T.StoreInitialConstants();
     CLProof proof;
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
         Fact premiseFactInstantiated;
@@ -446,21 +447,6 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory) {
-   cout << endl << "Exporting to TPTP" << endl;
-    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
-        string thm = case_study[i].first;
-        cout << " Exporting " << thm << " ... " << endl;
-        vector<string> depends = case_study[i].second;
-        if (!OutputToTPTPfile(theory,depends,thm))
-        {
-            cout << "Failed!" << endl;
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
 /*
 void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth) {
     if (input_format != eTPTP) {
@@ -482,3 +468,19 @@ void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<str
 */
 
 // ---------------------------------------------------------------------------------------------------------------------------
+
+void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory) {
+   cout << endl << "Exporting to TPTP" << endl;
+    for (size_t i = 0, size = case_study.size(); i<size /*&& i<50*/; i++) {
+        string thm = case_study[i].first;
+        cout << " Exporting " << thm << " ... " << endl;
+        vector<string> depends = case_study[i].second;
+        if (!OutputToTPTPfile(theory,depends,thm))
+        {
+            cout << "Failed!" << endl;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+

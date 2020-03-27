@@ -9,6 +9,16 @@ void Theory::SetAxioms(vector<pair<CLFormula,string>>& axioms)
 
 // --------------------------------------------------------------
 
+void Theory::Reset()
+{
+    miConstantsCounter = 0;
+    mConstants.clear();
+    mConstantsPermissible.clear();
+    AddSymbol("false", 0);
+}
+
+// --------------------------------------------------------------
+
 void Theory::AddAxiom(CLFormula& axiom, string name)
 {
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++)
@@ -337,6 +347,13 @@ bool Theory::MakeNextConstantPermissible()
         return true;
     };
     return false;
+}
+
+// --------------------------------------------------------------
+
+void Theory::StoreInitialConstants()
+{
+    mInitialConstants = mConstants;
 }
 
 // --------------------------------------------------------------

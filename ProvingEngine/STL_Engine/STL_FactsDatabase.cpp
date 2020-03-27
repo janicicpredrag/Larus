@@ -149,6 +149,11 @@ bool STLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, 
                       const string varInst = instantiation[varName];
                       orderedInstantiation.push_back(pair<string,string>(varName,varInst));
                 }
+                for (size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)  {
+                      const string varName = cl.GetExistVar(i);
+                      const string varInst = instantiation[varName];
+                      orderedInstantiation.push_back(pair<string,string>(varName,varInst));
+                }
                 // cout << "Conjunction " << fout << "ADDED"  << endl;
                 return true;
              }
