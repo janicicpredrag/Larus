@@ -1,4 +1,4 @@
-include(col-axioms.ax).
+include('col-axioms.ax').
 
 fof(pipo,conjecture,
 (! [P, Q, A, B, C, D, T, X, Y] : ( (
