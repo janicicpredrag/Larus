@@ -89,7 +89,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
      outfile << "Require Import CLProver.general_tactics." << endl;
      outfile <<  endl;
      outfile << "Section Sec." << endl;
-///    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
+//    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
     outfile << "Parameter MyT : Type." << endl;
     for(std::vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
