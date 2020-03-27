@@ -82,8 +82,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
         // cout << "Theorem proved! " << endl;
-        string sFileName("proofs/PROOF" + theoremName + ".tex");
-        string sFileName2("proofs/PROOF" + theoremName + "-simpl.tex");
+        string sFileName("theorems/proofs/PROOF" + theoremName + ".tex");
+        string sFileName2("theorems/proofs/PROOF" + theoremName + "-simpl.tex");
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
@@ -95,7 +95,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         delete ex;
 
         if (params.mbCoq) {
-            string sFileName3("proofs/PROOF" + theoremName + ".v");
+            string sFileName3("theorems/proofs/PROOF" + theoremName + ".v");
             ProofExport *excoq;
             excoq = new ProofExport2Coq;
             excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
