@@ -296,14 +296,14 @@ size_t Theory::GetSymbolArity(string p)
 string Theory::MakeNewConstant()
 {
     // return GetConstantName(miConstantsCounter++);
-    unsigned id = mConstants.size();
+    unsigned id = mConstants.size() + mConstantsPermissible.size();
     string s;
     if (id < 27) {
-        s = "a";
-        s[0] += id;
+        s = "wa";
+        s[1] += id;
     }
     else
-        s = "p" + to_string(id);
+        s = "w" + to_string(id);
     mConstants.push_back(s);
     return s;
 }

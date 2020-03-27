@@ -155,7 +155,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
         outfile << ") ";
         outfile << "by applying (" << get<2>(p.GetMP(i));
         vector<pair<string,string>> inst = get<3>(p.GetMP(i));
-        for (size_t j = 0, size = inst.size(); j < size; j++)
+        for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
             outfile << " " << inst[j].second;
         outfile << ")";
 
