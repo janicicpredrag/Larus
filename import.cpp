@@ -132,14 +132,14 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
             {
                 // we assume include command are on a single line and filename does not contain closing parenthesis.
                 // we do not support nested inclusion.
-                string str_input = string("input");   
+                string str_input = string("include");   
                 size_t found_input = s.find(str_input);
                 if (found_input != string::npos)
                 {
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)
                     {
-                        string filename = s.substr(found_input+str_input.size()+1, found_dot - found_input -str_input.size()-1);
+                        string filename = s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
                         cout << "Including file : " << filename << endl;
                         ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
                         if (input_file.good())
@@ -149,10 +149,11 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                                 if (ss!= "" && ss.at(0) != '%')
                                     str += ss;
                             }
+                            cout << "Debug:" << str << endl;
                         }
                         else
                         {
-                            cout << "Error reading input file :" << filename << endl;
+                            cout << "Error reading input file :" << "tptp-problems/col-trans/" << filename << endl;
                             return eBadOrMissingInputFile;
                         }
                     }
