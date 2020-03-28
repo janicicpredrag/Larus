@@ -177,7 +177,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
                 outfile << "]";
             outfile << ";spliter";
         }
-        outfile << "." << endl;
+        outfile << ". spliter." << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }

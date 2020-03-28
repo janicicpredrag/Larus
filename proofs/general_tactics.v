@@ -14,7 +14,7 @@ Ltac mysubst :=
    
 Ltac spliter := repeat
 match goal with
-   | H:(?X1 /\ ?X2) |- _ => induction H
+   | H:(?X1 /\ ?X2) |- _ => induction H; clear H
 end.
 
 Ltac splits :=
