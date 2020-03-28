@@ -1,6 +1,0 @@
-# Library name
--R . src
-
-# Coq files (filled by the configure)
-./general_tactics.v
-./RunFolder/proofs/PROOFapinp.v
