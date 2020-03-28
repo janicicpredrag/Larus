@@ -123,7 +123,7 @@ int main(int argc , char** argv)
 
     if (wrongInput) {
         cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
-        return false;
+        return 0;
     }
 
     clock_t startTime = clock();
