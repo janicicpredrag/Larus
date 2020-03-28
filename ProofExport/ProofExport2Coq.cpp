@@ -37,7 +37,7 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
         outfile << "exists ";
         for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
             outfile << " " << cl.GetExistVar(i);
-        outfile << ",";
+        outfile << ", ";
     }
     OutputDNF(outfile, cl.GetGoal());
     outfile << ".";
@@ -49,12 +49,19 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
 void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
 {
     if (f.GetName().compare("false") == 0)
-        outfile << "False";
+        {
+            outfile << "False";
+        }
+    else if (f.GetName().compare("true") == 0)
+        {
+            outfile << "True";
+        }
     else
+        {
         outfile << f.GetName();
-    for (size_t i=0; i<f.GetArity(); i++)
-        outfile << " " << f.GetArg(i);
-
+        for (size_t i=0; i<f.GetArity(); i++)
+            outfile << " " << f.GetArg(i);
+        }
     //outfile << " ";
 }
 // ---------------------------------------------------------------------------------
