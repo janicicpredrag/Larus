@@ -294,7 +294,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile <<"       bMatchConclusion &&= ((!bAxiomBranching[nAxiom] && !bCases[nProofStep]) || (bCases[nProofStep] && b)); "                    << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"       /* Introducing fresh constants if the axioms used has existential quantifiers */ "                                          << endl;
+    ursaFile <<"       /* Introducing fresh constants   if the axioms used has existential quantifiers */ "                                          << endl;
     ursaFile <<"       bMatchExiQuantifiers = true; "                                                                                              << endl;
     ursaFile <<"       for (nL=0; nL<nAxiomExiVars[nAxiom]; nL++) { "                                                                              << endl;
     ursaFile <<"           /* The id of a new constant is (nProofStep<<2) + nL, ie. 8*nProofStep+nL - so they don't overlap, "                     << endl;
