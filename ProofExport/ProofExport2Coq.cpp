@@ -148,6 +148,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 {
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+
         if (new_witnesses.size() > 0)
             outfile << Indent(level) << "let Tf:=fresh in" << endl;
         outfile << Indent(level) << "assert (";

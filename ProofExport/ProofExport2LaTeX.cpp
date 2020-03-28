@@ -103,9 +103,11 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
         outfile << "by axiom " << get<2>(p.GetMP(i)) << "; ";
 
         vector<pair<string,string>> instantiation = get<3>(p.GetMP(i));
-        if (instantiation.size() > 0) {
+        vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+
+        if (instantiation.size() > new_witnesses.size()) {
             outfile << "{\\scriptsize instantiation: ";
-            for (size_t j = 0; j != instantiation.size(); j++) {
+            for (size_t j = 0; j != instantiation.size()-new_witnesses.size(); j++) {
                 outfile << instantiation[j].first << " $\\mapsto$ " << instantiation[j].second;
                 if (j + 1 != instantiation.size())
                     outfile << ", ";
@@ -113,7 +115,6 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
             outfile << ";}";
         }
 
-        vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
         if (new_witnesses.size() > 0) {
             outfile << "{\\scriptsize $\\;\\;$ new witnesses: ";
             for (size_t j = 0; j != new_witnesses.size(); j++) {
