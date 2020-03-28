@@ -127,13 +127,21 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     return proved;
 }
 
+//////////////////////////////////////////////////////
+
+std::string dirnameOf(const std::string& fname)
+{
+     size_t pos = fname.find_last_of("\\/");
+     return (std::string::npos == pos)
+         ? ""
+         : fname.substr(0, pos);
+}
 // ---------------------------------------------------------------------------------------------------------------------------
 
 ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& params)
 {
     if (params.input_format != eTPTP)
         return eWrongFormatParameter;
-
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
     if (tptpconjecture.good()) {
@@ -149,12 +157,12 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)
                     {
-                        string filename = s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        string filename = dirnameOf(inputFile)+"/"+s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
                         cout << "Including file : " << filename << endl;
-                    //    ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
                         ifstream input_file(filename,ios::in);
                         if (input_file.good())
                         {
+                            cout << "could be open" << endl;
                             string ss;
                             while(getline(input_file, ss)) { 
                                 if (ss!= "" && ss.at(0) != '%')
@@ -164,7 +172,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                         }
                         else
                         {
-                            cout << "Error reading input file :" << "tptp-problems/col-trans/" << filename << endl;
+                            cout << "Error reading input file :" << filename << endl;
                             return eBadOrMissingInputFile;
                         }
                     }
