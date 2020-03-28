@@ -13,7 +13,7 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
     for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
         outfile << " (" << cl.GetExistVar(i) << ")";
     OutputDNF(outfile, cl.GetGoal());
-    outfile << "))";
+    outfile << ")";
     outfile << endl;
 }
 
