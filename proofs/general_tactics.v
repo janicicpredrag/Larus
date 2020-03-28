@@ -14,7 +14,7 @@ Ltac mysubst :=
    
 Ltac spliter := repeat
 match goal with
-   | H:(?X1 /\ ?X2) |- _ => induction H; clear H
+   | H:(?X1 /\ ?X2) |- _ => decompose [and] H; clear H
 end.
 
 Ltac splits :=
@@ -52,4 +52,4 @@ Ltac contradict :=
  end.
 
 Tactic Notation "by" "cases" "on" constr(t) :=
-(let H := hyp_of_type t in decompose [or] H; clear H).
+(let H := hyp_of_type t in decompose [or] H; clear H;spliter).
