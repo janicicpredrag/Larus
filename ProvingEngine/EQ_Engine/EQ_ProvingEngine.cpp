@@ -382,7 +382,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               /* The id of a new constant is (nProofStep<<2) + nL, ie. 8*nProofStep+nL - so they don't overlap, */
               /* unless some axioms introduces >4 witnesses */
               sbMatchExiQuantifiers +=
-                       appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL), itos(((nProofStep+1)<<3) + nL));
+                       appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL+1), itos(((nProofStep+1)<<3) + nL));
           }
           /* The MP proof step is correct if it was derived by using some axiom  */
           if (nProofStep != 0)

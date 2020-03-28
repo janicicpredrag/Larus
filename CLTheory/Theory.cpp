@@ -312,6 +312,16 @@ string Theory::MakeNewConstant()
 
 string Theory::GetConstantName(unsigned id) const
 {
+    if (id > mConstants.size() + mConstantsPermissible.size())   {
+        string s;
+        if (id < 27) {
+            s = "ca";
+            s[1] += id;
+        }
+        else
+            s = "c" + to_string(id);
+        return s;
+    }
     return mConstants[id];
 /*    if (id < 27) {
         string s = "a";
