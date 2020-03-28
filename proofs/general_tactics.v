@@ -42,7 +42,7 @@ Ltac one_of_disjunct :=
 Ltac rename_H H := let T := fresh in try rename H into T.
 
 Ltac applying t :=
-apply t;assumption.
+apply t;(assumption || trivial).
 
 Ltac conclude := solve [intuition].
 
