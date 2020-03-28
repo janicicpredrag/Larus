@@ -88,6 +88,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         string path = theoremFileName.substr(0,found);
         string fileName = theoremFileName.substr(found+1);
         fileName = SkipChar(fileName,'.');
+        fileName = SkipChar(fileName,'-');
 
         // cout << "Theorem proved! " << endl;
         string sFileName("proofs/PROOF" + fileName + ".tex");
@@ -150,6 +151,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     if (found_input != string::npos)
                     {
                         string filename = s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+
+                        std::size_t found = inputFile.find_last_of("/\\");
+                        filename = inputFile.substr(0,found) + "/" + filename;
+
                         cout << "Including file : " << filename << endl;
                     //    ifstream input_file("tptp-problems/col-trans/"+filename,ios::in);
                         ifstream input_file(filename,ios::in);
@@ -160,7 +165,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                                 if (ss!= "" && ss.at(0) != '%')
                                     str += ss;
                             }
-                            cout << "Debug:" << str << endl;
+                            // cout << "Debug:" << str << endl;
                         }
                         else
                         {

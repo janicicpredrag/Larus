@@ -299,11 +299,11 @@ string Theory::MakeNewConstant()
     unsigned id = mConstants.size() + mConstantsPermissible.size();
     string s;
     if (id < 27) {
-        s = "wa";
+        s = "ca";
         s[1] += id;
     }
     else
-        s = "w" + to_string(id);
+        s = "c" + to_string(id);
     mConstants.push_back(s);
     return s;
 }
