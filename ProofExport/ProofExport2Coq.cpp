@@ -89,7 +89,7 @@ string repeat(int n, string s) {
 void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation)
 {
  //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
-     outfile << "Require Import CLProver.general_tactics." << endl << endl;
+     outfile << "Require Import src.general_tactics." << endl << endl;
      outfile << "Section Sec." << endl;
 //    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 

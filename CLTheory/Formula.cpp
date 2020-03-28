@@ -9,7 +9,7 @@
 
 bool ConjunctionFormula::Read(const string& s)
 {
-    string s0 = SkipSpaces(s);
+    string s0 = SkipChar(s,' ');
     if (s0 == "$false" || s0=="$true") {
         Fact fact;
         if (fact.Read(s0.substr(1,s0.size()-1))) {
@@ -68,7 +68,7 @@ bool ConjunctionFormula::Read(const string& s)
 
 bool DNFFormula::Read(const string& s)
 {
-    string s0 = SkipSpaces(s);
+    string s0 = SkipChar(s, ' ');
     if (s0 == "$false" || s0 == "$true") {
         ConjunctionFormula c;
         Fact f(s0.substr(1,s0.size()-1));
@@ -202,7 +202,7 @@ bool Fact::Equals(const Fact& f) const
 
 bool CLFormula::Read(const string& s)
 {
-    string s0 = SkipSpaces(s);
+    string s0 = SkipChar(s, ' ');
     size_t pos, pos2, p, pp;
     #ifdef DEBUG_PARSER
     cout << "Currently reading : " << s0 << endl;
@@ -588,12 +588,12 @@ bool Fact::Read(const string& s)
 
 // ---------------------------------------------------------------------------------------
 
-string SkipSpaces(const string& str)
+string SkipChar(const string& str, char c)
 {
     string out;
     size_t slen = str.size();
     for(size_t i=0; i<slen; i++) {
-        if (str[i] != ' ')
+        if (str[i] != c)
         out += str[i];
     }
     return out;
@@ -615,7 +615,7 @@ string ToUpper(const string& str)
 
 bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& type) {
     size_t pos1, pos2;
-    string ss = SkipSpaces(s);
+    string ss = SkipChar(s, ' ');
 
     cl.Clear();
 

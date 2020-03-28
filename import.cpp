@@ -82,9 +82,16 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
+
+
+        std::size_t found = theoremFileName.find_last_of("/\\");
+        string path = theoremFileName.substr(0,found);
+        string fileName = theoremFileName.substr(found+1);
+        fileName = SkipChar(fileName,'.');
+
         // cout << "Theorem proved! " << endl;
-        string sFileName("proofs/PROOF" + theoremFileName + ".tex");
-        string sFileName2("proofs/PROOF" + theoremFileName + "-simpl.tex");
+        string sFileName("proofs/PROOF" + fileName + ".tex");
+        string sFileName2("proofs/PROOF" + fileName + "-simpl.tex");
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
@@ -99,13 +106,13 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         delete ex;
 
         if (params.mbCoq) {
-            string sFileName3("proofs/PROOF" + theoremFileName + ".v");
+            string sFileName3("proofs/PROOF" + fileName + ".v");
             ProofExport *excoq;
             excoq = new ProofExport2Coq;
             excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
 
             cout << "Verifying Coq proof ... " << flush;
-            string s = "coqc -R proofs CLProver -q  " + sFileName3;
+            string s = "coqc -R proofs src -q  " + sFileName3;
             int rv = system(s.c_str());
             if (!rv)
                 cout << "Correct!" << endl;
@@ -180,7 +187,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     CLFormula cl, theorem;
     size_t noAxioms = 0;
 
-    str = SkipSpaces(str);
+    str = SkipChar(str, ' ');
 
     string strfof ("fof");
     size_t found1 = str.find(strfof);
