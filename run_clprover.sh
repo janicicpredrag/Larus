@@ -17,7 +17,7 @@ do
     case $opt in
         "Euclid")
             echo "$opt selected."
-	    benches="tptp-problems/euclid-with-eq/*.tptp"
+	    benches="tptp-problems/euclid-with-eq/*.p"
 	    break
             ;;
        "Tarski")
@@ -32,17 +32,17 @@ do
             ;;
         "Col trans 10")
             echo "$opt selected"
-	    benches="tptp-problems/col-trans/col-trans-000*"
+	    benches="tptp-problems/col-trans/col-trans-000*.p"
 	    break
             ;;
         "Col trans 100")
 	    echo "$opt selected"
-	    benches="tptp-problems/col-trans/col-trans-00*"
+	    benches="tptp-problems/col-trans/col-trans-00*.p"
             break
             ;;
 	"Col trans 1000")
 	    echo "$opt selected"
-	    benches="tptp-problems/col-trans/col-trans-0*"
+	    benches="tptp-problems/col-trans/col-trans-0*.p"
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
