@@ -1,0 +1,20 @@
+fof(in_angle_trans,axiom,![A,B,C,D,E]:((point_in_angle(C,A,B,D)&point_in_angle(D,A,B,E))=>(point_in_angle(C,A,B,E)))).
+fof(th_11_31_2,axiom,(![A,B,C,D,E,F]:((A!=B&C!=B&bet(D,E,F)&distinct(D,E,F))=>le_angle(A,B,C,D,E,F)))).
+fof(th_11_31_1,axiom,(![A,B,C,D,E,F]:((out(B,A,C)&D!=E&F!=E)=>le_angle(A,B,C,D,E,F)))).
+fof(conga_preserves_in_angle,axiom,![A,B,C,I,A1,B1,C1,I1]:((cong_angle(A,B,C,A1,B1,C1)&cong_angle(A,B,I,A1,B1,I1)&point_in_angle(I,A,B,C)&one_side(I1,C1,A1,B1))=>(point_in_angle(I1,A1,B1,C1)))).
+fof(out_conga_out,axiom,![A,B,C,D,E,F]:((out(B,A,C)&cong_angle(A,B,C,D,E,F))=>(out(E,D,F)))).
+fof(bet_in_angle_bet,axiom,![A,B,C,P]:((bet(A,B,P)&point_in_angle(P,A,B,C))=>(bet(A,B,C)))).
+fof(or_bet_out,axiom,![A,B,C]:((A!=B&C!=B)=>(bet(A,B,C)|out(B,A,C)|ncol(A,B,C)))).
+fof(in_angle_one_side,axiom,![A,B,C,P]:((ncol(A,B,C)&ncol(B,A,P)&point_in_angle(P,A,B,C))=>(one_side(P,C,A,B)))).
+fof(out_in_angle_out,axiom,![A,B,C,P]:((out(B,A,C)&point_in_angle(P,A,B,C))=>(out(B,A,P)))).
+fof(th_11_21_2_1,axiom,(![A,B,C,A1,B1,C1]:((bet(A,B,C)&distinct(A,B,C)&cong_angle(A,B,C,A1,B1,C1))=>(bet(A1,B1,C1)&distinct(A1,B1,C1))))).
+fof(in_angle_out,axiom,![A,B,C,P]:((out(B,A,C)&point_in_angle(P,A,B,C))=>(out(B,A,P)))).
+fof(th_11_15_1,axiom,(![A,B,C,D,E,P]:((ncol(A,B,C)&ncol(D,E,P))=>(?[F]:(cong_angle(A,B,C,D,E,F)&one_side(F,P,E,D)))))).
+fof(th_11_8,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((cong_angle(A1,B1,C1,A2,B2,C2)&cong_angle(A2,B2,C2,A3,B3,C3))=>cong_angle(A1,B1,C1,A3,B3,C3)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_9_13,axiom,(![P,Q,A,B,C]:((one_side(A,B,P,Q)&one_side(B,C,P,Q))=>one_side(A,C,P,Q)))).
+fof(th_9_12,axiom,(![P,Q,A,B]:((one_side(A,B,P,Q))=>one_side(B,A,P,Q)))).
+fof(th_6_5,axiom,(![A,P]:(A!=P=>out(P,A,A)))).
+fof(out_col,axiom,![A,B,C]:((out(A,B,C))=>(col(A,B,C)))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(goal, conjecture,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((le_angle(A1,B1,C1,A2,B2,C2)&le_angle(A2,B2,C2,A3,B3,C3))=>le_angle(A1,B1,C1,A3,B3,C3)))).

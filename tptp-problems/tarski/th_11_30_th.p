@@ -1,0 +1,22 @@
+fof(conga_preserves_in_angle,axiom,![A,B,C,I,A1,B1,C1,I1]:((cong_angle(A,B,C,A1,B1,C1)&cong_angle(A,B,I,A1,B1,I1)&point_in_angle(I,A,B,C)&one_side(I1,C1,A1,B1))=>(point_in_angle(I1,A1,B1,C1)))).
+fof(out_conga_out,axiom,![A,B,C,D,E,F]:((out(B,A,C)&cong_angle(A,B,C,D,E,F))=>(out(E,D,F)))).
+fof(lea_line,axiom,![A,B,C,P]:((bet(A,B,P)&le_angle(A,B,P,A,B,C))=>(bet(A,B,C)))).
+fof(th_11_29_2,axiom,(![A,B,C,D,E,F,Q]:((point_in_angle(C,A,B,Q)&cong_angle(A,B,Q,D,E,F))=>(le_angle(A,B,C,D,E,F))))).
+fof(in_angle_line,axiom,![A,B,C,P]:((P!=B&A!=B&C!=B&bet(A,B,C))=>(point_in_angle(P,A,B,C)))).
+fof(th_11_29_1,axiom,(![A,B,C,D,E,F]:((le_angle(A,B,C,D,E,F))=>(?[Q]:(point_in_angle(C,A,B,Q)&cong_angle(A,B,Q,D,E,F)))))).
+fof(or_bet_out,axiom,![A,B,C]:((A!=B&C!=B)=>(bet(A,B,C)|out(B,A,C)|ncol(A,B,C)))).
+fof(out_in_angle_out,axiom,![A,B,C,P]:((out(B,A,C)&point_in_angle(P,A,B,C))=>(out(B,A,P)))).
+fof(th_11_21_2_1,axiom,(![A,B,C,A1,B1,C1]:((bet(A,B,C)&distinct(A,B,C)&cong_angle(A,B,C,A1,B1,C1))=>(bet(A1,B1,C1)&distinct(A1,B1,C1))))).
+fof(angle_construction_3,axiom,![A,B,C,A1,B1]:((A!=B&C!=B&A1!=B1)=>(?[C1]:((cong_angle(A,B,C,A1,B1,C1)))))).
+fof(col_in_angle_a,axiom,![A,B,C,P]:((A!=B&C!=B&P!=B&out(B,A,P))=>(point_in_angle(P,A,B,C)))).
+fof(col_in_angle_b,axiom,![A,B,C,P]:((A!=B&C!=B&P!=B&out(B,C,P))=>(point_in_angle(P,A,B,C)))).
+fof(out_in_angle,axiom,![A,B,C,P]:((out(B,A,C)&out(B,P,A))=>(point_in_angle(P,A,B,C)))).
+fof(th_11_15_1,axiom,(![A,B,C,D,E,P]:((ncol(A,B,C)&ncol(D,E,P))=>(?[F]:(cong_angle(A,B,C,D,E,F)&one_side(F,P,E,D)))))).
+fof(th_11_21_2_2,axiom,(![A,B,C,A1,B1,C1]:((bet(A,B,C)&distinct(A,B,C)&bet(A1,B1,C1)&distinct(A1,B1,C1))=>cong_angle(A,B,C,A1,B1,C1)))).
+fof(th_11_8,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((cong_angle(A1,B1,C1,A2,B2,C2)&cong_angle(A2,B2,C2,A3,B3,C3))=>cong_angle(A1,B1,C1,A3,B3,C3)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_11_6,axiom,(![A,B,C]:((A!=B&C!=B)=>cong_angle(A,B,C,A,B,C)))).
+fof(th_9_12,axiom,(![P,Q,A,B]:((one_side(A,B,P,Q))=>one_side(B,A,P,Q)))).
+fof(th_6_6,axiom,(![A,B,P]:(out(P,A,B)=>out(P,B,A)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(goal, conjecture,(![A,B,C,D,E,F,A1,B1,C1,D1,E1,F1]:((le_angle(A,B,C,D,E,F)&cong_angle(A,B,C,A1,B1,C1)&cong_angle(D,E,F,D1,E1,F1))=>le_angle(A1,B1,C1,D1,E1,F1)))).

@@ -1,0 +1,22 @@
+fof(par_trans,axiom,![A1,A2,B1,B2,C1,C2]:((par(A1,A2,B1,B2)&par(B1,B2,C1,C2))=>(par(A1,A2,C1,C2)))).
+fof(th_12_18,axiom,(![A,B,C,D,P]:((cong(A,B,C,D)&cong(B,C,D,A)&ncol(A,B,C)&B!=D&col(A,P,C)&col(B,P,D))=>(parallel_broad(A,B,C,D)&parallel_broad(B,C,D,A)&two_sides(B,D,A,C)&two_sides(A,C,B,D))))).
+fof(th_12_17,axiom,(![A,B,C,D,P]:((is_midpoint(P,A,C)&is_midpoint(P,B,D)&A!=B)=>parallel_broad(A,B,C,D)))).
+fof(par_distincts,axiom,![A,B,C,D]:((par(A,B,C,D))=>(par(A,B,C,D)&(A!=B)&(C!=D)))).
+fof(par_symmetry,axiom,![A,B,C,D]:((par(A,B,C,D))=>(par(C,D,A,B)))).
+fof(col2,axiom,![A,B,X,Y]:((A!=B&col(A,B,X)&col(A,B,Y))=>(col(A,X,Y)))).
+fof(inter_unicity,axiom,![A,B,X,Y,M,N]:((col(A,B,M)&col(X,Y,M)&col(A,B,N)&col(X,Y,N)&ncol(A,X,B)&X!=Y)=>(M=N))).
+fof(th_8_22_1,axiom,(![A,B]:(?[X]:is_midpoint(X,A,B)))).
+fof(is_midpoint_id,axiom,![A,B]:((is_midpoint(A,A,B))=>(A=B))).
+fof(th_7_13,axiom,(![P,Q,A,P1,Q1]:((is_symmetric(P,P1,A)&is_symmetric(Q,Q1,A))=>cong(P,Q,P1,Q1)))).
+fof(th_7_4_1,axiom,(![P,A]:(?[P1]:is_midpoint(A,P,P1)))).
+fof(th_7_3_1,axiom,(![A,M]:(is_midpoint(M,A,A)=>M=A))).
+fof(th_7_2,axiom,(![A,M,B]:(is_midpoint(M,A,B)=>is_midpoint(M,B,A)))).
+fof(th_6_23_2,axiom,(![A,B,C,P,Q]:((P!=Q&point_on_line(A,P,Q)&point_on_line(B,P,Q)&point_on_line(C,P,Q))=>col(A,B,C)))).
+fof(col_transitivity_1,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(P,A,B)))).
+fof(col_trivial_3,axiom,![A,B]:((col(A,B,A)))).
+fof(col_trivial_2,axiom,![A,B]:((col(A,B,B)))).
+fof(th_4_12,axiom,(![A,B]:col(A,A,B))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(cong_commutativity,axiom,![A,B,C,D]:((cong(A,B,C,D))=>(cong(B,A,D,C)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(goal, conjecture,(![A,B,C,D]:((ncol(A,B,C)&parallel_broad(A,B,C,D)&parallel_broad(B,C,D,A))=>(cong(A,B,C,D)&cong(B,C,D,A)&two_sides(B,D,A,C)&two_sides(A,C,B,D))))).

@@ -1,0 +1,22 @@
+fof(not_col_diff,axiom,![A,B,C]:((ncol(A,B,C))=>(ncol(A,B,C)&(A!=B)&(A!=C)&(B!=C)))).
+fof(out_one_side_a,axiom,![A,B,X,Y]:((ncol(A,B,X)&out(A,X,Y))=>(one_side(X,Y,A,B)))).
+fof(out_one_side_b,axiom,![A,B,X,Y]:((ncol(A,B,Y)&out(A,X,Y))=>(one_side(X,Y,A,B)))).
+fof(ncol_conga_ncol,axiom,![A,B,C,D,E,F]:((ncol(A,B,C)&cong_angle(A,B,C,D,E,F))=>(ncol(D,E,F)))).
+fof(cong2_conga_cong,axiom,![A,B,C,A1,B1,C1]:((cong_angle(A,B,C,A1,B1,C1)&cong(A,B,A1,B1)&cong(B,C,B1,C1))=>(cong(A,C,A1,C1)))).
+fof(l11_22_aux,axiom,![A,B,C,C1]:((cong_angle(A,B,C,A,B,C1))=>(out(B,C,C1)|two_sides(C,C1,A,B)))).
+fof(th_11_8,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((cong_angle(A1,B1,C1,A2,B2,C2)&cong_angle(A2,B2,C2,A3,B3,C3))=>cong_angle(A1,B1,C1,A3,B3,C3)))).
+fof(cong3_conga,axiom,![A,B,C,A1,B1,C1]:((A!=B&C!=B&cong3(A,B,C,A1,B1,C1))=>(cong_angle(A,B,C,A1,B1,C1)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_11_4_1,axiom,(![A,B,C,D,E,F,A1,C1,D1,F1]:((cong_angle(A,B,C,D,E,F)&A!=B&C!=B&D!=E&F!=E&out(B,A1,A)&out(B,C1,C)&out(E,D1,D)&out(E,F1,F)&cong(B,A1,E,D1)&cong(B,C1,E,F1))=>cong(A1,C1,D1,F1)))).
+fof(th_9_9,axiom,(![P,Q,A,B]:(two_sides(A,B,P,Q)=>none_side(A,B,P,Q)))).
+fof(inter_unicity,axiom,![A,B,X,Y,M,N]:((col(A,B,M)&col(X,Y,M)&col(A,B,N)&col(X,Y,N)&ncol(A,X,B)&X!=Y)=>(M=N))).
+fof(col_transitivity_1,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(P,A,B)))).
+fof(th_6_11_1,axiom,(![R,A,B,C]:((R!=A&B!=C)=>(?[X]:(out(A,X,R)&cong(A,X,B,C)))))).
+fof(th_6_6,axiom,(![A,B,P]:(out(P,A,B)=>out(P,B,A)))).
+fof(out_col,axiom,![A,B,C]:((out(A,B,C))=>(col(A,B,C)))).
+fof(col_trivial_2,axiom,![A,B]:((col(A,B,B)))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(th_3_1,axiom,(![A,B]:(bet(A,B,B)))).
+fof(cong_commutativity,axiom,![A,B,C,D]:((cong(A,B,C,D))=>(cong(B,A,D,C)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(goal, conjecture,(![A,B,C,A1,B1,C1]:((ncol(A,B,C)&cong_angle(B,A,C,B1,A1,C1)&cong_angle(A,B,C,A1,B1,C1)&cong(A,B,A1,B1))=>(cong(A,C,A1,C1)&cong(B,C,B1,C1)&cong_angle(A,C,B,A1,C1,B1))))).

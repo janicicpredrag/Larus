@@ -1,0 +1,21 @@
+fof(lta_right_comm,axiom,![A,B,C,D,E,F]:((lt_angle(A,B,C,D,E,F))=>(lt_angle(A,B,C,F,E,D)))).
+fof(lta_trans,axiom,![A,B,C,A1,B1,C1,A2,B2,C2]:((lt_angle(A,B,C,A1,B1,C1)&lt_angle(A1,B1,C1,A2,B2,C2))=>(lt_angle(A,B,C,A2,B2,C2)))).
+fof(not_col_diff,axiom,![A,B,C]:((ncol(A,B,C))=>(ncol(A,B,C)&(A!=B)&(A!=C)&(B!=C)))).
+fof(th_11_41,axiom,(![A,B,C,D]:((ncol(A,B,C)&bet(B,A,D)&D!=A)=>(lt_angle(A,C,B,C,A,D)&lt_angle(A,B,C,C,A,D))))).
+fof(th_11_36_1,axiom,(![A,B,C,D,E,F,A1,D1]:((bet(A,B,A1)&distinct(A,B,A1)&bet(D,E,D1)&distinct(D,E,D1)&le_angle(A,B,C,D,E,F))=>le_angle(D1,E,F,A1,B,C)))).
+fof(th_11_30,axiom,(![A,B,C,D,E,F,A1,B1,C1,D1,E1,F1]:((le_angle(A,B,C,D,E,F)&cong_angle(A,B,C,A1,B1,C1)&cong_angle(D,E,F,D1,E1,F1))=>le_angle(A1,B1,C1,D1,E1,F1)))).
+fof(th_11_17,axiom,(![A,B,C,A1,B1,C1]:((per(A,B,C)&cong_angle(A,B,C,A1,B1,C1))=>per(A1,B1,C1)))).
+fof(th_11_16,axiom,(![A,B,C,A1,B1,C1]:((per(A,B,C)&A!=B&C!=B&per(A1,B1,C1)&A1!=B1&C1!=B1)=>cong_angle(A,B,C,A1,B1,C1)))).
+fof(conga_comm,axiom,![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>(cong_angle(C,B,A,F,E,D)))).
+fof(conga_left_comm,axiom,![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>(cong_angle(C,B,A,D,E,F)))).
+fof(conga_right_comm,axiom,![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>(cong_angle(A,B,C,F,E,D)))).
+fof(th_11_8,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((cong_angle(A1,B1,C1,A2,B2,C2)&cong_angle(A2,B2,C2,A3,B3,C3))=>cong_angle(A1,B1,C1,A3,B3,C3)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_11_6,axiom,(![A,B,C]:((A!=B&C!=B)=>cong_angle(A,B,C,A,B,C)))).
+fof(per_col,axiom,![A,B,C,D]:((B!=C&per(A,B,C)&col(B,C,D))=>(per(A,B,D)))).
+fof(th_8_2,axiom,(![A,B,C]:(per(A,B,C)=>per(C,B,A)))).
+fof(col_transitivity_1,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(P,A,B)))).
+fof(th_4_12,axiom,(![A,B]:col(A,A,B))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(goal, conjecture,![A,B,C]:((ncol(A,B,C)&obtuse(B,A,C))=>(acute(A,B,C)))).

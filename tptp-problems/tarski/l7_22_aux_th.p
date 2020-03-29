@@ -1,0 +1,24 @@
+fof(th_7_17,axiom,(![A,B,P,P1]:((is_midpoint(A,P,P1)&is_midpoint(B,P,P1))=>A=B))).
+fof(th_7_16_1,axiom,(![P,Q,R,S,A,P1,Q1,R1,S1]:((cong(P,Q,R,S)&is_symmetric(P,P1,A)&is_symmetric(Q,Q1,A)&is_symmetric(R,R1,A)&is_symmetric(S,S1,A))=>cong(P1,Q1,R1,S1)))).
+fof(th_7_15_1,axiom,(![P,Q,R,P1,Q1,R1,A]:((bet(P,Q,R)&is_symmetric(P,P1,A)&is_symmetric(Q,Q1,A)&is_symmetric(R,R1,A))=>bet(P1,Q1,R1)))).
+fof(th_7_4_1,axiom,(![P,A]:(?[P1]:is_midpoint(A,P,P1)))).
+fof(th_7_3_1,axiom,(![A,M]:(is_midpoint(M,A,A)=>M=A))).
+fof(th_6_13_1,axiom,(![A,B,P]:((out(P,A,B)&le(P,A,P,B))=>bet(P,A,B)))).
+fof(le_zero,axiom,![A,B,C]:((le(A,B,C,C))=>(A=B))).
+fof(th_5_6,axiom,(![A,B,C,D,A1,B1,C1,D1]:((le(A,B,C,D)&cong(A,B,A1,B1)&cong(C,D,C1,D1))=>(le(A1,B1,C1,D1))))).
+fof(th_5_2,axiom,(![A,B,C,D]:((A!=B&bet(A,B,C)&bet(A,B,D))=>(bet(B,C,D)|bet(B,D,C))))).
+fof(th_4_2,axiom,(![A,B,C,D,A1,B1,C1,D1]:(ifs(A,B,C,D,A1,B1,C1,D1)=>cong(B,D,B1,D1)))).
+fof(th_4_17,axiom,(![A,B,C,P,Q]:((A!=B&col(A,B,C)&cong(A,P,A,Q)&cong(B,P,B,Q))=>cong(C,P,C,Q)))).
+fof(th_3_17,axiom,(![A,B,C,A1,B1,P]:((bet(A,B,C)&bet(A1,B1,C)&bet(A,P,A1))=>(?[Q]:(bet(P,Q,C)&bet(B,Q,B1)))))).
+fof(th_3_6,axiom,(![A,B,C,D]:((bet(A,B,C)&bet(A,C,D))=>(bet(B,C,D)&bet(A,B,D))))).
+fof(th_3_3,axiom,(![A,B]:bet(A,A,B))).
+fof(th_3_2,axiom,(![A,B,C]:(bet(A,B,C)=>bet(C,B,A)))).
+fof(th_3_1,axiom,(![A,B]:(bet(A,B,B)))).
+fof(cong_commutativity,axiom,![A,B,C,D]:((cong(A,B,C,D))=>(cong(B,A,D,C)))).
+fof(cong_reverse_identity,axiom,![A,C,D]:((cong(A,A,C,D))=>(C=D))).
+fof(th_2_5,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(A,B,D,C)))).
+fof(th_2_4,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(B,A,C,D)))).
+fof(th_2_3,axiom,(![A,B,C,D,E,F]:((cong(A,B,C,D)&cong(C,D,E,F))=>cong(A,B,E,F)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(th_2_1,axiom,(![A,B]:(cong(A,B,A,B)))).
+fof(goal, conjecture,![A1,A2,B1,B2,C,M1,M2]:((bet(A1,C,A2)&bet(B1,C,B2)&cong(C,A1,C,B1)&cong(C,A2,C,B2)&is_midpoint(M1,A1,B1)&is_midpoint(M2,A2,B2)&le(C,A1,C,A2))=>(bet(M1,C,M2)))).

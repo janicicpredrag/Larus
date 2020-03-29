@@ -1,0 +1,23 @@
+fof(th_12_21_2,axiom,(![A,B,C,D]:((two_sides(B,D,A,C)&cong_angle(B,A,C,D,C,A))=>parallel_broad(A,B,C,D)))).
+fof(par_col_par,axiom,![A,B,C,D,D1]:((C!=D1&par(A,B,C,D)&col(C,D,D1))=>(par(A,B,C,D1)))).
+fof(par_symmetry,axiom,![A,B,C,D]:((par(A,B,C,D))=>(par(C,D,A,B)))).
+fof(invert_one_side,axiom,![A,B,P,Q]:((one_side(P,Q,A,B))=>(one_side(P,Q,B,A)))).
+fof(invert_two_sides,axiom,![A,B,P,Q]:((two_sides(P,Q,A,B))=>(two_sides(P,Q,B,A)))).
+fof(col_one_side,axiom,![A,B,C,P,Q]:((col(A,B,C)&A!=C&one_side(P,Q,A,B))=>(one_side(P,Q,A,C)))).
+fof(col_two_sides,axiom,![A,B,C,P,Q]:((col(A,B,C)&A!=C&two_sides(P,Q,A,B))=>(two_sides(P,Q,A,C)))).
+fof(th_11_14,axiom,(![A,B,C,A1,C1]:((bet(A,B,A1)&distinct(A,B,A1)&bet(C,B,C1)&distinct(C,B,C1))=>cong_angle(A,B,C,A1,B,C1)))).
+fof(conga_comm,axiom,![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>(cong_angle(C,B,A,F,E,D)))).
+fof(th_11_10,axiom,(![A,B,C,D,E,F,A1,C1,D1,F1]:((cong_angle(A,B,C,D,E,F)&out(B,A1,A)&out(B,C1,C)&out(E,D1,D)&out(E,F1,F))=>cong_angle(A1,B,C1,D1,E,F1)))).
+fof(th_11_8,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((cong_angle(A1,B1,C1,A2,B2,C2)&cong_angle(A2,B2,C2,A3,B3,C3))=>cong_angle(A1,B1,C1,A3,B3,C3)))).
+fof(bet_out,axiom,![A,B,C]:((B!=A&C!=A&bet(A,B,C))=>(out(A,B,C)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_11_6,axiom,(![A,B,C]:((A!=B&C!=B)=>cong_angle(A,B,C,A,B,C)))).
+fof(th_9_8_2,axiom,(![P,Q,A,B,C]:((two_sides(A,C,P,Q)&one_side(A,B,P,Q))=>two_sides(B,C,P,Q)))).
+fof(th_9_2,axiom,(![P,Q,A,B]:((two_sides(A,B,P,Q))=>two_sides(B,A,P,Q)))).
+fof(col_transitivity_1,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(P,A,B)))).
+fof(th_6_5,axiom,(![A,P]:(A!=P=>out(P,A,A)))).
+fof(th_4_12,axiom,(![A,B]:col(A,A,B))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(th_3_2,axiom,(![A,B,C]:(bet(A,B,C)=>bet(C,B,A)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(goal, conjecture,![A,B,C,D,P]:((distinct(P,A,C)&bet(P,A,C)&one_side(B,D,P,A)&cong_angle(B,A,P,D,C,P))=>(par(A,B,C,D)))).

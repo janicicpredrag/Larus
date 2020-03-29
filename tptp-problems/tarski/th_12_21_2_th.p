@@ -1,0 +1,21 @@
+fof(th_12_17,axiom,(![A,B,C,D,P]:((is_midpoint(P,A,C)&is_midpoint(P,B,D)&A!=B)=>parallel_broad(A,B,C,D)))).
+fof(par_col_par,axiom,![A,B,C,D,D1]:((C!=D1&par(A,B,C,D)&col(C,D,D1))=>(par(A,B,C,D1)))).
+fof(conga_diff,axiom,![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>(cong_angle(A,B,C,D,E,F)&(A!=B)&(C!=B)&(D!=E)&(F!=E)))).
+fof(col_conga_col,axiom,![A,B,C,D,E,F]:((col(A,B,C)&cong_angle(A,B,C,D,E,F))=>(col(D,E,F)))).
+fof(segment_construction_3,axiom,![A,B,X,Y]:((A!=B&X!=Y)=>(?[C]:((out(A,B,C)&cong(A,C,X,Y)))))).
+fof(cong2_conga_cong,axiom,![A,B,C,A1,B1,C1]:((cong_angle(A,B,C,A1,B1,C1)&cong(A,B,A1,B1)&cong(B,C,B1,C1))=>(cong(A,C,A1,C1)))).
+fof(th_11_10,axiom,(![A,B,C,D,E,F,A1,C1,D1,F1]:((cong_angle(A,B,C,D,E,F)&out(B,A1,A)&out(B,C1,C)&out(E,D1,D)&out(E,F1,F))=>cong_angle(A1,B,C1,D1,E,F1)))).
+fof(th_11_7,axiom,(![A,B,C,D,E,F]:((cong_angle(A,B,C,D,E,F))=>cong_angle(D,E,F,A,B,C)))).
+fof(th_9_5,axiom,(![P,Q,A,B,C,R]:((P!=Q&two_sides(A,C,P,Q)&point_on_line(R,P,Q)&out(R,A,B))=>two_sides(B,C,P,Q)))).
+fof(th_9_2,axiom,(![P,Q,A,B]:((two_sides(A,B,P,Q))=>two_sides(B,A,P,Q)))).
+fof(th_7_21,axiom,(![A,B,C,D,P]:((ncol(A,B,C)&B!=D&cong(A,B,C,D)&cong(B,C,D,A)&col(A,P,C)&col(B,P,D))=>(is_midpoint(P,A,C)&is_midpoint(P,B,D))))).
+fof(th_6_6,axiom,(![A,B,P]:(out(P,A,B)=>out(P,B,A)))).
+fof(th_6_5,axiom,(![A,P]:(A!=P=>out(P,A,A)))).
+fof(out_col,axiom,![A,B,C]:((out(A,B,C))=>(col(A,B,C)))).
+fof(col_trivial_3,axiom,![A,B]:((col(A,B,A)))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(cong_commutativity,axiom,![A,B,C,D]:((cong(A,B,C,D))=>(cong(B,A,D,C)))).
+fof(th_2_4,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(B,A,C,D)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(th_2_1,axiom,(![A,B]:(cong(A,B,A,B)))).
+fof(goal, conjecture,(![A,B,C,D]:((two_sides(B,D,A,C)&cong_angle(B,A,C,D,C,A))=>parallel_broad(A,B,C,D)))).

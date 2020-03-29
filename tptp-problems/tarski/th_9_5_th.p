@@ -1,0 +1,26 @@
+fof(th_9_4_3,axiom,(![P,Q,A,C,R,S,U,V]:((two_sides(A,C,P,Q)&P!=Q&point_on_line(R,P,Q)&perp(P,Q,A,R)&point_on_line(S,P,Q)&perp(P,Q,C,S)&out(R,U,A)&out(S,V,C))=>two_sides(U,V,P,Q)))).
+fof(th_9_4_1,axiom,(![P,Q,A,C,R,S,M,U,U1]:((two_sides(A,C,P,Q)&P!=Q&point_on_line(R,P,Q)&perp(P,Q,A,R)&point_on_line(S,P,Q)&perp(P,Q,C,S)&is_midpoint(M,R,S)&out(R,U,A)&is_symmetric(U,U1,M))=>out(S,U1,C)))).
+fof(th_9_3,axiom,(![P,Q,A,B,C,M,R]:((two_sides(A,C,P,Q)&P!=Q&point_on_line(M,P,Q)&is_midpoint(M,A,C)&point_on_line(R,P,Q)&out(R,A,B))=>two_sides(B,C,P,Q)))).
+fof(colx,axiom,![A,B,M,N,X]:((A!=B&N!=M&X!=M&col(A,B,M)&col(A,B,N)&col(M,N,X))=>(col(A,B,X)))).
+fof(col2,axiom,![A,B,X,Y]:((A!=B&col(A,B,X)&col(A,B,Y))=>(col(A,X,Y)))).
+fof(th_9_2,axiom,(![P,Q,A,B]:((two_sides(A,B,P,Q))=>two_sides(B,A,P,Q)))).
+fof(th_8_22_1,axiom,(![A,B]:(?[X]:is_midpoint(X,A,B)))).
+fof(perp_col,axiom,![A,B,C,D,E]:((A!=E&perp(A,B,C,D)&col(A,B,E))=>(perp(A,E,C,D)))).
+fof(th_8_18_1,axiom,(![A,B,C]:(ncol(A,B,C)=>(?[X]:(col(A,B,X)&perp(A,B,C,X)))))).
+fof(perp_right_comm,axiom,![A,B,C,D]:((perp(A,B,C,D))=>(perp(A,B,D,C)))).
+fof(perp_left_comm,axiom,![A,B,C,D]:((perp(A,B,C,D))=>(perp(B,A,C,D)))).
+fof(perp_sym,axiom,![A,B,C,D]:((perp(A,B,C,D))=>(perp(C,D,A,B)))).
+fof(perp_distinct,axiom,![A,B,C,D]:((perp(A,B,C,D))=>((A!=B)&(C!=D)))).
+fof(midpoint_bet,axiom,![A,B,C]:((is_midpoint(B,A,C))=>(bet(A,B,C)))).
+fof(th_7_4_2,axiom,(![P,A,P1,P2]:((is_midpoint(A,P,P1)&is_midpoint(A,P,P2))=>P1=P2))).
+fof(th_7_4_1,axiom,(![P,A]:(?[P1]:is_midpoint(A,P,P1)))).
+fof(th_7_3_2,axiom,(![A]:(is_midpoint(A,A,A)))).
+fof(th_7_3_1,axiom,(![A,M]:(is_midpoint(M,A,A)=>M=A))).
+fof(th_7_2,axiom,(![A,M,B]:(is_midpoint(M,A,B)=>is_midpoint(M,B,A)))).
+fof(th_6_6,axiom,(![A,B,P]:(out(P,A,B)=>out(P,B,A)))).
+fof(th_6_5,axiom,(![A,P]:(A!=P=>out(P,A,A)))).
+fof(out_col,axiom,![A,B,C]:((out(A,B,C))=>(col(A,B,C)))).
+fof(col_trivial_2,axiom,![A,B]:((col(A,B,B)))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(th_3_1,axiom,(![A,B]:(bet(A,B,B)))).
+fof(goal, conjecture,(![P,Q,A,B,C,R]:((P!=Q&two_sides(A,C,P,Q)&point_on_line(R,P,Q)&out(R,A,B))=>two_sides(B,C,P,Q)))).

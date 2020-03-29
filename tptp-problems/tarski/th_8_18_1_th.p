@@ -1,0 +1,25 @@
+fof(is_midpoint_id,axiom,![A,B]:((is_midpoint(A,A,B))=>(A=B))).
+fof(th_8_13_2,axiom,(![X,A,B,C,D,U,V]:((A!=B&C!=D&point_on_line(X,A,B)&point_on_line(X,C,D)&point_on_line(U,A,B)&point_on_line(V,C,D)&U!=X&V!=X&per(U,X,V))=>(perp_in(X,A,B,C,D))))).
+fof(col_col,axiom,![A,B,X,Y,Z]:((A!=B&col(A,B,X)&col(A,B,Y)&col(A,B,Z))=>(col(X,Y,Z)))).
+fof(th_8_10,axiom,(![A,B,C,A1,B1,C1]:((per(A,B,C)&cong3(A,B,C,A1,B1,C1))=>per(A1,B1,C1)))).
+fof(th_8_2,axiom,(![A,B,C]:(per(A,B,C)=>per(C,B,A)))).
+fof(th_7_25,axiom,(![A,B,C]:((cong(C,A,C,B))=>(?[X]:is_midpoint(X,A,B))))).
+fof(th_7_4_2,axiom,(![P,A,P1,P2]:((is_midpoint(A,P,P1)&is_midpoint(A,P,P2))=>P1=P2))).
+fof(th_7_3_1,axiom,(![A,M]:(is_midpoint(M,A,A)=>M=A))).
+fof(th_7_2,axiom,(![A,M,B]:(is_midpoint(M,A,B)=>is_midpoint(M,B,A)))).
+fof(col_transitivity_2,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(Q,A,B)))).
+fof(col_transitivity_1,axiom,![P,Q,A,B]:((P!=Q&col(P,Q,A)&col(P,Q,B))=>(col(P,A,B)))).
+fof(col_trivial_3,axiom,![A,B]:((col(A,B,A)))).
+fof(col_trivial_2,axiom,![A,B]:((col(A,B,B)))).
+fof(th_4_12,axiom,(![A,B]:col(A,A,B))).
+fof(th_4_11,axiom,(![A,B,C]:(col(A,B,C)=>(col(B,C,A)&col(C,A,B)&col(C,B,A)&col(B,A,C)&col(A,C,B))))).
+fof(th_3_7,axiom,(![A,B,C,D]:((bet(A,B,C)&bet(B,C,D)&B!=C)=>(bet(A,C,D)&bet(A,B,D))))).
+fof(th_3_4,axiom,(![A,B,C]:((bet(A,B,C)&bet(B,A,C))=>A=B))).
+fof(th_3_2,axiom,(![A,B,C]:(bet(A,B,C)=>bet(C,B,A)))).
+fof(five_segments_with_def,axiom,![A,B,C,D,A1,B1,C1,D1]:((afs(A,B,C,D,A1,B1,C1,D1)&A!=B)=>(cong(C,D,C1,D1)))).
+fof(cong_commutativity,axiom,![A,B,C,D]:((cong(A,B,C,D))=>(cong(B,A,D,C)))).
+fof(th_2_5,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(A,B,D,C)))).
+fof(th_2_4,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(B,A,C,D)))).
+fof(th_2_2,axiom,(![A,B,C,D]:(cong(A,B,C,D)=>cong(C,D,A,B)))).
+fof(th_2_1,axiom,(![A,B]:(cong(A,B,A,B)))).
+fof(goal, conjecture,(![A,B,C]:(ncol(A,B,C)=>(?[X]:(col(A,B,X)&perp(A,B,C,X)))))).
