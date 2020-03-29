@@ -22,7 +22,7 @@ do
             ;;
        "Tarski")
             echo "$opt selected."
-            benches="tptp-problems/tarski/*.p"
+            benches="tptp-problems/tarski/*all_axioms_julien.p"
             break
             ;;
         "Coherent logic benches")
@@ -93,8 +93,11 @@ do
   ./CLprover -l"$time" $engine -ttptp -vcoq "$file" | tee -a $filename
   ((i++))
 done
+echo "------------------------------------------------------"
+echo "Summary:"
 echo "Time given: $time" | tee -a $summary
-echo "Engine: $engine" | tee -a $summary
+echo "Engine: $opt2" | tee -a $summary
+echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
 grep Theorem < $filename | wc -l | tee -a $summary
 echo "Number of theorems checked by Coq:" | tee -a $summary
