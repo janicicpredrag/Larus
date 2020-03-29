@@ -17,6 +17,7 @@ URSA_ProvingEngine::URSA_ProvingEngine(Theory *pT, proverParams& params)
 {
     mpT = pT;
     mParams = params;
+    mname = "URSA";
 }
 
 // ---------------------------------------------------------------------------------------

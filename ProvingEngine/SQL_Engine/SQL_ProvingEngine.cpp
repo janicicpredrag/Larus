@@ -14,6 +14,7 @@ SQL_ProvingEngine::SQL_ProvingEngine(Theory *T, proverParams& params)
     mpDB = new SQLFactsDatabase(T);
     mpT = T;
     mParams = params;
+    mname = "SQL";
 }
 
 // ---------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ class STL_ProvingEngine : public ProvingEngine
 public:
     STL_ProvingEngine(Theory *T, proverParams& params);
     virtual ~STL_ProvingEngine();
-
+  
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
