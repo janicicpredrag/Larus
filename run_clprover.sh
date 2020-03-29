@@ -5,13 +5,13 @@ printout() {
    exit
 }
 i=0
-time=300
+time=10
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="clprover-results-$today.out"
 summary="clprover-summary-$today.out"
 
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Coherent logic benches" "Col trans 10" "Col trans 100" "Col trans 1000")
+options=("Euclid" "Tarski" "Coherent logic benches" "Col trans 10" "Col trans 100" "Col trans 1000")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -19,6 +19,11 @@ do
             echo "$opt selected."
 	    benches="tptp-problems/euclid-with-eq/*.tptp"
 	    break
+            ;;
+       "Tarski")
+            echo "$opt selected."
+            benches="tptp-problems/tarski/*.p"
+            break
             ;;
         "Coherent logic benches")
             echo "$opt selected"
@@ -60,7 +65,7 @@ do
             engine="-estl"
             break
             ;;
-       "SMT")
+        "SMT")
             echo "$opt selected"
             engine="-esmt"
             break
@@ -69,7 +74,19 @@ do
     esac
 done
 
-echo "running clprover with engine: " $engine | tee -a $filename
+echo "Time limit ? (Default is $time seconds)"
+read timev
+if [ -z "$timev" ]
+then
+   echo "Using default time limit."
+else
+    echo "Setting time limit"
+    time=$timev
+fi
+
+echo "Running clprover with engine: " $engine | tee -a $filename
+echo "Time limit: " $time | tee -a $filename
+
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
