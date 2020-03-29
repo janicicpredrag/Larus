@@ -97,5 +97,6 @@ echo "Time given: $time" | tee -a $summary
 echo "Engine: $engine" | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
 grep Theorem < $filename | wc -l | tee -a $summary
-grep Theorem < $filename  | tee -a $summary
+echo "Number of theorems checked by Coq:" | tee -a $summary
+grep Correct < $filename | wc -l | tee -a $summary
 
