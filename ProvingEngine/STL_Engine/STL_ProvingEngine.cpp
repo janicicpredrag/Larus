@@ -6,7 +6,6 @@
 
 // #define DEBUG_OUTPUT
 
-
 // ---------------------------------------------------------------------------------------
 
 STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams& params)
@@ -14,6 +13,7 @@ STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams& params)
     mpDB = new STLFactsDatabase(T);
     mpT = T;
     mParams = params;
+    mname = "STL";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -22,6 +22,7 @@ STL_ProvingEngine::~STL_ProvingEngine()
 {
     delete mpDB;
 }
+
 // ---------------------------------------------------------------------------------------
 
 void STL_ProvingEngine::AddPremise(const Fact& f)

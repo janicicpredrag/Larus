@@ -15,7 +15,6 @@ class ProvingEngine
 public:
     ProvingEngine() {}
     virtual ~ProvingEngine() {}
-
     virtual void AddPremise(const Fact& f) = 0;
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit) = 0;
@@ -29,10 +28,14 @@ public:
     virtual void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars)
         { mpT->InstantiateGoal(f, instantiation, fout, bInstantiateVars); }
 
+public:
+    string mname;
+    
 protected:
     Theory* mpT;
     proverParams mParams;
     clock_t mStartTime;
+
 };
 
 #endif // PROVINGENGINE_H

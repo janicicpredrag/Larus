@@ -20,6 +20,7 @@ EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT, proverParams& params)
     mpT = pT;
     mParams = params;
     mnPremisesCount = 0;
+    mname = "EQ";
 }
 
 // ---------------------------------------------------------------------------------------
