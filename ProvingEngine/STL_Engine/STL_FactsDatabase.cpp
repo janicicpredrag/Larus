@@ -189,8 +189,8 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
         current[i] = mDatabase.begin();
 
     if (PremisesTrueInInstantiation(cl, conj_inst, current, instantiation)) {
-        if (mpT->mConstantsPermissible.empty() /* && cl.mUniversalVars.size()>0 */)
-            return false;
+//        if (mpT->mConstantsPermissible.empty() /* && cl.mUniversalVars.size()>0 */)
+//            return false;
         for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
             if (instantiation.find(cl.GetUnivVar(i)) == instantiation.end()) {
                 VarsNotInPremises[cl.GetUnivVar(i)] = mpT->mConstantsPermissible.begin();

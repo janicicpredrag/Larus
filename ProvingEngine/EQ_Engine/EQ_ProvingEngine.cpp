@@ -141,6 +141,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         unsigned l, r, s, best = 0;
 
         l = 1;
+        cout << "Looking for a proof of length: " << flush;
         while(l <= 32)  {
             time_t current_time = time(NULL);
             double remainingTime = mParams.time_limit - difftime(current_time, start_time);
@@ -154,14 +155,14 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             // if (!rv) // do not attempt to read some old proof representation
             //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << l << ";" << flush;
+            cout << l << flush;
             rv = system(sCall.c_str());
             if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
                 l *= 2;
-                cout << endl;
+                cout << ", ";
             }
             else {
-                cout << " Found!" << endl;
+                cout << " (found), ";
                 best = l;
                 break;
             }
@@ -185,18 +186,20 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             // if (!rv) // do not attempt to read some old proof representation
             //    cout << "The old file smt-proof.txt has been deleted." << endl;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
-            cout << "Trying proof length " << s << ";" << flush;
+            // cout << "Trying proof length " << s << ";" << flush;
+            cout << s << flush;
             rv = system(sCall.c_str());
             if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
                 l = s+1;
-                cout << endl;
+                cout << ", ";
             }
             else {
-                cout << " Found!" << endl;
+                cout << " (found), ";
                 best = s;
                 r = s-1;
             }
         }
+        cout << endl;
         if (best > 0) {
             cout << "Best found proof: of the length " << best << endl;
             ret = DecodeProof(formula, "smt-proof.txt",  proof);
