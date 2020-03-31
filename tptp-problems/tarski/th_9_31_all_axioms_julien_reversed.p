@@ -82,7 +82,8 @@ fof(ax_branch_point_in_angle, axiom, (! [P,A,B,C] : ((point_in_angle(P,A,B,C) | 
 fof(ax_11_23_2, axiom, (! [A,B,C,P,X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P)) => point_in_angle(P,A,B,C)))).
 fof(ax_11_23_1_2, axiom, (! [A,B,C,P] : ((A!=B & C!=B & P!=B & bet(A,B,C)) => (point_in_angle(P,A,B,C))))).
 %fof(ax_11_23_1_2, axiom, (! [A,B,C,P,X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & X = B) => (point_in_angle(P,A,B,C))))).
-fof(ax_11_23_1_1, axiom, (! [A,B,C,P] : ((point_in_angle(P,A,B,C)) => ((? [X] : (A!=B & C!=B & P!=B & bet(A,X,C) & X=B)) |  (? [X] : (A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P))))))).
+fof(ax_11_23_1_1, axiom, (! [A,B,C,P] : ((point_in_angle(P,A,B,C)) => ? [X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & X=B) |  (A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P)))))).
+
 fof(ax_false_distinct, axiom, (! [A,B,C] : ((distinct(A,B,C) & ndistinct(A,B,C)) => $false))).
 fof(ax_branch_distinct, axiom, (! [A,B,C] : ((distinct(A,B,C) | ndistinct(A,B,C))))).
 fof(ax_distinct_2, axiom, (! [A,B,C] : ((A!=B & A!=C & B!=C) => (distinct(A,B,C))))).
@@ -106,7 +107,7 @@ fof(ax_branch_is_image, axiom, (! [P, P1, A, B] : (is_image(P1,P,A,B) | nis_imag
 %fof(ax_10_3_2_2, axiom, (! [P,A,B,X] : ((A!=B & is_midpoint(X,P,P) & point_on_line(X,A,B)) => is_image(P,P,A,B)))).
 %%fof(ax_10_3_2_2, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1) => is_image(P1,P,A,B)))).
 %fof(ax_10_3_2_1, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) => is_image(P1,P,A,B)))).
-%fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B) & A!=B) => ((? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1))) | (? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1)))))).
+%fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B) & A!=B) => ? [X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) | (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1))))).
 fof(ax_10_3_4_2, axiom, (! [P,P1,A] : (is_midpoint(A,P,P1) => is_image(P1,P,A,A)))).
 fof(ax_10_3_4_1, axiom, (! [P,P1,A,B] : ((A!=B & is_image_spec(P1,P,A,B)) => is_image(P1,P,A,B)))).
 fof(ax_10_3_3, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B)) => ((A!=B & is_image_spec(P1,P,A,B)) | (A = B & is_midpoint(A,P,P1)))))).
@@ -115,7 +116,7 @@ fof(ax_branch_is_image_spec, axiom, (! [A,B,C,D] : ((C!=D) => (is_image_spec(A,B
 fof(ax_10_3_2_2, axiom, (! [P,A,B,X] : ((A!=B&is_midpoint(X,P,P) & point_on_line(X,A,B)) => is_image_spec(P,P,A,B)))).
 %fof(ax_10_3_2_2, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1) => is_image_spec(P1,P,A,B)))).
 fof(ax_10_3_2_1, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) => is_image_spec(P1,P,A,B)))).
-fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((A!=B&is_image_spec(P1,P,A,B)) => ((? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1))) | (? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1)))))).
+fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((A!=B&is_image_spec(P1,P,A,B)) => ? [X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) | (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1))))).
 fof(ax_false_one_side3p, axiom, (! [P,Q,R,A,B] : ((one_side3p(A,B,P,Q,R) & none_side3p(A,B,P,Q,R)) => $false))).
 fof(ax_branch_one_side3p, axiom, (! [P,Q,R,A,B] : ((one_side3p(A,B,P,Q,R) | none_side3p(A,B,P,Q,R))))).
 fof(ax_9_40_2, axiom, (! [A,B,C,P,Q,R] : ((two_sides3p(A,C,P,Q,R) & two_sides3p(B,C,P,Q,R)) => (one_side3p(A,B,P,Q,R))))).
@@ -144,7 +145,7 @@ fof(ax_false_point_on_plane2l, axiom, (! [X,A,B,C,D] : ((point_on_plane2l(X,A,B,
 fof(ax_branch_point_on_plane2l, axiom, (! [X,A,B,C,D] : ((intersect(A,B,C,D) & ncol(A,B,C)) => (point_on_plane2l(X,A,B,C,D) | npoint_on_plane2l(X,A,B,C,D))))).
 fof(ax_9_23_3, axiom, (! [A,B,C,D,R,X] : ((intersect(A,B,C,D) & ncol(A,B,D) & point_on_plane3p(X,A,B,D)) => point_on_plane2l(X,A,B,C,D)))).
 fof(ax_9_23_2, axiom, (! [A,B,C,D,R,X] : ((intersect(A,B,C,D) & ncol(A,B,C) &  point_on_plane3p(X,A,B,C)) => point_on_plane2l(X,A,B,C,D)))).
-fof(ax_9_23_1, axiom, (! [A,B,C,D,X] : ((point_on_plane2l(X,A,B,C,D)) => (intersect(A,B,C,D) & ((ncol(A,B,C) &  point_on_plane3p(X,A,B,C)) | (ncol(A,B,D) & point_on_plane3p(X,A,B,D))))))).
+fof(ax_9_23_1, axiom, (! [A,B,C,D,X] : ((point_on_plane2l(X,A,B,C,D)) => ( ( intersect(A,B,C,D)&ncol(A,B,C)&point_on_plane3p(X,A,B,C) ) | ( intersect(A,B,C,D)&ncol(A,B,D)&point_on_plane3p(X,A,B,D) ) )))).
 fof(ax_false_intersect, axiom, (! [A,B,C,D] : ((intersect(A,B,C,D) & nintersect(A,B,C,D)) => $false))).
 fof(ax_branch_intersect, axiom, (! [A,B,C,D] : (intersect(A,B,C,D) | nintersect(A,B,C,D)))).
 fof(ax_intersect_2, axiom, (! [X,A,B,C,D] : (inter(X,A,B,C,D) => intersect(A,B,C,D)))).
