@@ -96,7 +96,7 @@ fof(ax_line_on_plane3p1, axiom, (! [A,B,P,Q,R] : ((A!=B & ncol(P,Q,R) & point_on
 fof(ax_line_on_plane3p2, axiom, (! [A,B,P,Q,R] : ((line_on_plane3p(A,B,P,Q,R)) => (A!=B & ncol(P,Q,R) & point_on_plane3p(A,P,Q,R) & point_on_plane3p(B,P,Q,R))))).
 fof(ax_intersect_1, axiom, (! [A,B,C,D] : (intersect(A,B,C,D) => (? [X] : inter(X,A,B,C,D))))).
 fof(ax_intersect_2, axiom, (! [X,A,B,C,D] : (inter(X,A,B,C,D) => intersect(A,B,C,D)))).
-fof(ax_9_23_1, axiom, (! [A,B,C,D,X] : ((point_on_plane2l(X,A,B,C,D)) => (intersect(A,B,C,D) & ((ncol(A,B,C) &  point_on_plane3p(X,A,B,C)) | (ncol(A,B,D) & point_on_plane3p(X,A,B,D))))))).
+fof(ax_9_23_1, axiom, (! [A,B,C,D,X] : ((point_on_plane2l(X,A,B,C,D)) => ( ( intersect(A,B,C,D)&ncol(A,B,C)&point_on_plane3p(X,A,B,C) ) | ( intersect(A,B,C,D)&ncol(A,B,D)&point_on_plane3p(X,A,B,D) ) )))).
 fof(ax_9_23_2, axiom, (! [A,B,C,D,R,X] : ((intersect(A,B,C,D) & ncol(A,B,C) &  point_on_plane3p(X,A,B,C)) => point_on_plane2l(X,A,B,C,D)))).
 fof(ax_9_23_3, axiom, (! [A,B,C,D,R,X] : ((intersect(A,B,C,D) & ncol(A,B,D) & point_on_plane3p(X,A,B,D)) => point_on_plane2l(X,A,B,C,D)))).
 fof(ax_same_planes2l1, axiom, (! [A,B,C,D,P,Q,R,S,X,Y] : ((inter(X,A,B,C,D) & inter(Y,P,Q,R,S) & same_planes2l(A,B,C,D,P,Q,R,S)) => (point_on_plane2l(A,P,Q,R,S) & point_on_plane2l(B,P,Q,R,S) & point_on_plane2l(C,P,Q,R,S) & point_on_plane2l(D,P,Q,R,S))))).
@@ -113,7 +113,7 @@ fof(ax_9_37_1, axiom, (! [A,B,P,Q,R] : ((two_sides3p(A,B,P,Q,R)) => (? [T] : (nc
 fof(ax_9_37_2, axiom, (! [A,B,P,Q,R,T] : ((ncol(P,Q,R) & npoint_on_plane3p(A,P,Q,R) & npoint_on_plane3p(B,P,Q,R) & point_on_plane3p(T,P,Q,R) & bet(A,T,B)) => (two_sides3p(A,B,P,Q,R))))).
 fof(ax_9_40_1, axiom, (! [A,B,P,Q,R] : ((one_side3p(A,B,P,Q,R)) => (? [C] : (two_sides3p(A,C,P,Q,R) & two_sides3p(B,C,P,Q,R)))))).
 fof(ax_9_40_2, axiom, (! [A,B,C,P,Q,R] : ((two_sides3p(A,C,P,Q,R) & two_sides3p(B,C,P,Q,R)) => (one_side3p(A,B,P,Q,R))))).
-fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image_spec(P1,P,A,B)) => ((? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1))) | (? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1)))))).
+fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image_spec(P1,P,A,B)) => ? [X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) | (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1))))).
 fof(ax_10_3_2_1, axiom, (! [P,P1,A,B,X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) => is_image_spec(P1,P,A,B)))).
 %fof(ax_10_3_2_2, axiom, (! [P,P1,A,B,X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1) => is_image_spec(P1,P,A,B)))).
 fof(ax_10_3_2_2, axiom, (! [P,A,B,X] : ((is_midpoint(X,P,P) & point_on_line(X,A,B)) => is_image_spec(P,P,A,B)))).
@@ -122,7 +122,7 @@ fof(ax_false_is_image_spec, (! [A,B,C,D] : ((is_image_spec(A,B,C,D) & nis_image_
 fof(ax_10_3_3, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B)) => ((A!=B & is_image_spec(P1,P,A,B)) | (A = B & is_midpoint(A,P,P1)))))).
 fof(ax_10_3_4_1, axiom, (! [P,P1,A,B] : ((A!=B & is_image_spec(P1,P,A,B)) => is_image(P1,P,A,B)))).
 fof(ax_10_3_4_2, axiom, (! [P,P1,A] : (is_midpoint(A,P,P1) => is_image(P1,P,A,A)))).
-%fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B) & A!=B) => ((? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1))) | (? [X] : (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1)))))).
+%fof(ax_10_3_1, axiom, (! [P,P1,A,B] : ((is_image(P1,P,A,B) & A!=B) => ? [X] : ((is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) | (is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1))))).
 %fof(ax_10_3_2_1, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & perp(A,B,P,P1)) => is_image(P1,P,A,B)))).
 %%fof(ax_10_3_2_2, axiom, (! [P,P1,A,B,X] : ((A!=B & is_midpoint(X,P,P1) & point_on_line(X,A,B) & P=P1) => is_image(P1,P,A,B)))).
 %fof(ax_10_3_2_2, axiom, (! [P,A,B,X] : ((A!=B & is_midpoint(X,P,P) & point_on_line(X,A,B)) => is_image(P,P,A,B)))).
@@ -140,7 +140,8 @@ fof(ax_11_2_1, axiom, (! [A,B,C,D,E,F] : (cong_angle(A,B,C,D,E,F) => (? [A1,C1,D
 fof(ax_11_2_2, axiom, (! [A,B,C,D,E,F,A1,C1,D1,F1] : ((A!=B & C!=B & D!=E & F!=E & bet(B,A,A1) & cong(A,A1,E,D) & bet(B,C,C1) & cong(C,C1,E,F) & bet(E,D,D1) & cong(D,D1,B,A) & bet(E,F,F1) & cong(F,F1,B,C) & cong(A1,C1,D1,F1)) => (cong_angle(A,B,C,D,E,F))))).
 fof(ax_distinct_1, axiom, (! [A,B,C] : ((distinct(A,B,C)) => (A!=B & A!=C & B!=C)))).
 fof(ax_distinct_2, axiom, (! [A,B,C] : ((A!=B & A!=C & B!=C) => (distinct(A,B,C))))).
-fof(ax_11_23_1_1, axiom, (! [A,B,C,P] : ((point_in_angle(P,A,B,C)) => ((? [X] : (A!=B & C!=B & P!=B & bet(A,X,C) & X=B)) |  (? [X] : (A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P))))))).
+fof(ax_11_23_1_1, axiom, (! [A,B,C,P] : ((point_in_angle(P,A,B,C)) => ? [X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & X=B) |  (A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P)))))).
+
 %fof(ax_11_23_1_2, axiom, (! [A,B,C,P,X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & X = B) => (point_in_angle(P,A,B,C))))).
 fof(ax_11_23_1_2, axiom, (! [A,B,C,P] : ((A!=B & C!=B & P!=B & bet(A,B,C)) => (point_in_angle(P,A,B,C))))).
 fof(ax_11_23_2, axiom, (! [A,B,C,P,X] : ((A!=B & C!=B & P!=B & bet(A,X,C) & out(B,X,P)) => point_in_angle(P,A,B,C)))).
