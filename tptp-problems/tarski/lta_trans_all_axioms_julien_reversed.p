@@ -1,7 +1,7 @@
 fof(goal, conjecture,![A,B,C,A1,B1,C1,A2,B2,C2]:((lt_angle(A,B,C,A1,B1,C1)&lt_angle(A1,B1,C1,A2,B2,C2))=>(lt_angle(A,B,C,A2,B2,C2)))).
 fof(th_11_6,axiom,(![A,B,C]:((A!=B&C!=B)=>cong_angle(A,B,C,A,B,C)))).
 fof(th_11_33,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((le_angle(A1,B1,C1,A2,B2,C2)&le_angle(A2,B2,C2,A3,B3,C3))=>le_angle(A1,B1,C1,A3,B3,C3)))).
-fof(not_and_lta,axiom,![A,B,C,D,E,F]:((nlt_angle(A,B,C,D,E,F)|nlt_angle(D,E,F,A,B,C))))).
+fof(not_and_lta,axiom,![A,B,C,D,E,F]:(nlt_angle(A,B,C,D,E,F)|nlt_angle(D,E,F,A,B,C))).
 fof(conga_preserves_lta,axiom,![A,B,C,D,E,F,A1,B1,C1,D1,E1,F1]:((cong_angle(A,B,C,A1,B1,C1)&cong_angle(D,E,F,D1,E1,F1)&lt_angle(A,B,C,D,E,F))=>(lt_angle(A1,B1,C1,D1,E1,F1)))).
 %fof(ax_branch_parallel_planes, (! [A,B,C,D] : ((parallel_planes(A,B,C,D) | nparallel_planes(A,B,C,D))))).
 %fof(ax_12_24_2, axiom, (! [P1,Q1,R1,P2,Q2,R2,A1,B1,C1,D1,A2,B2,C2,D2,X1,X2] : ((ncol(P1,Q1,R1) & ncol(P2,Q2,R2) & inter(X1,A1,B1,C1,D1) & inter(X2,A2,B2,C2,D2) & line_in_plane3p(A1,B1,P1,Q1,R1) & line_in_plane3p(A2,B2,P2,Q2,R2) & line_in_plane3p(C1,D1,P1,Q1,R1) & line_in_plane3p(C2,D2,P2,Q2,R2) & parallel_broder(A1,B1,A2,B2) & parallel_broder(C1,D1,C2,D2)) => (parallel_planes(P1,Q1,R1,P2,Q2,R2))))).

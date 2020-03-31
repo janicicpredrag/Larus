@@ -1,7 +1,7 @@
 fof(goal, conjecture,![A,B,C,A1,B1,C1,A2,B2,C2]:((lt_angle(A,B,C,A1,B1,C1)&lt_angle(A1,B1,C1,A2,B2,C2))=>(lt_angle(A,B,C,A2,B2,C2)))).
 fof(th_11_6,axiom,(![A,B,C]:((A!=B&C!=B)=>cong_angle(A,B,C,A,B,C)))).
 fof(th_11_33,axiom,(![A1,B1,C1,A2,B2,C2,A3,B3,C3]:((le_angle(A1,B1,C1,A2,B2,C2)&le_angle(A2,B2,C2,A3,B3,C3))=>le_angle(A1,B1,C1,A3,B3,C3)))).
-fof(not_and_lta,axiom,![A,B,C,D,E,F]:((nlt_angle(A,B,C,D,E,F)|nlt_angle(D,E,F,A,B,C))))).
+fof(not_and_lta,axiom,![A,B,C,D,E,F]:(nlt_angle(A,B,C,D,E,F)|nlt_angle(D,E,F,A,B,C))).
 fof(conga_preserves_lta,axiom,![A,B,C,D,E,F,A1,B1,C1,D1,E1,F1]:((cong_angle(A,B,C,A1,B1,C1)&cong_angle(D,E,F,D1,E1,F1)&lt_angle(A,B,C,D,E,F))=>(lt_angle(A1,B1,C1,D1,E1,F1)))).
 fof(ax_11_2_2,axiom,(![A,B,C,D,E,F,A1,C1,D1,F1]:((A!=B&C!=B&D!=E&F!=E&bet(B,A,A1)&cong(A,A1,E,D)&bet(B,C,C1)&cong(C,C1,E,F)&bet(E,D,D1)&cong(D,D1,B,A)&bet(E,F,F1)&cong(F,F1,B,C)&cong(A1,C1,D1,F1))=>(cong_angle(A,B,C,D,E,F))))).
 fof(ax_11_2_1,axiom,(![A,B,C,D,E,F]:(cong_angle(A,B,C,D,E,F)=>(?[A1,C1,D1,F1]:(A!=B&C!=B&D!=E&F!=E&bet(B,A,A1)&cong(A,A1,E,D)&bet(B,C,C1)&cong(C,C1,E,F)&bet(E,D,D1)&cong(D,D1,B,A)&bet(E,F,F1)&cong(F,F1,B,C)&cong(A1,C1,D1,F1)))))).
