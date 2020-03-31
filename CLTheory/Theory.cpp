@@ -298,7 +298,7 @@ string Theory::MakeNewConstant()
     // return GetConstantName(miConstantsCounter++);
     unsigned id = mConstants.size() + mConstantsPermissible.size();
     string s;
-    if (id < 27) {
+    if (id < 26) {
         s = "ca";
         s[1] += id;
     }
@@ -314,7 +314,7 @@ string Theory::GetConstantName(unsigned id) const
 {
     if (id > mConstants.size() + mConstantsPermissible.size())   {
         string s;
-        if (id < 27) {
+        if (id < 26) {
             s = "ca";
             s[1] += id;
         }

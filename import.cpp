@@ -92,18 +92,13 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         // cout << "Theorem proved! " << endl;
         string sFileName("proofs/PROOF" + fileName + ".tex");
-        string sFileName2("proofs/PROOF" + fileName + "-simpl.tex");
+        // string sFileName2("proofs/PROOF" + fileName + "-simpl.tex");
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
-        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
-
-        if (engine->GetKind() != eURSA_ProvingEngine && engine->GetKind() != eEQ_ProvingEngine) {
+        if (engine->GetKind() != eURSA_ProvingEngine && engine->GetKind() != eEQ_ProvingEngine)
             proof.Simplify();
-            ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName2);
-        }
-
-
+        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
 
         if (params.mbCoq) {
@@ -133,7 +128,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 std::string dirnameOf(const std::string& fname)
 {
      size_t pos = fname.find_last_of("\\/");
-     return (std::string::npos == pos)
+     return (std::string::npos == pos)+"/"
          ? ""
          : fname.substr(0, pos);
 }
@@ -159,7 +154,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)
                     {
-                        string filename = dirnameOf(inputFile)+"/"+s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        string filename = dirnameOf(inputFile)+s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
 
                         cout << "Including file : " << filename << endl;
                         ifstream input_file(filename,ios::in);
@@ -438,7 +433,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
 
     //T.AddAxiomEqSymm();
     //T.AddAxiomNEqSymm();
-    ///T.AddAxiomEqReflexive();
+    //T.AddAxiomEqReflexive();
     //T.AddNegElimAxioms();
     //T.AddEqExcludedMiddleAxiom();
     //T.AddExcludedMiddleAxioms();

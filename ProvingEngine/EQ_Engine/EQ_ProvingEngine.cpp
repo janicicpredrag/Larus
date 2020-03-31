@@ -995,9 +995,9 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
              sfrom2 += "(" + itos(from) + ")";
           }
 
-          int inst[10];
+          int inst[100];
           for(int i=0; i<numberOfUnivVars+numberOfExiVars; i++) {
-              s = app("nInst", proofStep, i);
+              s = app("nInst", proofStep, i+1);
               inst[i] = nmodel[s];
           }
 

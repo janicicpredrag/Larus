@@ -189,8 +189,8 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
         current[i] = mDatabase.begin();
 
     if (PremisesTrueInInstantiation(cl, conj_inst, current, instantiation)) {
-//        if (mpT->mConstantsPermissible.empty() /* && cl.mUniversalVars.size()>0 */)
-//            return false;
+        if (mpT->mConstantsPermissible.empty() && cl.GetNumOfUnivVars()>0)
+            return false;
         for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
             if (instantiation.find(cl.GetUnivVar(i)) == instantiation.end()) {
                 VarsNotInPremises[cl.GetUnivVar(i)] = mpT->mConstantsPermissible.begin();
@@ -359,14 +359,14 @@ bool STLFactsDatabase::MatchConjunction(const ConjunctionFormula& conj, Conjunct
         return true;
     for (std::set<Fact>::iterator it = mDatabase.begin(); it != mDatabase.end(); ++it)  {
         map<string,string> instantiation1 = instantiation;
-        if (conj.GetElement(i).GetName() == "eq" &&
+       /* if (conj.GetElement(i).GetName() == "eq" &&
             conj.GetElement(i).GetArg(0) == conj.GetElement(i).GetArg(1)) {
 
             if (MatchConjunction(conj, conj_inst, i+1, instantiation1, checkingPremises, AuxFacts)) {
                 instantiation = instantiation1;
                 return true;
             }
-        }
+        }*/
 
         if (MatchFact(conj.GetElement(i), *it, instantiation1, checkingPremises, AuxFacts)) {
             if (MatchConjunction(conj, conj_inst, i+1, instantiation1, checkingPremises, AuxFacts)) {
