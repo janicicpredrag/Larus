@@ -2,7 +2,7 @@
 #include "CLTheory/Theory.h"
 #include <assert.h>
 
-// #define DEBUG_PARSER
+//#define DEBUG_PARSER
 
 
 // ---------------------------------------------------------------------------------------
@@ -515,8 +515,33 @@ bool Fact::Read(const string& s)
     #ifdef DEBUG_PARSER
     cout << "Currently Reading fact : " << s << endl;
     #endif
+
+    pos = s.size();
+    while (s[0] == '(' && s[pos-1] == ')') {
+        return Read(s.substr(1,pos-2));
+    }
+
     if (s=="false") {
         mName = "false";
+        return true;
+    }
+
+    pos = s.find("=",0);
+    if (pos != string::npos)
+    {
+        unsigned l = 1;
+        mName = "eqnative";
+        mArgs.push_back(s.substr(0,pos));
+        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
+        return true;
+    }
+    pos = s.find("!=",0);
+    if (pos != string::npos)
+    {
+        unsigned l = 2;
+        mName = "neqnative";
+        mArgs.push_back(s.substr(0,pos));
+        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
         return true;
     }
 

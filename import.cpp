@@ -82,8 +82,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
-
-
         std::size_t found = theoremFileName.find_last_of("/\\");
         string path = theoremFileName.substr(0,found);
         string fileName = theoremFileName.substr(found+1) + engine->mname ;

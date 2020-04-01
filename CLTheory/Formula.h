@@ -163,11 +163,11 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     else if (f.GetName() == "true") {
         os << "$true";
     }
-    else if (NATIVE_EQ && f.GetName() == "eq")
+    else if (NATIVE_EQ && f.GetName() == "=")
     {
         os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
     }
-    else if (NATIVE_EQ && f.GetName() == "neq")    
+    else if (NATIVE_EQ && f.GetName() == "!=")
     {
         os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
     }

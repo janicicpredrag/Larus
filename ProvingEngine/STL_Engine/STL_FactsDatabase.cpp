@@ -95,7 +95,7 @@ bool STLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, 
     map<string,string> instantiation;
 
     // Hard-coded for two predicates: eq/2 and betS/3
-    for (set<Fact>::iterator it=mDatabase.begin(); it != mDatabase.end(); ++it)  {
+    /*for (set<Fact>::iterator it=mDatabase.begin(); it != mDatabase.end(); ++it)  {
         Fact f = *it;
         if (f.GetName() == "eq")
             f.SetName("neq");
@@ -118,7 +118,8 @@ bool STLFactsDatabase::ApplyAxiom(const CLFormula& cl, ConjunctionFormula& fin, 
                 return true;
             }
         }
-    }
+    }*/
+
     vector<std::set<Fact>::iterator> current(cl.GetPremises().GetSize());
     map<string, set<string>::iterator> VarsNotInPremises;
 
@@ -412,10 +413,10 @@ bool STLFactsDatabase::MatchFact(const Fact& f1, const Fact& f2, map<string,stri
     for (size_t j=0; j<f1s && !noMatch; j++)  {
         std::map<string,string>::iterator it = instantiation.find(f1.GetArg(j));
         if (it != instantiation.end())  {
-            if (it->second != f2.GetArg(j) && !Equal(it->second,f2.GetArg(j),AuxFacts))
+            if (it->second != f2.GetArg(j) /*&& !Equal(it->second,f2.GetArg(j),AuxFacts)*/)
                 noMatch = true;
         }
-        else if (mpT->IsConstant(f1.GetArg(j)) && f1.GetArg(j)!=f2.GetArg(j) && !Equal(f1.GetArg(j),f2.GetArg(j),AuxFacts))
+        else if (mpT->IsConstant(f1.GetArg(j)) && f1.GetArg(j)!=f2.GetArg(j) /*&& !Equal(f1.GetArg(j),f2.GetArg(j),AuxFacts)*/)
             noMatch = true;
         else if (!mpT->IsConstant(f1.GetArg(j)))
             instantiation[f1.GetArg(j)]=f2.GetArg(j);
