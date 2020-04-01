@@ -117,7 +117,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
         int ret = system("rm sat-proof.txt");
         // if (!ret) // do not attempt to read some old proof representation
         //    cout << "The old file sat-proof.txt has been deleted." << endl;
-        const string sCall = "timeout " + to_string(mParams.time_limit) + " ./ursa < prove.urs -c -l8 -sclasp";
+        const string sCall = "timeout " + to_string(mParams.time_limit) + " ./ursa < prove.urs -q -c -l8 -sclasp";
         if (system(sCall.c_str()))  // Find a proof
             return false;
         return (DecodeProof(formula, "sat-proof.txt",  proof));
@@ -236,7 +236,6 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++)
             ursaFile << "nA[nFinalStep][" << i << "] = n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + ";" << endl;
     ursaFile << endl;
-
     ursaFile << "/* ******************* Proof specification ****************** */ "                                                                << endl;
     ursaFile << "/* ********************************************************** */ "                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
@@ -440,6 +439,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bPrevStepGoal = (nProofStep>0)  && (nP[nProofStep-1][0]==nP[nFinalStep][0]) && !bCases[nProofStep-1]; "                                            << endl;
     ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "                                                                                        << endl;
     ursaFile <<"       bPrevStepGoal &&= (nA[nProofStep-1][nInd]==nA[nFinalStep][nInd]); "                                                         << endl;
+//    ursaFile <<"   bPrevStepGoal &&= (nAxiomApplied[nProofStep-1] != nQEDbyAssumption) || (nAxiomApplied[nProofStep] == nSecondCase); "             << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bMatchBranchingForSecondCase = false; "                                                                                         << endl;
     ursaFile <<"   for (nI = nPremisesCount; nI+1 < nProofStep; nI++) { "                                                                          << endl;

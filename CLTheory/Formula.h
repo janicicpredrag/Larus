@@ -167,7 +167,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     {
         os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
     }
-    else if (NATIVE_EQ && f.GetName() == "!=")
+    else if (NATIVE_EQ && f.GetName() == "neqnative")
     {
         os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
     }
