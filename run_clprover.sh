@@ -41,7 +41,7 @@ do
 	    benches="tptp-problems/col-trans/col-trans-00*.p"
             break
             ;;
-	"Col trans 1000")
+   	    "Col trans 1000")
 	    echo "$opt selected"
 	    benches="tptp-problems/col-trans/col-trans-0*.p"
 	    break
@@ -57,12 +57,12 @@ select opt2 in "${options2[@]}"
 do
     case $opt2 in
         "URSA")
-            echo "$opt selected."
+            echo "$opt2 selected."
             engine="-eursa"
             break
             ;;
         "STL")
-            echo "$opt selected"
+            echo "$opt2 selected"
             engine="-estl"
             break
             ;;
@@ -80,6 +80,50 @@ do
     esac
 done
 
+PS3='Please select axioms: '
+options3=("None" "All" "Excluded Middle Only" "Eq Axioms Only" "Neg Elim Only")
+select opt3 in "${options3[@]}"
+do
+    case $opt3 in
+        "None")
+            echo "$opt3 selected."
+            eqaxioms=""
+            exaxioms=""
+            neaxioms=""
+            break
+            ;;
+        "All")
+            echo "$opt3 selected"
+            exaxioms="-aexcludedmiddle"
+            eqaxioms="-aeq"
+            neaxioms=""
+            break
+            ;;
+        "Excluded Middle Only")
+            echo "$opt3 selected"
+            exaxioms="-aexcludedmiddle"
+            eqaxioms=""
+            neaxioms=""
+            break
+            ;;
+        "Eq Axioms Only")
+            echo "$opt3 selected"
+            exaxioms=""
+            eqaxioms="-aeq"
+            neaxioms=""
+            break
+            ;;
+         "Neg Elim Only")
+            echo "$opt3 selected"
+            exaxioms=""
+            eqaxioms=""
+            neaxioms="-anegelim"
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
 echo "Time limit ? (Default is $time seconds)"
 read timev
 if [ -z "$timev" ]
@@ -89,6 +133,7 @@ else
     echo "Setting time limit"
     time=$timev
 fi
+
 
 echo "Max proof length ? (Default is $maxProofLen)"
 read timev
@@ -101,17 +146,21 @@ else
 fi
 
 
+
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
+echo "Length limit: " $length | tee -a $filename
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  ./CLprover -l"$time" -p"$maxProofLen" $engine -ftptp -vcoq "$file" | tee -a $filename
+  echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
+  ./CLprover -l"$time" -p"$maxProofLen" $engine -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"
 echo "Summary:"
+echo "Benches:" $opt | tee -a $summary
 echo "Time given: $time" | tee -a $summary
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
