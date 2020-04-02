@@ -152,6 +152,7 @@ do
 done
 echo "------------------------------------------------------"
 echo "Summary:"
+echo "Benches:" $opt | tee -a $summary
 echo "Time given: $time" | tee -a $summary
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
