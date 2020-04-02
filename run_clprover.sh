@@ -6,6 +6,7 @@ printout() {
 }
 i=0
 time=10
+length=32
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="clprover-results-$today.out"
 summary="clprover-summary-$today.out"
@@ -56,18 +57,62 @@ select opt2 in "${options2[@]}"
 do
     case $opt2 in
         "URSA")
-            echo "$opt selected."
+            echo "$opt2 selected."
             engine="-eursa"
             break
             ;;
         "STL")
-            echo "$opt selected"
+            echo "$opt2 selected"
             engine="-estl"
             break
             ;;
         "SMT")
-            echo "$opt selected"
+            echo "$opt2 selected"
             engine="-esmt"
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+PS3='Please select axioms: '
+options3=("None" "All" "Excluded Middle Only" "Eq Axioms Only" "Neg Elim Only")
+select opt3 in "${options3[@]}"
+do
+    case $opt3 in
+        "None")
+            echo "$opt3 selected."
+            eqaxioms=""
+            exaxioms=""
+            neaxioms=""
+            break
+            ;;
+        "All")
+            echo "$opt3 selected"
+            exaxioms="-aexcludedmiddle"
+            eqaxioms="-aeq"
+            neaxioms=""
+            break
+            ;;
+        "Excluded Middle Only")
+            echo "$opt3 selected"
+            exaxioms="-aexcludedmiddle"
+            eqaxioms=""
+            neaxioms=""
+            break
+            ;;
+        "Eq Axioms Only")
+            echo "$opt3 selected"
+            exaxioms=""
+            eqaxioms="-aeq"
+            neaxioms=""
+            break
+            ;;
+         "Neg Elim Only")
+            echo "$opt3 selected"
+            exaxioms=""
+            eqaxioms=""
+            neaxioms="-anegelim"
             break
             ;;
         *) echo "invalid option $REPLY";;
@@ -84,13 +129,25 @@ else
     time=$timev
 fi
 
+echo "Proof length limit ? (Default is $length steps)"
+read lengthv
+if [ -z "$lengthv" ]
+then
+   echo "Using default length limit."
+else
+    echo "Setting length limit"
+    length=$lengthv
+fi
+
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
+echo "Length limit: " $length | tee -a $filename
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  ./CLprover -l"$time" $engine -ftptp -p64 -vcoq "$file" | tee -a $filename
+  echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
+  ./CLprover -l"$time" -p"$length" $engine -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"
