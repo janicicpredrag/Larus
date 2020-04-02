@@ -43,6 +43,7 @@ int main(int argc , char** argv)
     params.eEngine = DEFAULT_ENGINE;
     params.time_limit = DEFAULT_TIME_LIMIT;
     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+    params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
@@ -83,6 +84,13 @@ int main(int argc , char** argv)
                     params.max_nesting_depth = d;
                 else
                     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'p') {
+                int d = atoi(argv[i]+2);
+                if (d >= 0)
+                    params.max_proof_length = d;
+                else
+                    params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'a') {
                 if (!strcmp(argv[i]+2, "eq"))

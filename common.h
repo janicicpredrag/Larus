@@ -16,6 +16,7 @@ const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
 const unsigned DEFAULT_MAX_NESTING_DEPTH = 3;
+const unsigned DEFAULT_MAX_PROOF_LENGTH = 32;
 
 const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
@@ -27,6 +28,7 @@ typedef struct proverParams {
     PROVING_ENGINE eEngine;
     float time_limit;
     unsigned max_nesting_depth;
+    unsigned max_proof_length;
     bool mbNativeEQ;
     bool mbNegElim;
     bool mbExcludedMiddle;

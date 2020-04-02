@@ -90,7 +90,7 @@ echo "Time limit: " $time | tee -a $filename
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  ./CLprover -l"$time" $engine -ftptp -vcoq "$file" | tee -a $filename
+  ./CLprover -l"$time" $engine -ftptp -p64 -vcoq "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"
