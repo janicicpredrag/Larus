@@ -1,7 +1,9 @@
 #include <string>
 #include <ctype.h>
 #include <iostream>
+#include <sstream>
 #include <string.h>
+#include  <iomanip>
 
 #include "CLTheory/Theory.h"
 #include "CLTheory/Formula.h"
@@ -39,6 +41,23 @@ string itos(unsigned int i)
     stringstream ss;
     ss << i;
     return ss.str();
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+string itos(PROVING_ENGINE T, unsigned int i)
+{
+    if (T == eSMTBV_ProvingEngine)   {
+        stringstream ss;
+        ss << setfill('0') << setw(3) << right << hex << i;
+        string a = ss.str();
+        return "#x"+ss.str();
+    }
+    else { // if (T == eSMTLIA_ProvingEngine)
+        stringstream ss;
+        ss << i;
+        return ss.str();
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -94,7 +113,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
-        if (engine->GetKind() != eURSA_ProvingEngine && engine->GetKind() != eEQ_ProvingEngine)
+        if (engine->GetKind() == eSTL_ProvingEngine)
             proof.Simplify();
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
@@ -218,7 +237,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                      T.AddConstant(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k));
 
             if (type == 0) {
-                if (params.eEngine == eURSA_ProvingEngine || params.eEngine == eEQ_ProvingEngine) {
+                if (params.eEngine != eSTL_ProvingEngine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
                     T.AddAxioms(normalizedAxioms);
@@ -232,7 +251,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
             } else if (type == 1) {
                 theorem = cl;
                 theoremName = statementName;
-                if (params.eEngine == eURSA_ProvingEngine || params.eEngine == eEQ_ProvingEngine) {
+                if (params.eEngine != eSTL_ProvingEngine) {
                     vector< pair<CLFormula,string> > output;
                     theorem.NormalizeGoal(statementName, to_string(0), output);
                     if (output.size()>1) {
@@ -261,7 +280,9 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         engine = new SQL_ProvingEngine(&T,params);
     else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T,params);
-    else if (params.eEngine == eEQ_ProvingEngine)
+    else if (params.eEngine == eSMTLIA_ProvingEngine)
+        engine = new EQ_ProvingEngine(&T,params);
+    else if (params.eEngine == eSMTBV_ProvingEngine)
         engine = new EQ_ProvingEngine(&T,params);
     else // default
         engine = new STL_ProvingEngine(&T,params);

@@ -6,6 +6,7 @@ printout() {
 }
 i=0
 time=10
+maxProofLen=32
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="clprover-results-$today.out"
 summary="clprover-summary-$today.out"
@@ -51,7 +52,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT")
+options2=("URSA" "STL" "SMT-LIA" "SMT-BV")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -65,9 +66,14 @@ do
             engine="-estl"
             break
             ;;
-        "SMT")
+        "SMT-LIA")
             echo "$opt selected"
-            engine="-esmt"
+            engine="-esmtlia"
+            break
+            ;;
+        "SMT-BV")
+            echo "$opt selected"
+            engine="-esmtbv"
             break
             ;;
         *) echo "invalid option $REPLY";;
@@ -84,13 +90,24 @@ else
     time=$timev
 fi
 
+echo "Max proof length ? (Default is $maxProofLen)"
+read timev
+if [ -z "$maxProofLen" ]
+then
+   echo "Using max proof length."
+else
+    echo "Setting max proof length."
+    maxProofLen=$maxProofLen
+fi
+
+
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  ./CLprover -l"$time" $engine -ftptp -p64 -vcoq "$file" | tee -a $filename
+  ./CLprover -l"$time" -p"$maxProofLen" $engine -ftptp -vcoq "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"

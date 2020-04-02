@@ -22,7 +22,7 @@ public:
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
     virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit);
-    virtual PROVING_ENGINE GetKind() { return eEQ_ProvingEngine; }
+    virtual PROVING_ENGINE GetKind() { return mSMT_theory; }
 
 private:
     void EncodeAxiom(CLFormula& axiom);
@@ -35,6 +35,16 @@ private:
     string app(string s, unsigned arg1);
     string app(string s, unsigned arg1, unsigned arg2);
     string appeq(string arg1, string arg2);
+    string appeq(string arg1, int arg2);
+    string smt_sum(string arg1, string arg2);
+    string smt_sum(string arg1, int arg2);
+    string smt_sub(string arg1, string arg2);
+    string smt_prod(string arg1, string arg2);
+    string smt_prod(string arg1, int arg2);
+    string smt_geq(string arg1, string arg2);
+    string smt_less(string arg1, string arg2);
+    string smt_less(string arg1, int arg2);
+    string smt_ite(string arg1, int arg2, int arg3);
 
     unsigned mnMaxArity;
     unsigned mnMaxPremises;
@@ -58,6 +68,9 @@ private:
 
     string mURSAstringPremises;
     string mURSAstringAxioms;
+
+    PROVING_ENGINE mSMT_theory;
+    string mSMT_type;
 };
 
 #endif // EQPROVINGENGINE_H

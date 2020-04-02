@@ -111,8 +111,10 @@ int main(int argc , char** argv)
                     params.eEngine = eSQL_ProvingEngine;
                 else if (!strcmp(argv[i]+2, "ursa"))
                     params.eEngine = eURSA_ProvingEngine;
-                else if (!strcmp(argv[i]+2, "smt"))
-                    params.eEngine = eEQ_ProvingEngine;
+                else if (!strcmp(argv[i]+2, "smtlia"))
+                    params.eEngine = eSMTLIA_ProvingEngine;
+                else if (!strcmp(argv[i]+2, "smtbv"))
+                    params.eEngine = eSMTBV_ProvingEngine;
                 else {
                     wrongInput = true;
                     break;
@@ -130,7 +132,7 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
         return 0;
     }
 

@@ -6,7 +6,7 @@
 using namespace std;
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
-enum PROVING_ENGINE { eSTL_ProvingEngine, eSQL_ProvingEngine, eURSA_ProvingEngine, eEQ_ProvingEngine, eNumberOfProvingEngines };
+enum PROVING_ENGINE { eSTL_ProvingEngine, eSQL_ProvingEngine, eURSA_ProvingEngine, eSMTLIA_ProvingEngine, eSMTBV_ProvingEngine, eNumberOfProvingEngines };
 
 enum ReturnValue { eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
 
@@ -39,5 +39,6 @@ typedef struct proverParams {
 #define EQ_SUPPORT 1
 
 string itos(unsigned int i);
+string itos(PROVING_ENGINE T, unsigned int i);
 
 #endif // COMMON_H
