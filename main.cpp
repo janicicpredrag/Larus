@@ -130,7 +130,7 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -p<length limit> -f<tptp> -e<stl|sql|ursa|smt> -n<max nesting> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
         return 0;
     }
 
