@@ -1089,7 +1089,7 @@ bool EQ_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<st
     dummy.SetName("dummy");
 
     CaseSplit* pcs;
-    ByNegIntro* pni;
+    ByNegIntro* pni=nullptr;
     string str;
     if (ursaproof.good())
     {
