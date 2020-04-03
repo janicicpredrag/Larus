@@ -145,17 +145,35 @@ else
     maxProofLen=$maxProofLen
 fi
 
-
+PS3='Find minimum size proof ?'
+options4=("Yes" "No")
+select opt4 in "${options4[@]}"
+do
+    case $opt4 in
+        "Yes")
+            echo "$opt4 selected."
+            minproof=""
+            break
+            ;;
+        "No")
+            echo "$opt4 selected"
+            minproof="-s"
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
 
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
 echo "Length limit: " $length | tee -a $filename
+echo "Find minimal size proof:" $opt4 | tee -a $filename
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
-  ./CLprover -l"$time" -p"$maxProofLen" $engine -n1 -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
+  ./CLprover -l"$time" -p"$maxProofLen" $minproof $engine -n1 -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"
