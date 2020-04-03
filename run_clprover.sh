@@ -145,7 +145,7 @@ else
     maxProofLen=$maxProofLen
 fi
 
-PS3='Find minimum size proof ?'
+PS3='Find shortest possible proof ?'
 options4=("Yes" "No")
 select opt4 in "${options4[@]}"
 do
