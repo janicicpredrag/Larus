@@ -155,7 +155,7 @@ for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
-  ./CLprover -l"$time" -p"$maxProofLen" $engine -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
+  ./CLprover -l"$time" -p"$maxProofLen" $engine -n1 -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
 done
 echo "------------------------------------------------------"

@@ -415,8 +415,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
-                    sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
-                                                   smt_less(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) + ")";
+                     if (mSMT_theory == eSMTBV_ProvingEngine)
+                         sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", n_from) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
+                     else // (mSMT_theory == eSMTLIA_ProvingEngine)
+                         sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
+                                                   smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                  sbSameProofBranch += ")";
                  string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
@@ -494,7 +497,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
-                  sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
+                   if (mSMT_theory == eSMTBV_ProvingEngine)
+                       sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", n_from) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
+                   else // (mSMT_theory == eSMTLIA_ProvingEngine)
+                       sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
                                                  smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
                string sb2 = "(and " + appeq(app("nP", n_from, 0), "nEQ");
@@ -524,7 +530,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
            else
                sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
-                        appeq(app("nNesting", nProofStep), "1") + ")";
+                        appeq(app("nNesting", nProofStep), 1) + ")";
 
            //  eq(A,A)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQReflex);
@@ -546,8 +552,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
-                  sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
-                                             smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
+                   if (mSMT_theory == eSMTBV_ProvingEngine)
+                       sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", n_from) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
+                   else // (mSMT_theory == eSMTLIA_ProvingEngine)
+                       sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
+                                                 smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
 
                string sb = "(and "+ appeq(app("nFrom",nProofStep,0), n_from) + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
@@ -578,8 +587,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
-                  sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
-                                             smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
+                   if (mSMT_theory == eSMTBV_ProvingEngine)
+                       sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", n_from) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
+                   else // (mSMT_theory == eSMTLIA_ProvingEngine)
+                       sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
+                                                 smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
                string sn;
                for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
