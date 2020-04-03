@@ -15,13 +15,14 @@ enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eEQRefl
 const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
-const unsigned DEFAULT_MAX_NESTING_DEPTH = 3;
+const unsigned DEFAULT_MAX_NESTING_DEPTH = 2;
 const unsigned DEFAULT_MAX_PROOF_LENGTH = 32;
 
 const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
+const bool DEFAULT_SINGLE_PROOF = false;
 
 typedef struct proverParams {
     INPUT_FORMAT input_format;
@@ -29,6 +30,7 @@ typedef struct proverParams {
     float time_limit;
     unsigned max_nesting_depth;
     unsigned max_proof_length;
+    bool single_proof;
     bool mbNativeEQ;
     bool mbNegElim;
     bool mbExcludedMiddle;

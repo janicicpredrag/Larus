@@ -44,6 +44,7 @@ int main(int argc , char** argv)
     params.time_limit = DEFAULT_TIME_LIMIT;
     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
     params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
+    params.single_proof  = DEFAULT_SINGLE_PROOF;
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
@@ -84,6 +85,9 @@ int main(int argc , char** argv)
                     params.max_nesting_depth = d;
                 else
                     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 's') { // single proof
+                params.single_proof = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'p') {
                 int d = atoi(argv[i]+2);
@@ -132,7 +136,15 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<tptp> -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
+        cout << "   -l<time limit>       for time limit; example: -l10; default: 10s \n" << endl;
+        cout << "   -f<format>           for input format; example -ftptp; default: tptp \n" << endl;
+        cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
+        cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv); examples: -eursa; default: stl \n" << endl;
+        cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
+        cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;
+        cout << "   -a<axioms>           for additional axioms (eq|negelim|excludedmiddle); example: -aeq; default: do not include \n" << endl;
+        cout << "   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); examples: -vcoq; default: no" << endl;
         return 0;
     }
 

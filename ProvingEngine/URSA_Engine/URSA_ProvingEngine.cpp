@@ -134,8 +134,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
-    ursaFile << "minimize(nProofLen, 1, " << mParams.max_proof_length << ");" << endl << endl;
-    //ursaFile << "nProofLen = 4;" << endl << endl;
+
+    if (mParams.single_proof)
+        ursaFile << "nProofLen = " << mParams.max_proof_length << ";" << endl << endl;
+    else
+        ursaFile << "minimize(nProofLen, 1, " << mParams.max_proof_length << ");" << endl << endl;
 
     ursaFile << "nMaxDepth = " << mParams.max_nesting_depth << ";" << endl << endl;
 
