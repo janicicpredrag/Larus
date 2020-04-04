@@ -301,7 +301,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       bMatchExiQuantifiers = true; "                                                                                              << endl;
     ursaFile <<"       for (nL=0; nL<nAxiomExiVars[nAxiom]; nL++) { "                                                                              << endl;
     ursaFile <<"           /* The id of a new constant is ((nProofStep+1)<<3) + nL, ie. 8*nProofStep+nL - so they don't overlap, "                     << endl;
-    ursaFile <<"              unless some axioms introduces >4 witnesses */ "                                                                      << endl;
+    ursaFile <<"              unless some axioms introduces >7 witnesses */ "                                                                      << endl;
     ursaFile <<"           bMatchExiQuantifiers &&= nInst[nProofStep][nAxiomUniVars[nAxiom]+nL+1] == ((nProofStep+1)<<3) + nL;  /* fresh constants */ "  << endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile                                                                                                                                       << endl;
