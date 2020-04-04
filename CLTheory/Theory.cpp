@@ -312,7 +312,7 @@ string Theory::MakeNewConstant()
 
 string Theory::GetConstantName(unsigned id) const
 {
-    if (id > mConstants.size() + mConstantsPermissible.size())   {
+    if (id >= mConstants.size() + mConstantsPermissible.size())   {
         string s;
         if (id < 26) {
             s = "ca";

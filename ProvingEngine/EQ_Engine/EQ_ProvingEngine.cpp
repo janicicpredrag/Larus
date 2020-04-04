@@ -881,7 +881,9 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
       int predicate1 = nmodel[s];
       for(unsigned i=0; i<ARITY[predicate1]; i++) {
           s = app("nA", proofStep, i);
-          arg[0][i] = nmodel[s];
+          arg[0][i] = nmodel[s] % 1000; // some non-shortest proof may be found that uses some superflous constants
+                                        // they will be eliminated during simplification, here we replace them by
+                                        // small numbers
       }
 
       int nesting;
@@ -1081,7 +1083,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           int predicate2 = nmodel[s];
           for(unsigned i=0; i<ARITY[predicate2]; i++) {
               s = app("nA", proofStep, mnMaxArity+i);
-              arg[1][i] = nmodel[s];
+              arg[1][i] = nmodel[s] % 1000;
           }
           proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
           for(unsigned i=0; i<ARITY[predicate1]; i++)
@@ -1148,7 +1150,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
               int predicate2 = nmodel[s];
               for(unsigned i=0; i<ARITY[predicate2]; i++) {
                   s = app("nA", proofStep, mnMaxArity+i);
-                  arg[1][i] = nmodel[s];
+                  arg[1][i] = nmodel[s]  % 1000;
               }
               proofTxt << setw(4) << right << nesting << setw(4) << right << " " << setw(4) << right << axiom << setw(4) << right << "1" << setw(5) << right << predicate1;
               for(unsigned i=0; i<ARITY[predicate1]; i++)

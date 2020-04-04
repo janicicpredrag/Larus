@@ -136,7 +136,7 @@ fi
 
 
 echo "Max proof length ? (Default is $maxProofLen)"
-read timev
+read maxProofLen
 if [ -z "$maxProofLen" ]
 then
    echo "Using max proof length."
@@ -166,13 +166,13 @@ done
 
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
-echo "Length limit: " $length | tee -a $filename
-echo "Find minimal size proof:" $opt4 | tee -a $filename
+echo "Max proof length: " $maxProofLen | tee -a $filename
+echo "Find shortest proof:" $opt4 | tee -a $filename
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
+  echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" -s$minproof -n1 -vcoq "$axioms" "$axiomsb" "$file"
   ./CLprover -l"$time" -p"$maxProofLen" $minproof $engine -n1 -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
 done

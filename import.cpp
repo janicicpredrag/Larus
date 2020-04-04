@@ -113,8 +113,10 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
-        if (engine->GetKind() == eSTL_ProvingEngine)
-            proof.Simplify();
+//        if (engine->GetKind() == eSTL_ProvingEngine /* || params.single_proof*/)
+        cout << "Simplifying the proof ... " << flush;
+        proof.Simplify();
+        cout << "done!" << endl;
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
 
