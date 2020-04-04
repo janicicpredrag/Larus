@@ -145,7 +145,8 @@ else
     maxProofLen=$maxProofLen
 fi
 
-PS3='Find shortest possible proof ?'
+echo ""
+PS3='Find shortest possible proof ? '
 options4=("Yes" "No")
 select opt4 in "${options4[@]}"
 do
@@ -175,6 +176,8 @@ do
   echo -l"$time" $engine -ftptp -vcoq -p"$length" "$axioms" "$axiomsb" "$file"
   ./CLprover -l"$time" -p"$maxProofLen" $minproof $engine -n1 -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
+  echo "Number of theorems proved until now:" | tee -a $summary
+  grep Theorem < $filename | wc -l | tee -a $summary
 done
 echo "------------------------------------------------------"
 echo "Summary:"
