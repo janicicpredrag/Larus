@@ -442,7 +442,6 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bPrevStepGoal = (nProofStep>0)  && (nP[nProofStep-1][0]==nP[nFinalStep][0]) && !bCases[nProofStep-1]; "                                            << endl;
     ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "                                                                                        << endl;
     ursaFile <<"       bPrevStepGoal &&= (nA[nProofStep-1][nInd]==nA[nFinalStep][nInd]); "                                                         << endl;
-//    ursaFile <<"   bPrevStepGoal &&= (nAxiomApplied[nProofStep-1] != nQEDbyAssumption) || (nAxiomApplied[nProofStep] == nSecondCase); "             << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bMatchBranchingForSecondCase = false; "                                                                                         << endl;
     ursaFile <<"   for (nI = nPremisesCount; nI+1 < nProofStep; nI++) { "                                                                          << endl;
@@ -501,8 +500,20 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   nNegIntroCheck -= ite (nAxiomApplied[nProofStep] == nQEDbyNegIntro, 1, 0); "                                                    << endl;
     ursaFile <<"   bBranchingCorrect &&= (nNegIntroCheck == 2 || nNegIntroCheck==1); "                                                             << endl;
     ursaFile <<                                                                                                                                       endl;
+
+
+ursaFile <<" bEarlyEndOfProof = true; "                                                             << endl;
+ursaFile << "for (nI=nPremisesCount; nI+1<nProofStep; nI++)  "                                           << endl;
+ursaFile <<"          bEarlyEndOfProof &&= (!bCases[nI] || nAxiomApplied[nI+1] == nFirstCase); "                              << endl;
+ursaFile <<                                                                                                                                       endl;
+ursaFile <<"bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nCases && nCases == nConclude); "                                           << endl;
+ursaFile <<"bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                     << endl;
+ursaFile <<"bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
+ursaFile <<"bEarlyEndOfProof = (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                                                                      << endl;
+
+
     ursaFile <<"   /* ... the proof step is correct if it was one of cases from some case split */ "                                               << endl;
-    ursaFile <<"   bProofCorrect &&= (bMPStep || bNegIntroStep || bFirstCaseStep || bSecondCaseStep  "                                             << endl;
+    ursaFile <<"   bProofCorrect &&= (bEarlyEndOfProof || bMPStep || bNegIntroStep || bFirstCaseStep || bSecondCaseStep  "                                             << endl;
     ursaFile <<"                   || bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                           << endl;
     ursaFile <<"} "                                                                                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
