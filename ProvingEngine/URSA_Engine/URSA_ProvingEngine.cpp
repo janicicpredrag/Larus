@@ -608,8 +608,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
             }
 
             ss >> nBranching >> nPredicate;
-            for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+            for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
                 ss >> nArgs[i];
+                if (sConstants.find(nArgs[i]) == sConstants.end())  // eliminate spurious constants, also for inst[]
+                    nArgs[i] = 0;
+            }
             if (nAxiom == eAssumption) {
                 Fact f;
                 f.SetName(sPredicates[nPredicate]);
@@ -734,8 +737,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 int inst[numOfVars];
                 getline(ursaproof, str);
                 istringstream ss2(str);
-                for(size_t i=0; i < numOfVars; i++)
+                for(size_t i=0; i < numOfVars; i++) {
                     ss2 >> inst[i];
+                    if (sConstants.find(inst[i]) == sConstants.end())
+                        inst[i] = 0;
+                }
 
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
@@ -846,8 +852,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 if (nBranching) {
                     Fact f;
                     ss >> nPredicate;
-                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
                         ss >> nArgs[i];
+                        if (sConstants.find(nArgs[i]) == sConstants.end())
+                            nArgs[i] = 0;
+                    }
                     f.SetName(string(sPredicates[nPredicate]));
                     for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
                         f.SetArg(i,mpT->GetConstantName(nArgs[i]));
@@ -863,8 +872,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 int inst[numOfVars];
                 getline(ursaproof, str);
                 istringstream ss2(str);
-                for(size_t i=0; i < numOfVars; i++)
+                for(size_t i=0; i < numOfVars; i++) {
                     ss2 >> inst[i];
+                    if (sConstants.find(inst[i]) == sConstants.end())
+                        inst[i] = 0;
+                }
 
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
@@ -889,8 +901,11 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 if (nBranching) {
                     Fact f;
                     ss >> nPredicate;
-                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
                         ss >> nArgs[i];
+                        if (sConstants.find(nArgs[i]) == sConstants.end())
+                            nArgs[i] = 0;
+                    }
                     f.SetName(string(sPredicates[nPredicate]));
                     for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
                         f.SetArg(i,mpT->GetConstantName(nArgs[i]));
@@ -922,8 +937,12 @@ bool URSA_ProvingEngine::DecodeSubproof(const DNFFormula& formula, const vector<
                 int inst[numOfVars];
                 getline(ursaproof, str);
                 istringstream ss2(str);
-                for(size_t i=0; i < numOfVars; i++)
+                for(size_t i=0; i < numOfVars; i++) {
                     ss2 >> inst[i];
+                    if (sConstants.find(inst[i]) == sConstants.end())
+                        inst[i] = 0;
+                }
+
 
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
