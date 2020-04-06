@@ -414,7 +414,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), nAxiom);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n   (or false ";
-              sbMatchOnePremise += appeq("nTRUE", nPredicate[nAxiom][nPremisesCounter]);
+              sbMatchOnePremise += "(and " +  appeq("nTRUE", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
@@ -512,6 +512,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sb2 += ")";
                for (unsigned nJ = 0; nJ < mnMaxArity; nJ++) {
                    string sb1 = "(and " + appeq(app("nP", n_from, 0), app("nP", nProofStep,0));
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), "nFALSE") + ")";
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), "nTRUE") + ")";
                    for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                        if (nInd!=nJ)
                             sb1 += appeq(app("nA", n_from, nInd), app("nA", nProofStep, nInd));
@@ -628,6 +630,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
                 sn += appeq(app("nP", nProofStep, 0), i);
            sbMatchConclusion = appeq( smt_sum(app("nP",nProofStep,0),1), app("nP",nProofStep,1));
+           sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), "nFALSE") + ")";
            sbMatchConclusion += "(or " + sn + ")";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                 sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
@@ -1124,6 +1127,10 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
                  assert(mpT->mCLaxioms[axiom-eNumberOfStepKinds].first.GetPremises().GetElement(0).GetName() == "true");
              }
              int from = nmodel[s];
+             if (from == 99) {
+                noPremises = 0;
+                break;
+             }
              sfrom1 += itos(from) + " ";
              if (i > 0)
                 sfrom2 += " and ";
