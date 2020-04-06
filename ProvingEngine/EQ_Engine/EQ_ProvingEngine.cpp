@@ -227,11 +227,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
-
-        if (mParams.single_proof)
-            l = mParams.max_proof_length;
-        else
-            l = 1;
+        l = mParams.starting_proof_length;
         cout << "Looking for a proof of length: " << flush;
         while(l <= mParams.max_proof_length)  {
             time_t current_time = time(NULL);
