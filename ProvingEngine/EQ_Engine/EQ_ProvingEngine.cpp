@@ -193,7 +193,7 @@ void EQ_ProvingEngine::AddPremise(const Fact& f)
 {
     mpT->AddSymbol(f.GetName(), f.GetArity());
 
-    mURSAstringPremises += "(assert " + appeq(app("nNesting", mnPremisesCount), 1) + ")\n";
+    mURSAstringPremises += "\n(assert " + appeq(app("nNesting", mnPremisesCount), 1) + ")\n";
     mURSAstringPremises += "(assert " + appeq(app("bCases", mnPremisesCount), "false") + ")\n";
     mURSAstringPremises += "(assert " + appeq(app("nAxiomApplied", mnPremisesCount), eAssumption) + ")\n";
     mURSAstringPremises += "(assert " + appeq(app("nP", mnPremisesCount, 0), "n" + ToUpper(f.GetName())) + ")\n";
@@ -228,6 +228,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
         l = mParams.starting_proof_length;
+        if (mParams.single_proof)
+            l = mParams.max_proof_length;
         cout << "Looking for a proof of length: " << flush;
         while(l <= mParams.max_proof_length)  {
             time_t current_time = time(NULL);
@@ -246,10 +248,10 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             rv = system(sCall.c_str());
             if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
                 l *= 2;
-                cout << ", ";
+                cout << ", "  << flush;
             }
             else {
-                cout << " (found), ";
+                cout << " (found), " << flush;
                 best = l;
                 break;
             }
@@ -770,19 +772,36 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        //       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
        sbBranchingCorrect += "(or " + appeq(smt_sum(snNegIntroCheck, 1), 2) + appeq(smt_sum(snNegIntroCheck,1), 1) + ")";
 
-       /* ... the proof step is correct if it was one of cases from some case split */
 
+       string sbEarlyEndOfProof = "(and ";
+               for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
+                   sbEarlyEndOfProof += "(or (not " + app("bCases", nProofStep) + ")" +
+                                                  appeq(app("nAxiomApplied", nProofStep+1), eFirstCase) + ")";
+               if (mSMT_theory == eSMTLIA_ProvingEngine)
+                   sbEarlyEndOfProof += appeq("(+ " + snFirst + ")", "(+ " + snSecond + ")") +
+                                     appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
+                                     appeq("(+ " + snCases + ")", "(+ " + snConclude + ")");
+               else
+                   sbEarlyEndOfProof += appeq("(bvadd " + snFirst + ")", "(bvadd " + snSecond + ")") +
+                                     appeq("(bvadd " + snSecond + ")", "(bvadd " + snCases + ")") +
+                                     appeq("(bvadd " + snCases + ")", "(bvadd " + snConclude + ")");
+               sbEarlyEndOfProof += appeq(snNegIntroCheck, 1);
+               sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
+               sbEarlyEndOfProof += ")";
+               sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
+
+
+       /* ... the proof step is correct if it was one of cases from some case split */
        if (nProofStep != 0)
-            sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
+           sbProofCorrect += "(or " + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
                                   sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
        else
-           sbProofCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
+           sbProofCorrect += "(or "  + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
     }
 
-    for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
+  for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
         sbBranchingCorrect += "(or (not " + app("bCases", nProofStep) + ")" +
                                        appeq(app("nAxiomApplied", nProofStep+1), eFirstCase) + ")";
-
     if (mSMT_theory == eSMTLIA_ProvingEngine)
         sbBranchingCorrect += appeq("(+ " + snFirst + ")", "(+ " + snSecond + ")") +
                           appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
@@ -791,15 +810,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         sbBranchingCorrect += appeq("(bvadd " + snFirst + ")", "(bvadd " + snSecond + ")") +
                           appeq("(bvadd " + snSecond + ")", "(bvadd " + snCases + ")") +
                           appeq("(bvadd " + snCases + ")", "(bvadd " + snConclude + ")");
-
     sbBranchingCorrect += appeq(smt_sum(snNegIntroCheck,1), 1);
     sbBranchingCorrect += ")";
-
     string sbFinalStepGoal = "(or " + appeq(app("nAxiomApplied", nFinalStep), eQEDbyCases) +
                                       appeq(app("nAxiomApplied", nFinalStep), eQEDbyAssumption) +
                                       appeq(app("nAxiomApplied", nFinalStep), eQEDbyEFQ) +
                                       appeq(app("nAxiomApplied", nFinalStep), eQEDbyNegIntro) +
                               ")";
+
 
     for(set<string>::iterator it = DECLARATIONS.begin(); it!=DECLARATIONS.end(); it++) {
         smtFile << "(declare-const " + *it + ((*it).at(0) == 'n' ? " " + mSMT_type + ")" : " Bool)") << endl;
@@ -808,7 +826,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << endl;
     smtFile << sPreabmle;
     smtFile << endl;
-    smtFile << "(assert (and " + sbProofCorrect + sbFinalStepGoal + sbBranchingCorrect  + "))" << endl << endl;
+    smtFile << "(assert (and " + sbProofCorrect + sbFinalStepGoal +  sbBranchingCorrect  + "))" << endl << endl;
     smtFile << "(check-sat)" << endl;
     smtFile << "(get-model)" << endl;
     smtFile.close();

@@ -48,20 +48,22 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
 
 void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
 {
-    if (f.GetName().compare("false") == 0)
-        {
-            outfile << "False";
+    if (f.GetName().compare("false") == 0)  {
+        outfile << "False";
+    }
+    else if (f.GetName().compare("true") == 0) {
+        outfile << "True";
+    }
+    else {
+        if (f.GetName() == EQ_NATIVE_NAME)  {
+            outfile << f.GetArg(0) << " = " << f.GetArg(1);
         }
-    else if (f.GetName().compare("true") == 0)
-        {
-            outfile << "True";
+        else {
+            outfile << f.GetName();
+            for (size_t i=0; i<f.GetArity(); i++)
+                outfile << " " << f.GetArg(i);
         }
-    else
-        {
-        outfile << f.GetName();
-        for (size_t i=0; i<f.GetArity(); i++)
-            outfile << " " << f.GetArg(i);
-        }
+    }
     //outfile << " ";
 }
 // ---------------------------------------------------------------------------------
