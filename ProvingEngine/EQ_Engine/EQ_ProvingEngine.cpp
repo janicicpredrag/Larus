@@ -76,9 +76,9 @@ string EQ_ProvingEngine::smt_sum(string arg1, string arg2)
 string EQ_ProvingEngine::smt_sum(string arg1)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine)
-        return "(bvsub " + arg1 + ")";
+        return "(bvadd " + arg1 + ")";
     else // (mSMT_theory == eSMTLIA_ProvingEngine)
-        return "(- " + arg1 + ")";
+        return "(+ " + arg1 + ")";
 }
 
 
@@ -415,6 +415,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     string sbBranchingCorrect = "(and true ";
 
     string sbProofCorrect;
+    string sbProofFinished;
 
     string sbMatchPremises;
     string sbMatchExiQuantifiers;
@@ -791,39 +792,26 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                     + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1) + ")";
 
        string sbEarlyEndOfProof = "(and ";
-               for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
-                   sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
-                                                  appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
-               if (mSMT_theory == eSMTLIA_ProvingEngine)
-                   sbEarlyEndOfProof += appeq("(+ " + snFirst + ")", "(+ " + snSecond + ")") +
-                                     appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
-                                     appeq("(+ " + snCases + ")", "(+ " + snConclude + ")");
-               else
-                   sbEarlyEndOfProof += appeq("(bvadd " + snFirst + ")", "(bvadd " + snSecond + ")") +
-                                     appeq("(bvadd " + snSecond + ")", "(bvadd " + snCases + ")") +
-                                     appeq("(bvadd " + snCases + ")", "(bvadd " + snConclude + ")");
-               sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0);
-               sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
-               sbEarlyEndOfProof += ")";
-               sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
-
+       for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
+           sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
+                                          appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
+       sbEarlyEndOfProof += appeq(smt_sum(snFirst), smt_sum(snSecond)) +
+                            appeq(smt_sum(snSecond), smt_sum(snCases)) +
+                            appeq(smt_sum(snCases), smt_sum(snConclude));
+       sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0);
+       sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
+       sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
+       sbEarlyEndOfProof += ")";
 
        /* ... the proof step is correct if it was one of cases from some case split */
        if (nProofStep != 0)
            sbProofCorrect += "(or " + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
                                   sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
        else
-           sbProofCorrect += "(or "  + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
-    }
+           sbProofCorrect += "(or "  + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
 
-    string sbProofFinished = "(or ";
-    for (unsigned nProofStep=mnPremisesCount; nProofStep<mnPremisesCount+nProofLen; nProofStep++)
-            sbProofFinished += "(or " + appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) +
-                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) +
-                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) +
-                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro) +
-                                      ")";
-    sbProofFinished += ")";
+       sbProofFinished += sbEarlyEndOfProof;
+    }
 
     /*
   for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
@@ -853,7 +841,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << endl;
     smtFile << sPreabmle;
     smtFile << endl;
-    smtFile << "(assert (and " + sbProofCorrect + sbProofFinished + /* sbFinalStepGoal +  sbBranchingCorrect  + */ "))" << endl << endl;
+    smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")" + /* sbFinalStepGoal +  sbBranchingCorrect  + */ "))" << endl << endl;
     smtFile << "(check-sat)" << endl;
     smtFile << "(get-model)" << endl;
     smtFile.close();

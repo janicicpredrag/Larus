@@ -214,7 +214,7 @@ bool CLProof::DecodeProof(const DNFFormula& formula, const string& sEncodedProof
 
     ifstream encodedproof(sEncodedProofFile,ios::in);
 
-    int r = DecodeSubproof(formula, sPredicates, sConstants, encodedproof, proofTrace, false);
+    bool r = DecodeSubproof(formula, sPredicates, sConstants, encodedproof, proofTrace, false);
     encodedproof.close();
     return r;
 }

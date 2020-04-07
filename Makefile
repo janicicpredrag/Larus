@@ -79,7 +79,7 @@ OBJECTS       = main.o \
 		ProofExport2Isabelle.o \
 		ProofExport2LaTeX.o \
 		import.o
-DIST          = 		CLprover.pro CLTheory/Formula.h \
+DIST          = 		CLTheory/Formula.h \
 		CLTheory/Theory.h \
 		CLProof/CLProof.h \
 		ProvingEngine/FactsDatabase.h \
@@ -123,13 +123,7 @@ first: all
 $(TARGET):  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
-Makefile: CLprover.pro 
-		CLprover.pro \
-	$(QMAKE) -o Makefile CLprover.pro -spec linux-g++
-CLprover.pro:
-qmake: FORCE
-	@$(QMAKE) -o Makefile CLprover.pro -spec linux-g++
-
+    
 qmake_all: FORCE
 
 all: Makefile $(TARGET)
