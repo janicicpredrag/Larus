@@ -1,0 +1,70 @@
+
+TODO:
+
+1. Make looking for a shortest proof/any proof correct
+2. Handle native equality (update corpus, parser, added axioms)
+3. Generate "excluded middle" axioms for Coq, when used/needed
+4. Explain the encoding in the paper
+5. Make smt-uflia and smt-ufbf engines
+
+DONE:
+
+
+*******************************************************************************************************************
+
+BUGS:
+
+1. 23.03.2020. Julien
+CLprover/Stl prover seems to be stuck with some examples
+coherent-logic-benches
+I think it does not obey to the timeout command.
+[Many changes afterwards, maybe this is obsolete bug.]
+
+2. 24.03.2020. Julien
+the file:
+tptp-problems/coherent-logic-benches/anl.in.p
+produces a wrong proof:
+It wrongly assumes that the variables in the first axiom (initial_model) are universally quantified, but they are constants.
+In tptp constant starts with a lowercase and variables with an uppercase.
+assert (dom_dom_0_dom_0_rr_0_ss_0 a a a) by applying (initial_model).
+[Many changes afterwards, maybe this is obsolete bug.]
+
+3. 25.03.2020. 
+Using z3 i get a lot of errors like:
+Proving theorem: lemma_Euclid4:(! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & per(Xa,Xb,Xc)) => ((congA(A,B,C,Xa,Xb,Xc)))))
+Trying proof length 1;
+Trying proof length 2;
+Trying proof length 4;
+Trying proof length 8;The model file is empty !
+Is it normal failure ?
+[Many changes afterwards, maybe this is obsolete bug.]
+
+
+
+
+RESOLVED:
+
+
+
+*******************************************************************************************************************
+
+IDEAS:
+
+1. Julien: Here are some ideas of potential additional constraints to reduce the search space:
+- all axioms should be used in the proof
+- the same fact should not be derived twice in the same branch
+- a proof of length x is also a proof of length y for y > x.
+
+2. Julien: I noticed that we can optimize the encoding:
+the formula of the form A & B & C & D are encoded using
+P -> A
+P -> B
+P -> C
+P -> D
+When there is no assumption I think we can just split the facts:
+A
+B
+C
+D.
+
+3. Julien: The readable proof we have a cut-free (we do not introduce lemma),  I wondering if we can really generate readable proof which provide explaination without introducing lemmas.
