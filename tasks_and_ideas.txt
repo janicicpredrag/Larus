@@ -48,13 +48,12 @@ Engine: SMT-BV
 proof size 8!
 Number 0035 seems to be problematic as well. 
 
+RESOLVED:
+
 5. Predrag: 07.04.2020.
 // FIXME: BV complains about adding negative number
        snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
-
-
-
-RESOLVED:
+- Adding -1 replaced by difference of two sums
 
 
 
