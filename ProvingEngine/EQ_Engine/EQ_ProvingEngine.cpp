@@ -790,11 +790,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbBranchingCorrect = "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0)
                                     + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1) + ")";
 
-
-//    sbBranchingCorrect += ")";
-
-//       string sbEarlyEndOfProof = "(and true " ;
-       string sbEarlyEndOfProof = "(and " + sbBranchingCorrect;
+       string sbEarlyEndOfProof = "(and " ;
        for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
            sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
                                           appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
