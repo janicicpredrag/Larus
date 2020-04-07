@@ -412,7 +412,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     string snConclude;
     string snNegIntroCheck;
     string snNegIntroCheckNeg;
-    string sbBranchingCorrect = "(and true ";
+    string sbBranchingCorrect; // = "(and true ";
 
     string sbProofCorrect;
     string sbProofFinished;
@@ -786,12 +786,15 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        snConclude += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyCases), 1, 0);
 
        snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eNegIntro), 1, 0);
-       // FIXME: BV complains about adding negative number:
        snNegIntroCheckNeg += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), 1, 0);
-       sbBranchingCorrect += "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0)
+       sbBranchingCorrect = "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0)
                                     + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1) + ")";
 
-       string sbEarlyEndOfProof = "(and ";
+
+//    sbBranchingCorrect += ")";
+
+//       string sbEarlyEndOfProof = "(and true " ;
+       string sbEarlyEndOfProof = "(and " + sbBranchingCorrect;
        for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
            sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
                                           appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
@@ -803,6 +806,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
        sbEarlyEndOfProof += ")";
 
+       sbProofFinished += sbEarlyEndOfProof;
+
        /* ... the proof step is correct if it was one of cases from some case split */
        if (nProofStep != 0)
            sbProofCorrect += "(or " + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
@@ -810,7 +815,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        else
            sbProofCorrect += "(or "  + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
 
-       sbProofFinished += sbEarlyEndOfProof;
+       sbProofCorrect += sbBranchingCorrect;
+
     }
 
     /*

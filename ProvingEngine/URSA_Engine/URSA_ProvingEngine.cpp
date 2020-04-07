@@ -250,6 +250,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "nConcludeNegIntro = 0; "                                                                                                          << endl;
     ursaFile << "nNegIntroCheck = 1; "                                                                                                             << endl;
     ursaFile << "bBranchingCorrect = true; "                                                                                                       << endl;
+    ursaFile << "bProofFinished = false; "                                                                                                       << endl;
     ursaFile << "bProofCorrect = true;  /* accumulated conditions for all proof steps */ "                                                         << endl;
     ursaFile << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "                                            << endl;
     ursaFile << "   bMPStep = false; "                                                                                                             << endl;
@@ -501,7 +502,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   nNegIntroCheck += ite (nAxiomApplied[nProofStep] == nNegIntroStart, 1, 0); "                                                    << endl;
     ursaFile <<"   nNegIntroCheck -= ite (nAxiomApplied[nProofStep] == nQEDbyNegIntro, 1, 0); "                                                    << endl;
-    ursaFile <<"   bBranchingCorrect &&= (nNegIntroCheck == 2 || nNegIntroCheck==1); "                                                             << endl;
+    ursaFile <<"   bBranchingCorrect = (nNegIntroCheck == 2 || nNegIntroCheck==1); "                                                             << endl;
     ursaFile <<                                                                                                                                       endl;
 
 ursaFile <<" bEarlyEndOfProof = true; "                                                             << endl;
@@ -511,20 +512,15 @@ ursaFile <<                                                                     
 ursaFile <<"bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nCases && nCases == nConclude); "                                           << endl;
 ursaFile <<"bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                     << endl;
 ursaFile <<"bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
-ursaFile <<"bEarlyEndOfProof = (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                                                                      << endl;
+ursaFile <<"bEarlyEndOfProof &&= (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                                                                      << endl;
+ursaFile <<"bProofFinished ||= bEarlyEndOfProof; "  << endl;
 
     ursaFile <<"   /* ... the proof step is correct if it was one of cases from some case split */ "                                               << endl;
     ursaFile <<"   bProofCorrect &&= (bEarlyEndOfProof || bMPStep || bNegIntroStep || bFirstCaseStep || bSecondCaseStep  "                                             << endl;
     ursaFile <<"                   || bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                           << endl;
+    ursaFile <<"   bProofCorrect &&= bBranchingCorrect; "                                             << endl;
     ursaFile <<"} "                                                                                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
-
-ursaFile << "bProofFinished = false; " <<  endl;
-ursaFile << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++)  "                                           << endl;
-ursaFile << "   bProofFinished = (nAxiomApplied[nFinalStep] == nQEDbyCases) "                                                                      << endl;
-ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyAssumption) "                                                              << endl;
-ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyEFQ) "                                                                     << endl;
-ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyNegIntro); "                                                               << endl;
 
 //    ursaFile << "for (nProofStep=nPremisesCount; nProofStep+1<nPremisesCount+nProofLen; nProofStep++)  "                                           << endl;
 //    ursaFile <<"          bBranchingCorrect &&= (!bCases[nProofStep] || nAxiomApplied[nProofStep+1] == nFirstCase); "                              << endl;
