@@ -43,6 +43,7 @@ int main(int argc , char** argv)
     params.eEngine = DEFAULT_ENGINE;
     params.time_limit = DEFAULT_TIME_LIMIT;
     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+    params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
     params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
     params.single_proof  = DEFAULT_SINGLE_PROOF;
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
