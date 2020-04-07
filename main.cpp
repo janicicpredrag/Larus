@@ -150,6 +150,7 @@ int main(int argc , char** argv)
         cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
         cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv); examples: -eursa; default: stl \n" << endl;
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
+        cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
         cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;
         cout << "   -a<axioms>           for additional axioms (eq|negelim|excludedmiddle); example: -aeq; default: do not include \n" << endl;
         cout << "   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); examples: -vcoq; default: no" << endl;
