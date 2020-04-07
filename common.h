@@ -18,7 +18,6 @@ const float DEFAULT_TIME_LIMIT = 10;
 const unsigned DEFAULT_MAX_NESTING_DEPTH = 2;
 const unsigned DEFAULT_STARTING_PROOF_LENGTH = 1;
 const unsigned DEFAULT_MAX_PROOF_LENGTH = 32;
-const unsigned DEFAULT_STARTING_PROOF_LENGTH = 2;
 
 const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
@@ -35,7 +34,6 @@ typedef struct proverParams {
     unsigned max_nesting_depth;
     unsigned starting_proof_length;
     unsigned max_proof_length;
-    unsigned starting_proof_length;
     bool single_proof;
     bool mbNativeEQ;
     bool mbNegElim;
