@@ -229,6 +229,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         unsigned l, r, s, best = 0;
         l = mParams.starting_proof_length;
         // if (mParams.shortest_proof)
+        //if (mParams.single_proof)
         //    l = mParams.max_proof_length;
         cout << "Looking for a proof of length: " << flush;
         while(l <= mParams.max_proof_length)  {
