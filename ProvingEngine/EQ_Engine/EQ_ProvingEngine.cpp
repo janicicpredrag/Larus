@@ -228,6 +228,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         time_t start_time = time(NULL);
         unsigned l, r, s, best = 0;
         l = mParams.starting_proof_length;
+        // if (mParams.shortest_proof)
         //if (mParams.single_proof)
         //    l = mParams.max_proof_length;
         cout << "Looking for a proof of length: " << flush;
@@ -258,7 +259,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         }
 
         l = best/2+1; r = best;
-        while(!mParams.single_proof && best && l <= r && l!=best)  {
+        while(mParams.shortest_proof && best && l <= r && l!=best)  {
             time_t current_time = time(NULL);
             double remainingTime = mParams.time_limit - difftime(current_time, start_time);
            // cout << "remaining time " << remainingTime << endl;
@@ -276,7 +277,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             // cout << "Trying proof length " << s << ";" << flush;
             cout << s << flush;
             rv = system(sCall.c_str());
-            if (rv || !ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
+            if (!ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
                 l = s+1;
                 cout << ", ";
             }
@@ -289,7 +290,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         cout << endl;
         if (best > 0) {
             cout << "Best found proof: of the length " << best << endl;
-            ret = DecodeProof(formula, "smt-proof.txt",  proof);
+            ret = proof.DecodeProof(formula, "smt-proof.txt");
         }
     }
 
@@ -371,7 +372,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     sPreabmle += "\n";
     sPreabmle += "; **************************** Premises ******************************* \n";
     sPreabmle += mURSAstringPremises;
-
+    sPreabmle += "\n";
     sPreabmle += "; **************************** Theorem ******************************* \n";
     sPreabmle += "; ******************************************************************** \n\n";
 
@@ -646,7 +647,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        string sbNegIntroStep = "(and " + appeq(app("nAxiomApplied", nProofStep), eNegIntro) +
                                          "(not " + app("bCases", nProofStep) + ") " +
                                          appeq(app("nNesting", nProofStep), 2) +  // only the special case
-                                         appeq(smt_sum(app("nP", nProofStep, 0), eNegIntro), app("nP", nFinalStep, 0));
+                                         appeq(smt_sum(app("nP", nProofStep, 0), 1), app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
        string sn = "";
@@ -768,15 +769,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        snConclude += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyCases), 1, 0);
 
        snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eNegIntro), 1, 0);
-// FIXME: BV complains about adding negative number
-       //       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
+       // FIXME: BV complains about adding negative number:
+       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
        sbBranchingCorrect += "(or " + appeq(smt_sum(snNegIntroCheck, 1), 2) + appeq(smt_sum(snNegIntroCheck,1), 1) + ")";
 
-
        string sbEarlyEndOfProof = "(and ";
-               for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
-                   sbEarlyEndOfProof += "(or (not " + app("bCases", nProofStep) + ")" +
-                                                  appeq(app("nAxiomApplied", nProofStep+1), eFirstCase) + ")";
+               for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
+                   sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
+                                                  appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
                if (mSMT_theory == eSMTLIA_ProvingEngine)
                    sbEarlyEndOfProof += appeq("(+ " + snFirst + ")", "(+ " + snSecond + ")") +
                                      appeq("(+ " + snSecond + ")", "(+ " + snCases + ")") +
@@ -799,6 +799,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbProofCorrect += "(or "  + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
     }
 
+    string sbProofFinished = "(or ";
+    for (unsigned nProofStep=mnPremisesCount; nProofStep<mnPremisesCount+nProofLen; nProofStep++)
+            sbProofFinished += "(or " + appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) +
+                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) +
+                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) +
+                                              appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro) +
+                                      ")";
+    sbProofFinished += ")";
+
+    /*
   for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
         sbBranchingCorrect += "(or (not " + app("bCases", nProofStep) + ")" +
                                        appeq(app("nAxiomApplied", nProofStep+1), eFirstCase) + ")";
@@ -817,7 +827,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                       appeq(app("nAxiomApplied", nFinalStep), eQEDbyEFQ) +
                                       appeq(app("nAxiomApplied", nFinalStep), eQEDbyNegIntro) +
                               ")";
-
+*/
 
     for(set<string>::iterator it = DECLARATIONS.begin(); it!=DECLARATIONS.end(); it++) {
         smtFile << "(declare-const " + *it + ((*it).at(0) == 'n' ? " " + mSMT_type + ")" : " Bool)") << endl;
@@ -826,7 +836,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << endl;
     smtFile << sPreabmle;
     smtFile << endl;
-    smtFile << "(assert (and " + sbProofCorrect + sbFinalStepGoal +  sbBranchingCorrect  + "))" << endl << endl;
+    smtFile << "(assert (and " + sbProofCorrect + sbProofFinished + /* sbFinalStepGoal +  sbBranchingCorrect  + */ "))" << endl << endl;
     smtFile << "(check-sat)" << endl;
     smtFile << "(get-model)" << endl;
     smtFile.close();
@@ -845,7 +855,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
     ifstream smtmodel(sModelFile,ios::in);
     if (smtmodel.good()) {
         if ( smtmodel.peek() == std::ifstream::traits_type::eof())  {
-            cout << "The model file is empty !" << endl;
+            // cout << "The model file is empty !" << endl;
             return false;
         }
         getline(smtmodel, str);

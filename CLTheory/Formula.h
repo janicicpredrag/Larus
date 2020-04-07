@@ -175,7 +175,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     {
         if (NATIVE_NEG && f.GetName()[0]=='n')
         {
-            os << "~ (" << f.GetName().substr(1); 
+            os << "~ (" << f.GetName().substr(1) << ")" ;
         }
         else
         {

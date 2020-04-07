@@ -1,0 +1,101 @@
+
+TODO:
+
+1. Make looking for a shortest proof/any proof correct
+2. Handle native equality (update corpus, parser, added axioms)
+3. Generate "excluded middle" axioms for Coq, when used/needed
+4. Explain the encoding in the paper
+5. Make smt-uflia and smt-ufbf engines
+
+DONE:
+
+
+*******************************************************************************************************************
+
+BUGS:
+
+1. 23.03.2020. Julien
+CLprover/Stl prover seems to be stuck with some examples
+coherent-logic-benches
+I think it does not obey to the timeout command.
+[Many changes afterwards, maybe this is obsolete bug.]
+
+2. 24.03.2020. Julien
+the file:
+tptp-problems/coherent-logic-benches/anl.in.p
+produces a wrong proof:
+It wrongly assumes that the variables in the first axiom (initial_model) are universally quantified, but they are constants.
+In tptp constant starts with a lowercase and variables with an uppercase.
+assert (dom_dom_0_dom_0_rr_0_ss_0 a a a) by applying (initial_model).
+[Many changes afterwards, maybe this is obsolete bug.]
+
+3. 25.03.2020. 
+Using z3 i get a lot of errors like:
+Proving theorem: lemma_Euclid4:(! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & per(Xa,Xb,Xc)) => ((congA(A,B,C,Xa,Xb,Xc)))))
+Trying proof length 1;
+Trying proof length 2;
+Trying proof length 4;
+Trying proof length 8;The model file is empty !
+Is it normal failure ?
+[Many changes afterwards, maybe this is obsolete bug.]
+
+4. Julien: 06.04.2020.
+Proofs only of size 32:
+Benches: Col trans 100
+Time given: 30
+Engine: SMT-BV
+0031 it fails to prove using proof size 32 can be proved using
+proof size 8!
+Number 0035 seems to be problematic as well. 
+
+5. Predrag: 07.04.2020.
+// FIXME: BV complains about adding negative number
+       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
+
+
+
+RESOLVED:
+
+
+
+*******************************************************************************************************************
+
+IDEAS:
+
+1. Julien: Here are some ideas of potential additional constraints to reduce the search space:
+- all axioms should be used in the proof
+- the same fact should not be derived twice in the same branch
+- a proof of length x is also a proof of length y for y > x.
+
+2. Julien: I noticed that we can optimize the encoding:
+the formula of the form A & B & C & D are encoded using
+P -> A
+P -> B
+P -> C
+P -> D
+When there is no assumption I think we can just split the facts:
+A
+B
+C
+D.
+
+3. Julien: The readable proof we have a cut-free (we do not introduce lemma),  I wondering if we can really generate readable proof which provide explaination without introducing lemmas.
+
+4. Julien: It seems that for some problems the function which maps n to the time to 
+find a proof or fail to find a proof of n is not increasing in n!  
+larger value of n can sometimes give much smaller computing time.
+It would be hard to implement, but maybe on our several cores computer 
+we could run in parallel size 8, 16, 32 and take the first answer ? or 
+another solution is to give this problem to the solver.
+
+Predrag: This is absolutely sensible idea. But I see the following problems:
+(1) First and most important :) I don't have experience with 
+multicore programming - maybe it is not that difficult;
+(2) Even if I make it work on my computer, it might not work on 
+your Mac or StarExec, so we could have other troubles;
+(3) Parallelization of this kind is rather orthogonal to our
+current attempts: looking for suitable encodings etc. More
+cores or more computers is something that can be always 
+addressed later.
+
+

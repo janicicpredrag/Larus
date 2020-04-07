@@ -45,7 +45,7 @@ int main(int argc , char** argv)
     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
     params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
     params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
-    params.single_proof  = DEFAULT_SINGLE_PROOF;
+    params.shortest_proof = DEFAULT_SHORTEST_PROOF;
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
@@ -87,8 +87,8 @@ int main(int argc , char** argv)
                 else
                     params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
             }
-            else if (argv[i][0] == '-' && argv[i][1] == 's') { // single proof
-                params.single_proof = true;
+            else if (argv[i][0] == '-' && argv[i][1] == 's') { // shortest proof
+                params.shortest_proof = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'm') {
                 int d = atoi(argv[i]+2);

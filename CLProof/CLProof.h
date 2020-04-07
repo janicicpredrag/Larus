@@ -7,6 +7,7 @@
 #include <string>
 #include <assert.h>
 #include "CLTheory/Formula.h"
+#include "CLTheory/Theory.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ class CLProof
 {
 public:
     CLProof();
+    void Clear();
+    void SetTheory(Theory* pT);
     void AddAssumption(const Fact& f);
     void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses);
     void SetProofEnd(CLProofEnd *p);
@@ -37,10 +40,16 @@ public:
     void MakeRelevant(set<Fact>& relevant, const Fact& f);
     void MakeRelevant(set<Fact>& relevant, const ConjunctionFormula& f);
 
+    bool DecodeProof(const DNFFormula& formula, const string& sEncodedProofFile);
+    bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
+                                            ifstream& ursaproof, vector<Fact>& proofTrace, bool bNegIntro);
+
 private:
+    Theory* mpT;
+
     CLFormula mGoal;
     vector<Fact> mAssumptions;
-    std::vector<MP_Step> mMPs;
+    vector<MP_Step> mMPs;
     CLProofEnd* mpProofEnd;
 };
 
@@ -100,3 +109,6 @@ class EFQ : public CLProofEnd
 
 
 #endif // CLPROOF_H
+
+
+

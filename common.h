@@ -23,7 +23,7 @@ const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
-const bool DEFAULT_SINGLE_PROOF = false;
+const bool DEFAULT_SHORTEST_PROOF = false;
 
 const string EQ_NATIVE_NAME = "eqnative";
 
@@ -34,7 +34,7 @@ typedef struct proverParams {
     unsigned max_nesting_depth;
     unsigned starting_proof_length;
     unsigned max_proof_length;
-    bool single_proof;
+    bool shortest_proof;
     bool mbNativeEQ;
     bool mbNegElim;
     bool mbExcludedMiddle;
