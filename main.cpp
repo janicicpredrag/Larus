@@ -89,6 +89,13 @@ int main(int argc , char** argv)
             else if (argv[i][0] == '-' && argv[i][1] == 's') { // single proof
                 params.single_proof = true;
             }
+            else if (argv[i][0] == '-' && argv[i][1] == 'm') {
+                int d = atoi(argv[i]+2);
+                if (d >= 0)
+                    params.starting_proof_length = d;
+                else
+                    params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+            }
             else if (argv[i][0] == '-' && argv[i][1] == 'p') {
                 int d = atoi(argv[i]+2);
                 if (d >= 0)
