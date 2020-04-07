@@ -120,7 +120,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
         const string sCall = "timeout " + to_string(mParams.time_limit) + " ./ursa < prove.urs -q -c -l12 -sclasp";
         if (system(sCall.c_str()))  // Find a proof
             return false;
-        return (DecodeProof(formula, "sat-proof.txt",  proof));
+        return (proof.DecodeProof(formula, "sat-proof.txt"));
     }
     return false;
 }
@@ -135,10 +135,10 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
 
-    if (mParams.single_proof)
-        ursaFile << "nProofLen = " << mParams.max_proof_length << ";" << endl << endl;
+    if (mParams.shortest_proof)
+        ursaFile << "minimize(nProofLen, " << mParams.starting_proof_length << ", " << mParams.max_proof_length << ");" << endl << endl;
     else
-        ursaFile << "minimize(nProofLen, 1, " << mParams.max_proof_length << ");" << endl << endl;
+        ursaFile << "nProofLen = " << mParams.max_proof_length << ";" << endl << endl;
 
     ursaFile << "nMaxDepth = " << mParams.max_nesting_depth << ";" << endl << endl;
 
@@ -518,6 +518,14 @@ ursaFile <<"bEarlyEndOfProof = (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDb
     ursaFile <<"                   || bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                           << endl;
     ursaFile <<"} "                                                                                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
+
+ursaFile << "bProofFinished = false; " <<  endl;
+ursaFile << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++)  "                                           << endl;
+ursaFile << "   bProofFinished = (nAxiomApplied[nFinalStep] == nQEDbyCases) "                                                                      << endl;
+ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyAssumption) "                                                              << endl;
+ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyEFQ) "                                                                     << endl;
+ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyNegIntro); "                                                               << endl;
+
 //    ursaFile << "for (nProofStep=nPremisesCount; nProofStep+1<nPremisesCount+nProofLen; nProofStep++)  "                                           << endl;
 //    ursaFile <<"          bBranchingCorrect &&= (!bCases[nProofStep] || nAxiomApplied[nProofStep+1] == nFirstCase); "                              << endl;
 //    ursaFile <<                                                                                                                                       endl;
@@ -529,7 +537,7 @@ ursaFile <<"bEarlyEndOfProof = (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDb
 //    ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyEFQ) "                                                                     << endl;
 //    ursaFile <<"                 || (nAxiomApplied[nFinalStep] == nQEDbyNegIntro); "                                                               << endl;
 //    ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"assert(bProofCorrect /* && bFinalStepGoal && bBranchingCorrect*/);  "                                                                   << endl;
+    ursaFile <<"assert(bProofCorrect && bProofFinished /* && bFinalStepGoal && bBranchingCorrect*/);  "                                                                   << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile.close();
 }

@@ -74,6 +74,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     }
     T.StoreInitialConstants();
     CLProof proof;
+    proof.SetTheory(&T);
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
         Fact premiseFactInstantiated;
         T.InstantiateFact(theorem.GetPremises().GetElement(i), instantiation, premiseFactInstantiated, true);

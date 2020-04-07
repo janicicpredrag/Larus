@@ -39,6 +39,18 @@ Trying proof length 8;The model file is empty !
 Is it normal failure ?
 [Many changes afterwards, maybe this is obsolete bug.]
 
+4. Julien: 06.04.2020.
+Proofs only of size 32:
+Benches: Col trans 100
+Time given: 30
+Engine: SMT-BV
+0031 it fails to prove using proof size 32 can be proved using
+proof size 8!
+Number 0035 seems to be problematic as well. 
+
+5. Predrag: 07.04.2020.
+// FIXME: BV complains about adding negative number
+       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
 
 
 
@@ -68,3 +80,22 @@ C
 D.
 
 3. Julien: The readable proof we have a cut-free (we do not introduce lemma),  I wondering if we can really generate readable proof which provide explaination without introducing lemmas.
+
+4. Julien: It seems that for some problems the function which maps n to the time to 
+find a proof or fail to find a proof of n is not increasing in n!  
+larger value of n can sometimes give much smaller computing time.
+It would be hard to implement, but maybe on our several cores computer 
+we could run in parallel size 8, 16, 32 and take the first answer ? or 
+another solution is to give this problem to the solver.
+
+Predrag: This is absolutely sensible idea. But I see the following problems:
+(1) First and most important :) I don't have experience with 
+multicore programming - maybe it is not that difficult;
+(2) Even if I make it work on my computer, it might not work on 
+your Mac or StarExec, so we could have other troubles;
+(3) Parallelization of this kind is rather orthogonal to our
+current attempts: looking for suitable encodings etc. More
+cores or more computers is something that can be always 
+addressed later.
+
+

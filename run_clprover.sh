@@ -153,12 +153,12 @@ do
     case $opt4 in
         "Yes")
             echo "$opt4 selected."
-            minproof=""
+            minproof="-s"
             break
             ;;
         "No")
             echo "$opt4 selected"
-            minproof="-s"
+            minproof=""
             break
             ;;
         *) echo "invalid option $REPLY";;
