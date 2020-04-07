@@ -28,14 +28,12 @@ private:
     void EncodeAxiom(CLFormula& axiom);
     void EncodeProof(const DNFFormula& formula, unsigned nProofLen);
     bool ReadModel(const string& sModelFile, const string& sEncodedProofFile);
-    bool DecodeProof(const DNFFormula& formula,  const string& sEncodedProofFile, CLProof& proof);
-    bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
-                        ifstream& ursaproof, vector<Fact>& proofTrace, CLProof& proof, bool bNegIntro);
 
     string app(string s, unsigned arg1);
     string app(string s, unsigned arg1, unsigned arg2);
     string appeq(string arg1, string arg2);
     string appeq(string arg1, int arg2);
+    string smt_sum(string arg1);
     string smt_sum(string arg1, string arg2);
     string smt_sum(string arg1, int arg2);
     string smt_sub(string arg1, string arg2);

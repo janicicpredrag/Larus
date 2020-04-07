@@ -34,7 +34,12 @@ void CLProof::SetTheory(Theory* pT)
     mpT = pT;
 }
 
+// ---------------------------------------------------------------------------------
 
+unsigned CLProof::Size() const
+{
+    return mAssumptions.size() + mMPs.size() + mpProofEnd->Size();
+}
 
 
 // ---------------------------------------------------------------------------------

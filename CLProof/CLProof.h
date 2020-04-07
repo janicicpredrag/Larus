@@ -22,6 +22,7 @@ public:
     CLProof();
     void Clear();
     void SetTheory(Theory* pT);
+    unsigned Size() const;
     void AddAssumption(const Fact& f);
     void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses);
     void SetProofEnd(CLProofEnd *p);
@@ -59,6 +60,7 @@ class CLProofEnd
 public:
     CLProofEnd() {}
     virtual ~CLProofEnd() {}
+    virtual unsigned Size() = 0;
     const ConjunctionFormula& GetConjunctionFormula() const { return mFromConj; }
     void SetConjunctionFormula(const ConjunctionFormula& f) { mFromConj = f; }
 
@@ -76,6 +78,7 @@ public:
     void SetCases(const DNFFormula& dnf) { mCases = dnf; }
     size_t GetNumOfCases() const { return mCases.GetSize(); }
     const DNFFormula& GetCases() const { return mCases; }
+    unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s; }
 private:
     DNFFormula mCases;
     vector<CLProof> mSubproofs;
@@ -89,6 +92,7 @@ public:
     void AddSubproof(CLProof& proof) { mSubproof = proof; }
     const CLProof& GetSubproof() const { return mSubproof; }
     const Fact& GetAssumption() const { return mAssumption; }
+    unsigned Size() { return mSubproof.Size()+1; }
 private:
     Fact mAssumption;
     CLProof mSubproof;
@@ -100,11 +104,13 @@ class ByAssumption : public CLProofEnd
 public:
     ByAssumption(const ConjunctionFormula& f) { SetConjunctionFormula(f); }
 // fixme, make private
+    unsigned Size() { return 1; }
 };
 
 
 class EFQ : public CLProofEnd
 {
+    unsigned Size() { return 1; }
 };
 
 
