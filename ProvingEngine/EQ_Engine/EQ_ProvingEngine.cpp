@@ -431,7 +431,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), nAxiom);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n   (or false ";
-              sbMatchOnePremise += "(and " +  appeq("nTRUE", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
+              sbMatchOnePremise += "(and " +  appeq(PREFIX_NEGATED+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
@@ -506,7 +506,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           else
             sbMPStep += "\n      (and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                            appeq(app("nNesting", nProofStep), 1) + ")\n\n";
-
        }
 
        if (mParams.mbNativeEQ) {
@@ -529,8 +528,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sb2 += ")";
                for (unsigned nJ = 0; nJ < mnMaxArity; nJ++) {
                    string sb1 = "(and " + appeq(app("nP", n_from, 0), app("nP", nProofStep,0));
-                   sb1 += "(not " + appeq(app("nP", n_from, 0), "nFALSE") + ")";
-                   sb1 += "(not " + appeq(app("nP", n_from, 0), "nTRUE") + ")";
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), PREFIX_NEGATED+ "false") + ")";
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), PREFIX_NEGATED+ "true") + ")";
                    for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                        if (nInd!=nJ)
                             sb1 += appeq(app("nA", n_from, nInd), app("nA", nProofStep, nInd));
@@ -630,7 +629,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremise1 += ")";
            sbMatchPremise2 += ")";
            sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
-           sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nFALSE");
+           sbMatchConclusion = appeq(app("nP", nProofStep, 0), PREFIX_NEGATED+"false");
            if (nProofStep != 0)
                sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
@@ -647,7 +646,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
                 sn += appeq(app("nP", nProofStep, 0), i);
            sbMatchConclusion = appeq( smt_sum(app("nP",nProofStep,0),1), app("nP",nProofStep,1));
-           sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), "nFALSE") + ")";
+           sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), PREFIX_NEGATED + "false") + ")";
            sbMatchConclusion += "(or " + sn + ")";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++) {
                 sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
@@ -766,7 +765,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        if (nProofStep == 0)
            sbQEDbyEFQStep = "false";
        else
-           sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), " nFALSE") +
+           sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), PREFIX_NEGATED+ "false") +
                          appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
                          sbGoalReached + " " + "(not " + app("bCases", nProofStep) + ") " +
                          appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) + ")";
@@ -775,7 +774,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        if (nProofStep == 0)
            sbQEDbyNegIntroStep = "false";
        else
-           sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), "nFALSE") +
+           sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), PREFIX_NEGATED+ "false") +
             "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
                      appeq(app("nNesting", nProofStep-1), smt_sum(smt_prod(app("nNesting", nProofStep),2), 1)) + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +

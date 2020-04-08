@@ -659,11 +659,13 @@ string SkipChar(const string& str, char c)
 
 string ToUpper(const string& str)
 {
+    return str;
+    /*
     string res;
     res.resize(str.size());
     for (size_t i=0; i<str.size(); i++)
          res[i] = toupper(str[i]);
-    return res;
+    return res;*/
 }
 
 

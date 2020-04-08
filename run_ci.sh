@@ -1,17 +1,18 @@
 #!/bin/sh
 maxlength=-p32
-axioms=-aexcludedmiddle
+axioms1=-aexcludedmiddle 
+axioms2=-anegelim
 benches=tptp-problems/continuous-integration/*.p
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     echo "With URSA:"
-    ./CLprover $maxlength $axioms -eursa -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms1 $axioms2 -eursa -ftptp -vcoq "$file"
     echo "With STL:"
-    ./CLprover $maxlength $axioms -estl -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms1 $axioms2 -estl -ftptp -vcoq "$file"
     echo "With SMTBV:"
-    ./CLprover $maxlength $axioms -esmtbv -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms1 $axioms2 -esmtbv -ftptp -vcoq "$file"
     echo "With SMTLIA:"
-    ./CLprover $maxlength $axioms -esmtlia -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms1 $axioms2 -esmtlia -ftptp -vcoq "$file"
     ((i++))
 done

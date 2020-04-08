@@ -126,6 +126,9 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             T.AddEqExcludedMiddleAxiom();
             T.AddExcludedMiddleAxioms();
         }
+        if (params.mbNegElim) {
+            T.AddNegElimAxioms();
+        }
         if (params.mbNativeEQ) {
             T.AddAxiomEqReflexive();
             T.AddAxiomEqSymm();
