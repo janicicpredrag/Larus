@@ -104,7 +104,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         proved = eConjectureProved;
         std::size_t found = theoremFileName.find_last_of("/\\");
         string path = theoremFileName.substr(0,found);
-        string fileName = theoremFileName.substr(found+1) + engine->mname ;
+        string isminproof = params.shortest_proof ? "min" : "";
+        string fileName = theoremFileName.substr(found+1) + engine->mname + isminproof ;
         fileName = SkipChar(fileName,'.');
         fileName = SkipChar(fileName,'-');
 
