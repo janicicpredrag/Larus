@@ -41,9 +41,6 @@ typedef struct proverParams {
     bool mbCoq;
 } proverParams;
 
-
-#define EQ_SUPPORT 1
-
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
 
