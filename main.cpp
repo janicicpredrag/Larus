@@ -33,9 +33,6 @@ extern vector<string> TestAxiomsnegintro;
 extern vector < pair < string, vector<string> > > test_trivial;
 extern vector<string> TrivialAxioms;
 
-// A=B replaced by eq(A,B)
-// A!=B replaced by neq(A,B)
-
 int main(int argc , char** argv)
 {
     proverParams params;
@@ -105,9 +102,7 @@ int main(int argc , char** argv)
                     params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'a') {
-                if (!strcmp(argv[i]+2, "eq"))
-                    params.mbNativeEQ = true;
-                else if (!strcmp(argv[i]+2, "negelim"))
+                if (!strcmp(argv[i]+2, "negelim"))
                     params.mbNegElim = true;
                 else if (!strcmp(argv[i]+2, "excludedmiddle"))
                     params.mbExcludedMiddle =  true;
@@ -144,7 +139,7 @@ int main(int argc , char** argv)
         wrongInput = true;
 
     if (wrongInput) {
-        cout << "Usage: CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<eq|negelim|excludedmiddle> -vcoq filename \n" << endl;
+        cout << "Usage: CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename \n" << endl;
         cout << "   -l<time limit>       for time limit; example: -l10; default: 10s \n" << endl;
         cout << "   -f<format>           for input format; example -ftptp; default: tptp \n" << endl;
         cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
@@ -152,7 +147,7 @@ int main(int argc , char** argv)
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
         cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;
-        cout << "   -a<axioms>           for additional axioms (eq|negelim|excludedmiddle); example: -aeq; default: do not include \n" << endl;
+        cout << "   -a<axioms>           for additional axioms (negelim|excludedmiddle); example: -anegelim; default: do not include \n" << endl;
         cout << "   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); examples: -vcoq; default: no" << endl;
         return 0;
     }
