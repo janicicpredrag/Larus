@@ -18,7 +18,6 @@ const float DEFAULT_TIME_LIMIT = 10;
 const unsigned DEFAULT_MAX_NESTING_DEPTH = 2;
 const unsigned DEFAULT_STARTING_PROOF_LENGTH = 1;
 const unsigned DEFAULT_MAX_PROOF_LENGTH = 32;
-
 const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
@@ -36,8 +35,8 @@ typedef struct proverParams {
     unsigned starting_proof_length;
     unsigned max_proof_length;
     bool shortest_proof;
-    bool mbNativeEQ;
     bool mbNegElim;
+    bool mbNativeEQ;
     bool mbExcludedMiddle;
     bool mbCoq;
 } proverParams;

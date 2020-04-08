@@ -114,7 +114,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
         EncodeProof(formula);
-        int ret = system("rm sat-proof.txt");
+        system("rm sat-proof.txt");
         // if (!ret) // do not attempt to read some old proof representation
         //    cout << "The old file sat-proof.txt has been deleted." << endl;
         const string sCall = "timeout " + to_string(mParams.time_limit) + " ./ursa < prove.urs -q -c -l12 -sclasp";
