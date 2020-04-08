@@ -114,10 +114,11 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
-//        if (engine->GetKind() == eSTL_ProvingEngine /* || params.single_proof*/)
-  //        cout << "Simplifying the proof ... " << flush;
-  //       proof.Simplify();
-  //      cout << "done!" << endl;
+        if (engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) {
+            cout << "Simplifying the proof ... " << flush;
+            proof.Simplify();
+            cout << "done! (proof length: " << proof.Size() << ")" << endl;
+        }
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
 

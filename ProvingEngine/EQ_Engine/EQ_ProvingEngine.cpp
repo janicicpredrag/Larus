@@ -273,6 +273,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             cout << "done! (new size: " << proof.Size() << ")" << endl;
             r = proof.Size();
 
+            cout << "Looking for a proof of length: " << flush;
             while(l <= r && l != best)  {
                 time_t current_time = time(NULL);
                 double remainingTime = mParams.time_limit - difftime(current_time, start_time);
