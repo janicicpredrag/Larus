@@ -1,16 +1,17 @@
 #!/bin/sh
-maxlength=-p16
+maxlength=-p32
+axioms=-aexcludedmiddle
 benches=tptp-problems/continuous-integration/*.p
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     echo "With URSA:"
-    ./CLprover $maxlength -eursa -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms -eursa -ftptp -vcoq "$file"
     echo "With STL:"
-    ./CLprover $maxlength -estl -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms -estl -ftptp -vcoq "$file"
     echo "With SMTBV:"
-    ./CLprover $maxlength -esmtbv -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms -esmtbv -ftptp -vcoq "$file"
     echo "With SMTLIA:"
-    ./CLprover $maxlength -esmtlia -ftptp -vcoq "$file"
+    ./CLprover $maxlength $axioms -esmtlia -ftptp -vcoq "$file"
     ((i++))
 done
