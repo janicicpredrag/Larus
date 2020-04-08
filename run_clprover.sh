@@ -159,13 +159,13 @@ else
 fi
 
 echo "Max proof length ? (Default is $maxProofLen)"
-read maxProofLen
-if [ -z "$maxProofLen" ]
+read maxProofLenv
+if [ -z "$maxProofLenv" ]
 then
    echo "Using max proof length."
 else
     echo "Setting max proof length."
-    maxProofLen=$maxProofLen
+    maxProofLen=$maxProofLenv
 fi
 
 echo ""
