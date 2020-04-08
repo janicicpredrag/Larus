@@ -22,7 +22,7 @@ void ProofExport2Coq::OutputCLFormula(ofstream& outfile, const CLFormula& cl, co
             if (i < size - 1)
                 outfile << " ";
         }
-        outfile << ", ";
+        outfile << " : MyT, ";
     }
 
     for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {

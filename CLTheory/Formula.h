@@ -81,6 +81,7 @@ public:
     static bool less (const ConjunctionFormula& lhs, const ConjunctionFormula& rhs);
     const vector<Fact>& GetConjunction() const { return mConjunction; }
     bool Equals(const ConjunctionFormula& f) const;
+    bool UsesNativeEq() const;
 
 private:
     vector<Fact> mConjunction;
@@ -141,6 +142,8 @@ public:
     void Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
+
+    bool UsesNativeEq() const;
 
     void Clear() { mA.Clear(); mB.Clear(); ClearUnivVars(); ClearExistVars(); }
 

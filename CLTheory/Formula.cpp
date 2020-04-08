@@ -181,6 +181,16 @@ bool ConjunctionFormula::Equals(const ConjunctionFormula& f) const
     return true;
 }
 
+// ---------------------------------------------------------------------------------------
+
+bool ConjunctionFormula::UsesNativeEq() const
+{
+    for (size_t i = 0; i < GetSize(); i++)
+        if (GetElement(i).GetName() == EQ_NATIVE_NAME || GetElement(i).GetName() == "n"+EQ_NATIVE_NAME)
+            return true;
+    return false;
+}
+
 
 // ---------------------------------------------------------------------------------------
 
@@ -199,6 +209,19 @@ bool Fact::Equals(const Fact& f) const
 
 
 // ---------------------------------------------------------------------------------------
+
+bool CLFormula::UsesNativeEq() const
+{
+    if (GetPremises().UsesNativeEq())
+        return true;
+    for (size_t i = 0; i < GetGoal().GetSize(); i++)
+        if (GetGoal().GetElement(i).UsesNativeEq())
+            return true;
+    return false;
+}
+
+// ---------------------------------------------------------------------------------------
+
 
 bool CLFormula::Read(const string& s)
 {
@@ -530,7 +553,7 @@ bool Fact::Read(const string& s)
     if (pos != string::npos)
     {
         unsigned l = 1;
-        mName = "eqnative";
+        mName = EQ_NATIVE_NAME;
         mArgs.push_back(s.substr(0,pos));
         mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
         return true;
@@ -539,7 +562,7 @@ bool Fact::Read(const string& s)
     if (pos != string::npos)
     {
         unsigned l = 2;
-        mName = "neqnative";
+        mName = "n" + EQ_NATIVE_NAME;
         mArgs.push_back(s.substr(0,pos));
         mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
         return true;

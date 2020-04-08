@@ -78,7 +78,7 @@ public:
     void SetCases(const DNFFormula& dnf) { mCases = dnf; }
     size_t GetNumOfCases() const { return mCases.GetSize(); }
     const DNFFormula& GetCases() const { return mCases; }
-    unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s; }
+    unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s+1; }
 private:
     DNFFormula mCases;
     vector<CLProof> mSubproofs;

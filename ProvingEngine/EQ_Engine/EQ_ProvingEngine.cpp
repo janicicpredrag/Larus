@@ -270,8 +270,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             ret = proof.DecodeProof(formula, "smt-proof.txt");
             cout << endl << "Simplifying the proof (size " << proof.Size() << ") ... " << flush;
             proof.Simplify();
-            cout << "done! (new size: " << proof.Size() << ")" << endl;
-            r = proof.Size();
+            cout << "done! (new proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
+            r = proof.Size()-proof.NumOfAssumptions();
 
             cout << "Looking for a proof of length: " << flush;
             while(l <= r && l != best)  {

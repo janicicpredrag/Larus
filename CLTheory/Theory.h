@@ -20,8 +20,7 @@ public:
         miConstantsCounter = 0;
         AddSymbol("false", 0);
         AddSymbol("true", 0);
-        if (EQ_SUPPORT)
-            AddSymbol("eq", 2);
+        mbUseNativeEq = false;
     }
 
     void Reset();
@@ -54,6 +53,9 @@ public:
     void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars);
     void InstantiateGoalDisj(const CLFormula& cl, size_t i, map<string,string>& instantiation, ConjunctionFormula& fout, bool bInstantiateVars);
 
+    void SetUseNativeEq(bool b) { mbUseNativeEq = b; };
+    bool GetUseNativeEq() { return mbUseNativeEq; };
+
     vector< pair<CLFormula,string> > mCLaxioms;
     // set<string> mConstants;
     vector<string> mConstants;
@@ -64,7 +66,7 @@ public:
 
 protected:
     unsigned int miConstantsCounter;
-
+    bool mbUseNativeEq;
 
 };
 

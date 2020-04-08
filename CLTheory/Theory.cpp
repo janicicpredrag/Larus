@@ -114,11 +114,11 @@ void Theory::AddEqExcludedMiddleAxiom()
     ConjunctionFormula conc0, conc1;
     Fact a,b;
     // ugly convention: in the signature R and nR go one after another
-    a.SetName("eq");
+    a.SetName(EQ_NATIVE_NAME);
     a.SetArg(0,"A");
     a.SetArg(1,"B");
     conc0.Add(a);
-    b.SetName("neq");
+    b.SetName("n"+EQ_NATIVE_NAME);
     b.SetArg(0,"A");
     b.SetArg(1,"B");
     conc1.Add(b);
@@ -144,7 +144,7 @@ void Theory::AddEqSubAxioms()
             DNFFormula conclusion;
             ConjunctionFormula conc0;
             Fact a,b,c;
-            a.SetName("eq"); // This is ugly: it is assumed that equality is denoted eq
+            a.SetName(EQ_NATIVE_NAME);
             a.SetArg(0,string(1,'A'+j));
             a.SetArg(1,"X");
             premises.Add(a);
@@ -176,11 +176,11 @@ void Theory::AddAxiomEqSymm()
     DNFFormula conclusion;
     ConjunctionFormula conc0;
     Fact a,b;
-    a.SetName("eq"); // This is ugly: it is assumed that equality is denoted eq
+    a.SetName(EQ_NATIVE_NAME);
     a.SetArg(0,"A");
     a.SetArg(1,"B");
     premises.Add(a);
-    b.SetName("eq");
+    b.SetName(EQ_NATIVE_NAME);
     b.SetArg(0,"B");
     b.SetArg(1,"A");
     conc0.Add(b);
@@ -199,11 +199,11 @@ void Theory::AddAxiomNEqSymm()
     DNFFormula conclusion;
     ConjunctionFormula conc0;
     Fact a,b;
-    a.SetName("neq"); // This is ugly: it is assumed that equality is denoted eq
+    a.SetName("n"+EQ_NATIVE_NAME);
     a.SetArg(0,"A");
     a.SetArg(1,"B");
     premises.Add(a);
-    b.SetName("neq");
+    b.SetName("n"+EQ_NATIVE_NAME);
     b.SetArg(0,"B");
     b.SetArg(1,"A");
     conc0.Add(b);
@@ -223,7 +223,7 @@ void Theory::AddAxiomEqReflexive()
     DNFFormula conclusion;
     ConjunctionFormula conc0;
     Fact b;
-    b.SetName("eq");
+    b.SetName(EQ_NATIVE_NAME);
     b.SetArg(0,"A");
     b.SetArg(1,"A");
     conc0.Add(b);

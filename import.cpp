@@ -118,7 +118,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         if (engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) {
             cout << "Simplifying the proof ... " << flush;
             proof.Simplify();
-            cout << "done! (proof length: " << proof.Size() << ")" << endl;
+            cout << "done! (proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
@@ -228,6 +228,9 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         size_t type = 2;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
 
+            if (cl.UsesNativeEq())
+                T.SetUseNativeEq(true);
+
             for (unsigned i = 0; i<cl.GetPremises().GetSize(); i++)
                 for (unsigned j = 0; j<cl.GetPremises().GetElement(i).GetArity(); j++)
                     if (cl.ExistVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
@@ -277,6 +280,17 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
     if (theoremName == "")
         return eNoConjectureGiven;
+
+    if (T.GetUseNativeEq()) {
+        T.AddAxiomEqReflexive();
+        T.AddAxiomEqSymm();
+        T.AddAxiomNEqSymm();
+        T.AddEqSubAxioms();
+    }
+
+    //T.AddNegElimAxioms();
+    //T.AddEqExcludedMiddleAxiom();
+    //T.AddExcludedMiddleAxioms();
 
     ProvingEngine* engine;
     if (params.eEngine== eSTL_ProvingEngine)
