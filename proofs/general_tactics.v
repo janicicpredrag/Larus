@@ -36,7 +36,7 @@ match goal with
 end.
 
 Ltac one_of_disjunct :=
- solve [repeat (assumption || (left;assumption) || right)].
+ solve [repeat (eassumption || (left;eassumption) || right)].
 
 
 Ltac rename_H H := let T := fresh in try rename H into T.
@@ -44,7 +44,7 @@ Ltac rename_H H := let T := fresh in try rename H into T.
 Ltac applying t :=
 apply t;(assumption || trivial).
 
-Ltac conclude := solve [intuition].
+Ltac conclude := remove_exists;one_of_disjunct.
 
 Ltac contradict :=
  match goal with
