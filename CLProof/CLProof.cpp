@@ -375,7 +375,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, "EqSub", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_EqSub", instantiation, new_witnesses);
             }
 
             else if (nAxiom == eEQReflex) {
@@ -410,7 +410,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, "EqReflex", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, "eq_refl", instantiation, new_witnesses);
             }
 
             else if (nAxiom == eEQSymm) {
@@ -453,7 +453,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, "EqSym", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, "eq_sym", instantiation, new_witnesses);
             }
 
 

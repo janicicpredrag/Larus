@@ -523,7 +523,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
                                                  smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
-               string sb2 = "(and " + appeq(app("nP", n_from, 0), "EQ_NATIVE_NAME");
+               string sb2 = "(and " + appeq(app("nP", n_from, 0), "n"+ToUpper(EQ_NATIVE_NAME));
                sb2 += "(or (and " + appeq(app("nA", n_from, 0), app("nAA", nProofStep)) + appeq(app("nA",n_from,1), app("nXX", nProofStep)) + ")" +
                           "(and " + appeq(app("nA", n_from, 0), app("nXX", nProofStep)) + appeq(app("nA",n_from,1), app("nAA", nProofStep)) + "))";
                sb2 += ")";
@@ -556,7 +556,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
            //  eq(A,A)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQReflex);
-           sbMatchConclusion = appeq(app("nP", nProofStep, 0), "EQ_NATIVE_NAME") +
+           sbMatchConclusion = appeq(app("nP", nProofStep, 0), "n"+ToUpper(EQ_NATIVE_NAME)) +
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
            for (unsigned nInd = 0; nInd < 2; nInd++)
                sbMatchConclusion += smt_less(app("nA",nProofStep,nInd), (nProofStep+2)<<3);
@@ -582,7 +582,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sbSameProofBranch += ")";
 
                string sb = "(and "+ appeq(app("nFrom",nProofStep,0), n_from) + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
-               sb += "(or " + appeq(app("nP", n_from, 0), "nEQ_NATIVE_NAME") + " " + appeq(app("nP", n_from, 0), "nNEQ_NATIVE_NAME") + ")";
+               sb += "(or " + appeq(app("nP", n_from, 0), " n"+ToUpper(EQ_NATIVE_NAME)) + " " + appeq(app("nP", n_from, 0), " n"+ToUpper(PREFIX_NEGATED+EQ_NATIVE_NAME)) + ")";
                sb += appeq(app("nP",n_from,0),app("nP",nProofStep,0));
                sb += appeq(app("nA",n_from,0),app("nA",nProofStep,1));
                sb += appeq(app("nA",n_from,1),app("nA",nProofStep,0));

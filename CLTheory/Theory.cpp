@@ -188,11 +188,7 @@ void Theory::AddAxiomEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
-<<<<<<< HEAD
     AddAxiom(axiom, "eq_sym");
-=======
-    AddAxiom(axiom, "EqSym");
->>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 // --------------------------------------------------------------
@@ -215,11 +211,7 @@ void Theory::AddAxiomNEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
-<<<<<<< HEAD
     AddAxiom(axiom, "not_eq_sym");
-=======
-    AddAxiom(axiom, "NeqSym");
->>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 
@@ -238,11 +230,7 @@ void Theory::AddAxiomEqReflexive()
     conclusion.Add(conc0);
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
-<<<<<<< HEAD
     AddAxiom(axiom, "eq_refl");
-=======
-    AddAxiom(axiom, "EqReflex");
->>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 // --------------------------------------------------------------
