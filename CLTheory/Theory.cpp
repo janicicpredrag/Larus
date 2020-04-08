@@ -77,8 +77,8 @@ void Theory::AddNegElimAxioms()
 
 void Theory::AddExcludedMiddleAxioms()
 {
-    // add the axiom  R(...) | nR(...) for every predicate symbol
-    for (size_t i=1; i < mSignature.size(); i+=2) {
+    // add the axiom  R(...) | nR(...) for every predicate symbol (skip false | true)
+    for (size_t i=2; i < mSignature.size(); i+=2) {
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
@@ -118,7 +118,7 @@ void Theory::AddEqExcludedMiddleAxiom()
     a.SetArg(0,"A");
     a.SetArg(1,"B");
     conc0.Add(a);
-    b.SetName("n"+EQ_NATIVE_NAME);
+    b.SetName(PREFIX_NEGATED+EQ_NATIVE_NAME);
     b.SetArg(0,"A");
     b.SetArg(1,"B");
     conc1.Add(b);
@@ -188,7 +188,11 @@ void Theory::AddAxiomEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
+<<<<<<< HEAD
     AddAxiom(axiom, "eq_sym");
+=======
+    AddAxiom(axiom, "EqSym");
+>>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 // --------------------------------------------------------------
@@ -199,11 +203,11 @@ void Theory::AddAxiomNEqSymm()
     DNFFormula conclusion;
     ConjunctionFormula conc0;
     Fact a,b;
-    a.SetName("n"+EQ_NATIVE_NAME);
+    a.SetName(PREFIX_NEGATED+EQ_NATIVE_NAME);
     a.SetArg(0,"A");
     a.SetArg(1,"B");
     premises.Add(a);
-    b.SetName("n"+EQ_NATIVE_NAME);
+    b.SetName(PREFIX_NEGATED+EQ_NATIVE_NAME);
     b.SetArg(0,"B");
     b.SetArg(1,"A");
     conc0.Add(b);
@@ -211,7 +215,11 @@ void Theory::AddAxiomNEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
+<<<<<<< HEAD
     AddAxiom(axiom, "not_eq_sym");
+=======
+    AddAxiom(axiom, "NeqSym");
+>>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 
@@ -230,7 +238,11 @@ void Theory::AddAxiomEqReflexive()
     conclusion.Add(conc0);
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
+<<<<<<< HEAD
     AddAxiom(axiom, "eq_refl");
+=======
+    AddAxiom(axiom, "EqReflex");
+>>>>>>> bc6f551633e46e68bb4188ffe6d13aa85b21b119
 }
 
 // --------------------------------------------------------------
@@ -274,7 +286,7 @@ void Theory::AddSymbol(string p, unsigned arity)
         mSignature.push_back(pair<string,unsigned>("true",0));
     } else if (p[0] != 'n') {
         mSignature.push_back(pair<string,unsigned>(p,arity));
-        mSignature.push_back(pair<string,unsigned>("n"+p, arity));
+        mSignature.push_back(pair<string,unsigned>(PREFIX_NEGATED+p, arity));
     } else {
         mSignature.push_back(pair<string,unsigned>(p.substr(1,p.size()-1),arity));
         mSignature.push_back(pair<string,unsigned>(p,arity));

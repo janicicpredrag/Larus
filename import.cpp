@@ -87,7 +87,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
     /* if (fout.GetSize() == 1 && fout.GetElement(0).GetSize() == 1 )   { // Try proving by refutation
         Fact f = fout.GetElement(0).GetElement(0);
-        f.SetName("n"+f.GetName());
+        f.SetName(PREFIX_NEGATED+f.GetName());
         engine->AddFact(f);
         Fact b;
         b.SetName("false");
@@ -120,6 +120,19 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             proof.Simplify();
             cout << "done! (proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
+
+        // in ursa/smt engines, these axioms are hard-coded, here we include them for the purpose of export
+        if (params.mbExcludedMiddle) {
+            T.AddEqExcludedMiddleAxiom();
+            T.AddExcludedMiddleAxioms();
+        }
+        if (params.mbNativeEQ) {
+            T.AddAxiomEqReflexive();
+            T.AddAxiomEqSymm();
+            T.AddAxiomNEqSymm();
+            T.AddEqSubAxioms();
+        }
+
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
 
@@ -281,12 +294,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     if (theoremName == "")
         return eNoConjectureGiven;
 
-    if (T.GetUseNativeEq()) {
-        T.AddAxiomEqReflexive();
-        T.AddAxiomEqSymm();
-        T.AddAxiomNEqSymm();
-        T.AddEqSubAxioms();
-    }
+    if (T.GetUseNativeEq())
+        params.mbNativeEQ = true;
 
     //T.AddNegElimAxioms();
     //T.AddEqExcludedMiddleAxiom();

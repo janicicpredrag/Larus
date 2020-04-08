@@ -58,7 +58,7 @@ void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
         if (f.GetName() == EQ_NATIVE_NAME)  {
             outfile << f.GetArg(0) << " = " << f.GetArg(1);
         }
-        else if (f.GetName() == "n"+EQ_NATIVE_NAME){
+        else if (f.GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME){
             outfile << f.GetArg(0) << " <> " << f.GetArg(1);
         }
         else {

@@ -186,7 +186,7 @@ bool ConjunctionFormula::Equals(const ConjunctionFormula& f) const
 bool ConjunctionFormula::UsesNativeEq() const
 {
     for (size_t i = 0; i < GetSize(); i++)
-        if (GetElement(i).GetName() == EQ_NATIVE_NAME || GetElement(i).GetName() == "n"+EQ_NATIVE_NAME)
+        if (GetElement(i).GetName() == EQ_NATIVE_NAME || GetElement(i).GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME)
             return true;
     return false;
 }
@@ -549,6 +549,14 @@ bool Fact::Read(const string& s)
         return true;
     }
 
+    if (s[0] == '~')
+    {
+        if (!Read(s.substr(1,pos-1)))
+            return false;
+        mName = PREFIX_NEGATED+mName;
+        return true;
+    }
+
     pos = s.find("=",0);
     if (pos != string::npos)
     {
@@ -562,7 +570,7 @@ bool Fact::Read(const string& s)
     if (pos != string::npos)
     {
         unsigned l = 2;
-        mName = "n" + EQ_NATIVE_NAME;
+        mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
         mArgs.push_back(s.substr(0,pos));
         mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
         return true;

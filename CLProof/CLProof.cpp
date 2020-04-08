@@ -453,7 +453,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, "EqSymm", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, "EqSym", instantiation, new_witnesses);
             }
 
 
@@ -547,7 +547,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 ConjunctionFormula cfPremises;
-                AddMPstep(cfPremises, d, "ExcludedMiddle", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, sPredicates[nPredicate-1]+"_excluded_middle", instantiation, new_witnesses);
             }
             else if (nAxiom >= eNumberOfStepKinds) {
                 Fact f;
