@@ -188,7 +188,7 @@ void Theory::AddAxiomEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
-    AddAxiom(axiom, "eqSymmetric");
+    AddAxiom(axiom, "eq_sym");
 }
 
 // --------------------------------------------------------------
@@ -211,7 +211,7 @@ void Theory::AddAxiomNEqSymm()
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
     axiom.AddUnivVar("B");
-    AddAxiom(axiom, "neqSymmetric");
+    AddAxiom(axiom, "not_eq_sym");
 }
 
 
@@ -230,7 +230,7 @@ void Theory::AddAxiomEqReflexive()
     conclusion.Add(conc0);
     CLFormula axiom(premises,conclusion);
     axiom.AddUnivVar("A");
-    AddAxiom(axiom, "eqReflexive");
+    AddAxiom(axiom, "eq_refl");
 }
 
 // --------------------------------------------------------------
