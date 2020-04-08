@@ -36,7 +36,7 @@ match goal with
 end.
 
 Ltac one_of_disjunct :=
- solve [repeat (eassumption || (left;eassumption) || right)].
+ solve [repeat (splits;eassumption || (left;splits;eassumption) || right)].
 
 
 Ltac rename_H H := let T := fresh in try rename H into T.
