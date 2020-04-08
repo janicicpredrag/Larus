@@ -180,7 +180,12 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
                 outfile << "]";
             outfile << ";spliter";
         }
-        outfile << ". spliter." << endl;
+        if (get<1>(p.GetMP(i)).GetSize() == 1 && get<1>(p.GetMP(i)).GetElement(0).GetSize() > 1)
+        {
+            outfile << ". spliter." << endl;
+        }
+        else
+            outfile << "." << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }
