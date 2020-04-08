@@ -26,6 +26,7 @@ const bool DEFAULT_COQ = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 
 const string EQ_NATIVE_NAME = "eqnative";
+const string PREFIX_NEGATED = "n";
 
 typedef struct proverParams {
     INPUT_FORMAT input_format;

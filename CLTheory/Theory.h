@@ -53,8 +53,8 @@ public:
     void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars);
     void InstantiateGoalDisj(const CLFormula& cl, size_t i, map<string,string>& instantiation, ConjunctionFormula& fout, bool bInstantiateVars);
 
-    void SetUseNativeEq(bool b) { mbUseNativeEq = b; };
-    bool GetUseNativeEq() { return mbUseNativeEq; };
+    void SetUseNativeEq(bool b) { mbUseNativeEq = b; if (b) AddSymbol(EQ_NATIVE_NAME,2); }
+    bool GetUseNativeEq() { return mbUseNativeEq; }
 
     vector< pair<CLFormula,string> > mCLaxioms;
     // set<string> mConstants;
