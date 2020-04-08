@@ -6,6 +6,9 @@ TODO:
 3. Generate "excluded middle" axioms for Coq, when used/needed
 4. Explain the encoding in the paper
 5. Make smt-uflia and smt-ufbf engines
+6. Do not use always the same file names for temporary files like prove.urs etc...
+ to be able to run instances of the provers in parallel.
+7. Remove hard coded old benches in the .cpp files.
 
 DONE:
 
@@ -64,7 +67,7 @@ IDEAS:
 1. Julien: Here are some ideas of potential additional constraints to reduce the search space:
 - all axioms should be used in the proof
 - the same fact should not be derived twice in the same branch
-- a proof of length x is also a proof of length y for y > x.
+
 
 2. Julien: I noticed that we can optimize the encoding:
 the formula of the form A & B & C & D are encoded using
@@ -96,5 +99,8 @@ your Mac or StarExec, so we could have other troubles;
 current attempts: looking for suitable encodings etc. More
 cores or more computers is something that can be always 
 addressed later.
+
+5 Julien: to deal with symmetry we can make an experiment by imposing the order of the point in Col predicates, deriving Col X Y Z we can add a constraint that X <= Y <= Z.
+
 
 
