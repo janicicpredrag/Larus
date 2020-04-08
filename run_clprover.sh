@@ -19,7 +19,7 @@ do
     case $opt in
         "Euclid")
             echo "$opt selected."
-	    benches="tptp-problems/euclid-with-eq/*.p"
+	    benches="tptp-problems/euclid-native-eq/*.p"
 	    break
             ;;
        "Tarski")
