@@ -42,12 +42,12 @@ void EQ_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
 
     size_t noPremises = axiom.GetPremises().GetSize();
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-        nPredicate[mnAxiomsCount][j] = PREDICATE["n"+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
+        nPredicate[mnAxiomsCount][j] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
         for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
             nBinding[mnAxiomsCount][j*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i));
     }
     if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
-        nPredicate[mnAxiomsCount][noPremises] = PREDICATE["n"+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
+        nPredicate[mnAxiomsCount][noPremises] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
                 nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
@@ -56,7 +56,7 @@ void EQ_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
         }
     }
     if (axiom.GetGoal().GetSize()>1) {
-        nPredicate[mnAxiomsCount][noPremises+1] = PREDICATE["n"+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
+        nPredicate[mnAxiomsCount][noPremises+1] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
                 nBinding[mnAxiomsCount][noPremises+1*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
@@ -75,7 +75,7 @@ void EQ_ProvingEngine::AddPremise(const Fact& f)
     nNesting[mnPremisesCount] = 1;
     bCases[mnPremisesCount]  = false;
     nAxiomApplied[mnPremisesCount] = eAssumption;
-    nP[mnPremisesCount][0] = PREDICATE["n" + ToUpper(f.GetName())];
+    nP[mnPremisesCount][0] = PREDICATE[PREFIX_NEGATED + ToUpper(f.GetName())];
     for (size_t i=0; i<f.GetArity(); i++)
         nA[mnPremisesCount][i] = CONSTANTS[f.GetArg(i)];
 
@@ -83,9 +83,9 @@ void EQ_ProvingEngine::AddPremise(const Fact& f)
     mURSAstringPremises += "(assert (= nNesting_l_" + smnPremisesCount + "_r_ 1))\n";
     mURSAstringPremises += "(assert (= bCases_l_" + smnPremisesCount + "_r_ false))\n";
     mURSAstringPremises += "(assert (= nAxiomApplied_l_" + smnPremisesCount + "_r_ " + itos(eAssumption) + "))\n";
-    mURSAstringPremises += "(assert (= nP_l_" + smnPremisesCount + "_r__l_0_r_ " + "n" + ToUpper(f.GetName()) + "))\n";
+    mURSAstringPremises += "(assert (= nP_l_" + smnPremisesCount + "_r__l_0_r_ " + PREFIX_NEGATED + ToUpper(f.GetName()) + "))\n";
     for (size_t i=0; i<f.GetArity(); i++)
-        mURSAstringPremises += "(assert (= nA_l_" + smnPremisesCount + "_r__l_" + itos(i) + "_r_ " + "n" + ToUpper(f.GetArg(i)) + "))\n";
+        mURSAstringPremises += "(assert (= nA_l_" + smnPremisesCount + "_r__l_" + itos(i) + "_r_ " + PREFIX_NEGATED + ToUpper(f.GetArg(i)) + "))\n";
 
     mnPremisesCount++;
 }
@@ -189,7 +189,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (size_t i = 0; i<mpT->mSignature.size(); i++) {
         smtFile << "(assert (= n" + ToUpper(mpT->mSignature[i].first) + " " + itos(enumerator) + "))" << endl;
         ARITY[enumerator] = mpT->mSignature[i].second;
-        PREDICATE["n" + ToUpper(mpT->mSignature[i].first)] = enumerator++;
+        PREDICATE[PREFIX_NEGATED + ToUpper(mpT->mSignature[i].first)] = enumerator++;
         if (mpT->mSignature[i].second > mnMaxArity)
             mnMaxArity = mpT->mSignature[i].second;
     }
@@ -205,11 +205,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << "; **************************** Constants ******************************* " << endl;
     for (set<string>::iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
         smtFile << "(assert (= n" + ToUpper(*it) + " " + itos(enumerator) + "))" << endl;
-        CONSTANTS["n" + ToUpper(*it)] = enumerator++;
+        CONSTANTS[PREFIX_NEGATED + ToUpper(*it)] = enumerator++;
     }
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++) {
         smtFile << "(assert (= n" + ToUpper(*it) + " " + itos(enumerator) + "))" << endl;
-        CONSTANTS["n" + ToUpper(*it)] = enumerator++;
+        CONSTANTS[PREFIX_NEGATED + ToUpper(*it)] = enumerator++;
     }
 
     enum StepKind { eAssumption, eNegIntroStart, eFirstCase, eSecondCase, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };

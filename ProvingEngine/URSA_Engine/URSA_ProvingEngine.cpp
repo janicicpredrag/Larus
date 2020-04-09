@@ -45,17 +45,17 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
 
     size_t noPremises = axiom.GetPremises().GetSize();
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-        s << "nPredicate[nAxiomsCount][" << j << "]         = " << "n"+ToUpper(axiom.GetPremises().GetElement(j).GetName()) + "; /* " << j << ". predicate in premises */" << endl;
+        s << "nPredicate[nAxiomsCount][" << j << "]         = " << PREFIX_NEGATED+ToUpper(axiom.GetPremises().GetElement(j).GetName()) + "; /* " << j << ". predicate in premises */" << endl;
         for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
                 s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i))+1 << "; /*" << i+1 << ". universal variable */" << endl;
             else {
                 s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = 0; /* constant */" << endl;
-                s << "nAxiomArgument[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " <<  "n" << ToUpper(axiom.GetPremises().GetElement(j).GetArg(i)) << ";" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = " <<  PREFIX_NEGATED << ToUpper(axiom.GetPremises().GetElement(j).GetArg(i)) << ";" << endl;
             }
         }
     if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
-        s << "nPredicate[nAxiomsCount][" << noPremises << "]         = " << "n"+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName()) + "; /* first predicate in goal */" << endl;
+        s << "nPredicate[nAxiomsCount][" << noPremises << "]         = " << PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName()) + "; /* first predicate in goal */" << endl;
         for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
                 s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
@@ -63,12 +63,12 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
                 s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
             else {
                 s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = 0; /* constant */" << endl;
-                s << "nAxiomArgument[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << "n" << ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) << ";" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << noPremises << "*nMaxArg+" << i << "] = " << PREFIX_NEGATED << ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) << ";" << endl;
             }
         }
     }
     if (axiom.GetGoal().GetSize()>1) {
-        s << "nPredicate[nAxiomsCount][" << noPremises+1 << "]         = " << "n"+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName()) + "; /* second predicate in goal */" << endl;
+        s << "nPredicate[nAxiomsCount][" << noPremises+1 << "]         = " << PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName()) + "; /* second predicate in goal */" << endl;
         for (size_t i=0; i<axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
                 s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
@@ -76,7 +76,7 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula& axiom, string name)
                 s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1 << "; /* 1th univ var */" << endl;
             else {
                 s << "nBinding[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = 0; /* constant  */" << endl;
-                s << "nAxiomArgument[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << "n" << ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) << ";" << endl;
+                s << "nAxiomArgument[nAxiomsCount][" << noPremises+1 << "*nMaxArg+" << i << "] = " << PREFIX_NEGATED << ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) << ";" << endl;
             }
         }
     }
@@ -151,7 +151,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     unsigned nMaxArity = 0;
     unsigned enumerator = 0;
     for (size_t i = 0; i<mpT->mSignature.size(); i++) {
-        ursaFile << "n" << ToUpper(mpT->mSignature[i].first) << " = " << enumerator++ << ";" << endl;
+        ursaFile << PREFIX_NEGATED << ToUpper(mpT->mSignature[i].first) << " = " << enumerator++ << ";" << endl;
         ursaFile << "nArity[n" << ToUpper(mpT->mSignature[i].first) << "] = " <<  mpT->mSignature[i].second << ";" << endl;
         if (mpT->mSignature[i].second > nMaxArity)
             nMaxArity = mpT->mSignature[i].second;
@@ -162,9 +162,9 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "/* Intro constants */" << endl;
     enumerator = 0;
     for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++)
-        ursaFile << "n" << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
+        ursaFile << PREFIX_NEGATED << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
     for (set<string>::const_iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
-        ursaFile << "n" << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
+        ursaFile << PREFIX_NEGATED << ToUpper(*it) << " = " << enumerator++ << ";" << endl;
 
     stringstream s;
     s << endl;

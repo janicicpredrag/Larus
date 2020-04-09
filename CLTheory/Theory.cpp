@@ -68,7 +68,7 @@ void Theory::AddNegElimAxioms()
             axiom.AddUnivVar(string(1,'A'+j));
         string sname(mSignature[i].first);
         sname[0] = std::tolower(sname[0]);
-        AddAxiom(axiom, "n"+sname+"_neg_elim");
+        AddAxiom(axiom, PREFIX_NEGATED+sname+"_neg_elim");
     }
 }
 
