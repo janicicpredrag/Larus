@@ -47,10 +47,6 @@ SOURCES       = main.cpp \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
-		Axioms/TarskiAxioms.cpp \
-		Axioms/BezemAxioms.cpp \
-		Axioms/EuclidElements.cpp \
-		Axioms/EuclidStatementsDepends.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
@@ -65,10 +61,6 @@ OBJECTS       = main.o \
 		Formula.o \
 		Theory.o \
 		CLProof.o \
-		TarskiAxioms.o \
-		BezemAxioms.o \
-		EuclidElements.o \
-		EuclidStatementsDepends.o \
 		URSA_ProvingEngine.o \
 		STL_ProvingEngine.o \
 		STL_FactsDatabase.o \
