@@ -395,22 +395,31 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     unsigned nFinalStep = mnPremisesCount+nProofLen-1;
     sPreabmle += "; *** Goal ***                                                         \n ";
     sPreabmle += "(assert " + appeq(app("nNesting", nFinalStep), 1) + ")\n";
-    sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "false") + ")\n";
+    if (formula.GetSize()>1)
+        sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "true") + ")\n";
+    else
+        sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "false") + ")\n";
     sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 0), PREFIX_NEGATED + ToUpper(formula.GetElement(0).GetElement(0).GetName())) + ") \n";
     for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++) {
        if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
             sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
         sPreabmle += "(assert " + appeq(app("nA", nFinalStep, i), PREFIX_NEGATED + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
     }
-    if (formula.GetSize()>1)
-        for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++)
-            sPreabmle += "(assert " + appeq(app("nA", nFinalStep, i), PREFIX_NEGATED + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
+    if (formula.GetSize()>1) {
+        sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 1), PREFIX_NEGATED + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
+        for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++) {
+           if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end())
+                sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+            sPreabmle += "(assert " + appeq(app("nA", nFinalStep, mnMaxArity + i), PREFIX_NEGATED + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
+        }
+    }
     sPreabmle += "\n";
 
-    string snFirst;
-    string snSecond;
-    string snCases;
-    string snConclude;
+    string snFirst  =   (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
+    string snSecond  =  (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
+    string snCases =    (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
+    string snConclude = (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
+
     string snNegIntroCheck;
     string snNegIntroCheckNeg;
     string sbBranchingCorrect; // = "(and true ";
@@ -480,11 +489,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sb =  appeq(app("nP" , nProofStep, 1), nPredicate[nAxiom][nGoalIndex+1]);
               for (unsigned nInd = 0; nInd < ARITY[nPredicate[nAxiom][nGoalIndex+1]]; nInd++) {
                   if (nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd] != 0)
-                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
-                              app("nInst", nProofStep, nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]));
+                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd), app("nInst", nProofStep, nBinding[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]));
                   else
-                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd),
-                                nAxiomArgument[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]);
+                      sb += appeq(app("nA", nProofStep, mnMaxArity+nInd), nAxiomArgument[nAxiom][(nGoalIndex+1)*mnMaxArity+nInd]);
                   sb += smt_less(app("nA", nProofStep, mnMaxArity+nInd), (nProofStep+2)<<3);
               };
               sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
@@ -508,7 +515,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                            appeq(app("nNesting", nProofStep), 1) + ")\n\n";
        }
 
-       if (mParams.mbNativeEQ) {
+       if (false && mParams.mbNativeEQ) {
            //  P(Arg1,,,Argn) & nEQ(Arg1,x) => P(X,...Argn)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQSub);
            string sbMatchPremise1 = "(or false ";
@@ -601,7 +608,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
 
 
-       if (mParams.mbNegElim) {
+       if (false && mParams.mbNegElim) {
            //  P(Arg1,,,Argn) & ~P(X,...Argn) => false
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eNegElim);
            string sbMatchPremise1 = "(or false ";
@@ -640,7 +647,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
 
 
-       if (mParams.mbExcludedMiddle) {
+       if (false && mParams.mbExcludedMiddle) {
            //  P(Arg1,,,Argn) | ~P(X,...Argn)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eExcludedMiddle);
            string sn;
@@ -691,7 +698,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
 
        unsigned ArityFinal = formula.GetElement(0).GetElement(0).GetArity();
-
        string sbPrevStepGoal;
        if (nProofStep == 0)
            sbPrevStepGoal = "false";
@@ -701,6 +707,21 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
               sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
            sbPrevStepGoal += ")";
+       }
+       string sbPrevStepGoal2;
+       unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
+
+       if (formula.GetSize()>1) {
+           if (nProofStep == 0)
+               sbPrevStepGoal2 = "false";
+           else {
+               sbPrevStepGoal2 = "(and " + appeq(app("nP", nProofStep-1, 0), app("nP", nFinalStep, 1)) +
+                                      "(not " + app("bCases", nProofStep-1) + ")";
+               for (unsigned nInd = 0; nInd < ArityFinal1; nInd++)
+                  sbPrevStepGoal2 += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, mnMaxArity + nInd));
+               sbPrevStepGoal2 += ")";
+           }
+           sbPrevStepGoal = "(or " + sbPrevStepGoal + sbPrevStepGoal2 + ")";
        }
 
        string sbMatchBranchingForSecondCase = "(or false ";
@@ -728,11 +749,27 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                     "(not " + app("bCases", nProofStep) + ")" +
                                     appeq(app("nNesting", nProofStep), smt_sum(app("nNesting", nProofStep-1),1)) + ")";
 
-       string sbGoalReached = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) +
-                                         "(not " + app("bCases", nProofStep) + ")";
+       string sbGoalReached = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) + "";
+                                         // "(not " + app("bCases", nProofStep) + ")";
        for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
           sbGoalReached += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, nInd));
        sbGoalReached += ")";
+
+       if (formula.GetSize()>1) {
+           string sbGoalReached2 = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1)) + "";
+                                            // "(not " + app("bCases", nProofStep) + ")";
+           for (unsigned nInd = 0; nInd < ArityFinal1; nInd++)
+              sbGoalReached2 += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, mnMaxArity + nInd));
+           sbGoalReached2 += ")";
+           sbGoalReached = "(or " + sbGoalReached + sbGoalReached2 + ")";
+       }
+
+
+       string scurrentstepfinal;
+       if (nProofStep == nFinalStep)
+           scurrentstepfinal = " true ";
+       else
+           scurrentstepfinal = " false ";
 
        string sbQEDbyCasesStep;
        if (nProofStep == 0)
@@ -750,7 +787,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")" +
                  appeq(smt_sum(smt_prod(app("nNesting", nProofStep),2),1), app("nNesting", nProofStep-1)) +
                  sbGoalReached +
-                 "(not " + app("bCases", nProofStep) + ")" +
+                 "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                  appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) + ")";
 
        string sbQEDbyAssumptionStep;
@@ -759,7 +796,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        else
            sbQEDbyAssumptionStep = "(and " + sbPrevStepGoal +
                 appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +
-                sbGoalReached + " (not " + app("bCases", nProofStep) + ")" +
+                sbGoalReached +
+                "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                 appeq(app("nAxiomApplied", nProofStep),eQEDbyAssumption) + ")";
 
        string sbQEDbyEFQStep;
@@ -768,7 +806,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        else
            sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), PREFIX_NEGATED+ "false") +
                          appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
-                         sbGoalReached + " " + "(not " + app("bCases", nProofStep) + ") " +
+                         sbGoalReached + " " +
+                         "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                          appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) + ")";
 
        string sbQEDbyNegIntroStep;
@@ -780,10 +819,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                      appeq(app("nNesting", nProofStep-1), smt_sum(smt_prod(app("nNesting", nProofStep),2), 1)) + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +
                  sbGoalReached +
-                 "(not " + app("bCases",nProofStep) + ")" +
+                   "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                  appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro)  + ")";
 
-       snCases +=    smt_ite(app("bCases",nProofStep), 1, 0);
        snFirst +=    smt_ite(appeq(app("nAxiomApplied", nProofStep), eFirstCase), 1, 0);
        snSecond +=   smt_ite(appeq(app("nAxiomApplied", nProofStep), eSecondCase), 1, 0);
        snConclude += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyCases), 1, 0);
@@ -808,7 +846,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
                                           appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
        sbEarlyEndOfProof += appeq(smt_sum(snFirst), smt_sum(snSecond)) +
-                            appeq(smt_sum(snSecond), smt_sum(snCases)) +
+                            appeq(smt_sum(snSecond), smt_sum(snConclude)) +
                             appeq(smt_sum(snCases), smt_sum(snConclude));
        sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0);
        sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
@@ -816,6 +854,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbEarlyEndOfProof += ")";
 
        sbProofFinished += sbEarlyEndOfProof;
+
+       // This counted is moved down here, so it don't count nProofStep in case it is the final step and has a disjunction
+       snCases +=    smt_ite(app("bCases",nProofStep), 1, 0);
 
        /* ... the proof step is correct if it was one of cases from some case split */
        if (nProofStep != 0)
@@ -828,7 +869,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
     }
 
-    /*
+/*
   for (unsigned nProofStep=mnPremisesCount; nProofStep+1<mnPremisesCount+nProofLen; nProofStep++)
         sbBranchingCorrect += "(or (not " + app("bCases", nProofStep) + ")" +
                                        appeq(app("nAxiomApplied", nProofStep+1), eFirstCase) + ")";
@@ -856,7 +897,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << endl;
     smtFile << sPreabmle;
     smtFile << endl;
-    smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")" + /* sbFinalStepGoal +  sbBranchingCorrect  + */ "))" << endl << endl;
+    smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")" +  /*sbFinalStepGoal +  sbBranchingCorrect */ + "))" << endl << endl;
     smtFile << "(check-sat)" << endl;
     smtFile << "(get-model)" << endl;
     smtFile.close();

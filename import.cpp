@@ -99,6 +99,18 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     engine->SetStartTimeAndLimit(clock(), params.time_limit);
     engine->SetMaxNestingDepth(params.max_nesting_depth);
 
+    if (params.mbNativeEQ) {
+        T.AddAxiomEqReflexive();
+        T.AddAxiomEqSymm();
+        T.AddAxiomNEqSymm();
+        T.AddEqSubAxioms();
+        T.AddEqExcludedMiddleAxiom();
+    }
+
+    if (params.mbExcludedMiddle) {
+        T.AddExcludedMiddleAxioms();
+    }
+
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
@@ -122,18 +134,12 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         }
 
         // in ursa/smt engines, these axioms are hard-coded, here we include them for the purpose of export
-        if (params.mbExcludedMiddle) {
+    /*    if (params.mbExcludedMiddle) {
             T.AddEqExcludedMiddleAxiom();
             T.AddExcludedMiddleAxioms();
-        }
+        }*/
         if (params.mbNegElim) {
             T.AddNegElimAxioms();
-        }
-        if (params.mbNativeEQ) {
-            T.AddAxiomEqReflexive();
-            T.AddAxiomEqSymm();
-            T.AddAxiomNEqSymm();
-            T.AddEqSubAxioms();
         }
 
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);

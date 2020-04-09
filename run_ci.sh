@@ -25,7 +25,7 @@ for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     printf "URSA:  "
-    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt
+    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
     test_success resursa.txt
     printf "STL:   "
     ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
