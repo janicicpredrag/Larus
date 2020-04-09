@@ -202,7 +202,6 @@ bool CLProof::DecodeProof(const DNFFormula& formula, const string& sEncodedProof
 
     sPredicates.resize(mpT->mSignature.size()+1);
     int i=0;
-    //sPredicates[i++] = "nFALSE";
     for(size_t j = 0; j< mpT->mSignature.size(); j++)
         sPredicates[i++] = mpT->mSignature[j].first;
 
@@ -375,7 +374,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_EqSub", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_eq_sub", instantiation, new_witnesses);
             }
 
             else if (nAxiom == eEQReflex) {
@@ -471,7 +470,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
 
                 proofTrace.push_back(f); // this is not used if the axiom is branching
 
-                int nFrom;
+                int nFrom, nFrom0;
                 getline(encodedproof, str);
                 istringstream ss1(str);
                 ConjunctionFormula cfPremises;
@@ -480,6 +479,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 noPremises = 2;
                 for (unsigned int i = 0; i<noPremises; i++) {
                     ss1 >> nFrom;
+                    nFrom0 = nFrom;
                     if (nFrom != -1 && nFrom != 99) {
                         cfPremises.Add(proofTrace[nFrom]);
                         numOfUnivVars = proofTrace[nFrom].GetArity();
@@ -498,7 +498,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, "NegElim", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, proofTrace[nFrom0].GetName() + "_neg_elim", instantiation, new_witnesses);
             }
             else if (nAxiom == eExcludedMiddle) {
                 Fact f;
@@ -621,7 +621,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
 
                 AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation, new_witnesses);
 
-                if (bNegIntro && mpT->GetSymbolArity(sPredicates[nPredicate]) == 0 && !nBranching) { // FALSE reached
+                if (bNegIntro && mpT->GetSymbolArity(sPredicates[nPredicate]) == 0 && !nBranching) { // false reached
                     SetProofEnd(NULL);
                     return true;
                 }

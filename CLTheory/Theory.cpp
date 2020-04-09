@@ -44,7 +44,7 @@ void Theory::AddAxioms(vector< pair<CLFormula,string> >& axioms)
 void Theory::AddNegElimAxioms()
 {
     // add the axiom  R(...) & nR(...) => false for every predicate symbol
-    for (size_t i=1; i < mSignature.size(); i+=2) {
+    for (size_t i=0; i < mSignature.size(); i+=2) {
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
@@ -68,7 +68,7 @@ void Theory::AddNegElimAxioms()
             axiom.AddUnivVar(string(1,'A'+j));
         string sname(mSignature[i].first);
         sname[0] = std::tolower(sname[0]);
-        AddAxiom(axiom, sname+"_neg_elim");
+        AddAxiom(axiom, "n"+sname+"_neg_elim");
     }
 }
 
@@ -162,7 +162,7 @@ void Theory::AddEqSubAxioms()
             for (size_t k=0; k < mSignature[i].second; k++)
                 axiom.AddUnivVar(string(1,'A'+k));
             axiom.AddUnivVar("X");
-            AddAxiom(axiom, mSignature[i].first+"_EqSub_"+to_string(j));
+            AddAxiom(axiom, mSignature[i].first+"_eq_sub_"+to_string(j));
         }
     }
 }
