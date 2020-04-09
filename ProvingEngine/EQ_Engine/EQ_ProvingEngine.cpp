@@ -557,6 +557,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQReflex);
            sbMatchConclusion = appeq(app("nP", nProofStep, 0), PREFIX_NEGATED+ToUpper(EQ_NATIVE_NAME)) +
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
+                               appeq(app("nA",nProofStep,0), app("nInst", nProofStep,0));
            for (unsigned nInd = 0; nInd < 2; nInd++)
                sbMatchConclusion += smt_less(app("nA",nProofStep,nInd), (nProofStep+2)<<3);
            if (nProofStep != 0)
@@ -1035,8 +1036,6 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
       }
 
       else if (axiom == eEQReflex) {
-          unsigned numberOfUnivVars = 1;
-
           proofTxt << setw(4) << right << nesting << setw(4) << right << axiom << setw(4) << right << "0" << setw(5) << right << predicate1;
           for(unsigned i=0; i<ARITY[predicate1]; i++)
              proofTxt << setw(4) << right <<  arg[0][i];
@@ -1046,25 +1045,21 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << ") ***/" << endl;
 
           proofTxt << setw(40) << right << " ";
-          for(unsigned i=0; i<numberOfUnivVars; i++)
-              proofTxt << i << " ";
           proofTxt << arg[0][0] << " ";
           proofTxt << "/*** Instantiation ***/" << endl;
       }
 
       else if (axiom == eEQSymm) {
           string sfrom1, sfrom2 = "";
-          unsigned numberOfUnivVars = 2;
+          s = app("nFrom", proofStep, 0);
+          if (nmodel.find(s) == nmodel.end())
+             assert(false);
+          int predicate_from = nmodel[s];
+          if (predicate_from == -1)
+             assert(false);
 
-         s = app("nFrom", proofStep, 0);
-         if (nmodel.find(s) == nmodel.end())
-           assert(false);
-         int predicate_from = nmodel[s];
-         if (predicate_from == -1)
-            assert(false);
-         numberOfUnivVars = ARITY[predicate_from];
-         sfrom1 += itos(predicate_from) + " ";
-         sfrom2 += "(" + itos(predicate_from) + ")";
+          sfrom1 += itos(predicate_from) + " ";
+          sfrom2 += "(" + itos(predicate_from) + ")";
 
           proofTxt << setw(4) << right << nesting << setw(4) << right << axiom << setw(4) << right << "0" << setw(5) << right << predicate1;
           for(unsigned i=0; i<ARITY[predicate1]; i++)
@@ -1078,9 +1073,8 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           proofTxt << sfrom1 << "  /*** From steps: " << sfrom2 << " ***/" << endl;
 
           proofTxt << setw(40) << right << " ";
-          for(unsigned i=0; i<numberOfUnivVars; i++)
-              proofTxt << i << " ";
           proofTxt << arg[0][0] << " ";
+          proofTxt << arg[0][1] << " ";
           proofTxt << "/*** Instantiation ***/" << endl;
       }
 

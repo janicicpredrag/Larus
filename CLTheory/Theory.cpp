@@ -144,14 +144,14 @@ void Theory::AddEqSubAxioms()
             DNFFormula conclusion;
             ConjunctionFormula conc0;
             Fact a,b,c;
-            a.SetName(EQ_NATIVE_NAME);
-            a.SetArg(0,string(1,'A'+j));
-            a.SetArg(1,"X");
-            premises.Add(a);
             b.SetName(mSignature[i].first);
             for (size_t k=0; k < mSignature[i].second; k++)
                 b.SetArg(k,string(1,'A'+k));
             premises.Add(b);
+            a.SetName(EQ_NATIVE_NAME);
+            a.SetArg(0,string(1,'A'+j));
+            a.SetArg(1,"X");
+            premises.Add(a);
             c.SetName(mSignature[i].first);
             for (size_t k=0; k < mSignature[i].second; k++)
                 c.SetArg(k, string(1,'A'+k));

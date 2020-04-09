@@ -348,17 +348,16 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
 
                 proofTrace.push_back(f); // this is not used if the axiom is branching
 
-                int nFrom;
+                int nFrom, nFrom0;
                 getline(encodedproof, str);
                 istringstream ss1(str);
                 ConjunctionFormula cfPremises;
-                unsigned noPremises;
-                size_t numOfUnivVars;
-                noPremises = 2;
-                numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate])+1;
-                size_t numOfVars = numOfUnivVars;
+                unsigned noPremises = 2;
+                size_t numOfVars = mpT->GetSymbolArity(sPredicates[nPredicate])+1;
                 for (unsigned int i = 0; i<noPremises; i++) {
                     ss1 >> nFrom;
+                    if (i==0)
+                        nFrom0 = nFrom;
                     if (nFrom != -1 && nFrom != 99)
                         cfPremises.Add(proofTrace[nFrom]);
                 }
@@ -368,13 +367,19 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 for(size_t i=0; i < numOfVars; i++)
                     ss2 >> inst[i];
 
+                unsigned int nJ;
+                for (nJ = 0; nJ < numOfVars-1; nJ++) {
+                    if (proofTrace[nFrom0].GetArg(nJ) != f.GetArg(nJ))
+                        break;
+                }
+
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
-                for(size_t i=0; i < numOfUnivVars; i++) {
+                for(size_t i=0; i < numOfVars; i++) {
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
-                AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_eq_sub", instantiation, new_witnesses);
+                AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_eq_sub_"+itos(nJ), instantiation, new_witnesses);
             }
 
             else if (nAxiom == eEQReflex) {
@@ -391,9 +396,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 proofTrace.push_back(f); // this is not used if the axiom is branching
 
                 ConjunctionFormula cfPremises;
-                size_t numOfUnivVars;
-                numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate])+1;
-                size_t numOfVars = numOfUnivVars;
+                size_t numOfVars = 1;
                 int inst[numOfVars];
                 getline(encodedproof, str);
                 istringstream ss2(str);
@@ -405,7 +408,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
 
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
-                for(size_t i=0; i < numOfUnivVars; i++) {
+                for(size_t i=0; i < numOfVars; i++) {
                     const string UnivVar = string(1,'A' + i);
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
@@ -433,7 +436,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 unsigned noPremises;
                 size_t numOfUnivVars;
                 noPremises = 1;
-                numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate])+1;
+                numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate]);
                 size_t numOfVars = numOfUnivVars;
                 for (unsigned int i = 0; i<noPremises; i++) {
                     ss1 >> nFrom;
