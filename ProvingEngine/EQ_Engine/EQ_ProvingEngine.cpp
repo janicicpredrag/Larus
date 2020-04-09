@@ -523,7 +523,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
                                                  smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
-               string sb2 = "(and " + appeq(app("nP", n_from, 0), "nEQ");
+               string sb2 = "(and " + appeq(app("nP", n_from, 0), "n"+ToUpper(EQ_NATIVE_NAME));
                sb2 += "(or (and " + appeq(app("nA", n_from, 0), app("nAA", nProofStep)) + appeq(app("nA",n_from,1), app("nXX", nProofStep)) + ")" +
                           "(and " + appeq(app("nA", n_from, 0), app("nXX", nProofStep)) + appeq(app("nA",n_from,1), app("nAA", nProofStep)) + "))";
                sb2 += ")";
@@ -556,7 +556,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
            //  eq(A,A)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQReflex);
-           sbMatchConclusion = appeq(app("nP", nProofStep, 0), "nEQ") +
+           sbMatchConclusion = appeq(app("nP", nProofStep, 0), "n"+ToUpper(EQ_NATIVE_NAME)) +
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
            for (unsigned nInd = 0; nInd < 2; nInd++)
                sbMatchConclusion += smt_less(app("nA",nProofStep,nInd), (nProofStep+2)<<3);
@@ -582,7 +582,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sbSameProofBranch += ")";
 
                string sb = "(and "+ appeq(app("nFrom",nProofStep,0), n_from) + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
-               sb += "(or " + appeq(app("nP", n_from, 0), "nEQ") + " " + appeq(app("nP", n_from, 0), "nNEQ") + ")";
+               sb += "(or " + appeq(app("nP", n_from, 0), " n"+ToUpper(EQ_NATIVE_NAME)) + " " + appeq(app("nP", n_from, 0), " n"+ToUpper(PREFIX_NEGATED+EQ_NATIVE_NAME)) + ")";
                sb += appeq(app("nP",n_from,0),app("nP",nProofStep,0));
                sb += appeq(app("nA",n_from,0),app("nA",nProofStep,1));
                sb += appeq(app("nA",n_from,1),app("nA",nProofStep,0));
@@ -649,8 +649,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchConclusion = appeq( smt_sum(app("nP",nProofStep,0),1), app("nP",nProofStep,1));
            sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), "nFALSE") + ")";
            sbMatchConclusion += "(or " + sn + ")";
-           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
+           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++) {
                 sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
+                sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nInst", nProofStep, nInd));
+           }
            if (nProofStep != 0)
                sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + " " + app("bCases",nProofStep) + " " +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
@@ -790,6 +792,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        snNegIntroCheckNeg += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), 1, 0);
        sbBranchingCorrect = "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0)
                                     + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1) + ")";
+
+       if (nProofStep != 0) {
+           string sbPrevStepQED = "(or " + appeq(app("nAxiomApplied", nProofStep-1), eQEDbyCases) +
+                                   appeq(app("nAxiomApplied", nProofStep-1), eQEDbyAssumption) +
+                                   appeq(app("nAxiomApplied", nProofStep-1), eQEDbyEFQ) +
+                                   appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")";
+           sbBranchingCorrect = "(and " + sbBranchingCorrect + "(or " +
+                   "(not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
+                   "(not " + sbPrevStepQED + ")" + "(not " + appeq(app("nNesting",nProofStep-1),app("nNesting",nProofStep)) + ")))";
+       }
 
        string sbEarlyEndOfProof = "(and " ;
        for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)

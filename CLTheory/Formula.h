@@ -8,6 +8,7 @@
 #include <set>
 #include <map>
 #include <iostream>
+#include "common.h"
 // #include "Theory/theory.h"
 
 using namespace std;
@@ -166,17 +167,17 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     else if (f.GetName() == "true") {
         os << "$true";
     }
-    else if (NATIVE_EQ && f.GetName() == "eqnative")
+    else if (f.GetName() == EQ_NATIVE_NAME)
     {
         os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
     }
-    else if (NATIVE_EQ && f.GetName() == "neqnative")
+    else if (f.GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME)
     {
         os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
     }
     else
     {
-        if (NATIVE_NEG && f.GetName()[0]=='n')
+        if (f.GetName()[0]=='n')
         {
             os << "~ (" << f.GetName().substr(1) << ")" ;
         }
@@ -191,7 +192,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 if (i != f.GetArity()-1)
                     os << ",";
             }
-            if (NATIVE_NEG && f.GetName()[0]=='n')
+            if (f.GetName()[0]=='n')
                 os << ")";
             os << ")";
         }         

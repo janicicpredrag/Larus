@@ -9,6 +9,7 @@ TODO:
 6. Do not use always the same file names for temporary files like prove.urs etc...
  to be able to run instances of the provers in parallel.
 7. Remove hard coded old benches in the .cpp files.
+8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
 
 DONE:
 
@@ -101,6 +102,9 @@ cores or more computers is something that can be always
 addressed later.
 
 5 Julien: to deal with symmetry we can make an experiment by imposing the order of the point in Col predicates, deriving Col X Y Z we can add a constraint that X <= Y <= Z.
+
+6. Julien: Idea for tree traversal for annotating Nesting
+
 
 
 
