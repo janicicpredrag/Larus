@@ -20,19 +20,6 @@ extern void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_s
 
 using namespace std;
 
-extern vector < pair < string, vector<string> > > euclids_thms;
-extern vector < pair < string, vector<string> > > euclids_thms_working;
-extern vector < pair < string, vector<string> > > euclids_thms1;
-extern vector < pair < string, vector<string> > > col_thms;
-extern vector<string> EuclidAxioms;
-extern vector<string> ColAxioms;
-extern vector < pair < string, vector<string> > > test_thms;
-extern vector<string> TestAxioms;
-extern vector < pair < string, vector<string> > > test_negintro;
-extern vector<string> TestAxiomsnegintro;
-extern vector < pair < string, vector<string> > > test_trivial;
-extern vector<string> TrivialAxioms;
-
 int main(int argc , char** argv)
 {
     proverParams params;
