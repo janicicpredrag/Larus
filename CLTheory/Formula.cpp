@@ -591,68 +591,56 @@ bool Fact::Read(const string& s)
         #endif
         return false;
     }
-    if (pos1 == string::npos)
-    {
-        // we have a constant
-        if (s == "$true")
-            mName = "true";
-        else if (s == "$false")
-            mName = "false";
-        else 
-            mName = s;
-    }
-    else
-    {
-        pos2 = s.find(')',0);
-        if (pos2 == string::npos)
-        {
-            #ifdef DEBUG_PARSER
-            cout << "Ending parenthesis not found in : " << s << endl;
-            #endif
-            return false;
-        }
 
-        if (s.find('(',pos1+1) != string::npos)
-        {
-            #ifdef DEBUG_PARSER
-            cout << "Error ( not found in : " << s << endl;
-            #endif
-            return false;
-        }
+    pos2 = s.find(')',0);
+    if (pos2 == string::npos)
+    {
         #ifdef DEBUG_PARSER
-        cout << "the constant is " << s.substr(0, pos1) << endl;
+        cout << "Ending parenthesis not found in : " << s << endl;
         #endif
-        mName = s.substr(0, pos1);
+        return false;
+    }
 
-        pos1++;
-        pos2 = s.size();
-        while(pos1<pos2) {
-            pos = s.find(',',pos1);
+    if (s.find('(',pos1+1) != string::npos)
+    {
+        #ifdef DEBUG_PARSER
+        cout << "Error ( not found in : " << s << endl;
+        #endif
+        return false;
+    }
+    #ifdef DEBUG_PARSER
+    cout << "the constant is " << s.substr(0, pos1) << endl;
+    #endif
+    mName = s.substr(0, pos1);
+
+    pos1++;
+    pos2 = s.size();
+    while(pos1<pos2) {
+        pos = s.find(',',pos1);
+        if (pos == string::npos) {
+        pos = s.find(')',pos1);
             if (pos == string::npos) {
-            pos = s.find(')',pos1);
-                if (pos == string::npos) {
-                    #ifdef DEBUG_PARSER
-                    cout << "Error ) not found in " << s << endl;
-                    #endif
-                    return false;
-                }
-                if (pos < pos2-1)     {
-                    #ifdef DEBUG_PARSER
-                    cout << "Error ) should be the last character of :" << s << endl;
-                    #endif
-                    return false;
-                  }
-            }
-            if (pos==pos1)
-            {
                 #ifdef DEBUG_PARSER
-                cout << "Error " << endl;
+                cout << "Error ) not found in " << s << endl;
                 #endif
                 return false;
             }
-            mArgs.push_back(s.substr(pos1, pos-pos1));
-            pos1=pos+1;
+            if (pos < pos2-1)     {
+                #ifdef DEBUG_PARSER
+                cout << "Error ) should be the last character of :" << s << endl;
+                #endif
+                return false;
+              }
         }
+        if (pos==pos1)
+        {
+            #ifdef DEBUG_PARSER
+            cout << "Error " << endl;
+            #endif
+            return false;
+        }
+        mArgs.push_back(s.substr(pos1, pos-pos1));
+        pos1=pos+1;
     }
     return true;
 }
