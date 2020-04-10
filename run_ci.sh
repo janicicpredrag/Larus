@@ -31,16 +31,16 @@ for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     printf "URSA:  "
-    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
+    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
     test_success resursa.txt
     printf "STL:   "
-    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
+    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
     test_success resstl.txt
     printf "SMTBV: "
-    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
+    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
     test_success ressmtbv.txt
     printf "SMTLIA:"
-    ./CLprover -l30 $maxlength $axioms $axioms2 -n3 -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
+    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
     test_success ressmtlia.txt
     ((i++))
 done
