@@ -15,6 +15,7 @@ void Theory::Reset()
     mConstants.clear();
     mConstantsPermissible.clear();
     AddSymbol("false", 0);
+    AddSymbol("true", 0);
 }
 
 // --------------------------------------------------------------

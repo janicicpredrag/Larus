@@ -12,6 +12,9 @@ bool ConjunctionFormula::Read(const string& s)
     string s0 = SkipChar(s,' ');
     if (s0 == "$false" || s0=="$true") {
         Fact fact;
+        #ifdef DEBUG_PARSER
+            cout << "false or true in conjunction" << s0 << endl;
+        #endif
         if (fact.Read(s0.substr(1,s0.size()-1))) {
             Add(fact);
             return true;
@@ -548,6 +551,10 @@ bool Fact::Read(const string& s)
         mName = "false";
         return true;
     }
+    if (s=="true") {
+        mName = "true";
+        return true;
+    }
 
     if (s[0] == '~')
     {
@@ -587,7 +594,12 @@ bool Fact::Read(const string& s)
     if (pos1 == string::npos)
     {
         // we have a constant
-        mName = s;
+        if (s == "$true")
+            mName = "true";
+        else if (s == "$false")
+            mName = "false";
+        else 
+            mName = s;
     }
     else
     {
@@ -607,6 +619,9 @@ bool Fact::Read(const string& s)
             #endif
             return false;
         }
+        #ifdef DEBUG_PARSER
+        cout << "the constant is " << s.substr(0, pos1) << endl;
+        #endif
         mName = s.substr(0, pos1);
 
         pos1++;
