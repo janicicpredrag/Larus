@@ -839,6 +839,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbBranchingCorrect = "(and " + sbBranchingCorrect + "(or " +
                    "(not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
                    "(not " + sbPrevStepQED + ")" + "(not " + appeq(app("nNesting",nProofStep-1),app("nNesting",nProofStep)) + ")))";
+
+           sbBranchingCorrect = "(and " + sbBranchingCorrect + "(or " +
+                   "(not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
+                   + "(not " + appeq(app("nNesting",nProofStep+1),app("nNesting",nProofStep)) + ")))";
        }
 
        string sbEarlyEndOfProof = "(and " ;
@@ -866,7 +870,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbProofCorrect += "(or "  + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
 
        sbProofCorrect += sbBranchingCorrect;
-
     }
 
 /*

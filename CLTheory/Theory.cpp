@@ -268,10 +268,16 @@ void Theory::AddSymbol(string p, unsigned arity)
     for(size_t i = 0; i<mSignature.size(); i++)
         if (mSignature[i].first == p)
             return;
+
+    if (p[0] == '$')
+        p = p.substr(1,p.size()-1);
+
     if (p == "false") {
         mSignature.push_back(pair<string,unsigned>("false",0));
+        mSignature.push_back(pair<string,unsigned>("true",0));
     }
     else if (p == "true") {
+        mSignature.push_back(pair<string,unsigned>("false",0));
         mSignature.push_back(pair<string,unsigned>("true",0));
     } else if (p[0] != 'n') {
         mSignature.push_back(pair<string,unsigned>(p,arity));

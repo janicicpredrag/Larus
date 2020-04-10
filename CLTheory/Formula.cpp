@@ -547,11 +547,11 @@ bool Fact::Read(const string& s)
         return Read(s.substr(1,pos-2));
     }
 
-    if (s=="false") {
+    if (s=="false" || s=="$false") {
         mName = "false";
         return true;
     }
-    if (s=="true") {
+    if (s=="true" || s=="$true") {
         mName = "true";
         return true;
     }

@@ -550,6 +550,9 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bPrevStepQED ||= (nAxiomApplied[nProofStep-1] == nQEDbyEFQ)  || (nAxiomApplied[nProofStep-1] == nQEDbyNegIntro); "            << endl;
     ursaFile <<"   bBranchingCorrect &&= !(bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep) || !(bPrevStepQED && (nNesting[nProofStep-1] == nNesting[nProofStep])); "  << endl;
 
+    ursaFile <<"   bBranchingCorrect &&= !(bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep) || !(nNesting[nProofStep+1] == nNesting[nProofStep]); "  << endl;
+
+
 ursaFile <<" bEarlyEndOfProof = true; "                                                             << endl;
 ursaFile << "for (nI=nPremisesCount; nI+1<nProofStep; nI++)  "                                           << endl;
 ursaFile <<"          bEarlyEndOfProof &&= (!bCases[nI] || nAxiomApplied[nI+1] == nFirstCase); "                              << endl;
