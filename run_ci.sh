@@ -9,15 +9,21 @@ NC='\033[0m' # No Color
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
+red=0
+green=0
+orange=0
 test_success () {
     if grep Theorem $1 > /dev/null; then
         if grep Correct $1 > /dev/null; then
          echo -e "${GREEN} Coq Ok ${NC}"
+         ((green++))
         else 
          echo -e "${ORANGE} Ok, but Coq fails ${NC}"
+         ((orange++))
         fi
     else
         echo -e "${RED} Error ${NC}"
+        ((red++))
         cat < $1 >> $filename
     fi
 }
@@ -38,4 +44,10 @@ do
     test_success ressmtlia.txt
     ((i++))
 done
+echo ""
+echo "Summary:"
+echo "Coq correct:" $green
+echo "Coq fails:" $orange
+echo "Errors" $red
+echo ""
 echo "Output of errors have been written to $filename"
