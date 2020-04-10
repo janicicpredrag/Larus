@@ -584,12 +584,13 @@ bool Fact::Read(const string& s)
     }
 
     pos1 = s.find('(',0);
-    if (pos1 == 0)
+    if (pos1 == string::npos)
     {
-        #ifdef DEBUG_PARSER
+        /*#ifdef DEBUG_PARSER
         cout << "Name not found in : " << s << endl;
-        #endif
-        return false;
+        #endif*/
+        mName = s;
+        return true;
     }
 
     pos2 = s.find(')',0);

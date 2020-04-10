@@ -22,21 +22,18 @@ void Theory::Reset()
 
 void Theory::AddAxiom(CLFormula& axiom, string name)
 {
+    mCLaxioms.push_back(pair<CLFormula,string>(axiom,name));
+}
+
+// --------------------------------------------------------------
+
+void Theory::UpdateSignature(CLFormula& axiom)
+{
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++)
         AddSymbol(axiom.GetPremises().GetElement(j).GetName(), axiom.GetPremises().GetElement(j).GetArity());
     for (size_t j = 0; j < axiom.GetGoal().GetSize(); j++)
         for (size_t k = 0; k < axiom.GetGoal().GetElement(j).GetSize(); k++)
             AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(), axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
-    mCLaxioms.push_back(pair<CLFormula,string>(axiom,name));
-}
-
-
-// --------------------------------------------------------------
-
-void Theory::AddAxioms(vector< pair<CLFormula,string> >& axioms)
-{
-    for (size_t i=0; i<axioms.size(); i++)
-        AddAxiom(axioms[i].first, axioms[i].second);
 }
 
 
@@ -45,7 +42,8 @@ void Theory::AddAxioms(vector< pair<CLFormula,string> >& axioms)
 void Theory::AddNegElimAxioms()
 {
     // add the axiom  R(...) & nR(...) => false for every predicate symbol
-    for (size_t i=0; i < mSignature.size(); i+=2) {
+    for (size_t i=2; i < mSignature.size(); i+=2) {
+        // skip false
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
@@ -80,6 +78,7 @@ void Theory::AddExcludedMiddleAxioms()
 {
     // add the axiom  R(...) | nR(...) for every predicate symbol (skip false | true)
     for (size_t i=2; i < mSignature.size(); i+=2) {
+        // skip false
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
@@ -265,12 +264,12 @@ void Theory::AddSymbol(string p, unsigned arity)
 //    mSignature[p] = mSignature.size()+1;
 //    mArity[p] = arity;
 
+    if (p[0] == '$')
+        p = p.substr(1,p.size()-1);
+
     for(size_t i = 0; i<mSignature.size(); i++)
         if (mSignature[i].first == p)
             return;
-
-    if (p[0] == '$')
-        p = p.substr(1,p.size()-1);
 
     if (p == "false") {
         mSignature.push_back(pair<string,unsigned>("false",0));

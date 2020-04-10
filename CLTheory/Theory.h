@@ -27,7 +27,6 @@ public:
 
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
-    void AddAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiomEqSymm();
     void AddAxiomNEqSymm();
     void AddAxiomEqReflexive();
@@ -47,6 +46,7 @@ public:
     void StoreInitialConstants();
 
     void AddSymbol(string p, unsigned arity);
+    void UpdateSignature(CLFormula& axiom);
     size_t GetSymbolArity(string p);
 
     void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars);

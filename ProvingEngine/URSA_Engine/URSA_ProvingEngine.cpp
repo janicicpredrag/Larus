@@ -457,6 +457,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
    // ursaFile <<"                    && (nNesting[nProofStep] == (nNesting[nProofStep-1]<<1)) "                                                     << endl;
     ursaFile <<"                    && (nNesting[nProofStep] == 2) "                                              << endl; // restricted version!
     ursaFile <<"                    && (nP[nProofStep][0] & 1 == 0) "                                                                              << endl;
+    ursaFile <<"                    && (nP[nProofStep][0] != nfalse) "                                                                              << endl;
     ursaFile <<"                    && (nP[nProofStep][0]+1 == nP[nFinalStep][0]);  "                                                              << endl;
     ursaFile <<"   for (nInd = 0; nInd < nMaxArg; nInd++) "                                                                                        << endl;
     ursaFile <<"      bNegIntroStep &&= (nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "                                                            << endl;

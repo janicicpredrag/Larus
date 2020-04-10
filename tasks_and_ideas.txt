@@ -13,6 +13,9 @@ TODO:
 7. Remove hard coded old benches in the .cpp files.
 8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
 9. Differentiate between "n" prefix for negation and "n" prefix for URSA
+10. Julien: For equality, I had hope that with a native encoding we can have something more efficient than the version which adds the axioms.
+    Don’t you want to run run a full bench with/without native before dropping the support ?
+
 
 DONE:
 

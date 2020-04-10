@@ -111,6 +111,11 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         T.AddExcludedMiddleAxioms();
     }
 
+    if (params.mbNegElim) {
+        T.AddNegElimAxioms();
+    }
+
+
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
@@ -138,9 +143,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             T.AddEqExcludedMiddleAxiom();
             T.AddExcludedMiddleAxioms();
         }*/
-        if (params.mbNegElim) {
-            T.AddNegElimAxioms();
-        }
 
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
@@ -270,14 +272,19 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                 if (params.eEngine != eSTL_ProvingEngine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
-                    T.AddAxioms(normalizedAxioms);
+
                     cout << "Input Axiom: " << s << endl;
-                    for (size_t i=0; i<normalizedAxioms.size(); i++)
-                         cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                    for (size_t i=0; i<normalizedAxioms.size(); i++) {
+                        T.AddAxiom(normalizedAxioms[i].first, normalizedAxioms[i].second);
+                        T.UpdateSignature(normalizedAxioms[i].first);
+                        cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                    }
                      cout << endl;
                 }
-                else
+                else {
                     T.AddAxiom(cl,statementName);
+                    T.UpdateSignature(cl);
+                }
             } else if (type == 1) {
                 theorem = cl;
                 theoremName = statementName;
@@ -285,10 +292,13 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     vector< pair<CLFormula,string> > output;
                     theorem.NormalizeGoal(statementName, to_string(0), output);
                     if (output.size()>1) {
-                        for(size_t j=0; j<output.size()-1; j++)
+                        for(size_t j=0; j<output.size()-1; j++) {
                             T.AddAxiom(output[j].first, output[j].second);
+                            T.UpdateSignature(output[j].first);
+                        }
                     }
                     theorem = output[output.size()-1].first;
+                    T.UpdateSignature(theorem);
                 }
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
             }

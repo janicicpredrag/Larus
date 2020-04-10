@@ -678,7 +678,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
            sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
        string sn = "";
-       for (size_t i = 2; i<mpT->mSignature.size(); i += 2)
+       for (size_t i = 2; i<mpT->mSignature.size(); i += 2) // starts from 2, ie. skips nfalse
             sn += appeq(app("nP", nProofStep, 0), i);
        sbNegIntroStep += "(or " + sn + ")";
        sbNegIntroStep += ")";
