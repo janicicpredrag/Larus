@@ -1,0 +1,1 @@
+fof(example_with_true, conjecture, $false | $true ).
