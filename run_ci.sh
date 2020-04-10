@@ -12,12 +12,12 @@ ORANGE='\033[0;33m'
 test_success () {
     if grep Theorem $1 > /dev/null; then
         if grep Correct $1 > /dev/null; then
-         echo "${GREEN} Coq Ok ${NC}"
+         echo -e "${GREEN} Coq Ok ${NC}"
         else 
-         echo "${ORANGE} Ok, but Coq fails ${NC}"
+         echo -e "${ORANGE} Ok, but Coq fails ${NC}"
         fi
     else
-        echo "${RED} Error ${NC}"
+        echo -e "${RED} Error ${NC}"
         cat < $1 >> $filename
     fi
 }
