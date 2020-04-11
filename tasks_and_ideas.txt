@@ -12,14 +12,19 @@ TODO:
  to be able to run instances of the provers in parallel.
 7. Remove hard coded old benches in the .cpp files.
 8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
-9. Differentiate between "n" prefix for negation and "n" prefix for URSA
+9. Differentiate between "n" prefix for negation and "n" prefix for URSA; use longer prefix for negated predicates symbols
 10. Julien: For equality, I had hope that with a native encoding we can have something more efficient than the version which adds the axioms.
     Don’t you want to run run a full bench with/without native before dropping the support ?
-11 Julien: Maybe we could use this idea also using some meta-theorems or 
+11. Julien: Maybe we could use this idea also using some meta-theorems or 
 heuristics: if the goal has some given form then some of the hypotheses 
 should be used:
-(1) "use necessarily all the given axioms"
-(2) "use necessarily this axioms" (can be repeated several times)
+    (1) "use necessarily all the given axioms"
+    (2) "use necessarily this axioms" (can be repeated several times)
+
+12. Julien: names with underscore are assumed to be internal auxiliary predicates (introduced by CL2 normalization)
+    I think we should replace it with something less common , like starting with three underscores.
+
+
 
 
 
