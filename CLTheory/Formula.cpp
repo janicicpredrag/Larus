@@ -343,6 +343,11 @@ bool CLFormula::Read(const string& s)
             CLFormula clf(A,B);
             clf.mUniversalVars = mUniversalVars;
             clf.mExistentialVars = mExistentialVars;
+            for (size_t k = 0; k < mExistentialVars.size(); k++)
+                for (size_t i = 0; i < A.GetSize(); i++)
+                    for (size_t j = 0; j < A.GetElement(i).GetArity(); j++)
+                        if (A.GetElement(i).GetArg(j) == mExistentialVars[k])
+                            return false;
             *this = clf;
             return true;
         }
