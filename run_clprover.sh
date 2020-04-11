@@ -105,13 +105,12 @@ done
 
 
 PS3='Please select axioms: '
-options3=("None" "All" "Excluded Middle Only" "Eq Axioms Only" "Neg Elim Only")
+options3=("None" "All" "Excluded Middle Only" "Neg Elim Only")
 select opt3 in "${options3[@]}"
 do
     case $opt3 in
         "None")
             echo "$opt3 selected."
-            eqaxioms=""
             exaxioms=""
             neaxioms=""
             break
@@ -119,28 +118,18 @@ do
         "All")
             echo "$opt3 selected"
             exaxioms="-aexcludedmiddle"
-            eqaxioms="-aeq"
-            neaxioms=""
+            neaxioms="-anegelim"
             break
             ;;
         "Excluded Middle Only")
             echo "$opt3 selected"
             exaxioms="-aexcludedmiddle"
-            eqaxioms=""
-            neaxioms=""
-            break
-            ;;
-        "Eq Axioms Only")
-            echo "$opt3 selected"
-            exaxioms=""
-            eqaxioms="-aeq"
             neaxioms=""
             break
             ;;
          "Neg Elim Only")
             echo "$opt3 selected"
             exaxioms=""
-            eqaxioms=""
             neaxioms="-anegelim"
             break
             ;;
@@ -219,7 +208,7 @@ for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
-  ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$eqaxioms" "$neaxioms" "$exaxioms" "$file" | tee -a $filename
+  ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
   ((i++))
   echo "Number of theorems proved until now:" | tee -a $summary
   grep Theorem < $filename | wc -l | tee -a $summary
