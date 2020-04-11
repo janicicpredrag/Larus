@@ -502,11 +502,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                     && !bCases[nProofStep] "                                                                                      << endl;
     ursaFile <<"                     && (nNesting[nProofStep] == (nNesting[nProofStep-1]+1)); "                                                    << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nFinalStep][0]) /*&& !bCases[nProofStep]*/; "                                                 << endl;
+    ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nFinalStep][0]) && !bCases[nProofStep-1]; "                                                 << endl;
     ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "                                                                                        << endl;
     ursaFile <<"      bGoalReached &&= (nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "                                                             << endl;
 
-    ursaFile <<"   bGoalReached2 = (nProofStep>0)  && (nP[nProofStep][0]==nP[nFinalStep][1]); "                                            << endl;
+    ursaFile <<"   bGoalReached2 = (nProofStep>0)  && (nP[nProofStep][0]==nP[nFinalStep][1]) && !bCases[nProofStep-1]; "                                            << endl;
     ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "                                                                                        << endl;
     ursaFile <<"       bGoalReached2 &&= (nA[nProofStep][nInd]==nA[nFinalStep][nMaxArg+nInd]); "                                                         << endl;
     ursaFile <<"   bGoalReached ||= (bGoalReached2 && bCases[nFinalStep]); "                                            << endl;

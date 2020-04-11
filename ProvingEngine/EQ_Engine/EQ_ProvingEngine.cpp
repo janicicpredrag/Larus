@@ -790,7 +790,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")" +
                  appeq(smt_sum(smt_prod(app("nNesting", nProofStep),2),1), app("nNesting", nProofStep-1)) +
                  sbGoalReached +
-                 "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
+// 11.04.                 "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                  appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) +
                  "(or " + appeq(app("nNesting", nProofStep),1) + smt_less(app("nNesting", nProofStep+1),app("nNesting", nProofStep)) + ")"
                  + ")";
@@ -863,7 +863,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0);
        sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
        sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
-       //sbEarlyEndOfProof += "(or " + sbQEDbyAssumptionStep + ")";
        sbEarlyEndOfProof += ")";
 
        sbProofFinished += sbEarlyEndOfProof;
