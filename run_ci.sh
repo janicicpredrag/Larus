@@ -12,6 +12,11 @@ ORANGE='\033[0;33m'
 red=0
 green=0
 orange=0
+if [ -z "$1" ]; then
+    benches=tptp-problems/continuous-integration/*.p
+else
+    benches=tptp-problems/continuous-integration/$1
+fi
 test_success () {
     if grep Theorem $1 > /dev/null; then
         if grep Correct $1 > /dev/null; then

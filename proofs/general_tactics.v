@@ -35,8 +35,10 @@ match goal with
    | H:_ |- _ => progress (decompose [ex and] H);clear H
 end.
 
+Ltac finish_conj := splits;(trivial || eassumption).
+
 Ltac one_of_disjunct :=
- solve [repeat (splits;eassumption || (left;splits;eassumption) || right)].
+ solve [repeat (finish_conj || (left;finish_conj) || right)].
 
 
 Ltac rename_H H := let T := fresh in try rename H into T.
