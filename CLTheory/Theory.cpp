@@ -283,12 +283,12 @@ void Theory::AddSymbol(string p, unsigned arity)
     else if (p == "true") {
         mSignature.push_back(pair<string,unsigned>("false",0));
         mSignature.push_back(pair<string,unsigned>("true",0));
-    } else if (p[0] != 'n') {
+    } else if (p.size()>3 && p.substr(0,3) == PREFIX_NEGATED) {
+        mSignature.push_back(pair<string,unsigned>(p.substr(3,p.size()-3),arity));
+        mSignature.push_back(pair<string,unsigned>(p,arity));
+    } else {
         mSignature.push_back(pair<string,unsigned>(p,arity));
         mSignature.push_back(pair<string,unsigned>(PREFIX_NEGATED+p, arity));
-    } else {
-        mSignature.push_back(pair<string,unsigned>(p.substr(1,p.size()-1),arity));
-        mSignature.push_back(pair<string,unsigned>(p,arity));
     }
 }
 
