@@ -266,8 +266,8 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
             ss >> nBranching >> nPredicate;
             for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
                 ss >> nArgs[i];
-                if (sConstants.find(nArgs[i]) == sConstants.end())  // eliminate spurious constants, also for inst[]
-                    nArgs[i] = 0;
+              //  if (sConstants.find(nArgs[i]) == sConstants.end())  // eliminate spurious constants, also for inst[]
+              //      nArgs[i] = 0;
             }
 
             if (nAxiom == eAssumption) {
@@ -553,34 +553,13 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 AddMPstep(cfPremises, d, sPredicates[nPredicate-1]+"_excluded_middle", instantiation, new_witnesses);
             }
             else if (nAxiom >= eNumberOfStepKinds) {
-                Fact f;
-                f.SetName(string(sPredicates[nPredicate]));
-                for(size_t i=0; i< mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
-                    f.SetArg(i,mpT->GetConstantName(nArgs[i]));
 
-                DNFFormula d;
-                ConjunctionFormula cfconc1, cfconc2;
-                cfconc1.Add(f);
-                d.Add(cfconc1);
-
+                int nPredicate1, nArgs1[100];
                 if (nBranching) {
-                    Fact f;
-                    ss >> nPredicate;
-                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
-                        ss >> nArgs[i];
-                        if (sConstants.find(nArgs[i]) == sConstants.end())
-                            nArgs[i] = 0;
-                    }
-                    f.SetName(string(sPredicates[nPredicate]));
-                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++)
-                        f.SetArg(i,mpT->GetConstantName(nArgs[i]));
-                    cfconc2.Add(f);
-                    d.Add(cfconc2);
-                    pcs = new CaseSplit;
-                    pcs->SetCases(d);
+                    ss >> nPredicate1;
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++)
+                        ss >> nArgs1[i];
                 }
-
-                proofTrace.push_back(f); // this is not used if the axiom is branching
 
                 int nFrom;
                 getline(encodedproof, str);
@@ -604,14 +583,14 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 istringstream ss2(str);
                 for(size_t i=0; i < numOfVars; i++) {
                     ss2 >> inst[i];
-                    if (sConstants.find(inst[i]) == sConstants.end())
-                        inst[i] = 0;
                 }
 
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
                 for(size_t i=0; i < numOfUnivVars; i++) {
                     const string UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
+                    if (sConstants.find(inst[i]) == sConstants.end())
+                        inst[i] = 0; // eliminate spurious constants
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 for(size_t i=0; i < numOfExistVars; i++) {
@@ -621,6 +600,34 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     instantiation.push_back(pair<string,string>(existVar, newWitness));
                     new_witnesses.push_back(pair<string,string>(existVar, newWitness));
                 }
+
+                Fact f;
+                f.SetName(string(sPredicates[nPredicate]));
+                for(size_t i=0; i< mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+                    if (sConstants.find(nArgs[i]) == sConstants.end())
+                        nArgs[i] = 0; // eliminate spurious constants, also for inst[]
+                    f.SetArg(i,mpT->GetConstantName(nArgs[i]));
+                }
+
+                DNFFormula d;
+                ConjunctionFormula cfconc1, cfconc2;
+                cfconc1.Add(f);
+                d.Add(cfconc1);
+
+                proofTrace.push_back(f); // this is not used if the axiom is branching
+
+                if (nBranching) {
+                    f.SetName(string(sPredicates[nPredicate1]));
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++) {
+                        if (sConstants.find(nArgs1[i]) == sConstants.end())
+                            nArgs1[i] = 0; // eliminate spurious constants, also for inst[]
+                        f.SetArg(i,mpT->GetConstantName(nArgs1[i]));
+                    }
+                    cfconc2.Add(f);
+                    d.Add(cfconc2);
+                }
+                pcs = new CaseSplit;
+                pcs->SetCases(d);
 
                 AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation, new_witnesses);
 
