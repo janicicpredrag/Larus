@@ -11,9 +11,6 @@
 #include "common.h"
 
 
-//#define DEBUG_OUTPUT
-
-
 // ---------------------------------------------------------------------------------------
 
 EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT, proverParams& params)
@@ -159,17 +156,17 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
 
     size_t noPremises = axiom.GetPremises().GetSize();
     for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-        nPredicate[mnAxiomsCount][j] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
+        nPredicate[mnAxiomsCount][j] = PREDICATE[URSA_NUM_PREFIX+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
         for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
                 nBinding[mnAxiomsCount][j*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i))+1;
             else {
                 nBinding[mnAxiomsCount][j*mnMaxArity+i] = 0;
-                nAxiomArgument[mnAxiomsCount][j*mnMaxArity+i] = PREFIX_NEGATED + ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
+                nAxiomArgument[mnAxiomsCount][j*mnMaxArity+i] = URSA_NUM_PREFIX + ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
             }
     }
     if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
-        nPredicate[mnAxiomsCount][noPremises] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
+        nPredicate[mnAxiomsCount][noPremises] = PREDICATE[URSA_NUM_PREFIX+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
                 nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
@@ -177,12 +174,12 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
                 nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
             else {
                 nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = 0;
-                nAxiomArgument[mnAxiomsCount][noPremises*mnMaxArity+i] = PREFIX_NEGATED + ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
+                nAxiomArgument[mnAxiomsCount][noPremises*mnMaxArity+i] = URSA_NUM_PREFIX + ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
             }
         }
     }
     if (axiom.GetGoal().GetSize()>1) {
-        nPredicate[mnAxiomsCount][noPremises+1] = PREDICATE[PREFIX_NEGATED+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
+        nPredicate[mnAxiomsCount][noPremises+1] = PREDICATE[URSA_NUM_PREFIX+ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
         for (size_t i=0; i<axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
             if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
                 nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1;
@@ -190,7 +187,7 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
                 nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))+1;
             else {
                 nBinding[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = 0;
-                nAxiomArgument[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = PREFIX_NEGATED + ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
+                nAxiomArgument[mnAxiomsCount][(noPremises+1)*mnMaxArity+i] = URSA_NUM_PREFIX + ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
             }
         }
     }
@@ -206,9 +203,9 @@ void EQ_ProvingEngine::AddPremise(const Fact& f)
     mURSAstringPremises += "\n(assert " + appeq(app("nNesting", mnPremisesCount), 1) + ")\n";
     mURSAstringPremises += "(assert " + appeq(app("bCases", mnPremisesCount), "false") + ")\n";
     mURSAstringPremises += "(assert " + appeq(app("nAxiomApplied", mnPremisesCount), eAssumption) + ")\n";
-    mURSAstringPremises += "(assert " + appeq(app("nP", mnPremisesCount, 0), PREFIX_NEGATED + ToUpper(f.GetName())) + ")\n";
+    mURSAstringPremises += "(assert " + appeq(app("nP", mnPremisesCount, 0), URSA_NUM_PREFIX + ToUpper(f.GetName())) + ")\n";
     for (size_t i=0; i<f.GetArity(); i++)
-        mURSAstringPremises += "(assert " + appeq(app("nA" , mnPremisesCount , i), PREFIX_NEGATED + ToUpper(f.GetArg(i))) + ")\n";
+        mURSAstringPremises += "(assert " + appeq(app("nA" , mnPremisesCount , i), URSA_NUM_PREFIX + ToUpper(f.GetArg(i))) + ")\n";
 
     mnPremisesCount++;
 }
@@ -365,7 +362,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (size_t i = 0; i<mpT->mSignature.size(); i++) {
         sPreabmle += "(assert (= n" + ToUpper(mpT->mSignature[i].first) + " " + itos(mSMT_theory, enumerator) + "))\n";
         ARITY[enumerator] = mpT->mSignature[i].second;
-        PREDICATE[PREFIX_NEGATED + ToUpper(mpT->mSignature[i].first)] = enumerator++;
+        PREDICATE[URSA_NUM_PREFIX + ToUpper(mpT->mSignature[i].first)] = enumerator++;
         if (mpT->mSignature[i].second > mnMaxArity)
             mnMaxArity = mpT->mSignature[i].second;
     }
@@ -380,11 +377,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     enumerator = 0;
     sPreabmle += "; **************************** Constants ******************************* \n";
     for (vector<string>::const_iterator it = mpT->mConstants.begin(); it != mpT->mConstants.end(); it++) {
-        sPreabmle += "(assert " + appeq(PREFIX_NEGATED + ToUpper(*it), enumerator) + ")\n";
+        sPreabmle += "(assert " + appeq(URSA_NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
         CONSTANTS[*it] = enumerator++;
     }
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++) {
-        sPreabmle += "(assert " + appeq(PREFIX_NEGATED + ToUpper(*it), enumerator) + ")\n";
+        sPreabmle += "(assert " + appeq(URSA_NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
         CONSTANTS[*it] = enumerator++;
     }
     sPreabmle += "\n";
@@ -401,18 +398,18 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "true") + ")\n";
     else
         sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "false") + ")\n";
-    sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 0), PREFIX_NEGATED + ToUpper(formula.GetElement(0).GetElement(0).GetName())) + ") \n";
+    sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetName())) + ") \n";
     for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++) {
        if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
             sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
-        sPreabmle += "(assert " + appeq(app("nA", nFinalStep, i), PREFIX_NEGATED + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
+        sPreabmle += "(assert " + appeq(app("nA", nFinalStep, i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
     }
     if (formula.GetSize()>1) {
-        sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 1), PREFIX_NEGATED + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
+        sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++) {
            if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end())
                 sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
-            sPreabmle += "(assert " + appeq(app("nA", nFinalStep, mnMaxArity + i), PREFIX_NEGATED + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
+            sPreabmle += "(assert " + appeq(app("nA", nFinalStep, mnMaxArity + i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
         }
     }
     sPreabmle += "\n";
@@ -442,7 +439,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), nAxiom);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n   (or false ";
-              sbMatchOnePremise += "(and " +  appeq(PREFIX_NEGATED+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
+              sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
@@ -531,14 +528,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
                                                  smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
                sbSameProofBranch += ")";
-               string sb2 = "(and " + appeq(app("nP", n_from, 0), PREFIX_NEGATED+ToUpper(EQ_NATIVE_NAME));
+               string sb2 = "(and " + appeq(app("nP", n_from, 0), URSA_NUM_PREFIX+ToUpper(EQ_NATIVE_NAME));
                sb2 += "(or (and " + appeq(app("nA", n_from, 0), app("nAA", nProofStep)) + appeq(app("nA",n_from,1), app("nXX", nProofStep)) + ")" +
                           "(and " + appeq(app("nA", n_from, 0), app("nXX", nProofStep)) + appeq(app("nA",n_from,1), app("nAA", nProofStep)) + "))";
                sb2 += ")";
                for (unsigned nJ = 0; nJ < mnMaxArity; nJ++) {
                    string sb1 = "(and " + appeq(app("nP", n_from, 0), app("nP", nProofStep,0));
-                   sb1 += "(not " + appeq(app("nP", n_from, 0), PREFIX_NEGATED+ "false") + ")";
-                   sb1 += "(not " + appeq(app("nP", n_from, 0), PREFIX_NEGATED+ "true") + ")";
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), URSA_NUM_PREFIX+ "false") + ")";
+                   sb1 += "(not " + appeq(app("nP", n_from, 0), URSA_NUM_PREFIX+ "true") + ")";
                    for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                        if (nInd!=nJ)
                             sb1 += appeq(app("nA", n_from, nInd), app("nA", nProofStep, nInd));
@@ -564,7 +561,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
            //  eq(A,A)
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), eEQReflex);
-           sbMatchConclusion = appeq(app("nP", nProofStep, 0), PREFIX_NEGATED+ToUpper(EQ_NATIVE_NAME)) +
+           sbMatchConclusion = appeq(app("nP", nProofStep, 0), URSA_NUM_PREFIX+ToUpper(EQ_NATIVE_NAME)) +
                                appeq(app("nA", nProofStep, 0), app("nA", nProofStep,1));
                                appeq(app("nA",nProofStep,0), app("nInst", nProofStep,0));
            for (unsigned nInd = 0; nInd < 2; nInd++)
@@ -591,7 +588,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sbSameProofBranch += ")";
 
                string sb = "(and "+ appeq(app("nFrom",nProofStep,0), n_from) + sbSameProofBranch + "(not " + app("bCases",n_from) + "))";
-               sb += "(or " + appeq(app("nP", n_from, 0), " n"+ToUpper(EQ_NATIVE_NAME)) + " " + appeq(app("nP", n_from, 0), " n"+ToUpper(PREFIX_NEGATED+EQ_NATIVE_NAME)) + ")";
+               sb += "(or " + appeq(app("nP", n_from, 0), URSA_NUM_PREFIX+ToUpper(EQ_NATIVE_NAME)) + " " + appeq(app("nP", n_from, 0), URSA_NUM_PREFIX+ToUpper(PREFIX_NEGATED+EQ_NATIVE_NAME)) + ")";
                sb += appeq(app("nP",n_from,0),app("nP",nProofStep,0));
                sb += appeq(app("nA",n_from,0),app("nA",nProofStep,1));
                sb += appeq(app("nA",n_from,1),app("nA",nProofStep,0));
@@ -639,7 +636,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbMatchPremise1 += ")";
            sbMatchPremise2 += ")";
            sbMatchPremises += sbMatchPremise1 + sbMatchPremise2;
-           sbMatchConclusion = appeq(app("nP", nProofStep, 0), PREFIX_NEGATED+"false");
+           sbMatchConclusion = appeq(app("nP", nProofStep, 0), URSA_NUM_PREFIX+"false");
            if (nProofStep != 0)
                sbMPStep += "\n(and " +  sbMatchPremises  + " "  + sbMatchConclusion + "(not " + app("bCases",nProofStep) + ")" +
                         appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
@@ -656,7 +653,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (size_t i = 2; i<mpT->mSignature.size(); i+=2)
                 sn += appeq(app("nP", nProofStep, 0), i);
            sbMatchConclusion = appeq( smt_sum(app("nP",nProofStep,0),1), app("nP",nProofStep,1));
-           sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), PREFIX_NEGATED + "false") + ")";
+           sbMatchConclusion += "(not " + appeq(app("nP", nProofStep, 0), URSA_NUM_PREFIX + "false") + ")";
            sbMatchConclusion += "(or " + sn + ")";
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++) {
                 sbMatchConclusion += appeq(app("nA", nProofStep, nInd), app("nA", nProofStep, mnMaxArity+nInd));
@@ -709,7 +706,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
            sbPrevStepGoal += ")";
        }
-       sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 0), PREFIX_NEGATED+"true") + ")";
+       sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true") + ")";
 
        string sbPrevStepGoal2;
        unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
@@ -725,7 +722,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sbPrevStepGoal2 += ")";
            }
            sbPrevStepGoal = "(or " + sbPrevStepGoal + sbPrevStepGoal2 + ")";
-           sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 1), PREFIX_NEGATED+"true") + ")";
+           sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
        }
 
        string sbMatchBranchingForSecondCase = "(or false ";
@@ -758,7 +755,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
           sbGoalReached += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, nInd));
        sbGoalReached += ")";
-       sbGoalReached = "(or " + sbGoalReached+ appeq(app("nP", nFinalStep, 0), PREFIX_NEGATED+"true") + ")";
+       sbGoalReached = "(or " + sbGoalReached+ appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true") + ")";
 
        if (formula.GetSize()>1) {
            string sbGoalReached2 = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1)) + "";
@@ -767,7 +764,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sbGoalReached2 += appeq(app("nA", nProofStep, nInd),app("nA", nFinalStep, mnMaxArity + nInd));
            sbGoalReached2 += ")";
            sbGoalReached = "(or " + sbGoalReached + sbGoalReached2 + ")";
-           sbGoalReached = "(or " + sbGoalReached + appeq(app("nP", nFinalStep, 1), PREFIX_NEGATED+"true") + ")";
+           sbGoalReached = "(or " + sbGoalReached + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
        }
 
        string scurrentstepfinal;
@@ -814,7 +811,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        if (nProofStep == 0)
            sbQEDbyEFQStep = " false ";
        else
-           sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), PREFIX_NEGATED+ "false") +
+           sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
                          appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
                          sbGoalReached + " " +
                          "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
@@ -824,7 +821,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        if (nProofStep == 0)
            sbQEDbyNegIntroStep = sbPrevStepGoal;
        else
-           sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), PREFIX_NEGATED+ "false") +
+           sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
             "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
                      appeq(app("nNesting", nProofStep-1), smt_sum(smt_prod(app("nNesting", nProofStep),2), 1)) + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +
