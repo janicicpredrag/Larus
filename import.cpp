@@ -300,6 +300,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     theorem = output[output.size()-1].first;
                     T.UpdateSignature(theorem);
                 }
+                T.UpdateSignature(theorem);
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
             }
         }
