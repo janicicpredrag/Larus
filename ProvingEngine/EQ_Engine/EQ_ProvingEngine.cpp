@@ -429,7 +429,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     string snCases =    (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
     string snConclude = (mSMT_theory == eSMTLIA_ProvingEngine ? " 0 " : " #x000 ");
 
-    string snNegIntroCheck;
+    string snNegIntroCheck = (mSMT_theory == eSMTLIA_ProvingEngine ? " 1 " : " #x001 ");
     string snNegIntroCheckNeg;
     string sbBranchingCorrect; // = "(and true ";
 
@@ -845,8 +845,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eNegIntro), 1, 0);
        snNegIntroCheckNeg += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), 1, 0);
-       sbBranchingCorrect = "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0)
-                                    + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1) + ")";
+       sbBranchingCorrect = "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1)
+                                    + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 2) + ")";
 
        if (nProofStep != 0) {
            string sbPrevStepQED = "(or " + appeq(app("nAxiomApplied", nProofStep-1), eQEDbyCases) +
@@ -890,9 +890,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for(set<string>::iterator it = DECLARATIONS.begin(); it!=DECLARATIONS.end(); it++)
         smtFile << "(declare-const " + *it + ((*it).at(0) == 'n' ? " " + mSMT_type + ")" : " Bool)") << endl;
 
-    smtFile << endl;
-    smtFile << sPreabmle;
-    smtFile << endl;
+    smtFile << endl << sPreabmle << endl;
 
     smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")))" << endl << endl;
     smtFile << "(check-sat)" << endl;
