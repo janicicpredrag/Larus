@@ -399,16 +399,26 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     else
         sPreabmle += "(assert " + appeq(app("bCases", nFinalStep), "false") + ")\n";
     sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetName())) + ") \n";
+
+    set<string> exi_vars;
     for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++) {
-       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
-            sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+           exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+              sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+              exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+       }
+
         sPreabmle += "(assert " + appeq(app("nA", nFinalStep, i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
     }
     if (formula.GetSize()>1) {
         sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++) {
-           if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end())
-                sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+           if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+                exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) == exi_vars.end()) {
+               sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+               exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+           }
+
             sPreabmle += "(assert " + appeq(app("nA", nFinalStep, mnMaxArity + i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
         }
     }
