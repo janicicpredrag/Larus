@@ -876,7 +876,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbEarlyEndOfProof += appeq(smt_sum(snFirst), smt_sum(snSecond)) +
                             appeq(smt_sum(snSecond), smt_sum(snConclude)) +
                             appeq(smt_sum(snCases), smt_sum(snConclude));
-       sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 0);
+       sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1);
        sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
        sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
        sbEarlyEndOfProof += ")";
