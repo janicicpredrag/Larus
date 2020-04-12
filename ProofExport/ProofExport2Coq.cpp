@@ -62,7 +62,15 @@ void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
             outfile << f.GetArg(0) << " <> " << f.GetArg(1);
         }
         else {
-            outfile << f.GetName();
+            int ns = PREFIX_NEGATED.size();
+            if (f.GetName().find(PREFIX_NEGATED) == 0)
+            {
+                outfile << "~ " << f.GetName().substr(ns, string::npos);
+            }
+            else
+            {
+                outfile << f.GetName();
+            }
             for (size_t i=0; i<f.GetArity(); i++)
                 outfile << " " << f.GetArg(i);
         }
@@ -234,9 +242,9 @@ void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, u
     outfile << Indent(level+1) << "{" << endl;
     outfile << Indent(level+1) << "intro." << endl;
     OutputProof(outfile, bni->GetSubproof(), level+1);
-    outfile << Indent(level+1) << "contradict." << endl;
+    //outfile << Indent(level+1) << "contradict." << endl;
     outfile << Indent(level+1) << "}" << endl;
-    outfile << Indent(level) << "close." << endl;
+    outfile << Indent(level) << "conclude." << endl;
 }
 
 // ---------------------------------------------------------------------------------
