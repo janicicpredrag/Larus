@@ -356,6 +356,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin(); it != mpT->mConstantsPermissible.end(); it++)
         smtFile << "(declare-const n" + ToUpper(*it) +  " " + mSMT_type + " )" << endl;
 
+    smtFile << "(declare-const nProofSize " + mSMT_type + " )" << endl;
+
     string sPreabmle;
     sPreabmle += "; **************************** Predicates ******************************* \n";
 
@@ -844,19 +846,26 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyAssumption) +
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyEFQ) +
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")";
-           sbBranchingCorrect = "(and " + sbBranchingCorrect + "(or " +
-                   "(not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
-                   "(not " + sbPrevStepQED + ")" + "(not " + appeq(app("nNesting",nProofStep-1),app("nNesting",nProofStep)) + ")))";
+           sbBranchingCorrect += "(or (not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
+                   "(not " + sbPrevStepQED + ")" + "(not " + appeq(app("nNesting",nProofStep-1),app("nNesting",nProofStep)) + "))";
 
-           sbBranchingCorrect = "(and " + sbBranchingCorrect + "(or " +
-                   "(not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
-                   + "(not " + appeq(app("nNesting",nProofStep+1),app("nNesting",nProofStep)) + ")))";
+           sbBranchingCorrect += "(or (not " + app("bCases", nProofStep-1) + ")" +
+                                              appeq(app("nAxiomApplied", nProofStep), eFirstCase) + ")";
        }
 
-       string sbEarlyEndOfProof = "(and " ;
-       for (unsigned nI=mnPremisesCount; nI+1<nProofStep; nI++)
-           sbEarlyEndOfProof += "(or (not " + app("bCases", nI) + ")" +
-                                          appeq(app("nAxiomApplied", nI+1), eFirstCase) + ")";
+       sbBranchingCorrect = "(or (not (or " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))" +
+               + "(not " + appeq(app("nNesting",nProofStep+1),app("nNesting",nProofStep)) + "))";
+
+       /* ... the proof step is correct if it was one of cases from some case split */
+       if (nProofStep != 0)
+           sbBranchingCorrect += "(or " + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
+                                  sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
+       else
+           sbBranchingCorrect += "(or "  + sbQEDbyAssumptionStep + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
+
+       sbProofCorrect += "(or " + smt_less("nProofSize", nProofStep) + "(and " + sbBranchingCorrect + "))";
+
+       string sbEarlyEndOfProof = "(and ";
        sbEarlyEndOfProof += appeq(smt_sum(snFirst), smt_sum(snSecond)) +
                             appeq(smt_sum(snSecond), smt_sum(snConclude)) +
                             appeq(smt_sum(snCases), smt_sum(snConclude));
@@ -865,20 +874,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
        sbEarlyEndOfProof += ")";
 
-       sbProofFinished += sbEarlyEndOfProof;
+       sbProofFinished += "(and " + sbEarlyEndOfProof + appeq("nProofSize", nProofStep) + ")";
 
        // This counter is moved down here, so it don't count nProofStep in case it is the final step and has a disjunction
        snCases +=    smt_ite(app("bCases",nProofStep), 1, 0);
-
-
-       /* ... the proof step is correct if it was one of cases from some case split */
-       if (nProofStep != 0)
-           sbProofCorrect += "(or " + sbEarlyEndOfProof + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
-                                  sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + sbQEDbyNegIntroStep + ")";
-       else
-           sbProofCorrect += "(or "  + sbQEDbyAssumptionStep + sbMPStep + " " + sbNegIntroStep + " " + sbFirstCaseStep + " " + sbSecondCaseStep + ")";
-
-       sbProofCorrect += sbBranchingCorrect;
     }
 
     for(set<string>::iterator it = DECLARATIONS.begin(); it!=DECLARATIONS.end(); it++)
@@ -887,7 +886,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     smtFile << endl;
     smtFile << sPreabmle;
     smtFile << endl;
-    smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")" +  /*sbFinalStepGoal +  sbBranchingCorrect */ + "))" << endl << endl;
+
+    smtFile << "(assert (and " + sbProofCorrect + "(or " + sbProofFinished + ")))" << endl << endl;
     smtFile << "(check-sat)" << endl;
     smtFile << "(get-model)" << endl;
     smtFile.close();
