@@ -446,6 +446,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMPStep = "\n(or false ";
        for (unsigned nAxiom = eNumberOfStepKinds; nAxiom <= mnAxiomsCount /*&& nProofStep + 1!= mnPremisesCount+nProofLen*/; nAxiom++) {
 
+           if (nAxiomUniVars[nAxiom]>0 && nProofStep == 0)
+               continue;
+
            sbMatchPremises = "\n" + appeq(app("nAxiomApplied", nProofStep), nAxiom);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "\n   (or false ";
@@ -799,7 +802,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")" +
                  appeq(smt_sum(smt_prod(app("nNesting", nProofStep),2),1), app("nNesting", nProofStep-1)) +
                  sbGoalReached +
-// 11.04.                 "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
+                 "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                  appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) +
                  "(or " + appeq(app("nNesting", nProofStep),1) + smt_less(app("nNesting", nProofStep+1),app("nNesting", nProofStep)) + ")"
                  + ")";

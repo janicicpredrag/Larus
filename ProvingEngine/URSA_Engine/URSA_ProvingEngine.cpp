@@ -266,7 +266,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << "   for (nAxiom = 13; nAxiom <= nAxiomsCount; nAxiom++) { /* the proof step was obtained by one of the axioms */ "                 << endl;
     ursaFile <<"       /* If the axiom being explored has N premises, each of them has to be justified  */ "                                       << endl;
     ursaFile <<"       /* (in a proper instantiation) in some of the previous steps.                    */ "                                       << endl;
+
     ursaFile <<"       bMatchPremises = (nAxiomApplied[nProofStep]==nAxiom); "                                                                     << endl;
+
+    ursaFile <<"       bMatchPremises &&= (nAxiomUniVars[nAxiom]==0 || nProofStep>0); "                                                                     << endl;
+
     ursaFile <<"       for (nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) { "                               << endl;
     ursaFile <<"          bMatchOnePremise = false; "                                                                                              << endl;
     ursaFile <<"          bMatchOnePremise ||= (nPredicate[nAxiom][nPremisesCounter] == ntrue && nFrom[nProofStep][0] == 99); "                     << endl;
