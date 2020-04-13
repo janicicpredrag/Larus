@@ -263,13 +263,18 @@ void Theory::AddSymbol(string p, unsigned arity)
     // This is ugly convention: predicates with names beginning with 'n' are negated versions
 //    mSignature[p] = mSignature.size()+1;
 //    mArity[p] = arity;
-
+    cout << "adding:" << p << endl;
     if (p[0] == '$')
         p = p.substr(1,p.size()-1);
 
     for(size_t i = 0; i<mSignature.size(); i++)
+    {
         if (mSignature[i].first == p)
+        {
+            cout << p << " already present" << endl;
             return;
+        }
+    }
 
     if (p == "false") {
         mSignature.push_back(pair<string,unsigned>("false",0));

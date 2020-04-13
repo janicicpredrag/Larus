@@ -177,7 +177,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     }
     else
     {
-        if (f.GetName()[0]=='n')
+        if (f.GetName().find(PREFIX_NEGATED)== 0)
         {
             os << "~ (" << f.GetName().substr(1) << ")" ;
         }
@@ -192,7 +192,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 if (i != f.GetArity()-1)
                     os << ",";
             }
-            if (f.GetName()[0]=='n')
+            if (f.GetName().find(PREFIX_NEGATED)==0)
                 os << ")";
             os << ")";
         }         
