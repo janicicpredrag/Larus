@@ -133,9 +133,10 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
         if (engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) {
-            cout << "Simplifying the proof ... " << flush;
+           cout << endl << "Simplifying the proof (size " << proof.Size() << ") ... " << flush;
             proof.Simplify();
-            cout << "done! (proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
+            cout << "done! (new proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
+
         }
 
         // in ursa/smt engines, these axioms are hard-coded, here we include them for the purpose of export
@@ -298,7 +299,6 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                         }
                     }
                     theorem = output[output.size()-1].first;
-                    T.UpdateSignature(theorem);
                 }
                 T.UpdateSignature(theorem);
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
