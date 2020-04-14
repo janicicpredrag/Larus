@@ -160,6 +160,11 @@ void CLProof::Simplify(set<Fact>& relevant)
                 MakeRelevant(relevant, Fact("false"));
         }
     }
+    if (mMPs.size() > 0) { // last step is always relevant
+        ConjunctionFormula cf = get<0>(mMPs[mMPs.size()-1]);
+        DNFFormula dnf = get<1>(mMPs[mMPs.size()-1]);
+        MakeRelevant(relevant, dnf.GetElement(0));
+    }
 
     // Simplify the sequence of modus ponenses
     size_t size = mMPs.size();

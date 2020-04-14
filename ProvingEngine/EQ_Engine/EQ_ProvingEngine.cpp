@@ -233,7 +233,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
         time_t start_time = time(NULL);
-        unsigned l, r, s, best = 0;
+        unsigned l, r, s, best = 0, best_start;
         l = mParams.starting_proof_length;
         cout << "Looking for a proof of length: " << flush;
         while(l <= mParams.max_proof_length)  {
@@ -264,17 +264,19 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
         if (mParams.shortest_proof && best) {
             l = best/2+1; r = best;
+            best_start = best;
             ret = proof.DecodeProof(formula, "smt-proof.txt");
             cout << endl << "Simplifying the proof (size without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << flush;
             proof.Simplify();
             cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
             r = proof.Size()-proof.NumOfAssumptions();
 
-            cout << "Looking for a proof of length: " << flush;
+            if (l <= r && l != best)
+                cout << "Looking for a proof of length: " << flush;
             while(l <= r && l != best)  {
                 time_t current_time = time(NULL);
                 double remainingTime = mParams.time_limit - difftime(current_time, start_time);
-               // cout << "remaining time " << remainingTime << endl;
+                // cout << "remaining time " << remainingTime << endl;
                 if (remainingTime <= 0)
                     break;
 
@@ -301,10 +303,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             }
         }
         cout << endl;
-        if (best > 0) {
-            cout << "Best found proof: of the length " << best << endl;
+        cout << "Best found proof: of the length " << best << endl;
+        if (best > 0 /* && best < best_start*/)
             ret = proof.DecodeProof(formula, "smt-proof.txt");
-        }
     }
 
     PREDICATE.clear();
