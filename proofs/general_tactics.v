@@ -38,7 +38,7 @@ end.
 Ltac finish_conj := splits;(eassumption || trivial).
 
 Ltac one_of_disjunct :=
- solve [repeat (finish_conj || (left;finish_conj) || right)].
+ solve [repeat (solve [finish_conj] || (left;solve [finish_conj]) || right)].
 
 
 Ltac rename_H H := let T := fresh in try rename H into T.
