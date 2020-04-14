@@ -114,6 +114,10 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
 //    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
     outfile << "Parameter MyT : Type." << endl;
+    for(vector<string>::iterator it = T.mConstants.begin(); it!=T.mConstants.end(); ++it)
+    {
+        outfile << "Parameter " << (*it) << " : MyT." << endl;
+    }
     for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
     {
         outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 

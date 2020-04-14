@@ -115,6 +115,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         T.AddNegElimAxioms();
     }
 
+    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
+        T.MakeNewConstant();
 
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
