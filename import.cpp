@@ -72,7 +72,12 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         instantiation[theorem.GetUnivVar(i)] = constantName;
 //        T.MakeNextConstantPermissible();
     }
+
+    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
+        T.MakeNewConstant();
+
     T.StoreInitialConstants();
+
     CLProof proof;
     proof.SetTheory(&T);
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
@@ -114,9 +119,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     if (params.mbNegElim) {
         T.AddNegElimAxioms();
     }
-
-    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
-        T.MakeNewConstant();
 
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {

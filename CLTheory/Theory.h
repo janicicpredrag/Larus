@@ -63,11 +63,9 @@ public:
     set<string> mConstantsPermissible;
     vector< pair<string,unsigned> > mSignature;
 
-
 protected:
     unsigned int miConstantsCounter;
     bool mbUseNativeEq;
-
 };
 
 #endif // THEORY_H
