@@ -92,7 +92,7 @@ public:
     void AddSubproof(CLProof& proof) { mSubproof = proof; }
     const CLProof& GetSubproof() const { return mSubproof; }
     const Fact& GetAssumption() const { return mAssumption; }
-    unsigned Size() { return mSubproof.Size()+1; }
+    unsigned Size() { return mSubproof.Size(); }
 private:
     Fact mAssumption;
     CLProof mSubproof;

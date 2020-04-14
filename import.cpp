@@ -133,9 +133,9 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
         if (engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) {
-           cout << endl << "Simplifying the proof (size " << proof.Size() << ") ... " << flush;
+           cout << endl << "Simplifying the proof (size without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << flush;
            proof.Simplify();
-           cout << "done! (new proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
+           cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
 
         // in ursa/smt engines, these axioms are hard-coded, here we include them for the purpose of export

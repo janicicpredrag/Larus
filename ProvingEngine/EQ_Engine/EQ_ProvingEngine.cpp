@@ -265,9 +265,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         if (mParams.shortest_proof && best) {
             l = best/2+1; r = best;
             ret = proof.DecodeProof(formula, "smt-proof.txt");
-            cout << endl << "Simplifying the proof (size " << proof.Size() << ") ... " << flush;
+            cout << endl << "Simplifying the proof (size without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << flush;
             proof.Simplify();
-            cout << "done! (new proof length (without assumptions): " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
+            cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
             r = proof.Size()-proof.NumOfAssumptions();
 
             cout << "Looking for a proof of length: " << flush;
@@ -458,7 +458,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                  string sbSameProofBranch = "(or " + appeq(app("nNesting", nProofStep), app("nNesting", n_from));
                  for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
                      if (mSMT_theory == eSMTBV_ProvingEngine)
-                         sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", n_from) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
+                         sbSameProofBranch += appeq( "(bvlshr " + app("nNesting", nProofStep) + " " + itos(mSMT_theory, nI) + ")" , app("nNesting", n_from));
                      else // (mSMT_theory == eSMTLIA_ProvingEngine)
                          sbSameProofBranch += "(and " + smt_geq(app("nNesting", nProofStep), smt_prod(app("nNesting", n_from),nJ)) +
                                                    smt_less(app("nNesting", nProofStep), smt_sum(smt_prod(app("nNesting", n_from), nJ), nJ)) + ")";
@@ -688,7 +688,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                          appeq(app("nNesting", nProofStep), 2) +  // only the special case
                                          appeq(smt_sum(app("nP", nProofStep, 0), 1), app("nP", nFinalStep, 0));
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
-           sbNegIntroStep += " (= " + app("nA", nProofStep, nInd) + " " + app("nA", nFinalStep, nInd) + ")";
+             sbNegIntroStep += appeq(app("nA", nProofStep, nInd), app("nA", nFinalStep, nInd));
        string sn = "";
        for (size_t i = 2; i<mpT->mSignature.size(); i += 2) // starts from 2, ie. skips nfalse
             sn += appeq(app("nP", nProofStep, 0), i);
@@ -720,7 +720,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sbPrevStepGoal += appeq(app("nA", nProofStep-1, nInd), app("nA", nFinalStep, nInd));
            sbPrevStepGoal += ")";
        }
-       sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true") + ")";
+//      sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true") + ")";
 
        string sbPrevStepGoal2;
        unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
@@ -736,7 +736,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                sbPrevStepGoal2 += ")";
            }
            sbPrevStepGoal = "(or " + sbPrevStepGoal + sbPrevStepGoal2 + ")";
-           sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
+//           sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
        }
 
        string sbMatchBranchingForSecondCase = "(or false ";
@@ -810,7 +810,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbQEDbyAssumptionStep;
        if (nProofStep == 0) // the goal can be trivial eg. true
-           sbQEDbyAssumptionStep = "(and " + sbPrevStepGoal +
+           sbQEDbyAssumptionStep = "(and " "(or " + sbPrevStepGoal + /* sbGoalReached +*/ ")" +
                 appeq(app("nNesting", nProofStep), 1) +
   //              "(or (not " + app("bCases", nProofStep) + ")" + scurrentstepfinal + ")" +
                 appeq(app("nAxiomApplied", nProofStep),eQEDbyAssumption) + ")";
