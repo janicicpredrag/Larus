@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 trap printout SIGINT
 printout() {
    echo "foo"
@@ -75,62 +75,44 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-BV")
+options2=("URSA" "STL" "SMT-LIA" "SMT-BV" "eprover" "zenon")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
         "URSA")
             echo "$opt2 selected."
+            prover="CLprover"
             engine="-eursa"
             break
             ;;
         "STL")
             echo "$opt2 selected"
+            prover="CLprover"
             engine="-estl"
             break
             ;;
         "SMT-LIA")
             echo "$opt selected"
+            prover="CLprover"
             engine="-esmtlia"
             break
             ;;
         "SMT-BV")
             echo "$opt selected"
+            prover="CLprover"
             engine="-esmtbv"
             break
             ;;
-        *) echo "invalid option $REPLY";;
-    esac
-done
-
-
-PS3='Please select axioms: '
-options3=("None" "All" "Excluded Middle Only" "Neg Elim Only")
-select opt3 in "${options3[@]}"
-do
-    case $opt3 in
-        "None")
-            echo "$opt3 selected."
-            exaxioms=""
-            neaxioms=""
+        "eprover")
+            echo "$opt selected"
+            prover="eprover"
+            engine=""
             break
             ;;
-        "All")
-            echo "$opt3 selected"
-            exaxioms="-aexcludedmiddle"
-            neaxioms="-anegelim"
-            break
-            ;;
-        "Excluded Middle Only")
-            echo "$opt3 selected"
-            exaxioms="-aexcludedmiddle"
-            neaxioms=""
-            break
-            ;;
-         "Neg Elim Only")
-            echo "$opt3 selected"
-            exaxioms=""
-            neaxioms="-anegelim"
+        "zenon")
+            echo "$opt selected"
+            prover="zenon"
+            engine=""
             break
             ;;
         *) echo "invalid option $REPLY";;
@@ -146,6 +128,43 @@ else
     echo "Setting time limit"
     time=$timev
 fi
+
+
+if [ "$prover" = "CLprover" ]; then
+ PS3='Please select axioms: '
+ options3=("None" "All" "Excluded Middle Only" "Neg Elim Only")
+ select opt3 in "${options3[@]}"
+ do
+     case $opt3 in
+         "None")
+             echo "$opt3 selected."
+             exaxioms=""
+             neaxioms=""
+             break
+             ;;
+         "All")
+             echo "$opt3 selected"
+             exaxioms="-aexcludedmiddle"
+             neaxioms="-anegelim"
+             break
+             ;;
+         "Excluded Middle Only")
+             echo "$opt3 selected"
+             exaxioms="-aexcludedmiddle"
+             neaxioms=""
+             break
+             ;;
+          "Neg Elim Only")
+             echo "$opt3 selected"
+             exaxioms=""
+             neaxioms="-anegelim"
+             break
+             ;;
+         *) echo "invalid option $REPLY";;
+     esac
+ done
+
+
 
 echo "Max proof length ? (Default is $maxProofLen)"
 read maxProofLenv
@@ -203,15 +222,32 @@ echo "Time limit: " $time | tee -a $filename
 echo "Starting proof length" $startinglength | tee -a $filename
 echo "Max proof length: " $maxProofLen | tee -a $filename
 echo "Find shortest proof:" $opt4 | tee -a $filename
+fi
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
-  ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
-  ((i++))
+  if [ $prove = "CLprover" ]; then
+      echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
+    ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
+    else
+    if [ $prover = "eprover" ]; then
+        echo "eprove"
+        eprover --cpu-limit="$time" "$file" | tee -a $filename
+    else 
+    if [ $prover = "zenon" ]; then
+        zenon -itptp -max-time "$time" "$file" | tee -a $filename
+        fi
+    fi
+  fi
+  
+ ((i++))
   echo "Number of theorems proved until now:" | tee -a $summary
-  grep Theorem < $filename | wc -l | tee -a $summary
+  if [ $prover = "zenon" ]; then
+      grep FOUND < $filename | wc -l | tee -a $summary
+  else
+      grep Theorem < $filename | wc -l | tee -a $summary
+  fi
 done
 echo "------------------------------------------------------"
 echo "Summary:"
@@ -224,7 +260,10 @@ echo "Nesting:" $nest | tee -a $filename
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
-grep Theorem < $filename | wc -l | tee -a $summary
-echo "Number of theorems checked by Coq:" | tee -a $summary
-grep Correct < $filename | wc -l | tee -a $summary
-
+if [ $prover = "zenon" ]; then
+   grep FOUND < $filename | wc -l | tee -a $summary
+else
+    grep Theorem < $filename | wc -l | tee -a $summary
+    echo "Number of theorems checked by Coq:" | tee -a $summary
+    grep Correct < $filename | wc -l | tee -a $summary
+fi
