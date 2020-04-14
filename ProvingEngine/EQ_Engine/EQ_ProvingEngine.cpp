@@ -817,7 +817,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbQEDbyAssumptionStep;
        if (nProofStep == 0) // the goal can be trivial eg. true
-           sbQEDbyAssumptionStep = "(and " "(or " + sbPrevStepGoal + sbTrivGoalReached + ")" +
+           sbQEDbyAssumptionStep = "(and " "(or " /* + sbPrevStepGoal*/ + sbTrivGoalReached + ")" +
                 appeq(app("nNesting", nProofStep), 1) +
                 appeq(app("nAxiomApplied", nProofStep),eQEDbyAssumption) + ")";
        else

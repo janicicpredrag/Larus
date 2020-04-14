@@ -527,10 +527,10 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */"                                 << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyCases); "                                                               << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bQEDbyAssumptionStep = ((bPrevStepGoal /*|| sbTrivGoalReached*/) "                                                              << endl;
-    ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                << endl;
+    ursaFile <<"   bQEDbyAssumptionStep = (((nProofStep == 0 && bTrivGoalReached && nNesting[nProofStep] == 1) || "               << endl;
+    ursaFile <<"                           (nProofStep > 0 && bPrevStepGoal && bGoalReached && nNesting[nProofStep-1] == nNesting[nProofStep])) "  << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyAssumption); "                                                          << endl;
+
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyEFQStep = ((nProofStep>0) && nP[nProofStep-1][0] == " + URSA_NUM_PREFIX + "false "                                        << endl;
     ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
