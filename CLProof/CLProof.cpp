@@ -577,6 +577,8 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     ss1 >> nFrom;
                     if (nFrom != -1 && nFrom != 99)
                         cfPremises.Add(proofTrace[nFrom]);
+                    else
+                        break;
                 }
 
                 int inst[numOfVars];

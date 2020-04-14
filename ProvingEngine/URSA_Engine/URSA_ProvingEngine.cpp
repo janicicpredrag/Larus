@@ -270,16 +270,16 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       bMatchPremises = (nAxiomApplied[nProofStep]==nAxiom); "                                                                     << endl;
 
     if (mpT->mConstants.size() + mpT->mConstantsPermissible.size() == 0)
-        ursaFile <<"       bMatchPremises &&= (nAxiomUniVars[nAxiom]==0 || nProofStep>0); "                                                            << endl;
+        ursaFile <<"       bMatchPremises &&= (nAxiomUniVars[nAxiom]==0 || nProofStep>0); "                                                        << endl;
 
     ursaFile <<"       for (nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) { "                               << endl;
     ursaFile <<"          bMatchOnePremise = false; "                                                                                              << endl;
-    ursaFile <<"          bMatchOnePremise ||= (nPredicate[nAxiom][nPremisesCounter] == " + URSA_NUM_PREFIX + "true && nFrom[nProofStep][0] == 99); " << endl;
+    ursaFile <<"          bMatchOnePremise ||= (nPredicate[nAxiom][nPremisesCounter] == " +URSA_NUM_PREFIX+"true && nFrom[nProofStep][nPremisesCounter] == 99); " << endl;
     ursaFile <<"          for (n_from = 0; n_from < nProofStep; n_from++) { "                                                                      << endl;
     ursaFile <<"             bSameProofBranch = false; "                                                                                           << endl;
     ursaFile <<"             for (nI = 0; nI <= nMaxDepth; nI++) "                                                                                 << endl;
     ursaFile <<"                bSameProofBranch ||= ((nNesting[nProofStep]>>nI)==nNesting[n_from]); "                                             << endl;
-
+    ursaFile <<                                                                                                                                       endl;
     ursaFile <<"             b = (nP[n_from][0]==nPredicate[nAxiom][nPremisesCounter]); "                                                          << endl;
     ursaFile <<"             for (nInd = 0; nInd < nArity[nPredicate[nAxiom][nPremisesCounter]]; nInd++) "                                         << endl;
     ursaFile <<"                b &&= ((nA[n_from][nInd]==nInst[nProofStep][nBinding[nAxiom][nPremisesCounter*nMaxArg+nInd]] && "                  << endl;
@@ -317,7 +317,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"       for (nL=0; nL<nAxiomExiVars[nAxiom]; nL++) { "                                                                              << endl;
     ursaFile <<"           /* The id of a new constant is ((nProofStep+1)<<3) + nL, ie. 8*nProofStep+nL - so they don't overlap, "                 << endl;
     ursaFile <<"              unless some axioms introduces >7 witnesses */ "                                                                      << endl;
-    ursaFile <<"           bMatchExiQuantifiers &&= nInst[nProofStep][nAxiomUniVars[nAxiom]+nL+1] == ((nProofStep+1)<<3) + nL;  /* fresh constants */ "  << endl;
+    ursaFile <<"           bMatchExiQuantifiers &&= nInst[nProofStep][nAxiomUniVars[nAxiom]+nL+1] == ((nProofStep+1)<<3)+nL; /* fresh constants*/ "<< endl;
     ursaFile <<"       } "                                                                                                                         << endl;
     ursaFile                                                                                                                                       << endl;
     ursaFile <<"       /* The MP proof step is correct if it was derived by using some axiom  */ "                                                 << endl;
@@ -336,12 +336,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
         ursaFile <<"      bSameProofBranch = (nNesting[nProofStep]==nNesting[n_from]); "                                                           << endl;
         ursaFile <<"      for (nI = 1; nI <= nMaxDepth; nI++) "                                                                                    << endl;
         ursaFile <<"         bSameProofBranch ||= ((nNesting[nProofStep]>>nI)==nNesting[n_from]); "                                                << endl;
-        ursaFile <<"      b1 = (nP[n_from][0]==nP[nProofStep][0] && nP[n_from][0]!=" + URSA_NUM_PREFIX + "false && nP[n_from][0]!=" + URSA_NUM_PREFIX + "true);  "                             << endl;
+        ursaFile <<"      b1 = (nP[n_from][0]==nP[nProofStep][0] && nP[n_from][0]!=" + URSA_NUM_PREFIX + "false && nP[n_from][0]!=" + URSA_NUM_PREFIX + "true); " << endl;
         ursaFile <<"      b2 = (nP[n_from][0]==n" + EQ_NATIVE_NAME + ");  "                                                                        << endl;
         ursaFile <<"      b3 = (nP[n_from][0]==n" + EQ_NATIVE_NAME + ");  "                                                                        << endl;
         ursaFile <<"      b2 &&= (nA[n_from][1]==nInst[nProofStep][nMaxArg+2]); "                                                                  << endl;
         ursaFile <<"      b3 &&= (nA[n_from][0]==nInst[nProofStep][nMaxArg+2]); "                                                                  << endl;
-
         ursaFile <<"      bB1 = false;  "                                                                                                          << endl;
         ursaFile <<"      bB2 = false;  "                                                                                                          << endl;
         ursaFile <<"      bB3 = false;  "                                                                                                          << endl;
@@ -484,7 +483,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "                                                                      << endl;
     ursaFile <<"       bPrevStepGoal2 &&= (nA[nProofStep-1][nInd]==nA[nFinalStep][nMaxArg+nInd]); "                                                << endl;
     ursaFile <<"   bPrevStepGoal ||= (bPrevStepGoal2 && bCases[nFinalStep]); "                                                                     << endl;
-    ursaFile <<"   bPrevStepGoal ||= (nP[nFinalStep][0]==" + URSA_NUM_PREFIX + "true || (nP[nFinalStep][1]==" + URSA_NUM_PREFIX + "true && bCases[nFinalStep])); " << endl;
+    //ursaFile <<"   bPrevStepGoal ||= (nP[nFinalStep][0]==" + URSA_NUM_PREFIX + "true || (nP[nFinalStep][1]==" + URSA_NUM_PREFIX + "true && bCases[nFinalStep])); " << endl;
 
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bMatchBranchingForSecondCase = false; "                                                                                         << endl;
@@ -506,16 +505,17 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                     && !bCases[nProofStep] "                                                                                      << endl;
     ursaFile <<"                     && (nNesting[nProofStep] == (nNesting[nProofStep-1]+1)); "                                                    << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nFinalStep][0]) /*&& !bCases[nProofStep-1]*/; "                                                 << endl;
-    ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "                                                                                        << endl;
+    ursaFile <<"   bGoalReached = (nP[nProofStep][0]==nP[nFinalStep][0]) /*&& !bCases[nProofStep-1]*/; "                                           << endl;
+    ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "                                                                      << endl;
     ursaFile <<"      bGoalReached &&= (nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "                                                             << endl;
-
-    ursaFile <<"   bGoalReached2 = (nProofStep>0)  && (nP[nProofStep][0]==nP[nFinalStep][1]) /*&& !bCases[nProofStep-1]*/; "                                            << endl;
-    ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "                                                                                        << endl;
-    ursaFile <<"       bGoalReached2 &&= (nA[nProofStep][nInd]==nA[nFinalStep][nMaxArg+nInd]); "                                                         << endl;
-    ursaFile <<"   bGoalReached ||= (bGoalReached2 && bCases[nFinalStep]); "                                            << endl;
-    ursaFile <<"   bGoalReached ||= (nP[nFinalStep][0]==" + URSA_NUM_PREFIX + "true || (nP[nFinalStep][1]==" + URSA_NUM_PREFIX + "true && bCases[nFinalStep])); "    << endl;
-
+    ursaFile <<                                                                                                                                       endl;
+    ursaFile <<"   bGoalReached2 = (nProofStep>0)  && (nP[nProofStep][0]==nP[nFinalStep][1]) /*&& !bCases[nProofStep-1]*/; "                       << endl;
+    ursaFile <<"   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "                                                                      << endl;
+    ursaFile <<"       bGoalReached2 &&= (nA[nProofStep][nInd]==nA[nFinalStep][nMaxArg+nInd]); "                                                   << endl;
+    ursaFile <<"   bGoalReached ||= (bGoalReached2 && bCases[nFinalStep]); "                                                                       << endl;
+    ursaFile <<                                                                                                                                       endl;
+    ursaFile <<"   bTrivGoalReached = (nP[nFinalStep][0]==" + URSA_NUM_PREFIX + "true || nP[nFinalStep][1]==" + URSA_NUM_PREFIX + "true && bCases[nFinalStep]); " << endl;
+    ursaFile <<                                                                                                                                       endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyCasesStep = (bPrevStepGoal && ((nNesting[nProofStep-1] & 1) == 1) "                                                       << endl;
     ursaFile <<"                     && ((nAxiomApplied[nProofStep-1] == nQEDbyCases) "                                                            << endl;
@@ -523,25 +523,23 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                     || (nAxiomApplied[nProofStep-1] == nQEDbyEFQ) "                                                               << endl;
     ursaFile <<"                     || (nAxiomApplied[nProofStep-1] == nQEDbyNegIntro))"                                                          << endl;
     ursaFile <<"                     && nNesting[nProofStep] == (nNesting[nProofStep-1]>>1) "                                                      << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */"                                       << endl;
+    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */"                                 << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyCases); "                                                               << endl;
-//13.04    ursaFile <<"                     && (nNesting[nProofStep] == 1 || nNesting[nProofStep] > nNesting[nProofStep+1]); "                     << endl;
-
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bQEDbyAssumptionStep = (bPrevStepGoal  "                                                                                         << endl;
+    ursaFile <<"   bQEDbyAssumptionStep = ((bPrevStepGoal /*|| sbTrivGoalReached*/) "                                                              << endl;
     ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                      << endl;
+    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                 << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyAssumption); "                                                          << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyEFQStep = ((nProofStep>0) && nP[nProofStep-1][0] == " + URSA_NUM_PREFIX + "false "                                        << endl;
     ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                      << endl;
+    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyEFQ); "                                                                 << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyNegIntroStep = ((nProofStep>0) && nP[nProofStep-1][0] == " + URSA_NUM_PREFIX + "false "                                   << endl;
     ursaFile <<"                     && ((nNesting[nProofStep-1] >> 1) == nNesting[nProofStep]) "                                                  << endl;
     ursaFile <<"                     && !bCases[nProofStep-1] "                                                                                    << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep))*/ "                                      << endl;
+    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep))*/ "                                 << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyNegIntro); "                                                            << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   nFirst += ite (nAxiomApplied[nProofStep] == nFirstCase, 1, 0); "                                                                << endl;
@@ -552,36 +550,30 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   nNegIntroCheck -= ite (nAxiomApplied[nProofStep] == nQEDbyNegIntro, 1, 0); "                                                    << endl;
     ursaFile <<"   bBranchingCorrect = (nNegIntroCheck == 2 || nNegIntroCheck==1); "                                                               << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bPrevStepQED = (nAxiomApplied[nProofStep-1] == nQEDbyCases) || (nAxiomApplied[nProofStep-1] == nQEDbyAssumption) "               << endl;
+    ursaFile <<"   bPrevStepQED = (nAxiomApplied[nProofStep-1] == nQEDbyCases) || (nAxiomApplied[nProofStep-1] == nQEDbyAssumption) "              << endl;
     ursaFile <<"                  || (nAxiomApplied[nProofStep-1] == nQEDbyEFQ)  || (nAxiomApplied[nProofStep-1] == nQEDbyNegIntro); "             << endl;
-    ursaFile <<"   bBranchingCorrect &&= !bPrevStepQED || (nNesting[nProofStep] != nNesting[nProofStep-1]); "  << endl;
-
-    ursaFile <<"   bBranchingCorrect &&= (!bCases[nProofStep-1] || nAxiomApplied[nProofStep] == nFirstCase);"  << endl;
-
+    ursaFile <<"   bBranchingCorrect &&= !bPrevStepQED || (nNesting[nProofStep] != nNesting[nProofStep-1]); "                                      << endl;
+    ursaFile <<                                                                                                                                       endl;
+    ursaFile <<"   bBranchingCorrect &&= (!bCases[nProofStep-1] || nAxiomApplied[nProofStep] == nFirstCase);"                                      << endl;
+    ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   /* ... the proof step is correct if it was one of cases from some case split */ "                                               << endl;
     ursaFile <<"   bBranchingCorrect &&= (bMPStep || bNegIntroStep || bFirstCaseStep || bSecondCaseStep  "                                         << endl;
     ursaFile <<"                   || bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                           << endl;
-
+    ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bProofCorrect &&= ((nProofStep > nProofSize) || bBranchingCorrect); "                                                           << endl;
 
-
-ursaFile <<" bEarlyEndOfProof = true; "                                                                                                           << endl;
-ursaFile <<                                                                                                                                         endl;
-ursaFile <<"bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nConclude && nCases == nConclude); "                                            << endl;
-ursaFile <<"bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                         << endl;
-ursaFile <<"bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
-ursaFile <<"bEarlyEndOfProof &&= (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                                                                      << endl;
-
-ursaFile <<"bProofFinished ||= (bEarlyEndOfProof && nProofSize == nProofStep); "  << endl;
+    ursaFile <<" bEarlyEndOfProof = true; "                                                                                                            << endl;
+    ursaFile <<" bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nConclude && nCases == nConclude); "                                            << endl;
+    ursaFile <<" bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                         << endl;
+    ursaFile <<" bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
+    ursaFile <<" bEarlyEndOfProof &&= (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                              << endl;
+    ursaFile <<" bProofFinished ||= (bEarlyEndOfProof && nProofSize == nProofStep); "                                                                  << endl;
 
     // This counted is moved down here, so it don't count nProofStep in case it is the final step and has a disjunction
     ursaFile <<"   nCases += ite (bCases[nProofStep], 1, 0); "                                                                                     << endl;
-
-
-
     ursaFile <<"} "                                                                                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"assert(bProofCorrect  && bProofFinished /* && bFinalStepGoal && bBranchingCorrect*/);  "                                                                   << endl;
+    ursaFile <<"assert(bProofCorrect  && bProofFinished /* && bFinalStepGoal && bBranchingCorrect*/);  "                                           << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile.close();
 }
