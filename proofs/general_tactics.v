@@ -35,7 +35,7 @@ match goal with
    | H:_ |- _ => progress (decompose [ex and] H);clear H
 end.
 
-Ltac finish_conj := splits;(trivial || eassumption).
+Ltac finish_conj := splits;(eassumption || trivial).
 
 Ltac one_of_disjunct :=
  solve [repeat (finish_conj || (left;finish_conj) || right)].
