@@ -688,6 +688,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                          "(not " + app("bCases", nProofStep) + ") " +
                                          appeq(app("nNesting", nProofStep), 2) +  // only the special case
                                          appeq(smt_sum(app("nP", nProofStep, 0), 1), app("nP", nFinalStep, 0));
+       if (nProofStep != 0)
+           sbNegIntroStep += appeq(app("nNesting", nProofStep-1), 1);
+
        for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
              sbNegIntroStep += appeq(app("nA", nProofStep, nInd), app("nA", nFinalStep, nInd));
        string sn = "";
@@ -858,7 +861,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyAssumption) +
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyEFQ) +
                                    appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")";
-           sbBranchingCorrect = "(or (not " + sbPrevStepQED + ")" +
+           sbBranchingCorrect += "(or (not " + sbPrevStepQED + ")" +
                          "(not " + appeq(app("nNesting",nProofStep-1),app("nNesting",nProofStep)) + "))";
        }
 
@@ -1016,18 +1019,26 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
       else if (axiom == eQEDbyCases) {
           proofTxt << setw(4) << right << nesting << setw(4) << right  << eQEDbyCases;
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind: QED by cases; ***/" << endl;
+          if (nesting == 1)
+              break;
       }
       else if (axiom == eQEDbyAssumption) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eQEDbyAssumption;
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind: QED by assumption; ***/" << endl;
+          if (nesting == 1)
+              break;
       }
       else if (axiom == eQEDbyEFQ) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eQEDbyEFQ;
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind: QED by EFQ; ***/" << endl;
+          if (nesting == 1)
+              break;
       }
       else if (axiom == eQEDbyNegIntro) {
           proofTxt << setw(4) << right << nesting << setw(4) << right << eQEDbyNegIntro;
           proofTxt << "   /*** Nesting: " << nesting << "; Step kind: QED by NegIntro; ***/" << endl;
+          if (nesting == 1)
+              break;
       }
       else if (axiom == eEQSub) {
           string sfrom1, sfrom2 = "";

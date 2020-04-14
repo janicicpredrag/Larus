@@ -21,7 +21,39 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
 
 void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
 {
-    outfile << f;
+    if (f.GetName().compare("false") == 0)  {
+        outfile << "\\bot";
+    }
+    else if (f.GetName().compare("true") == 0) {
+        outfile << "\\top";
+    }
+    else {
+        if (f.GetName() == EQ_NATIVE_NAME)  {
+            outfile << f.GetArg(0) << " = " << f.GetArg(1);
+        }
+        else if (f.GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME){
+            outfile << f.GetArg(0) << " \neq " << f.GetArg(1);
+        }
+        else {
+            int ns = PREFIX_NEGATED.size();
+            if (f.GetName().find(PREFIX_NEGATED) == 0)
+            {
+                outfile << "\\neg " << f.GetName().substr(ns, string::npos);
+            }
+            else
+            {
+                outfile << f.GetName();
+            }
+            if (f.GetArity() > 0) {
+                outfile << "(";
+                for (size_t i=0; i<f.GetArity()-1; i++)
+                    outfile << f.GetArg(i) << ", ";
+                outfile << f.GetArg(f.GetArity()-1);
+                outfile << ")";
+            }
+        }
+    }
+    //outfile << " ";
 }
 
 // ---------------------------------------------------------------------------------

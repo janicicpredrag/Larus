@@ -459,6 +459,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
     ursaFile <<"   bNegIntroStep = (nAxiomApplied[nProofStep] == nNegIntroStart) "                                                                 << endl;
     ursaFile <<"                    && !bCases[nProofStep] "                                                                                       << endl;
+    ursaFile <<"                    && (nNesting[nProofStep-1] == 1) "                                                                               << endl; // restricted version!
     ursaFile <<"                    && (nNesting[nProofStep] == 2) "                                                                               << endl; // restricted version!
     ursaFile <<"                    && (nP[nProofStep][0] & 1 == 0) "                                                                              << endl;
     ursaFile <<"                    && (nP[nProofStep][0] != " + URSA_NUM_PREFIX + "false) "                                                                             << endl;
@@ -528,7 +529,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyAssumptionStep = ((bPrevStepGoal /*|| sbTrivGoalReached*/) "                                                              << endl;
     ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
-    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                 << endl;
+    ursaFile <<"                     && bGoalReached /* && (!bCases[nProofStep] || (nProofStep == nFinalStep)) */ "                                << endl;
     ursaFile <<"                     && nAxiomApplied[nProofStep] == nQEDbyAssumption); "                                                          << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyEFQStep = ((nProofStep>0) && nP[nProofStep-1][0] == " + URSA_NUM_PREFIX + "false "                                        << endl;
@@ -562,19 +563,19 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bProofCorrect &&= ((nProofStep > nProofSize) || bBranchingCorrect); "                                                           << endl;
 
-    ursaFile <<" bEarlyEndOfProof = true; "                                                                                                            << endl;
-    ursaFile <<" bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nConclude && nCases == nConclude); "                                            << endl;
-    ursaFile <<" bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                         << endl;
-    ursaFile <<" bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
-    ursaFile <<" bEarlyEndOfProof &&= (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                              << endl;
-    ursaFile <<" bProofFinished ||= (bEarlyEndOfProof && nProofSize == nProofStep); "                                                                  << endl;
+    ursaFile <<"   bEarlyEndOfProof = true; "                                                                                                            << endl;
+    ursaFile <<"   bEarlyEndOfProof &&= (nFirst == nSecond && nSecond == nConclude && nCases == nConclude); "                                            << endl;
+    ursaFile <<"   bEarlyEndOfProof &&= (nNegIntroCheck == 1); "                                                                                         << endl;
+    ursaFile <<"   bEarlyEndOfProof &&= (nNesting[nProofStep]==1); "                                                                                     << endl;
+    ursaFile <<"   bEarlyEndOfProof &&= (bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep || bQEDbyNegIntroStep); "                              << endl;
+    ursaFile <<"   bProofFinished ||= (bEarlyEndOfProof && nProofSize == nProofStep); "                                                                  << endl;
 
     // This counted is moved down here, so it don't count nProofStep in case it is the final step and has a disjunction
-    ursaFile <<"   nCases += ite (bCases[nProofStep], 1, 0); "                                                                                     << endl;
-    ursaFile <<"} "                                                                                                                                << endl;
-    ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"assert(bProofCorrect  && bProofFinished /* && bFinalStepGoal && bBranchingCorrect*/);  "                                           << endl;
-    ursaFile <<                                                                                                                                       endl;
+    ursaFile <<"   nCases += ite (bCases[nProofStep], 1, 0); "                                                                                           << endl;
+    ursaFile <<"} "                                                                                                                                      << endl;
+    ursaFile <<                                                                                                                                             endl;
+    ursaFile <<"assert(bProofCorrect  && bProofFinished);  "                                                                                             << endl;
+    ursaFile <<                                                                                                                                             endl;
     ursaFile.close();
 }
 

@@ -69,7 +69,7 @@ void Theory::AddNegElimAxioms()
             axiom.AddUnivVar(string(1,'A'+j));
         string sname(mSignature[i].first);
         sname[0] = std::tolower(sname[0]);
-        AddAxiom(axiom, PREFIX_NEGATED+sname+"_neg_elim");
+        AddAxiom(axiom, PREFIX_NEGATED+sname+"NegElim");
     }
 }
 
@@ -103,7 +103,7 @@ void Theory::AddExcludedMiddleAxioms()
         CLFormula axiom(premises,conclusion);
         for (size_t j=0; j < mSignature[i].second; j++)
             axiom.AddUnivVar(string(1,'A'+j));
-        AddAxiom(axiom, mSignature[i].first+"_excluded_middle");
+        AddAxiom(axiom, mSignature[i].first+"ExcludedMiddle");
     }
 }
 
@@ -164,7 +164,7 @@ void Theory::AddEqSubAxioms()
             for (size_t k=0; k < mSignature[i].second; k++)
                 axiom.AddUnivVar(string(1,'A'+k));
             axiom.AddUnivVar("X");
-            AddAxiom(axiom, mSignature[i].first+"_eq_sub_"+to_string(j));
+            AddAxiom(axiom, mSignature[i].first+"EqSub"+to_string(j));
         }
     }
 }
