@@ -66,6 +66,9 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
     outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
     outfile << "{\\em Proof:}" << endl;
     outfile << "\\vspace{5pt}" << endl << endl;
+    outfile << endl;
+
+
 }
 
 // ---------------------------------------------------------------------------------

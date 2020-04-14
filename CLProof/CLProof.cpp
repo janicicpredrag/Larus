@@ -277,6 +277,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     f.SetArg(i,mpT->GetConstantName(nArgs[i]));
                 // Assumptions already added
                 // AddAssumption(f);
+                AddAssumption(f);
                 proofTrace.push_back(f);
             }
             else if (nAxiom == eNegIntro) {

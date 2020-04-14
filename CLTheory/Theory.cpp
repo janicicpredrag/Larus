@@ -1,5 +1,7 @@
 #include "CLTheory/Theory.h"
 
+// #define DEBUG_THEORY
+
 // --------------------------------------------------------------
 
 void Theory::SetAxioms(vector<pair<CLFormula,string>>& axioms)
@@ -263,7 +265,9 @@ void Theory::AddSymbol(string p, unsigned arity)
     // This is ugly convention: predicates with names beginning with 'n' are negated versions
 //    mSignature[p] = mSignature.size()+1;
 //    mArity[p] = arity;
+#ifdef DEBUG_THEORY
     cout << "adding:" << p << endl;
+#endif
     if (p[0] == '$')
         p = p.substr(1,p.size()-1);
 
@@ -271,7 +275,9 @@ void Theory::AddSymbol(string p, unsigned arity)
     {
         if (mSignature[i].first == p)
         {
+#ifdef DEBUG_THEORY
             cout << p << " already present" << endl;
+#endif
             return;
         }
     }
