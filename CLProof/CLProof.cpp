@@ -190,6 +190,19 @@ void CLProof::Simplify(set<Fact>& relevant)
         // else
         //     cout << " relevant " << dnf << endl;
     }
+
+    for (int i=size; i>0; i--) {
+        DNFFormula dnf = get<1>(mMPs[i-1]);
+        if (dnf.GetSize() == 1 && dnf.GetElement(0).GetSize() == 1) {
+            for (int j=i-1; j>0; j--) {
+                DNFFormula dnf2 = get<1>(mMPs[j-1]);
+                if (dnf2.GetSize() == 1 && dnf2.GetElement(0).GetSize()==1 && dnf.GetElement(0).GetElement(0)==dnf2.GetElement(0).GetElement(0)) {
+                    mMPs.erase(mMPs.begin()+i-1);
+                    break;
+                }
+            }
+        }
+    }
     // cout << " end " << mMPs.size() << endl;
 
 }

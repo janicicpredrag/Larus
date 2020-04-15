@@ -24,6 +24,7 @@ public:
     Fact(string& n, const vector<string>& a) { mName = n; mArgs = a; }
     Fact (const Fact &f) { mName = f.mName; mArgs = f.mArgs; }
     Fact& operator=(const Fact& f) { mName = f.mName; mArgs = f.mArgs; return *this; }
+    bool operator==(const Fact& f) { return (mName == f.mName && mArgs == f.mArgs); }
     Fact (const string& s);
     size_t GetArity() const { return mArgs.size(); }
     string GetArg(size_t i) const { return (mArgs.size()>i ? mArgs[i] : "null"); }
