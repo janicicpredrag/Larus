@@ -802,7 +802,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbQEDbyCasesStep = " false ";
        else
            sbQEDbyCasesStep = "(and " + sbPrevStepGoal +
-                  "(or " + appeq(app("nNesting", nProofStep-1), 3) +
+                   "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                   "(or " + appeq(app("nNesting", nProofStep-1), 3) +
                         appeq(app("nNesting", nProofStep-1), 5) +
                         appeq(app("nNesting", nProofStep-1), 7) +
                         appeq(app("nNesting", nProofStep-1), 9) +
@@ -822,6 +823,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                 appeq(app("nAxiomApplied", nProofStep),eQEDbyAssumption) + ")";
        else
            sbQEDbyAssumptionStep = "(and " + sbPrevStepGoal +
+                "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                 appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +
                 sbGoalReached +
                 appeq(app("nAxiomApplied", nProofStep),eQEDbyAssumption) + ")";
@@ -831,6 +833,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbQEDbyEFQStep = " false ";
        else
            sbQEDbyEFQStep = "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
+                         "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                          appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
                          sbGoalReached + " " +
                          appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) + ")";
@@ -840,11 +843,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbQEDbyNegIntroStep = sbPrevStepGoal;
        else
            sbQEDbyNegIntroStep = "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
-            "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
+                    "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                    "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
                      appeq(app("nNesting", nProofStep-1), smt_sum(smt_prod(app("nNesting", nProofStep),2), 1)) + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +
-                 sbGoalReached +
-                 appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro)  + ")";
+                    sbGoalReached +
+                    appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro)  + ")";
 
        snFirst +=    smt_ite(appeq(app("nAxiomApplied", nProofStep), eFirstCase), 1, 0);
        snSecond +=   smt_ite(appeq(app("nAxiomApplied", nProofStep), eSecondCase), 1, 0);
