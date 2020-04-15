@@ -227,15 +227,15 @@ fi
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  if [ $prove = "CLprover" ]; then
+  if [[ $prover = "CLprover" ]]; then
       echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
     ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
     else
-    if [ $prover = "eprover" ]; then
+    if [[ $prover = "eprover" ]]; then
         echo "eprove"
         eprover --cpu-limit="$time" "$file" | tee -a $filename
     else 
-    if [ $prover = "zenon" ]; then
+    if [[ $prover = "zenon" ]]; then
         zenon -itptp -max-time "$time" "$file" | tee -a $filename
         fi
     fi
