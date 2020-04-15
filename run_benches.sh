@@ -227,15 +227,15 @@ fi
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  if [ $prove = "CLprover" ]; then
+  if [ "$prover" = "CLprover" ]; then
       echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
     ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
     else
-    if [ $prover = "eprover" ]; then
+    if [ "$prover" = "eprover" ]; then
         echo "eprove"
         eprover --cpu-limit="$time" "$file" | tee -a $filename
     else 
-    if [ $prover = "zenon" ]; then
+    if [ "$prover" = "zenon" ]; then
         zenon -itptp -max-time "$time" "$file" | tee -a $filename
         fi
     fi
@@ -243,7 +243,7 @@ do
   
  ((i++))
   echo "Number of theorems proved until now:" | tee -a $summary
-  if [ $prover = "zenon" ]; then
+  if [ "$prover" = "zenon" ]; then
       grep FOUND < $filename | wc -l | tee -a $summary
   else
       grep Theorem < $filename | wc -l | tee -a $summary
@@ -260,7 +260,7 @@ echo "Nesting:" $nest | tee -a $filename
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
-if [ $prover = "zenon" ]; then
+if [ "$prover" = "zenon" ]; then
    grep FOUND < $filename | wc -l | tee -a $summary
 else
     grep Theorem < $filename | wc -l | tee -a $summary
