@@ -303,9 +303,10 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             }
         }
         cout << endl;
-        cout << "Best found proof: of the length " << best << endl;
-        if (best > 0 /* && best < best_start*/)
+        if (best > 0 /* && best < best_start*/) {
+            cout << "Best found proof: of the length " << best << endl;
             ret = proof.DecodeProof(formula, "smt-proof.txt");
+        }
     }
 
     PREDICATE.clear();

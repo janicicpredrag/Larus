@@ -147,7 +147,7 @@ bool DNFFormula::Equals(const DNFFormula& f) const
 
 // ---------------------------------------------------------------------------------------
 
-bool DNFFormula::MatchingBrackets(const string& v) const
+bool MatchingBrackets(const string& v)
 {
     size_t pos = v.find('>');
     if (pos != string::npos)
@@ -547,6 +547,9 @@ bool Fact::Read(const string& s)
     cout << "Currently Reading fact : " << s << endl;
     #endif
 
+    if (!MatchingBrackets(s))
+        return false;
+
     pos = s.size();
     while (s[0] == '(' && s[pos-1] == ')') {
         return Read(s.substr(1,pos-2));
@@ -569,15 +572,6 @@ bool Fact::Read(const string& s)
         return true;
     }
 
-    pos = s.find("=",0);
-    if (pos != string::npos)
-    {
-        unsigned l = 1;
-        mName = EQ_NATIVE_NAME;
-        mArgs.push_back(s.substr(0,pos));
-        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
-        return true;
-    }
     pos = s.find("!=",0);
     if (pos != string::npos)
     {
@@ -587,6 +581,16 @@ bool Fact::Read(const string& s)
         mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
         return true;
     }
+    pos = s.find("=",0);
+    if (pos != string::npos)
+    {
+        unsigned l = 1;
+        mName = EQ_NATIVE_NAME;
+        mArgs.push_back(s.substr(0,pos));
+        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
+        return true;
+    }
+
 
     pos1 = s.find('(',0);
     if (pos1 == string::npos)

@@ -16,6 +16,8 @@ using namespace std;
 class ProvingEngine;
 class Theory;
 
+bool MatchingBrackets(const string& v);
+
 // ---------------------------------------------------------------------------------------
 class Fact
 {
@@ -108,7 +110,6 @@ public:
     void Clear() { mDNF.clear(); }
 
 private:
-    bool MatchingBrackets(const string& v) const;
 
     vector<ConjunctionFormula> mDNF; // fixme
 };
