@@ -179,8 +179,8 @@ bool STLFactsDatabase::FindInstantiationOfUnivVars(const CLFormula& cl, Conjunct
   //      return true;
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
-    if (cl.GetPremises().GetSize() == 1 && cl.GetPremises().GetElement(0).GetName() == "true")
-        return true;
+//    if (cl.GetPremises().GetSize() == 1 && cl.GetPremises().GetElement(0).GetName() == "true")
+//        return true;
     if (cl.GetPremises().GetSize() == 0 && cl.GetNumOfUnivVars() == 0)
         return true;
     if (mDatabase.size()==0 && NoConjuncts>0)
@@ -299,6 +299,8 @@ bool STLFactsDatabase::PremisesTrueInInstantiation(const CLFormula& cl, Conjunct
     ConjunctionFormula conj = cl.GetPremises();
     size_t NoConjuncts = conj.GetSize();
     for(size_t i=0; i<NoConjuncts; i++) {
+        if (conj.GetElement(i).GetName() == "true")
+            continue;
        vector<Fact> AuxFacts;
        if (MatchFact(conj.GetElement(i), *current[i], instantiation, true, AuxFacts)) {
             conj_inst.Add(*current[i]);
@@ -318,6 +320,8 @@ bool STLFactsDatabase::PremisesTrueInInstantiation(const CLFormula& cl, Conjunct
 bool STLFactsDatabase::HoldsDisjunction(const DNFFormula& dnf, ConjunctionFormula& fin, vector<Fact>& AuxFacts)
 {
     for (std::vector<ConjunctionFormula>::const_iterator it = dnf.GetDNF()->begin(); it != dnf.GetDNF()->end(); it++) {
+        if (it->GetConjunction().size() == 1 && it->GetConjunction().at(0).GetName() == "true")
+            return true;
         map<string,string> instantiation;
         size_t ind = 0;
         if (MatchConjunction((*it), fin, ind, instantiation, false, AuxFacts))
