@@ -1,4 +1,6 @@
 #!/bin/sh
+compare=1 # compare to eprover and zenon
+time=120
 maxlength=-p32
 axioms1=-aexcludedmiddle 
 axioms2=-anegelim
@@ -17,6 +19,13 @@ if [ -z "$1" ]; then
 else
     benches=tptp-problems/continuous-integration/$1
 fi
+tm() {
+  local start=$(date +%s)
+  $@
+  local exit_code=$?
+  printf >&2 " ~$(($(date +%s)-${start})) seconds. "
+  return $exit_code
+}
 test_success () {
     if grep Theorem $1 > /dev/null; then
         if grep Correct $1 > /dev/null; then
@@ -32,21 +41,48 @@ test_success () {
         cat < $1 >> $filename
     fi
 }
+test_success_zenon () {
+    if grep FOUND $1 > /dev/null; then
+        echo -e "${GREEN} Ok ${NC}"
+    else
+        echo -e "${RED} Error ${NC}"
+        cat < $1 >> $filename
+    fi
+}
+test_success_eprover () {
+    if grep Theorem $1 > /dev/null; then
+        echo -e "${GREEN} Ok ${NC}"
+    else
+        echo -e "${RED} Error ${NC}"
+        cat < $1 >> $filename
+    fi
+}
+
+
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     printf "URSA:  "
-    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
     test_success resursa.txt
     printf "STL:   "
-    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
     test_success resstl.txt
     printf "SMTBV: "
-    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
     test_success ressmtbv.txt
     printf "SMTLIA:"
-    ./CLprover -l30 $maxlength $axioms1 $axioms2 -n3 -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
     test_success ressmtlia.txt
+    if [ $compare = "1" ]; then
+        echo "Other prover results:"
+        echo "Zenon:"
+        tm zenon -itptp "$file" > reszenon.txt
+        test_success_zenon reszenon.txt
+        echo "Eprover:"
+        tm eprover "$file" > reseprover.txt
+        test_success_eprover reseprover.txt
+    fi
     ((i++))
 done
 echo ""
