@@ -243,7 +243,7 @@ do
   
  ((i++))
   echo "Number of theorems proved until now:" | tee -a $summary
-  if [ $prover = "zenon" ]; then
+  if [ "$prover" = "zenon" ]; then
       grep FOUND < $filename | wc -l | tee -a $summary
   else
       grep Theorem < $filename | wc -l | tee -a $summary
@@ -260,7 +260,7 @@ echo "Nesting:" $nest | tee -a $filename
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
-if [ $prover = "zenon" ]; then
+if [ "$prover" = "zenon" ]; then
    grep FOUND < $filename | wc -l | tee -a $summary
 else
     grep Theorem < $filename | wc -l | tee -a $summary
