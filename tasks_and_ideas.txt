@@ -149,4 +149,5 @@ assert(g2 ca).
 conclude.
 Qed.
 
-
+8. Julien: Maybe we could implement something similar to RETE algorithm in the encoding:
+ if two rules share some assumptions, we could share some part of the matching ?
