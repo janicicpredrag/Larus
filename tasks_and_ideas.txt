@@ -3,32 +3,28 @@ fof(disjingoal,conjecture, r(y) | r(x)).
 
 TODO:
 
-1. Make looking for a shortest proof/any proof correct
-2. Handle native equality (update corpus, parser, added axioms)
-3. Generate "excluded middle" axioms for Coq, when used/needed
-4. Explain the encoding in the paper
-5. Make smt-uflia and smt-ufbf engines
-6. Do not use always the same file names for temporary files like prove.urs etc...
- to be able to run instances of the provers in parallel.
-7. Remove hard coded old benches in the .cpp files.
-8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
-9. Differentiate between "n" prefix for negation and "n" prefix for URSA; use longer prefix for negated predicates symbols
-10. Julien: For equality, I had hope that with a native encoding we can have something more efficient than the version which adds the axioms.
+ 3. Generate "excluded middle" axioms for Coq, when used/needed
+ 4. Explain the encoding in the paper  
+ 5. Make smt-uflia and smt-ufbf engines
+ 6. Do not use always the same file names for temporary files like prove.urs etc...
+    to be able to run instances of the provers in parallel.
+ 8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
+10. Julien: For equality, I had hope that with a native encoding we can have something more 
+    efficient than the version which adds the axioms.
     Don’t you want to run run a full bench with/without native before dropping the support ?
-11. Julien: Maybe we could use this idea also using some meta-theorems or 
-heuristics: if the goal has some given form then some of the hypotheses 
-should be used:
+11. Julien: Maybe we could use this idea also using some meta-theorems or heuristics: 
+    if the goal has some given form then some of the hypotheses should be used:
     (1) "use necessarily all the given axioms"
     (2) "use necessarily this axioms" (can be repeated several times)
 
+DONE:
+
+ 1. Make looking for a shortest proof/any proof correct
+ 2. Handle native equality (update corpus, parser, added axioms)
+ 7. Remove hard coded old benches in the .cpp files.
+ 9. Differentiate between "n" prefix for negation and "n" prefix for URSA; use longer prefix for negated predicates symbols
 12. Julien: names with underscore are assumed to be internal auxiliary predicates (introduced by CL2 normalization)
     I think we should replace it with something less common , like starting with three underscores.
-
-
-
-
-
-DONE:
 
 
 *******************************************************************************************************************
@@ -86,7 +82,6 @@ IDEAS:
 - all axioms should be used in the proof
 - the same fact should not be derived twice in the same branch
 
-
 2. Julien: I noticed that we can optimize the encoding:
 the formula of the form A & B & C & D are encoded using
 P -> A
@@ -99,7 +94,9 @@ B
 C
 D.
 
-3. Julien: The readable proof we have a cut-free (we do not introduce lemma),  I wondering if we can really generate readable proof which provide explaination without introducing lemmas.
+3. Julien: The readable proof we have a cut-free (we do not introduce lemma),  
+I wondering if we can really generate readable proof which provide explaination 
+without introducing lemmas.
 
 4. Julien: It seems that for some problems the function which maps n to the time to 
 find a proof or fail to find a proof of n is not increasing in n!  
@@ -122,6 +119,34 @@ addressed later.
 
 6. Julien: Idea for tree traversal for annotating Nesting
 
+7. Julien: I just realized that the example non_nested_case_split produces proofs only with 
+nested case split. It is not a bug, it is just that CL does not allow "subproofs". 
+I would have expected the following proof (not the step with just an assert). It is just a 
+thought. I am not sure we should implement that.
 
+Theorem nonnestedcasesplit : forall Z : MyT, r Z -> g1 Z /\ g2 Z.
+Proof.
+intros ca.
+intros.
+assert(g1 ca).
+ {
+  assert (p ca \/ q ca) by applying (ax1 ca).
+  by cases on (p ca \/ q ca).
+  - assert (g1 ca) by applying (ax2 ca).
+    conclude.
+  - assert (g1 ca) by applying (ax3 ca).
+    conclude.
+}
+assert(g2 ca).
+ {
+  assert (p2 ca \/ q2 ca) by applying (ax4 ca).
+  by cases on (p2 ca \/ q2 ca).
+  - assert (g2 ca) by applying (ax5 ca).
+   conclude.
+  - assert (g2 ca) by applying (ax6 ca).
+   conclude.
+}
+conclude.
+Qed.
 
 
