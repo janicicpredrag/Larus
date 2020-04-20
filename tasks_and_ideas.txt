@@ -169,7 +169,10 @@ Qed.
 ...
 > So the approach would be a little bit different that  just cutting the natural proof in small pieces in order to try to get a formal proof. Here we would help the system  by giving some information. I think it would be closer to what a human does when he formalizes a natural language proof: you have hints that you should use some proofs steps. But usually the natural language proof forgets some special cases. So if you try to prove automatically that one step can be derived from the previous it will fail because sometimes some assumptions are missing. For example, in Euclid proof, often only the proof in the general case is given.
 
-
+11. Julien:
+Yes I agree that for experimenting we should look at individual engines, 
+but when comparing to other provers we can take into consideration that 
+they are portfolio prover using different strategies.
 
 
 

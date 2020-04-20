@@ -6,7 +6,16 @@
 using namespace std;
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
-enum PROVING_ENGINE { eSTL_ProvingEngine, eSQL_ProvingEngine, eURSA_ProvingEngine, eSMTLIA_ProvingEngine, eSMTBV_ProvingEngine, eNumberOfProvingEngines };
+
+enum PROVING_ENGINE {
+    eSTL_ProvingEngine,
+    eSQL_ProvingEngine,
+    eURSA_ProvingEngine,
+    eSMTLIA_ProvingEngine,
+    eSMTBV_ProvingEngine,
+    eSMTUFLIA_ProvingEngine,
+    eSMTUFBV_ProvingEngine,
+    eNumberOfProvingEngines };
 
 enum ReturnValue { eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
 

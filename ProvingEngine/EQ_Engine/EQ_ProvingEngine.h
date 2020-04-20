@@ -44,6 +44,9 @@ private:
     string smt_less(string arg1, int arg2);
     string smt_ite(string arg1, int arg2, int arg3);
 
+    string appack(string s, unsigned arg1);
+    string appack(string s, unsigned arg1, unsigned arg2);
+
     unsigned mnMaxArity;
     unsigned mnMaxPremises;
     unsigned mnAxiomsCount;
@@ -63,6 +66,9 @@ private:
     map<string, unsigned> CONSTANTS;
 
     set<string> DECLARATIONS;
+    set<string> DECLARATIONS1;
+    set<string> DECLARATIONS2;
+    set<string> GETVALUE;
 
     string mURSAstringPremises;
     string mURSAstringAxioms;

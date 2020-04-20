@@ -109,6 +109,10 @@ int main(int argc , char** argv)
                     params.eEngine = eSMTLIA_ProvingEngine;
                 else if (!strcmp(argv[i]+2, "smtbv"))
                     params.eEngine = eSMTBV_ProvingEngine;
+                else if (!strcmp(argv[i]+2, "smtuflia"))
+                    params.eEngine = eSMTUFLIA_ProvingEngine;
+                else if (!strcmp(argv[i]+2, "smtufbv"))
+                    params.eEngine = eSMTUFBV_ProvingEngine;
                 else {
                     wrongInput = true;
                     break;

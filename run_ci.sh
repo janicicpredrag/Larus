@@ -62,18 +62,24 @@ test_success_eprover () {
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
-    printf "URSA:  "
+    printf "URSA:    "
     tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -eursa -ftptp -vcoq "$file" > resursa.txt -s
     test_success resursa.txt
-    printf "STL:   "
-    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
-    test_success resstl.txt
-    printf "SMTBV: "
+    printf "SMTBV:   "
     tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
     test_success ressmtbv.txt
-    printf "SMTLIA:"
+    printf "SMTUFBV: "
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtufbv -ftptp -vcoq "$file" > ressmtufbv.txt
+    test_success ressmtufbv.txt
+    printf "SMTLIA:  "
     tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
     test_success ressmtlia.txt
+    printf "SMTUFLIA:"
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -esmtuflia -ftptp -vcoq "$file" > ressmtuflia.txt
+    test_success ressmtuflia.txt
+    printf "STL:     "
+    tm ./CLprover -l$time $maxlength $axioms1 $axioms2 -n3 -estl -ftptp -vcoq "$file" > resstl.txt
+    test_success resstl.txt
     if [ $compare = "1" ]; then
         echo "Other prover results:"
         echo "Zenon:"
