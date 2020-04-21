@@ -102,6 +102,39 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
     mURSAstringPremises += s.str();
 }
 
+
+// ---------------------------------------------------------------------------------------
+
+void URSA_ProvingEngine::EncodeHint(size_t no, const CLFormula& hint, const string name)
+{
+    assert(hint.GetNumOfUnivVars()==0 && hint.GetNumOfExistVars() == 0 && hint.GetPremises().GetSize() == 0);
+
+    if (hint.GetGoal().GetSize() > 1)
+        return;
+    if (hint.GetGoal().GetElement(0).GetSize() > 1)
+        return;
+
+    Fact f = hint.GetGoal().GetElement(0).GetElement(0);
+
+    stringstream s;
+    s << "/* Hint " << f << " */" << endl;
+    //    s << "nNesting[nPremisesCount] = 1;" << endl;
+    //    s << "nAxiomApplied[nPremisesCount] = nAssumption;" << endl;
+
+    s << "bH = false; "                                                                           << endl;
+    s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
+    s << "   bH ||= ( "                                                                           << endl;
+    s << "                !bCases[nProofStep] &&  "                                               << endl;
+    s << "                nP[nProofStep][0] == n" + ToUpper(f.GetName()) +  " && "                << endl;
+    for (size_t i=0; i<f.GetArity(); i++)
+        s << "                nA[nProofStep][" << i << "] == nHintVar" + ToUpper(f.GetArg(i)) + " && " << endl;
+    s << "                true); "                                                                << endl;
+    s << "} "                                                                                     << endl;
+    s << "bHints &&= bH; "                                                                        << endl;
+    mURSAstringHints += s.str();
+}
+
+
 // ---------------------------------------------------------------------------------------
 
 bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
@@ -147,6 +180,10 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     mURSAstringAxioms = "";
     for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
         EncodeAxiom(it-mpT->mCLaxioms.begin(), it->first, it->second);
+
+    mURSAstringHints = "";
+    for (vector<pair<CLFormula,string>>::const_iterator it = mpHints->begin(); it != mpHints->end(); it++)
+        EncodeHint(0, it->first, it->second);
 
     unsigned nMaxArity = 0;
     unsigned enumerator = 0;
@@ -223,8 +260,15 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     s << "/* *********************************************************************** */" << endl << endl;
     ursaFile << s.str();
     ursaFile << mURSAstringPremises;
-
     ursaFile << endl;
+
+    s << "/* *******************************  Hints  ****************************** */" << endl;
+    s << "/* *********************************************************************** */" << endl << endl;
+    s << "bHints = true; "                                                                       << endl;
+    ursaFile << s.str();
+    ursaFile << mURSAstringHints;
+    ursaFile << endl;
+
     ursaFile << "/* **************************** Theorem ******************************* */" << endl;
     ursaFile << "/* ******************************************************************** */" << endl << endl;
 
@@ -578,7 +622,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   nCases += ite (bCases[nProofStep], 1, 0); "                                                                                           << endl;
     ursaFile <<"} "                                                                                                                                      << endl;
     ursaFile <<                                                                                                                                             endl;
-    ursaFile <<"assert(bProofCorrect  && bProofFinished);  "                                                                                             << endl;
+    ursaFile <<"assert(bProofCorrect  && bProofFinished && bHints);  "                                                                                             << endl;
     ursaFile <<                                                                                                                                             endl;
     ursaFile.close();
 }

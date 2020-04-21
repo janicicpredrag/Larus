@@ -17,6 +17,8 @@ enum PROVING_ENGINE {
     eSMTUFBV_ProvingEngine,
     eNumberOfProvingEngines };
 
+enum fofType { eAxiom, eConjecture, eHint, eAny };
+
 enum ReturnValue { eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
 
 enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eEQReflex, eEQSymm, eNegElim, eExcludedMiddle, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };

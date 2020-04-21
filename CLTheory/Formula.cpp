@@ -684,7 +684,7 @@ string ToUpper(const string& str)
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& type) {
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, fofType& type) {
     size_t pos1, pos2;
     string ss = SkipChar(s, ' ');
 
@@ -715,26 +715,30 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, size_t& ty
         return false;
     }
     string s1 = ss.substr(pos1+1,pos2-pos1-1);
-    if (type == 0)
-        if (s1 != string("axiom"))
-        {
-            #ifdef DEBUG_PARSER
-            cout << "Error: 'axiom' expected, found : " << s1 << endl;
-            #endif
-            return false;
-        }
-    if (type == 1)
-        if (s1 != string("conjecture"))
-        {
-            #ifdef DEBUG_PARSER
-            cout << "Error: conjecture expected, found : " << s1 << endl;
-            #endif
-            return false;
-        }
+    if (type == eAxiom && s1 != string("axiom"))  {
+        #ifdef DEBUG_PARSER
+        cout << "Error: 'axiom' expected, found : " << s1 << endl;
+        #endif
+        return false;
+    }
+    if (type == eConjecture && s1 != string("conjecture"))  {
+        #ifdef DEBUG_PARSER
+        cout << "Error: conjecture expected, found : " << s1 << endl;
+        #endif
+        return false;
+    }
+    if (type == eHint && s1 != string("hint"))  {
+        #ifdef DEBUG_PARSER
+        cout << "Error: 'hint' expected, found : " << s1 << endl;
+        #endif
+        return false;
+    }
     if (s1 == string("axiom"))
-        type = 0;
+        type = eAxiom;
     if (s1 == string("conjecture"))
-        type = 1;
+        type = eConjecture;
+    if (s1 == string("hint"))
+        type = eHint;
 
     ss = ss.substr(pos2+1,ss.size()-pos2-2);
     // cout << "text: " << axname << " : " << ss << endl;
@@ -758,7 +762,7 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
     for(size_t i=0, size = statements.size(); i < size; i++) {
         CLFormula cl;
         string s = statements[i];
-        size_t type = 0;
+        fofType type = eAxiom;
         if (ReadTPTPStatement(s, cl, statementName, type))
             T->AddAxiom(cl, statementName);
     }

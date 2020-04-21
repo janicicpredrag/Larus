@@ -21,10 +21,12 @@ public:
 
 private:
     void EncodeAxiom(size_t no, CLFormula& axiom, string name);
+    void EncodeHint(size_t no, const CLFormula &hint, const string name);
     void EncodeProof(const DNFFormula& formula);
 
-    string mURSAstringPremises;
     string mURSAstringAxioms;
+    string mURSAstringPremises;
+    string mURSAstringHints;
 };
 
 #endif // SATPROVINGENGINE_H

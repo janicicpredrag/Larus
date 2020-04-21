@@ -174,5 +174,29 @@ Yes I agree that for experimenting we should look at individual engines,
 but when comparing to other provers we can take into consideration that 
 they are portfolio prover using different strategies.
 
+12. Julien: What about trying with hints (statements) taken from the Coq proof using 
+euclid problems ?
+The syntax could be:
+fof(name, hint, formula).
+ 
+then we can reuse the parser?
+ 
+For example, we could consider euclid prop 01 and give it these hints ?
+exists J, CI J A A B
+exists K, CI K B B A
+ 
+The meaning of an "hint" for a statement, would be there is a proof step 
+with this statement: if n is number of steps, it would be a big n ary conj ?
+ 
+We could allow also for * in the statement, meaning any point. exists J, CI J * * * means one needs to build a point on a circle.
+
+13. Predrag: We can use incolmplete SAT solvers for SAT encoding:
+https://github.com/msoos/walksat
+
+14. Julien: use some other SAT solver: I tried walksat on the two examples and I could not get a model.
+On the nested2b-42s (of course we can not compare to 42s):
+Using glucose : 12s
+Using cryptominisat: 9s.
+cadical: 20s
 
 

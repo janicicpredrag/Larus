@@ -64,7 +64,7 @@ string itos(PROVING_ENGINE T, unsigned int i)
 
 
 
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector< pair<CLFormula,string> >& hints)
 {
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
@@ -103,6 +103,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
     engine->SetStartTimeAndLimit(clock(), params.time_limit);
     engine->SetMaxNestingDepth(params.max_nesting_depth);
+    engine->SetHints(&hints);
 
     if (params.mbNativeEQ) {
         T.AddAxiomEqReflexive();
@@ -142,8 +143,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
            cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
 
-        // in ursa/smt engines, these axioms are hard-coded, here we include them for the purpose of export
-    /*    if (params.mbExcludedMiddle) {
+        // in ursa/smt engines, these axioms can be hard-coded, here we include them for the purpose of export
+        /* if (params.mbExcludedMiddle) {
             T.AddEqExcludedMiddleAxiom();
             T.AddExcludedMiddleAxioms();
         }*/
@@ -237,10 +238,11 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     else
         return eBadOrMissingInputFile;
 
-    string statementName, theoremName;
+    string statementName, theoremName, hintName;
     Theory T;
-    CLFormula cl, theorem;
+    CLFormula cl, theorem, hint;
     size_t noAxioms = 0;
+    vector< pair<CLFormula,string> > hints;
 
     str = SkipChar(str, ' ');
 
@@ -253,26 +255,28 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         if (found2 == string::npos)
             return eErrorReadingAxioms;
         s = str.substr(found1, found2-found1);
-        size_t type = 2;
+        fofType type = eAny;
         if (ReadTPTPStatement(s, cl, statementName, type)) {
 
-            if (cl.UsesNativeEq())
-                T.SetUseNativeEq(true);
+            if (type != eHint) {
+                if (cl.UsesNativeEq())
+                    T.SetUseNativeEq(true);
 
-            for (unsigned i = 0; i<cl.GetPremises().GetSize(); i++)
-                for (unsigned j = 0; j<cl.GetPremises().GetElement(i).GetArity(); j++)
-                    if (cl.ExistVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
-                        cl.UnivVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1)
-                     T.AddConstant(cl.GetPremises().GetElement(i).GetArg(j));
+                for (unsigned i = 0; i<cl.GetPremises().GetSize(); i++)
+                    for (unsigned j = 0; j<cl.GetPremises().GetElement(i).GetArity(); j++)
+                        if (cl.ExistVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
+                            cl.UnivVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1)
+                         T.AddConstant(cl.GetPremises().GetElement(i).GetArg(j));
 
-            for (unsigned i = 0; i<cl.GetGoal().GetSize(); i++)
-                for (unsigned j = 0; j<cl.GetGoal().GetElement(i).GetSize(); j++)
-                    for (unsigned k = 0; k<cl.GetGoal().GetElement(i).GetElement(j).GetArity(); k++)
-                    if (cl.ExistVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1 &&
-                        cl.UnivVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1)
-                     T.AddConstant(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k));
+                for (unsigned i = 0; i<cl.GetGoal().GetSize(); i++)
+                    for (unsigned j = 0; j<cl.GetGoal().GetElement(i).GetSize(); j++)
+                        for (unsigned k = 0; k<cl.GetGoal().GetElement(i).GetElement(j).GetArity(); k++)
+                        if (cl.ExistVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1 &&
+                            cl.UnivVarOrdinalNumber(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1)
+                         T.AddConstant(cl.GetGoal().GetElement(i).GetElement(j).GetArg(k));
+            }
 
-            if (type == 0) {
+            if (type == eAxiom) {
                 if (params.eEngine != eSTL_ProvingEngine) {
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
@@ -289,7 +293,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     T.AddAxiom(cl,statementName);
                     T.UpdateSignature(cl);
                 }
-            } else if (type == 1) {
+            } else if (type == eConjecture) {
                 theorem = cl;
                 theoremName = statementName;
                 if (params.eEngine != eSTL_ProvingEngine) {
@@ -305,6 +309,11 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                 }
                 T.UpdateSignature(theorem);
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
+            } else if (type == eHint) {
+                hint = cl;
+                hintName = statementName;
+                hints.push_back(pair<CLFormula,string>(hint, hintName));
+                cout << endl << "Hint: " << inputFile << " - " << hint << endl;
             }
         }
         else
@@ -339,7 +348,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     else // default
         engine = new STL_ProvingEngine(&T,params);
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params);
+    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params, hints);
     delete engine;
 
     return r;
@@ -486,7 +495,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
             CLFormula cl;
-            size_t type = 2;
+            fofType type = eAny;
             if (ReadTPTPStatement(theory[i], cl, statementName, type)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
  //               string s = theory[i];
@@ -517,7 +526,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
-        size_t type = 2;
+        fofType type = eAny;
         if (ReadTPTPStatement(theory[i], cl, statementName, type)
             && statementName == theoremName) {
             theorem = cl;
