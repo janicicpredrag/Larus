@@ -233,7 +233,7 @@ do
     else
     if [[ $prover = "eprover" ]]; then
         echo "eprove"
-        eprover --cpu-limit="$time" "$file" | tee -a $filename
+        eprover --auto  "$file" | tee -a $filename
     else 
     if [[ $prover = "zenon" ]]; then
         zenon -itptp -max-time "$time" "$file" | tee -a $filename
