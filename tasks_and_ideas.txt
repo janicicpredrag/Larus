@@ -17,6 +17,9 @@ TODO:
     (1) "use necessarily all the given axioms"
     (2) "use necessarily this axioms" (can be repeated several times)
 
+12. Test interesting to test Isabelle and Coq hammer.
+
+
 DONE:
 
  1. Make looking for a shortest proof/any proof correct
@@ -151,3 +154,25 @@ Qed.
 
 8. Julien: Maybe we could implement something similar to RETE algorithm in the encoding:
  if two rules share some assumptions, we could share some part of the matching ?
+
+9. Predrag: Namely, there are some theorems proved
+    easily by stl and not by ursa and vice versa. Why?
+    For instance, if there is an axiom "dom(a) & dom(b)", the stl
+    engine will quickly apply it, while the ursa engine would consider
+    all possible axioms for all possible proof steps. Thanks to this,
+    stl proves some theorems, and ursa does not. We have to exploit these things. 
+
+10. Julien:
+> Let's assume that we have natural language proof in latex and we want to turn it into a formal proof. The structure of such a proof is hard to  reconstruct automatically, it is hard to formalize each sentence in the proof. But it may help our prover to detect just a few things in the proofs and to try to reconstruct the proof using these pieces of information.
+> Maybe we could help the CLprover/SAT/SMT by saying that some proof steps is using (perp_bisect_cong2 G A' B C)
+> but we do not have to provide the precise information that it is in a subgoal to prove Cong B C C G.
+...
+> So the approach would be a little bit different that  just cutting the natural proof in small pieces in order to try to get a formal proof. Here we would help the system  by giving some information. I think it would be closer to what a human does when he formalizes a natural language proof: you have hints that you should use some proofs steps. But usually the natural language proof forgets some special cases. So if you try to prove automatically that one step can be derived from the previous it will fail because sometimes some assumptions are missing. For example, in Euclid proof, often only the proof in the general case is given.
+
+11. Julien:
+Yes I agree that for experimenting we should look at individual engines, 
+but when comparing to other provers we can take into consideration that 
+they are portfolio prover using different strategies.
+
+
+

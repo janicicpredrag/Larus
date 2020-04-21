@@ -13,7 +13,7 @@ STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams& params)
     mpDB = new STLFactsDatabase(T);
     mpT = T;
     mParams = params;
-    mname = "STL";
+    mName = "STL";
 }
 
 // ---------------------------------------------------------------------------------------

@@ -29,7 +29,7 @@ public:
         { mpT->InstantiateGoal(f, instantiation, fout, bInstantiateVars); }
 
 public:
-    string mname;
+    string mName;
     
 protected:
     Theory* mpT;

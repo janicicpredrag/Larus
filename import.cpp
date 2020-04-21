@@ -47,7 +47,7 @@ string itos(unsigned int i)
 
 string itos(PROVING_ENGINE T, unsigned int i)
 {
-    if (T == eSMTBV_ProvingEngine)   {
+    if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine) {
         stringstream ss;
         ss << setfill('0') << setw(3) << right << hex << i;
         string a = ss.str();
@@ -126,7 +126,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         std::size_t found = theoremFileName.find_last_of("/\\");
         string path = theoremFileName.substr(0,found);
         string isminproof = params.shortest_proof ? "min" : "";
-        string fileName = theoremFileName.substr(found+1) + engine->mname + isminproof ;
+        string fileName = theoremFileName.substr(found+1) + engine->mName + isminproof ;
         fileName = SkipChar(fileName,'.');
         fileName = SkipChar(fileName,'-');
 
@@ -331,9 +331,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         engine = new SQL_ProvingEngine(&T,params);
     else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T,params);
-    else if (params.eEngine == eSMTLIA_ProvingEngine)
-        engine = new EQ_ProvingEngine(&T,params);
-    else if (params.eEngine == eSMTBV_ProvingEngine)
+    else if (params.eEngine == eSMTLIA_ProvingEngine ||
+             params.eEngine == eSMTBV_ProvingEngine ||
+             params.eEngine == eSMTUFLIA_ProvingEngine ||
+             params.eEngine == eSMTUFBV_ProvingEngine)
         engine = new EQ_ProvingEngine(&T,params);
     else // default
         engine = new STL_ProvingEngine(&T,params);

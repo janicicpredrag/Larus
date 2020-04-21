@@ -75,7 +75,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-BV" "eprover" "zenon")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -97,10 +97,22 @@ do
             engine="-esmtlia"
             break
             ;;
+        "SMT-UFLIA")
+            echo "$opt selected"
+            prover="CLprover"
+            engine="-esmtuflia"
+            break
+            ;;
         "SMT-BV")
             echo "$opt selected"
             prover="CLprover"
             engine="-esmtbv"
+            break
+            ;;
+        "SMT-UFBV")
+            echo "$opt selected"
+            prover="CLprover"
+            engine="-esmtufbv"
             break
             ;;
         "eprover")
