@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <string.h>
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "URSA_ProvingEngine.h"
@@ -105,31 +106,65 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 
 // ---------------------------------------------------------------------------------------
 
-void URSA_ProvingEngine::EncodeHint(size_t no, const CLFormula& hint, const string name)
+void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string>& hint)
 {
-    assert(hint.GetNumOfUnivVars()==0 && hint.GetNumOfExistVars() == 0 && hint.GetPremises().GetSize() == 0);
+    CLFormula hintFormula = get<0>(hint);
+    string hintName = get<1>(hint);
+    string ordinal = get<2>(hint);
+    string justification = get<3>(hint);
+    char* p;
 
-    if (hint.GetGoal().GetSize() > 1)
+    assert(hintFormula.GetNumOfUnivVars()==0 && hintFormula.GetNumOfExistVars() == 0 && hintFormula.GetPremises().GetSize() == 0);
+
+    if (hintFormula.GetGoal().GetSize() > 1)
         return;
-    if (hint.GetGoal().GetElement(0).GetSize() > 1)
+    if (hintFormula.GetGoal().GetElement(0).GetSize() > 1)
         return;
 
-    Fact f = hint.GetGoal().GetElement(0).GetElement(0);
+    Fact f = hintFormula.GetGoal().GetElement(0).GetElement(0);
 
     stringstream s;
-    s << "/* Hint " << f << " */" << endl;
+    s << "/* Hint " << hintFormula << " */" << endl;
     //    s << "nNesting[nPremisesCount] = 1;" << endl;
     //    s << "nAxiomApplied[nPremisesCount] = nAssumption;" << endl;
 
-    s << "bH = false; "                                                                           << endl;
-    s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
-    s << "   bH ||= ( "                                                                           << endl;
-    s << "                !bCases[nProofStep] &&  "                                               << endl;
-    s << "                nP[nProofStep][0] == n" + ToUpper(f.GetName()) +  " && "                << endl;
-    for (size_t i=0; i<f.GetArity(); i++)
-        s << "                nA[nProofStep][" << i << "] == nHintVar" + ToUpper(f.GetArg(i)) + " && " << endl;
-    s << "                true); "                                                                << endl;
-    s << "} "                                                                                     << endl;
+    long proofStep = strtol(ordinal.c_str(), &p, 10);
+    if (strlen(p) == 0) { // if it is a number, it is a concrete proof step
+
+        s << "   bH = ( "                                                                           << endl;
+        s << "                !bCases[" << proofStep << "] &&  "                                 << endl;
+        s << "                nP[" << proofStep << "][0] == n" + ToUpper(f.GetName()) +  " && "                << endl;
+        for (size_t i=0; i<f.GetArity(); i++) {
+            if (f.GetArg(i) == "?")
+                continue;
+            long arg = strtol(f.GetArg(i).c_str(), &p, 10);
+            if (strlen(p) == 0) // if it is a number, it is one of the intro vars
+                s << "                nA[" << proofStep << "][" << i << "] == " << arg << " && " << endl;
+            else
+                s << "                nA[" << proofStep << "][" << i << "] == nHintVar" + ToUpper(f.GetArg(i)) + " && " << endl;
+        }
+        s << "                true); "                                                                << endl;
+    }
+    else { // the given step is one of proof steps
+        s << "bH = false; "                                                                           << endl;
+        s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
+        s << "   bH ||= ( "                                                                           << endl;
+        s << "                !bCases[nProofStep] &&  "                                               << endl;
+        s << "                nP[nProofStep][0] == n" + ToUpper(f.GetName()) +  " && "                << endl;
+        for (size_t i=0; i<f.GetArity(); i++) {
+            if (f.GetArg(i) == "?")
+                continue;
+
+            long arg = strtol(f.GetArg(i).c_str(), &p, 10);
+            if (strlen(p) == 0) // if it is a number, it is one of the intro vars
+                s << "                nA[nProofStep][" << i << "] == " << arg << " && " << endl;
+            else
+                s << "                nA[nProofStep][" << i << "] == nHintVar" + ToUpper(f.GetArg(i)) + " && " << endl;
+        }
+        s << "                true); "                                                                << endl;
+        s << "} "                                                                                     << endl;
+    }
+
     s << "bHints &&= bH; "                                                                        << endl;
     mURSAstringHints += s.str();
 }
@@ -182,8 +217,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
         EncodeAxiom(it-mpT->mCLaxioms.begin(), it->first, it->second);
 
     mURSAstringHints = "";
-    for (vector<pair<CLFormula,string>>::const_iterator it = mpHints->begin(); it != mpHints->end(); it++)
-        EncodeHint(0, it->first, it->second);
+    for (size_t i = 0; i < mpHints->size(); i++)
+        EncodeHint(mpHints->at(i));
 
     unsigned nMaxArity = 0;
     unsigned enumerator = 0;

@@ -21,7 +21,7 @@ public:
 
     virtual void SetMaxNestingDepth(unsigned max_nesting_depth) { mParams.max_nesting_depth = max_nesting_depth; }
 
-    virtual void SetHints(const vector< pair<CLFormula,string> >* pHints) { mpHints = pHints; }
+    virtual void SetHints(const vector< tuple<CLFormula,string, string, string> >* pHints) { mpHints = pHints; }
 
     virtual PROVING_ENGINE GetKind() = 0;
 
@@ -38,7 +38,7 @@ protected:
     proverParams mParams;
     clock_t mStartTime;
 
-    const vector< pair<CLFormula,string> >* mpHints;
+    const vector< tuple<CLFormula,string, string, string> >* mpHints;
 };
 
 #endif // PROVINGENGINE_H

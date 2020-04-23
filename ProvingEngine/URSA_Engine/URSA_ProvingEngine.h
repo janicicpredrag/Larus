@@ -2,6 +2,7 @@
 #define SATPROVINGENGINE_H
 
 #include <string>
+#include <tuple>
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "ProvingEngine/ProvingEngine.h"
@@ -21,7 +22,7 @@ public:
 
 private:
     void EncodeAxiom(size_t no, CLFormula& axiom, string name);
-    void EncodeHint(size_t no, const CLFormula &hint, const string name);
+    void EncodeHint(const tuple<CLFormula,string, string, string>& hint);
     void EncodeProof(const DNFFormula& formula);
 
     string mURSAstringAxioms;

@@ -192,11 +192,14 @@ We could allow also for * in the statement, meaning any point. exists J, CI J * 
 
 13. Predrag: We can use incolmplete SAT solvers for SAT encoding:
 https://github.com/msoos/walksat
+ Walksat cannot find a model for one conjecture (nested2)
 
 14. Julien: use some other SAT solver: I tried walksat on the two examples and I could not get a model.
 On the nested2b-42s (of course we can not compare to 42s):
 Using glucose : 12s
 Using cryptominisat: 9s.
 cadical: 20s
+
+
 
 

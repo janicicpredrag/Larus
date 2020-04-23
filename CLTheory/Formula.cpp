@@ -684,7 +684,7 @@ string ToUpper(const string& str)
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, fofType& type) {
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordinal, string& justification, fofType& type) {
     size_t pos1, pos2;
     string ss = SkipChar(s, ' ');
 
@@ -705,7 +705,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, fofType& t
         #endif
         return false;
     }
-    axname = ss.substr(4,pos1-4);
+    name = ss.substr(4,pos1-4);
     pos2 = ss.find(',', pos1+1);
     if (pos2 == string::npos)
     {
@@ -742,15 +742,39 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, fofType& t
 
     ss = ss.substr(pos2+1,ss.size()-pos2-2);
     // cout << "text: " << axname << " : " << ss << endl;
-    if (cl.Read(ss)) {
-    //    cout << "Ax: " << cl;
-    //    cout << endl;
+    if (type == eHint) {
+        string s[3];
+        int BracketsClosed = 0;
+        int ord = 0;
+        for (int i = 0; i<ss.size(); i++) {
+            if (ss[i]=='(')
+                BracketsClosed++;
+            if (ss[i]==')')
+                BracketsClosed--;
+            if (ss[i]==',' && BracketsClosed==0)
+                ord++;
+            else
+                s[ord] += ss[i];
+        }
+        if (!cl.Read(s[0]))
+            return false;
+        ordinal = s[1];
+        justification = s[2];
         return true;
     }
     else {
-        cout << "Ax: " << axname << cl;
-        cout << "CL read fail! " << endl << endl;
-        return false;
+        ordinal = "";
+        justification = "";
+        if (cl.Read(ss)) {
+    //    cout << "Ax: " << cl;
+    //    cout << endl;
+          return true;
+        }
+        else {
+            cout << "Ax: " << name << cl;
+            cout << "CL read fail! " << endl << endl;
+            return false;
+        }
     }
 }
 
@@ -758,12 +782,12 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, fofType& t
 
 bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 {
-    string statementName;
+    string statementName, ordinal, justification;
     for(size_t i=0, size = statements.size(); i < size; i++) {
         CLFormula cl;
         string s = statements[i];
         fofType type = eAxiom;
-        if (ReadTPTPStatement(s, cl, statementName, type))
+        if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type))
             T->AddAxiom(cl, statementName);
     }
     return true;
