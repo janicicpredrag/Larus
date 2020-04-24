@@ -1,3 +1,5 @@
+% trying an hint for a useless step to check if we really find this step in the proof.
+
 fof(deftworightangles,axiom, (! [A,B,C,D,E,F] : (? [X,Y,Z,U,V] : ((rT(A,B,C,D,E,F)) => ((supp(X,Y,U,V,Z) & congA(A,B,C,X,Y,U) & congA(D,E,F,V,Y,Z))))))).
 fof(deftworightangles2,axiom, (! [A,B,C,D,E,F,X,Y,Z,U,V] : ((supp(X,Y,U,V,Z) & congA(A,B,C,X,Y,U) & congA(D,E,F,V,Y,Z)) => ((rT(A,B,C,D,E,F)))))).
 fof(lemma_supplementsymmetric,axiom, (! [A,B,C,D,E] : ((supp(A,B,C,E,D)) => ((supp(D,B,E,C,A)))))).
