@@ -9,6 +9,8 @@ using namespace std;
 
 extern string itos(unsigned int i);
 
+typedef tuple<CLFormula,string,string,Fact> tHint;
+
 
 class ProvingEngine
 {
@@ -21,7 +23,7 @@ public:
 
     virtual void SetMaxNestingDepth(unsigned max_nesting_depth) { mParams.max_nesting_depth = max_nesting_depth; }
 
-    virtual void SetHints(const vector< tuple<CLFormula,string, string, string> >* pHints) { mpHints = pHints; }
+    virtual void SetHints(const vector<tHint>* pHints) { mpHints = pHints; }
 
     virtual PROVING_ENGINE GetKind() = 0;
 
@@ -38,7 +40,7 @@ protected:
     proverParams mParams;
     clock_t mStartTime;
 
-    const vector< tuple<CLFormula,string, string, string> >* mpHints;
+    const vector<tHint>* mpHints;
 };
 
 #endif // PROVINGENGINE_H

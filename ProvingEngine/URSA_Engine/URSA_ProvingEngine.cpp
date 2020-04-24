@@ -106,12 +106,21 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
 
 // ---------------------------------------------------------------------------------------
 
-void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string>& hint)
+void URSA_ProvingEngine::EncodeHint(const tHint& hint)
 {
     CLFormula hintFormula = get<0>(hint);
     string hintName = get<1>(hint);
     string ordinal = get<2>(hint);
-    string justification = get<3>(hint);
+    Fact justification = get<3>(hint);
+
+    int AxiomUsed = -1;
+    if (justification.GetName() != "_") {
+        for (size_t i = 0; i < mpT->mCLaxioms.size(); i++)
+            if (mpT->mCLaxioms[i].second == justification.GetName()) {
+                AxiomUsed = i;
+                break;
+            }
+    }
 
     assert(hintFormula.GetNumOfUnivVars()==0 && hintFormula.GetNumOfExistVars() == 0 && hintFormula.GetPremises().GetSize() == 0);
 
@@ -121,75 +130,101 @@ void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string
         return;
 
     stringstream s;
-    s << "/* Hint " << hintFormula << " */" << endl;
-    //    s << "nNesting[nPremisesCount] = 1;" << endl;
-    //    s << "nAxiomApplied[nPremisesCount] = nAssumption;" << endl;
-
+    s << "/* Hint: " << hintFormula << "; proof step: " << ordinal << "; justification: " << justification << "*/" << endl;
     int proofStep, arg;
-    if (stoi(ordinal, proofStep)) { // if it is a number, it is a concrete proof step
-        s << "   bH = ( "                                                                             << endl;
 
+    if (stoi(ordinal, proofStep)) { // if it is a number, it is a concrete proof step
+        s << "   bH = ( "                                                                                 << endl;
+        s <<"                " << proofStep << " < nProofSize  && "                                      << endl;
         if (hintFormula.GetGoal().GetSize() == 1)
             s << "                !bCases[" << proofStep << "] &&  "                                      << endl;
         else
             s << "                 bCases[" << proofStep << "] &&  "                                      << endl;
-
-        s <<"                  " << proofStep << "< nProofSize  && "                                                            << endl;
-        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyCases && "                                                            << endl;
-        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyAssumption && "                                                         << endl;
-        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyEFQ && "                                                               << endl;
-        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyNegIntro && "                                                          << endl;
-
-        for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
-            if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
-                return;
-            Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
-            s << "                nP[" << proofStep << "][" << j << "] == n" + ToUpper(f.GetName()) +  " && "       << endl;
-            for (size_t i=0; i<f.GetArity(); i++) {
-                if (f.GetArg(i) == "?")
+        if (AxiomUsed!=-1) {
+            s <<"                  nAxiomApplied[" << proofStep << "] == " << 13+AxiomUsed << " && "         << endl;
+            for (size_t i=0; i<justification.GetArity(); i++) {
+                if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
                     continue;
-                if (stoi(f.GetArg(i), arg)) // if it is a number, it is one of the intro vars
-                    s << "                nA[" << proofStep << "][" << j << "*nMaxArg + " << i << "] == " << arg << " && "     << endl;
+                if (stoi(justification.GetArg(i), arg)) // if it is a number, it is one of the intro vars
+                    s << "                nInst[" << proofStep << "][" << i+1 << "] == " << justification.GetArg(i) << " && "     << endl;
                 else // otherwise, we bind it to a new variable
-                    s << "                nA[" << proofStep << "][" << j << "*nMaxArg + " << i << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && " << endl;
+                    s << "                nInst[" << proofStep << "][" << i+1 << "] == nHintVarInst" + hintName + justification.GetArg(i) + " && " << endl;
+            }
+        }
+        else {
+            s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyCases && "                 << endl;
+            s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyAssumption && "            << endl;
+            s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyEFQ && "                   << endl;
+            s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyNegIntro && "              << endl;
+        }
+
+        if (hintFormula.GetGoal().GetElement(0).GetElement(0).GetName() != "_") {
+            for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
+                if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
+                    return;
+                Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
+                s << "                nP[" << proofStep << "][" << j << "] == n" + ToUpper(f.GetName()) +  " && "       << endl;
+                for (size_t i=0; i<f.GetArity(); i++) {
+                    if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
+                        continue;
+                    if (stoi(f.GetArg(i), arg)) // if it is a number, it is one of the intro vars
+                        s << "                nA[" << proofStep << "][" << j << "*nMaxArg + " << i << "] == " << arg << " && "     << endl;
+                    else // otherwise, we bind it to a new variable
+                        s << "                nA[" << proofStep << "][" << j << "*nMaxArg + " << i << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && " << endl;
+                }
             }
         }
         s << "                true); "                                                                << endl;
     }
+
     else { // the given step is one of proof steps
         s << "bH = false; "                                                                           << endl;
         s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
         s << "   bH ||= ( "                                                                           << endl;
-
+        s <<"                   nProofStep < nProofSize  && "                                                            << endl;
         if (hintFormula.GetGoal().GetSize() == 1)
             s << "                !bCases[nProofStep] &&  "                                      << endl;
         else
             s << "                 bCases[nProofStep] &&  "                                      << endl;
 
-        s <<"                  nProofStep < nProofSize  && "                                                            << endl;
-        s <<"                  nAxiomApplied[nProofStep] != nQEDbyCases && "                                                            << endl;
-        s <<"                  nAxiomApplied[nProofStep] != nQEDbyAssumption && "                                                         << endl;
-        s <<"                  nAxiomApplied[nProofStep] != nQEDbyEFQ && "                                                               << endl;
-        s <<"                  nAxiomApplied[nProofStep] != nQEDbyNegIntro && "                                                          << endl;
-
-        for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
-            if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
-                 return;
-            Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
-            s << "                nP[nProofStep][" << j << "] == n" + ToUpper(f.GetName()) +  " && "                << endl;
-            for (size_t i=0; i<f.GetArity(); i++) {
-                if (f.GetArg(i) == "?")
+        if (AxiomUsed!=-1) {
+            s <<"                  nAxiomApplied[nProofStep] == " << 13+AxiomUsed << " && "         << endl;
+            for (size_t i=0; i<justification.GetArity(); i++) {
+                if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
                     continue;
-                if (stoi(f.GetArg(i), arg)) // if it is a number, it is one of the intro vars
-                    s << "                nA[nProofStep][" << j << "*nMaxArg + " << i << "] == " << arg << " && " << endl;
-                else
-                    s << "                nA[nProofStep][" << j << "*nMaxArg + " << i << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && " << endl;
+                if (stoi(justification.GetArg(i), arg)) // if it is a number, it is one of the intro vars
+                    s << "                nInst[nProofStep][" << i+1 << "] == " << justification.GetArg(i) << " && "     << endl;
+                else // otherwise, we bind it to a new variable
+                    s << "                nInst[nProofStep][" << i+1 << "] == nHintVarInst" + hintName + justification.GetArg(i) + " && " << endl;
             }
         }
+        else {
+            s <<"                  nAxiomApplied[nProofStep] != nQEDbyCases && "                                                            << endl;
+            s <<"                  nAxiomApplied[nProofStep] != nQEDbyAssumption && "                                                         << endl;
+            s <<"                  nAxiomApplied[nProofStep] != nQEDbyEFQ && "                                                               << endl;
+            s <<"                  nAxiomApplied[nProofStep] != nQEDbyNegIntro && "                                                          << endl;
+        }
+
+        if (hintFormula.GetGoal().GetElement(0).GetElement(0).GetName() != "_") {
+            for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
+                if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
+                     return;
+                Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
+                s << "                nP[nProofStep][" << j << "] == n" + ToUpper(f.GetName()) +  " && "                << endl;
+                for (size_t i=0; i<f.GetArity(); i++) {
+                    if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
+                        continue;
+                    if (stoi(f.GetArg(i), arg)) // if it is a number, it is one of the intro vars
+                        s << "                nA[nProofStep][" << j << "*nMaxArg + " << i << "] == " << arg << " && " << endl;
+                    else
+                        s << "                nA[nProofStep][" << j << "*nMaxArg + " << i << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && " << endl;
+                }
+            }
+        }
+
         s << "                true); "                                                                << endl;
         s << "} "                                                                                     << endl;
     }
-
     s << "bHints &&= bH; "                                                                        << endl;
     mURSAstringHints += s.str();
 }
@@ -321,6 +356,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile << s.str();
     ursaFile << mURSAstringPremises;
     ursaFile << endl;
+    s.str("");
 
     s << "/* *******************************  Hints  ****************************** */" << endl;
     s << "/* *********************************************************************** */" << endl << endl;

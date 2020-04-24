@@ -684,11 +684,12 @@ string ToUpper(const string& str)
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordinal, string& justification, fofType& type) {
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordinal, Fact& justification, fofType& type) {
     size_t pos1, pos2;
     string ss = SkipChar(s, ' ');
 
     cl.Clear();
+    justification.Clear();
 
     if(ss.substr(0,4) != "fof(")
         {   
@@ -759,12 +760,13 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordi
         if (!cl.Read(s[0]))
             return false;
         ordinal = s[1];
-        justification = s[2];
+        if (!justification.Read(s[2]))
+            return false;
         return true;
     }
     else {
         ordinal = "";
-        justification = "";
+   //     justification = "";
         if (cl.Read(ss)) {
     //    cout << "Ax: " << cl;
     //    cout << endl;
@@ -782,9 +784,10 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordi
 
 bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 {
-    string statementName, ordinal, justification;
+    string statementName, ordinal;
     for(size_t i=0, size = statements.size(); i < size; i++) {
         CLFormula cl;
+        Fact justification;
         string s = statements[i];
         fofType type = eAxiom;
         if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type))
