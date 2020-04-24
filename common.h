@@ -57,5 +57,6 @@ typedef struct proverParams {
 
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
+bool stoi(string s, int& i);
 
 #endif // COMMON_H

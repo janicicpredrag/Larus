@@ -62,6 +62,15 @@ string itos(PROVING_ENGINE T, unsigned int i)
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+bool stoi(string s, int& i)
+{
+    char *p;
+    i = strtol(s.c_str(), &p, 10);
+    return (strlen(p) == 0);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 
 
 ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector< tuple<CLFormula,string,string,string> >& hints)
