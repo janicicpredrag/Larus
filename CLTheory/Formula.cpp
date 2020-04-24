@@ -746,7 +746,7 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordi
         string s[3];
         int BracketsClosed = 0;
         int ord = 0;
-        for (int i = 0; i<ss.size(); i++) {
+        for (size_t i = 0; i<ss.size(); i++) {
             if (ss[i]=='(')
                 BracketsClosed++;
             if (ss[i]==')')
