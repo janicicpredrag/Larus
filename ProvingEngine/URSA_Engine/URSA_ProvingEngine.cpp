@@ -134,7 +134,7 @@ void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string
         else
             s << "                 bCases[" << proofStep << "] &&  "                                      << endl;
 
-        s <<"                  nProofStep < nProofLen  && "                                                            << endl;
+        s <<"                  " << proofStep << "< nProofSize  && "                                                            << endl;
         s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyCases && "                                                            << endl;
         s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyAssumption && "                                                         << endl;
         s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyEFQ && "                                                               << endl;
@@ -166,7 +166,7 @@ void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string
         else
             s << "                 bCases[nProofStep] &&  "                                      << endl;
 
-        s <<"                  nProofStep < nProofLen  && "                                                            << endl;
+        s <<"                  nProofStep < nProofSize  && "                                                            << endl;
         s <<"                  nAxiomApplied[nProofStep] != nQEDbyCases && "                                                            << endl;
         s <<"                  nAxiomApplied[nProofStep] != nQEDbyAssumption && "                                                         << endl;
         s <<"                  nAxiomApplied[nProofStep] != nQEDbyEFQ && "                                                               << endl;
