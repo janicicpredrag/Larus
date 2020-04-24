@@ -134,6 +134,11 @@ void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string
         else
             s << "                 bCases[" << proofStep << "] &&  "                                      << endl;
 
+        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyCases && "                                                            << endl;
+        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyAssumption && "                                                         << endl;
+        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyEFQ && "                                                               << endl;
+        s <<"                  nAxiomApplied[" << proofStep << "] != nQEDbyNegIntro && "                                                          << endl;
+
         for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
             if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
                 return;
@@ -152,13 +157,18 @@ void URSA_ProvingEngine::EncodeHint(const tuple<CLFormula,string, string, string
     }
     else { // the given step is one of proof steps
         s << "bH = false; "                                                                           << endl;
-        s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
+        s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofSize; nProofStep++) { "  << endl;
         s << "   bH ||= ( "                                                                           << endl;
 
         if (hintFormula.GetGoal().GetSize() == 1)
             s << "                !bCases[nProofStep] &&  "                                      << endl;
         else
             s << "                 bCases[nProofStep] &&  "                                      << endl;
+
+        s <<"                  nAxiomApplied[nProofStep] != nQEDbyCases && "                                                            << endl;
+        s <<"                  nAxiomApplied[nProofStep] != nQEDbyAssumption && "                                                         << endl;
+        s <<"                  nAxiomApplied[nProofStep] != nQEDbyEFQ && "                                                               << endl;
+        s <<"                  nAxiomApplied[nProofStep] != nQEDbyNegIntro && "                                                          << endl;
 
         for(size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
             if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
