@@ -34,6 +34,7 @@ int main(int argc , char** argv)
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
     params.mbCoq =  DEFAULT_COQ;
+    params.no_simp = DEFAULT_NO_SIMP;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
@@ -73,6 +74,9 @@ int main(int argc , char** argv)
             }
             else if (argv[i][0] == '-' && argv[i][1] == 's') { // shortest proof
                 params.shortest_proof = true;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'd') { // disable simplification of proofs
+                params.no_simp = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'm') {
                 int d = atoi(argv[i]+2);
@@ -134,6 +138,7 @@ int main(int argc , char** argv)
         cout << "   -l<time limit>       for time limit; example: -l10; default: 10s \n" << endl;
         cout << "   -f<format>           for input format; example -ftptp; default: tptp \n" << endl;
         cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
+        cout << "   -d                   for disabling proof simplification; default is false \n" << endl; 
         cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv); examples: -eursa; default: stl \n" << endl;
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 

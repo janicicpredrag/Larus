@@ -145,7 +145,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         ProofExport *ex;
         ex = new ProofExport2LaTeX;
-        if (engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) {
+        if ((engine->GetKind() == eSTL_ProvingEngine || !params.shortest_proof) && !params.no_simp) {
            cout << endl << "Simplifying the proof (size without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << flush;
            proof.Simplify();
            cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
