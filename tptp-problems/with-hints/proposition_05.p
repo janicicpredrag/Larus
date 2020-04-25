@@ -7,6 +7,8 @@ fof(lemma_collinearorder,axiom, (! [A,B,C] : ((col(A,B,C)) => ((col(B,A,C) & col
 fof(lemma_ABCequalsCBA,axiom, (! [A,B,C] : ((~ (col(A,B,C))) => ((congA(A,B,C,C,B,A)))))).
 fof(proposition_04,axiom, (! [A,B,C,Xa,Xb,Xc] : ((cong(A,B,Xa,Xb) & cong(A,C,Xa,Xc) & congA(B,A,C,Xb,Xa,Xc)) => ((cong(B,C,Xb,Xc) & congA(A,B,C,Xa,Xb,Xc) & congA(A,C,B,Xa,Xc,Xb)))))).
 fof(cn_col1b,axiom, (! [A,B,C] : ((col(A,B,C)) | (~ (col(A,B,C)))))).
-fof(proposition_05,conjecture,(! [A,B,C] : ((isosceles(A,B,C)) => ((congA(A,B,C,A,C,B)))))).
+%problem simplified by introducing not col.
+fof(proposition_05,conjecture,(! [A,B,C] : ((isosceles(A,B,C) & ~(col(A,B,C)) => ((congA(A,B,C,A,C,B)))))).
+ 
 fof(hint1,hint, congA(3,1,2,2,1,3), ? , ?).
 fof(hint2,hint, cong(1,3,1,2), ? , ?).
