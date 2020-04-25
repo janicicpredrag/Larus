@@ -22,7 +22,7 @@ public:
 
 private:
     void EncodeAxiom(size_t no, CLFormula& axiom, string name);
-    void EncodeHint(const tuple<CLFormula,string, string, string>& hint);
+    void EncodeHint(const tHint& hint);
     void EncodeProof(const DNFFormula& formula);
 
     string mURSAstringAxioms;

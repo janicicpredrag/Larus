@@ -39,6 +39,7 @@ public:
         mArgs[i]=s;
     }
     bool Equals(const Fact& f) const;
+    void Clear() { mName = ""; mArgs.clear(); }
 
     bool operator<(const Fact &rhs) const {
 
@@ -273,7 +274,7 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
 
 string SkipChar(const string& str, char c);
 string ToUpper(const string& str);
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, string& ordinal, string& justification, fofType& type);
+bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, string& ordinal, Fact& justification, fofType& type);
 bool ReadSetOfTPTPStatements(Theory *pT, const vector<string>& statements);
 
 // ---------------------------------------------------------------------------------------

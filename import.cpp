@@ -73,13 +73,12 @@ bool stoi(string s, int& i)
 
 
 
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector< tuple<CLFormula,string,string,string> >& hints)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
 {
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
         string constantName = T.MakeNewConstant();
         instantiation[theorem.GetUnivVar(i)] = constantName;
-//        T.MakeNextConstantPermissible();
     }
 
     if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
@@ -247,17 +246,17 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     else
         return eBadOrMissingInputFile;
 
-    string statementName, theoremName, ordinal, justification;
+    string statementName, theoremName, ordinal;
     Theory T;
     CLFormula cl, theorem, hint;
+    Fact justification;
     size_t noAxioms = 0;
-    vector< tuple<CLFormula,string,string,string> > hints;
+    vector<tHint> hints;
 
     str = SkipChar(str, ' ');
 
     string strfof ("fof");
     size_t found1 = str.find(strfof);
-
 
     while (found1 != string::npos) {
         size_t found2 = str.find(".", found1+1);
@@ -320,7 +319,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
             } else if (type == eHint) {
                 hint = cl;
-                hints.push_back(tuple<CLFormula,string,string,string>(hint,statementName,ordinal,justification));
+                hints.push_back(tuple<CLFormula,string,string,Fact>(hint,statementName,ordinal,justification));
                 cout << endl << "Hint: " << inputFile << " - " << hint << endl;
             }
         }
@@ -503,8 +502,9 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         bool found = false;
         for(size_t i=0, size = theory.size(); i < size && !found; i++) {
             CLFormula cl;
+            Fact justification;
             fofType type = eAny;
-            string ordinal, justification;
+            string ordinal;
             if (ReadTPTPStatement(theory[i], cl, statementName, ordinal, justification, type)
                 && statementName == namesOfAxiomsToBeUsed[j]) {
  //               string s = theory[i];
@@ -535,8 +535,9 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     bool found = false;
     for(size_t i=0, size = theory.size(); i < size && !found; i++) {
         CLFormula cl;
+        Fact justification;
         fofType type = eAny;
-        string ordinal, justification;
+        string ordinal;
         if (ReadTPTPStatement(theory[i], cl, statementName, ordinal, justification, type)
             && statementName == theoremName) {
             theorem = cl;
