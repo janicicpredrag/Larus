@@ -22,6 +22,6 @@ fof(deftworightangles2,axiom, (! [A,B,C,D,E,F,X,Y,Z,U,V] : ((supp(X,Y,U,V,Z) & c
 fof(proposition_13,conjecture,(! [A,B,C,D] : ((betS(D,B,C) & ~ (col(A,B,C))) => ((rT(C,B,A,A,B,D)))))).
 
 % Supp C B A A D
-fof(hint1,hint, supp(3,2,1,1,4),?,?).
+fof(hint1,hint, supp(3,2,1,1,4),_,_).
 % CongA A B D A B D
-fof(hint2,hint, congA(1,2,4,1,2,4),?, ?).
+fof(hint2,hint, congA(1,2,4,1,2,4),_, _).

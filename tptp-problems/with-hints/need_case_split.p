@@ -4,6 +4,6 @@ fof(ax3, axiom,! [X] : (q(X) => g(X)) ).
 fof(disjingoal,conjecture, ! [Z] : (r(Z) => g(Z))).
 
 
-fof(hintname2, hint, p(a) | q(a), 4, ?).
+fof(hintname2, hint, p(a) | q(a), 4, _).
 
 

@@ -12,11 +12,11 @@ fof(lemma_col_triv, axiom, ![A,B] : col(A,A,B) ).
 fof(lemma_RTsymmetric,conjecture,(! [A,B,C,D,E,F] : ((rT(A,B,C,D,E,F)) => ((rT(D,E,F,A,B,C)))))).
 
 
-fof(hintname0, hint, col(0,0,1), ? , ?).
+fof(hintname0, hint, col(0,0,1), _ , _).
 
-fof(hintname1, hint, congA(0,1,2,?,?,?), ?, ?).
+fof(hintname1, hint, congA(0,1,2,?,?,?), _, _).
 
-fof(hintname2, hint, congA(a1,a2,a3,a3,a2,a1), 8, ?).
+fof(hintname2, hint, congA(a1,a2,a3,a3,a2,a1), 8, _).
 
 
 

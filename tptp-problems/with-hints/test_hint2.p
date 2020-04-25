@@ -3,7 +3,7 @@
 fof(lemma_col_triv, axiom, ![A,B] : col(A,A,B) ).
 fof(stupid,conjecture,(! [A,B,C] : ((col(A,B,C)) => ((col(A,B,C)))))).
 
-fof(hintname0, hint, col(0,0,1), ? , ?).
+fof(hintname0, hint, col(0,0,1), _ , _).
 
 
 

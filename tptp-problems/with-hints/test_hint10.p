@@ -4,7 +4,7 @@ fof(allp, axiom, ![A] : p(A) ).
 fof(axcolpermcirc, axiom, ![A,B,C] : (col(A,B,C) => col(B,C,A))).
 fof(stupid,conjecture,(! [A,B,C] : ((col(A,B,C)) => ((col(C,A,B)))))).
 
-fof(hintname0, hint, p(2) | ~p(2), ? , ?).
+fof(hintname0, hint, p(2) | ~p(2), _ , _).
 
 
 
