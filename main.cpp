@@ -34,7 +34,7 @@ int main(int argc , char** argv)
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
     params.mbCoq =  DEFAULT_COQ;
-    params.no_simp = DEFAULT_NO_SIMP;
+    params.mbSimp = DEFAULT_SIMP;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
@@ -76,7 +76,7 @@ int main(int argc , char** argv)
                 params.shortest_proof = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'd') { // disable simplification of proofs
-                params.no_simp = true;
+                params.mbSimp = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'm') {
                 int d = atoi(argv[i]+2);

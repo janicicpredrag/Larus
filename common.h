@@ -34,7 +34,7 @@ const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
-const bool DEFAULT_NO_SIMP = false;
+const bool DEFAULT_SIMP = false;
 
 const string EQ_NATIVE_NAME = "eqnative";
 
@@ -54,7 +54,7 @@ typedef struct proverParams {
     bool mbNativeEQ;
     bool mbExcludedMiddle;
     bool mbCoq;
-    bool no_simp;
+    bool mbSimp;
 } proverParams;
 
 string itos(unsigned int i);
