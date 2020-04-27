@@ -320,7 +320,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
             } else if (type == eHint) {
                 hint = cl;
                 hints.push_back(tuple<CLFormula,string,string,Fact>(hint,statementName,ordinal,justification));
-                cout << endl << "Hint: " << inputFile << " - " << hint << endl;
+                cout <<  "Hint: name: " << statementName << "; hint formula: " << hint << "; proof step: " << ordinal << "; justification: " << justification << endl;
             }
         }
         else

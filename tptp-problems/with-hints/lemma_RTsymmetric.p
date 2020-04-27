@@ -10,3 +10,10 @@ fof(hintname1, hint, congA(0,1,2,?,?,?), _, _).
 fof(hintname2, hint, _, 9, lemma_equalanglestransitive(3,A,5,_,_,_)).    
 
 fof(hintname3, hint, _, 4, lemma_equalanglesNC(0,1,2,_,_,_)).
+
+fof(hintname4, hint, _, s1,lemma_equalanglestransitive(0,1,2,_,_,_)).
+
+fof(hintname4, hint, _, s2, deftworightangles2(_,_,_,_,_,_,_,_,_,_,_)).
+
+fof(hintname4, hint, _, _, leq(s1,s2)).
+

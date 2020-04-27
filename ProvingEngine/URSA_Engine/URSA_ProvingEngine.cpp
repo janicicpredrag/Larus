@@ -96,9 +96,9 @@ void URSA_ProvingEngine::AddPremise(const Fact& f)
     s << "nNesting[nPremisesCount] = 1;" << endl;
     s << "bCases[nPremisesCount]  = false; " << endl;
     s << "nAxiomApplied[nPremisesCount] = nAssumption;" << endl;
-    s << "nP[nPremisesCount][0] = n" + ToUpper(f.GetName()) + ";" << endl;
+    s << "nP[nPremisesCount][0] = " + URSA_NUM_PREFIX + ToUpper(f.GetName()) + ";" << endl;
     for (size_t i=0; i<f.GetArity(); i++)
-        s << "nA[nPremisesCount][" << i << "] = n" + ToUpper(f.GetArg(i)) + ";" << endl;
+        s << "nA[nPremisesCount][" << i << "] = " + URSA_NUM_PREFIX + ToUpper(f.GetArg(i)) + ";" << endl;
     s << "nPremisesCount++;" << endl << endl;
     mURSAstringPremises += s.str();
 }
@@ -113,8 +113,21 @@ void URSA_ProvingEngine::EncodeHint(const tHint& hint)
     string ordinal = get<2>(hint);
     Fact justification = get<3>(hint);
 
+    string sURSAstringConstraints;
+
     int AxiomUsed = -1;
     if (justification.GetName() != "_") {
+        int i;
+        string arg0, arg1;
+        arg0 = stoi(justification.GetArg(0), i) ? itos(i) : URSA_NUM_PREFIX + justification.GetArg(0) + hintName;
+        arg1 = stoi(justification.GetArg(1), i) ? itos(i) : URSA_NUM_PREFIX + justification.GetArg(1) + hintName;
+
+        if (justification.GetName() == "leq" && justification.GetArity() == 2) {
+            sURSAstringConstraints += "bHints &&= (" + arg0 + " <= " + arg1 + ");\n";
+        }
+        if (justification.GetName() == "less" && justification.GetArity() == 2) {
+            sURSAstringConstraints += "bHints &&= (" + arg0 + " < " + arg1 + ");\n";
+        }
         for (size_t i = 0; i < mpT->mCLaxioms.size(); i++)
             if (mpT->mCLaxioms[i].second == justification.GetName()) {
                 AxiomUsed = i;
@@ -163,7 +176,7 @@ void URSA_ProvingEngine::EncodeHint(const tHint& hint)
                 if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
                     return;
                 Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
-                s << "                nP[" << proofStep << "][" << j << "] == n" + ToUpper(f.GetName()) +  " && "       << endl;
+                s << "                nP[" << proofStep << "][" << j << "] == " + URSA_NUM_PREFIX + ToUpper(f.GetName()) +  " && "       << endl;
                 for (size_t i=0; i<f.GetArity(); i++) {
                     if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
                         continue;
@@ -182,6 +195,7 @@ void URSA_ProvingEngine::EncodeHint(const tHint& hint)
         s << "for (nProofStep=nPremisesCount; nProofStep<nPremisesCount+nProofLen; nProofStep++) { "  << endl;
         s << "   bH ||= ( "                                                                           << endl;
         s <<"                   nProofStep < nProofSize  && "                                                            << endl;
+        s <<"                   nProofStep == " + URSA_NUM_PREFIX + ordinal + hintName + " && " << endl;
         if (hintFormula.GetGoal().GetSize() == 1)
             s << "                !bCases[nProofStep] &&  "                                      << endl;
         else
@@ -210,7 +224,7 @@ void URSA_ProvingEngine::EncodeHint(const tHint& hint)
                 if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
                      return;
                 Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
-                s << "                nP[nProofStep][" << j << "] == n" + ToUpper(f.GetName()) +  " && "                << endl;
+                s << "                nP[nProofStep][" << j << "] == " + URSA_NUM_PREFIX + ToUpper(f.GetName()) +  " && "                << endl;
                 for (size_t i=0; i<f.GetArity(); i++) {
                     if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
                         continue;
@@ -227,6 +241,8 @@ void URSA_ProvingEngine::EncodeHint(const tHint& hint)
     }
     s << "bHints &&= bH; "                                                                        << endl;
     mURSAstringHints += s.str();
+    mURSAstringHints += sURSAstringConstraints;
+
 }
 
 
@@ -284,7 +300,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     unsigned enumerator = 0;
     for (size_t i = 0; i<mpT->mSignature.size(); i++) {
         ursaFile << URSA_NUM_PREFIX << ToUpper(mpT->mSignature[i].first) << " = " << enumerator++ << ";" << endl;
-        ursaFile << "nArity[n" << ToUpper(mpT->mSignature[i].first) << "] = " <<  mpT->mSignature[i].second << ";" << endl;
+        ursaFile << "nArity[" + URSA_NUM_PREFIX << ToUpper(mpT->mSignature[i].first) << "] = " <<  mpT->mSignature[i].second << ";" << endl;
         if (mpT->mSignature[i].second > nMaxArity)
             nMaxArity = mpT->mSignature[i].second;
         ursaFile << endl;
@@ -376,13 +392,13 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     else
         ursaFile << "bCases[nFinalStep]  = false;                                              " << endl;
 
-    ursaFile << "nP[nFinalStep][0] = n" + ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ";" << endl;
+    ursaFile << "nP[nFinalStep][0] = " + URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ";" << endl;
     for (size_t i=0; i<formula.GetElement(0).GetElement(0).GetArity(); i++)
-        ursaFile << "nA[nFinalStep][" << i << "] = n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + ";" << endl;
+        ursaFile << "nA[nFinalStep][" << i << "] = " + URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + ";" << endl;
     if (formula.GetSize()>1) {
-        ursaFile << "nP[nFinalStep][1] = n" + ToUpper(formula.GetElement(1).GetElement(0).GetName()) + ";" << endl;
+        ursaFile << "nP[nFinalStep][1] = " + URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetName()) + ";" << endl;
         for (size_t i=0; i<formula.GetElement(1).GetElement(0).GetArity(); i++)
-            ursaFile << "nA[nFinalStep][nMaxArg+" << i << "] = n" + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + ";" << endl;
+            ursaFile << "nA[nFinalStep][nMaxArg+" << i << "] = " + URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) + ";" << endl;
     }
     ursaFile << endl;
 
@@ -477,8 +493,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
         ursaFile <<"      for (nI = 1; nI <= nMaxDepth; nI++) "                                                                                    << endl;
         ursaFile <<"         bSameProofBranch ||= ((nNesting[nProofStep]>>nI)==nNesting[n_from]); "                                                << endl;
         ursaFile <<"      b1 = (nP[n_from][0]==nP[nProofStep][0] && nP[n_from][0]!=" + URSA_NUM_PREFIX + "false && nP[n_from][0]!=" + URSA_NUM_PREFIX + "true); " << endl;
-        ursaFile <<"      b2 = (nP[n_from][0]==n" + EQ_NATIVE_NAME + ");  "                                                                        << endl;
-        ursaFile <<"      b3 = (nP[n_from][0]==n" + EQ_NATIVE_NAME + ");  "                                                                        << endl;
+        ursaFile <<"      b2 = (nP[n_from][0]==" + URSA_NUM_PREFIX + EQ_NATIVE_NAME + ");  "                                                                        << endl;
+        ursaFile <<"      b3 = (nP[n_from][0]==" + URSA_NUM_PREFIX + EQ_NATIVE_NAME + ");  "                                                                        << endl;
         ursaFile <<"      b2 &&= (nA[n_from][1]==nInst[nProofStep][nMaxArg+2]); "                                                                  << endl;
         ursaFile <<"      b3 &&= (nA[n_from][0]==nInst[nProofStep][nMaxArg+2]); "                                                                  << endl;
         ursaFile <<"      bB1 = false;  "                                                                                                          << endl;
@@ -518,7 +534,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
 
         //  eq(A,A)
         ursaFile <<"   bMatchPremises = (nAxiomApplied[nProofStep] == nEQReflex); "                                                                    << endl;
-        ursaFile <<"   bMatchConclusion = (nP[nProofStep][0] == n" + EQ_NATIVE_NAME + ") && "                                                          << endl;
+        ursaFile <<"   bMatchConclusion = (nP[nProofStep][0] == " + URSA_NUM_PREFIX + EQ_NATIVE_NAME + ") && "                                                          << endl;
         ursaFile <<"                      (nA[nProofStep][0] == nA[nProofStep][1]); "                                                                  << endl;
         ursaFile <<"   for (nInd = 0; nInd < 2; nInd++) { "                                                                                            << endl;
         ursaFile <<"      bMatchConclusion &&= (nA[nProofStep][nInd] < ((nProofStep+2)<<3)); "                                                         << endl;
