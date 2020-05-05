@@ -95,6 +95,9 @@ do
         echo "Eprover:"
         tm eprover --auto --cpu-limit="$time" "$file" > reseprover.txt
         test_success_eprover reseprover.txt
+	echo "Vampire:"
+	tm vampire --mode casc "$file" > resvampire.txt
+	test_success_eprover resvampire.txt
     fi
     ((i++))
 done
