@@ -175,6 +175,21 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
                 cout << "Wrong!" << endl;
             delete excoq;
         }
+        if (params.mbIsa) {
+            string sFileName3("proofs/PROOF" + fileName + ".thy");
+            ProofExport *exisa;
+            exisa = new ProofExport2Isabelle;
+            exisa->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
+
+            cout << "Verifying Isabelle proof ... " << flush;
+            string s = "./isabelle  process -T " + sFileName3;
+            int rv = system(s.c_str());
+            if (!rv)
+                cout << "Correct!" << endl;
+            else
+                cout << "Wrong!" << endl;
+            delete exisa;
+        }
     }
     // else
     //    cout << "Theorem not proved!" << endl;

@@ -12,17 +12,32 @@ ProofExport2Isabelle::ProofExport2Isabelle()
 
 void ProofExport2Isabelle::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
-    outfile << "forall (";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        outfile << " (" << cl.GetUnivVar(i) << " )";
-    OutputConjFormula(outfile, cl.GetPremises());
-    OutputImplication(outfile);
+    outfile << "\\<forall> ";
+    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
+        outfile << cl.GetUnivVar(i);
+        if (i < size-1)
+            outfile << " ";
+    }
+        
+    outfile << ". ";
+    for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
+        OutputFact(outfile, cl.GetPremises().GetElement(i));
+        if(i+1<cl.GetPremises().GetSize())
+            outfile << " \\<longrightarrow> ";
+    }
+    if (cl.GetPremises().GetSize() != 0)
+        OutputImplication(outfile);
 
-    outfile << "exists (";
-    for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
-        outfile << " (" << cl.GetExistVar(i) << " )";
+    if (cl.GetNumOfExistVars() > 0) {
+        outfile << "\\<exists> ";
+        for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
+            outfile << cl.GetExistVar(i);
+            if (i < size-1)
+                outfile << " ";
+        }
+        outfile << ". ";
+    }
     OutputDNF(outfile, cl.GetGoal());
-    outfile << "))";
 }
 
 
@@ -34,21 +49,20 @@ void ProofExport2Isabelle::OutputFact(ofstream& outfile, const Fact& f)
     for (size_t i=0; i<f.GetArity(); i++) {
         outfile << " " << f.GetArg(i);
     }
-    outfile << " ";
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputImplication(ofstream& outfile)
 {
-    outfile << "\\<Leftrightarrow> ";
+    outfile << "\\<longrightarrow> ";
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputAnd(ofstream& outfile)
 {
-    outfile << " and ";
+    outfile << "\\<and>";
 }
 
 // ---------------------------------------------------------------------------------
@@ -59,9 +73,37 @@ void ProofExport2Isabelle::OutputOr(ofstream& outfile)
 }
 
 // ---------------------------------------------------------------------------------
+string repeat2(int n, string s) {
+    ostringstream os;
+    for(int i = 0; i < n; i++)
+        os << s;
+    return os.str();
+}
+// ---------------------------------------------------------------------------------
 
-void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& /*T*/, const CLFormula& /* cl */, const string& /* theoremName*/, const map<string,string>& /*instantiation*/)
+void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl , const string& theoremName, const map<string,string>& /*instantiation*/)
 {
+    outfile << "theory Th" << endl;
+    outfile << "imports Main" << endl;
+    outfile << "begin" << endl << endl;
+    
+    outfile << "typedecl \"MyT\"" << endl;
+    for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
+    {
+        outfile << "consts " << get<0>(*it) << " :: \"" << repeat2(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl; 
+    }
+    outfile << endl;
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+        outfile << "axiomatization where " << endl;
+        outfile << get<1>(T.Axiom(i)) << " : \"";
+        OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
+        outfile << "\"" << endl;
+    }
+    outfile << endl;
+
+    outfile << "lemma " << theoremName << ": \"";
+    OutputCLFormula(outfile, cl, theoremName);
+    outfile << "\"" << endl;
     outfile << "proof - " << endl << endl;
 }
 
@@ -70,6 +112,7 @@ void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& /*T*/, cons
 void ProofExport2Isabelle::OutputEpilogue(ofstream& outfile)
 {
     outfile << endl << endl << "qed" << endl << endl;
+    outfile << "end" << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -85,14 +128,28 @@ void ProofExport2Isabelle::OutputProof(ofstream& outfile, const CLProof& p, unsi
     outfile << endl;
 
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-        outfile << "from: '";
-        OutputConjFormula(outfile, get<0>(p.GetMP(i)));
-        outfile << "' have '";
+        ConjunctionFormula conj = get<0>(p.GetMP(i));
+        if (conj.GetSize() > 0) {
+            outfile << "from ";
+            for(size_t i=0; i<conj.GetSize(); i++) {
+                outfile << "`";
+                OutputFact(outfile, conj.GetElement(i));
+                outfile << "`";
+                if(i+1<conj.GetSize())
+                outfile << " and ";
+            }
+            //OutputConjFormula(outfile, get<0>(p.GetMP(i)));
+            outfile << " ";
+        }
+        outfile << "have \"";
         OutputDNF(outfile, get<1>(p.GetMP(i)));
-        outfile << "' by rule (" << get<2>(p.GetMP(i)) << ")" << endl;
+        outfile << "\" using " << get<2>(p.GetMP(i)) << " by blast" << endl;
+       // vector<pair<string,string>> inst = get<3>(p.GetMP(i));
+       // vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+       // for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
+       //     outfile << " " << inst[j].second;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
-    outfile << "note note3 = this";
 }
 
 // ---------------------------------------------------------------------------------
@@ -123,6 +180,10 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/,
 }
 
 // ---------------------------------------------------------------------------------
+void ProofExport2Isabelle::OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level)
+{
+    outfile << "end of proof by neg intro" << endl;
+}
 
 
 

@@ -34,6 +34,7 @@ int main(int argc , char** argv)
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
     params.mbCoq =  DEFAULT_COQ;
+    params.mbIsa = DEFAULT_ISA;
     params.mbSimp = DEFAULT_SIMP;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
@@ -55,6 +56,8 @@ int main(int argc , char** argv)
             if (argv[i][0] == '-' && argv[i][1] == 'v') {
                 if (!strcmp(argv[i]+2, "coq"))
                     params.mbCoq = true;
+                else if (!strcmp(argv[i]+2, "isa"))
+                    params.mbIsa = true;
                 else {
                     wrongInput = true;
                     break;

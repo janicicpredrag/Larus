@@ -33,6 +33,7 @@ const bool DEFAULT_NATIVE_EQ  = false;
 const bool DEFAULT_NEG_ELIM = false;
 const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
+const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
 
@@ -54,6 +55,7 @@ typedef struct proverParams {
     bool mbNativeEQ;
     bool mbExcludedMiddle;
     bool mbCoq;
+    bool mbIsa;
     bool mbSimp;
 } proverParams;
 
