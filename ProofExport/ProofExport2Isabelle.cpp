@@ -12,14 +12,17 @@ ProofExport2Isabelle::ProofExport2Isabelle()
 
 void ProofExport2Isabelle::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
 {
-    outfile << "\\<forall> ";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
-        outfile << cl.GetUnivVar(i);
-        if (i < size-1)
-            outfile << " ";
+    if (cl.GetNumOfUnivVars()>0)
+    {
+        outfile << "\\<forall> ";
+        for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
+            outfile << cl.GetUnivVar(i);
+            if (i < size-1)
+                outfile << " ";
+        }
+        outfile << ". ";
     }
-        
-    outfile << ". ";
+    
     for(size_t i=0; i<cl.GetPremises().GetSize(); i++) {
         OutputFact(outfile, cl.GetPremises().GetElement(i));
         if(i+1<cl.GetPremises().GetSize())
@@ -34,8 +37,8 @@ void ProofExport2Isabelle::OutputCLFormula(ofstream& outfile, const CLFormula& c
             outfile << cl.GetExistVar(i);
             if (i < size-1)
                 outfile << " ";
-        }
         outfile << ". ";
+        }       
     }
     OutputDNF(outfile, cl.GetGoal());
 }
@@ -104,6 +107,7 @@ void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CL
     outfile << "lemma " << theoremName << ": \"";
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "\"" << endl;
+    //outfile << "by meeson";
     outfile << "proof - " << endl << endl;
 }
 
