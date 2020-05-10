@@ -668,7 +668,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   bQEDbyEFQStep = ((nProofStep>0) && nP[nProofStep-1][0] == " + URSA_NUM_PREFIX + "false "                                        << endl;
     ursaFile <<"                     && (nNesting[nProofStep-1] == nNesting[nProofStep]) "                                                         << endl;
     ursaFile <<"                     && bGoalReached "                                                                                             << endl;
-    ursaFile <<"                     && (!bCases[nProofStep] || nProofSize==nProofStep)); "                                                        << endl;
+    ursaFile <<"                     && (!bCases[nProofStep] || nProofSize==nProofStep)) "                                                         << endl;
+    ursaFile <<"                     && !bQEDbyAssumptionStep;  "                                                                                  << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bQEDbyCasesStep = (((nNesting[nProofStep-1] & 1) == 1) "                                                                        << endl;
     ursaFile <<"                     && nNesting[nProofStep] == (nNesting[nProofStep-1]>>1) "                                                      << endl;
@@ -685,12 +686,12 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   nNegIntroCheck -= ite (nAxiomApplied[nProofStep] == nQEDbyNegIntro, 1, 0); "                                                    << endl;
     ursaFile <<"   bProofStepCorrect = (nNegIntroCheck == 2 || nNegIntroCheck==1); "                                                               << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bPrevStepQED = (nAxiomApplied[nProofStep-1] == nQEDbyCases) || (nAxiomApplied[nProofStep-1] == nQEDbyAssumption) "              << endl;
-    ursaFile <<"                  || (nAxiomApplied[nProofStep-1] == nQEDbyEFQ)  || (nAxiomApplied[nProofStep-1] == nQEDbyNegIntro); "             << endl;
+    ursaFile <<"   bPrevStepQED = (nProofStep > 0) && ((nAxiomApplied[nProofStep-1] == nQEDbyCases) || (nAxiomApplied[nProofStep-1] == nQEDbyAssumption) "              << endl;
+    ursaFile <<"                  || (nAxiomApplied[nProofStep-1] == nQEDbyEFQ)  || (nAxiomApplied[nProofStep-1] == nQEDbyNegIntro)); "             << endl;
 
     ursaFile <<"   bProofStepCorrect &&= !bPrevStepQED || (nNesting[nProofStep] != nNesting[nProofStep-1]); "                                      << endl;
     ursaFile <<                                                                                                                                       endl;
-    ursaFile <<"   bProofStepCorrect &&= !(bCases[nProofStep-1] ^^ nAxiomApplied[nProofStep] == nFirstCase);"                                      << endl;
+    ursaFile <<"   bProofStepCorrect &&= !(bCases[nProofStep-1] ^^ (nAxiomApplied[nProofStep] == nFirstCase));"                                      << endl;
     ursaFile <<"   bProofStepCorrect &&= !((bPrevStepGoal && bPrevStepQED && (nNesting[nProofStep-1] & 1) == 0) ^^ "                               << endl;
     ursaFile <<"                          nAxiomApplied[nProofStep] == nSecondCase);"                                                              << endl;
     ursaFile <<"   bProofStepCorrect &&= !((bPrevStepGoal && bPrevStepQED && (nNesting[nProofStep-1] & 1) == 1 && nNesting[nProofStep-1]!=1) ^^ "  << endl;
@@ -710,6 +711,28 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   /* ... the proof step is correct if it was one of cases from some case split */ "                                               << endl;
     ursaFile <<"   bProofStepCorrect &&= (bMPStep /*|| bNegIntroStep*/ || bFirstCaseStep || bSecondCaseStep  "                                     << endl;
     ursaFile <<"                   || bQEDbyCasesStep || bQEDbyAssumptionStep || bQEDbyEFQStep /*|| bQEDbyNegIntroStep*/); "                       << endl;
+    ursaFile <<"   bProofStepCorrect &&= !(bMPStep && bFirstCaseStep) && "                                                                         << endl;
+    ursaFile <<"                         !(bMPStep && bSecondCaseStep) &&  "                                                                       << endl;
+    ursaFile <<"                         !(bMPStep && bQEDbyCasesStep) &&  "                                                                       << endl;
+    ursaFile <<"                         !(bMPStep && bQEDbyAssumptionStep) &&  "                                                                  << endl;
+    ursaFile <<"                         !(bMPStep && bQEDbyEFQStep) &&  "                                                                         << endl;
+    ursaFile <<"                         !(bMPStep && bQEDbyNegIntroStep) &&  "                                                                    << endl;
+    ursaFile <<"                         !(bFirstCaseStep && bSecondCaseStep) &&  "                                                                << endl;
+    ursaFile <<"                         !(bFirstCaseStep && bQEDbyCasesStep) &&  "                                                                << endl;
+    ursaFile <<"                         !(bFirstCaseStep && bQEDbyAssumptionStep) &&  "                                                           << endl;
+    ursaFile <<"                         !(bFirstCaseStep && bQEDbyEFQStep) &&  "                                                                  << endl;
+    ursaFile <<"                         !(bFirstCaseStep && bQEDbyNegIntroStep) &&  "                                                             << endl;
+    ursaFile <<"                         !(bSecondCaseStep && bQEDbyCasesStep) &&  "                                                               << endl;
+    ursaFile <<"                         !(bSecondCaseStep && bQEDbyAssumptionStep) &&  "                                                          << endl;
+    ursaFile <<"                         !(bSecondCaseStep && bQEDbyEFQStep) &&  "                                                                 << endl;
+    ursaFile <<"                         !(bSecondCaseStep && bQEDbyNegIntroStep) &&  "                                                            << endl;
+    ursaFile <<"                         !(bQEDbyCasesStep && bQEDbyAssumptionStep) &&  "                                                          << endl;
+    ursaFile <<"                         !(bQEDbyCasesStep && bQEDbyEFQStep) &&  "                                                                 << endl;
+    ursaFile <<"                         !(bQEDbyCasesStep && bQEDbyNegIntroStep) &&  "                                                            << endl;
+    ursaFile <<"                         !(bQEDbyAssumptionStep && bQEDbyEFQStep) &&  "                                                            << endl;
+    ursaFile <<"                         !(bQEDbyAssumptionStep && bQEDbyNegIntroStep) &&  "                                                       << endl;
+    ursaFile <<"                         !(bQEDbyEFQStep && bQEDbyNegIntroStep);  "                                                                << endl;
+
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bProofCorrect &&= ((nProofStep > nProofSize) || bProofStepCorrect); "                                                           << endl;
 

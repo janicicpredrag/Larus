@@ -16,6 +16,8 @@ TODO:
     (1) "use necessarily all the given axioms"
     (2) "use necessarily this axioms" (can be repeated several times)
 12. Test interesting to test Isabelle and Coq hammer.
+13. Julien: use incremental sat solver instead of restarting from scratch
+
 
 DONE:
 
@@ -26,6 +28,15 @@ DONE:
 12. Julien: names with underscore are assumed to be internal auxiliary predicates (introduced by CL2 normalization)
     I think we should replace it with something less common , like starting with three underscores.
  5. Make smt-uflia and smt-ufbf engines
+12. Julien: What about trying with hints (statements) taken from the Coq proof using euclid problems ?
+    The syntax could be: fof(name, hint, formula).
+    then we can reuse the parser?
+    For example, we could consider euclid prop 01 and give it these hints ?
+    exists J, CI J A A B
+    exists K, CI K B B A
+    The meaning of an "hint" for a statement, would be there is a proof step 
+    with this statement: if n is number of steps, it would be a big n ary conj ?
+    We could allow also for * in the statement, meaning any point. exists J, CI J * * * means one needs to build a point on a circle.
 
 
 *******************************************************************************************************************
@@ -81,7 +92,7 @@ IDEAS:
 
 1. Julien: Here are some ideas of potential additional constraints to reduce the search space:
 - all axioms should be used in the proof
-- the same fact should not be derived twice in the same branch
+- the same fact should not be derived twice in the same branch  (proof step ( the fact deduced) can not appear twice.)
 
 2. Julien: I noticed that we can optimize the encoding:
 the formula of the form A & B & C & D are encoded using
@@ -168,25 +179,8 @@ Qed.
 > So the approach would be a little bit different that  just cutting the natural proof in small pieces in order to try to get a formal proof. Here we would help the system  by giving some information. I think it would be closer to what a human does when he formalizes a natural language proof: you have hints that you should use some proofs steps. But usually the natural language proof forgets some special cases. So if you try to prove automatically that one step can be derived from the previous it will fail because sometimes some assumptions are missing. For example, in Euclid proof, often only the proof in the general case is given.
 
 11. Julien:
-Yes I agree that for experimenting we should look at individual engines, 
-but when comparing to other provers we can take into consideration that 
+Yes I agree that for experimenting we should look at individual engines, but when comparing to other provers we can take into consideration that 
 they are portfolio prover using different strategies.
-
-12. Julien: What about trying with hints (statements) taken from the Coq proof using 
-euclid problems ?
-The syntax could be:
-fof(name, hint, formula).
- 
-then we can reuse the parser?
- 
-For example, we could consider euclid prop 01 and give it these hints ?
-exists J, CI J A A B
-exists K, CI K B B A
- 
-The meaning of an "hint" for a statement, would be there is a proof step 
-with this statement: if n is number of steps, it would be a big n ary conj ?
- 
-We could allow also for * in the statement, meaning any point. exists J, CI J * * * means one needs to build a point on a circle.
 
 13. Predrag: We can use incolmplete SAT solvers for SAT encoding:
 https://github.com/msoos/walksat
@@ -198,9 +192,9 @@ Using glucose : 12s
 Using cryptominisat: 9s.
 cadical: 20s
 
-
 15: Julien: We could add a constraint to never put 'case foo' inside 'case foo'.
     Predrag: Would be useful only for a very few conjectures, on the other hand would complicate encoding.
+
 
 
 

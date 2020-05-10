@@ -903,7 +903,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
                     "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
-                    sbGoalReached + ")");
+                    sbGoalReached +
+                    "(not " + sbQEDbyAssumptionStep + "))");
 
        string sbQEDbyNegIntroStep = ( nProofStep == 0 ? " false " :
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
@@ -951,6 +952,32 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        /* ... the proof step is correct if it was one of cases from some case split */
        sbProofStepCorrect += "(or " + sbMPStep + " " + /* sbNegIntroStep +*/ " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
                                   sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " /*+ sbQEDbyNegIntroStep*/ + ")";
+
+
+       sbProofStepCorrect += "(not (and " + sbMPStep  + sbFirstCaseStep + "))";
+       sbProofStepCorrect += "(not (and " + sbMPStep + sbSecondCaseStep + "))";
+       sbProofStepCorrect += "(not (and " + sbMPStep + sbQEDbyCasesStep + "))";
+       sbProofStepCorrect += "(not (and " + sbMPStep + sbQEDbyAssumptionStep + "))";
+       sbProofStepCorrect += "(not (and " + sbMPStep + sbQEDbyEFQStep + "))";
+       sbProofStepCorrect += "(not (and " + sbMPStep + sbQEDbyNegIntroStep + "))";
+       sbProofStepCorrect += "(not (and " + sbFirstCaseStep + sbSecondCaseStep + "))";
+       sbProofStepCorrect += "(not (and " + sbFirstCaseStep + sbQEDbyCasesStep + "))";
+       sbProofStepCorrect += "(not (and " + sbFirstCaseStep + sbQEDbyAssumptionStep + "))";
+       sbProofStepCorrect += "(not (and " + sbFirstCaseStep + sbQEDbyEFQStep + "))";
+       sbProofStepCorrect += "(not (and " + sbFirstCaseStep + sbQEDbyNegIntroStep + "))";
+       sbProofStepCorrect += "(not (and " + sbSecondCaseStep + sbQEDbyCasesStep + "))";
+       sbProofStepCorrect += "(not (and " + sbSecondCaseStep + sbQEDbyAssumptionStep + "))";
+       sbProofStepCorrect += "(not (and " + sbSecondCaseStep + sbQEDbyEFQStep + "))";
+       sbProofStepCorrect += "(not (and " + sbSecondCaseStep + sbQEDbyNegIntroStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyCasesStep + sbQEDbyAssumptionStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyCasesStep + sbQEDbyEFQStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyCasesStep + sbQEDbyNegIntroStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyAssumptionStep + sbQEDbyEFQStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyAssumptionStep + sbQEDbyNegIntroStep + "))";
+       sbProofStepCorrect += "(not (and " + sbQEDbyEFQStep + sbQEDbyNegIntroStep + "))";
+
+
+
        sbProofCorrect += "(or " + smt_less("nProofSize", nProofStep) + "(and " + sbProofStepCorrect + "))";
 
        string sbEarlyEndOfProof = "(and ";
