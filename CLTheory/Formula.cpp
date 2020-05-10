@@ -229,6 +229,9 @@ bool CLFormula::UsesNativeEq() const
 bool CLFormula::Read(const string& s)
 {
     string s0 = SkipChar(s, ' ');
+    s0 = SkipChar(s0, '\n');
+    s0 = SkipChar(s0, '\r');
+    s0 = SkipChar(s0, '\t');
     size_t pos, pos2, p, pp;
     #ifdef DEBUG_PARSER
     cout << "Currently reading : " << s0 << endl;

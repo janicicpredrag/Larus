@@ -40,9 +40,14 @@ private:
     string smt_prod(string arg1, string arg2);
     string smt_prod(string arg1, int arg2);
     string smt_geq(string arg1, string arg2);
+    string smt_geq(string arg1, int arg2);
     string smt_less(string arg1, string arg2);
     string smt_less(string arg1, int arg2);
     string smt_ite(string arg1, int arg2, int arg3);
+
+    string smt_odd(string arg1, unsigned max);
+    string smt_even(string arg1, unsigned max);
+    string smt_prefix(string arg1, string arg2);
 
     string appack(string s, unsigned arg1);
     string appack(string s, unsigned arg1, unsigned arg2);
