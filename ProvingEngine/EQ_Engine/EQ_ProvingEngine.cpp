@@ -1017,13 +1017,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (unsigned i = 0; i<Asserts.size(); i++) {
         smtFile << "\n; ********* Constraints for proof step " << i << " ********* " << endl;
         smtFile << "(assert" + Asserts[i] + ")" << endl << endl;
-//        smtFile << "(push)" << endl << endl;
-
-//        smtFile << "(check-sat)" << endl << endl;
-
+        // smtFile << "(push)" << endl << endl;
+        //  smtFile << "(check-sat)" << endl << endl;
     }
-
-            smtFile << "(check-sat)" << endl << endl;
+    smtFile << "(check-sat)" << endl << endl;
 
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
     smtFile << "(assert (and " /* + sbProofCorrect +*/ "(or " + sbProofFinished + ")))" << endl << endl;
