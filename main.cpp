@@ -142,7 +142,7 @@ int main(int argc , char** argv)
         cout << "   -f<format>           for input format; example -ftptp; default: tptp \n" << endl;
         cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
         cout << "   -d                   for disabling proof simplification; default is false \n" << endl; 
-        cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv); examples: -eursa; default: stl \n" << endl;
+        cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv); examples: -eursa; default: stl \n" << endl;
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
         cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;

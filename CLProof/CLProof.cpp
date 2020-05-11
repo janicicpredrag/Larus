@@ -588,6 +588,8 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 size_t numOfUnivVars;
                 size_t numOfExistVars;
                 noPremises = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetSize();
+                if (noPremises == 1 && mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetElement(1).GetName() == "true")
+                    noPremises = 0;
                 numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
                 numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
                 size_t numOfVars = numOfUnivVars + numOfExistVars;
