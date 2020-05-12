@@ -258,6 +258,11 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
             int nNesting, nAxiom, nPredicate, nBranching, nArgs[100];
             ss >> nNesting >> nAxiom ;
 
+            size_t numOfUnivVars;
+            size_t numOfExistVars;
+            numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
+            numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
+
             if (nAxiom == eQEDbyCases) {
                 SetProofEnd(pcs);
                 proofTrace.push_back(dummy);
@@ -284,8 +289,8 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
             ss >> nBranching >> nPredicate;
             for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
                 ss >> nArgs[i];
-              //  if (sConstants.find(nArgs[i]) == sConstants.end())  // eliminate spurious constants, also for inst[]
-              //      nArgs[i] = 0;
+                if (sConstants.find(nArgs[i]) == sConstants.end() && numOfExistVars == 0)  // eliminate spurious constants, also for inst[]
+                    nArgs[i] = 0;
             }
 
             if (nAxiom == eAssumption) {
@@ -576,8 +581,11 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 int nPredicate1, nArgs1[100];
                 if (nBranching) {
                     ss >> nPredicate1;
-                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++)
+                    for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++) {
                         ss >> nArgs1[i];
+                        if (sConstants.find(nArgs1[i]) == sConstants.end()  && numOfExistVars == 0)
+                            nArgs1[i] = 0; // eliminate spurious constants, also for inst[]
+                    }
                 }
 
                 int nFrom;
@@ -585,13 +593,10 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 istringstream ss1(str);
                 ConjunctionFormula cfPremises;
                 unsigned noPremises;
-                size_t numOfUnivVars;
-                size_t numOfExistVars;
+
                 noPremises = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetSize();
                 if (noPremises == 1 && mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetElement(1).GetName() == "true")
                     noPremises = 0;
-                numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
-                numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
                 size_t numOfVars = numOfUnivVars + numOfExistVars;
                 for (unsigned int i = 0; i<noPremises; i++) {
                     ss1 >> nFrom;
@@ -612,7 +617,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 vector<pair<string,string>> new_witnesses;
                 for(size_t i=0; i < numOfUnivVars; i++) {
                     const string UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
-                    if (sConstants.find(inst[i]) == sConstants.end())
+                    if (sConstants.find(inst[i]) == sConstants.end()  && numOfExistVars == 0)
                         inst[i] = 0; // eliminate spurious constants
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }

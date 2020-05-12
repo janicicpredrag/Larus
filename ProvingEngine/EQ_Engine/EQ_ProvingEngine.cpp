@@ -986,14 +986,27 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbProofStepCorrect += "(or " + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1)
                                    + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 2) + ")";
 
-       // memoization
+       // a kind of memoization:
        sbProofStepCorrect += appeq(app("bOddNesting", nProofStep),
                                    smt_odd(app("nNesting", nProofStep), 32));
-       for (unsigned nProofStep1 = mnPremisesCount; nProofStep1 < nProofStep; nProofStep1++) {
+       for (unsigned nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) {
+           // a kind of memoization:
            sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
                                        smt_prefix(app("nNesting", nProofStep1), app("nNesting", nProofStep)));
-       }
 
+           // symmetry breaking: if there are two steps with MP rule application, mp1 and mp2,
+           // for mp2, there must be at least one "from" which is >= than some "from" for mp1.
+           string bb;
+           for (unsigned i1 = 0; i1 < mnMaxPremises; i1++) {
+               for (unsigned i = 0; i < mnMaxPremises; i++) {
+                   bb += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
+               }
+           }
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   app("bSameProofBranch", nProofStep1, nProofStep) + "))" +
+                   "(or " + bb + "))";
+       }
 
        Asserts.push_back("(or " + smt_less("nProofSize", nProofStep) + "(and " + sbProofStepCorrect + "))");
        // sbProofCorrect += "(or " + smt_less("nProofSize", nProofStep) + "(and " + sbProofStepCorrect + "))";
@@ -1423,7 +1436,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
                  assert(false);
                  // assert(mpT->mCLaxioms[axiom-eNumberOfStepKinds].first.GetPremises().GetElement(0).GetName() == "true");
              }
-             int from = nmodel[s];
+             int from = nmodel[s] % 1000;
              if (from == 99) {
                 noPremises = 0;
                 break;
@@ -1437,7 +1450,7 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
           int inst[100];
           for(int i=0; i<numberOfUnivVars+numberOfExiVars; i++) {
               s = appack("nInst", proofStep, i+1);
-              inst[i] = nmodel[s];
+              inst[i] = nmodel[s] % 1000;
           }
 
           if (!branching) {
