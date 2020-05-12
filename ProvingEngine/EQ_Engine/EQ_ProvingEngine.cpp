@@ -996,15 +996,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
            // symmetry breaking: if there are two steps with MP rule application, mp1 and mp2,
            // for mp2, there must be at least one "from" which is >= than some "from" for mp1.
-           string bb;
-           for (unsigned i1 = 0; i1 < mnMaxPremises; i1++) {
-               for (unsigned i = 0; i < mnMaxPremises; i++) {
+           string bb = " false ";
+           for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
+               for (unsigned i = 0; i < mnMaxPremises; i++)
                    bb += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
-               }
-           }
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
-                   app("bSameProofBranch", nProofStep1, nProofStep) + "))" +
+                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
+                   // app("bSameProofBranch", nProofStep1, nProofStep) + "))" +
                    "(or " + bb + "))";
        }
 

@@ -276,6 +276,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ofstream ursaFile;
     ursaFile.open ("prove.urs");
 
+    unsigned mnMaxPremises = 0;
+    for (vector<pair<CLFormula,string>>::iterator it = mpT->mCLaxioms.begin(); it!=mpT->mCLaxioms.end(); it++)
+        if (it->first.GetPremises().GetSize() > mnMaxPremises)
+            mnMaxPremises = it->first.GetPremises().GetSize();
+
     ursaFile << "/* *********************** URSA Specification ********************** */" << endl;
     ursaFile << endl;
 
@@ -285,6 +290,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
         ursaFile << "nProofLen = " << mParams.max_proof_length << ";" << endl << endl;
 
     ursaFile << "nMaxDepth = " << mParams.max_nesting_depth << ";" << endl << endl;
+
+    ursaFile << "nMaxPremises = " << mnMaxPremises << ";" << endl << endl;
 
     ursaFile << "/* Predicate symbols */" << endl;
 
@@ -744,6 +751,13 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                         !(baQEDbyAssumptionStep[nProofStep] && baQEDbyNegIntroStep[nProofStep]) &&  "                                                       << endl;
     ursaFile <<"                         !(baQEDbyEFQStep[nProofStep] && baQEDbyNegIntroStep[nProofStep]);  "                                                                << endl;
 
+    ursaFile <<"   bsymm = false; "    << endl;
+    ursaFile <<"   for (nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) { "                                                                      << endl;
+    ursaFile <<"      for (ni1 = 0; ni1 < nMaxPremises; ni1++)  "                                                                      << endl;
+    ursaFile <<"         for (ni = 0; ni < nMaxPremises; ni++)  "                                                                      << endl;
+    ursaFile <<"                  bsymm ||= nFrom[nProofStep][ni] >= nFrom[nProofStep1][ni1]; " << endl;
+    ursaFile <<"   bProofStepCorrect &&= (!(baMPStep[nProofStep1] && baMPStep[nProofStep] && nNesting[nProofStep1]==nNesting[nProofStep]) || bsymm);" << endl;
+    ursaFile <<" } "                                                                                                                                << endl;
     ursaFile <<                                                                                                                                       endl;
     ursaFile <<"   bProofCorrect &&= ((nProofStep > nProofSize) || bProofStepCorrect); "                                                           << endl;
 
