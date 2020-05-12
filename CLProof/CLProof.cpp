@@ -258,10 +258,12 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
             int nNesting, nAxiom, nPredicate, nBranching, nArgs[100];
             ss >> nNesting >> nAxiom ;
 
-            size_t numOfUnivVars;
-            size_t numOfExistVars;
-            numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
-            numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
+            size_t numOfUnivVars = 0;
+            size_t numOfExistVars = 0;
+            if (nAxiom >= eNumberOfStepKinds) {
+                numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
+                numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
+            }
 
             if (nAxiom == eQEDbyCases) {
                 SetProofEnd(pcs);
