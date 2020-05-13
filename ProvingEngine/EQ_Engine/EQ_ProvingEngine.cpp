@@ -551,6 +551,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     continue;
 
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
+           sbMatchPremises += appeq(app("nPremises", nProofStep), nAxiomPremises[nAxiom]);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "(or false ";
               sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
@@ -989,6 +990,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        // a kind of memoization:
        sbProofStepCorrect += appeq(app("bOddNesting", nProofStep),
                                    smt_odd(app("nNesting", nProofStep), 32));
+
        for (unsigned nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) {
            // a kind of memoization:
            sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
@@ -1000,11 +1002,22 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                for (unsigned i = 0; i < mnMaxPremises; i++)
                    bb += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
+
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
                    // app("bSameProofBranch", nProofStep1, nProofStep) + "))" +
                    "(or " + bb + "))";
+       }
+
+       // symmetry breaking:
+       // check only one before: if there is one with 0 premises after some with <>0, this is sufficient!
+       for (unsigned nProofStep1 = nProofStep-1; nProofStep1 < nProofStep; nProofStep1++) {
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   appeq(app("nPremises", nProofStep), 0) + "))" +
+                   appeq(app("nPremises", nProofStep1), 0) + ")";
        }
 
        Asserts.push_back("(or " + smt_less("nProofSize", nProofStep) + "(and " + sbProofStepCorrect + "))");
