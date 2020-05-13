@@ -26,7 +26,7 @@ public:
 
 private:
     void EncodeAxiom(CLFormula& axiom);
-    void EncodeProof(const DNFFormula& formula, unsigned nProofLen);
+    void EncodeProof(const DNFFormula& formula, unsigned nProofLen, string filename);
     bool ReadModel(const string& sModelFile, const string& sEncodedProofFile);
 
     string app(string s, unsigned arg1);
