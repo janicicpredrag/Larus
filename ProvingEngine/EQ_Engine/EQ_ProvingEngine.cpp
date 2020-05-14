@@ -551,7 +551,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     continue;
 
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
-           sbMatchPremises += appeq(app("nPremises", nProofStep), nAxiomPremises[nAxiom]);
+           sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "(or false ";
               sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
@@ -996,28 +996,53 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
                                        smt_prefix(app("nNesting", nProofStep1), app("nNesting", nProofStep)));
 
+           string bb = " false ";
+           for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
+               bb +=   "(or " + smt_less(app("nNumberOfPremises", nProofStep), i1) +
+                       smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   app("bSameProofBranch", nProofStep1, nProofStep) +
+                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   bb + "))" +
+                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
+
            // symmetry breaking: if there are two steps with MP rule application, mp1 and mp2,
            // for mp2, there must be at least one "from" which is >= than some "from" for mp1.
-           string bb = " false ";
+        /*   string bb = " false ";
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                for (unsigned i = 0; i < mnMaxPremises; i++)
                    bb += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
-
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
-                   // app("bSameProofBranch", nProofStep1, nProofStep) + "))" +
-                   "(or " + bb + "))";
+                   "(or " + bb + "))";*/
        }
 
        // symmetry breaking:
        // check only one before: if there is one with 0 premises after some with <>0, this is sufficient!
-       for (unsigned nProofStep1 = nProofStep-1; nProofStep1 < nProofStep; nProofStep1++) {
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+       for (unsigned nProofStep1 = nProofStep-1; nProofStep1 < nProofStep; nProofStep1++)
+       if (nProofStep > 0)
+       {
+           unsigned nProofStep1 = nProofStep-1;
+     /*      sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
-                   appeq(app("nPremises", nProofStep), 0) + "))" +
-                   appeq(app("nPremises", nProofStep1), 0) + ")";
+                   appeq(app("nNumberOfPremises", nProofStep), 0) + "))" +
+                   appeq(app("nNumberOfPremises", nProofStep1), 0) + ")";*/
+
+           string bb = " true ";
+           for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
+               bb +=   "(or " +
+                       smt_less(app("nNumberOfPremises", nProofStep), i1+1) +
+                       smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   app("bSameProofBranch", nProofStep1, nProofStep) +
+                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(and " + bb + ")))" +
+                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
+
        }
 
        Asserts.push_back("(or " + smt_less("nProofSize", nProofStep) + "(and " + sbProofStepCorrect + "))");
