@@ -320,7 +320,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-
+    string smt_proofout_filename = tmpnam(NULL);
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -339,15 +339,15 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            EncodeProof(formula, l);
+            string smt_proof_filename = tmpnam(NULL);
+            string smt_model_filename = tmpnam(NULL);
+            
+            EncodeProof(formula, l, smt_proof_filename);
             int rv;
-            rv = system("rm smt-model.txt");
-            // if (!rv) // do not attempt to read some old proof representation
-            //    cout << "The old file smt-proof.txt has been deleted." << endl;
-            const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
+            const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proof_filename + " > " + smt_model_filename;
             cout << l << flush;
             rv = system(sCall.c_str());
-            if (!ReadModel("smt-model.txt", "smt-proof.txt")) {  // Find a model
+            if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
                 l *= 2;
                 cout << ", "  << flush;
             }
@@ -361,7 +361,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         if (mParams.shortest_proof && best) {
             l = best/2+1; r = best;
             best_start = best;
-            ret = proof.DecodeProof(formula, "smt-proof.txt");
+            ret = proof.DecodeProof(formula, smt_proofout_filename);
             cout << endl << "Simplifying the proof (size without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << flush;
             proof.Simplify();
             cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
@@ -372,22 +372,20 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             while(l <= r && l != best)  {
                 time_t current_time = time(NULL);
                 double remainingTime = mParams.time_limit - difftime(current_time, start_time);
-                // cout << "remaining time " << remainingTime << endl;
                 if (remainingTime <= 0)
                     break;
 
                 s = (l+r)/2;
                 DECLARATIONS = decl;
-                EncodeProof(formula, s);
+                string smt_proof_filename = tmpnam(NULL);
+                string smt_model_filename = tmpnam(NULL);
+                EncodeProof(formula, s, smt_proof_filename);
                 int rv;
-                rv = system("rm smt-model.txt");
-                // if (!rv) // do not attempt to read some old proof representation
-                //    cout << "The old file smt-proof.txt has been deleted." << endl;
-                const string sCall = "timeout " + to_string(remainingTime) + " z3  prove.smt > smt-model.txt";
+                const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proof_filename +  " > " + smt_model_filename;
                 // cout << "Trying proof length " << s << ";" << flush;
                 cout << s << flush;
                 rv = system(sCall.c_str());
-                if (!ReadModel("smt-model.txt", "smt-proof.txt")) { // Find a model
+                if (!ReadModel(smt_model_filename, smt_proofout_filename)) { // Find a model
                     l = s+1;
                     cout << ", ";
                 }
@@ -401,7 +399,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
         cout << endl;
         if (best > 0 /* && best < best_start*/) {
             cout << "Best found proof: of the length " << best << endl;
-            ret = proof.DecodeProof(formula, "smt-proof.txt");
+            ret = proof.DecodeProof(formula, smt_proofout_filename);
         }
     }
 
@@ -424,10 +422,10 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen)
+void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen, string prove_smt_filename)
 {
     ofstream smtFile;
-    smtFile.open ("prove.smt");
+    smtFile.open (prove_smt_filename);
 
     // smtFile << "(set-option :print-success false)" << endl;
     smtFile << "(set-option :produce-models true)" << endl;
