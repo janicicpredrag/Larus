@@ -348,7 +348,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             cout << l << flush;
             rv = system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
-                l *= 2;
+                l += 5;
+                // l *= 2;
                 cout << ", "  << flush;
             }
             else {
@@ -1040,6 +1041,21 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                    "(and " + bb + ")))" +
                    smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
+
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   app("bSameProofBranch", nProofStep1, nProofStep) +
+                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(and " + bb + "(not " + appeq(app("nAxiomApplied", nProofStep1),0) + "))))" +
+                   "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
+
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                   app("sbMPStep", nProofStep) + " " +
+                   app("bSameProofBranch", nProofStep1, nProofStep) +
+                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(and " + bb + appeq(app("nAxiomApplied", nProofStep),0) + ")))" +
+                   "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
+
 
        }
 

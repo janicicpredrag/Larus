@@ -776,6 +776,19 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     //    ursaFile <<"                   nNesting[nProofStep1]==nNesting[nProofStep] && bb) "                                                                                << endl;
     ursaFile <<"                         bSameProofBranch[nProofStep1][nProofStep] && bb) "                                                                                  << endl;
     ursaFile <<"                        || nAxiomApplied[nProofStep] > nAxiomApplied[nProofStep1]));"                                                                        << endl;
+
+
+    ursaFile <<"   bProofStepCorrect &&= (nProofStep == 0) || ((!(baMPStep[nProofStep1] && baMPStep[nProofStep] && "                                                         << endl;
+    //    ursaFile <<"                   nNesting[nProofStep1]==nNesting[nProofStep] && bb) "                                                                                << endl;
+    ursaFile <<"                         bSameProofBranch[nProofStep1][nProofStep] && bb && nNumberOfPremises[nProofStep] == 0) "                                                                                  << endl;
+    ursaFile <<"                        || nNumberOfPremises[nProofStep1] == 0));"                                                                        << endl;
+
+    ursaFile <<"   bProofStepCorrect &&= (nProofStep == 0) || ((!(baMPStep[nProofStep1] && baMPStep[nProofStep] && "                                                         << endl;
+    //    ursaFile <<"                   nNesting[nProofStep1]==nNesting[nProofStep] && bb) "                                                                                << endl;
+    ursaFile <<"                         bSameProofBranch[nProofStep1][nProofStep] && bb && nNumberOfPremises[nProofStep1] != 0) "                                                                                  << endl;
+    ursaFile <<"                        || nNumberOfPremises[nProofStep1] != 0));"                                                                        << endl;
+
+
     ursaFile <<                                                                                                                                                                 endl;
     ursaFile <<"   bProofCorrect &&= ((nProofStep > nProofSize) || bProofStepCorrect); "                                                                                     << endl;
 
