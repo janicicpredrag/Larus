@@ -320,7 +320,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename = tmpnam(NULL);
+    string smt_proofout_filename = tmpnam(NULL); // "smt-proof.txt"
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -1022,7 +1022,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        // check only one before: if there is one with 0 premises after some with <>0, this is sufficient!
        for (unsigned nProofStep1 = nProofStep-1; nProofStep1 < nProofStep; nProofStep1++)
        // TODO: symmetry breaking turned off
-       if (false && nProofStep > 0)
+       if (nProofStep > 0)
        {
            unsigned nProofStep1 = nProofStep-1;
      /*      sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
@@ -1031,6 +1031,18 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    appeq(app("nNumberOfPremises", nProofStep), 0) + "))" +
                    appeq(app("nNumberOfPremises", nProofStep1), 0) + ")";*/
 
+
+         /*     string bb1 = " false ";
+              for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
+                  for (unsigned i = 0; i < mnMaxPremises; i++)
+                      bb1 += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
+              sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                      app("sbMPStep", nProofStep) + " " +
+                      appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                      "(not " +  app("bCases", nProofStep) + ")" +
+                      appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
+                      "(or " + bb1 + "))";*/
+
            string bb = " true ";
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                bb +=   "(or " +
@@ -1038,22 +1050,25 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
-                   app("bSameProofBranch", nProofStep1, nProofStep) +
-                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   // app("bSameProofBranch", nProofStep1, nProofStep) +
+                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(not " +  app("bCases", nProofStep) + ")" +
                    "(and " + bb + ")))" +
                    smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
 
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
-                   app("bSameProofBranch", nProofStep1, nProofStep) +
-                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   // app("bSameProofBranch", nProofStep1, nProofStep) +
+                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(not " +  app("bCases", nProofStep) + ")" +
                    "(and " + bb + "(not " + appeq(app("nAxiomApplied", nProofStep1),0) + "))))" +
                    "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
 
            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
-                   app("bSameProofBranch", nProofStep1, nProofStep) +
-                   // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   // app("bSameProofBranch", nProofStep1, nProofStep) +
+                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                   "(not " +  app("bCases", nProofStep) + ")" +
                    "(and " + bb + appeq(app("nAxiomApplied", nProofStep),0) + ")))" +
                    "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
 
