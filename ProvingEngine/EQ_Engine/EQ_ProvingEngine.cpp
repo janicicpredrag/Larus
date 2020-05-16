@@ -339,12 +339,12 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proof_filename = tmpnam(NULL);
-            string smt_model_filename = tmpnam(NULL);
+            string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt";
+            string smt_model_filename =  tmpnam(NULL); // "smt-model.txt";
             
-            EncodeProof(formula, l, smt_proof_filename);
+            EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;
-            const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proof_filename + " > " + smt_model_filename;
+            const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename + " > " + smt_model_filename;
             cout << l << flush;
             rv = system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
@@ -378,11 +378,11 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
                 s = (l+r)/2;
                 DECLARATIONS = decl;
-                string smt_proof_filename = tmpnam(NULL);
+                string smt_proofencoded_filename = tmpnam(NULL);
                 string smt_model_filename = tmpnam(NULL);
-                EncodeProof(formula, s, smt_proof_filename);
+                EncodeProof(formula, s, smt_proofencoded_filename);
                 int rv;
-                const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proof_filename +  " > " + smt_model_filename;
+                const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename +  " > " + smt_model_filename;
                 // cout << "Trying proof length " << s << ";" << flush;
                 cout << s << flush;
                 rv = system(sCall.c_str());
@@ -995,7 +995,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
                                        smt_prefix(app("nNesting", nProofStep1), app("nNesting", nProofStep)));
 
-           string bb = " false ";
+       /*    string bb = " false ";
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                bb +=   "(or " + smt_less(app("nNumberOfPremises", nProofStep), i1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
@@ -1004,7 +1004,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    app("bSameProofBranch", nProofStep1, nProofStep) +
                    // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                    bb + "))" +
-                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
+                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";*/
 
            // symmetry breaking: if there are two steps with MP rule application, mp1 and mp2,
            // for mp2, there must be at least one "from" which is >= than some "from" for mp1.
@@ -1021,7 +1021,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        // symmetry breaking:
        // check only one before: if there is one with 0 premises after some with <>0, this is sufficient!
        for (unsigned nProofStep1 = nProofStep-1; nProofStep1 < nProofStep; nProofStep1++)
-       if (nProofStep > 0)
+       // TODO: symmetry breaking turned off
+       if (false && nProofStep > 0)
        {
            unsigned nProofStep1 = nProofStep-1;
      /*      sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
@@ -1080,21 +1081,22 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for(set<string>::iterator it = DECLARATIONS2.begin(); it!=DECLARATIONS2.end(); it++)
         smtFile << "(declare-fun " + *it + " (" + mSMT_type + " " + mSMT_type + ")" + ((*it).at(0) == 'n' ? " " + mSMT_type + ")" : " Bool)") << endl;
 
-
-
     smtFile << endl << sPreabmle << endl;
 
     for (unsigned i = 0; i<Asserts.size(); i++) {
         smtFile << "\n; ********* Constraints for proof step " << i << " ********* " << endl;
         smtFile << "(assert" + Asserts[i] + ")" << endl << endl;
-        // smtFile << "(push)" << endl << endl;
-        //  smtFile << "(check-sat)" << endl << endl;
+        smtFile << "(check-sat)" << endl << endl;
     }
-    smtFile << "(check-sat)" << endl << endl;
+//    smtFile << "(check-sat)" << endl << endl;
 
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
     smtFile << "(assert (and " /* + sbProofCorrect +*/ "(or " + sbProofFinished + ")))" << endl << endl;
+
+    //smtFile << "(check-sat-using (then simplify purify-arith ctx-solver-simplify))" << endl;
+    //smtFile << "(check-sat-using ctx-solver-simplify)" << endl;
     smtFile << "(check-sat)" << endl;
+
 
 
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
