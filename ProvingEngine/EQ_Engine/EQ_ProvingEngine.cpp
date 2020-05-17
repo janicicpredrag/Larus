@@ -1048,7 +1048,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                bb +=   "(or " +
                        smt_less(app("nNumberOfPremises", nProofStep), i1+1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+    /*            sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
                    // app("bSameProofBranch", nProofStep1, nProofStep) +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
@@ -1056,7 +1056,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    "(and " + bb + ")))" +
                    smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")";
 
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+    /*       sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                    app("sbMPStep", nProofStep) + " " +
                    // app("bSameProofBranch", nProofStep1, nProofStep) +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
@@ -1070,7 +1070,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                    "(not " +  app("bCases", nProofStep) + ")" +
                    "(and " + bb + appeq(app("nAxiomApplied", nProofStep),0) + ")))" +
-                   "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
+                   "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";*/
+
+                  sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+                          app("sbMPStep", nProofStep) + " " +
+                          // app("bSameProofBranch", nProofStep1, nProofStep) +
+                          appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+                          "(not " +  app("bCases", nProofStep) + ")" +
+                          "(and " + bb + ")))" +
+                          "(or " + smt_less(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
+                          smt_less(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) + "))";
 
 
        }
