@@ -782,7 +782,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"   for (ni1 = 0; ni1 < nMaxPremises; ni1++)  "                                                                                                               << endl;
     ursaFile <<"      bb &&= ((nNumberOfPremises[nProofStep] <= ni1) || (nFrom[nProofStep][ni1] < nProofStep1)); "                                                           << endl;
     ursaFile <<"   bB =  ((nNumberOfPremises[nProofStep] > nNumberOfPremises[nProofStep1]) "  << endl;
-    ursaFile <<"          || (nNumberOfPremises[nProofStep] == nNumberOfPremises[nProofStep1] && nAxiomApplied[nProofStep] >= nAxiomApplied[nProofStep1])); " << endl;
+    ursaFile <<"          || (nAxiomApplied[nProofStep] >= nAxiomApplied[nProofStep1])); " << endl;
     ursaFile <<"   bProofStepCorrect &&= (nProofStep == 0) || (!(baMPStep[nProofStep1] && baMPStep[nProofStep] && "                                                         << endl;
     ursaFile <<"                             !bCases[nProofStep] && " << endl;
     ursaFile <<"                             !bCases[nProofStep1] && " << endl;

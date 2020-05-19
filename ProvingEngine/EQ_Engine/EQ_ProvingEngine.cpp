@@ -1052,8 +1052,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                "(not " +  app("bCases", nProofStep1) + ")" +
                "(and " + bb + ")))" +
                "(or " + smt_less(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
-               "(and " + appeq(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
-               smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")))";
+               smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + "))";
 
        }
 
