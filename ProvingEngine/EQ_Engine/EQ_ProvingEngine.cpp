@@ -1048,10 +1048,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                   // app("bSameProofBranch", nProofStep1, nProofStep) +
                   appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                   "(not " +  app("bCases", nProofStep) + ")" +
+                  "(not " +  app("bCases", nProofStep1) + ")" +
                   "(and " + bb + ")))" +
-                  "(or " + smt_less(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
-                  "(and " + appeq(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
-                  smt_geq(app("nNumberOfPremises", nProofStep), app("nNumberOfPremises", nProofStep1)) + ")))";
+                  "(or " + smt_less(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
+                  "(and " + appeq(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
+                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")))";
+//                  "(or " + smt_less(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
+//                  "(and " + appeq(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
+//                  smt_geq(app("nNumberOfPremises", nProofStep), app("nNumberOfPremises", nProofStep1)) + ")))";
 
     /*       sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
                   app("sbMPStep", nProofStep) + " " +
