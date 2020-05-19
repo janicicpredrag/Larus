@@ -763,7 +763,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"      bProofStepCorrect &&= !(bSameProofBranch[nProofStep1][nProofStep] ^^ bsb); "                                                                           << endl;
     ursaFile <<"   } "                                                                                                                                                       << endl;
 
-    ursaFile <<"   /* Symmetry breaking */ "                                                                                                                                 << endl;
+    ursaFile <<"   /* ***************** Symmetry breaking ********************* */ "                                                                                                                                 << endl;
 
     ursaFile <<"   nProofStep1 = nProofStep-1; "                                                                                                                             << endl;
 /*    ursaFile <<"   bsymm = false; "                                                                                                                                          << endl;
@@ -777,22 +777,17 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     ursaFile <<"                          || bsymm);"                                                                                                                        << endl;
 */
 
-    // ursaFile <<"   for (nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) { "                                                                                        << endl;
+/*  Symmetry breaking - best constraint: */
     ursaFile <<"   bb = true; "                                                                                                                                              << endl;
     ursaFile <<"   for (ni1 = 0; ni1 < nMaxPremises; ni1++)  "                                                                                                               << endl;
     ursaFile <<"      bb &&= ((nNumberOfPremises[nProofStep] <= ni1) || (nFrom[nProofStep][ni1] < nProofStep1)); "                                                           << endl;
-//    ursaFile <<"   bB =  (nAxiomApplied[nProofStep] > nAxiomApplied[nProofStep1] "  << endl;
-//    ursaFile <<"          || (nAxiomApplied[nProofStep] == nAxiomApplied[nProofStep1] && nNumberOfPremises[nProofStep] >= nNumberOfPremises[nProofStep1])); " << endl;
-
     ursaFile <<"   bB =  ((nNumberOfPremises[nProofStep] > nNumberOfPremises[nProofStep1]) "  << endl;
     ursaFile <<"          || (nNumberOfPremises[nProofStep] == nNumberOfPremises[nProofStep1] && nAxiomApplied[nProofStep] >= nAxiomApplied[nProofStep1])); " << endl;
-
     ursaFile <<"   bProofStepCorrect &&= (nProofStep == 0) || (!(baMPStep[nProofStep1] && baMPStep[nProofStep] && "                                                         << endl;
     ursaFile <<"                             !bCases[nProofStep] && " << endl;
     ursaFile <<"                             !bCases[nProofStep1] && " << endl;
     ursaFile <<"                             nNesting[nProofStep1]==nNesting[nProofStep] && bb) "                                                                                << endl;
     ursaFile <<"                             || bB); " << endl;
-    // ursaFile <<"   } "                                                                                                                                                       << endl;
 
 
     // Julien: no two same proof steps

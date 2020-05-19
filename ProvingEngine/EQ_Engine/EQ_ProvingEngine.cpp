@@ -1038,40 +1038,22 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                       appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
                       "(or " + bb1 + "))";*/
 
+ /*         Symmetry breaking - best constraint: */
            string bb = " true ";
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                bb +=   "(or " +
                        smt_less(app("nNumberOfPremises", nProofStep), i1+1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
-               sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                  app("sbMPStep", nProofStep) + " " +
-                  // app("bSameProofBranch", nProofStep1, nProofStep) +
-                  appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
-                  "(not " +  app("bCases", nProofStep) + ")" +
-                  "(not " +  app("bCases", nProofStep1) + ")" +
-                  "(and " + bb + ")))" +
-                  "(or " + smt_less(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
-                  "(and " + appeq(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
-                   smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")))";
-//                  "(or " + smt_less(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
-//                  "(and " + appeq(app("nAxiomApplied", nProofStep1), app("nAxiomApplied", nProofStep)) +
-//                  smt_geq(app("nNumberOfPremises", nProofStep), app("nNumberOfPremises", nProofStep1)) + ")))";
-
-    /*       sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                  app("sbMPStep", nProofStep) + " " +
-                  // app("bSameProofBranch", nProofStep1, nProofStep) +
-                  appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
-                  "(not " +  app("bCases", nProofStep) + ")" +
-                  "(and " + bb + "(not " + appeq(app("nAxiomApplied", nProofStep1),0) + "))))" +
-                  "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";
-
-             sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                  app("sbMPStep", nProofStep) + " " +
-                  // app("bSameProofBranch", nProofStep1, nProofStep) +
-                  appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
-                  "(not " +  app("bCases", nProofStep) + ")" +
-                  "(and " + bb + appeq(app("nAxiomApplied", nProofStep),0) + ")))" +
-                  "(not " + appeq(app("nAxiomApplied", nProofStep),0) + "))";*/
+           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
+               app("sbMPStep", nProofStep) + " " +
+               // app("bSameProofBranch", nProofStep1, nProofStep) +
+               appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
+               "(not " +  app("bCases", nProofStep) + ")" +
+               "(not " +  app("bCases", nProofStep1) + ")" +
+               "(and " + bb + ")))" +
+               "(or " + smt_less(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
+               "(and " + appeq(app("nNumberOfPremises", nProofStep1), app("nNumberOfPremises", nProofStep)) +
+               smt_geq(app("nAxiomApplied", nProofStep), app("nAxiomApplied", nProofStep1)) + ")))";
 
        }
 
