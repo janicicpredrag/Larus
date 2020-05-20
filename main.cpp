@@ -107,7 +107,8 @@ int main(int argc , char** argv)
                 }
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'h') {
-                params.msHammerInvoke = argv[i]+2;
+                // for instance: " ../vampire/vampire4.2.2"
+                params.msHammerInvoke = argv[i+1];
                 break;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
@@ -152,7 +153,7 @@ int main(int argc , char** argv)
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
         cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;
         cout << "   -a<axiom>            for additional axioms (negelim|excludedmiddle); example: -anegelim; default: do not include \n" << endl;
-        cout << "   -h<invoke>           the way a FOL prover is invoked for filtering out needed axioms \n" << endl;
+        cout << "   -h <invoke>          the way a FOL prover is invoked for filtering out needed axioms \n" << endl;
         cout << "   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); examples: -vcoq; default: no" << endl;
         return 0;
     }

@@ -36,7 +36,7 @@ const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
-const string DEFAULT_HAMMER = " ../vampire/vampire4.2.2";
+const string DEFAULT_HAMMER = "";
 
 const string EQ_NATIVE_NAME = "eqnative";
 
