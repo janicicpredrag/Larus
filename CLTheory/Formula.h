@@ -182,7 +182,8 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     {
         if (f.GetName().find(PREFIX_NEGATED)== 0)
         {
-            os << "~ (" << f.GetName().substr(1) << ")" ;
+            string s = PREFIX_NEGATED;
+            os << " ~" << f.GetName().substr(s.length(), f.GetName().size()-s.length()) << " " ;
         }
         else
         {
@@ -195,8 +196,8 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                 if (i != f.GetArity()-1)
                     os << ",";
             }
-            if (f.GetName().find(PREFIX_NEGATED)==0)
-                os << ")";
+//            if (f.GetName().find(PREFIX_NEGATED)==0)
+//                os << ")";
             os << ")";
         }         
     }

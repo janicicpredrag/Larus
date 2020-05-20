@@ -1,3 +1,5 @@
+#include <iostream>
+#include <fstream>
 #include "CLTheory/Theory.h"
 
 // #define DEBUG_THEORY
@@ -438,3 +440,6 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
         fout.SetArg(i, instantiation[f.GetArg(i)]);
     }
 }
+
+// ---------------------------------------------------------------------------------------
+

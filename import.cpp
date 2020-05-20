@@ -129,6 +129,39 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         T.AddNegElimAxioms();
     }
 
+    // **************************** filtering axioms by FOL prover
+    // export to TPTP
+    string for_FOL_prover = "tptpfile.txt"; //tmpnam(NULL);
+    ofstream TPTPfile;
+    TPTPfile.open(for_FOL_prover);
+    for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
+        TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")." << endl;
+    TPTPfile << "fof(" << theoremName << ", conjecture, " << theorem << ")." << endl;
+    TPTPfile.close();
+
+    vector<string> neededAxioms;
+    string vampire_solution = "vampire.txt"; // tmpnam(NULL);
+    const string sCall = "timeout " + itos(params.time_limit) + " ../vampire/vampire4.2.2 " + for_FOL_prover + " > " + vampire_solution;
+    int rv = system(sCall.c_str());
+
+    // filtering
+
+    // before real filterin is ready, all axioms are needed:
+    for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
+        neededAxioms.push_back(it->second);
+
+    for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)   {
+        bool axiomNeeded = false;
+        for (size_t i = 0; i < neededAxioms.size(); i++)   {
+            if (it->second == neededAxioms[i]) {
+                axiomNeeded = true;
+            }
+        }
+        if (!axiomNeeded)
+            it = T.mCLaxioms.erase(it);
+    }
+    // **************************** end of filtering axioms by FOL prover
+
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;

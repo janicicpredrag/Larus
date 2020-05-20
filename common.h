@@ -39,7 +39,7 @@ const bool DEFAULT_SIMP = false;
 
 const string EQ_NATIVE_NAME = "eqnative";
 
-const string PREFIX_NEGATED = "NNN";
+const string PREFIX_NEGATED = "nnn";
 
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
 

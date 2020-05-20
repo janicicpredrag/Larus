@@ -56,6 +56,8 @@ public:
     void SetUseNativeEq(bool b) { mbUseNativeEq = b; if (b) AddSymbol(EQ_NATIVE_NAME,2); }
     bool GetUseNativeEq() { return mbUseNativeEq; }
 
+    bool exportToTPTP(const string theoremName, CLFormula theorem, string for_FOL_prover);
+
     vector< pair<CLFormula,string> > mCLaxioms;
     // set<string> mConstants;
     vector<string> mConstants;
