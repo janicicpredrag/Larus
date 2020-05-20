@@ -141,7 +141,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
     vector<string> neededAxioms;
     string vampire_solution = "vampire.txt"; // tmpnam(NULL);
-    const string sCall = "timeout " + itos(params.time_limit) + " ../vampire/vampire4.2.2 " + for_FOL_prover + " > " + vampire_solution;
+    const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " " + for_FOL_prover + " > " + vampire_solution;
     int rv = system(sCall.c_str());
 
     // filtering
