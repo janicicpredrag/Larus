@@ -197,7 +197,7 @@ inline ostream& operator<<(ostream& os, const Fact& f)
                     os << ",";
             }
 //            if (f.GetName().find(PREFIX_NEGATED)==0)
-//                os << ")";
+//                  os << ")";
             os << ")";
         }         
     }

@@ -1,5 +1,3 @@
-#include <iostream>
-#include <fstream>
 #include "CLTheory/Theory.h"
 
 // #define DEBUG_THEORY
