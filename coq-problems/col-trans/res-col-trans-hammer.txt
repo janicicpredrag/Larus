@@ -1,0 +1,1005 @@
+col_trans_0000.v
+COQDEP VFILES
+COQC col_trans_0000.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic leauto succeeded.
+Replace the hammer tactic with:
+	leauto.
+Tactic call ran for 28.338 secs (11.278u,0.938s) (success)
+col_trans_0001.v
+COQC col_trans_0001.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 32.759 secs (12.25u,1.103s) (success)
+col_trans_0002.v
+COQC col_trans_0002.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.436 secs (11.146u,0.474s) (success)
+col_trans_0003.v
+COQC col_trans_0003.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.198 secs (11.406u,0.475s) (success)
+col_trans_0004.v
+COQC col_trans_0004.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.243 secs (11.491u,0.473s) (success)
+col_trans_0005.v
+COQC col_trans_0005.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.825 secs (11.738u,0.486s) (success)
+col_trans_0006.v
+COQC col_trans_0006.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 32.551 secs (12.502u,0.857s) (success)
+col_trans_0007.v
+COQC col_trans_0007.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic leauto succeeded.
+Replace the hammer tactic with:
+	leauto.
+Tactic call ran for 27.26 secs (11.457u,0.505s) (success)
+col_trans_0008.v
+COQC col_trans_0008.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.053 secs (0.339u,0.067s) (success)
+col_trans_0009.v
+COQC col_trans_0009.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.077 secs (11.293u,0.482s) (success)
+col_trans_0010.v
+COQC col_trans_0010.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.305 secs (11.37u,0.462s) (success)
+col_trans_0011.v
+COQC col_trans_0011.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.018 secs (11.19u,0.471s) (success)
+col_trans_0012.v
+COQC col_trans_0012.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.899 secs (11.094u,0.473s) (success)
+col_trans_0013.v
+COQC col_trans_0013.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.325 secs (11.456u,0.504s) (success)
+col_trans_0014.v
+COQC col_trans_0014.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.91 secs (11.093u,0.468s) (success)
+col_trans_0015.v
+COQC col_trans_0015.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.959 secs (11.111u,0.475s) (success)
+col_trans_0016.v
+COQC col_trans_0016.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.789 secs (11.088u,0.447s) (success)
+col_trans_0017.v
+COQC col_trans_0017.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic hauto succeeded.
+Replace the hammer tactic with:
+	hauto.
+Tactic call ran for 17.532 secs (11.297u,0.515s) (success)
+col_trans_0018.v
+COQC col_trans_0018.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.664 secs (11.014u,0.482s) (success)
+col_trans_0019.v
+COQC col_trans_0019.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.934 secs (11.106u,0.472s) (success)
+col_trans_0020.v
+COQC col_trans_0020.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.072 secs (11.225u,0.488s) (success)
+col_trans_0021.v
+COQC col_trans_0021.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.994 secs (11.084u,0.464s) (success)
+col_trans_0022.v
+COQC col_trans_0022.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.02 secs (11.017u,0.472s) (success)
+col_trans_0023.v
+COQC col_trans_0023.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.684 secs (11.752u,0.579s) (success)
+col_trans_0024.v
+COQC col_trans_0024.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.331 secs (10.799u,0.427s) (success)
+col_trans_0025.v
+COQC col_trans_0025.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.305 secs (10.778u,0.421s) (success)
+col_trans_0026.v
+COQC col_trans_0026.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 30.959 secs (11.38u,0.812s) (success)
+col_trans_0027.v
+COQC col_trans_0027.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 31.1 secs (11.427u,1.07s) (success)
+col_trans_0028.v
+COQC col_trans_0028.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.061 secs (0.352u,0.064s) (success)
+col_trans_0029.v
+COQC col_trans_0029.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.191 secs (10.685u,0.428s) (success)
+col_trans_0030.v
+COQC col_trans_0030.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.118 secs (10.636u,0.409s) (success)
+col_trans_0031.v
+COQC col_trans_0031.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.172 secs (10.62u,0.414s) (success)
+col_trans_0032.v
+COQC col_trans_0032.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.714 secs (10.879u,0.442s) (success)
+col_trans_0033.v
+COQC col_trans_0033.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 30.37 secs (11.322u,0.833s) (success)
+col_trans_0034.v
+COQC col_trans_0034.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.831 secs (11.186u,0.463s) (success)
+col_trans_0035.v
+COQC col_trans_0035.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.497 secs (10.937u,0.454s) (success)
+col_trans_0036.v
+COQC col_trans_0036.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.363 secs (11.204u,0.488s) (success)
+col_trans_0037.v
+COQC col_trans_0037.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.182 secs (11.173u,0.512s) (success)
+col_trans_0038.v
+COQC col_trans_0038.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 34.205 secs (12.013u,1.073s) (success)
+col_trans_0039.v
+COQC col_trans_0039.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.341 secs (10.775u,0.483s) (success)
+col_trans_0040.v
+COQC col_trans_0040.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.647 secs (12.262u,0.588s) (success)
+col_trans_0041.v
+COQC col_trans_0041.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 52.715 secs (12.723u,0.883s) (success)
+col_trans_0042.v
+COQC col_trans_0042.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 37.626 secs (13.098u,1.08s) (success)
+col_trans_0043.v
+COQC col_trans_0043.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 50.004 secs (12.509u,0.591s) (success)
+col_trans_0044.v
+COQC col_trans_0044.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 51.33 secs (12.564u,0.588s) (success)
+col_trans_0045.v
+COQC col_trans_0045.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 37.185 secs (12.803u,1.201s) (success)
+col_trans_0046.v
+COQC col_trans_0046.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 50.438 secs (12.441u,0.569s) (success)
+col_trans_0047.v
+COQC col_trans_0047.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.491 secs (12.131u,0.55s) (success)
+col_trans_0048.v
+COQC col_trans_0048.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.129 secs (11.292u,0.492s) (success)
+col_trans_0049.v
+COQC col_trans_0049.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.51 secs (11.491u,0.527s) (success)
+col_trans_0050.v
+COQC col_trans_0050.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.342 secs (11.158u,0.506s) (success)
+col_trans_0051.v
+COQC col_trans_0051.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.714 secs (10.96u,0.482s) (success)
+col_trans_0052.v
+COQC col_trans_0052.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47. secs (11.016u,0.492s) (success)
+col_trans_0053.v
+COQC col_trans_0053.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.577 secs (11.8u,0.557s) (success)
+col_trans_0054.v
+COQC col_trans_0054.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 41.303 secs (13.448u,1.465s) (success)
+col_trans_0055.v
+COQC col_trans_0055.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.36 secs (0.34u,0.079s) (success)
+col_trans_0056.v
+COQC col_trans_0056.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 57.068 secs (13.152u,0.939s) (success)
+col_trans_0057.v
+COQC col_trans_0057.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 58.164 secs (14.784u,1.044s) (success)
+col_trans_0058.v
+COQC col_trans_0058.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 35.271 secs (12.717u,1.055s) (success)
+col_trans_0059.v
+COQC col_trans_0059.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 35.044 secs (11.678u,1.132s) (success)
+col_trans_0060.v
+COQC col_trans_0060.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 46.916 secs (11.227u,0.503s) (success)
+col_trans_0061.v
+COQC col_trans_0061.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 55.379 secs (13.95u,0.728s) (success)
+col_trans_0062.v
+COQC col_trans_0062.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 54.949 secs (14.329u,1.092s) (success)
+col_trans_0063.v
+COQC col_trans_0063.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 51.456 secs (13.358u,0.587s) (success)
+col_trans_0064.v
+COQC col_trans_0064.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 52.045 secs (13.777u,0.62s) (success)
+col_trans_0065.v
+COQC col_trans_0065.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 38.401 secs (14.275u,1.199s) (success)
+col_trans_0066.v
+COQC col_trans_0066.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 40.643 secs (14.084u,1.486s) (success)
+col_trans_0067.v
+COQC col_trans_0067.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.383 secs (0.476u,0.09s) (success)
+col_trans_0068.v
+COQC col_trans_0068.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 54.276 secs (14.457u,0.657s) (success)
+col_trans_0069.v
+COQC col_trans_0069.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 56.245 secs (14.645u,0.728s) (success)
+col_trans_0070.v
+COQC col_trans_0070.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.626 secs (0.57u,0.097s) (success)
+col_trans_0071.v
+COQC col_trans_0071.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 52.701 secs (13.46u,0.694s) (success)
+col_trans_0072.v
+COQC col_trans_0072.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.407 secs (13.099u,0.567s) (success)
+col_trans_0073.v
+COQC col_trans_0073.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 57.706 secs (16.076u,1.017s) (success)
+col_trans_0074.v
+COQC col_trans_0074.v
+Replace the hammer tactic with: scrush
+Tactic call ran for 1.117 secs (0.364u,0.077s) (success)
+col_trans_0075.v
+COQC col_trans_0075.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.549 secs (12.334u,0.537s) (success)
+col_trans_0076.v
+COQC col_trans_0076.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.56 secs (11.471u,0.484s) (success)
+col_trans_0077.v
+COQC col_trans_0077.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 149.866 secs (13.86u,0.967s) (success)
+col_trans_0078.v
+COQC col_trans_0078.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.51 secs (12.521u,0.588s) (success)
+col_trans_0079.v
+COQC col_trans_0079.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 49.983 secs (12.999u,0.59s) (success)
+col_trans_0080.v
+COQC col_trans_0080.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 51.044 secs (12.969u,0.513s) (success)
+col_trans_0081.v
+COQC col_trans_0081.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 52.876 secs (13.053u,0.712s) (success)
+col_trans_0082.v
+COQC col_trans_0082.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.816 secs (11.908u,0.508s) (success)
+col_trans_0083.v
+COQC col_trans_0083.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.382 secs (11.674u,0.456s) (success)
+col_trans_0084.v
+COQC col_trans_0084.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 1204. secs (12.116u,1.772s) (success)
+col_trans_0085.v
+COQC col_trans_0085.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic sreconstr succeeded.
+Replace the hammer tactic with:
+	sreconstr.
+Tactic call ran for 6668.355 secs (18.514u,4.614s) (success)
+col_trans_0086.v
+COQC col_trans_0086.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 45.83 secs (10.427u,0.457s) (success)
+col_trans_0087.v
+COQC col_trans_0087.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.229 secs (11.341u,0.534s) (success)
+col_trans_0088.v
+COQC col_trans_0088.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 54.077 secs (12.554u,0.876s) (success)
+col_trans_0089.v
+COQC col_trans_0089.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 51.011 secs (12.49u,0.626s) (success)
+col_trans_0090.v
+COQC col_trans_0090.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 64.643 secs (14.755u,0.859s) (success)
+col_trans_0091.v
+COQC col_trans_0091.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.55 secs (11.821u,0.575s) (success)
+col_trans_0092.v
+COQC col_trans_0092.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 50.143 secs (13.227u,0.698s) (success)
+col_trans_0093.v
+COQC col_trans_0093.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.851 secs (11.56u,0.519s) (success)
+col_trans_0094.v
+COQC col_trans_0094.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Tactic syelles succeeded.
+Replace the hammer tactic with:
+	syelles.
+Tactic call ran for 37.81 secs (11.746u,1.27s) (success)
+col_trans_0095.v
+COQC col_trans_0095.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 48.82 secs (11.538u,0.531s) (success)
+col_trans_0096.v
+COQC col_trans_0096.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.403 secs (11.103u,0.484s) (success)
+col_trans_0097.v
+COQC col_trans_0097.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 52.75 secs (12.05u,0.591s) (success)
+col_trans_0098.v
+COQC col_trans_0098.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.339 secs (11.358u,0.542s) (success)
+col_trans_0099.v
+COQC col_trans_0099.v
+Extracting features...
+Running provers (8 threads)...
+Error: Error running cvc4.
+Error: Error running cvc4.
+Vampire (knn-1024) succeeded
+Reconstructing the proof...
+Error: Hammer failed: proof reconstruction failed
+Tactic call ran for 47.254 secs (11.333u,0.529s) (success)
+tactic.v
+make: `tactic.vo' is up to date.

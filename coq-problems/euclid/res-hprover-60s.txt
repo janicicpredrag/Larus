@@ -1,0 +1,512 @@
+lemma_10_12.v
+COQDEP VFILES
+COQC tactic.v
+COQC lemma_10_12.v
+lemma_21helper.v
+COQC lemma_21helper.v
+lemma_26helper.v
+COQC lemma_26helper.v
+lemma_30helper.v
+COQC lemma_30helper.v
+lemma_35helper.v
+COQC lemma_35helper.v
+lemma_3_5b.v
+COQC lemma_3_5b.v
+Tactic call ran for 0.07 secs (0.046u,0.023s) (success)
+lemma_3_6a.v
+COQC lemma_3_6a.v
+Tactic call ran for 0.053 secs (0.035u,0.018s) (success)
+lemma_3_6b.v
+COQC lemma_3_6b.v
+Tactic call ran for 0.052 secs (0.034u,0.018s) (success)
+lemma_3_7a.v
+COQC lemma_3_7a.v
+lemma_3_7b.v
+COQC lemma_3_7b.v
+Tactic call ran for 0.052 secs (0.034u,0.017s) (success)
+lemma_4_19.v
+COQC lemma_4_19.v
+lemma_8_2.v
+COQC lemma_8_2.v
+lemma_8_3.v
+COQC lemma_8_3.v
+lemma_8_7.v
+COQC lemma_8_7.v
+lemma_9_5.v
+COQC lemma_9_5.v
+lemma_9_5a.v
+COQC lemma_9_5a.v
+lemma_9_5b.v
+COQC lemma_9_5b.v
+lemma_ABCequalsCBA.v
+COQC lemma_ABCequalsCBA.v
+lemma_EFreflexive.v
+COQC lemma_EFreflexive.v
+lemma_ETreflexive.v
+COQC lemma_ETreflexive.v
+Tactic call ran for 0.057 secs (0.039u,0.015s) (success)
+lemma_Euclid4.v
+COQC lemma_Euclid4.v
+lemma_NCdistinct.v
+COQC lemma_NCdistinct.v
+lemma_NChelper.v
+COQC lemma_NChelper.v
+lemma_NCorder.v
+COQC lemma_NCorder.v
+Tactic call ran for 0.83 secs (0.748u,0.057s) (success)
+lemma_PGflip.v
+COQC lemma_PGflip.v
+Tactic call ran for 0.264 secs (0.207u,0.046s) (success)
+lemma_PGrectangle.v
+COQC lemma_PGrectangle.v
+lemma_PGrotate.v
+COQC lemma_PGrotate.v
+Tactic call ran for 0.234 secs (0.184u,0.048s) (success)
+lemma_PGsymmetric.v
+COQC lemma_PGsymmetric.v
+Tactic call ran for 0.243 secs (0.197u,0.042s) (success)
+lemma_Playfair.v
+COQC lemma_Playfair.v
+lemma_Playfairhelper.v
+COQC lemma_Playfairhelper.v
+lemma_Playfairhelper2.v
+COQC lemma_Playfairhelper2.v
+lemma_RTcongruence.v
+COQC lemma_RTcongruence.v
+Tactic call ran for 2.917 secs (2.853u,0.05s) (success)
+lemma_RTsymmetric.v
+COQC lemma_RTsymmetric.v
+Tactic call ran for 50.794 secs (50.33u,0.18s) (success)
+lemma_TCreflexive.v
+COQC lemma_TCreflexive.v
+Tactic call ran for 0.078 secs (0.052u,0.025s) (success)
+lemma_TGflip.v
+COQC lemma_TGflip.v
+lemma_TGsymmetric.v
+COQC lemma_TGsymmetric.v
+lemma_TTflip.v
+COQC lemma_TTflip.v
+Tactic call ran for 2.603 secs (2.537u,0.057s) (success)
+lemma_TTflip2.v
+COQC lemma_TTflip2.v
+lemma_TTorder.v
+COQC lemma_TTorder.v
+Tactic call ran for 0.223 secs (0.182u,0.04s) (success)
+lemma_TTtransitive.v
+COQC lemma_TTtransitive.v
+lemma_altitudebisectsbase.v
+COQC lemma_altitudebisectsbase.v
+lemma_altitudeofrighttriangle.v
+COQC lemma_altitudeofrighttriangle.v
+lemma_angleaddition.v
+COQC lemma_angleaddition.v
+lemma_angledistinct.v
+COQC lemma_angledistinct.v
+lemma_angleorderrespectscongruence.v
+COQC lemma_angleorderrespectscongruence.v
+lemma_angleorderrespectscongruence2.v
+COQC lemma_angleorderrespectscongruence2.v
+Tactic call ran for 3.864 secs (3.79u,0.062s) (success)
+lemma_angleordertransitive.v
+COQC lemma_angleordertransitive.v
+lemma_angletrichotomy.v
+COQC lemma_angletrichotomy.v
+lemma_angletrichotomy2.v
+COQC lemma_angletrichotomy2.v
+lemma_betweennesspreserved.v
+COQC lemma_betweennesspreserved.v
+lemma_betweennotequal.v
+COQC lemma_betweennotequal.v
+Tactic call ran for 0.456 secs (0.408u,0.046s) (success)
+lemma_collinear1.v
+COQC lemma_collinear1.v
+Tactic call ran for 1.387 secs (1.338u,0.045s) (success)
+lemma_collinear2.v
+COQC lemma_collinear2.v
+Tactic call ran for 1.427 secs (1.378u,0.044s) (success)
+lemma_collinear4.v
+COQC lemma_collinear4.v
+lemma_collinear5.v
+COQC lemma_collinear5.v
+lemma_collinearbetween.v
+COQC lemma_collinearbetween.v
+lemma_collinearitypreserved.v
+COQC lemma_collinearitypreserved.v
+lemma_collinearorder.v
+COQC lemma_collinearorder.v
+Tactic call ran for 0.069 secs (0.046u,0.023s) (success)
+lemma_collinearparallel.v
+COQC lemma_collinearparallel.v
+lemma_collinearparallel2.v
+COQC lemma_collinearparallel2.v
+lemma_collinearright.v
+COQC lemma_collinearright.v
+lemma_congruenceflip.v
+COQC lemma_congruenceflip.v
+Tactic call ran for 0.075 secs (0.049u,0.025s) (success)
+lemma_congruencesymmetric.v
+COQC lemma_congruencesymmetric.v
+Tactic call ran for 0.018 secs (0.011u,0.006s) (success)
+lemma_congruencetransitive.v
+COQC lemma_congruencetransitive.v
+Tactic call ran for 0.058 secs (0.038u,0.02s) (success)
+lemma_crisscross.v
+COQC lemma_crisscross.v
+lemma_crossbar.v
+COQC lemma_crossbar.v
+lemma_crossbar2.v
+COQC lemma_crossbar2.v
+lemma_crossimpliesopposite.v
+COQC lemma_crossimpliesopposite.v
+lemma_diagonalsbisect.v
+COQC lemma_diagonalsbisect.v
+lemma_diagonalsmeet.v
+COQC lemma_diagonalsmeet.v
+lemma_differenceofparts.v
+COQC lemma_differenceofparts.v
+lemma_doublereverse.v
+COQC lemma_doublereverse.v
+Tactic call ran for 0.187 secs (0.142u,0.043s) (success)
+lemma_droppedperpendicularunique.v
+COQC lemma_droppedperpendicularunique.v
+lemma_equalanglesNC.v
+COQC lemma_equalanglesNC.v
+lemma_equalanglesflip.v
+COQC lemma_equalanglesflip.v
+Tactic call ran for 0.475 secs (0.427u,0.047s) (success)
+lemma_equalangleshelper.v
+COQC lemma_equalangleshelper.v
+lemma_equalanglesreflexive.v
+COQC lemma_equalanglesreflexive.v
+Tactic call ran for 0.213 secs (0.169u,0.043s) (success)
+lemma_equalanglessymmetric.v
+COQC lemma_equalanglessymmetric.v
+lemma_equalanglestransitive.v
+COQC lemma_equalanglestransitive.v
+lemma_equalitysymmetric.v
+COQC lemma_equalitysymmetric.v
+Tactic call ran for 0.005 secs (0.003u,0.001s) (success)
+lemma_equaltorightisright.v
+COQC lemma_equaltorightisright.v
+lemma_erectedperpendicularunique.v
+COQC lemma_erectedperpendicularunique.v
+lemma_extension.v
+COQC lemma_extension.v
+lemma_extensionunique.v
+COQC lemma_extensionunique.v
+lemma_fiveline.v
+COQC lemma_fiveline.v
+lemma_inequalitysymmetric.v
+COQC lemma_inequalitysymmetric.v
+Tactic call ran for 0.003 secs (0.002u,0.001s) (success)
+lemma_interior5.v
+COQC lemma_interior5.v
+lemma_layoff.v
+COQC lemma_layoff.v
+lemma_layoffunique.v
+COQC lemma_layoffunique.v
+lemma_legsmallerhypotenuse.v
+COQC lemma_legsmallerhypotenuse.v
+lemma_lessthanadditive.v
+COQC lemma_lessthanadditive.v
+lemma_lessthanbetween.v
+COQC lemma_lessthanbetween.v
+lemma_lessthancongruence.v
+COQC lemma_lessthancongruence.v
+lemma_lessthancongruence2.v
+COQC lemma_lessthancongruence2.v
+Tactic call ran for 0.286 secs (0.249u,0.036s) (success)
+lemma_lessthannotequal.v
+COQC lemma_lessthannotequal.v
+Tactic call ran for 41.688 secs (41.196u,0.187s) (success)
+lemma_lessthantransitive.v
+COQC lemma_lessthantransitive.v
+lemma_linereflectionisometry.v
+COQC lemma_linereflectionisometry.v
+lemma_localextension.v
+COQC lemma_localextension.v
+lemma_midpointunique.v
+COQC lemma_midpointunique.v
+lemma_notperp.v
+COQC lemma_notperp.v
+lemma_ondiameter.v
+COQC lemma_ondiameter.v
+lemma_oppositesideflip.v
+COQC lemma_oppositesideflip.v
+Tactic call ran for 0.317 secs (0.268u,0.047s) (success)
+lemma_oppositesidesymmetric.v
+COQC lemma_oppositesidesymmetric.v
+lemma_outerconnectivity.v
+COQC lemma_outerconnectivity.v
+lemma_parallelNC.v
+COQC lemma_parallelNC.v
+lemma_parallelPasch.v
+COQC lemma_parallelPasch.v
+lemma_parallelbetween.v
+COQC lemma_parallelbetween.v
+lemma_parallelcollinear.v
+COQC lemma_parallelcollinear.v
+lemma_parallelcollinear1.v
+COQC lemma_parallelcollinear1.v
+lemma_parallelcollinear2.v
+COQC lemma_parallelcollinear2.v
+lemma_paralleldef2A.v
+COQC lemma_paralleldef2A.v
+lemma_paralleldef2B.v
+COQC lemma_paralleldef2B.v
+lemma_parallelflip.v
+COQC lemma_parallelflip.v
+lemma_parallelsymmetric.v
+COQC lemma_parallelsymmetric.v
+lemma_partnotequalwhole.v
+COQC lemma_partnotequalwhole.v
+lemma_paste5.v
+COQC lemma_paste5.v
+lemma_pointreflectionisometry.v
+COQC lemma_pointreflectionisometry.v
+lemma_ray.v
+COQC lemma_ray.v
+lemma_ray1.v
+COQC lemma_ray1.v
+lemma_ray2.v
+COQC lemma_ray2.v
+lemma_ray3.v
+COQC lemma_ray3.v
+lemma_ray4_1.v
+COQC lemma_ray4_1.v
+lemma_ray4_2.v
+COQC lemma_ray4_2.v
+Tactic call ran for 6.475 secs (6.383u,0.064s) (success)
+lemma_ray4_3.v
+COQC lemma_ray4_3.v
+lemma_ray5.v
+COQC lemma_ray5.v
+Tactic call ran for 0.44 secs (0.392u,0.047s) (success)
+lemma_rayimpliescollinear.v
+COQC lemma_rayimpliescollinear.v
+lemma_raystrict.v
+COQC lemma_raystrict.v
+lemma_rectangleparallelogram.v
+COQC lemma_rectangleparallelogram.v
+lemma_rectanglereverse.v
+COQC lemma_rectanglereverse.v
+lemma_rectanglerotate.v
+COQC lemma_rectanglerotate.v
+lemma_rightangleNC.v
+COQC lemma_rightangleNC.v
+lemma_rightreflection.v
+COQC lemma_rightreflection.v
+lemma_rightreverse.v
+COQC lemma_rightreverse.v
+lemma_righttogether.v
+COQC lemma_righttogether.v
+lemma_samenotopposite.v
+COQC lemma_samenotopposite.v
+Tactic call ran for 10.02 secs (9.874u,0.087s) (success)
+lemma_sameside2.v
+COQC lemma_sameside2.v
+lemma_samesidecollinear.v
+COQC lemma_samesidecollinear.v
+lemma_samesideflip.v
+COQC lemma_samesideflip.v
+lemma_samesidereflexive.v
+COQC lemma_samesidereflexive.v
+lemma_samesidesymmetric.v
+COQC lemma_samesidesymmetric.v
+lemma_samesidetransitive.v
+COQC lemma_samesidetransitive.v
+lemma_squareflip.v
+COQC lemma_squareflip.v
+Tactic call ran for 0.411 secs (0.36u,0.046s) (success)
+lemma_squareparallelogram.v
+COQC lemma_squareparallelogram.v
+lemma_squarerectangle.v
+COQC lemma_squarerectangle.v
+Tactic call ran for 0.321 secs (0.273u,0.044s) (success)
+lemma_squaresequal.v
+COQC lemma_squaresequal.v
+lemma_squareunique.v
+COQC lemma_squareunique.v
+lemma_subtractequals.v
+COQC lemma_subtractequals.v
+lemma_supplementinequality.v
+COQC lemma_supplementinequality.v
+lemma_supplementofright.v
+COQC lemma_supplementofright.v
+lemma_supplements2.v
+COQC lemma_supplements2.v
+lemma_supplementsymmetric.v
+COQC lemma_supplementsymmetric.v
+Tactic call ran for 0.185 secs (0.138u,0.046s) (success)
+lemma_tarskiparallelflip.v
+COQC lemma_tarskiparallelflip.v
+lemma_together.v
+COQC lemma_together.v
+lemma_together2.v
+COQC lemma_together2.v
+lemma_trapezoiddiagonals.v
+COQC lemma_trapezoiddiagonals.v
+lemma_triangletoparallelogram.v
+COQC lemma_triangletoparallelogram.v
+lemma_trichotomy1.v
+COQC lemma_trichotomy1.v
+lemma_trichotomy2.v
+COQC lemma_trichotomy2.v
+lemma_twolines.v
+COQC lemma_twolines.v
+lemma_twoperpsparallel.v
+COQC lemma_twoperpsparallel.v
+lemma_tworays.v
+COQC lemma_tworays.v
+proposition_01.v
+COQC proposition_01.v
+proposition_02.v
+COQC proposition_02.v
+proposition_03.v
+COQC proposition_03.v
+Tactic call ran for 2.718 secs (2.652u,0.054s) (success)
+proposition_04.v
+COQC proposition_04.v
+proposition_05.v
+COQC proposition_05.v
+Tactic call ran for 9.257 secs (9.157u,0.068s) (success)
+proposition_05b.v
+COQC proposition_05b.v
+proposition_06.v
+COQC proposition_06.v
+Tactic call ran for 51.306 secs (50.996u,0.146s) (success)
+proposition_06a.v
+COQC proposition_06a.v
+proposition_07.v
+COQC proposition_07.v
+proposition_08.v
+COQC proposition_08.v
+proposition_09.v
+COQC proposition_09.v
+proposition_10.v
+COQC proposition_10.v
+proposition_11.v
+COQC proposition_11.v
+proposition_11B.v
+COQC proposition_11B.v
+proposition_12.v
+COQC proposition_12.v
+proposition_13.v
+COQC proposition_13.v
+proposition_14.v
+COQC proposition_14.v
+proposition_15.v
+COQC proposition_15.v
+proposition_16.v
+COQC proposition_16.v
+proposition_17.v
+COQC proposition_17.v
+proposition_18.v
+COQC proposition_18.v
+proposition_19.v
+COQC proposition_19.v
+proposition_20.v
+COQC proposition_20.v
+proposition_21.v
+COQC proposition_21.v
+proposition_22.v
+COQC proposition_22.v
+proposition_23.v
+COQC proposition_23.v
+proposition_23B.v
+COQC proposition_23B.v
+proposition_23C.v
+COQC proposition_23C.v
+proposition_24.v
+COQC proposition_24.v
+proposition_25.v
+COQC proposition_25.v
+proposition_26A.v
+COQC proposition_26A.v
+proposition_26B.v
+COQC proposition_26B.v
+proposition_27.v
+COQC proposition_27.v
+proposition_27B.v
+COQC proposition_27B.v
+proposition_28A.v
+COQC proposition_28A.v
+proposition_28B.v
+COQC proposition_28B.v
+proposition_28C.v
+COQC proposition_28C.v
+proposition_28D.v
+COQC proposition_28D.v
+proposition_29.v
+COQC proposition_29.v
+proposition_29B.v
+COQC proposition_29B.v
+proposition_29C.v
+COQC proposition_29C.v
+proposition_30.v
+COQC proposition_30.v
+proposition_30A.v
+COQC proposition_30A.v
+proposition_30B.v
+COQC proposition_30B.v
+proposition_31.v
+COQC proposition_31.v
+proposition_31short.v
+COQC proposition_31short.v
+proposition_32.v
+COQC proposition_32.v
+proposition_33.v
+COQC proposition_33.v
+proposition_33B.v
+COQC proposition_33B.v
+proposition_34.v
+COQC proposition_34.v
+proposition_35.v
+COQC proposition_35.v
+proposition_35A.v
+COQC proposition_35A.v
+proposition_36.v
+COQC proposition_36.v
+proposition_36A.v
+COQC proposition_36A.v
+proposition_37.v
+COQC proposition_37.v
+proposition_38.v
+COQC proposition_38.v
+proposition_39.v
+COQC proposition_39.v
+proposition_39A.v
+COQC proposition_39A.v
+proposition_40.v
+COQC proposition_40.v
+proposition_41.v
+COQC proposition_41.v
+proposition_42.v
+COQC proposition_42.v
+proposition_42B.v
+COQC proposition_42B.v
+proposition_43.v
+COQC proposition_43.v
+Tactic call ran for 50.07 secs (46.254u,0.454s) (failure)
+proposition_43B.v
+COQC proposition_43B.v
+proposition_44.v
+COQC proposition_44.v
+proposition_44A.v
+COQC proposition_44A.v
+proposition_45.v
+COQC proposition_45.v
+proposition_46.v
+COQC proposition_46.v
+proposition_47.v
+COQC proposition_47.v
+proposition_47A.v
+COQC proposition_47A.v
+proposition_47B.v
+COQC proposition_47B.v
+proposition_48.v
+COQC proposition_48.v
+proposition_48A.v
+COQC proposition_48A.v
+tactic.v
+make: `tactic.vo' is up to date.

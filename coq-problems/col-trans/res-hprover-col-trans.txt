@@ -1,0 +1,280 @@
+col_trans_0000.v
+COQC col_trans_0000.v
+Tactic call ran for 0.407 secs (0.357u,0.046s) (success)
+col_trans_0001.v
+COQC col_trans_0001.v
+Tactic call ran for 0.404 secs (0.358u,0.045s) (success)
+col_trans_0002.v
+COQC col_trans_0002.v
+Tactic call ran for 0.463 secs (0.422u,0.04s) (success)
+col_trans_0003.v
+COQC col_trans_0003.v
+Tactic call ran for 0.498 secs (0.453u,0.043s) (success)
+col_trans_0004.v
+COQC col_trans_0004.v
+Tactic call ran for 0.526 secs (0.481u,0.043s) (success)
+col_trans_0005.v
+COQC col_trans_0005.v
+Tactic call ran for 0.534 secs (0.49u,0.042s) (success)
+col_trans_0006.v
+COQC col_trans_0006.v
+Tactic call ran for 0.453 secs (0.412u,0.039s) (success)
+col_trans_0007.v
+COQC col_trans_0007.v
+Tactic call ran for 0.416 secs (0.375u,0.039s) (success)
+col_trans_0008.v
+COQC col_trans_0008.v
+Tactic call ran for 0.209 secs (0.167u,0.042s) (success)
+col_trans_0009.v
+COQC col_trans_0009.v
+Tactic call ran for 3.408 secs (3.346u,0.052s) (success)
+col_trans_0010.v
+COQC col_trans_0010.v
+Tactic call ran for 0.407 secs (0.363u,0.041s) (success)
+col_trans_0011.v
+COQC col_trans_0011.v
+Tactic call ran for 0.953 secs (0.907u,0.042s) (success)
+col_trans_0012.v
+COQC col_trans_0012.v
+Tactic call ran for 1.03 secs (0.981u,0.043s) (success)
+col_trans_0013.v
+COQC col_trans_0013.v
+Tactic call ran for 0.984 secs (0.932u,0.045s) (success)
+col_trans_0014.v
+COQC col_trans_0014.v
+Tactic call ran for 1.045 secs (0.998u,0.043s) (success)
+col_trans_0015.v
+COQC col_trans_0015.v
+Tactic call ran for 0.877 secs (0.821u,0.044s) (success)
+col_trans_0016.v
+COQC col_trans_0016.v
+Tactic call ran for 7.584 secs (7.491u,0.061s) (success)
+col_trans_0017.v
+COQC col_trans_0017.v
+Tactic call ran for 18.089 secs (17.9u,0.099s) (success)
+col_trans_0018.v
+COQC col_trans_0018.v
+Tactic call ran for 1.148 secs (1.098u,0.046s) (success)
+col_trans_0019.v
+COQC col_trans_0019.v
+Tactic call ran for 0.974 secs (0.923u,0.046s) (success)
+col_trans_0020.v
+COQC col_trans_0020.v
+Tactic call ran for 1.352 secs (1.302u,0.044s) (success)
+col_trans_0021.v
+COQC col_trans_0021.v
+Tactic call ran for 9.554 secs (9.287u,0.073s) (success)
+col_trans_0022.v
+COQC col_trans_0022.v
+Tactic call ran for 12.467 secs (12.334u,0.076s) (success)
+col_trans_0023.v
+COQC col_trans_0023.v
+Tactic call ran for 15.985 secs (15.836u,0.08s) (success)
+col_trans_0024.v
+COQC col_trans_0024.v
+Tactic call ran for 0.87 secs (0.826u,0.043s) (success)
+col_trans_0025.v
+COQC col_trans_0025.v
+Tactic call ran for 8.526 secs (8.438u,0.062s) (success)
+col_trans_0026.v
+COQC col_trans_0026.v
+Tactic call ran for 0.53 secs (0.485u,0.043s) (success)
+col_trans_0027.v
+COQC col_trans_0027.v
+Tactic call ran for 0.535 secs (0.491u,0.043s) (success)
+col_trans_0028.v
+COQC col_trans_0028.v
+Tactic call ran for 2.325 secs (2.272u,0.045s) (success)
+col_trans_0029.v
+COQC col_trans_0029.v
+Tactic call ran for 0.632 secs (0.59u,0.041s) (success)
+col_trans_0030.v
+COQC col_trans_0030.v
+Tactic call ran for 0.72 secs (0.677u,0.042s) (success)
+col_trans_0031.v
+COQC col_trans_0031.v
+col_trans_0032.v
+COQC col_trans_0032.v
+col_trans_0033.v
+COQC col_trans_0033.v
+Tactic call ran for 0.459 secs (0.409u,0.047s) (success)
+col_trans_0034.v
+COQC col_trans_0034.v
+col_trans_0035.v
+COQC col_trans_0035.v
+col_trans_0036.v
+COQC col_trans_0036.v
+col_trans_0037.v
+COQC col_trans_0037.v
+col_trans_0038.v
+COQC col_trans_0038.v
+Tactic call ran for 0.574 secs (0.525u,0.047s) (success)
+col_trans_0039.v
+COQC col_trans_0039.v
+col_trans_0040.v
+COQC col_trans_0040.v
+col_trans_0041.v
+COQC col_trans_0041.v
+col_trans_0042.v
+COQC col_trans_0042.v
+Tactic call ran for 0.614 secs (0.559u,0.047s) (success)
+col_trans_0043.v
+COQC col_trans_0043.v
+col_trans_0044.v
+COQC col_trans_0044.v
+col_trans_0045.v
+COQC col_trans_0045.v
+Tactic call ran for 1.314 secs (1.19u,0.068s) (success)
+col_trans_0046.v
+COQC col_trans_0046.v
+Tactic call ran for 7.862 secs (6.801u,0.133s) (success)
+col_trans_0047.v
+COQC col_trans_0047.v
+Tactic call ran for 53.275 secs (48.121u,1.067s) (success)
+col_trans_0048.v
+COQC col_trans_0048.v
+Tactic call ran for 11.673 secs (11.249u,0.154s) (success)
+col_trans_0049.v
+COQC col_trans_0049.v
+Tactic call ran for 16.283 secs (15.698u,0.206s) (success)
+col_trans_0050.v
+COQC col_trans_0050.v
+col_trans_0051.v
+COQC col_trans_0051.v
+Tactic call ran for 7.905 secs (7.548u,0.122s) (success)
+col_trans_0052.v
+COQC col_trans_0052.v
+Tactic call ran for 0.623 secs (0.524u,0.056s) (success)
+col_trans_0053.v
+COQC col_trans_0053.v
+Tactic call ran for 25.372 secs (24.801u,0.194s) (success)
+col_trans_0054.v
+COQC col_trans_0054.v
+Tactic call ran for 0.94 secs (0.888u,0.046s) (success)
+col_trans_0055.v
+COQC col_trans_0055.v
+Tactic call ran for 0.738 secs (0.689u,0.045s) (success)
+col_trans_0056.v
+COQC col_trans_0056.v
+col_trans_0057.v
+COQC col_trans_0057.v
+col_trans_0058.v
+COQC col_trans_0058.v
+Tactic call ran for 0.555 secs (0.505u,0.046s) (success)
+col_trans_0059.v
+COQC col_trans_0059.v
+Tactic call ran for 0.608 secs (0.554u,0.049s) (success)
+col_trans_0060.v
+COQC col_trans_0060.v
+col_trans_0061.v
+COQC col_trans_0061.v
+col_trans_0062.v
+COQC col_trans_0062.v
+Tactic call ran for 2.636 secs (2.553u,0.058s) (success)
+col_trans_0063.v
+COQC col_trans_0063.v
+Tactic call ran for 3.986 secs (3.397u,0.12s) (success)
+col_trans_0064.v
+COQC col_trans_0064.v
+Tactic call ran for 0.916 secs (0.864u,0.045s) (success)
+col_trans_0065.v
+COQC col_trans_0065.v
+Tactic call ran for 0.503 secs (0.45u,0.047s) (success)
+col_trans_0066.v
+COQC col_trans_0066.v
+Tactic call ran for 1.777 secs (0.683u,0.08s) (success)
+col_trans_0067.v
+COQC col_trans_0067.v
+Tactic call ran for 1.708 secs (1.024u,0.219s) (success)
+col_trans_0068.v
+COQC col_trans_0068.v
+col_trans_0069.v
+COQC col_trans_0069.v
+col_trans_0070.v
+COQC col_trans_0070.v
+Tactic call ran for 0.88 secs (0.825u,0.045s) (success)
+col_trans_0071.v
+COQC col_trans_0071.v
+Tactic call ran for 28.864 secs (28.503u,0.135s) (success)
+col_trans_0072.v
+COQC col_trans_0072.v
+Tactic call ran for 34.745 secs (33.377u,0.271s) (success)
+col_trans_0073.v
+COQC col_trans_0073.v
+col_trans_0074.v
+COQC col_trans_0074.v
+Tactic call ran for 0.487 secs (0.445u,0.041s) (success)
+col_trans_0075.v
+COQC col_trans_0075.v
+Tactic call ran for 0.677 secs (0.633u,0.041s) (success)
+col_trans_0076.v
+COQC col_trans_0076.v
+Tactic call ran for 9.06 secs (8.978u,0.057s) (success)
+col_trans_0077.v
+COQC col_trans_0077.v
+Tactic call ran for 8.442 secs (8.357u,0.057s) (success)
+col_trans_0078.v
+COQC col_trans_0078.v
+Tactic call ran for 9.902 secs (9.815u,0.06s) (success)
+col_trans_0079.v
+COQC col_trans_0079.v
+Tactic call ran for 10.037 secs (9.906u,0.064s) (success)
+col_trans_0080.v
+COQC col_trans_0080.v
+Tactic call ran for 0.544 secs (0.501u,0.041s) (success)
+col_trans_0081.v
+COQC col_trans_0081.v
+col_trans_0082.v
+COQC col_trans_0082.v
+Tactic call ran for 55.429 secs (55.049u,0.169s) (success)
+col_trans_0083.v
+COQC col_trans_0083.v
+Tactic call ran for 51.143 secs (50.827u,0.149s) (success)
+col_trans_0084.v
+COQC col_trans_0084.v
+Tactic call ran for 0.564 secs (0.513u,0.046s) (success)
+col_trans_0085.v
+COQC col_trans_0085.v
+Tactic call ran for 0.531 secs (0.488u,0.041s) (success)
+col_trans_0086.v
+COQC col_trans_0086.v
+col_trans_0087.v
+COQC col_trans_0087.v
+col_trans_0088.v
+COQC col_trans_0088.v
+Tactic call ran for 0.601 secs (0.555u,0.044s) (success)
+col_trans_0089.v
+COQC col_trans_0089.v
+Tactic call ran for 0.57 secs (0.523u,0.043s) (success)
+col_trans_0090.v
+COQC col_trans_0090.v
+Tactic call ran for 8.288 secs (8.204u,0.06s) (success)
+col_trans_0091.v
+COQC col_trans_0091.v
+Tactic call ran for 0.502 secs (0.458u,0.042s) (success)
+col_trans_0092.v
+COQC col_trans_0092.v
+Tactic call ran for 1.073 secs (1.024u,0.042s) (success)
+col_trans_0093.v
+COQC col_trans_0093.v
+Tactic call ran for 1.728 secs (1.68u,0.043s) (success)
+col_trans_0094.v
+COQC col_trans_0094.v
+Tactic call ran for 0.653 secs (0.605u,0.041s) (success)
+col_trans_0095.v
+COQC col_trans_0095.v
+Tactic call ran for 1.694 secs (1.647u,0.042s) (success)
+col_trans_0096.v
+COQC col_trans_0096.v
+Tactic call ran for 0.671 secs (0.614u,0.046s) (success)
+col_trans_0097.v
+COQC col_trans_0097.v
+Tactic call ran for 8.811 secs (8.728u,0.058s) (success)
+col_trans_0098.v
+COQC col_trans_0098.v
+Tactic call ran for 53.735 secs (53.344u,0.153s) (success)
+col_trans_0099.v
+COQC col_trans_0099.v
+Tactic call ran for 0.886 secs (0.839u,0.043s) (success)
+tactic.v
+make: `tactic.vo' is up to date.

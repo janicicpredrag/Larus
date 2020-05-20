@@ -1,0 +1,150 @@
+and3_in.v
+COQDEP VFILES
+COQC and3_in.v
+Tactic call ran for 0.029 secs (0.026u,0.003s) (success)
+and3or_in.v
+COQC and3or_in.v
+Tactic call ran for 0.133 secs (0.115u,0.017s) (success)
+anl_in.v
+COQC anl_in.v
+ap_in.v
+COQC ap_in.v
+apd_in.v
+COQC apd_in.v
+ape_in.v
+COQC ape_in.v
+Tactic call ran for 2.81 secs (2.739u,0.05s) (success)
+cdp_in.v
+COQC cdp_in.v
+ce_in.v
+COQC ce_in.v
+Tactic call ran for 32.07 secs (27.481u,0.332s) (success)
+classic36_in.v
+COQC classic36_in.v
+Tactic call ran for 1.363 secs (1.274u,0.053s) (success)
+classic43_in.v
+COQC classic43_in.v
+cro_8_2_in.v
+COQC cro_8_2_in.v
+cro_case1_in.v
+COQC cro_case1_in.v
+cro_case2_in.v
+COQC cro_case2_in.v
+ct_in.v
+COQC ct_in.v
+d_andrew_in.v
+COQC d_andrew_in.v
+d_horn_in.v
+COQC d_horn_in.v
+Tactic call ran for 0.684 secs (0.624u,0.049s) (success)
+delta1_in.v
+COQC delta1_in.v
+delta_in.v
+COQC delta_in.v
+dpa_in.v
+COQC dpa_in.v
+dpe_a_in.v
+COQC dpe_a_in.v
+dpe_in.v
+COQC dpe_in.v
+dpt_in.v
+COQC dpt_in.v
+drinker_in.v
+COQC drinker_in.v
+Tactic call ran for 0.308 secs (0.232u,0.059s) (success)
+drunk2_in.v
+COQC drunk2_in.v
+equality_in.v
+COQC equality_in.v
+Tactic call ran for 8.51 secs (8.054u,0.102s) (success)
+exist_in.v
+COQC exist_in.v
+Tactic call ran for 0.018 secs (0.014u,0.003s) (success)
+five_in.v
+COQC five_in.v
+hdn001_in.v
+COQC hdn001_in.v
+Tactic call ran for 0.345 secs (0.292u,0.046s) (success)
+hdn002_in.v
+COQC hdn002_in.v
+Tactic call ran for 0.601 secs (0.538u,0.048s) (failure)
+hdn010_in.v
+COQC hdn010_in.v
+Tactic call ran for 4.421 secs (4.306u,0.056s) (failure)
+hdn020_in.v
+COQC hdn020_in.v
+Tactic call ran for 8.798 secs (7.677u,0.122s) (success)
+hp_bf_0_in.v
+COQC hp_bf_0_in.v
+hp_bf_1_in.v
+COQC hp_bf_1_in.v
+hp_bf_2_in.v
+COQC hp_bf_2_in.v
+hp_bf_3_in.v
+COQC hp_bf_3_in.v
+hr_in.v
+COQC hr_in.v
+latt_in.v
+COQC latt_in.v
+len.v
+COQC len.v
+mb_in.v
+COQC mb_in.v
+nl_in.v
+COQC nl_in.v
+nnl_in.v
+COQC nnl_in.v
+or3_in.v
+COQC or3_in.v
+Tactic call ran for 0.17 secs (0.146u,0.021s) (success)
+or_in.v
+COQC or_in.v
+Tactic call ran for 0.099 secs (0.087u,0.011s) (success)
+p1p2_in.v
+COQC p1p2_in.v
+p2p1_in.v
+COQC p2p1_in.v
+pa1_in.v
+COQC pa1_in.v
+Tactic call ran for 0.551 secs (0.49u,0.05s) (success)
+pa2_in.v
+COQC pa2_in.v
+pa_in.v
+COQC pa_in.v
+pierce_in.v
+COQC pierce_in.v
+Tactic call ran for 0.239 secs (0.211u,0.025s) (success)
+pp_in.v
+COQC pp_in.v
+problem43_40_in.v
+COQC problem43_40_in.v
+problem43_41_in.v
+COQC problem43_41_in.v
+qedf_in.v
+COQC qedf_in.v
+Tactic call ran for 0.075 secs (0.057u,0.018s) (success)
+r_in.v
+COQC r_in.v
+sd.v
+COQC sd.v
+ser_in.v
+COQC ser_in.v
+srr_in.v
+COQC srr_in.v
+Tactic call ran for 1.766 secs (1.684u,0.055s) (success)
+steam_in.v
+COQC steam_in.v
+strip_in.v
+COQC strip_in.v
+tactic.v
+make: `tactic.vo' is up to date.
+tdpe2_in.v
+COQC tdpe2_in.v
+tdpe3_in.v
+COQC tdpe3_in.v
+tdpe4_in.v
+COQC tdpe4_in.v
+tdpe_in.v
+COQC tdpe_in.v
+trs_in.v
+COQC trs_in.v
