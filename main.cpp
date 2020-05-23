@@ -36,6 +36,7 @@ int main(int argc , char** argv)
     params.mbCoq =  DEFAULT_COQ;
     params.mbIsa = DEFAULT_ISA;
     params.mbSimp = DEFAULT_SIMP;
+    params.msHammerInvoke = DEFAULT_HAMMER;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
@@ -105,6 +106,11 @@ int main(int argc , char** argv)
                     break;
                 }
             }
+            else if (argv[i][0] == '-' && argv[i][1] == 'h') {
+                // for instance: " ../vampire/vampire4.2.2"
+                params.msHammerInvoke = argv[i+1];
+                break;
+            }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
                     params.eEngine = eSTL_ProvingEngine;
@@ -146,7 +152,8 @@ int main(int argc , char** argv)
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
         cout << "   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32 \n" << endl;
-        cout << "   -a<axioms>           for additional axioms (negelim|excludedmiddle); example: -anegelim; default: do not include \n" << endl;
+        cout << "   -a<axiom>            for additional axioms (negelim|excludedmiddle); example: -anegelim; default: do not include \n" << endl;
+        cout << "   -h <invoke>          the way a FOL prover is invoked for filtering out needed axioms \n" << endl;
         cout << "   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); examples: -vcoq; default: no" << endl;
         return 0;
     }
