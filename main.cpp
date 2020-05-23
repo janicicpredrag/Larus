@@ -141,6 +141,9 @@ int main(int argc , char** argv)
     else
         wrongInput = true;
 
+    params.msHammerInvoke = "../vampire/vampire4.2.2 --proof tptp --output_axiom_names on";
+
+
     if (inputFilename == "")
         wrongInput = true;
 

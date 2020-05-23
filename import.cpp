@@ -154,11 +154,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             std::string line;
             ifstream in(vampire_solution.c_str());
             if (in.is_open())  {
-                while( getline(in,line) )
-                {
+                while( getline(in,line))  {
                    if (line.find(it->second) != string::npos) {
-
-                       cout << "FOUNDA " << endl;
                        neededAxioms.push_back(it->second);
                        break;
                    }
