@@ -108,8 +108,7 @@ int main(int argc , char** argv)
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'h') {
                 // for instance: " ../vampire/vampire4.2.2"
-                params.msHammerInvoke = argv[i+1];
-                break;
+                 params.msHammerInvoke =  argv[i+1]; 
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
