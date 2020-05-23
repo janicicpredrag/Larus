@@ -75,7 +75,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -124,6 +124,12 @@ do
         "zenon")
             echo "$opt selected"
             prover="zenon"
+            engine=""
+            break
+            ;;
+        "vampire")
+            echo "$opt selected"
+            prover="vampire"
             engine=""
             break
             ;;
@@ -243,16 +249,19 @@ do
       echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
     ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
     else
-    if [[ $prover = "eprover" ]]; then
+      if [[ $prover = "eprover" ]]; then
         echo "eprove"
-        eprover --auto --cpu-limit="$time" "$file" | tee -a $filename
-    else 
-    if [[ $prover = "zenon" ]]; then
-        zenon -itptp -max-time "$time" "$file" | tee -a $filename
-        fi
-    fi
+        eprover -xAuto -tAuto --cpu-limit="$time" "$file" | tee -a $filename
+      else 
+	  if [[ $prover = "zenon" ]]; then
+              zenon -itptp -max-time "$time" "$file" | tee -a $filename
+	  else
+	      if [[ $prover = "vampire" ]]; then
+		  vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
+	      fi
+	  fi
+      fi
   fi
-  
  ((i++))
   echo "Number of theorems proved until now:" | tee -a $summary
   if [ "$prover" = "zenon" ]; then
@@ -276,6 +285,10 @@ if [ "$prover" = "zenon" ]; then
    grep FOUND < $filename | wc -l | tee -a $summary
 else
     grep Theorem < $filename | wc -l | tee -a $summary
+    echo "Contradictory axioms:"
+    grep Contradictory < $filename | wc -l | tee -a $summary
+    echo "Counter sat:"
+    grep "Counter" < $filename | wc -l | tee -a $summary
     echo "Number of theorems checked by Coq:" | tee -a $summary
     grep Correct < $filename | wc -l | tee -a $summary
 fi
