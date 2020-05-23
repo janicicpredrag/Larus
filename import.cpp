@@ -141,7 +141,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         TPTPfile << "fof(" << theoremName << ", conjecture, " << theorem << ")." << endl;
         TPTPfile.close();
 
-        cout << "Filtering out input axioms (input: " <<  T.mCLaxioms.size() << ")" << endl;
+        cout << "Filtering out input axioms (input: " <<  T.mCLaxioms.size() << "; " <<  flush;
 
         vector<string> neededAxioms;
         string vampire_solution = "vampire.txt"; // tmpnam(NULL);
@@ -149,13 +149,29 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         int rv = system(sCall.c_str());
 
         // filtering
+        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
 
+            std::string line;
+            ifstream in(vampire_solution.c_str());
+            if (in.is_open())  {
+                while( getline(in,line) )
+                {
+                   if (line.find(it->second) != string::npos) {
+
+                       cout << "FOUNDA " << endl;
+                       neededAxioms.push_back(it->second);
+                       break;
+                   }
+                }
+            }
+
+        }
 
         // before real filterin is ready, all axioms are needed:
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
-            neededAxioms.push_back(it->second);
+        // for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
+        //    neededAxioms.push_back(it->second);
 
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)   {
+        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
@@ -164,7 +180,12 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             }
             if (!axiomNeeded)
                 it = T.mCLaxioms.erase(it);
+            else
+                it++;
         }
+
+        cout << "output: " <<  T.mCLaxioms.size() << ")" << endl;
+
         // **************************** end of filtering axioms by FOL prover
     }
 

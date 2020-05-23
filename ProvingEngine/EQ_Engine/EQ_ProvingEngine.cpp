@@ -855,7 +855,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        if (nProofStep == 0)
            sbSecondCaseStep = " false ";
        else
-           sbSecondCaseStep = "(and " + sbMatchBranchingForSecondCase +
+           sbSecondCaseStep = "(and " + sbMatchBranchingForSecondCase + sbPrevStepGoal +
                               "(not " + app("bCases", nProofStep) + ")" +
                               appeq(app("nNesting", nProofStep), smt_sum(app("nNesting", nProofStep-1),1)) + ")";
 
@@ -1076,11 +1076,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        Asserts.push_back(sbProofCorrect);
 
 
-       string sbEarlyEndOfProof = "(and ";
-       sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1);
-       sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
-       sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + /* sbQEDbyNegIntroStep +*/ ")";
-       sbEarlyEndOfProof += ")";
+//       string sbEarlyEndOfProof = " false ";
+//       if (nProofStep==nFinalStep) {
+           string sbEarlyEndOfProof = "(and ";
+           sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1);
+           sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
+           sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + /* sbQEDbyNegIntroStep +*/ ")";
+           sbEarlyEndOfProof += ")";
+//       }
 
        sbProofFinished += "(and " + sbEarlyEndOfProof + appeq("nProofSize", nProofStep) + ")";
 

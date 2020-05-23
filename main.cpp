@@ -107,8 +107,11 @@ int main(int argc , char** argv)
                 }
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'h') {
-                // for instance: " ../vampire/vampire4.2.2"
-                params.msHammerInvoke = argv[i+1];
+                // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp --output_axiom_names on"
+//                params.msHammerInvoke = argv[i+1];
+params.msHammerInvoke = "../vampire/vampire4.2.2 --proof tptp --output_axiom_names on";
+                cout << "ARGUMENT: " << params.msHammerInvoke << endl;
+
                 break;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
