@@ -133,55 +133,67 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
     if (params.msHammerInvoke != "") {
         // export to TPTP
-        string for_FOL_prover = "tptpfile.txt"; //tmpnam(NULL);
-        ofstream TPTPfile;
-        TPTPfile.open(for_FOL_prover);
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
-            TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")." << endl;
-        TPTPfile << "fof(" << theoremName << ", conjecture, " << theorem << ")." << endl;
-        TPTPfile.close();
+        size_t numberOfAxioms;
 
-        cout << "Filtering out input axioms (input: " <<  T.mCLaxioms.size() << "; " <<  flush;
+        int iterationParity = 0;
+        do {
+            iterationParity++;
+            numberOfAxioms = T.mCLaxioms.size();
 
-        vector<string> neededAxioms;
-        string vampire_solution = "vampire.txt"; // tmpnam(NULL);
-        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " " + for_FOL_prover + " > " + vampire_solution;
-        int rv = system(sCall.c_str());
+            string for_FOL_prover = "tptpfile.txt"; // tmpnam(NULL); // "tptpfile.txt"; //  //
 
-        // filtering
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
+           //const string ss = "rm " + for_FOL_prover;
+           //system(ss.c_str());
 
-            std::string line;
-            ifstream in(vampire_solution.c_str());
-            if (in.is_open())  {
-                while( getline(in,line))  {
-                   if (line.find(it->second) != string::npos) {
-                       neededAxioms.push_back(it->second);
-                       break;
-                   }
-                }
-            }
+            ofstream TPTPfile;
+            TPTPfile.open(for_FOL_prover);
 
-        }
-
-        // before real filterin is ready, all axioms are needed:
-        // for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
-        //    neededAxioms.push_back(it->second);
-
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
-            bool axiomNeeded = false;
-            for (size_t i = 0; i < neededAxioms.size(); i++)   {
-                if (it->second == neededAxioms[i]) {
-                    axiomNeeded = true;
-                }
-            }
-            if (!axiomNeeded)
-                it = T.mCLaxioms.erase(it);
+            if (iterationParity % 2)
+                for (int i = 0; i < T.mCLaxioms.size(); i++)
+                    TPTPfile << "fof(" << T.mCLaxioms[i].second << ", axiom, " << T.mCLaxioms[i].first << ")." << endl;
             else
-                it++;
-        }
+                for (int i = T.mCLaxioms.size()-1; i>=0; i--)
+                    TPTPfile << "fof(" << T.mCLaxioms[i].second << ", axiom, " << T.mCLaxioms[i].first << ")." << endl;
 
-        cout << "output: " <<  T.mCLaxioms.size() << ")" << endl;
+            TPTPfile << "fof(" << theoremName << ", conjecture, " << theorem << ")." << endl;
+            TPTPfile.close();
+
+            cout << "Filtering out input axioms (input: " <<  T.mCLaxioms.size() << "; " <<  flush;
+
+            vector<string> neededAxioms;
+            string vampire_solution = "vampire.txt"; // tmpnam(NULL);
+            const string sCall = "timeout " + itos(100 /* params.time_limit*/) + " " + params.msHammerInvoke + " " + for_FOL_prover + " > " + vampire_solution;
+            int rv = system(sCall.c_str());
+            if (!rv) {
+                for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
+                    std::string line;
+                    ifstream in(vampire_solution.c_str());
+                    if (in.is_open())  {
+                        while( getline(in,line))  {
+                           if (line.find(it->second) != string::npos) {
+                               neededAxioms.push_back(it->second);
+                               break;
+                           }
+                        }
+                    }
+                }
+                for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
+                    bool axiomNeeded = false;
+                    for (size_t i = 0; i < neededAxioms.size(); i++)   {
+                        if (it->second == neededAxioms[i]) {
+                            axiomNeeded = true;
+                        }
+                    }
+                    if (!axiomNeeded)
+                        it = T.mCLaxioms.erase(it);
+                    else
+                        it++;
+                }
+            }
+            else
+                cout << " FAILED; " <<  T.mCLaxioms.size() << ")" << endl;
+            cout << "output: " <<  T.mCLaxioms.size() << ")" << endl;
+        } while (T.mCLaxioms.size() < numberOfAxioms);
 
         // **************************** end of filtering axioms by FOL prover
     }

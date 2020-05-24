@@ -111,7 +111,6 @@ int main(int argc , char** argv)
                 //                params.msHammerInvoke = argv[i+1];
                 // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
                 params.msHammerInvoke = "../vampire/vampire4.2.2 --proof tptp --output_axiom_names on";
-                break;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
