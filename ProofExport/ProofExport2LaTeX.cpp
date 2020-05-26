@@ -32,7 +32,7 @@ void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
             outfile << f.GetArg(0) << " = " << f.GetArg(1);
         }
         else if (f.GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME){
-            outfile << f.GetArg(0) << " \neq " << f.GetArg(1);
+            outfile << f.GetArg(0) << " \\neq " << f.GetArg(1);
         }
         else {
             int ns = PREFIX_NEGATED.size();

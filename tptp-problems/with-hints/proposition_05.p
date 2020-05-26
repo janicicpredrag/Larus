@@ -10,5 +10,5 @@ fof(cn_col1b,axiom, (! [A,B,C] : ((col(A,B,C)) | (~ (col(A,B,C)))))).
 %problem simplified by introducing not col.
 fof(proposition_05,conjecture,(! [A,B,C] : ((isosceles(A,B,C) & ~(col(A,B,C)) => ((congA(A,B,C,A,C,B)))))).
  
-fof(hint1,hint, congA(3,1,2,2,1,3), _ , _).
-fof(hint2,hint, cong(1,3,1,2), _ , _).
+fof(hint1,hint, congA(2,0,1,1,0,2), _ , _).
+fof(hint2,hint, cong(0,2,0,1), _ , _).
