@@ -69,6 +69,33 @@ bool stoi(string s, int& i)
     return (strlen(p) == 0);
 }
 
+
+// -----------------------------------------------------------------------------------------------------
+
+vector<string> readVampireOutput(string filename) {
+    ifstream input_file(filename,ios::in);
+    vector<string> strv;
+    if (input_file.good())
+    {
+        string ss;
+        while(getline(input_file, ss)) { 
+            if (ss!= "" && ss.at(0) != '%')
+            {
+                size_t beginindex = ss.find(',');
+                size_t endindex = ss.find(')');
+                if (beginindex != string::npos && endindex != string::npos)
+                    strv.push_back(ss.substr(beginindex+1,endindex-beginindex-1));
+
+            }
+        }
+    }
+    else
+        {
+            cout << "Error reading input file :" << filename << endl;
+        }
+    return(strv);
+}
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
@@ -145,11 +172,13 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         vector<string> neededAxioms;
         string vampire_solution = "vampire.txt"; // tmpnam(NULL);
-        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " " + for_FOL_prover + " > " + vampire_solution;
+        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " 2>/dev/null | grep \"file[(]'\" > " + vampire_solution;
         int rv = system(sCall.c_str());
 
+        neededAxioms = readVampireOutput(vampire_solution);
+        // Julien: this vector should coontain all the needed axioms
+        
         // filtering
-
 
         // before real filterin is ready, all axioms are needed:
         for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
@@ -159,6 +188,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
+                    cout << "Debug " << neededAxioms[i] << endl;
                     axiomNeeded = true;
                 }
             }
