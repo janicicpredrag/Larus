@@ -125,10 +125,10 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
     DNFFormula fout;
     T.InstantiateGoal(theorem, instantiation, fout, false);
 
-    /* if (fout.GetSize() == 1 && fout.GetElement(0).GetSize() == 1 )   { // Try proving by refutation
+  /*  if (fout.GetSize() == 1 && fout.GetElement(0).GetSize() == 1 )   { // Try proving by refutation
         Fact f = fout.GetElement(0).GetElement(0);
         f.SetName(PREFIX_NEGATED+f.GetName());
-        engine->AddFact(f);
+        engine->AddPremise(f);
         Fact b;
         b.SetName("false");
         ConjunctionFormula conj;
@@ -177,24 +177,24 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
         neededAxioms = readVampireOutput(vampire_solution);
         // Julien: this vector should coontain all the needed axioms
-        
-        // filtering
 
-        // before real filterin is ready, all axioms are needed:
         for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
             neededAxioms.push_back(it->second);
-
         for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)   {
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
-                    cout << "Debug " << neededAxioms[i] << endl;
+                    cout << "[Debug] Needed axiom: " << neededAxioms[i] << endl;
                     axiomNeeded = true;
                 }
             }
             if (!axiomNeeded)
                 it = T.mCLaxioms.erase(it);
         }
+
+
+        cout << "Filtering output: " <<  T.mCLaxioms.size() << endl;
+
         // **************************** end of filtering axioms by FOL prover
     }
 
