@@ -350,7 +350,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
+    string smt_proofout_filename =  tmpnam(NULL); // "smt-proof.txt"; //
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -369,8 +369,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = "prove.smt"; // tmpnam(NULL); //
-            string smt_model_filename = "smt-model.txt"; // tmpnam(NULL); //
+            string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
+            string smt_model_filename =  tmpnam(NULL); // "smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;

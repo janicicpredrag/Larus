@@ -70,37 +70,10 @@ bool stoi(string s, int& i)
 }
 
 
-// -----------------------------------------------------------------------------------------------------
-
-vector<string> readVampireOutput(string filename) {
-    ifstream input_file(filename,ios::in);
-    vector<string> strv;
-    if (input_file.good())
-    {
-        string ss;
-        while(getline(input_file, ss)) { 
-            if (ss!= "" && ss.at(0) != '%')
-            {
-                size_t beginindex = ss.find(',');
-                size_t endindex = ss.find(')');
-                if (beginindex != string::npos && endindex != string::npos)
-                    strv.push_back(ss.substr(beginindex+1,endindex-beginindex-1));
-
-            }
-        }
-    }
-    else
-        {
-            cout << "Error reading input file :" << filename << endl;
-        }
-    return(strv);
-}
-
 // ---------------------------------------------------------------------------------------------------------------------------
 
 
-
-ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
+ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
 {
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
@@ -122,19 +95,42 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         proof.AddAssumption(premiseFactInstantiated);
     }
 
-    DNFFormula fout;
-    T.InstantiateGoal(theorem, instantiation, fout, false);
+    /*
+    if (theorem.GetGoal().GetSize() == 1 && theorem.GetGoal().GetElement(0).GetSize() == 1
+            && theorem.GetNumOfExistVars()==0)   { // Try proving by refutation
+        Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
+        unsigned len = string(PREFIX_NEGATED).size();
+        if (f.GetName().substr(0,len) == PREFIX_NEGATED)
+            f.SetName(f.GetName().substr(len, f.GetName().size()-len));
+        else
+            f.SetName(PREFIX_NEGATED+f.GetName());
+        Fact premiseFactInstantiated;
+        T.AddSymbol(f.GetName(), f.GetArity());
 
-  /*  if (fout.GetSize() == 1 && fout.GetElement(0).GetSize() == 1 )   { // Try proving by refutation
-        Fact f = fout.GetElement(0).GetElement(0);
-        f.SetName(PREFIX_NEGATED+f.GetName());
-        engine->AddPremise(f);
+        T.InstantiateFact(f, instantiation, premiseFactInstantiated, true);
+        engine->AddPremise(premiseFactInstantiated);
+        proof.AddAssumption(premiseFactInstantiated);
+
         Fact b;
         b.SetName("false");
         ConjunctionFormula conj;
         conj.Add(b);
-        fout.Add(conj);
+
+        ConjunctionFormula A = theorem.GetPremises();
+        DNFFormula B = theorem.GetGoal();
+        A.Add(f);
+        B.Clear();
+        B.Add(conj);
+        CLFormula thm(A,B);
+        for(size_t i = 0; i<theorem.GetNumOfUnivVars(); i++)
+            thm.AddUnivVar(theorem.GetUnivVar(i));
+        for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
+            thm.AddExistVar(theorem.GetExistVar(i));
+        theorem = thm;
     }*/
+
+    DNFFormula fout;
+    T.InstantiateGoal(theorem, instantiation, fout, false);
 
     engine->SetStartTimeAndLimit(clock(), params.time_limit);
     engine->SetMaxNestingDepth(params.max_nesting_depth);
@@ -160,7 +156,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
 
     if (params.msHammerInvoke != "") {
         // export to TPTP
-        string for_FOL_prover = "tptpfile.txt"; //tmpnam(NULL);
+        string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt"; //
         ofstream TPTPfile;
         TPTPfile.open(for_FOL_prover);
         for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
@@ -171,16 +167,29 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
         cout << "Filtering out input axioms (input: " <<  T.mCLaxioms.size() << ")" << endl;
 
         vector<string> neededAxioms;
-        string vampire_solution = "vampire.txt"; // tmpnam(NULL);
-        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " 2>/dev/null | grep \"file[(]'\" > " + vampire_solution;
+        string vampire_solution =  tmpnam(NULL); // "vampire.txt"; //
+//        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " 2>/dev/null | grep \"file[(]'\" > " + vampire_solution;
+        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
         int rv = system(sCall.c_str());
 
-        neededAxioms = readVampireOutput(vampire_solution);
-        // Julien: this vector should coontain all the needed axioms
+        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
+            ifstream input_file(vampire_solution);
+            if (input_file.good())  {
+                string ss;
+                while(getline(input_file, ss)) {
+                    if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
+                           neededAxioms.push_back(it->second);
+                }
+            }
+            else
+            {
+                cout << "Error reading input file :" << vampire_solution << endl;
+                return eErrorReadingAxioms;
+            }
+            input_file.close();
+        }
 
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)
-            neededAxioms.push_back(it->second);
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)   {
+        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
@@ -190,9 +199,9 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theo
             }
             if (!axiomNeeded)
                 it = T.mCLaxioms.erase(it);
+            else
+                it++;
         }
-
-
         cout << "Filtering output: " <<  T.mCLaxioms.size() << endl;
 
         // **************************** end of filtering axioms by FOL prover
