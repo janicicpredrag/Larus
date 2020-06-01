@@ -875,7 +875,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                      app("bGoal", nProofStep) + ")");
 
        string sbQEDbyAssumptionStep = ( nProofStep == 0 ?
-                   "(and " + sbTrivGoalReached + appeq(app("nNesting", nProofStep), 1) + ")"
+                   "(and " + sbTrivGoalReached + appeq(app("nNesting", nProofStep), 1) +
+                    appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) + ")"
                    :
                    "(and " +  app("bGoal", nProofStep-1) +
                     "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
@@ -921,7 +922,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                  /*+ app("sbQEDbyNegIntroStep", nProofStep) */ + ")\n";
 
        sbProofStepCorrect += "(= " + app("sbMPStep", nProofStep) + "(and " + smt_geq(app("nAxiomApplied",nProofStep),13) + smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1) + "))";
-       sbProofStepCorrect += smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1);
+    //   sbProofStepCorrect += smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1);
 
        if (nProofStep != 0) {
            sbProofStepCorrect += "(or (not " + sbPrevStepQED + ")" +
