@@ -36,6 +36,7 @@ const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
+const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
 
 const string EQ_NATIVE_NAME = "eqnative";
@@ -58,6 +59,7 @@ typedef struct proverParams {
     bool mbCoq;
     bool mbIsa;
     bool mbSimp;
+    bool mbNeedsCaseSplits;
     string msHammerInvoke;
 } proverParams;
 

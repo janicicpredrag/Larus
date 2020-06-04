@@ -36,6 +36,7 @@ int main(int argc , char** argv)
     params.mbCoq =  DEFAULT_COQ;
     params.mbIsa = DEFAULT_ISA;
     params.mbSimp = DEFAULT_SIMP;
+    params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
     params.msHammerInvoke = DEFAULT_HAMMER;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;

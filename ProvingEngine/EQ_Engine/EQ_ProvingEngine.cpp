@@ -827,7 +827,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbNegIntroStep += ")";
 
        string sbFirstCaseStep;
-       if (nProofStep == 0)
+       if (nProofStep == 0 || !mParams.mbNeedsCaseSplits)
            sbFirstCaseStep = " false ";
        else {
            sbFirstCaseStep = "(and " "(not " + app("bCases", nProofStep) + ") " +
@@ -853,7 +853,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        sbMatchBranchingForSecondCase += ")";
 
        string sbSecondCaseStep;
-       if (nProofStep == 0)
+       if (nProofStep == 0 || !mParams.mbNeedsCaseSplits)
            sbSecondCaseStep = " false ";
        else
            sbSecondCaseStep = "(and " + sbMatchBranchingForSecondCase + /* app("bGoal", nProofStep-1) +*/
@@ -866,7 +866,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbTrivGoalReached = "(or " + sbTrivGoalReached + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
        }
 
-       string sbQEDbyCasesStep = ( nProofStep == 0 ? " false " :
+       string sbQEDbyCasesStep = ( nProofStep == 0 || !mParams.mbNeedsCaseSplits ? " false " :
                    "(and "
                      "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                      app("bOddNesting", nProofStep-1) +
@@ -1079,6 +1079,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
         smtFile << "(get-value (" << endl;
         for(set<string>::iterator it = GETVALUE.begin(); it != GETVALUE.end(); it++)
+            if (it->find("bSameProofBranch") == string::npos &&
+                it->find("bGoal") == string::npos &&
+                it->find("bOddNesting") == string::npos &&
+                it->find("bStepQED") == string::npos &&
+                it->find("sbaMPStep") == string::npos)
             smtFile << *it << endl;
         smtFile << "))" << endl;
     }

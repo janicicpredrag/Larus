@@ -208,6 +208,19 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         // **************************** end of filtering axioms by FOL prover
     }
 
+
+    params.mbNeedsCaseSplits = false;
+    for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++)  {
+        if (it->first.GetGoal().GetSize() > 1) {
+            params.mbNeedsCaseSplits = true;
+            break;
+        }
+    }
+    if (params.mbNeedsCaseSplits)
+        cout << "Case splits needed. " << endl;
+    else
+        cout << "Case splits NOT needed. " << endl;
+
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
         proved = eConjectureProved;
