@@ -169,41 +169,46 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         vector<string> neededAxioms;
         string vampire_solution =  tmpnam(NULL); // "vampire.txt"; //
 //        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " 2>/dev/null | grep \"file[(]'\" > " + vampire_solution;
-        const string sCall = "timeout " + itos(params.time_limit) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
+        const string sCall = "timeout " + itos(5 /*params.time_limit*/) + " " + params.msHammerInvoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
         int rv = system(sCall.c_str());
 
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
-            ifstream input_file(vampire_solution);
-            if (input_file.good())  {
-                string ss;
-                while(getline(input_file, ss)) {
-                    if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
-                           neededAxioms.push_back(it->second);
+        if (!rv)
+        {
+            for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end(); it++) {
+                ifstream input_file(vampire_solution);
+                if (input_file.good())  {
+                    string ss;
+                    while(getline(input_file, ss)) {
+                        if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
+                               neededAxioms.push_back(it->second);
+                    }
                 }
+                else
+                {
+                    cout << "Error reading input file :" << vampire_solution << endl;
+                    return eErrorReadingAxioms;
+                }
+                input_file.close();
             }
-            else
-            {
-                cout << "Error reading input file :" << vampire_solution << endl;
-                return eErrorReadingAxioms;
-            }
-            input_file.close();
-        }
 
-        for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
-            bool axiomNeeded = false;
-            for (size_t i = 0; i < neededAxioms.size(); i++)   {
-                if (it->second == neededAxioms[i]) {
-                    if (!axiomNeeded)
-                        cout << "    Needed axiom: " << neededAxioms[i] << endl;
-                    axiomNeeded = true;
+            for (vector<pair<CLFormula,string>>::iterator it = T.mCLaxioms.begin(); it != T.mCLaxioms.end();)   {
+                bool axiomNeeded = false;
+                for (size_t i = 0; i < neededAxioms.size(); i++)   {
+                    if (it->second == neededAxioms[i]) {
+                        if (!axiomNeeded)
+                            cout << "    Needed axiom: " << neededAxioms[i] << endl;
+                        axiomNeeded = true;
+                    }
                 }
+                if (!axiomNeeded)
+                    it = T.mCLaxioms.erase(it);
+                else
+                    it++;
             }
-            if (!axiomNeeded)
-                it = T.mCLaxioms.erase(it);
-            else
-                it++;
+            cout << "Filtering output (success): " <<  T.mCLaxioms.size() << endl;
         }
-        cout << "Filtering output: " <<  T.mCLaxioms.size() << endl;
+        else
+            cout << "Filtering output (failure): " <<  T.mCLaxioms.size() << endl;
 
         // **************************** end of filtering axioms by FOL prover
     }
