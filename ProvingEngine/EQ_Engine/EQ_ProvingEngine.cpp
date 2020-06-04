@@ -369,8 +369,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
-            string smt_model_filename =  tmpnam(NULL); // "smt-model.txt"; //
+            string smt_proofencoded_filename =  "prove.smt"; // tmpnam(NULL); // "prove.smt"; //
+            string smt_model_filename = "smt-model.txt"; // tmpnam(NULL); // /
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;
@@ -904,24 +904,25 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eNegIntro), 1, 0);
        snNegIntroCheckNeg += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), 1, 0);
 
-       string sbPrevStepQED = ( nProofStep == 0 ? " false " :
-                   "(or " + appeq(app("nAxiomApplied", nProofStep-1), eQEDbyCases) +
-                            appeq(app("nAxiomApplied", nProofStep-1), eQEDbyAssumption) +
-                            appeq(app("nAxiomApplied", nProofStep-1), eQEDbyEFQ) +
-                            appeq(app("nAxiomApplied", nProofStep-1), eQEDbyNegIntro) + ")");
+       bool bPrevStepQED = (nProofStep == 0 || nProofStep < mnPremisesCount);
+       string sbPrevStepQED = (bPrevStepQED  ? " false " : " " + app("bStepQED", nProofStep-1) + " ");
 
        sbProofStepCorrect = " true ";
-       sbProofStepCorrect += "(= " + sbMPStep + app("sbMPStep", nProofStep) + ")";
+       sbProofStepCorrect += "(= " + sbMPStep + app("sbaMPStep", nProofStep) + ")";
+
+       sbProofStepCorrect += appeq(app("bStepQED", nProofStep), "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + /* sbQEDbyNegIntroStep +*/ ")");
 
        // neg intro temporarily disabled
        /* ... the proof step is correct if it was one of cases from some case split */
        sbProofStepCorrect += "\n(or " +
-                                 sbMPStep +
+                                 // sbMPStep +
+                                 app("sbaMPStep", nProofStep) +
                                  /* sbNegIntroStep +*/ " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
-                                 sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " "
+                                app("bStepQED", nProofStep) +
+                                // sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " "
                                  /*+ app("sbQEDbyNegIntroStep", nProofStep) */ + ")\n";
 
-       sbProofStepCorrect += "(= " + app("sbMPStep", nProofStep) + "(and " + smt_geq(app("nAxiomApplied",nProofStep),13) + smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1) + "))";
+       sbProofStepCorrect += "(= " + app("sbaMPStep", nProofStep) + "(and " + smt_geq(app("nAxiomApplied",nProofStep),13) + smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1) + "))";
     //   sbProofStepCorrect += smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1);
 
        if (nProofStep != 0) {
@@ -953,8 +954,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                bb +=   "(or " + smt_less(app("nNumberOfPremises", nProofStep), i1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                   app("sbMPStep", nProofStep) + " " +
+           sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+                   app("sbaMPStep", nProofStep) + " " +
                    app("bSameProofBranch", nProofStep1, nProofStep) +
                    // appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                    bb + "))" +
@@ -966,8 +967,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                for (unsigned i = 0; i < mnMaxPremises; i++)
                    bb += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                   app("sbMPStep", nProofStep) + " " +
+           sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+                   app("sbaMPStep", nProofStep) + " " +
                    appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
                    "(or " + bb + "))";*/
        }
@@ -982,8 +983,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               for (unsigned i1 = 0; i1 < mnMaxPremises; i1++)
                   for (unsigned i = 0; i < mnMaxPremises; i++)
                       bb1 += smt_geq(app("nFrom", nProofStep, i), app("nFrom", nProofStep1, i1));
-              sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-                      app("sbMPStep", nProofStep) + " " +
+              sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+                      app("sbaMPStep", nProofStep) + " " +
                       appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                       "(not " +  app("bCases", nProofStep) + ")" +
                       appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) + "))" +
@@ -995,8 +996,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                bb +=   "(or " +
                        smt_less(app("nNumberOfPremises", nProofStep), i1+1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-               app("sbMPStep", nProofStep) + " " +
+           sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+               app("sbaMPStep", nProofStep) + " " +
                // app("bSameProofBranch", nProofStep1, nProofStep) +
                appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                "(not " +  app("bCases", nProofStep) + ")" +
@@ -1012,8 +1013,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            string bb = appeq(app("nP", nProofStep,0), app("nP", nProofStep1,0));
            for (unsigned nInd = 0; nInd < mnMaxArity; nInd++)
                bb += appeq(app("nArg" , nProofStep, nInd),app("nArg" , nProofStep1, nInd));
-           sbProofStepCorrect += "(or (not (and " + app("sbMPStep", nProofStep1) + " " +
-              app("sbMPStep", nProofStep) + " " +
+           sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+              app("sbaMPStep", nProofStep) + " " +
               appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
               "(not " +  app("bCases", nProofStep) + ")"
               "(not " +  app("bCases", nProofStep1) + ")))" +
@@ -1028,7 +1029,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            string sbEarlyEndOfProof = "(and ";
           // sbEarlyEndOfProof += appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 1);
            sbEarlyEndOfProof += appeq(app("nNesting",nProofStep), 1);
-           sbEarlyEndOfProof += "(or " + sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " " + /* sbQEDbyNegIntroStep +*/ ")";
+           sbEarlyEndOfProof += app("bStepQED", nProofStep);
            sbEarlyEndOfProof += ")";
 //       }
 
@@ -1061,15 +1062,13 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     for (unsigned i = 0; i<StepAsserts.size(); i++) {
         smtFile << "\n; ********* Constraints for proof step " << i << " ********* " << endl;
         smtFile << "(assert" + StepAsserts[i] + ")" << endl << endl;
-        // smtFile << "(check-sat)" << endl << endl;
+        smtFile << "(check-sat)" << endl << endl;
     }
-
-
 
     smtFile << "(check-sat)" << endl << endl;
 
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
-    smtFile << "(assert (and " /* + sbProofCorrect +*/ "(or " + sbProofFinished + ")))" << endl << endl;
+    smtFile << "(assert (or " + sbProofFinished + "))" << endl << endl;
 
     //smtFile << "(check-sat-using (then simplify purify-arith ctx-solver-simplify))" << endl;
     //smtFile << "(check-sat-using ctx-solver-simplify)" << endl;

@@ -193,7 +193,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
-                    cout << "[Debug] Needed axiom: " << neededAxioms[i] << endl;
+                    if (!axiomNeeded)
+                        cout << "    Needed axiom: " << neededAxioms[i] << endl;
                     axiomNeeded = true;
                 }
             }
