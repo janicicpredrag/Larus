@@ -6,7 +6,7 @@ printout() {
 }
 i=0
 time=10
-maxProofLen=32
+maxProofLen=64
 startinglength=4
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/clprover-results-$today.out"
