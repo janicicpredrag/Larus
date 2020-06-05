@@ -7,6 +7,8 @@
 #include "CLTheory/Formula.h"
 #include "common.h"
 
+bool USING_ORIGINAL_SIGNATURE_EQ;
+bool USING_ORIGINAL_SIGNATURE_NEG;
 
 extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params);
 extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& params);
@@ -38,6 +40,9 @@ int main(int argc , char** argv)
     params.mbSimp = DEFAULT_SIMP;
     params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
     params.msHammerInvoke = DEFAULT_HAMMER;
+
+    USING_ORIGINAL_SIGNATURE_EQ = false;
+    USING_ORIGINAL_SIGNATURE_NEG = false;
 
 //    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
 //    ExportCaseStudyToTPTP(case_study,EuclidAxioms);

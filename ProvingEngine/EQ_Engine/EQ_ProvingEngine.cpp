@@ -378,7 +378,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             cout << l << flush;
             rv = system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
-                l += 5;
+                l += 8;
                 // l *= 2;
                 cout << ", "  << flush;
             }

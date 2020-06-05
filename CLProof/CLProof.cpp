@@ -647,6 +647,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 proofTrace.push_back(f); // this is not used if the axiom is branching
 
                 if (nBranching) {
+                    Fact f;
                     f.SetName(string(sPredicates[nPredicate1]));
                     for(size_t i=0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++) {
                         if (sConstants.find(nArgs1[i]) == sConstants.end())
