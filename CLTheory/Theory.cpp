@@ -41,12 +41,47 @@ void Theory::UpdateSignature(CLFormula& axiom)
 
 // --------------------------------------------------------------
 
+void Theory::AddEqNegElimAxioms()
+{
+    if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end() ||
+        mOccuringSymbols.find(PREFIX_NEGATED+EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
+    DNFFormula conclusion;
+    ConjunctionFormula conc0, conc1;
+    Fact a,b;
+    a.SetName(EQ_NATIVE_NAME);
+    a.SetArg(0,"A");
+    a.SetArg(1,"B");
+    conc0.Add(a);
+    b.SetName(PREFIX_NEGATED+EQ_NATIVE_NAME);
+    b.SetArg(0,"A");
+    b.SetArg(1,"B");
+    conc0.Add(b);
+
+    Fact c;
+    c.SetName("false");
+    conc1.Add(c);
+    conclusion.Add(conc1);
+    CLFormula axiom(conc0,conclusion);
+    axiom.AddUnivVar("A");
+    axiom.AddUnivVar("B");
+    AddAxiom(axiom, "eq_neg_elim");
+}
+
+// --------------------------------------------------------------
+
 void Theory::AddNegElimAxioms()
 {
     // add the axiom  R(...) & nR(...) => false for every predicate symbol
     for (size_t i=2; i < mSignature.size(); i+=2) {
         // skip false
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
+
+        if (mOccuringSymbols.find(PREFIX_NEGATED+mSignature[i].first) == mOccuringSymbols.end() ||
+            mOccuringSymbols.find(mSignature[i].first) == mOccuringSymbols.end())
+            continue;
+
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
 
@@ -82,6 +117,10 @@ void Theory::AddExcludedMiddleAxioms()
     for (size_t i=2; i < mSignature.size(); i+=2) {
         // skip false
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
+        if (mOccuringSymbols.find(PREFIX_NEGATED+mSignature[i].first) == mOccuringSymbols.end() ||
+            mOccuringSymbols.find(mSignature[i].first) == mOccuringSymbols.end())
+            continue;
+
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
 
@@ -111,6 +150,10 @@ void Theory::AddExcludedMiddleAxioms()
 
 void Theory::AddEqExcludedMiddleAxiom()
 {
+    if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end() ||
+        mOccuringSymbols.find(PREFIX_NEGATED+EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
     ConjunctionFormula premises;
     DNFFormula conclusion;
     ConjunctionFormula conc0, conc1;
@@ -136,11 +179,18 @@ void Theory::AddEqExcludedMiddleAxiom()
 
 void Theory::AddEqSubAxioms()
 {
+    if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
     // add the axiom  eq(A,B) & R(..A..) => R(..B..) false for every predicate symbol
     for (size_t i=1; i < mSignature.size(); i++) {
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mSignature[i].first.find('_',0) != string::npos)
             continue;
+
+        if (mSignature[i].first.find(PREFIX_NEGATED,0) != string::npos)
+            continue;
+
         for (size_t j=0; j < mSignature[i].second; j++) {
             ConjunctionFormula premises;
             DNFFormula conclusion;
@@ -174,6 +224,9 @@ void Theory::AddEqSubAxioms()
 
 void Theory::AddAxiomEqSymm()
 {
+    if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
     ConjunctionFormula premises;
     DNFFormula conclusion;
     ConjunctionFormula conc0;
@@ -197,6 +250,9 @@ void Theory::AddAxiomEqSymm()
 
 void Theory::AddAxiomNEqSymm()
 {
+    if (mOccuringSymbols.find(PREFIX_NEGATED+EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
     ConjunctionFormula premises;
     DNFFormula conclusion;
     ConjunctionFormula conc0;
@@ -221,6 +277,9 @@ void Theory::AddAxiomNEqSymm()
 
 void Theory::AddAxiomEqReflexive()
 {
+    if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+        return;
+
     ConjunctionFormula premises;
     DNFFormula conclusion;
     ConjunctionFormula conc0;
@@ -260,9 +319,16 @@ void Theory::AddConstant(string s)
 
 // --------------------------------------------------------------
 
-void Theory::AddSymbol(string p, unsigned arity)
+void Theory::AddSymbol(const string& pp, unsigned arity)
 {
-    // This is ugly convention: predicates with names beginning with 'n' are negated versions
+    string p = pp;
+    if (mOccuringSymbols.find(p) == mOccuringSymbols.end())
+        mOccuringSymbols.insert(p);
+    /*for (std::set<std::string>::iterator it = mOccuringSymbols.begin();
+         it != mOccuringSymbols.end(); it++)
+       cout << "sadrzaj: " << *it << endl;*/
+
+// This is ugly convention: predicates with names beginning with PREFIX_NEGATED are negated versions
 //    mSignature[p] = mSignature.size()+1;
 //    mArity[p] = arity;
 #ifdef DEBUG_THEORY

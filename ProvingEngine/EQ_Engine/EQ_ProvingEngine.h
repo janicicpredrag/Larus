@@ -31,6 +31,7 @@ private:
 
     string app(string s, unsigned arg1);
     string app(string s, unsigned arg1, unsigned arg2);
+    string app(string s, unsigned arg1, unsigned arg2, unsigned arg3);
     string appeq(string arg1, string arg2);
     string appeq(string arg1, int arg2);
     string smt_sum(string arg1);
@@ -51,6 +52,7 @@ private:
 
     string appack(string s, unsigned arg1);
     string appack(string s, unsigned arg1, unsigned arg2);
+    string appack(string s, unsigned arg1, unsigned arg2, unsigned arg3);
 
     unsigned mnMaxArity;
     unsigned mnMaxPremises;
@@ -73,6 +75,7 @@ private:
     set<string> DECLARATIONS;
     set<string> DECLARATIONS1;
     set<string> DECLARATIONS2;
+    set<string> DECLARATIONS3;
     set<string> GETVALUE;
 
     string mURSAstringPremises;

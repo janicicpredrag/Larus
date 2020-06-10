@@ -96,7 +96,6 @@ private:
 // ---------------------------------------------------------------------------------------
 
 class DNFFormula
-
 {
 public:
     DNFFormula() {}
@@ -122,6 +121,8 @@ class CLFormula
 public:
     CLFormula()  {  }
     CLFormula(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
+    CLFormula& operator=(const CLFormula& cf)
+        { mA = cf.mA; mB = cf.mB; mUniversalVars = cf.mUniversalVars; mExistentialVars = cf.mExistentialVars; return *this; }
     friend ostream& operator<<(ostream& os, const CLFormula& f);
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
@@ -172,22 +173,26 @@ inline ostream& operator<<(ostream& os, const Fact& f)
     }
     else if (f.GetName() == EQ_NATIVE_NAME)
     {
-        // os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
-        os  << EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", " << f.GetArg(1) << " )";
+        if (USING_ORIGINAL_SIGNATURE_EQ)
+            os  << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
+        else
+            os  << EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", " << f.GetArg(1) << " )";
     }
     else if (f.GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME)
     {
-        // os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
-        os  << PREFIX_NEGATED+EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", " << f.GetArg(1) << " )";
+        if (USING_ORIGINAL_SIGNATURE_EQ)
+            os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
+        else
+            os  << PREFIX_NEGATED+EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", " << f.GetArg(1) << " )";
     }
     else
     {
-/*        if (f.GetName().find(PREFIX_NEGATED)== 0)
+        if (f.GetName().find(PREFIX_NEGATED)== 0 && USING_ORIGINAL_SIGNATURE_NEG)
         {
             string s = PREFIX_NEGATED;
             os << " ~" << f.GetName().substr(s.length(), f.GetName().size()-s.length()) << " " ;
         }
-        else*/
+        else
         {
            os << f.GetName();
         }

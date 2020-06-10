@@ -2,6 +2,7 @@
 #define THEORY_H
 
 #include <sstream>
+#include <set>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -31,9 +32,11 @@ public:
     void AddAxiomNEqSymm();
     void AddAxiomEqReflexive();
     void AddEqExcludedMiddleAxiom(); // this one is redundant if AddExcludedMiddleAxioms() is used
+    void AddEqNegElimAxioms();
     void AddNegElimAxioms();
     void AddExcludedMiddleAxioms();
     void AddEqSubAxioms();
+
     size_t NumberOfAxioms() const;
     const pair<CLFormula,string>& Axiom(size_t i) const;
 
@@ -45,7 +48,7 @@ public:
     bool MakeNextConstantPermissible();
     void StoreInitialConstants();
 
-    void AddSymbol(string p, unsigned arity);
+    void AddSymbol(const string& p, unsigned arity);
     void UpdateSignature(CLFormula& axiom);
     size_t GetSymbolArity(string p);
 
@@ -62,6 +65,7 @@ public:
     vector<string> mInitialConstants;
     set<string> mConstantsPermissible;
     vector< pair<string,unsigned> > mSignature;
+    set<string> mOccuringSymbols;
 
 protected:
     unsigned int miConstantsCounter;
