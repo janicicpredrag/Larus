@@ -13,7 +13,7 @@ filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
 
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Tarski" "Coherent logic benches" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
+options=("Euclid" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
 select opt in "${options[@]}"
 do
     case $opt in
@@ -30,31 +30,36 @@ do
         "Coherent logic benches")
             echo "$opt selected"
     	    benches="tptp-problems/coherent-logic-benches/*.p"
-	        break
+	    break
+            ;;
+        "Col trans hard")
+            echo "$opt selected"
+            benches="tptp-problems/col-trans-hard/col-trans-hard-*.p"
+            break
             ;;
         "Col trans 10")
             echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-000*.p"
-	        break
+	    benches="tptp-problems/col-trans/col-trans-000*.p"
+	    break
             ;;
         "Col trans 100")
-	        echo "$opt selected"
+	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-00*.p"
+	    benches="tptp-problems/col-trans/col-trans-00*.p"
             break
             ;;
-   	    "Col trans 1000")
-	        echo "$opt selected"
+   	"Col trans 1000")
+	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-0*.p"
-	        break
-	        ;;
+	    benches="tptp-problems/col-trans/col-trans-0*.p"
+	    break
+	    ;;
         "Col trans 10 (Alternate Axioms)")
             echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-2.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-000*.p"
-	        break
+	    benches="tptp-problems/col-trans/col-trans-000*.p"
+	    break
             ;;
         "Col trans 100 (Alternate Axioms)")
 	        echo "$opt selected"
@@ -62,13 +67,12 @@ do
 	        benches="tptp-problems/col-trans/col-trans-00*.p"
             break
             ;;
-   	    "Col trans 1000 (Alternate Axioms)")
-	        echo "$opt selected"
+   	"Col trans 1000 (Alternate Axioms)")
+	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-2.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-0*.p"
-	        break
-	        ;;
-
+	    benches="tptp-problems/col-trans/col-trans-0*.p"
+	    break
+	    ;;
         *) echo "invalid option $REPLY";;
     esac
 done
