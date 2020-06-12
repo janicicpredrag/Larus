@@ -116,6 +116,9 @@ void Theory::AddExcludedMiddleAxioms()
     // add the axiom  R(...) | nR(...) for every predicate symbol (skip false | true)
     for (size_t i=2; i < mSignature.size(); i+=2) {
         // skip false
+
+        string ass = PREFIX_NEGATED+mSignature[i].first;
+
         // ugly convention: skip the predicate symbols with _ in their name - those were introduced during normalization
         if (mOccuringSymbols.find(PREFIX_NEGATED+mSignature[i].first) == mOccuringSymbols.end() ||
             mOccuringSymbols.find(mSignature[i].first) == mOccuringSymbols.end())

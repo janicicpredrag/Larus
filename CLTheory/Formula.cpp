@@ -814,15 +814,21 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
     /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
     ConjunctionFormula premises;
     size_t numPremises = GetPremises().GetSize();
-    if (numPremises <= 25) {
+    if (numPremises <= 20) {
         premises = GetPremises();
     }
     else
     {
         //cout << "Too many premises.";
         // assert(false);
-        Fact current = GetPremises().GetElement(0);
-        for(size_t i=1; i < numPremises-1; i++) // todo: we should reorder the facts, so we get a smaller arity at the end
+        Fact current;
+        if (GetPremises().GetSize()>0)
+            current = GetPremises().GetElement(0);
+        else {
+            current.SetName("false");
+            current.ClearArgs();
+        }
+        for(size_t i=1; i < numPremises; i++) // todo: we should reorder the facts, so we get a smaller arity at the end
         {
             ConjunctionFormula conj;
             conj.Add(current);
@@ -848,7 +854,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
         }
         premises.Clear();
         premises.Add(current);
-        premises.Add(GetPremises().GetElement(numPremises-1));
+ //       premises.Add(GetPremises().GetElement(numPremises-1));
     }
 
     /* P => (C1 & C2 & C3) | ... gives  axioms: C123 => C1, C123 => C2 ... */
@@ -858,7 +864,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
         size_t numConjuncts = GetGoal().GetElement(0).GetSize();
         if (numConjuncts > 1) {
             ConjunctionFormula conj;
-            conj = GetPremises();
+            conj = premises; // GetPremises();
             for(size_t j=0; j < numConjuncts; j++) {
                 ConjunctionFormula conj1;
                 conj1.Add(GetGoal().GetElement(0).GetElement(j));
@@ -990,6 +996,9 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
 
 void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
 {
+//    if (mExistentialVars.size() == 0 && GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
+//        return;
+
     unsigned count_aux = 0;
     /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */
     size_t numGoalDisjuncts = GetGoal().GetSize();
