@@ -104,11 +104,12 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
         unsigned len = string(PREFIX_NEGATED).size();
         if (f.GetName().substr(0,len) == PREFIX_NEGATED
-            && f.GetName().find('_') == string::npos) {
+            && f.GetName().find('_') == string::npos)
+        {
 
             f.SetName(f.GetName().substr(len, f.GetName().size()-len));
             // else
-            //    f.SetName(PREFIX_NEGATED+f.GetName());
+            //f.SetName(PREFIX_NEGATED+f.GetName());
             Fact premiseFactInstantiated;
             T.AddSymbol(f.GetName(), f.GetArity());
 
