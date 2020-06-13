@@ -996,8 +996,8 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
 
 void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
 {
-//    if (mExistentialVars.size() == 0 && GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
-//        return;
+    if (mExistentialVars.size() == 0 && GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
+        return;
 
     unsigned count_aux = 0;
     /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */

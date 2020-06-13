@@ -145,8 +145,11 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 
     bool vampire_succeeded = false;
 
+// TODO / FIXME: experimental - only the third round of filtering kept
+vampire_succeeded = true;
+
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != "") {
+    if (false && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         vampire_succeeded = FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -161,7 +164,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         T.AddEqSubAxioms();
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
-        if (params.msHammerInvoke != "" && vampire_succeeded) {
+        if (false && params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
             vampire_succeeded = FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
