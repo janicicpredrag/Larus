@@ -20,7 +20,6 @@
 
 
 using namespace std;
-
 extern vector < pair < string, vector<string> > > euclids_thms;
 extern vector < pair < string, vector<string> > > euclids_thms_working;
 extern vector < pair < string, vector<string> > > euclids_thms1;
