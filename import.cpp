@@ -141,7 +141,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
     engine->SetHints(&hints);
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != "") {
+    // if (params.msHammerInvoke != "") {
+    if (false) {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -156,7 +157,8 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         T.AddEqSubAxioms();
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
-        if (params.msHammerInvoke != "") {
+        //if (params.msHammerInvoke != "") {
+        if (false) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
             FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
