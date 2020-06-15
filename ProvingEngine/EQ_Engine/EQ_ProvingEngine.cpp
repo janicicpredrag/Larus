@@ -11,7 +11,7 @@
 #include "common.h"
 
 
-// #define INCREMENTAL_CONSTRAINTS
+//#define INCREMENTAL_CONSTRAINTS
 
 
 // ---------------------------------------------------------------------------------------
@@ -350,7 +350,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename =  tmpnam(NULL); // "smt-proof.txt"; //
+    string smt_proofout_filename = tmpnam(NULL); //"smt-proof.txt"; //
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -370,7 +370,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
             DECLARATIONS = decl;
             string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
-            string smt_model_filename = tmpnam(NULL); // "smt-model.txt";
+            string smt_model_filename = tmpnam(NULL); // "smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;
@@ -378,7 +378,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             cout << l << flush;
             rv = system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
-                l += 8;
+                l += 12;
                 // l *= 2;
                 cout << ", "  << flush;
             }

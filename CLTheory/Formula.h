@@ -30,6 +30,7 @@ public:
     Fact (const string& s);
     size_t GetArity() const { return mArgs.size(); }
     string GetArg(size_t i) const { return (mArgs.size()>i ? mArgs[i] : "null"); }
+    void ClearArgs() { mArgs.clear(); }
     string GetName() const { return mName; }
     void SetName(const string& name) { mName = name; }
     bool Read(const string& s);

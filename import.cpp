@@ -20,7 +20,6 @@
 
 
 using namespace std;
-
 extern vector < pair < string, vector<string> > > euclids_thms;
 extern vector < pair < string, vector<string> > > euclids_thms_working;
 extern vector < pair < string, vector<string> > > euclids_thms1;
@@ -99,39 +98,42 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         proof.AddAssumption(premiseFactInstantiated);
     }
 
-    /*
     if (theorem.GetGoal().GetSize() == 1 && theorem.GetGoal().GetElement(0).GetSize() == 1
-            && theorem.GetNumOfExistVars()==0)   { // Try proving by refutation
+            && theorem.GetNumOfExistVars()==0)   { // Try proving by refutation if the goal is ~Something
         Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
         unsigned len = string(PREFIX_NEGATED).size();
-        if (f.GetName().substr(0,len) == PREFIX_NEGATED)
+        if (f.GetName().substr(0,len) == PREFIX_NEGATED
+            && f.GetName().find('_') == string::npos)
+        {
+
             f.SetName(f.GetName().substr(len, f.GetName().size()-len));
-        else
-            f.SetName(PREFIX_NEGATED+f.GetName());
-        Fact premiseFactInstantiated;
-        T.AddSymbol(f.GetName(), f.GetArity());
+            // else
+            //f.SetName(PREFIX_NEGATED+f.GetName());
+            Fact premiseFactInstantiated;
+            T.AddSymbol(f.GetName(), f.GetArity());
 
-        T.InstantiateFact(f, instantiation, premiseFactInstantiated, true);
-        engine->AddPremise(premiseFactInstantiated);
-        proof.AddAssumption(premiseFactInstantiated);
+            T.InstantiateFact(f, instantiation, premiseFactInstantiated, true);
+            engine->AddPremise(premiseFactInstantiated);
+            proof.AddAssumption(premiseFactInstantiated);
 
-        Fact b;
-        b.SetName("false");
-        ConjunctionFormula conj;
-        conj.Add(b);
+            Fact b;
+            b.SetName("false");
+            ConjunctionFormula conj;
+            conj.Add(b);
 
-        ConjunctionFormula A = theorem.GetPremises();
-        DNFFormula B = theorem.GetGoal();
-        A.Add(f);
-        B.Clear();
-        B.Add(conj);
-        CLFormula thm(A,B);
-        for(size_t i = 0; i<theorem.GetNumOfUnivVars(); i++)
-            thm.AddUnivVar(theorem.GetUnivVar(i));
-        for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
-            thm.AddExistVar(theorem.GetExistVar(i));
-        theorem = thm;
-    }*/
+            ConjunctionFormula A = theorem.GetPremises();
+            DNFFormula B = theorem.GetGoal();
+            A.Add(f);
+            B.Clear();
+            B.Add(conj);
+            CLFormula thm(A,B);
+            for(size_t i = 0; i<theorem.GetNumOfUnivVars(); i++)
+                thm.AddUnivVar(theorem.GetUnivVar(i));
+            for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
+                thm.AddExistVar(theorem.GetExistVar(i));
+            theorem = thm;
+        }
+    }
 
     DNFFormula fout;
     T.InstantiateGoal(theorem, instantiation, fout, false);
@@ -140,12 +142,16 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
     engine->SetMaxNestingDepth(params.max_nesting_depth);
     engine->SetHints(&hints);
 
+    bool vampire_succeeded = false;
+
+// TODO / FIXME: experimental - only the third round of filtering kept
+vampire_succeeded = true;
+
     // **************************** filtering axioms a la hammer by FOL prover
-    // if (params.msHammerInvoke != "") {
-    if (false) {
+    if (false && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
-        FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
+        vampire_succeeded = FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
     }
@@ -157,26 +163,25 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         T.AddEqSubAxioms();
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
-        //if (params.msHammerInvoke != "") {
-        if (false) {
+        if (false && params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
-            FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
+            vampire_succeeded = FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
         }
     }
 
     if (params.mbExcludedMiddle)
         T.AddExcludedMiddleAxioms();
-
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != "") {
+    if (params.msHammerInvoke != ""  && vampire_succeeded) {
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
-        FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
+        vampire_succeeded = FilterOurNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
     }
+
 
     // **************************** checking if case split support is needed
     params.mbNeedsCaseSplits = false;
@@ -212,12 +217,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
            proof.Simplify();
            cout << endl << "Done! (simplified proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
-
-        // in ursa/smt engines, these axioms can be hard-coded, here we include them for the purpose of export
-        /* if (params.mbExcludedMiddle) {
-            T.AddEqExcludedMiddleAxiom();
-            T.AddExcludedMiddleAxioms();
-        }*/
 
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
@@ -390,7 +389,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                             T.UpdateSignature(output[j].first);
                         }
                     }
-                    theorem = output[output.size()-1].first;
+                    if (output.size()>0)
+                        theorem = output[output.size()-1].first;
                 }
                 T.UpdateSignature(theorem);
                 cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
@@ -407,35 +407,80 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         found1 = str.find(strfof);
     }
 
+
     if (theoremName == "")
         return eNoConjectureGiven;
 
     if (T.GetUseNativeEq())
         params.mbNativeEQ = true;
 
-    //T.AddNegElimAxioms();
-    //T.AddEqExcludedMiddleAxiom();
-    //T.AddExcludedMiddleAxioms();
+    size_t numberOfCases = theorem.GetGoal().GetSize();
+    size_t numberOfConjInCases = theorem.GetGoal().GetElement(0).GetSize();
+    if (numberOfCases == 1 && numberOfConjInCases > 1) { // if there are more conjuncts in the goal
+        for (size_t i = 0; i<numberOfConjInCases; i++) {
+            Theory T1 = T;
+            ProvingEngine* engine;
+            if (params.eEngine== eSTL_ProvingEngine)
+                engine = new STL_ProvingEngine(&T1,params);
+            else if (params.eEngine == eSQL_ProvingEngine)
+                engine = new SQL_ProvingEngine(&T1,params);
+            else if (params.eEngine == eURSA_ProvingEngine)
+                engine = new URSA_ProvingEngine(&T1,params);
+            else if (params.eEngine == eSMTLIA_ProvingEngine ||
+                     params.eEngine == eSMTBV_ProvingEngine ||
+                     params.eEngine == eSMTUFLIA_ProvingEngine ||
+                     params.eEngine == eSMTUFBV_ProvingEngine)
+                engine = new EQ_ProvingEngine(&T1,params);
+            else // default
+                engine = new STL_ProvingEngine(&T1,params);
 
-    ProvingEngine* engine;
-    if (params.eEngine== eSTL_ProvingEngine)
-        engine = new STL_ProvingEngine(&T,params);
-    else if (params.eEngine == eSQL_ProvingEngine)
-        engine = new SQL_ProvingEngine(&T,params);
-    else if (params.eEngine == eURSA_ProvingEngine)
-        engine = new URSA_ProvingEngine(&T,params);
-    else if (params.eEngine == eSMTLIA_ProvingEngine ||
-             params.eEngine == eSMTBV_ProvingEngine ||
-             params.eEngine == eSMTUFLIA_ProvingEngine ||
-             params.eEngine == eSMTUFBV_ProvingEngine)
-        engine = new EQ_ProvingEngine(&T,params);
-    else // default
-        engine = new STL_ProvingEngine(&T,params);
+            DNFFormula dnf;
+            ConjunctionFormula cn;
+            cn.Add(theorem.GetGoal().GetElement(0).GetElement(i));
+            dnf.Add(cn);
+            CLFormula thm(theorem.GetPremises(), dnf);
+            for(size_t i = 0; i<theorem.GetNumOfUnivVars(); i++)
+                thm.AddUnivVar(theorem.GetUnivVar(i));
+            for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
+                thm.AddExistVar(theorem.GetExistVar(i));
 
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params, hints);
-    delete engine;
+            for (size_t i = 0; i<T1.mCLaxioms.size(); i++)
+                cout << "Axiom " << i << ": " << T1.mCLaxioms.at(i).second << ": " << T1.mCLaxioms.at(i).first << endl;
+            cout << "----------------------------------------" << endl;
 
-    return r;
+            ReturnValue r = ProveTheorem(T1, engine, thm, theoremName+itos(i), inputFile+itos(i), params, hints);
+            delete engine;
+
+            if (r != eConjectureProved)
+                return r;
+        }
+    }
+    else {
+        ProvingEngine* engine;
+        if (params.eEngine== eSTL_ProvingEngine)
+            engine = new STL_ProvingEngine(&T,params);
+        else if (params.eEngine == eSQL_ProvingEngine)
+            engine = new SQL_ProvingEngine(&T,params);
+        else if (params.eEngine == eURSA_ProvingEngine)
+            engine = new URSA_ProvingEngine(&T,params);
+        else if (params.eEngine == eSMTLIA_ProvingEngine ||
+                 params.eEngine == eSMTBV_ProvingEngine ||
+                 params.eEngine == eSMTUFLIA_ProvingEngine ||
+                 params.eEngine == eSMTUFBV_ProvingEngine)
+            engine = new EQ_ProvingEngine(&T,params);
+        else // default
+            engine = new STL_ProvingEngine(&T,params);
+
+        for (size_t i = 0; i<T.mCLaxioms.size(); i++)
+            cout << "Axiom " << i << ": " << T.mCLaxioms.at(i).second << ": " << T.mCLaxioms.at(i).first << endl;
+        cout << "----------------------------------------" << endl;
+
+        ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params, hints);
+        delete engine;
+        return r;
+    }
+
+    return eConjectureProved;
 }
 
 
@@ -661,7 +706,7 @@ bool FilterOurNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     cout << "Filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
     // export to TPTP
-    string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";
+    string for_FOL_prover =  tmpnam(NULL); // "tptpfile.txt"; //
     ofstream TPTPfile;
     TPTPfile.open(for_FOL_prover);
     for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++)
@@ -670,8 +715,8 @@ bool FilterOurNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     TPTPfile.close();
 
     vector<string> neededAxioms;
-    string vampire_solution =  tmpnam(NULL); // "vampire.txt"; //
-    const string sCall = "timeout " + itos(20 /*params.time_limit*/) + " " + hammer_invoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
+    string vampire_solution = tmpnam(NULL); // "vampire.txt"; //
+    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)
     {
@@ -680,6 +725,8 @@ bool FilterOurNeededAxioms(vector< pair<CLFormula,string> >& axioms,
             if (input_file.good())  {
                 string ss;
                 while(getline(input_file, ss)) {
+                    if (ss.find("Satisfiable") != std::string::npos)
+                        return false;
                     if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
                            neededAxioms.push_back(it->second);
                 }
