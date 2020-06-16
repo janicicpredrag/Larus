@@ -782,7 +782,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                          sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
                                      app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
                       else
-                         sb += appeq(nAxiomArgument[nUnivAxiom][nPremisesCounter*mnMaxArity+nInd],
+                         sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
                                     app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
                   }
                   sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
@@ -902,30 +902,30 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
 
 #ifdef SPECIALCASEUNIVAXIOMS
-       for(size_t i = 0; i < formula.GetSize(); i++) {
-           string sb = "";
-           for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
-               if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
-                   !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
-                   continue;
+       for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
+           if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
+               !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
+               continue;
+           for(size_t i = 0; i < formula.GetSize(); i++) {
+               string sb = "";
                sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
                unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
                for (unsigned nInd = 0; nInd < ar; nInd++) {
-                   if (nBinding[nUnivAxiom][nInd] != 0)
+                  if (nBinding[nUnivAxiom][nInd] != 0)
                       sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
-                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
-                   else
+                                  app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                  else
                       sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                     app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                                  app("nArg", nFinalStep, i*mnMaxArity+nInd));
                }
-           }
-           if (sb != "")
-              sbTrivGoalReached += "(and " + sb + ")";
+               if (sb != "")
+                    sbTrivGoalReached += "(and " + sb + ")";
+          }
        }
 #endif
 
        sbTrivGoalReached = "(or " + sbTrivGoalReached + ")";
-       string sbQEDbyCasesStep = ( nProofStep == 0 || !mParams.mbNeedsCaseSplits ? " false " :
+       string sbQEDbyCasesStep = ( nProofStep == mnPremisesCount || !mParams.mbNeedsCaseSplits ? " false " :
                    "(and "
                      "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                      app("bOddNesting", nProofStep-1) +
@@ -933,7 +933,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                      appeq(smt_sum(smt_prod(app("nNesting", nProofStep),2),1), app("nNesting", nProofStep-1)) +
                      app("bGoal", nProofStep) + ")");
 
-       string sbQEDbyAssumptionStep = ( nProofStep == 0 ?
+       string sbQEDbyAssumptionStep = ( nProofStep == mnPremisesCount ?
                    "(and " + sbTrivGoalReached + appeq(app("nNesting", nProofStep), 1) +
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) + ")"
                    :
@@ -943,7 +943,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +
                     app("bGoal", nProofStep) + ")");
 
-       string sbQEDbyEFQStep = ( nProofStep == 0 ? " false " :
+       string sbQEDbyEFQStep = ( nProofStep == mnPremisesCount ? " false " :
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
                     "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
@@ -951,7 +951,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) +
                     "(not " + sbQEDbyAssumptionStep + "))");
 
-       string sbQEDbyNegIntroStep = ( nProofStep == 0 ? " false " :
+       string sbQEDbyNegIntroStep = ( nProofStep == mnPremisesCount ? " false " :
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
                     "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
