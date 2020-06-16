@@ -11,7 +11,7 @@
 #include "common.h"
 
 
- #define SPECIALCASEUNIVAXIOMS
+#define SPECIALCASEUNIVAXIOMS
 
 //#define INCREMENTAL_CONSTRAINTS
 
@@ -778,12 +778,22 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                   string sb;
                   unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
                   for (unsigned nInd = 0; nInd < ar; nInd++) {
-                      if (nBinding[nUnivAxiom][nInd] != 0)
-                         sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
-                                     app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                      else
-                         sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                    app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                      if (nBinding[nUnivAxiom][nInd] != 0) {
+                          if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                             sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                                         app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                          else
+                             sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                                         nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                      }
+                      else {
+                          if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                          else
+                              sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                          nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                      }
                   }
                   sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
               }
@@ -806,6 +816,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
               sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), (nProofStep+2)<<3);
           }
+
           // redundant, but helps in checking if two proof steps are the same
   /*        for (unsigned nInd = ARITY[nPredicate[nAxiom][nGoalIndex]]; nInd < mnMaxArity; nInd++)
                   sbMatchConclusion += appeq(app("nArg" , nProofStep, nInd), 999);*/

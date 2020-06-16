@@ -149,7 +149,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 vampire_succeeded = true;
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (false && params.msHammerInvoke != "") {
+    if (params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -178,6 +178,7 @@ vampire_succeeded = true;
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
+    T.printAxioms();
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
 
     // **************************** filtering axioms a la hammer by FOL prover
@@ -449,9 +450,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
             for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
                 thm.AddExistVar(theorem.GetExistVar(i));
 
-            for (size_t i = 0; i<T1.mCLaxioms.size(); i++)
-                cout << "Axiom " << i << ": " << T1.mCLaxioms.at(i).second << ": " << T1.mCLaxioms.at(i).first << endl;
-            cout << "----------------------------------------" << endl;
+            // T1.printAxioms();
 
             ReturnValue r = ProveTheorem(T1, engine, thm, theoremName+itos(i), inputFile+itos(i), params, hints);
             delete engine;
@@ -476,9 +475,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         else // default
             engine = new STL_ProvingEngine(&T,params);
 
-        for (size_t i = 0; i<T.mCLaxioms.size(); i++)
-            cout << "Axiom " << i << ": " << T.mCLaxioms.at(i).second << ": " << T.mCLaxioms.at(i).first << endl;
-        cout << "----------------------------------------" << endl;
+        // T.printAxioms();
 
         ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, inputFile, params, hints);
         delete engine;

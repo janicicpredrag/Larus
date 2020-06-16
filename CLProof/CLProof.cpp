@@ -384,7 +384,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     ss1 >> nFrom;
                     if (i==0)
                         nFrom0 = nFrom;
-                    if (nFrom != -1 && nFrom != 99)
+                    if (nFrom != -1 && nFrom != 99 && nFrom != 98)
                         cfPremises.Add(proofTrace[nFrom]);
                 }
                 int inst[numOfVars];
@@ -602,7 +602,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 size_t numOfVars = numOfUnivVars + numOfExistVars;
                 for (unsigned int i = 0; i<noPremises; i++) {
                     ss1 >> nFrom;
-                    if (nFrom != -1 && nFrom != 99)
+                    if (nFrom != -1 && nFrom != 99 && nFrom != 98)
                         cfPremises.Add(proofTrace[nFrom]);
                     else
                         break;

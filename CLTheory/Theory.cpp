@@ -38,6 +38,15 @@ void Theory::UpdateSignature(CLFormula& axiom)
             AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(), axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
 }
 
+// --------------------------------------------------------------
+
+void Theory::printAxioms() const
+{
+    for (size_t i = 0; i < mCLaxioms.size(); i++)
+        cout << "Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
+    cout << "----------------------------------------" << endl;
+}
+
 
 // --------------------------------------------------------------
 
