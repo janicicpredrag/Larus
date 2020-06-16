@@ -11,6 +11,8 @@
 #include "common.h"
 
 
+ #define SPECIALCASEUNIVAXIOMS
+
 //#define INCREMENTAL_CONSTRAINTS
 
 
@@ -350,7 +352,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename = tmpnam(NULL); //"smt-proof.txt"; //
+    string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -359,7 +361,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(), formula.GetElement(1).GetElement(0).GetArity());
 
         time_t start_time = time(NULL);
-        unsigned l, r, s, best = 0, best_start;
+        unsigned l, r, s, best = 0, best_start = 0;
         l = mParams.starting_proof_length;
         cout << "Looking for a proof of length: " << flush;
         while(l <= mParams.max_proof_length)  {
@@ -369,8 +371,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
-            string smt_model_filename = tmpnam(NULL); // "smt-model.txt"; //
+            string smt_proofencoded_filename = "prove.smt"; //tmpnam(NULL); //
+            string smt_model_filename = "smt-model.txt"; // tmpnam(NULL); //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;
@@ -397,6 +399,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             proof.Simplify();
             cout << endl << "Done! (new proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
             r = proof.Size()-proof.NumOfAssumptions();
+            best = r;
+            best_start = best;
 
             if (l <= r && l != best)
                 cout << "Looking for a proof of length: " << flush;
@@ -427,8 +431,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 }
             }
         }
+
         cout << endl;
-        if (best > 0 /* && best < best_start*/) {
+        if (best > 0 && best != best_start) {
             cout << "Best found proof: of the length " << best << endl;
             ret = proof.DecodeProof(formula, smt_proofout_filename);
             assert(ret);
@@ -537,8 +542,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sPreabmle += "(declare-const n" + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
               exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
        }
-
-        sPreabmle += "(assert " + appeq(app("nArg", nFinalStep, i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
+       sPreabmle += "(assert " + appeq(app("nArg", nFinalStep, i), URSA_NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
     }
     if (formula.GetSize()>1) {
         sPreabmle += "(assert " + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
@@ -732,8 +736,16 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               if (nAxiomUniVars[nAxiom]>0 && nProofStep == 0)
                     continue;
 
+#ifdef SPECIALCASEUNIVAXIOMS
+           // Support for univ axioms
+           if (nAxiomExiVars[nAxiom]==0 && nAxiomPremises[nAxiom]==0 &&
+               !bAxiomBranching[nAxiom] && ARITY[nPredicate[nAxiom][0]]!=0)
+               continue;
+#endif
+
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
            sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
+
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "(or false ";
               sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
@@ -754,6 +766,29 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                                app("bSameProofBranch", n_from, nProofStep) +
                                                "(not " + app("bCases", n_from) + ")" + ")";
               }
+
+#ifdef SPECIALCASEUNIVAXIOMS
+              // Support for univ axioms
+              for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
+                  if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
+                      !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
+                      continue;
+                  if (nPredicate[nAxiom][nPremisesCounter] != nPredicate[nUnivAxiom][0])
+                      continue;
+                  string sb;
+                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
+                  for (unsigned nInd = 0; nInd < ar; nInd++) {
+                      if (nBinding[nUnivAxiom][nInd] != 0)
+                         sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                                     app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                      else
+                         sb += appeq(nAxiomArgument[nUnivAxiom][nPremisesCounter*mnMaxArity+nInd],
+                                    app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                  }
+                  sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
+              }
+#endif
+
               sbMatchOnePremise += ")";
               sbMatchPremises += " " + sbMatchOnePremise;
           }
@@ -863,9 +898,33 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbTrivGoalReached = appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true");
        if (formula.GetSize()>1) {
-           sbTrivGoalReached = "(or " + sbTrivGoalReached + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
+           sbTrivGoalReached += appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true");
        }
 
+#ifdef SPECIALCASEUNIVAXIOMS
+       for(size_t i = 0; i < formula.GetSize(); i++) {
+           string sb = "";
+           for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
+               if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
+                   !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
+                   continue;
+               sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
+               unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
+               for (unsigned nInd = 0; nInd < ar; nInd++) {
+                   if (nBinding[nUnivAxiom][nInd] != 0)
+                      sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
+                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                   else
+                      sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                     app("nArg", nFinalStep, i*mnMaxArity+nInd));
+               }
+           }
+           if (sb != "")
+              sbTrivGoalReached += "(and " + sb + ")";
+       }
+#endif
+
+       sbTrivGoalReached = "(or " + sbTrivGoalReached + ")";
        string sbQEDbyCasesStep = ( nProofStep == 0 || !mParams.mbNeedsCaseSplits ? " false " :
                    "(and "
                      "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
