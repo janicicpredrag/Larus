@@ -36,6 +36,7 @@ extern vector<string> TrivialAxioms;
 bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
                            const CLFormula& theorem, const string& theoremName, const string& hammer_invoke);
 
+bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -170,10 +171,14 @@ vampire_succeeded = true;
         }
     }
 
+//    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+
     if (params.mbExcludedMiddle)
         T.AddExcludedMiddleAxioms();
     if (params.mbNegElim)
         T.AddNegElimAxioms();
+
+    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
 
     // **************************** filtering axioms a la hammer by FOL prover
     if (params.msHammerInvoke != ""  && vampire_succeeded) {
@@ -761,44 +766,60 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
-/*
-bool FilterOurNeededAxioms1(vector< pair<CLFormula,string> >& axioms,
-                           const CLFormula& theorem, const string& theoremName, const string& hammer_invoke)
+
+bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem)
 {
+    set<string> mReachablePredicateSymbols;
     cout << "REACHABILITY: Filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
-    for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++)
-        TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")." << endl;
-    TPTPfile << "fof(" << theoremName << ", conjecture, " << theorem << ")." << endl;
-    TPTPfile.close();
+    for (size_t i = 0; i < theorem.GetPremises().GetSize(); i++)
+        mReachablePredicateSymbols.insert(theorem.GetPremises().GetElement(i).GetName());
 
-    size_t noPremises = axiom.GetPremises().GetSize();
-    for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-        nPredicate[mnAxiomsCount][j] = PREDICATE[URSA_NUM_PREFIX+ToUpper(axiom.GetPremises().GetElement(j).GetName())];
-        for (size_t i=0; i<axiom.GetPremises().GetElement(j).GetArity(); i++)
-            if ((int)axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
-                nBinding[mnAxiomsCount][j*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetPremises().GetElement(j).GetArg(i))+1;
-            else {
-                nBinding[mnAxiomsCount][j*mnMaxArity+i] = 0;
-                nAxiomArgument[mnAxiomsCount][j*mnMaxArity+i] = URSA_NUM_PREFIX + ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
+    size_t RCount;
+    do {
+        RCount = mReachablePredicateSymbols.size();
+        for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++) {
+            bool bAllSymbolsReachable = true;
+            for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
+                if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
+                    mReachablePredicateSymbols.find(it->first.GetPremises().GetElement(i).GetName()) ==
+                        mReachablePredicateSymbols.end())  {
+                    bAllSymbolsReachable = false;
+                    break;
+                }
             }
-    }
-    if (axiom.GetGoal().GetSize()>0) { // disjunctions in the goal can have only one disjunct
-        nPredicate[mnAxiomsCount][noPremises] = PREDICATE[URSA_NUM_PREFIX+ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
-        for (size_t i=0; i<axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
-            if ((int)axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.UnivVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
-            else if ((int)axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = axiom.GetNumOfUnivVars() + axiom.ExistVarOrdinalNumber(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))+1;
-            else {
-                nBinding[mnAxiomsCount][noPremises*mnMaxArity+i] = 0;
-                nAxiomArgument[mnAxiomsCount][noPremises*mnMaxArity+i] = URSA_NUM_PREFIX + ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
+            if (bAllSymbolsReachable) {
+                for (size_t j = 0; j < it->first.GetGoal().GetSize(); j++)
+                   for (size_t k=0; k < it->first.GetGoal().GetElement(j).GetSize(); k++)
+                        mReachablePredicateSymbols.insert(it->first.GetGoal().GetElement(j).GetElement(k).GetName());
             }
         }
     }
+    while (mReachablePredicateSymbols.size() != RCount);
 
+    for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); ) {
+        bool bAllSymbolsReachable = true;
+        for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
+            if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
+                mReachablePredicateSymbols.find(it->first.GetPremises().GetElement(i).GetName()) ==
+                    mReachablePredicateSymbols.end())  {
+                bAllSymbolsReachable = false;
+                break;
+            }
+        }
+        if (!bAllSymbolsReachable) {
+            cout << " ERASED : " << it->second << endl;
+            it = axioms.erase(it);
+        }
+        else
+            it++;
+    }
+
+
+    return true;
 }
-*/
+
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory) {
