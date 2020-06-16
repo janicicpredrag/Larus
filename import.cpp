@@ -488,118 +488,6 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     return eConjectureProved;
 }
 
-
-// ---------------------------------------------------------------------------------------------------------------------------
-/*
-bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem, PROVING_ENGINE proving_engine, size_t timelimit)
-{
-    Theory T;
-    if (!ReadSetOfTPTPStatements(&T, axioms))
-        return false;
-    URSA_ProvingEngine engine(&T);
-    CLFormula cl;
-    string thmName;
-    size_t type = 2;
-    if (ReadTPTPStatement(strTheorem, cl, thmName, type))
-        return ProveTheorem(T, &engine, cl, thmName, timelimit);
-    return false;
-}
-*/
-// ---------------------------------------------------------------------------------------------------------------------------
-
-/*
-bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth)
-{
-    Theory T;
-    CLFormula theorem;
-    string statementName;
-
-    for(size_t j=0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
-        bool found = false;
-        for(size_t i=0, size = theory.size(); i < size && !found; i++) {
-            CLFormula cl;
-            size_t type = 2;
-            if (ReadTPTPStatement(theory[i], cl, statementName, type)
-                && statementName == namesOfAxiomsToBeUsed[j]) {
-                if (proving_engine == eURSA_ProvingEngine || proving_engine == eEQ_ProvingEngine) {
-                    vector< pair<CLFormula,string> > normalizedAxioms;
-                    cl.Normalize(statementName, to_string(j+1), normalizedAxioms);
-                    T.AddAxioms(normalizedAxioms);
-                }
-                else
-                    T.AddAxiom(cl,statementName);
-                found = true;
-            }
-        }
-        if (!found) {
-            cout << "Missing axiom " << namesOfAxiomsToBeUsed[j] << " or not a CL formula. Exiting..." << endl;
-            cerr << "Missing axiom " << namesOfAxiomsToBeUsed[j] << " or not a CL formula. Exiting..." << endl;
-            return false;
-        }
-    }
-
-    bool found = false;
-    for(size_t i=0, size = theory.size(); i < size && !found; i++) {
-        CLFormula cl;
-        size_t type = 2;
-        if (ReadTPTPStatement(theory[i], cl, statementName, type)
-            && statementName == theoremName) {
-            theorem = cl;
-            if (proving_engine == eURSA_ProvingEngine || proving_engine == eEQ_ProvingEngine) {
-                vector< pair<CLFormula,string> > output;
-                theorem.NormalizeGoal(theoremName, to_string(0), output);
-                if (output.size()>1) {
-                    for(size_t j=0; j<output.size()-1; j++)
-                        T.AddAxiom(output[j].first, output[j].second);
-                }
-                theorem = output[output.size()-1].first;
-                cout << theorem << endl;
-            }
-            else
-                cout << theorem << endl;
-            found = true;
-        }
-    }
-    if (!found) {
-        cout << "Missing conjecture " << theoremName << " or not a CL formula. Exiting..." << endl;
-        return false;
-    }
-
-    ProvingEngine* engine;
-    if (proving_engine == eSTL_ProvingEngine)
-        engine = new STL_ProvingEngine(&T);
-    else if (proving_engine == eSQL_ProvingEngine)
-        engine = new SQL_ProvingEngine(&T);
-    else if (proving_engine == eURSA_ProvingEngine)
-        engine = new URSA_ProvingEngine(&T);
-    else if (proving_engine == eEQ_ProvingEngine)
-        engine = new EQ_ProvingEngine(&T);
-    else // default
-        engine = new STL_ProvingEngine(&T);
-
-    T.AddAxiomEqSymm();
-    T.AddAxiomNEqSymm();
-    T.AddAxiomEqReflexive();
- //   T.AddNegElimAxioms();
-
-    ReturnValue r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
-    if (false && r != eConjectureProved) {
-        // T.AddEqExcludedMiddleAxiom();
-        //  T.AddEqSubAxioms();
-        cerr << "   second attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
-    }
-    if (r != eConjectureProved) {
-        T.AddExcludedMiddleAxioms();
-        cerr << "   third attempt " << endl;
-        r = ProveTheorem(T, engine, theorem, theoremName, timelimit, max_nesting_depth);
-    }
-
-    delete engine;
-    return r;
-}
-*/
-
 // ---------------------------------------------------------------------------------------------------------------------------
 
 string replaceFirstOccurrence(string& s, const string& toReplace, const string& replaceWith)
@@ -647,14 +535,6 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
         }
     }
 
-    //T.AddAxiomEqSymm();
-    //T.AddAxiomNEqSymm();
-    //T.AddAxiomEqReflexive();
-    //T.AddNegElimAxioms();
-    //T.AddEqExcludedMiddleAxiom();
-    //T.AddExcludedMiddleAxioms();
-    //T.AddEqSubAxioms();
-
     for(size_t i=0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "fof(" << T.Axiom(i).second <<",axiom, " << T.Axiom(i).first << ")." << endl;
     }
@@ -679,29 +559,6 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
     outfile.close();
     return true;
 }
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-/*
-void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth) {
-    if (input_format != eTPTP) {
-        cout << "Wrong input format!" << endl;
-        return;
-    }
-    unsigned numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = case_study.size(); i<size; i++) {
-        string thm = case_study[i].first;
-        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
-        vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(  theory , depends, thm, proving_engine, timelimit, max_nesting_depth))
-            numberProved++;
-        else
-            numberNotProved++;
-        cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    }
-}
-*/
-
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -814,8 +671,6 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
         else
             it++;
     }
-
-
     return true;
 }
 
