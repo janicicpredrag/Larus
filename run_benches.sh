@@ -13,7 +13,7 @@ filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
 
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
+options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
 select opt in "${options[@]}"
 do
     case $opt in
@@ -45,6 +45,11 @@ do
        "Col trans very hard")
             echo "$opt selected"
             benches="tptp-problems/col-trans-very-hard/col-trans-hard-*.p"
+            break
+            ;;
+       "Col trans very very hard")
+            echo "$opt selected"
+            benches="tptp-problems/col-trans-very-very-hard/col-trans-hard-*.p"
             break
             ;;
         "Col trans 10")
