@@ -169,6 +169,7 @@ void CLProof::Simplify(set<Fact>& relevant)
     // Simplify the sequence of modus ponenses
     size_t size = mMPs.size();
     for (int i=size; i>0; i--) {
+        // std::cout << endl << " MP  : " << i << endl;
         ConjunctionFormula cf = get<0>(mMPs[i-1]);
         DNFFormula dnf = get<1>(mMPs[i-1]);
         /*if (dnf.GetSize()==1) {
@@ -180,9 +181,11 @@ void CLProof::Simplify(set<Fact>& relevant)
 
         bool bRelevant = false;
         for (size_t j = 0; j<dnf.GetSize() && !bRelevant; j++) {
+            // std::cout << "Testing Relevant : " << cf << endl;
             if (Relevant(relevant, dnf.GetElement(j))) {
                 MakeRelevant(relevant, cf);
                 bRelevant = true;
+               // std::cout << " Relevant : " << cf << endl;
             }
         }
         if (!bRelevant)
@@ -605,6 +608,14 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     if (nFrom != -1 && nFrom != 99 && nFrom != 98)
                         cfPremises.Add(proofTrace[nFrom]);
                     else
+
+                    if (nFrom == 98) {
+                        Fact univAxFact = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetElement(i);
+                        univAxFact.SetName("@" + univAxFact.GetName());
+                        cfPremises.Add(univAxFact);
+                    }
+
+                    else
                         break;
                 }
 
@@ -659,6 +670,22 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 }
                 pcs = new CaseSplit;
                 pcs->SetCases(d);
+
+
+                // Instantiation of fact derived inline from univ axioms
+                for(size_t ii = 0; ii < cfPremises.GetSize(); ii++) {
+                    if (cfPremises.GetElement(ii).GetName().at(0) == '@') {
+                        Fact univAxFact = cfPremises.GetElement(ii);
+                        for(size_t jj = 0; jj < univAxFact.GetArity(); jj++)
+                            for(size_t kk = 0; kk < instantiation.size(); kk++) {
+                                if (univAxFact.GetArg(jj) == instantiation[kk].first)
+                                    univAxFact.SetArg(jj,instantiation[kk].second);
+                            }
+                        univAxFact.SetName(univAxFact.GetName().substr(1));
+                        cfPremises.SetElement(ii,univAxFact);
+                    }
+                }
+
 
                 AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation, new_witnesses);
 
