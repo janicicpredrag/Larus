@@ -584,8 +584,10 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
             if (input_file.good())  {
                 string ss;
                 while(getline(input_file, ss)) {
-                    if (ss.find("Satisfiable") != std::string::npos)
+                    if (ss.find("Satisfiable") != std::string::npos) {
+                        cout << "Satisfiable! " << endl;
                         return false;
+                    }
                     if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
                            neededAxioms.push_back(it->second);
                 }

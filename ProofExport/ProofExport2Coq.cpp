@@ -123,7 +123,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
         outfile << "Parameter " << (*it) << " : MyT." << endl;
     }
 
-/*    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+/*   for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
         outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : ";
         OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
     }
@@ -139,6 +139,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     outfile << "Hypothesis col_triv : forall A B : MyT , col A B B." << endl;
     outfile << "Hypothesis col_triv3 : forall A B : MyT , col A B A." << endl;
     outfile << "Hypothesis col_trans : forall P Q A B C : MyT, wd P Q -> col P Q A -> col P Q B -> col P Q C -> col A B C." << endl;
+
 
     outfile << endl;
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {

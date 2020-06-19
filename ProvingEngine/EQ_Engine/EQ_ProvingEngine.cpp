@@ -737,12 +737,17 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     continue;
 
 #ifdef SPECIALCASEUNIVAXIOMS
-           // Support for univ axioms
+           // These axioms will be inlined
            if (nAxiomExiVars[nAxiom]==0 && nAxiomPremises[nAxiom]==0 &&
                !bAxiomBranching[nAxiom] && ARITY[nPredicate[nAxiom][0]]!=0)
                continue;
 #endif
 
+#ifdef SPECIALCASEUNIVAXIOMS
+           // These axioms will be inlined
+           if (mpT->mCLaxioms[nAxiom].first.IsPermutation())
+               continue;
+#endif
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
            sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
 
