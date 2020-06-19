@@ -35,7 +35,9 @@ match goal with
    | H:_ |- _ => progress (decompose [ex and] H);clear H
 end.
 
-Ltac finish_conj := splits;(eassumption || trivial).
+Create HintDb Sym.
+
+Ltac finish_conj := splits;(eassumption || trivial || auto with Sym).
 
 Ltac one_of_disjunct :=
  solve [repeat (solve [finish_conj] || (left;solve [finish_conj]) || right)].
@@ -43,8 +45,10 @@ Ltac one_of_disjunct :=
 
 Ltac rename_H H := let T := fresh in try rename H into T.
 
+
+
 Ltac applying t :=
-apply t;(assumption || trivial).
+apply t;(assumption || trivial || auto with Sym).
 
 Ltac conclude := remove_exists;one_of_disjunct.
 
