@@ -532,7 +532,24 @@ int CLFormula::ExistVarOrdinalNumber(string v) const
     return -1;
 }
 
+// ---------------------------------------------------------------------------------------
 
+bool CLFormula::IsPermutation() const
+{
+
+   size_t numPremises = GetPremises().GetSize();
+   size_t numDisj = GetGoal().GetSize();
+   if (numPremises != 1 || numDisj != 1)
+        return false;
+    else
+    {
+        string premisse_pred = GetPremises().GetElement(0).GetName();
+        for (size_t i = 0; i < GetGoal().GetElement(0).GetSize(); i++)
+            if (premisse_pred != GetGoal().GetElement(0).GetElement(i).GetName())
+                return false;
+        return true;
+    }
+}
 
 // ---------------------------------------------------------------------------------------
 

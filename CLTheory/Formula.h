@@ -150,6 +150,7 @@ public:
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
     bool UsesNativeEq() const;
+    bool IsPermutation() const;
 
     void Clear() { mA.Clear(); mB.Clear(); ClearUnivVars(); ClearExistVars(); }
 

@@ -128,7 +128,11 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
         OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
     }
     outfile << endl;
-
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+        if (get<0>(T.Axiom(i)).IsPermutation())
+            outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
+    }
+    outfile << endl;
     outfile << "Theorem " << theoremName << " : ";
     OutputCLFormula(outfile, cl, theoremName);
     outfile << "Proof. " << endl;
