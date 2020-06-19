@@ -750,8 +750,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               string sbMatchOnePremise = "(or false ";
               sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-                 string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
+                 string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
                  for (unsigned nInd = 0; nInd < ar; nInd++) {
                      if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
                         sb += appeq(app("nArg" , n_from, nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
@@ -763,6 +763,44 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                                sb +
                                                app("bSameProofBranch", n_from, nProofStep) +
                                                "(not " + app("bCases", n_from) + ")" + ")";
+#ifdef SPECIALCASEUNIVAXIOMS
+                 // Support for symmetric predicate symbols
+                 if (ar == 2)  { // HARD CODED, FOR WD
+                     string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
+                     for (unsigned nInd = 0; nInd < ar; nInd++) {
+                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                            sb += appeq(app("nArg" , n_from, 1-nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                         else
+                            sb += appeq(app("nArg" , n_from, 1-nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                     }
+                     sbMatchOnePremise += string(" (and ") +
+                                                   appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
+                                                   sb +
+                                                   app("bSameProofBranch", n_from, nProofStep) +
+                                                   "(not " + app("bCases", n_from) + ")" + ")";
+                  }
+#endif
+
+#ifdef SPECIALCASEUNIVAXIOMS
+                // Support for symmetric predicate symbols
+                if (ar == 3)  { // HARD CODED, FOR COL
+                    unsigned permutations[][3] = { {0,2,1}, {1,0,2}, {1,2,0}, {2,0,1}, {2,1,0} };
+                    for (unsigned perm = 0; perm < 5; perm++) {
+                         string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
+                         for (unsigned nInd = 0; nInd < ar; nInd++) {
+                             if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                             else
+                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                         }
+                         sbMatchOnePremise += string(" (and ") +
+                                                       appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
+                                                       sb +
+                                                       app("bSameProofBranch", n_from, nProofStep) +
+                                                       "(not " + app("bCases", n_from) + ")" + ")";
+                    }
+                }
+#endif
               }
 
 #ifdef SPECIALCASEUNIVAXIOMS
@@ -796,67 +834,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                   sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
               }
 #endif
-
-
-#ifdef SPECIALCASEUNIVAXIOMS
-              // Support for symmetric predicate symbols
-              if (ARITY[nPredicate[nAxiom][nPremisesCounter]] == 2)  { // HARD CODED, FOR WD
-                  for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-                     string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
-                     unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-                     for (unsigned nInd = 0; nInd < ar; nInd++) {
-                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                            sb += appeq(app("nArg" , n_from, 1-nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                         else
-                            sb += appeq(app("nArg" , n_from, 1-nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                     }
-                     sbMatchOnePremise += string(" (and ") +
-                                                   appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                                   sb +
-                                                   app("bSameProofBranch", n_from, nProofStep) +
-                                                   "(not " + app("bCases", n_from) + ")" + ")";
-                  }
-              }
-#endif
-
-
-              unsigned permutations[5][3] = { {1,3,2}, {2,1,3}, {2,3,1}, {3,1,2}, {3,2,1} };
-
-#ifdef SPECIALCASEUNIVAXIOMS
-              // Support for symmetric predicate symbols
-              if (ARITY[nPredicate[nAxiom][nPremisesCounter]] == 3)  { // HARD CODED, FOR COL
-                  for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-
-                     for (unsigned perm = 0; perm < 5; perm++) {
-                         string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
-                         unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-                         for (unsigned nInd = 0; nInd < ar; nInd++) {
-
-
-                             if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                             else
-                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                         }
-                         sbMatchOnePremise += string(" (and ") +
-                                                       appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                                       sb +
-                                                       app("bSameProofBranch", n_from, nProofStep) +
-                                                       "(not " + app("bCases", n_from) + ")" + ")";
-
-                      }
-                  }
-              }
-#endif
-
-
-
-
-
-
-
-
-
 
               sbMatchOnePremise += ")";
               sbMatchPremises += " " + sbMatchOnePremise;
