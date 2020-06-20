@@ -178,12 +178,9 @@ vampire_succeeded = true;
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
-    T.printAxioms();
-
-    cout << "After saturation: " << endl;
-    T.printAxioms();
-
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+    cout << "After filtering by reachability " << endl;
+    T.printAxioms();
 
     // **************************** filtering axioms a la hammer by FOL prover
     if (params.msHammerInvoke != ""  && vampire_succeeded) {
@@ -191,7 +188,10 @@ vampire_succeeded = true;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
     }
+
     T.Saturate();
+    cout << "After saturation: " << endl;
+    T.printAxioms();
 
 
     // **************************** checking if case split support is needed
