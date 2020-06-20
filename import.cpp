@@ -179,6 +179,10 @@ vampire_succeeded = true;
         T.AddNegElimAxioms();
 
     T.printAxioms();
+
+    cout << "After saturation: " << endl;
+    T.printAxioms();
+
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
 
     // **************************** filtering axioms a la hammer by FOL prover
@@ -187,6 +191,7 @@ vampire_succeeded = true;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
     }
+    T.Saturate();
 
 
     // **************************** checking if case split support is needed
@@ -377,7 +382,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                         T.UpdateSignature(normalizedAxioms[i].first);
                         cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
                     }
-                     cout << endl;
+                    // cout << endl;
                 }
                 else {
                     T.AddAxiom(cl,statementName);
@@ -604,8 +609,8 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
             bool axiomNeeded = false;
             for (size_t i = 0; i < neededAxioms.size(); i++)   {
                 if (it->second == neededAxioms[i]) {
-                    if (!axiomNeeded)
-                        cout << "    Needed axiom: " << neededAxioms[i] << endl;
+                    //if (!axiomNeeded)
+                    //    cout << "    Needed axiom: " << neededAxioms[i] << endl;
                     axiomNeeded = true;
                 }
             }

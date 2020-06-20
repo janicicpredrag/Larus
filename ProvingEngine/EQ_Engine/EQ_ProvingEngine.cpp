@@ -745,8 +745,11 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
 #ifdef SPECIALCASEUNIVAXIOMS
            // These axioms will be inlined
-           if (mpT->mCLaxioms[nAxiom].first.IsPermutation())
+           const CLFormula& cf = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first;
+           if (cf.IsSimpleImplication()) {
+               // cout << "Skipping MP for " << mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second << endl;
                continue;
+           }
 #endif
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
            sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
@@ -768,6 +771,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                                sb +
                                                app("bSameProofBranch", n_from, nProofStep) +
                                                "(not " + app("bCases", n_from) + ")" + ")";
+
+/*
 #ifdef SPECIALCASEUNIVAXIOMS
                  // Support for symmetric predicate symbols
                  if (ar == 2)  { // HARD CODED, FOR WD
@@ -806,7 +811,56 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     }
                 }
 #endif
-              }
+*/
+
+#ifdef SPECIALCASEUNIVAXIOMS
+                // Support for simple implication axioms
+                for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+                    const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
+                    if (!cf.IsSimpleImplication())
+                        continue;
+                    // we check for the premise fact B, and there is an axiom A=>B
+                    if (nPredicate[nSimpleAxiom][1] != nPredicate[nAxiom][nPremisesCounter])
+                        continue;
+                    string sb = appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                    unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][0]];
+                    for (unsigned nInd = 0; nInd < ar1; nInd++) { // match A
+                        if (nBinding[nSimpleAxiom][nInd] != 0)
+                            sb += appeq(app("nArg" , n_from, nInd),
+                                        app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][nInd]));
+                        else
+                            sb += appeq(app("nArg" , n_from, nInd),
+                                        nAxiomArgument[nSimpleAxiom][nInd]);
+                    }
+                    for (unsigned nInd = 0; nInd < ar; nInd++) { // match B
+                        if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0) {
+                            if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                            else
+                                sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                            nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                        }
+                        else {
+                            if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                            else
+                                sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                        nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                        }
+                    }
+                    sbMatchOnePremise += string(
+                                              "\n; matching premise " + itos(nPremisesCounter) + "of the axiom " +
+                                               itos(nSimpleAxiom) + " by step " + itos(n_from) + "\n" +
+                                               " (and ") +
+                                               appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
+                                               sb +
+                                               app("bSameProofBranch", n_from, nProofStep) +
+                                               "(not " + app("bCases", n_from) + ")" + ")";
+             }
+#endif
+          }
 
 #ifdef SPECIALCASEUNIVAXIOMS
               // Support for univ axioms
@@ -821,10 +875,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                   for (unsigned nInd = 0; nInd < ar; nInd++) {
                       if (nBinding[nUnivAxiom][nInd] != 0) {
                           if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                             sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                             sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
                                          app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
                           else
-                             sb += appeq(app("nInst3", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                             sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
                                          nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
                       }
                       else {
@@ -959,8 +1013,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
                continue;
            for(size_t i = 0; i < formula.GetSize(); i++) {
-               string sb = "";
-               sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
+               string sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
                unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
                for (unsigned nInd = 0; nInd < ar; nInd++) {
                   if (nBinding[nUnivAxiom][nInd] != 0)
@@ -975,6 +1028,44 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           }
        }
 #endif
+
+#ifdef SPECIALCASEUNIVAXIOMS
+            // Support for simple implication axioms
+            for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+                for(size_t i = 0; i < formula.GetSize(); i++) {
+                    string sb = "\n; checking simple axiom " + itos(nSimpleAxiom) + "\n";
+                    sb += appeq(app("nP", nFinalStep, i), nPredicate[nSimpleAxiom][1]);
+                    unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][1]];
+                    for (unsigned nInd = 0; nInd < ar1; nInd++) { // match B
+                        if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0)
+                            sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
+                                        app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]));
+                        else
+                            sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
+                                        nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
+                    }
+                    for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
+                        const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
+                        if (!cf.IsSimpleImplication())
+                            continue;
+                        sb += appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                        unsigned ar = ARITY[nPredicate[nSimpleAxiom][0]];
+                        for (unsigned nInd = 0; nInd < ar; nInd++) { // match A
+                            if (nBinding[nSimpleAxiom][nInd] != 0)
+                                sb += appeq(app("nArg", n_from, nInd),
+                                            app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][nInd]));
+                            else
+                                sb += appeq(app("nArg", n_from, nInd),
+                                            nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
+                        }
+                        sb += "\n; checking simple axiom END \n";
+                        if (sb != "")
+                             sbTrivGoalReached += "(and " + sb + ")";
+                     }
+                 }
+             }
+#endif
+
 
        sbTrivGoalReached = "(or " + sbTrivGoalReached + ")";
        string sbQEDbyCasesStep = ( nProofStep == mnPremisesCount || !mParams.mbNeedsCaseSplits ? " false " :
@@ -1176,7 +1267,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         smtFile << "(check-sat)" << endl << endl;
     }
 
-    smtFile << "(check-sat)" << endl << endl;
+    // smtFile << "(check-sat)" << endl << endl;
 
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
     smtFile << "(assert (or " + sbProofFinished + "))" << endl << endl;
