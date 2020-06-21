@@ -26,7 +26,7 @@ public:
     Fact(string& n, const vector<string>& a) { mName = n; mArgs = a; }
     Fact (const Fact &f) { mName = f.mName; mArgs = f.mArgs; }
     Fact& operator=(const Fact& f) { mName = f.mName; mArgs = f.mArgs; return *this; }
-    bool operator==(const Fact& f) { return (mName == f.mName && mArgs == f.mArgs); }
+    bool operator==(const Fact& f) const { return (mName == f.mName && mArgs == f.mArgs); }
     Fact (const string& s);
     size_t GetArity() const { return mArgs.size(); }
     string GetArg(size_t i) const { return (mArgs.size()>i ? mArgs[i] : "null"); }
@@ -77,6 +77,7 @@ public:
     ConjunctionFormula() {}
     ConjunctionFormula(const ConjunctionFormula &cf) { mConjunction = cf.mConjunction; }
     ConjunctionFormula& operator=(const ConjunctionFormula& cf) { mConjunction = cf.mConjunction; return *this; }
+    bool operator==(const ConjunctionFormula& cf) const { return (mConjunction == cf.mConjunction); }
     ConjunctionFormula(vector<Fact>& cf) { mConjunction = cf; }
     size_t GetSize() const { return mConjunction.size(); }
     Fact GetElement(size_t i) const { return (mConjunction.size()>i ? mConjunction[i] : mConjunction[0]); }
@@ -101,6 +102,7 @@ class DNFFormula
 public:
     DNFFormula() {}
     DNFFormula(vector<ConjunctionFormula> dnf) { mDNF = dnf; }
+    bool operator==(const DNFFormula& dnf) const { return (mDNF == dnf.mDNF); }
     size_t GetSize() const { return mDNF.size(); }
     const ConjunctionFormula& GetElement(size_t i) const { return (mDNF.size()>i ? mDNF[i] : mDNF[0]); }
     void Add(const ConjunctionFormula& cf) { mDNF.push_back(cf); }
@@ -124,6 +126,8 @@ public:
     CLFormula(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
     CLFormula& operator=(const CLFormula& cf)
         { mA = cf.mA; mB = cf.mB; mUniversalVars = cf.mUniversalVars; mExistentialVars = cf.mExistentialVars; return *this; }
+    bool operator==(const CLFormula& cf)
+        { return (mA == cf.mA && mB == cf.mB && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars); }
     friend ostream& operator<<(ostream& os, const CLFormula& f);
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }
@@ -135,6 +139,10 @@ public:
     const string& GetUnivVar(size_t i) const { return mUniversalVars[i]; }
     size_t GetNumOfExistVars() const { return mExistentialVars.size(); }
     const string& GetExistVar(size_t i) const { return mExistentialVars[i]; }
+    void SetUnivVars(vector<string>& uv) {  mUniversalVars = uv; }
+    void SetExistVars(vector<string>& ev) {  mExistentialVars = ev; }
+    void TakeUnivVars(const CLFormula& cf) {  mUniversalVars = cf.mUniversalVars; }
+    void TakeExistVars(const CLFormula& cf) { mExistentialVars = cf.mExistentialVars; }
 
     void AddUnivVar(const string& varName) { mUniversalVars.push_back(varName); }
     void AddExistVar(const string& varName) { mExistentialVars.push_back(varName); }
@@ -151,6 +159,7 @@ public:
 
     bool UsesNativeEq() const;
     bool IsSimpleImplication() const;
+    bool IsSimpleUnivFormula() const;
 
     void Clear() { mA.Clear(); mB.Clear(); ClearUnivVars(); ClearExistVars(); }
 

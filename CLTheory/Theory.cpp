@@ -2,6 +2,8 @@
 
 // #define DEBUG_THEORY
 
+#include <assert.h>
+
 // --------------------------------------------------------------
 
 void Theory::SetAxioms(vector<pair<CLFormula,string>>& axioms)
@@ -522,6 +524,70 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
 
 bool Theory::Saturate()
 {
+    vector<CLFormula> axioms;
+    for (size_t i = 0; i < mCLaxioms.size(); i++) {
+        axioms.push_back(mCLaxioms[i].first);
+    }
+
+    bool updated = false;
+    unsigned count_sat=0;
+    do {
+         updated = false;
+         for (size_t i = 0; i < mCLaxioms.size(); i++) {
+            const CLFormula ax1 = mCLaxioms[i].first;
+            if (!ax1.IsSimpleImplication())
+                continue;
+            Fact fact_ax1 = ax1.GetPremises().GetElement(0);
+
+            for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications
+                const CLFormula ax2 = mCLaxioms[j].first;
+
+                if (ax2.IsSimpleImplication() || ax2.IsSimpleUnivFormula()) {
+                    Fact fact_ax2 = ax2.GetGoal().GetElement(0).GetElement(0);
+                    if (fact_ax2.GetName() != fact_ax1.GetName())
+                        continue;
+                    map<string,string> inst;
+                    for (size_t k = 0; k < fact_ax2.GetArity(); k++) {
+                        inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
+                    }
+                    Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
+                    for (size_t k = 0; k < fact_new.GetArity(); k++) {
+                        assert(inst.find(fact_new.GetArg(k)) != inst.cend());
+                        fact_new.SetArg(k,inst.find(fact_new.GetArg(k))->second);
+                    }
+                    ConjunctionFormula cf;
+                    DNFFormula df;
+                    cf.Add(fact_new);
+                    df.Add(cf);
+                    CLFormula newUnivAx;
+                    if (ax2.IsSimpleImplication()) {
+                        newUnivAx = CLFormula(ax2.GetPremises(), df);
+                    }
+                    else {
+                        ConjunctionFormula empty;
+                        newUnivAx = CLFormula (empty, df);
+                    }
+                    newUnivAx.TakeUnivVars(ax2);
+                    newUnivAx.TakeExistVars(ax2);
+                    bool found = false;
+                    if (ax2.IsSimpleImplication() && fact_new == ax2.GetPremises().GetElement(0))
+                        found = true;
+                    for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
+                        if (newUnivAx == mCLaxioms[l].first)
+                            found = true;
+                    }
+                    if (!found) {
+                        // cout << "Success!" << newUnivAx << endl;
+                        axioms.push_back(newUnivAx);
+                        mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
+                        updated = true;
+                    }
+                }
+            }
+        }
+    }
+    while (updated);
+
     return true;
 }
 

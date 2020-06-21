@@ -149,7 +149,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 vampire_succeeded = true;
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != "") {
+    if (false && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);

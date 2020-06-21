@@ -738,14 +738,20 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
 #ifdef SPECIALCASEUNIVAXIOMS
            // These axioms will be inlined
-           if (nAxiomExiVars[nAxiom]==0 && nAxiomPremises[nAxiom]==0 &&
-               !bAxiomBranching[nAxiom] && ARITY[nPredicate[nAxiom][0]]!=0)
-               continue;
 #endif
 
 #ifdef SPECIALCASEUNIVAXIOMS
            // These axioms will be inlined
            const CLFormula& cf = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first;
+
+           //if (nAxiomExiVars[nAxiom]==0 && nAxiomPremises[nAxiom]==0 &&
+           //    !bAxiomBranching[nAxiom] && ARITY[nPredicate[nAxiom][0]]!=0)
+           //    continue;
+           if (cf.IsSimpleUnivFormula()) {
+               // cout << "Skipping MP for " << mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second << endl;
+               continue;
+           }
+
            if (cf.IsSimpleImplication()) {
                // cout << "Skipping MP for " << mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second << endl;
                continue;
@@ -865,9 +871,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 #ifdef SPECIALCASEUNIVAXIOMS
               // Support for univ axioms
               for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
-                  if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
-                      !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
+                  const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
+                  if (!cf.IsSimpleUnivFormula())
                       continue;
+                  //if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
+                  //    !bAxiomBranching[nUnivAxiom] /*&& ARITY[nPredicate[nUnivAxiom][0]]!=0*/))
+                  //    continue;
                   if (nPredicate[nAxiom][nPremisesCounter] != nPredicate[nUnivAxiom][0])
                       continue;
                   string sb;
@@ -1007,33 +1016,36 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbTrivGoalReached += appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true");
        }
 
+       string sbTrivGoalReachedInlined;
 #ifdef SPECIALCASEUNIVAXIOMS
        for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
-           if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
-               !bAxiomBranching[nUnivAxiom] && ARITY[nPredicate[nUnivAxiom][0]]!=0))
-               continue;
-           for(size_t i = 0; i < formula.GetSize(); i++) {
-               string sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
-               unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
-               for (unsigned nInd = 0; nInd < ar; nInd++) {
-                  if (nBinding[nUnivAxiom][nInd] != 0)
-                      sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
-                                  app("nArg", nFinalStep, i*mnMaxArity+nInd));
-                  else
-                      sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                  app("nArg", nFinalStep, i*mnMaxArity+nInd));
-               }
-               if (sb != "")
-                    sbTrivGoalReached += "(and " + sb + ")";
-          }
+           const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
+           if (cf.IsSimpleUnivFormula()) {
+               string disj;
+               for(size_t i = 0; i < formula.GetSize(); i++) {
+                   string sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
+                   unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
+                   for (unsigned nInd = 0; nInd < ar; nInd++) {
+                      if (nBinding[nUnivAxiom][nInd] != 0)
+                          sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
+                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                      else
+                          sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                   }
+                   if (sb != "")
+                      disj += "(and " + sb + ")";
+              }
+              sbTrivGoalReachedInlined += disj;
+           }
        }
-#endif
-
-#ifdef SPECIALCASEUNIVAXIOMS
-            // Support for simple implication axioms
-            for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+       // Support for simple implication axioms
+        for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+            const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
+            if (cf.IsSimpleImplication()) {
+                string disj;
                 for(size_t i = 0; i < formula.GetSize(); i++) {
-                    string sb = "\n; checking simple axiom " + itos(nSimpleAxiom) + "\n";
+                    string sb = "\n; checking simple axiom for goal " + itos(nSimpleAxiom) + "\n";
                     sb += appeq(app("nP", nFinalStep, i), nPredicate[nSimpleAxiom][1]);
                     unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][1]];
                     for (unsigned nInd = 0; nInd < ar1; nInd++) { // match B
@@ -1044,30 +1056,35 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                             sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
                                         nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
                     }
+                    string allfrom;
                     for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-                        const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
-                        if (!cf.IsSimpleImplication())
-                            continue;
-                        sb += appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                        string allfrom1;
+                        allfrom1 += appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                        allfrom1 += app("bSameProofBranch", n_from, nProofStep);
+                        allfrom1 += "(not " + app("bCases", n_from) + ")";
                         unsigned ar = ARITY[nPredicate[nSimpleAxiom][0]];
                         for (unsigned nInd = 0; nInd < ar; nInd++) { // match A
                             if (nBinding[nSimpleAxiom][nInd] != 0)
-                                sb += appeq(app("nArg", n_from, nInd),
+                                allfrom1 += appeq(app("nArg", n_from, nInd),
                                             app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][nInd]));
                             else
-                                sb += appeq(app("nArg", n_from, nInd),
-                                            nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
+                                allfrom1 += appeq(app("nArg", n_from, nInd),
+                                            nAxiomArgument[nSimpleAxiom][nInd]);
                         }
-                        sb += "\n; checking simple axiom END \n";
-                        if (sb != "")
-                             sbTrivGoalReached += "(and " + sb + ")";
+                        allfrom += "(and " + allfrom1 + ")";
                      }
+                     sb += "(or false " + allfrom + ")";
+                     sb += "\n; checking simple axiom END \n";
+                     disj += "(and " + sb + ")";
                  }
-             }
+                 sbTrivGoalReachedInlined += disj;
+            }
+         }
 #endif
 
+       sbTrivGoalReachedInlined = "\n ; start \n" + sbTrivGoalReachedInlined + "\n ; end \n";
 
-       sbTrivGoalReached = "(or " + sbTrivGoalReached + ")";
+       sbTrivGoalReached = "(or " + sbTrivGoalReached + sbTrivGoalReachedInlined + ")";
        string sbQEDbyCasesStep = ( nProofStep == mnPremisesCount || !mParams.mbNeedsCaseSplits ? " false " :
                    "(and "
                      "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
@@ -1080,7 +1097,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                    "(and " + sbTrivGoalReached + appeq(app("nNesting", nProofStep), 1) +
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) + ")"
                    :
-                   "(and " +  app("bGoal", nProofStep-1) +
+                   "(and " "(or " + app("bGoal", nProofStep-1) + sbTrivGoalReachedInlined + ")" +
                     "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) +
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +

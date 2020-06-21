@@ -552,6 +552,19 @@ bool CLFormula::IsSimpleImplication() const
 
 // ---------------------------------------------------------------------------------------
 
+bool CLFormula::IsSimpleUnivFormula() const
+{
+    return (GetNumOfExistVars() == 0 &&
+        GetPremises().GetSize() == 0 &&
+        GetGoal().GetSize() == 1
+        //GetGoal().GetElement(0).GetElement(0).GetArg()!=0
+        );
+}
+
+
+
+// ---------------------------------------------------------------------------------------
+
 Fact::Fact (const string& s)
 {
     Read(s);
