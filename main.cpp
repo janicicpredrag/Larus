@@ -120,7 +120,7 @@ int main(int argc , char** argv)
                 // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp --output_axiom_names on"
                 //                params.msHammerInvoke = argv[i+1];
                 // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
-                params.msHammerInvoke = "../vampire/vampire4.2.2 --proof tptp --output_axiom_names on";
+                params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))
@@ -150,7 +150,7 @@ int main(int argc , char** argv)
     else
         wrongInput = true;
 
-    params.msHammerInvoke = "../vampire/vampire4.2.2 --proof tptp --output_axiom_names on";
+    params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
 
 
     if (inputFilename == "")

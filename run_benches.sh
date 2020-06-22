@@ -6,12 +6,11 @@ printout() {
 }
 i=0
 time=10
-maxProofLen=64
+maxProofLen=128
 startinglength=4
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
-
 PS3='Please enter your choice of benches: '
 options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
 select opt in "${options[@]}"
@@ -253,20 +252,42 @@ else
     startinglength=$startsizev
 fi
 
+echo ""
+PS3='Use implicit lemmas ? '
+options5=("Yes" "No")
+select opt5 in "${options5[@]}"
+do
+    case $opt5 in
+        "Yes")
+            echo "$opt5 selected."
+            implicit=""
+            break
+            ;;
+        "No")
+            echo "$opt5 selected"
+            implicit="-i"
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+
 echo "Running clprover with engine: " $engine | tee -a $filename
 echo "Nesting:" $nesting | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
 echo "Starting proof length" $startinglength | tee -a $filename
 echo "Max proof length: " $maxProofLen | tee -a $filename
 echo "Find shortest proof:" $opt4 | tee -a $filename
+echo "Use implicit lemmas:" $opt5 | tee -a $filename
 fi
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   if [[ $prover = "CLprover" ]]; then
-      echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof -vcoq "$axioms" "$axiomsb" "$file"
-    ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$file" | tee -a $filename
+      echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof $implicit -vcoq "$axioms" "$axiomsb" "$file"
+    ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
     else
       if [[ $prover = "eprover" ]]; then
         echo "eprove"
