@@ -2,7 +2,7 @@
 compare=1 # compare to eprover and zenon
 time=120
 maxlength=-p32
-nesting=-n0
+nesting=-n2
 axioms1=-aexcludedmiddle 
 axioms2=-anegelim
 benches=tptp-problems/continuous-integration/*.p
