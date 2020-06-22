@@ -307,7 +307,7 @@ do
   if [ "$prover" = "zenon" ]; then
       grep FOUND < $filename | wc -l | tee -a $summary
   else
-      grep Theorem < $filename | wc -l | tee -a $summary
+      grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
   fi
 done
 echo "------------------------------------------------------"
@@ -324,11 +324,11 @@ echo "Number of theorems proved:" | tee -a $summary
 if [ "$prover" = "zenon" ]; then
    grep FOUND < $filename | wc -l | tee -a $summary
 else
-    grep Theorem < $filename | wc -l | tee -a $summary
+    grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
     echo "Contradictory axioms:"
-    grep Contradictory < $filename | wc -l | tee -a $summary
+    grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
     echo "Counter sat:"
-    grep "Counter" < $filename | wc -l | tee -a $summary
+    grep "SZS status Counter" < $filename | wc -l | tee -a $summary
     echo "Number of theorems checked by Coq:" | tee -a $summary
     grep Correct < $filename | wc -l | tee -a $summary
 fi
