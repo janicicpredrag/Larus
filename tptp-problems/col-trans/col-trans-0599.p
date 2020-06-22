@@ -5,7 +5,7 @@ fof(pipo,conjecture,
  wd( Aprime, Bprime) &
  wd( A, B) &
   wd( X, Y) &
-   colH(A, B, X) &
-    colH(A, B, Y) & colH(Aprime,Bprime,X) & colH(Aprime,Bprime,Y)) => colH(A,B,Aprime)))
+   col(A, B, X) &
+    col(A, B, Y) & col(Aprime,Bprime,X) & col(Aprime,Bprime,Y)) => col(A,B,Aprime)))
 ).
 

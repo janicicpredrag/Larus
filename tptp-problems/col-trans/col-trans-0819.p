@@ -5,6 +5,6 @@ fof(pipo,conjecture,
  wd( Z1, I) &
  wd( I, Z2) &
   wd( Z1, Z2) &
-   colH(X, I, Y) &
-    colH(Z1, I, Z2) & colH(Y, Z1, Z2) & colH(X, Z1, Z2) => colH(X, Y, Z2) ).
+   col(X, I, Y) &
+    col(Z1, I, Z2) & col(Y, Z1, Z2) & col(X, Z1, Z2) => col(X, Y, Z2) ).
 

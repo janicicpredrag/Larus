@@ -11,6 +11,6 @@ fof(pipo,conjecture,
       wd( B, G) &
        wd( A, D) &
         wd( C, D) &
-         colH(A, B, C) & colH(B, D, G) & colH(A, D, G) ) => colH(A,  C,  D)))
+         col(A, B, C) & col(B, D, G) & col(A, D, G) ) => col(A,  C,  D)))
 ).
 

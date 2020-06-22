@@ -18,8 +18,8 @@ fof(pipo,conjecture,
              wd( F, A) &
               wd( G, A) &
                wd( C, F) &
-                colH(A, B, C) &
-                 colH(B, D, G) &
-                  colH(G, E, C) & colH(G, F, A) & colH(C, E, F) ) => colH(A,  C,  D)))
+                col(A, B, C) &
+                 col(B, D, G) &
+                  col(G, E, C) & col(G, F, A) & col(C, E, F) ) => col(A,  C,  D)))
 ).
 

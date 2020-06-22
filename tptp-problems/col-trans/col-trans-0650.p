@@ -6,6 +6,6 @@ fof(pipo,conjecture,
  wd( B, E) &
   wd( A, E) &
    wd( A, B) &
-    wd( A, D) & colH(A, B, E) & colH(A, B, D) & colH(A, C, E) ) => colH(A,  B,  C)))
+    wd( A, D) & col(A, B, E) & col(A, B, D) & col(A, C, E) ) => col(A,  B,  C)))
 ).
 

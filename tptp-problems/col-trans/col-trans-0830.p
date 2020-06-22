@@ -10,6 +10,6 @@ fof(pipo,conjecture,
      wd( Aprime, Cprime) &
       wd( Bprime, Cprime) &
        wd( Cprime, P) &
-        wd( Bprime, P) & colH(Bprime,Cprime,P) & colH(P,Aprime,Cprime) & ColH Aprime Bprime Cprime
+        wd( Bprime, P) & col(Bprime,Cprime,P) & col(P,Aprime,Cprime) & ColH Aprime Bprime Cprime
 ).
 

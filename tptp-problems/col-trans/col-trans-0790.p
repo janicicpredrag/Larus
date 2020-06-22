@@ -4,6 +4,6 @@ fof(pipo,conjecture,
 (! [H, O, L, I] : ( (
  wd( O, H) &
  wd( O, I) &
-  wd( H, I) & wd( O, L) & colH(I, O, H) & colH(O, L, I) ) => colH(H,  O,  L)))
+  wd( H, I) & wd( O, L) & col(I, O, H) & col(O, L, I) ) => col(H,  O,  L)))
 ).
 

@@ -7,5 +7,5 @@ fof(pipo,conjecture,
   wd( Xprime, Zprime) &
    wd( Z, Xprime) &
     wd( Z, Zprime) &
-     colH(Xprime,X,Xprime) & colH(Z,Xprime,Zprime) & colH(Y,Xprime,Zprime)) => colH(Y, Xprime, Z))) ).
+     col(Xprime,X,Xprime) & col(Z,Xprime,Zprime) & col(Y,Xprime,Zprime)) => col(Y, Xprime, Z))) ).
 

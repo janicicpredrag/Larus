@@ -18,6 +18,6 @@ fof(pipo,conjecture,
              wd( P, I) &
               wd( Q, I) &
                wd( C, I) &
-                colH(A, I, B) & colH(P, Q, I) & colH(A, C, I) ) => colH(A,  B,  C)))
+                col(A, I, B) & col(P, Q, I) & col(A, C, I) ) => col(A,  B,  C)))
 ).
 

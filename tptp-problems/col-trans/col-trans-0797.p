@@ -12,8 +12,8 @@ fof(pipo,conjecture,
        wd( Iprime, Lprimeprime) &
         wd( O, K) &
          wd( O, L) &
-          colH(Oprime,Kprime,Kprimeprime) &
-           colH(Oprime,Lprime,Lprimeprime) &
-            colH(Oprime,Iprime,Hprime) &
-             colH(O, I, H) & colH(Hprime,Lprimeprime,Oprime) ) => colH(Hprime,Oprime,Lprime))) ).
+          col(Oprime,Kprime,Kprimeprime) &
+           col(Oprime,Lprime,Lprimeprime) &
+            col(Oprime,Iprime,Hprime) &
+             col(O, I, H) & col(Hprime,Lprimeprime,Oprime) ) => col(Hprime,Oprime,Lprime))) ).
 

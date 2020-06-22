@@ -8,6 +8,6 @@ fof(pipo,conjecture,
    wd( O, I) &
     wd( Oprime, Lprimeprime) &
      wd( Oprime, Lprimeprime) &
-      wd( Oprime, Hprime) & colH(Oprime,Lprime,Lprimeprime) & colH(Oprime,Hprime,Lprimeprime) ) => colH(Hprime,Oprime,Lprime)))
+      wd( Oprime, Hprime) & col(Oprime,Lprime,Lprimeprime) & col(Oprime,Hprime,Lprimeprime) ) => col(Hprime,Oprime,Lprime)))
 ).
 
