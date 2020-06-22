@@ -126,8 +126,8 @@ public:
     CLFormula(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
     CLFormula& operator=(const CLFormula& cf)
         { mA = cf.mA; mB = cf.mB; mUniversalVars = cf.mUniversalVars; mExistentialVars = cf.mExistentialVars; return *this; }
-    bool operator==(const CLFormula& cf)
-        { return (mA == cf.mA && mB == cf.mB && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars); }
+    bool operator==(const CLFormula& cf) // up to quantifiers
+        { return (mA == cf.mA && mB == cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/); }
     friend ostream& operator<<(ostream& os, const CLFormula& f);
     const ConjunctionFormula& GetPremises() const { return mA; }
     const DNFFormula& GetGoal() const { return mB; }

@@ -45,8 +45,7 @@ void Theory::UpdateSignature(CLFormula& axiom)
 void Theory::printAxioms() const
 {
     for (size_t i = 0; i < mCLaxioms.size(); i++)
-        cout << "Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
-    cout << "----------------------------------------" << endl;
+        cout << "          Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
 }
 
 

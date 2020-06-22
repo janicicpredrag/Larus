@@ -90,6 +90,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 
     T.StoreInitialConstants();
 
+    cout << "--- Instantiating the goal." << endl;
     CLProof proof;
     proof.SetTheory(&T);
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
@@ -178,8 +179,14 @@ vampire_succeeded = true;
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
+    if (params.mbNativeEQ || params.mbExcludedMiddle || params.mbNegElim) {
+        cout << "--- Adding axioms for =, excluded middle and negation elimination." << endl;
+        cout << "       After adding axioms for =, excluded middle and negation elimination: output size: " << T.mCLaxioms.size() << endl;
+        T.printAxioms();
+    }
+
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    cout << "After filtering by reachability " << endl;
+    cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
     T.printAxioms();
 
     // **************************** filtering axioms a la hammer by FOL prover
@@ -187,12 +194,15 @@ vampire_succeeded = true;
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
+        T.printAxioms();
     }
 
-    T.Saturate();
-    cout << "After saturation: " << endl;
-    T.printAxioms();
-
+    if (params.mbInlineAxioms) {
+        cout << "--- Saturating for inlining. " << endl;
+        T.Saturate();
+        cout << "       After saturation: output size: " << T.mCLaxioms.size() << endl;
+        T.printAxioms();
+    }
 
     // **************************** checking if case split support is needed
     params.mbNeedsCaseSplits = false;
@@ -203,9 +213,11 @@ vampire_succeeded = true;
         }
     }
     if (params.mbNeedsCaseSplits)
-        cout << "Case splits needed. " << endl;
+        cout << "--- Support for case splits used. " << endl;
     else
-        cout << "Case splits NOT needed. " << endl;
+        cout << "--- Support for case splits NOT used. " << endl;
+
+    cout << "--------------------------------------------------------------------" << endl;
 
     ReturnValue proved = eConjectureNotProved;
     if (engine->ProveFromPremises(fout, proof)) {
@@ -287,6 +299,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         return eWrongFormatParameter;
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
+    cout << endl << "--------------------------------------------------------------------" << endl;
+    cout << "--- Reading axioms: " << endl;
     if (tptpconjecture.good()) {
         while(getline(tptpconjecture, s)) { 
             if (s != "" && s.at(0) != '%')
@@ -302,7 +316,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     {
                         string filename = dirnameOf(inputFile)+"/"+s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
 
-                        cout << "Including file : " << filename << endl;
+                        cout << "       Including file : " << filename << endl;
                         ifstream input_file(filename,ios::in);
                         if (input_file.good())
                         {
@@ -376,11 +390,11 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     vector< pair<CLFormula,string> > normalizedAxioms;
                     cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
 
-                    cout << "Input Axiom: " << s << endl;
+                    cout << "       Input Axiom: " << s << endl;
                     for (size_t i=0; i<normalizedAxioms.size(); i++) {
                         T.AddAxiom(normalizedAxioms[i].first, normalizedAxioms[i].second);
                         T.UpdateSignature(normalizedAxioms[i].first);
-                        cout << "             " << i << ". " << normalizedAxioms[i].first << endl;
+                        cout << "                    " << i << ". " << normalizedAxioms[i].first << endl;
                     }
                     // cout << endl;
                 }
@@ -404,7 +418,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                         theorem = output[output.size()-1].first;
                 }
                 T.UpdateSignature(theorem);
-                cout << endl << "Proving theorem: " << inputFile << " - " << theoremName << ":" << theorem << endl;
+                cout << "--- Theorem to be proved: " << endl;
+                cout << "       File name:    " << inputFile << endl;
+                cout << "       Theorem name: " << theoremName << endl;
+                cout << "       Conjecture:   " << theorem << endl;
             } else if (type == eHint) {
                 hint = cl;
                 hints.push_back(tuple<CLFormula,string,string,Fact>(hint,statementName,ordinal,justification));
@@ -567,7 +584,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
 bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
                            const CLFormula& theorem, const string& theoremName, const string& hammer_invoke)
 {
-    cout << "Filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
+    cout << "--- Vampire filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
     // export to TPTP
     string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt"; //
@@ -619,10 +636,10 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
             else
                 it++;
         }
-        cout << "Filtering output (success): " <<  axioms.size() << endl;
+        cout << "       Vampire filtering (success): output size: " <<  axioms.size() << endl;
         return true;
     }
-    cout << "Filtering output (failure): " <<  axioms.size() << endl;
+    cout << "       Vampire filtering (failure): output size: " <<  axioms.size() << endl;
     return false;
 }
 
@@ -631,7 +648,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
 bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem)
 {
     set<string> mReachablePredicateSymbols;
-    cout << "REACHABILITY: Filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
+    cout << "--- Reachability filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
     for (size_t i = 0; i < theorem.GetPremises().GetSize(); i++)
         mReachablePredicateSymbols.insert(theorem.GetPremises().GetElement(i).GetName());
@@ -669,7 +686,7 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
             }
         }
         if (!bAllSymbolsReachable) {
-            cout << " ERASED : " << it->second << endl;
+            cout << "   erased : " << it->second << endl;
             it = axioms.erase(it);
         }
         else

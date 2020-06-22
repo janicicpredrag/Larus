@@ -139,6 +139,9 @@ void CLProof::Simplify()
 
 void CLProof::Simplify(set<Fact>& relevant)
 {
+    //TODO temporarily!
+    //return;
+
     CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
     if(pe) {
         for(size_t i=0, size = pe->GetNumOfCases(); i < size; i++) {
