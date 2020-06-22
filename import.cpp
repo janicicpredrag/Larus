@@ -213,9 +213,9 @@ vampire_succeeded = true;
         }
     }
     if (params.mbNeedsCaseSplits)
-        cout << "--- Support for case splits used. " << endl;
+        cout << "--- Support for case splits turned ON. " << endl;
     else
-        cout << "--- Support for case splits NOT used. " << endl;
+        cout << "--- Support for case splits turned OFF. " << endl;
 
     cout << "--------------------------------------------------------------------" << endl;
 
@@ -300,7 +300,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
     cout << endl << "--------------------------------------------------------------------" << endl;
-    cout << "--- Reading axioms: " << endl;
+    cout << "--- Reading axioms and transformation to CL2: " << endl;
     if (tptpconjecture.good()) {
         while(getline(tptpconjecture, s)) { 
             if (s != "" && s.at(0) != '%')
@@ -686,7 +686,7 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
             }
         }
         if (!bAllSymbolsReachable) {
-            cout << "   erased : " << it->second << endl;
+            cout << "       erased : " << it->second << endl;
             it = axioms.erase(it);
         }
         else
