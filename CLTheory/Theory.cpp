@@ -538,17 +538,27 @@ bool Theory::Saturate()
                 continue;
             Fact fact_ax1 = ax1.GetPremises().GetElement(0);
 
-            for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications
+            for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications and univ axioms
                 const CLFormula ax2 = mCLaxioms[j].first;
-
+                // ax1 is to be applied to RHS of ax2
                 if (ax2.IsSimpleImplication() || ax2.IsSimpleUnivFormula()) {
                     Fact fact_ax2 = ax2.GetGoal().GetElement(0).GetElement(0);
                     if (fact_ax2.GetName() != fact_ax1.GetName())
                         continue;
                     map<string,string> inst;
-                    for (size_t k = 0; k < fact_ax2.GetArity(); k++) {
+
+                    bool no_match = false;
+                    for (size_t k = 0; k < fact_ax2.GetArity() && !no_match; k++) {
+                        if (IsConstant(fact_ax1.GetArg(k))) {
+                            if (!IsConstant(fact_ax2.GetArg(k)) || fact_ax1.GetArg(k)!=fact_ax2.GetArg(k))
+                                no_match = true;
+                        }
                         inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
                     }
+
+                    if (no_match)
+                        continue;
+
                     Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
                     for (size_t k = 0; k < fact_new.GetArity(); k++) {
                         assert(inst.find(fact_new.GetArg(k)) != inst.cend());
