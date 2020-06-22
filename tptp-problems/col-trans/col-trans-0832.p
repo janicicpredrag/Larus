@@ -19,9 +19,9 @@ fof(pipo,conjecture,
               wd( O1, B1) &
                wd( O2, B2prime) &
                 wd( O2, B2) &
-                 colH(O1,A1,A1prime) &
-                  colH(O2,A2,A2prime) &
-                   colH(O1,B1,B1prime) &
-                    colH(O2,B2,B2prime) & colH(O1,A1prime,B1prime) => colH(O1, A1, B1)
+                 col(O1,A1,A1prime) &
+                  col(O2,A2,A2prime) &
+                   col(O1,B1,B1prime) &
+                    col(O2,B2,B2prime) & col(O1,A1prime,B1prime) => col(O1, A1, B1)
 ).
 

@@ -18,9 +18,9 @@ fof(pipo,conjecture,
              wd( Bprime, Cprime) &
               wd( Aprime, Cprime) &
                wd( Aprime, Dprime) &
-                colH(A, B, C) &
-                 colH(A, B, C) &
-                  colH(Aprime,Bprime,Cprime) &
-                   colH(Aprime,Bprime,Cprime) & colH(Aprime,Cprime,Dprime) & ColH Aprime Bprime Dprime
+                col(A, B, C) &
+                 col(A, B, C) &
+                  col(Aprime,Bprime,Cprime) &
+                   col(Aprime,Bprime,Cprime) & col(Aprime,Cprime,Dprime) & ColH Aprime Bprime Dprime
 ).
 

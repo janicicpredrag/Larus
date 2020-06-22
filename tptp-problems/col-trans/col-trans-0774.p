@@ -23,8 +23,8 @@ fof(pipo,conjecture,
                   wd( Aprimeprime, Cprimeprime) &
                    wd( Cprimeprime, Dprimeprime) &
                     wd( Aprimeprime, Dprimeprime) &
-                     colH(A, B, D) &
-                      colH(Aprime,Bprime,Dprime) &
-                       colH(Aprimeprime,Bprime,Dprimeprime) & colH(D, B, C) ) => colH(A,  B,  C)))
+                     col(A, B, D) &
+                      col(Aprime,Bprime,Dprime) &
+                       col(Aprimeprime,Bprime,Dprimeprime) & col(D, B, C) ) => col(A,  B,  C)))
 ).
 

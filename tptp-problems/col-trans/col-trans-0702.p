@@ -21,10 +21,10 @@ fof(pipo,conjecture,
                 wd( G, I) &
                  wd( I, E) &
                   wd( G, E) &
-                   colH(A, B, C) &
-                    colH(B, D, G) &
-                     colH(G, E, C) &
-                      colH(G, F, A) &
-                       colH(G, I, E) & colH(G, E, F) ) => colH(A,  G,  E)))
+                   col(A, B, C) &
+                    col(B, D, G) &
+                     col(G, E, C) &
+                      col(G, F, A) &
+                       col(G, I, E) & col(G, E, F) ) => col(A,  G,  E)))
 ).
 

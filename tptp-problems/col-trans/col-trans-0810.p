@@ -8,6 +8,6 @@ fof(pipo,conjecture,
    wd( Hprime, Oprime) &
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
-      colH(H, O, SH) & colH(Hprime,Oprime,SHprime) & colH(SH, O, L )=> colH(H, O, L)
+      col(H, O, SH) & col(Hprime,Oprime,SHprime) & col(SH, O, L )=> col(H, O, L)
 ).
 
