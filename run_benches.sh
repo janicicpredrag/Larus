@@ -12,7 +12,7 @@ today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans 1000" "Col trans 10 (Alternate Axioms)" "Col trans 100 (Alternate Axioms)" "Col trans 1000 (Alternate Axioms)" )
+options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans all" )
 select opt in "${options[@]}"
 do
     case $opt in
@@ -63,28 +63,10 @@ do
 	    benches="tptp-problems/col-trans/col-trans-00*.p"
             break
             ;;
-   	"Col trans 1000")
+   	"Col trans all")
 	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
-	    benches="tptp-problems/col-trans/col-trans-0*.p"
-	    break
-	    ;;
-        "Col trans 10 (Alternate Axioms)")
-            echo "$opt selected"
-            cp tptp-problems/col-trans/col-axioms-2.ax tptp-problems/col-trans/col-axioms.ax
-	    benches="tptp-problems/col-trans/col-trans-000*.p"
-	    break
-            ;;
-        "Col trans 100 (Alternate Axioms)")
-	        echo "$opt selected"
-            cp tptp-problems/col-trans/col-axioms-2.ax tptp-problems/col-trans/col-axioms.ax
-	        benches="tptp-problems/col-trans/col-trans-00*.p"
-            break
-            ;;
-   	"Col trans 1000 (Alternate Axioms)")
-	    echo "$opt selected"
-            cp tptp-problems/col-trans/col-axioms-2.ax tptp-problems/col-trans/col-axioms.ax
-	    benches="tptp-problems/col-trans/col-trans-0*.p"
+	    benches="tptp-problems/col-trans/col-trans-*.p"
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
