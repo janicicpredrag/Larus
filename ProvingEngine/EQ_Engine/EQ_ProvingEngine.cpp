@@ -10,9 +10,6 @@
 #include "../STL_Engine/STL_FactsDatabase.h"
 #include "common.h"
 
-
-#define SPECIALCASEUNIVAXIOMS
-
 //#define INCREMENTAL_CONSTRAINTS
 
 
@@ -736,27 +733,12 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               if (nAxiomUniVars[nAxiom]>0 && nProofStep == 0)
                     continue;
 
-#ifdef SPECIALCASEUNIVAXIOMS
-           // These axioms will be inlined
-#endif
-
-#ifdef SPECIALCASEUNIVAXIOMS
-           // These axioms will be inlined
-           const CLFormula& cf = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first;
-
-           //if (nAxiomExiVars[nAxiom]==0 && nAxiomPremises[nAxiom]==0 &&
-           //    !bAxiomBranching[nAxiom] && ARITY[nPredicate[nAxiom][0]]!=0)
-           //    continue;
-           if (cf.IsSimpleUnivFormula()) {
-               // cout << "Skipping MP for " << mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second << endl;
-               continue;
+           if (mParams.mbInlineAxioms) {
+               const CLFormula& cf = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first;
+               if (cf.IsSimpleUnivFormula() || cf.IsSimpleImplication())
+                   continue; // These axioms will be inlined
            }
 
-           if (cf.IsSimpleImplication()) {
-               // cout << "Skipping MP for " << mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second << endl;
-               continue;
-           }
-#endif
            sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
            sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
 
@@ -778,130 +760,86 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                                app("bSameProofBranch", n_from, nProofStep) +
                                                "(not " + app("bCases", n_from) + ")" + ")";
 
-/*
-#ifdef SPECIALCASEUNIVAXIOMS
-                 // Support for symmetric predicate symbols
-                 if (ar == 2)  { // HARD CODED, FOR WD
-                     string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
-                     for (unsigned nInd = 0; nInd < ar; nInd++) {
-                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                            sb += appeq(app("nArg" , n_from, 1-nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                         else
-                            sb += appeq(app("nArg" , n_from, 1-nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                     }
-                     sbMatchOnePremise += string(" (and ") +
-                                                   appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                                   sb +
-                                                   app("bSameProofBranch", n_from, nProofStep) +
-                                                   "(not " + app("bCases", n_from) + ")" + ")";
-                  }
-#endif
-
-#ifdef SPECIALCASEUNIVAXIOMS
-                // Support for symmetric predicate symbols
-                if (ar == 3)  { // HARD CODED, FOR COL
-                    unsigned permutations[][3] = { {0,2,1}, {1,0,2}, {1,2,0}, {2,0,1}, {2,1,0} };
-                    for (unsigned perm = 0; perm < 5; perm++) {
-                         string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
-                         for (unsigned nInd = 0; nInd < ar; nInd++) {
-                             if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                             else
-                                sb += appeq(app("nArg" , n_from, permutations[perm][nInd]), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                         }
-                         sbMatchOnePremise += string(" (and ") +
-                                                       appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                                       sb +
-                                                       app("bSameProofBranch", n_from, nProofStep) +
-                                                       "(not " + app("bCases", n_from) + ")" + ")";
-                    }
-                }
-#endif
-*/
-
-#ifdef SPECIALCASEUNIVAXIOMS
-                // Support for simple implication axioms
-                for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
-                    const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
-                    if (!cf.IsSimpleImplication())
-                        continue;
-                    // we check for the premise fact B, and there is an axiom A=>B
-                    if (nPredicate[nSimpleAxiom][1] != nPredicate[nAxiom][nPremisesCounter])
-                        continue;
-                    string sb = appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
-                    unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][0]];
-                    for (unsigned nInd = 0; nInd < ar1; nInd++) { // match A
-                        if (nBinding[nSimpleAxiom][nInd] != 0)
-                            sb += appeq(app("nArg" , n_from, nInd),
-                                        app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][nInd]));
-                        else
-                            sb += appeq(app("nArg" , n_from, nInd),
-                                        nAxiomArgument[nSimpleAxiom][nInd]);
-                    }
-                    for (unsigned nInd = 0; nInd < ar; nInd++) { // match B
-                        if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0) {
-                            if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
-                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                            else
-                                sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
-                                            nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                        }
-                        else {
-                            if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
-                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                            else
-                                sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
-                                        nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                        }
-                    }
-                    sbMatchOnePremise += string(
-                                              "\n; matching premise " + itos(nPremisesCounter) + "of the axiom " +
-                                               itos(nSimpleAxiom) + " by step " + itos(n_from) + "\n" +
-                                               " (and ") +
-                                               appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                               sb +
-                                               app("bSameProofBranch", n_from, nProofStep) +
-                                               "(not " + app("bCases", n_from) + ")" + ")";
-             }
-#endif
-          }
-
-#ifdef SPECIALCASEUNIVAXIOMS
-              // Support for univ axioms
-              for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
-                  const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
-                  if (!cf.IsSimpleUnivFormula())
-                      continue;
-                  //if (!(nAxiomExiVars[nUnivAxiom]==0 && nAxiomPremises[nUnivAxiom]==0 &&
-                  //    !bAxiomBranching[nUnivAxiom] /*&& ARITY[nPredicate[nUnivAxiom][0]]!=0*/))
-                  //    continue;
-                  if (nPredicate[nAxiom][nPremisesCounter] != nPredicate[nUnivAxiom][0])
-                      continue;
-                  string sb;
-                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-                  for (unsigned nInd = 0; nInd < ar; nInd++) {
-                      if (nBinding[nUnivAxiom][nInd] != 0) {
-                          if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                             sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
-                                         app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                          else
-                             sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
-                                         nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
-                      }
-                      else {
-                          if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                            app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
-                          else
-                              sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                          nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                 if (mParams.mbInlineAxioms) {
+                        // Support for simple implication axioms
+                        for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+                            const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
+                            if (cf.IsSimpleImplication()) {
+                                // we check for the premise fact B, and there is an axiom A=>B
+                                if (nPredicate[nSimpleAxiom][1] != nPredicate[nAxiom][nPremisesCounter])
+                                    continue;
+                                string sb = appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                                unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][0]];
+                                for (unsigned nInd = 0; nInd < ar1; nInd++) { // match A
+                                    if (nBinding[nSimpleAxiom][nInd] != 0)
+                                        sb += appeq(app("nArg" , n_from, nInd),
+                                                    app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][nInd]));
+                                    else
+                                        sb += appeq(app("nArg" , n_from, nInd),
+                                                    nAxiomArgument[nSimpleAxiom][nInd]);
+                                }
+                                for (unsigned nInd = 0; nInd < ar; nInd++) { // match B
+                                    if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0) {
+                                        if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                            sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                                        app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                                        else
+                                            sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                                        nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                                    }
+                                    else {
+                                        if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                            sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                                        app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                                        else
+                                            sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                                    nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                                    }
+                                }
+                                sbMatchOnePremise += string(
+                                                          "\n; matching premise " + itos(nPremisesCounter) + "of the axiom " +
+                                                           itos(nSimpleAxiom) + " by step " + itos(n_from) + "\n" +
+                                                           " (and ") +
+                                                           appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
+                                                           sb +
+                                                           app("bSameProofBranch", n_from, nProofStep) +
+                                                           "(not " + app("bCases", n_from) + ")" + ")";
+                            }
                       }
                   }
-                  sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
               }
-#endif
+
+              if (mParams.mbInlineAxioms) {
+                  // Support for univ axioms
+                  for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
+                      const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
+                      if (cf.IsSimpleUnivFormula()) {
+                          if (nPredicate[nAxiom][nPremisesCounter] != nPredicate[nUnivAxiom][0])
+                              continue;
+                          string sb;
+                          unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
+                          for (unsigned nInd = 0; nInd < ar; nInd++) {
+                              if (nBinding[nUnivAxiom][nInd] != 0) {
+                                  if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                     sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                                                 app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                                  else
+                                     sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter, nBinding[nUnivAxiom][nInd]),
+                                                 nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                              }
+                              else {
+                                  if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                                        sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                                    app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                                  else
+                                      sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                                  nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                              }
+                          }
+                          sbMatchOnePremise += "(and " + sb + appeq(app("nFrom", nProofStep, nPremisesCounter),98) + ")";
+                      }
+                  }
+              }
 
               sbMatchOnePremise += ")";
               sbMatchPremises += " " + sbMatchOnePremise;
@@ -920,10 +858,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
               sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), (nProofStep+2)<<3);
           }
-
-          // redundant, but helps in checking if two proof steps are the same
-  /*        for (unsigned nInd = ARITY[nPredicate[nAxiom][nGoalIndex]]; nInd < mnMaxArity; nInd++)
-                  sbMatchConclusion += appeq(app("nArg" , nProofStep, nInd), 999);*/
 
           string sb;
           if (bAxiomBranching[nAxiom]) {
@@ -1017,70 +951,71 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        }
 
        string sbTrivGoalReachedInlined;
-#ifdef SPECIALCASEUNIVAXIOMS
-       for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
-           const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
-           if (cf.IsSimpleUnivFormula()) {
-               string disj;
-               for(size_t i = 0; i < formula.GetSize(); i++) {
-                   string sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
-                   unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
-                   for (unsigned nInd = 0; nInd < ar; nInd++) {
-                      if (nBinding[nUnivAxiom][nInd] != 0)
-                          sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
-                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
-                      else
-                          sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
-                                      app("nArg", nFinalStep, i*mnMaxArity+nInd));
-                   }
-                   if (sb != "")
-                      disj += "(and " + sb + ")";
-              }
-              sbTrivGoalReachedInlined += disj;
+
+       if (mParams.mbInlineAxioms) {
+           for (unsigned nUnivAxiom = eNumberOfStepKinds; nUnivAxiom <= mnAxiomsCount; nUnivAxiom++) {
+               const CLFormula& cf = mpT->mCLaxioms[nUnivAxiom-eNumberOfStepKinds].first;
+               if (cf.IsSimpleUnivFormula()) {
+                   string disj;
+                   for(size_t i = 0; i < formula.GetSize(); i++) {
+                       string sb = appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
+                       unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
+                       for (unsigned nInd = 0; nInd < ar; nInd++) {
+                          if (nBinding[nUnivAxiom][nInd] != 0)
+                              sb += appeq(app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
+                                          app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                          else
+                              sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                                          app("nArg", nFinalStep, i*mnMaxArity+nInd));
+                       }
+                       if (sb != "")
+                          disj += "(and " + sb + ")";
+                  }
+                  sbTrivGoalReachedInlined += disj;
+               }
            }
-       }
-       // Support for simple implication axioms
-        for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
-            const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
-            if (cf.IsSimpleImplication()) {
-                string disj;
-                for(size_t i = 0; i < formula.GetSize(); i++) {
-                    string sb = "\n; checking simple axiom for goal " + itos(nSimpleAxiom) + "\n";
-                    sb += appeq(app("nP", nFinalStep, i), nPredicate[nSimpleAxiom][1]);
-                    unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][1]];
-                    for (unsigned nInd = 0; nInd < ar1; nInd++) { // match B
-                        if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0)
-                            sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
-                                        app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]));
-                        else
-                            sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
-                                        nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
-                    }
-                    string allfrom;
-                    for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-                        string allfrom1;
-                        allfrom1 += appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
-                        allfrom1 += app("bSameProofBranch", n_from, nProofStep);
-                        allfrom1 += "(not " + app("bCases", n_from) + ")";
-                        unsigned ar = ARITY[nPredicate[nSimpleAxiom][0]];
-                        for (unsigned nInd = 0; nInd < ar; nInd++) { // match A
-                            if (nBinding[nSimpleAxiom][nInd] != 0)
-                                allfrom1 += appeq(app("nArg", n_from, nInd),
-                                            app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][nInd]));
+           // Support for simple implication axioms
+            for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
+                const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
+                if (cf.IsSimpleImplication()) {
+                    string disj;
+                    for(size_t i = 0; i < formula.GetSize(); i++) {
+                        string sb = "\n; checking simple axiom for goal " + itos(nSimpleAxiom) + "\n";
+                        sb += appeq(app("nP", nFinalStep, i), nPredicate[nSimpleAxiom][1]);
+                        unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][1]];
+                        for (unsigned nInd = 0; nInd < ar1; nInd++) { // match B
+                            if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0)
+                                sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
+                                            app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]));
                             else
-                                allfrom1 += appeq(app("nArg", n_from, nInd),
-                                            nAxiomArgument[nSimpleAxiom][nInd]);
+                                sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
+                                            nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
                         }
-                        allfrom += "(and " + allfrom1 + ")";
+                        string allfrom;
+                        for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
+                            string allfrom1;
+                            allfrom1 += appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                            allfrom1 += app("bSameProofBranch", n_from, nProofStep);
+                            allfrom1 += "(not " + app("bCases", n_from) + ")";
+                            unsigned ar = ARITY[nPredicate[nSimpleAxiom][0]];
+                            for (unsigned nInd = 0; nInd < ar; nInd++) { // match A
+                                if (nBinding[nSimpleAxiom][nInd] != 0)
+                                    allfrom1 += appeq(app("nArg", n_from, nInd),
+                                                app("nInstSimpleAx", nProofStep, nBinding[nSimpleAxiom][nInd]));
+                                else
+                                    allfrom1 += appeq(app("nArg", n_from, nInd),
+                                                nAxiomArgument[nSimpleAxiom][nInd]);
+                            }
+                            allfrom += "(and " + allfrom1 + ")";
+                         }
+                         sb += "(or false " + allfrom + ")";
+                         sb += "\n; checking simple axiom END \n";
+                         disj += "(and " + sb + ")";
                      }
-                     sb += "(or false " + allfrom + ")";
-                     sb += "\n; checking simple axiom END \n";
-                     disj += "(and " + sb + ")";
-                 }
-                 sbTrivGoalReachedInlined += disj;
-            }
-         }
-#endif
+                     sbTrivGoalReachedInlined += disj;
+                }
+             }
+       }
 
        sbTrivGoalReachedInlined = "\n ; start \n" + sbTrivGoalReachedInlined + "\n ; end \n";
 
