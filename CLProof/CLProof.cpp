@@ -140,7 +140,7 @@ void CLProof::Simplify()
 void CLProof::Simplify(set<Fact>& relevant)
 {
     //TODO temporarily!
-    //return;
+    return;
 
     CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
     if(pe) {
