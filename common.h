@@ -38,6 +38,7 @@ const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
+const bool DEFAULT_INLINE_AXIOMS = true;
 
 const string EQ_NATIVE_NAME = "eqnative";
 
@@ -61,6 +62,7 @@ typedef struct proverParams {
     bool mbSimp;
     bool mbNeedsCaseSplits;
     string msHammerInvoke;
+    bool mbInlineAxioms;
 } proverParams;
 
 string itos(unsigned int i);

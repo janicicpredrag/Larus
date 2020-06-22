@@ -40,6 +40,7 @@ int main(int argc , char** argv)
     params.mbSimp = DEFAULT_SIMP;
     params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
     params.msHammerInvoke = DEFAULT_HAMMER;
+    params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
 
     USING_ORIGINAL_SIGNATURE_EQ = false;
     USING_ORIGINAL_SIGNATURE_NEG = false;
@@ -84,6 +85,9 @@ int main(int argc , char** argv)
             }
             else if (argv[i][0] == '-' && argv[i][1] == 's') { // shortest proof
                 params.shortest_proof = true;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'i') { // inline axioms
+                params.mbInlineAxioms = false;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'd') { // disable simplification of proofs
                 params.mbSimp = true;
