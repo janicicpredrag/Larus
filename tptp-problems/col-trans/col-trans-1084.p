@@ -44,7 +44,7 @@ fof(pipo,conjecture,
                                        col( N, A, B) &
                                         col( N, L, Bprime) &
                                          col( Cprime, N, Bprime) &
-                                          col( Bprime, Cprime, L) &
+                                          col( Bprime, Cprime, L)) =>
                                            col( Aprime, Bprime, Cprime)))
 ).
 
