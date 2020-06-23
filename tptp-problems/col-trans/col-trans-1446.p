@@ -1,9 +1,8 @@
 include('col-axioms.ax').
 
 fof(pipo,conjecture,
-(forall
-   O E Eprime S U1 A AX B BX C CX BXMAX CXMAX AB AC IAC T A1 A2 BXprimeprime CXprimeprime ABXprimeprime
-    ACXprimeprime : Tpoint,
+(![O, E, Eprime, S, U1, A, AX, B, BX, C, CX, BXMAX, CXMAX, AB, AC, IAC, T, A1, A2, BXprimeprime, CXprimeprime, ABXprimeprime,
+    ACXprimeprime ] : ((
  wd( A, B) &
  wd( A, C) &
   wd( B, C) &
@@ -28,6 +27,6 @@ fof(pipo,conjecture,
                      col( A1, A2, CXprimeprime) &
                       col( O, E, ABXprimeprime) &
                        col( O, E, ACXprimeprime) &
-                        col( A, B, C) ) => col( A, BXprimeprime, CXprimeprime) 
+                        col( A, B, C) ) => col( A, BXprimeprime, CXprimeprime))) 
 ).
 
