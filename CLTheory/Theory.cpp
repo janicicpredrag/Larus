@@ -523,10 +523,10 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
 
 bool Theory::Saturate()
 {
-    vector<CLFormula> axioms;
-    for (size_t i = 0; i < mCLaxioms.size(); i++) {
-        axioms.push_back(mCLaxioms[i].first);
-    }
+  //  vector<CLFormula> axioms;
+  //  for (size_t i = 0; i < mCLaxioms.size(); i++) {
+  //      axioms.push_back(mCLaxioms[i].first);
+  //  }
 
     bool updated = false;
     unsigned count_sat=0;
@@ -560,10 +560,16 @@ bool Theory::Saturate()
                         continue;
 
                     Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
-                    for (size_t k = 0; k < fact_new.GetArity(); k++) {
-                        assert(inst.find(fact_new.GetArg(k)) != inst.cend());
-                        fact_new.SetArg(k,inst.find(fact_new.GetArg(k))->second);
+                    for (size_t k = 0; k < fact_new.GetArity() && !no_match; k++) {
+                        if (inst.find(fact_new.GetArg(k)) == inst.cend())
+                            no_match = true;
+                        else
+                            fact_new.SetArg(k,inst.find(fact_new.GetArg(k))->second);
                     }
+
+                    if (no_match)
+                        continue;
+
                     ConjunctionFormula cf;
                     DNFFormula df;
                     cf.Add(fact_new);
@@ -582,12 +588,12 @@ bool Theory::Saturate()
                     if (ax2.IsSimpleImplication() && fact_new == ax2.GetPremises().GetElement(0))
                         found = true;
                     for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
-                        if (newUnivAx == mCLaxioms[l].first)
+                        if (newUnivAx.sameUpToRenaming(mCLaxioms[l].first))
                             found = true;
                     }
                     if (!found) {
                         // cout << "Success!" << newUnivAx << endl;
-                        axioms.push_back(newUnivAx);
+                        // axioms.push_back(newUnivAx);
                         mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
                         updated = true;
                     }

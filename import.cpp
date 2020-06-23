@@ -150,7 +150,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 vampire_succeeded = true;
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (false && params.msHammerInvoke != "") {
+    if (params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -597,7 +597,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
 
     vector<string> neededAxioms;
     string vampire_solution = tmpnam(NULL); //"vampire.txt"; //
-    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
+    const string sCall = "timeout " + itos(75 /*params.time_limit*/) + " " + hammer_invoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)
     {
