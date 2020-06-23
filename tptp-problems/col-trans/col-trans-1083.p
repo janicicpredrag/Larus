@@ -47,7 +47,7 @@ fof(pipo,conjecture,
                                           col( P, A, B) &
                                            col( Aprime, O, P) &
                                             col( Cprime, O, P) &
-                                             col( P, P, Cprime) &
-                                              col( O, Aprime, Cprime
+                                             col( P, P, Cprime) =>
+                                              col( O, Aprime, Cprime) )))
 ).
 
