@@ -11,6 +11,6 @@ fof(pipo,conjecture,
       wd( P, X) &
        wd( O, Yaux) &
         wd( O, Y) &
-         wd( O, Yaux) & col(O,Yaux,Y) & col(O, X, Y) & ColH Yaux O X
+         wd( O, Yaux) & col(O,Yaux,Y) & col(O, X, Y)) => col(Yaux, O, X) ))
 ).
 
