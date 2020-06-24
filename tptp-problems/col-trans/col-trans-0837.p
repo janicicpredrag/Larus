@@ -18,6 +18,6 @@ fof(pipo,conjecture,
              col(A, B, C) &
               col(Aprime,Cprime,Bprimeprime) &
                col(Aprime,Bprimeprime,Cprime) &
-                col(Aprime,Bprime,Cprimeprime) & col(Bprime,Cprimeprime,Cprime) & ColH Aprime Bprime Cprime
+                col(Aprime,Bprime,Cprimeprime) & col(Bprime,Cprimeprime,Cprime)) => col(Aprime,Bprime,Cprime)))
 ).
 

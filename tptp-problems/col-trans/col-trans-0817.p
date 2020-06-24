@@ -9,5 +9,5 @@ fof(pipo,conjecture,
     wd( Oprime, SHprime) &
      wd( Hprime, SHprime) &
       col(H, O, SH) & col(Hprime,Oprime,SHprime) & col(SH, O, K )) => col(H, O, K))
-).
+)).
 

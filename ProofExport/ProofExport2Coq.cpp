@@ -122,29 +122,35 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     {
         outfile << "Parameter " << (*it) << " : MyT." << endl;
     }
-
+    outfile << endl;
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-        outfile << "Hypothesis " << get<1>(T.Axiom(i)) << " : ";
-        OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
+        std::string name = get<1>(T.Axiom(i));
+        std::size_t found = name.find("sat");
+        if (found == std::string::npos)
+          {
+                outfile << "Hypothesis " << name << " : ";
+                OutputCLFormula(outfile, get<0>(T.Axiom(i)), name);
+          }
     }
     outfile << endl;
-/*
-    outfile << "Hypothesis col_swap1 : forall A B C : MyT, col A B C -> col B A C." << endl;
-    outfile << "Hypothesis col_swap2 : forall A B C : MyT, col A B C -> col B C A." << endl;
-    outfile << "Hypothesis col_swap3 : forall A B C : MyT, col A B C -> col A C B." << endl;
-    outfile << "Hypothesis col_swap5 : forall A B C : MyT, col A B C -> col C A B." << endl;
-    outfile << "Hypothesis col_swap6 : forall A B C : MyT, col A B C -> col C B A." << endl;
-
-    outfile << "Hypothesis wd_swap  :  forall A B   : MyT, wd A B -> wd B A." << endl;
-    outfile << "Hypothesis col_triv : forall A B : MyT , col A B B." << endl;
-    outfile << "Hypothesis col_triv3 : forall A B : MyT , col A B A." << endl;
-    outfile << "Hypothesis col_trans : forall P Q A B C : MyT, wd P Q -> col P Q A -> col P Q B -> col P Q C -> col A B C." << endl;
-*/
-
     outfile << endl;
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-        if (get<0>(T.Axiom(i)).IsSimpleImplication())
-            outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
+        if (get<0>(T.Axiom(i)).IsSimpleImplication() &&
+            get<1>(T.Axiom(i)).find("sat") == std::string::npos)            
+                outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
+    }
+    outfile << endl;
+    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+        std::string name = get<1>(T.Axiom(i));
+        if (name.find("sat") != std::string::npos)
+            {
+                outfile << "Lemma " << name << " : ";
+                OutputCLFormula(outfile, get<0>(T.Axiom(i)), name);
+                outfile << "Proof." << endl;    
+                outfile << "eauto with Sym." << endl;
+                outfile << "Qed." << endl << endl;
+                outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl << endl;
+            }
     }
     outfile << endl;
     outfile << "Theorem " << theoremName << " : ";
