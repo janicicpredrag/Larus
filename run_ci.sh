@@ -29,7 +29,7 @@ tm() {
   return $exit_code
 }
 test_success () {
-    if grep Theorem $1 > /dev/null; then
+    if grep "status Theorem" $1 > /dev/null; then
         if grep Correct $1 > /dev/null; then
          echo -e "${GREEN} Coq Ok ${NC}"
          ((green++))
