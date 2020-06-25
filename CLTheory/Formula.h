@@ -157,8 +157,6 @@ public:
     void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
-    bool sameUpToRenaming(const CLFormula& cf);
-
     bool UsesNativeEq() const;
     bool IsSimpleImplication() const;
     bool IsSimpleUnivFormula() const;

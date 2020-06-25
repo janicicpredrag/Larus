@@ -587,7 +587,7 @@ bool Theory::Saturate()
                     if (ax2.IsSimpleImplication() && fact_new == ax2.GetPremises().GetElement(0))
                         found = true;
                     for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
-                        if (newUnivAx.sameUpToRenaming(mCLaxioms[l].first))
+                        if (sameUpToRenaming(newUnivAx,mCLaxioms[l].first))
                             found = true;
                     }
                     if (!found) {
@@ -629,3 +629,44 @@ void Theory::normalizeToCL2()
 
 // ---------------------------------------------------------------------------------------
 
+bool Theory::sameUpToRenaming(const CLFormula& cf1, const CLFormula& cf2) const
+{
+    map<string,string> inst;
+    if (cf1.GetPremises().GetSize() != cf2.GetPremises().GetSize())
+        return false;
+    if (cf1.GetGoal().GetSize() != cf2.GetGoal().GetSize())
+        return false;
+
+    for (unsigned i = 0; i < cf1.GetPremises().GetSize(); i++) {
+        if (cf1.GetPremises().GetElement(i).GetName() != cf2.GetPremises().GetElement(i).GetName())
+            return false;
+        for (unsigned j = 0; j < cf1.GetPremises().GetElement(i).GetArity(); j++) {
+            if (IsConstant(cf1.GetPremises().GetElement(i).GetArg(j)))
+                if (cf1.GetPremises().GetElement(i).GetArg(j) != cf2.GetPremises().GetElement(i).GetArg(j))
+                    return false;
+            if (inst.find(cf1.GetPremises().GetElement(i).GetArg(j)) == inst.cend())
+                inst[cf1.GetPremises().GetElement(i).GetArg(j)] = cf2.GetPremises().GetElement(i).GetArg(j);
+            else if (inst.at(cf1.GetPremises().GetElement(i).GetArg(j)) != cf2.GetPremises().GetElement(i).GetArg(j))
+                return false;
+        }
+    }
+    for (unsigned i = 0; i < cf1.GetGoal().GetSize(); i++)
+        for (unsigned j = 0; j < cf1.GetGoal().GetElement(i).GetSize(); j++) {
+            if (cf1.GetGoal().GetElement(i).GetElement(j).GetName() != cf2.GetGoal().GetElement(i).GetElement(j).GetName())
+                return false;
+            for (unsigned k = 0; k < cf1.GetGoal().GetElement(i).GetElement(j).GetArity(); k++) {
+
+                if (IsConstant(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)))
+                    if (cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k) != cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k))
+                        return false;
+
+                if (inst.find(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == inst.cend())
+                    inst[cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)] = cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k);
+                else if (inst.at(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)) != cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k))
+                    return false;
+            }
+        }
+    return true;
+}
+
+// ---------------------------------------------------------------------------------------

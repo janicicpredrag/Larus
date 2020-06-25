@@ -60,6 +60,8 @@ public:
     void SetUseNativeEq(bool b) { mbUseNativeEq = b; if (b) AddSymbol(EQ_NATIVE_NAME,2); }
     bool GetUseNativeEq() { return mbUseNativeEq; }
 
+    bool sameUpToRenaming(const CLFormula& cf1, const CLFormula& cf2) const;
+
     void normalizeToCL2();
     bool Saturate();
 

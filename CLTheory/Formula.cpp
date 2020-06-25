@@ -1132,39 +1132,3 @@ Fact CLFormula::CLFormula::MergeFacts(const string& suffix, const Fact a, const 
 
 // ---------------------------------------------------------------------------------------
 
-bool CLFormula::sameUpToRenaming(const CLFormula& cf)
-{
-    map<string,string> inst;
-    if (GetPremises().GetSize() != cf.GetPremises().GetSize())
-        return false;
-    if (GetGoal().GetSize() != cf.GetGoal().GetSize())
-        return false;
-
-    for (unsigned i = 0; i < GetPremises().GetSize(); i++) {
-        if (this->GetPremises().GetElement(i).GetName() != cf.GetPremises().GetElement(i).GetName())
-            return false;
-        for (unsigned j = 0; j < GetPremises().GetElement(i).GetArity(); j++) {
-            if (inst.find(GetPremises().GetElement(i).GetArg(j)) == inst.cend())
-                inst[GetPremises().GetElement(i).GetArg(j)] = cf.GetPremises().GetElement(i).GetArg(j);
-            else if (inst.at(GetPremises().GetElement(i).GetArg(j)) != cf.GetPremises().GetElement(i).GetArg(j))
-                return false;
-        }
-    }
-    for (unsigned i = 0; i < GetGoal().GetSize(); i++)
-        for (unsigned j = 0; j < GetGoal().GetElement(i).GetSize(); j++) {
-            if (this->GetGoal().GetElement(i).GetElement(j).GetName() != cf.GetGoal().GetElement(i).GetElement(j).GetName())
-                return false;
-            for (unsigned k = 0; k < GetGoal().GetElement(i).GetElement(j).GetArity(); k++) {
-                if (inst.find(GetGoal().GetElement(i).GetElement(j).GetArg(k)) == inst.cend())
-                    inst[GetGoal().GetElement(i).GetElement(j).GetArg(k)] = cf.GetGoal().GetElement(i).GetElement(j).GetArg(k);
-                else if (inst.at(GetGoal().GetElement(i).GetElement(j).GetArg(k)) != cf.GetGoal().GetElement(i).GetElement(j).GetArg(k))
-                    return false;
-            }
-        }
-    return true;
-}
-
-
-// ---------------------------------------------------------------------------------------
-
-

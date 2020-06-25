@@ -412,8 +412,10 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     cout << "--- Input axioms : " << endl;
     T.printAxioms();
 
+/*
+    To be used in situations when we don't have dependencies, but a global set of axioms
     cout << "--- Reachability filtering: filtering out input axioms (input: " <<  T.mCLaxioms.size() << ")" << endl;
-   // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
     cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
     T.printAxioms();
     if (params.msHammerInvoke != "") {
@@ -424,7 +426,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         USING_ORIGINAL_SIGNATURE_NEG = false;
     }
     T.printAxioms();
-
+*/
     if (params.eEngine != eSTL_ProvingEngine) {
         cout << "--- Normalization to CL2 : output size: " << T.mCLaxioms.size() << endl;
         T.normalizeToCL2();
@@ -440,13 +442,15 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                 theorem = output[output.size()-1].first;
     }
 
-    /* TODO
-    if (cl.UsesNativeEq())
+
+    for (vector< pair<CLFormula,string> >::iterator it = T.mCLaxioms.begin(); it < T.mCLaxioms.end(); it++) {
+        if (it->first.UsesNativeEq())
+            T.SetUseNativeEq(true);
+    }
+    if (theorem.UsesNativeEq())
         T.SetUseNativeEq(true);
     if (T.GetUseNativeEq())
         params.mbNativeEQ = true;
-        */
-
 
     size_t numberOfCases = theorem.GetGoal().GetSize();
     size_t numberOfConjInCases = theorem.GetGoal().GetElement(0).GetSize();
@@ -593,7 +597,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     cout << "--- Vampire filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
     // export to TPTP
-    string for_FOL_prover = "tptpfile.txt"; //tmpnam(NULL); //
+    string for_FOL_prover =  tmpnam(NULL); // "tptpfile.txt";//
     ofstream TPTPfile;
     TPTPfile.open(for_FOL_prover);
     for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++)
@@ -602,7 +606,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     TPTPfile.close();
 
     vector<string> neededAxioms;
-    string vampire_solution = "vampire.txt"; // tmpnam(NULL); //
+    string vampire_solution =  tmpnam(NULL); // "vampire.txt";//
     const string sCall = "timeout " + itos(75 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " --proof tptp --output_axiom_names on " + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)

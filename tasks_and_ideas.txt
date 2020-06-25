@@ -1,6 +1,3 @@
-fof(initial_model, axiom, (r(x) | r(y)) ). 
-fof(disjingoal,conjecture, r(y) | r(x)).
-
 TODO:
 
  4. Explain the encoding in the paper  
@@ -16,6 +13,44 @@ TODO:
 14. CLprover generates proofs in terms of its CL2 conjecture. We have to transform it in terms
     of the original axioms.
     Julien: I think this is doable, it is just a matter of implementation, I am not worried about this. 
+15. proof simplification does not work properly, if some axiom is used inline in a QED step;
+16. there is possibly a problem in the coq tactic if some inline axioms were used in the last step 
+(see coherent-logic-benchmarks/pp.in.p )
+17. there is a bug in the STL enine - an invalid proof for continious-integration/inline_lemma_3.p
+uses a constants which is not in the context. 
+18. saturation may produce lemmas that are superfluous, same up to renaming variables. 
+20. coq proofs are not correct for:
+tptp-problems/continuous-integration/non_empty_model.p
+file tptp-problems/continuous-integration/triv_false.p ...
+21. Filtering: it will be useful if we take goals from Coq hammer or isabelle hammer in a 
+more realistic context with a lot of garbage. Our benches have very narrow dependencies.
+PJ: There is currently only filtering by reachability starting from the premises. But
+there should be another one, based on relevance, starting from the goal.
+
+The other way round: the symbols occurring in the goal are relevant. And relevant are 
+those appearing in premises, there where in the goal there are only relevant. Etc.
+All other symbols are irrelevant and we delete all axioms involving them?
+
+Each axiom can be seen as an edge in a graph. The nodes are the
+subsets of the set of all predicate symbols.
+
+If we are rules with the following "signatures":
+
+F1: Par
+F2: Col
+R1: Par-> Par
+R2: Col -> Par -> Col
+R3: Col -> Col
+R4: Perp-> Perp
+R5: Par -> Par \/ Perp
+
+Goal:
+Col
+
+We want to filter out the rules R4 and R5.
+The difficulty is to compute if there is a path of different rules
+from the hypotheses to the goal ?
+It does not seem to be so trivial.
 
 DONE:
 
@@ -196,8 +231,9 @@ cadical: 20s
 15: Julien: We could add a constraint to never put 'case foo' inside 'case foo'.
     Predrag: Would be useful only for a very few conjectures, on the other hand would complicate encoding.
 
+16. Julien: try incremental building of constraints (a descrption of the proof step n+1 uses a description of the proof step n)
+    Predrag tried, with no success.
 
-
-
+17. There could be some CL proof normalization procedure that could simplify the encoding and the search.
 
 
