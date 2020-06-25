@@ -520,7 +520,6 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
 
 // ---------------------------------------------------------------------------------------
 
-
 bool Theory::Saturate()
 {
   //  vector<CLFormula> axioms;
@@ -607,3 +606,26 @@ bool Theory::Saturate()
 }
 
 // ---------------------------------------------------------------------------------------
+
+void Theory::normalizeToCL2()
+{
+    size_t noAxioms = 0;
+    for (vector< pair<CLFormula,string> >::iterator it = mCLaxioms.begin(); it < mCLaxioms.end(); it++) {
+        vector< pair<CLFormula,string> > normalizedAxioms;
+        CLFormula& ax = it->first;
+        ax.Normalize(it->second, to_string(noAxioms++), normalizedAxioms);
+        cout << "       Input Axiom: " << it->first << endl;
+        if (normalizedAxioms.size()>1) {
+            it = mCLaxioms.erase(it);
+            for (size_t i=0; i<normalizedAxioms.size(); i++) {
+               it = mCLaxioms.insert(it,pair<CLFormula,string>(normalizedAxioms[i].first, normalizedAxioms[i].second));
+               // AddAxiom(normalizedAxioms[i].first, normalizedAxioms[i].second);
+               UpdateSignature(normalizedAxioms[i].first);
+               cout << "                    " << i << ". " << normalizedAxioms[i].first << endl;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+

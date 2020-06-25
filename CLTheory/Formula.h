@@ -276,6 +276,7 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
     if (f.mA.GetSize() >0)
     {
         os << "(" << f.mA << " => " << f.mB << ")";
+        // os << f.mA << " => " << f.mB;
     }
     else
     {

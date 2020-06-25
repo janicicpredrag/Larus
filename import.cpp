@@ -300,7 +300,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     ifstream tptpconjecture(inputFile,ios::in);
     string s, str;
     cout << endl << "--------------------------------------------------------------------" << endl;
-    cout << "--- Reading axioms and transformation to CL2: " << endl;
+    cout << "--- Reading axioms and conjecture : " << endl;
     if (tptpconjecture.good()) {
         while(getline(tptpconjecture, s)) { 
             if (s != "" && s.at(0) != '%')
@@ -351,7 +351,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     Theory T;
     CLFormula cl, theorem, hint;
     Fact justification;
-    size_t noAxioms = 0;
+
     vector<tHint> hints;
 
     str = SkipChar(str, ' ');
@@ -368,9 +368,6 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type)) {
 
             if (type != eHint) {
-                if (cl.UsesNativeEq())
-                    T.SetUseNativeEq(true);
-
                 for (unsigned i = 0; i<cl.GetPremises().GetSize(); i++)
                     for (unsigned j = 0; j<cl.GetPremises().GetElement(i).GetArity(); j++)
                         if (cl.ExistVarOrdinalNumber(cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
@@ -386,37 +383,11 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
             }
 
             if (type == eAxiom) {
-                if (params.eEngine != eSTL_ProvingEngine) {
-                    vector< pair<CLFormula,string> > normalizedAxioms;
-                    cl.Normalize(statementName, to_string(noAxioms++), normalizedAxioms);
-
-                    cout << "       Input Axiom: " << s << endl;
-                    for (size_t i=0; i<normalizedAxioms.size(); i++) {
-                        T.AddAxiom(normalizedAxioms[i].first, normalizedAxioms[i].second);
-                        T.UpdateSignature(normalizedAxioms[i].first);
-                        cout << "                    " << i << ". " << normalizedAxioms[i].first << endl;
-                    }
-                    // cout << endl;
-                }
-                else {
-                    T.AddAxiom(cl,statementName);
-                    T.UpdateSignature(cl);
-                }
+                T.AddAxiom(cl,statementName);
+                T.UpdateSignature(cl);
             } else if (type == eConjecture) {
                 theorem = cl;
                 theoremName = statementName;
-                if (params.eEngine != eSTL_ProvingEngine) {
-                    vector< pair<CLFormula,string> > output;
-                    theorem.NormalizeGoal(statementName, to_string(0), output);
-                    if (output.size()>1) {
-                        for(size_t j=0; j<output.size()-1; j++) {
-                            T.AddAxiom(output[j].first, output[j].second);
-                            T.UpdateSignature(output[j].first);
-                        }
-                    }
-                    if (output.size()>0)
-                        theorem = output[output.size()-1].first;
-                }
                 T.UpdateSignature(theorem);
                 cout << "--- Theorem to be proved: " << endl;
                 cout << "       File name:    " << inputFile << endl;
@@ -435,12 +406,47 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         found1 = str.find(strfof);
     }
 
-
     if (theoremName == "")
         return eNoConjectureGiven;
 
+    cout << "--- Input axioms : " << endl;
+    T.printAxioms();
+
+    cout << "--- Reachability filtering: filtering out input axioms (input: " <<  T.mCLaxioms.size() << ")" << endl;
+   // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+    cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
+    T.printAxioms();
+    if (params.msHammerInvoke != "") {
+        USING_ORIGINAL_SIGNATURE_EQ = true;
+        USING_ORIGINAL_SIGNATURE_NEG = true;
+        FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
+        USING_ORIGINAL_SIGNATURE_EQ = false;
+        USING_ORIGINAL_SIGNATURE_NEG = false;
+    }
+    T.printAxioms();
+
+    if (params.eEngine != eSTL_ProvingEngine) {
+        cout << "--- Normalization to CL2 : output size: " << T.mCLaxioms.size() << endl;
+        T.normalizeToCL2();
+        vector< pair<CLFormula,string> > output;
+        theorem.NormalizeGoal(statementName, to_string(0), output);
+        if (output.size()>1) {
+           for(size_t j=0; j<output.size()-1; j++) {
+              T.AddAxiom(output[j].first, output[j].second);
+              T.UpdateSignature(output[j].first);
+           }
+        }
+        if (output.size()>0)
+                theorem = output[output.size()-1].first;
+    }
+
+    /* TODO
+    if (cl.UsesNativeEq())
+        T.SetUseNativeEq(true);
     if (T.GetUseNativeEq())
         params.mbNativeEQ = true;
+        */
+
 
     size_t numberOfCases = theorem.GetGoal().GetSize();
     size_t numberOfConjInCases = theorem.GetGoal().GetElement(0).GetSize();
@@ -587,7 +593,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     cout << "--- Vampire filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
 
     // export to TPTP
-    string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt"; //
+    string for_FOL_prover = "tptpfile.txt"; //tmpnam(NULL); //
     ofstream TPTPfile;
     TPTPfile.open(for_FOL_prover);
     for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++)
@@ -596,8 +602,8 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
     TPTPfile.close();
 
     vector<string> neededAxioms;
-    string vampire_solution = tmpnam(NULL); //"vampire.txt"; //
-    const string sCall = "timeout " + itos(75 /*params.time_limit*/) + " " + hammer_invoke + " --proof tptp --output_axiom_names on " + for_FOL_prover + " > " +  vampire_solution;
+    string vampire_solution = "vampire.txt"; // tmpnam(NULL); //
+    const string sCall = "timeout " + itos(75 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " --proof tptp --output_axiom_names on " + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)
     {
@@ -686,7 +692,7 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
             }
         }
         if (!bAllSymbolsReachable) {
-            cout << "       erased : " << it->second << endl;
+            // cout << "       erased : " << it->second << endl;
             it = axioms.erase(it);
         }
         else
