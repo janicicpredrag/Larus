@@ -623,6 +623,7 @@ void Theory::normalizeToCL2()
                UpdateSignature(normalizedAxioms[i].first);
                cout << "                    " << i << ". " << normalizedAxioms[i].first << endl;
             }
+            it += normalizedAxioms.size()-1;
         }
     }
 }

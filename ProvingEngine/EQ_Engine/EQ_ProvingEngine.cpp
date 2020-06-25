@@ -858,7 +858,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                   sbMatchConclusion += appeq(app("nArg" , nProofStep, nInd),
                                        nAxiomArgument[nAxiom][nGoalIndex*mnMaxArity+nInd]);
 
-              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), (nProofStep+2)<<3);
+              unsigned original_constants = mpT->mConstants.size() + mpT->mConstantsPermissible.size();
+              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), original_constants+(nProofStep+2)<<3);
           }
 
           string sb;
@@ -876,12 +877,15 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               sbMatchConclusion += "(not " + app("bCases", nProofStep) + ")";
 
           /* Introducing fresh constants if the axioms used has existential quantifiers */
+
+          unsigned original_constants = mpT->mConstants.size() + mpT->mConstantsPermissible.size();
+
           sbMatchExiQuantifiers = "";
           for (unsigned nL=0; nL<nAxiomExiVars[nAxiom]; nL++) {
               /* The id of a new constant is (nProofStep<<2) + nL, ie. 8*nProofStep+nL - so they don't overlap, */
               /* unless some axioms introduces >4 witnesses */
               sbMatchExiQuantifiers +=
-                       appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL+1), ((nProofStep+1)<<3) + nL);
+                       appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom]+nL+1), original_constants+((nProofStep+1)<<3) + nL);
           }
           /* The MP proof step is correct if it was derived by using some axiom  */
           if (nProofStep != 0)

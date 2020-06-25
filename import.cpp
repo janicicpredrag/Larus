@@ -607,7 +607,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
 
     vector<string> neededAxioms;
     string vampire_solution =  tmpnam(NULL); // "vampire.txt";//
-    const string sCall = "timeout " + itos(75 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " --proof tptp --output_axiom_names on " + " > " +  vampire_solution;
+    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " --proof tptp --output_axiom_names on " + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)
     {
