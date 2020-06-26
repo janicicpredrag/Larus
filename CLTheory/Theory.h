@@ -28,7 +28,7 @@ public:
 
     void SetAxioms(vector< pair<CLFormula,string> >& axioms);
     void AddAxiom(CLFormula& axiom, string name);
-    void printAxioms() const;
+    void printAxioms(bool separateInlinedAxioms = false) const;
     void AddAxiomEqSymm();
     void AddAxiomNEqSymm();
     void AddAxiomEqReflexive();

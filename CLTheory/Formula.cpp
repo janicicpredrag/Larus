@@ -843,7 +843,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
     /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
     ConjunctionFormula premises;
     size_t numPremises = GetPremises().GetSize();
-    if (numPremises <= 10) {
+    if (numPremises <= 2) {
         premises = GetPremises();
     }
     else

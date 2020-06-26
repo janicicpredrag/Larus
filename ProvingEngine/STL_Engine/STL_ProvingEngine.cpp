@@ -4,7 +4,7 @@
 #include <string>
 #include <set>
 
-// #define DEBUG_OUTPUT
+//#define DEBUG_OUTPUT
 
 // ---------------------------------------------------------------------------------------
 
@@ -107,6 +107,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                         cout << "Branching, non-exi: " << mp << " from: " << from << "(ax: " << it->second << ")" << endl;
 #endif
                         GetDatabase()->AddCases(mp);
+
                         success = true;
                         --it;
                         break;

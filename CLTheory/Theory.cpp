@@ -42,10 +42,25 @@ void Theory::UpdateSignature(CLFormula& axiom)
 
 // --------------------------------------------------------------
 
-void Theory::printAxioms() const
+void Theory::printAxioms(bool separateInlinedAxioms) const
 {
-    for (size_t i = 0; i < mCLaxioms.size(); i++)
-        cout << "          Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
+    if (separateInlinedAxioms) {
+        cout << "          Univ axioms - to be inlined: " << endl;
+        for (size_t i = 0; i < mCLaxioms.size(); i++)
+            if (mCLaxioms.at(i).first.IsSimpleUnivFormula())
+                cout << "             Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
+        cout << "          Simple implication axioms - to be inlined: " << endl;
+        for (size_t i = 0; i < mCLaxioms.size(); i++)
+            if (mCLaxioms.at(i).first.IsSimpleImplication())
+                cout << "             Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
+        cout << "          To be used explicitly in MP steps: " << endl;
+        for (size_t i = 0; i < mCLaxioms.size(); i++)
+            if (!mCLaxioms.at(i).first.IsSimpleUnivFormula() && !mCLaxioms.at(i).first.IsSimpleImplication())
+                cout << "             Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
+    }
+    else
+        for (size_t i = 0; i < mCLaxioms.size(); i++)
+            cout << "          Axiom " << i << ": " << mCLaxioms.at(i).second << ": " << mCLaxioms.at(i).first << endl;
 }
 
 

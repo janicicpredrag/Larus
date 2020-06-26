@@ -201,7 +201,7 @@ vampire_succeeded = true;
         cout << "--- Saturating for inlining. " << endl;
         T.Saturate();
         cout << "       After saturation: output size: " << T.mCLaxioms.size() << endl;
-        T.printAxioms();
+        T.printAxioms(true);
     }
 
     // **************************** checking if case split support is needed
@@ -428,7 +428,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
     T.printAxioms();
 */
     if (params.eEngine != eSTL_ProvingEngine) {
-        cout << "--- Normalization to CL2 : output size: " << T.mCLaxioms.size() << endl;
+        cout << "--- Normalization to CL2 : input size: " << T.mCLaxioms.size() << endl;
         T.normalizeToCL2();
         vector< pair<CLFormula,string> > output;
         theorem.NormalizeGoal(statementName, to_string(0), output);
