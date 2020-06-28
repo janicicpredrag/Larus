@@ -536,8 +536,9 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
         if (instantiation.find(f.GetArg(i)) == instantiation.end()) {
             if (!IsConstant(f.GetArg(i)) && bInstantiateVars)
             {
-                string newc = MakeNewConstant();
-                // AddConstant(newc);
+                //string newc = MakeNewConstant();
+                assert (!mConstantsPermissible.empty());
+                string newc = *(mConstantsPermissible.begin());
                 instantiation[f.GetArg(i)] = newc;
                 fout.SetArg(i, instantiation[f.GetArg(i)]);
             }
