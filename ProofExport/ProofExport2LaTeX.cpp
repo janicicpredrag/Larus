@@ -4,16 +4,41 @@
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& /*name*/)
+void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, const string& name)
 {
+    if (name != "")
+        outfile << name << " : ";
+
+    outfile << "$";
+    if (cl.GetNumOfUnivVars() > 0) {
+        outfile << "\\forall \\; ";
+        for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
+            outfile << cl.GetUnivVar(i);
+            if (i+1 < cl.GetNumOfUnivVars())
+                outfile << ", ";
+            else
+                outfile << " ";
+
+        }
+    }
+    outfile << "\\; ( ";
+
     OutputConjFormula(outfile, cl.GetPremises());
     OutputImplication(outfile);
 
-    outfile << "exists (";
-    for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++)
-        outfile << " (" << cl.GetExistVar(i) << ")";
+    if (cl.GetNumOfExistVars() > 0) {
+        outfile << "\\exists \\; (";
+        for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
+            outfile << " " << cl.GetExistVar(i);
+            if (i+1 < cl.GetNumOfExistVars())
+                outfile << ", ";
+            else
+                outfile << " )";
+        }
+    }
     OutputDNF(outfile, cl.GetGoal());
-    outfile << ")";
+    outfile << "\\;";
+    outfile << ")$";
     outfile << endl;
 }
 
@@ -60,7 +85,7 @@ void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
 
 void ProofExport2LaTeX::OutputImplication(ofstream& outfile)
 {
-    outfile << "\\Leftrightarrow ";
+    outfile << " \\Rightarrow ";
 }
 
 // ---------------------------------------------------------------------------------
@@ -81,19 +106,31 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/)
 {
-    outfile << "% Proof of: forall (";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++)
-        outfile << " (" << cl.GetUnivVar(i) << ")";
-    OutputCLFormula(outfile, cl, theoremName);
-
-    outfile << "% Using axioms:" << endl;
-    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++)
-        outfile << "% " << get<1>(T.OriginalAxiom(i)) << " : " << get<0>(T.OriginalAxiom(i)) <<  endl;
-    outfile << endl;
-
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
+    outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
     outfile << "\\begin{document}" << endl << endl;
+
+    outfile << "\\title{Proof of theorem ,," << theoremName << "``}" << endl;
+    outfile << "\\author{CLprover}" << endl;
+    outfile << "\\maketitle" << endl << endl;
+
+    outfile << "\\noindent " << endl;
+    outfile << "{\\bfseries Axioms:} " << endl;
+    outfile << "\\begin{enumerate}" << endl;
+    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
+        outfile << "\\item ";
+        OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), get<1>(T.OriginalAxiom(i)));
+    }
+    outfile << "\\end{enumerate}" << endl << endl;
+    outfile << "\\hrulefill" << endl << endl;
+
+    outfile << "\\begin{theorem}" << endl;
+    OutputCLFormula(outfile, cl, theoremName);
+    outfile << "\\end{theorem}" << endl << endl;
+    outfile << "\\hrulefill" << endl << endl;
+    outfile << "\\vspace{3mm}" << endl;
+
     outfile << "\\newcounter{proofstepnum}" << endl;
     outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
     outfile << "{\\em Proof:}" << endl;
