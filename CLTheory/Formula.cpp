@@ -194,7 +194,6 @@ bool ConjunctionFormula::UsesNativeEq() const
     return false;
 }
 
-
 // ---------------------------------------------------------------------------------------
 
 bool Fact::Equals(const Fact& f) const
@@ -209,7 +208,6 @@ bool Fact::Equals(const Fact& f) const
     }
     return true;
 }
-
 
 // ---------------------------------------------------------------------------------------
 
@@ -689,33 +687,6 @@ bool Fact::Read(const string& s)
 
 // ---------------------------------------------------------------------------------------
 
-string SkipChar(const string& str, char c)
-{
-    string out;
-    size_t slen = str.size();
-    for(size_t i=0; i<slen; i++) {
-        if (str[i] != c)
-        out += str[i];
-    }
-    return out;
-}
-
-// ---------------------------------------------------------------------------------------
-
-string ToUpper(const string& str)
-{
-    return str;
-    /*
-    string res;
-    res.resize(str.size());
-    for (size_t i=0; i<str.size(); i++)
-         res[i] = toupper(str[i]);
-    return res;*/
-}
-
-
-// ---------------------------------------------------------------------------------------
-
 bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordinal, Fact& justification, fofType& type) {
     size_t pos1, pos2;
     string ss = SkipChar(s, ' ');
@@ -832,7 +803,9 @@ bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
 // ---------------------------------------------------------------------------------------
 
 
-void CLFormula::Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
+void CLFormula::Normalize(const string& name, const string& suffix,
+                          vector< pair<CLFormula,string> >& output,
+                          vector< pair<Fact, DNFFormula> >& definitions) const
 {
     unsigned count_aux = 0;
     // cout << "Premises: " << GetPremises().GetSize() << endl;
@@ -843,13 +816,11 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
     /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123, F123 & F4 => Goal */
     ConjunctionFormula premises;
     size_t numPremises = GetPremises().GetSize();
-    if (numPremises <= 2) {
+    if (numPremises <= 20) {
         premises = GetPremises();
     }
     else
     {
-        //cout << "Too many premises.";
-        // assert(false);
         Fact current;
         if (GetPremises().GetSize()>0)
             current = GetPremises().GetElement(0);
@@ -862,12 +833,18 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
             ConjunctionFormula conj;
             conj.Add(current);
             conj.Add(GetPremises().GetElement(i));
+
             ConjunctionFormula conj1;
             current = MergeFacts(suffix, current, GetPremises().GetElement(i));
             conj1.Add(current);
             DNFFormula disj;
             disj.Add(conj1);
             CLFormula axiom(conj,disj);
+
+            DNFFormula RHS;
+            RHS.Add(conj);
+            definitions.push_back(pair<Fact,DNFFormula>(current, RHS));
+
             for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
             {
                 if (UnivVarOrdinalNumber(current.GetArg(j))!=-1 || ExistVarOrdinalNumber(current.GetArg(j))!=-1) {
@@ -901,7 +878,6 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                 disj.Add(conj1);
                 CLFormula axiom(conj,disj);
                 Fact current = GetGoal().GetElement(0).GetElement(j);
-
                 for(size_t jj=0; jj < current.GetArity(); jj++) { // quantify only occuring variables
                     if (UnivVarOrdinalNumber(current.GetArg(jj))!=-1 || ExistVarOrdinalNumber(current.GetArg(jj))!=-1) {
                         bool bAlreadyThere = false;
@@ -940,6 +916,11 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
             Fact current = GetGoal().GetElement(i).GetElement(0);
             for(size_t j=1; j < numConjuncts; j++)
                current = MergeFacts(suffix, current, GetGoal().GetElement(i).GetElement(j));
+
+            DNFFormula RHS;
+            RHS.Add(GetGoal().GetElement(i));
+            definitions.push_back(pair<Fact,DNFFormula>(current, RHS));
+
             disjuncts[i] = current;
             for(size_t j=0; j < numConjuncts; j++) {
                 ConjunctionFormula conj;
@@ -971,6 +952,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
         /* P => C1 | C2 | C3 gives  axioms: P => C12 | C3, C12 => C1 | C2 */
         Fact current = disjuncts[0];
         for(size_t i=1; i < numGoalDisjuncts-1; i++)  {
+
             ConjunctionFormula conj1;
             conj1.Add(current);
             ConjunctionFormula conj2;
@@ -981,6 +963,9 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
             ConjunctionFormula conj;
             current = MergeFacts(suffix, current, disjuncts[i]);
             conj.Add(current);
+
+            definitions.push_back(pair<Fact,DNFFormula>(current, disj));
+
             CLFormula axiom(conj,disj);
             for(size_t j=0; j < current.GetArity(); j++) // quantify only occuring variables
             {

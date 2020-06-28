@@ -41,6 +41,9 @@ public:
     size_t NumberOfAxioms() const;
     const pair<CLFormula,string>& Axiom(size_t i) const;
 
+    size_t NumberOfOriginalAxioms() const;
+    const pair<CLFormula,string>& OriginalAxiom(size_t i) const;
+
     void AddConstant(string s);
     string MakeNewConstant();
     string GetConstantName(unsigned id) const;
@@ -60,12 +63,18 @@ public:
     void SetUseNativeEq(bool b) { mbUseNativeEq = b; if (b) AddSymbol(EQ_NATIVE_NAME,2); }
     bool GetUseNativeEq() { return mbUseNativeEq; }
 
+    vector< pair<Fact, DNFFormula> >& GetDefinitions() { return mDefinitions; }
+
     bool sameUpToRenaming(const CLFormula& cf1, const CLFormula& cf2) const;
 
     void normalizeToCL2();
     bool Saturate();
 
+    bool Rewrite(Fact LHS, DNFFormula RHS, Fact f, DNFFormula& fout) const;
+    bool Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f, DNFFormula& fout) const;
+
     vector< pair<CLFormula,string> > mCLaxioms;
+    vector< pair<CLFormula,string> > mCLOriginalAxioms;
     // set<string> mConstants;
     vector<string> mConstants;
     vector<string> mInitialConstants;
@@ -76,6 +85,8 @@ public:
 protected:
     unsigned int miConstantsCounter;
     bool mbUseNativeEq;
+
+    vector< pair<Fact, DNFFormula> > mDefinitions;
 };
 
 #endif // THEORY_H

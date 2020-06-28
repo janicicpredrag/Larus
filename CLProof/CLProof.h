@@ -14,7 +14,14 @@ using namespace std;
 class ModusPonens;
 class CLProofEnd;
 
-typedef tuple < ConjunctionFormula, DNFFormula, string, vector< pair <string, string> >, vector< pair <string,string> > >  MP_Step;
+// typedef tuple < ConjunctionFormula, DNFFormula, string, vector< pair <string, string> >, vector< pair <string,string> > >  MP_Step;
+typedef struct {
+    ConjunctionFormula from;
+    vector<DNFFormula> CLfrom;
+    DNFFormula conclusion;
+    string axiomName;
+    vector< pair <string, string> > instantiation;
+    vector< pair <string,string> > new_witnesses; }  MP_Step;
 
 class CLProof
 {
@@ -32,6 +39,9 @@ public:
 
     size_t NumOfAssumptions() const;
     const Fact& GetAssumption(size_t i) const;
+    size_t NumOfCLAssumptions() const;
+    const DNFFormula& GetCLAssumption(size_t i) const;
+
     int NumOfMPs() const;
     MP_Step GetMP(size_t i) const;
     const CLProofEnd* GetProofEnd() const { return mpProofEnd; }
@@ -45,11 +55,16 @@ public:
     bool DecodeSubproof(const DNFFormula& formula, const vector<string>& sPredicates, map<int,string>& sConstants,
                                             ifstream& ursaproof, vector<Fact>& proofTrace, bool bNegIntro);
 
+    bool CL2toCL();
+
 private:
     Theory* mpT;
 
     CLFormula mGoal;
+
     vector<Fact> mAssumptions;
+    vector<DNFFormula> mCLAssumptions;
+
     vector<MP_Step> mMPs;
     CLProofEnd* mpProofEnd;
 };
@@ -79,9 +94,11 @@ public:
     size_t GetNumOfCases() const { return mCases.GetSize(); }
     const DNFFormula& GetCases() const { return mCases; }
     unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s+1; }
-private:
+
     DNFFormula mCases;
     vector<CLProof> mSubproofs;
+protected:
+
 };
 
 

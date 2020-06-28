@@ -65,9 +65,31 @@ const Fact& CLProof::GetAssumption(size_t i) const
 
 // ---------------------------------------------------------------------------------
 
+size_t CLProof::NumOfCLAssumptions() const
+{
+    return mCLAssumptions.size();
+}
+
+// ---------------------------------------------------------------------------------
+
+const DNFFormula& CLProof::GetCLAssumption(size_t i) const
+{
+    assert(i<mCLAssumptions.size()); return mCLAssumptions[i];
+}
+
+// ---------------------------------------------------------------------------------
+
 void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses)
 {
-    mMPs.push_back(tuple < ConjunctionFormula, DNFFormula, string, vector < pair < string, string > >, vector < pair < string, string > > >(from,mp,name,instantiation, new_witnesses));
+    MP_Step m;
+    m.from = from;
+    m.conclusion = mp;
+    m.axiomName = name;
+    m.instantiation = instantiation;
+    m.new_witnesses = new_witnesses;
+    mMPs.push_back(m);
+
+    // mMPs.push_back(tuple < ConjunctionFormula, DNFFormula, string, vector < pair < string, string > >, vector < pair < string, string > > >(from,mp,name,instantiation, new_witnesses));
 }
 
 // ---------------------------------------------------------------------------------
@@ -164,8 +186,8 @@ void CLProof::Simplify(set<Fact>& relevant)
         }
     }
     if (mMPs.size() > 0) { // last step is always relevant
-        ConjunctionFormula cf = get<0>(mMPs[mMPs.size()-1]);
-        DNFFormula dnf = get<1>(mMPs[mMPs.size()-1]);
+        ConjunctionFormula cf = (mMPs[mMPs.size()-1]).from;
+        DNFFormula dnf = (mMPs[mMPs.size()-1]).conclusion;
         MakeRelevant(relevant, dnf.GetElement(0));
     }
 
@@ -173,8 +195,8 @@ void CLProof::Simplify(set<Fact>& relevant)
     size_t size = mMPs.size();
     for (int i=size; i>0; i--) {
         // std::cout << endl << " MP  : " << i << endl;
-        ConjunctionFormula cf = get<0>(mMPs[i-1]);
-        DNFFormula dnf = get<1>(mMPs[i-1]);
+        ConjunctionFormula cf = mMPs[i-1].from;
+        DNFFormula dnf = mMPs[i-1].conclusion;
         /*if (dnf.GetSize()==1) {
             if (Relevant(relevant, dnf.GetElement(0)))
                 MakeRelevant(relevant, cf);
@@ -198,10 +220,10 @@ void CLProof::Simplify(set<Fact>& relevant)
     }
 
     for (int i=size; i>0; i--) {
-        DNFFormula dnf = get<1>(mMPs[i-1]);
+        DNFFormula dnf = mMPs[i-1].conclusion;
         if (dnf.GetSize() == 1 && dnf.GetElement(0).GetSize() == 1) {
             for (int j=i-1; j>0; j--) {
-                DNFFormula dnf2 = get<1>(mMPs[j-1]);
+                DNFFormula dnf2 = mMPs[j-1].conclusion;
                 if (dnf2.GetSize() == 1 && dnf2.GetElement(0).GetSize()==1 && dnf.GetElement(0).GetElement(0)==dnf2.GetElement(0).GetElement(0)) {
                     mMPs.erase(mMPs.begin()+i-1);
                     break;
@@ -674,7 +696,6 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 pcs = new CaseSplit;
                 pcs->SetCases(d);
 
-
                 // Instantiation of fact derived inline from univ axioms
                 for(size_t ii = 0; ii < cfPremises.GetSize(); ii++) {
                     if (cfPremises.GetElement(ii).GetName().at(0) == '@') {
@@ -688,10 +709,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                         cfPremises.SetElement(ii,univAxFact);
                     }
                 }
-
-
                 AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation, new_witnesses);
-
                 if (bNegIntro && mpT->GetSymbolArity(sPredicates[nPredicate]) == 0 && !nBranching) { // false reached
                     SetProofEnd(NULL);
                     return true;
@@ -702,4 +720,83 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
     return false;
 }
 
+// ---------------------------------------------------------------------------------------
 
+bool CLProof::CL2toCL()
+{
+    bool b;
+    // In CL2 proofs, "from" is a conjunction of facts; in CL - it gets a vector of DNF formulae
+    for (size_t j = 0, size = NumOfMPs(); j < size; j++) {
+        for(size_t k = 0; k < mMPs[j].from.GetSize(); k++) {
+            Fact f = mMPs[j].from.GetElement(k);
+            ConjunctionFormula cf;
+            cf.Add(f);
+            DNFFormula dnf;
+            dnf.Add(cf);
+            mMPs[j].CLfrom.push_back(dnf);
+        }
+    }
+
+    for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {
+        Fact f = mAssumptions[j];
+        ConjunctionFormula cf;
+        cf.Add(f);
+        DNFFormula dnf;
+        dnf.Add(cf);
+        mCLAssumptions.push_back(dnf);
+    }
+
+    do {
+        b = false;
+        for (size_t i = 0; i < mpT->GetDefinitions().size(); i++) {
+            Fact LHS = mpT->GetDefinitions()[i].first;
+            DNFFormula RHS = mpT->GetDefinitions()[i].second;
+
+            for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {
+                DNFFormula dnf;
+                b |= mpT->Rewrite(LHS,RHS,mAssumptions[j],dnf);
+                mCLAssumptions[j] = dnf;
+            }
+
+            for (size_t j = 0, size = NumOfMPs(); j < size; j++) {
+                DNFFormula dnf;
+                b |= mpT->Rewrite(LHS,RHS,mMPs[j].conclusion,dnf);
+                mMPs[j].conclusion = dnf;
+
+                for(size_t k = 0; k < mMPs[j].CLfrom.size(); k++) {
+                    DNFFormula f = mMPs[j].CLfrom[k];
+                    DNFFormula dnf;
+                    bool bb = mpT->Rewrite(LHS,RHS,f,dnf);
+                    if (bb)
+                        mMPs[j].CLfrom[k] = dnf;
+                    b |= bb;
+                }
+            }
+
+            CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
+            if(pe) {
+                DNFFormula dnf;
+                b |= mpT->Rewrite(LHS,RHS,pe->mCases,dnf);
+                pe->mCases = dnf;
+
+                for(size_t j = 0; j < pe->mSubproofs.size(); j++)
+                    pe->mSubproofs[j].CL2toCL();
+            }
+            else {
+                ByAssumption* ba = dynamic_cast<ByAssumption*>(mpProofEnd);
+                if (ba) {
+
+                }
+                else {
+                    EFQ* efq = dynamic_cast<EFQ*>(mpProofEnd);
+
+                }
+            }
+        }
+    }
+    while (b);
+
+    return true;
+}
+
+// ---------------------------------------------------------------------------------------

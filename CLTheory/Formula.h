@@ -18,6 +18,8 @@ class Theory;
 
 bool MatchingBrackets(const string& v);
 
+class DNFFormula;
+
 // ---------------------------------------------------------------------------------------
 class Fact
 {
@@ -153,7 +155,9 @@ public:
     void ClearUnivVars() { mUniversalVars.clear(); }
     void ClearExistVars() {  mExistentialVars.clear(); }
 
-    void Normalize(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
+    void Normalize(const string& name, const string& suffix,
+                   vector< pair<CLFormula,string> >& output,
+                   vector< pair<Fact, DNFFormula> >& definitions) const;
     void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
@@ -278,7 +282,7 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
     }
     else
     {
-        os <<  f.mB;   
+        os <<  f.mB;
     }
     
     if (f.mUniversalVars.size() > 0)

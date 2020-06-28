@@ -68,10 +68,14 @@ typedef struct proverParams {
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
 bool stoi(string s, int& i);
+string SkipChar(const string& str, char c);
+string ToUpper(const string& str);
+
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 
 extern bool USING_ORIGINAL_SIGNATURE_NEG;
+
 
 
 #endif // COMMON_H

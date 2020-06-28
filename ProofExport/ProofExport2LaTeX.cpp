@@ -87,8 +87,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
     OutputCLFormula(outfile, cl, theoremName);
 
     outfile << "% Using axioms:" << endl;
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++)
-        outfile << "% " << get<1>(T.Axiom(i)) << " : " << get<0>(T.Axiom(i)) <<  endl;
+    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++)
+        outfile << "% " << get<1>(T.OriginalAxiom(i)) << " : " << get<0>(T.OriginalAxiom(i)) <<  endl;
     outfile << endl;
 
     outfile << "\\documentclass{article}" << endl;
@@ -115,30 +115,39 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream& outfile)
 
 void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
-    if (p.NumOfAssumptions() > 0)
+    if (p.NumOfCLAssumptions() > 0)
     {
-        for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
+        for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
             outfile << "\\proofstep{" << level << "}{Assumption: ";
             outfile << "$";
-            OutputFact(outfile, p.GetAssumption(i));
+            OutputDNF(outfile, p.GetCLAssumption(i));
             outfile << "$ }" << endl;
         }
     }
 
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "\\proofstep{" << level << "}{MP application: $";
-        OutputDNF(outfile, get<1>(p.GetMP(i)));
+        OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << "$ (";
-        if (get<0>(p.GetMP(i)).GetSize() > 0)
+        if (p.GetMP(i).CLfrom.size() > 0)
         {
-            outfile << "from $";
-            OutputConjFormula(outfile, get<0>(p.GetMP(i)));
-            outfile << "$, ";
-        }
-        outfile << "by axiom " << get<2>(p.GetMP(i)) << "; ";
+            outfile << "from ";
+            for (size_t j = 0; j < p.GetMP(i).CLfrom.size(); j++) {
+                outfile << "$";
+                OutputDNF(outfile, p.GetMP(i).CLfrom[j]);
+                outfile << "$";
+                if (j+1 < p.GetMP(i).CLfrom.size())
+                    outfile << ", ";
+                else
+                    outfile << " ";
 
-        vector<pair<string,string>> instantiation = get<3>(p.GetMP(i));
-        vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+            }
+            outfile << ", ";
+        }
+        outfile << "by axiom " << p.GetMP(i).axiomName << "; ";
+
+        vector<pair<string,string>> instantiation = p.GetMP(i).instantiation;
+        vector<pair<string,string>> new_witnesses = p.GetMP(i).new_witnesses;
 
         if (instantiation.size() > new_witnesses.size()) {
             outfile << "{\\scriptsize instantiation: ";
