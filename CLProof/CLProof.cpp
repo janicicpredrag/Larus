@@ -735,6 +735,10 @@ bool CLProof::CL2toCL()
             dnf.Add(cf);
             mMPs[j].CLfrom.push_back(dnf);
         }
+        if (mMPs[j].axiomName.find("Aux") != string::npos) {
+            int pos = mMPs[j].axiomName.find("Aux");
+            mMPs[j].axiomName = mMPs[j].axiomName.substr(0, pos);
+        }
     }
 
     for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {
