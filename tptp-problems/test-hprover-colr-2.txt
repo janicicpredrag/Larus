@@ -1,6 +1,7 @@
 
- 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6, P7] : (
  (wd(P2, P5) &
@@ -12,26 +13,30 @@
   wd(P7, P4) &
   wd(P2, P0) &
   wd(P2, P1) & wd(P3, P0) & wd(P3, P1) & wd(P4, P2) & wd(P4, P3) &
-  coinc(P4, P0, P1) &
-  coinc(P5, P0, P1) &
-  coinc(P0, P4, P5) &
-  coinc(P4, P7, P5) & coinc(P6, P7, P3) & coinc(P2, P4, P3) & coinc(P5, P6, P2)  ) =>
-  coinc(P0, P1, P7)))).
+  col(P4, P0, P1) &
+  col(P5, P0, P1) &
+  col(P0, P4, P5) &
+  col(P4, P7, P5) & col(P6, P7, P3) & col(P2, P4, P3) & col(P5, P6, P2)  ) =>
+  col(P0, P1, P7)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6] : (  
  (wd(P1, P4) &
   wd(P3, P5) &
   wd(P1, P3) &
   wd(P3, P4) & wd(P4, P2) & wd(P3, P2) & wd(P1, P2) & wd(P0, P3) &
- coinc(P5, P3, P4) &
- coinc(P5, P3, P1) &
- coinc(P2, P6, P1) &
- coinc(P5, P6, P3) & coinc(P0, P5, P1) & coinc(P1, P4, P2) & coinc(P0, P2, P3)  ) =>
- coinc(P3, P4, P2)))).
+ col(P5, P3, P4) &
+ col(P5, P3, P1) &
+ col(P2, P6, P1) &
+ col(P5, P6, P3) & col(P0, P5, P1) & col(P1, P4, P2) & col(P0, P2, P3)  ) =>
+ col(P3, P4, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
  
@@ -40,20 +45,24 @@
   wd(P, P0) &
   wd(P3, P0) &
   wd(P2, P )& wd(P2, P0) & wd(P0, P1) & wd(P, P1) & wd(P1, P3) & wd(P2, P3) &
- coinc(P4, P, P0) & coinc(P4, P0, P1) & coinc(P2, P4, P3) & coinc(P1, P0, P3)  ) =>
- coinc(P1, P2, P0)))).
+ col(P4, P, P0) & col(P4, P0, P1) & col(P2, P4, P3) & col(P1, P0, P3)  ) =>
+ col(P1, P2, P0)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4 ] : (
  (wd(P2, P3) &
   wd(P0, P3) &
   wd(P1, P4) &
   wd(P2, P4) & wd(P0, P1) & wd(P1, P2) & wd(P0, P2) & wd(P4, P0) &
- coinc(P4, P3, P0) & coinc(P1, P4, P2) & coinc(P0, P3, P2) & coinc(P3, P3, P1)  ) =>
- coinc(P0, P1, P2)))).
+ col(P4, P3, P0) & col(P1, P4, P2) & col(P0, P3, P2) & col(P3, P3, P1)  ) =>
+ col(P0, P1, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4 ] : (
   
@@ -62,67 +71,81 @@
   wd(P2, P4) &
   wd(P1, P4) &
   wd(P3, P4) & wd(P0, P1) & wd(P1, P2) & wd(P0, P2) & wd(P3, P1) &
- coinc(P4, P4, P0) & coinc(P3, P4, P1) & coinc(P1, P4, P2) & coinc(P0, P3, P2)  ) =>
- coinc(P0, P1, P2)))).
+ col(P4, P4, P0) & col(P3, P4, P1) & col(P1, P4, P2) & col(P0, P3, P2)  ) =>
+ col(P0, P1, P2)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5 ] : (
  (wd(P0, P4) &
   wd(P3, P4) &
   wd(P2, P5) & wd(P3, P5) & wd(P0, P2) & wd(P2, P3) & wd(P0, P3) &
- coinc(P3, P4, P5) & coinc(P0, P1, P2) & coinc(P2, P5, P3) & coinc(P0, P4, P3)  ) =>
- coinc(P0, P2, P3)))).
+ col(P3, P4, P5) & col(P0, P1, P2) & col(P2, P5, P3) & col(P0, P4, P3)  ) =>
+ col(P0, P2, P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5 ] : (
  (wd(P0, P4) &
   wd(P3, P4) &
   wd(P2, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P0, P2) & wd(P2, P3) & wd(P0, P3) &
- coinc(P0, P4, P5) & coinc(P0, P1, P2) & coinc(P2, P5, P3) & coinc(P0, P4, P3)  ) =>
- coinc(P0, P2, P3)))).
+ col(P0, P4, P5) & col(P0, P1, P2) & col(P2, P5, P3) & col(P0, P4, P3)  ) =>
+ col(P0, P2, P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5 ] : ( 
  (wd(P0, P4) &
   wd(P3, P4) &
   wd(P2, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P0, P2) & wd(P2, P3) & wd(P0, P3) &
- coinc(P2, P4, P5) & coinc(P0, P1, P2) & coinc(P2, P5, P3) & coinc(P0, P4, P3)  ) =>
- coinc(P0, P2, P3)))).
+ col(P2, P4, P5) & col(P0, P1, P2) & col(P2, P5, P3) & col(P0, P4, P3)  ) =>
+ col(P0, P2, P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
  (wd(P, P0) & wd(P2, P3) & wd(P3, P1) & wd(P2, P1) &
- coinc(P,P0,P2) & coinc(P,P0,P3) & coinc(P2, P3, P1)  ) => 
- coinc(P,P0,P1)))).
+ col(P,P0,P2) & col(P,P0,P3) & col(P2, P3, P1)  ) => 
+ col(P,P0,P1)))).
  
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
  
  (wd(P1, P2) &
   wd(P3, P4) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P4, P5) & wd(P3, P5) &
- coinc(P,P0,P3) & coinc(P1, P2, P3) & coinc(P1, P2, P4) & coinc(P3, P4, P5)  ) =>
- coinc(P1, P2, P5)))).
+ col(P,P0,P3) & col(P1, P2, P3) & col(P1, P2, P4) & col(P3, P4, P5)  ) =>
+ col(P1, P2, P5)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
  
  (wd(P1, P2) &
   wd(P3, P4) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P4, P5) & wd(P3, P5) &
- coinc(P,P0,P3) &
- coinc(P1, P2, P3) & coinc(P1, P2, P4) & coinc(P3, P4, P5) & coinc(P5, P, P0)  ) =>
- coinc(P1, P2, P5)))).
+ col(P,P0,P3) &
+ col(P1, P2, P3) & col(P1, P2, P4) & col(P3, P4, P5) & col(P5, P, P0)  ) =>
+ col(P1, P2, P5)))).
 
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6] : ( 
  (wd(P0, P1) &
@@ -133,10 +156,12 @@
   wd(P1, P6) &
   wd(P4, P6) &
   wd(P1, P5) & wd(P0, P5) & wd(P3, P5) & wd(P3, P6) & wd(P5, P4) &
- coinc(P0, P1, P4) & coinc(P0, P1, P6) & coinc(P6, P5, P4)  ) => 
- coinc(P0, P1, P5)))).
+ col(P0, P1, P4) & col(P0, P1, P6) & col(P6, P5, P4)  ) => 
+ col(P0, P1, P5)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6, P7] : (
  (wd(P2, P5) &
@@ -146,10 +171,12 @@
   wd(P2, P0) &
   wd(P3, P4) &
   wd(P2, P4) & wd(P0, P1) & wd(P0, P7) & wd(P6, P7) & wd(P0, P6) &
- coinc(P6, P7, P5) & coinc(P2, P6, P7) & coinc(P6, P0, P7) & coinc(P2, P5, P3)  ) =>
- coinc(P2, P3, P0)))).
+ col(P6, P7, P5) & col(P2, P6, P7) & col(P6, P0, P7) & col(P2, P5, P3)  ) =>
+ col(P2, P3, P0)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6, P7] : (
  (wd(P2, P5) &
@@ -159,10 +186,12 @@
   wd(P2, P0) &
   wd(P3, P4) &
   wd(P2, P4) & wd(P0, P1) & wd(P0, P7) & wd(P6, P7) & wd(P0, P6) &
- coinc(P6, P7, P5) & coinc(P3, P6, P7) & coinc(P6, P0, P7) & coinc(P2, P5, P3)  ) =>
- coinc(P2, P3, P0)))).
+ col(P6, P7, P5) & col(P3, P6, P7) & col(P6, P0, P7) & col(P2, P5, P3)  ) =>
+ col(P2, P3, P0)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (  
  (wd(P, P2) &
@@ -170,18 +199,22 @@
   wd(P0, P2) &
   wd(P, P1) &
   wd(P1, P3) & wd(P0, P1) & wd(P2, P3) & wd(P, P0) & wd(P0, P3) & wd(P2, P1) &
- coinc(P,P2,P3) & coinc(P,P0,P1) & coinc(P1, P0, P2)  ) => 
- coinc(P,P3,P1)))).
+ col(P,P2,P3) & col(P,P0,P1) & col(P1, P0, P2)  ) => 
+ col(P,P3,P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P, P2) &
   wd(P, P3) &
   wd(P0, P2) & wd(P, P1) & wd(P1, P3) & wd(P0, P1) & wd(P2, P3) & wd(P, P0) &
- coinc(P,P2,P3) & coinc(P,P0,P1) & coinc(P0, P1, P3) & coinc(P2, P1, P3)  ) =>
- coinc(P,P2,P0)))).
+ col(P,P2,P3) & col(P,P0,P1) & col(P0, P1, P3) & col(P2, P1, P3)  ) =>
+ col(P,P2,P0)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -189,11 +222,13 @@ fof(foo, conjecture,
  
  (wd(P, P2) &
   wd(P0, P2) & wd(P3, P1) & wd(P0, P1) & wd(P, P3) & wd(P, P1) & wd(P, P0) &
- coinc(P,P0,P1) & coinc(P2, P3, P1) & coinc(P0, P3, P1) & coinc(P,P2,P3)  ) =>
- coinc(P,P2,P0)))).
+ col(P,P0,P1) & col(P2, P3, P1) & col(P0, P3, P1) & col(P,P2,P3)  ) =>
+ col(P,P2,P0)))).
  
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
   
@@ -203,13 +238,15 @@ fof(foo, conjecture,
   wd(P0, P1) &
   wd(P0, P3) &
   wd(P3, P1) & wd(P1, P2) & wd(P2, P4) & wd(P0, P2) & wd(P, P2) & wd(P, P0) &
- coinc(P,P0,P1) &
- coinc(P0, P1, P2) &
- coinc(P,P3,P1) &
- coinc(P3, P1, P4) & coinc(P,P0,P3) & coinc(P0, P2, P4) & coinc(P3, P2, P4)  ) =>
- coinc(P,P4,P2)))).
+ col(P,P0,P1) &
+ col(P0, P1, P2) &
+ col(P,P3,P1) &
+ col(P3, P1, P4) & col(P,P0,P3) & col(P0, P2, P4) & col(P3, P2, P4)  ) =>
+ col(P,P4,P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5 ] : (
  (wd(P4, P2) &
@@ -218,10 +255,12 @@ fof(foo, conjecture,
   wd(P5, P1) &
   wd(P0, P1) &
   wd(P1, P2) & wd(P0, P2) & wd(P0, P5) & wd(P1, P3) & wd(P0, P4) &
- coinc(P1, P3, P2) & coinc(P0, P4, P2) & coinc(P0, P5, P1) & coinc(P3, P4, P2)  ) =>
- coinc(P0, P1, P2)))).
+ col(P1, P3, P2) & col(P0, P4, P2) & col(P0, P5, P1) & col(P3, P4, P2)  ) =>
+ col(P0, P1, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8] : (
  (wd(P4, P2) &
@@ -241,12 +280,14 @@ fof(foo, conjecture,
   wd(P6, P7) &
   wd(P4, P7) &
   wd(P6, P8) & wd(P3, P8) & wd(P2, P6) & wd(P0, P7) & wd(P1, P8) &
- coinc(P3, P4, P6) &
- coinc(P7, P6, P4) &
- coinc(P8, P6, P3) & coinc(P5, P0, P1) & coinc(P4, P0, P2) & coinc(P3, P1, P2)  ) =>
- coinc(P7, P8, P3)))).
+ col(P3, P4, P6) &
+ col(P7, P6, P4) &
+ col(P8, P6, P3) & col(P5, P0, P1) & col(P4, P0, P2) & col(P3, P1, P2)  ) =>
+ col(P7, P8, P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
  (wd(P3, P )&
@@ -259,11 +300,13 @@ fof(foo, conjecture,
   wd(P4, P0) &
   wd(P0, P2) &
   wd(P0, P6) & wd(P1, P2) & wd(P0, P3) & wd(P3, P1) & wd(P3, P2) &
- coinc(P,P2,P3) &
- coinc(P0, P, P1) & coinc(P,P4,P5) & coinc(P4, P5, P6) & coinc(P4, P5, P1)  ) =>
- coinc(P4, P5, P0)))).
+ col(P,P2,P3) &
+ col(P0, P, P1) & col(P,P4,P5) & col(P4, P5, P6) & col(P4, P5, P1)  ) =>
+ col(P4, P5, P0)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
  (wd(P3, P )&
@@ -279,15 +322,17 @@ fof(foo, conjecture,
   wd(P4, P1) &
   wd(P5, P0) &
   wd(P4, P0) & wd(P0, P2) & wd(P0, P3) & wd(P3, P1) & wd(P3, P2) &
- coinc(P,P2,P3) &
- coinc(P0, P, P1) &
- coinc(P,P4,P5) &
- coinc(P4, P5, P3) &
- coinc(P4, P5, P6) &
- coinc(P3, P, P6) & coinc(P1, P1, P6) & coinc(P2, P1, P6) & coinc(P3, P, P1)  ) =>
- coinc(P,P0,P2)))).
+ col(P,P2,P3) &
+ col(P0, P, P1) &
+ col(P,P4,P5) &
+ col(P4, P5, P3) &
+ col(P4, P5, P6) &
+ col(P3, P, P6) & col(P1, P1, P6) & col(P2, P1, P6) & col(P3, P, P1)  ) =>
+ col(P,P0,P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
  (wd(P, P0) &
@@ -299,11 +344,13 @@ fof(foo, conjecture,
   wd(P1, P3) &
   wd(P0, P3) &
   wd(P4, P0) & wd(P4, P2) & wd(P4, P3) & wd(P3, P5) & wd(P4, P5) &
- coinc(P0, P2, P5) &
- coinc(P3, P4, P5) & coinc(P0, P4, P2) & coinc(P3, P0, P1) & coinc(P2, P1, P ) ) =>
- coinc(P,P0,P2)))).
+ col(P0, P2, P5) &
+ col(P3, P4, P5) & col(P0, P4, P2) & col(P3, P0, P1) & col(P2, P1, P ) ) =>
+ col(P,P0,P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
  (wd(P, P0) &
@@ -317,11 +364,13 @@ fof(foo, conjecture,
   wd(P4, P0) &
   wd(P4, P2) &
   wd(P4, P3) & wd(P3, P5) & wd(P4, P5) & wd(P2, P5) & wd(P0, P5) & wd(P, P3) &
- coinc(P,P0,P3) &
- coinc(P3, P4, P5) & coinc(P0, P4, P2) & coinc(P3, P0, P1) & coinc(P2, P1, P ) ) =>
- coinc(P,P0,P2)))).
+ col(P,P0,P3) &
+ col(P3, P4, P5) & col(P0, P4, P2) & col(P3, P0, P1) & col(P2, P1, P ) ) =>
+ col(P,P0,P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : ( 
  (wd(P, P0) &
@@ -338,13 +387,15 @@ fof(foo, conjecture,
   wd(P3, P5) &
   wd(P4, P5) &
   wd(P3, P6) & wd(P6, P2) & wd(P2, P5) & wd(P0, P5) & wd(P, P6) & wd(P2, P3) &
- coinc(P0, P3, P6) &
- coinc(P,P0,P6) &
- coinc(P2, P6, P3) &
- coinc(P3, P4, P5) & coinc(P0, P4, P2) & coinc(P3, P0, P1) & coinc(P2, P1, P ) ) =>
- coinc(P0, P2, P5)))).
+ col(P0, P3, P6) &
+ col(P,P0,P6) &
+ col(P2, P6, P3) &
+ col(P3, P4, P5) & col(P0, P4, P2) & col(P3, P0, P1) & col(P2, P1, P ) ) =>
+ col(P0, P2, P5)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
  
@@ -364,13 +415,15 @@ fof(foo, conjecture,
   wd(P3, P6) &
   wd(P6, P2) &
   wd(P5, P2) & wd(P0, P6) & wd(P0, P5) & wd(P5, P6) & wd(P, P6) & wd(P2, P3) &
- coinc(P5, P2, P6) &
- coinc(P2, P6, P3) &
- coinc(P,P0,P6) &
- coinc(P3, P4, P5) & coinc(P0, P4, P2) & coinc(P3, P0, P1) & coinc(P2, P1, P ) ) =>
- coinc(P0, P2, P5)))).
+ col(P5, P2, P6) &
+ col(P2, P6, P3) &
+ col(P,P0,P6) &
+ col(P3, P4, P5) & col(P0, P4, P2) & col(P3, P0, P1) & col(P2, P1, P ) ) =>
+ col(P0, P2, P5)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
  (wd(P, P0) &
@@ -379,10 +432,12 @@ fof(foo, conjecture,
   wd(P, P3) &
   wd(P0, P1) &
   wd(P0, P2) & wd(P0, P3) & wd(P1, P2) & wd(P1, P3) & wd(P2, P3) &
- coinc(P,P1,P3) & coinc(P0, P2, P1) & coinc(P,P2,P3)  ) => 
- coinc(P,P0,P1)))).
+ col(P,P1,P3) & col(P0, P2, P1) & col(P,P2,P3)  ) => 
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
  (wd(P, P0) &
@@ -399,12 +454,14 @@ fof(foo, conjecture,
   wd(P, P4) &
   wd(P3, P5) &
   wd(P5, P1) & wd(P5, P2) & wd(P3, P4) & wd(P4, P0) & wd(P4, P2) &
- coinc(P4, P3, P5) &
- coinc(P,P4,P5) &
- coinc(P,P1,P5) & coinc(P,P0,P4) & coinc(P0, P2, P1) & coinc(P,P2,P3)  ) =>
- coinc(P,P0,P1)))).
+ col(P4, P3, P5) &
+ col(P,P4,P5) &
+ col(P,P1,P5) & col(P,P0,P4) & col(P0, P2, P1) & col(P,P2,P3)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
  (wd(P, P0) &
@@ -424,13 +481,15 @@ fof(foo, conjecture,
   wd(P6, P2) &
   wd(P6, P7) &
   wd(P4, P6) & wd(P3, P4) & wd(P7, P0) & wd(P7, P )& wd(P6, P )& wd(P6, P0) &
- coinc(P,P3,P1) &
- coinc(P3, P, P8) &
- coinc(P2, P7, P8) &
- coinc(P4, P2, P6) & coinc(P3, P5, P4) & coinc(P,P5,P2) & coinc(P,P1,P0)  ) =>
- coinc(P8, P0, P)))).
+ col(P,P3,P1) &
+ col(P3, P, P8) &
+ col(P2, P7, P8) &
+ col(P4, P2, P6) & col(P3, P5, P4) & col(P,P5,P2) & col(P,P1,P0)  ) =>
+ col(P8, P0, P)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13 ] : (
  (wd(P8, P9) &
@@ -449,21 +508,23 @@ fof(foo, conjecture,
   wd(P2, P4) &
   wd(P2, P5) &
   wd(P3, P4) & wd(P3, P5) & wd(P, P6) & wd(P, P7) & wd(P0, P6) & wd(P0, P7) &
- coinc(P, P0, P8) &
- coinc(P2, P3, P8) &
- coinc(P, P0, P9) &
- coinc(P4, P5, P9) &
- coinc(P2, P3, P10) &
- coinc(P6, P7, P10) &
- coinc(P8, P9, P )&
- coinc(P8, P9, P0) &
- coinc(P8, P10, P2) &
- coinc(P8, P10, P3) &
- coinc(P4, P5, P11) &
- coinc(P6, P7, P12) & coinc(P9,P11,P13) & coinc(P10,P12,P13)  ) =>
- coinc(P4, P5, P13)))).
+ col(P, P0, P8) &
+ col(P2, P3, P8) &
+ col(P, P0, P9) &
+ col(P4, P5, P9) &
+ col(P2, P3, P10) &
+ col(P6, P7, P10) &
+ col(P8, P9, P )&
+ col(P8, P9, P0) &
+ col(P8, P10, P2) &
+ col(P8, P10, P3) &
+ col(P4, P5, P11) &
+ col(P6, P7, P12) & col(P9,P11,P13) & col(P10,P12,P13)  ) =>
+ col(P4, P5, P13)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13 ] : (
@@ -484,22 +545,24 @@ fof(foo, conjecture,
   wd(P2, P4) &
   wd(P2, P5) &
   wd(P3, P4) & wd(P3, P5) & wd(P, P6) & wd(P, P7) & wd(P0, P6) & wd(P0, P7) &
- coinc(P,P0,P8) &
- coinc(P2, P3, P8) &
- coinc(P,P0,P9) &
- coinc(P4, P5, P9) &
- coinc(P2, P3, P10) &
- coinc(P6, P7, P10) &
- coinc(P8, P9, P )&
- coinc(P8, P9, P0) &
- coinc(P8, P10, P2) &
- coinc(P8, P10, P3) &
- coinc(P4, P5, P11) &
- coinc(P6, P7, P12) & 
- coinc(P9, P11, P13) & coinc(P10, P12, P13)  ) =>
- coinc(P6, P7, P13)))).
+ col(P,P0,P8) &
+ col(P2, P3, P8) &
+ col(P,P0,P9) &
+ col(P4, P5, P9) &
+ col(P2, P3, P10) &
+ col(P6, P7, P10) &
+ col(P8, P9, P )&
+ col(P8, P9, P0) &
+ col(P8, P10, P2) &
+ col(P8, P10, P3) &
+ col(P4, P5, P11) &
+ col(P6, P7, P12) & 
+ col(P9, P11, P13) & col(P10, P12, P13)  ) =>
+ col(P6, P7, P13)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
  (wd(P2, P4) &
@@ -507,10 +570,12 @@ fof(foo, conjecture,
   wd(P1, P2) &
   wd(P0, P2) &
   wd(P, P0) & wd(P, P2) & wd(P, P1) & wd(P2, P3) & wd(P4, P0) & wd(P3, P0) &
- coinc(P,P0,P3) & coinc(P2, P1, P0) & coinc(P2, P4, P3) & coinc(P0, P1, P4)  ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P3) & col(P2, P1, P0) & col(P2, P4, P3) & col(P0, P1, P4)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
 
@@ -519,8 +584,10 @@ fof(foo, conjecture,
   wd(P1, P2) &
   wd(P0, P2) &
   wd(P, P0) & wd(P, P2) & wd(P, P1) & wd(P4, P0) & wd(P3, P0) & wd(P2, P3) &
- coinc(P,P0,P3) & coinc(P2, P, P0) & coinc(P4, P3, P2) & coinc(P0, P1, P4)  ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P3) & col(P2, P, P0) & col(P4, P3, P2) & col(P0, P1, P4)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -541,10 +608,12 @@ fof(foo, conjecture,
   wd(P1, P3) &
   wd(P4, P1) &
   wd(P4, P0) & wd(P5, P1) & wd(P5, P0) & wd(P3, P2) & wd(P2, P5) & wd(P, P5) &
- coinc(P0, P1, P5) & coinc(P4, P3, P5) & coinc(P,P2,P4) & coinc(P0, P1, P3)  ) =>
- coinc(P1, P3, P4)))).
+ col(P0, P1, P5) & col(P4, P3, P5) & col(P,P2,P4) & col(P0, P1, P3)  ) =>
+ col(P1, P3, P4)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 ( 
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10] : (
  (wd(P4, P6) &
@@ -570,16 +639,18 @@ fof(foo, conjecture,
   wd(P6, P9) & 
   wd(P4, P9) & 
   wd(P10, P4) &
-  coinc(P0, P1, P4) &
-  coinc(P6, P2, P3) &
-  coinc(P5, P4, P7) &
-  coinc(P2, P3, P8) &
-  coinc(P0, P1, P9) & 
-  coinc(P6, P8, P10) & 
-  coinc(P4, P7, P10)  ) =>
-  coinc(P2, P3, P10)))).
+  col(P0, P1, P4) &
+  col(P6, P2, P3) &
+  col(P5, P4, P7) &
+  col(P2, P3, P8) &
+  col(P0, P1, P9) & 
+  col(P6, P8, P10) & 
+  col(P4, P7, P10)  ) =>
+  col(P2, P3, P10)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
  (wd(P, P2) &
@@ -593,10 +664,12 @@ fof(foo, conjecture,
   wd(P, P1) & 
   wd(P, P3) & 
   wd(P4, P) &
-  coinc(P,P0,P4) & coinc(P4, P3, P )& coinc(P0, P2, P1) & coinc(P,P2,P3)  ) =>
-  coinc(P0, P1, P3)))).
+  col(P,P0,P4) & col(P4, P3, P )& col(P0, P2, P1) & col(P,P2,P3)  ) =>
+  col(P0, P1, P3)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
@@ -621,13 +694,15 @@ fof(foo, conjecture,
   wd(P, P8) & 
   wd(P4, P8) & 
   wd(P7, P8) &
- coinc(P,P0,P7) &
- coinc(P3, P5, P6) &
- coinc(P,P0,P5) &
- coinc(P5, P7, P8) & coinc(P5, P3, P4) & coinc(P0, P2, P1) & coinc(P,P2,P3)  ) =>
- coinc(P,P0,P8)))).
+ col(P,P0,P7) &
+ col(P3, P5, P6) &
+ col(P,P0,P5) &
+ col(P5, P7, P8) & col(P5, P3, P4) & col(P0, P2, P1) & col(P,P2,P3)  ) =>
+ col(P,P0,P8)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
@@ -651,13 +726,15 @@ fof(foo, conjecture,
   wd(P4, P8) & 
   wd(P7, P8) & 
   wd(P8, P3) &
- coinc(P,P0,P7) &
- coinc(P3, P5, P6) &
- coinc(P,P0,P3) &
- coinc(P5, P7, P8) & coinc(P5, P3, P4) & coinc(P0, P2, P1) & coinc(P,P2,P3)  ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P7) &
+ col(P3, P5, P6) &
+ col(P,P0,P3) &
+ col(P5, P7, P8) & col(P5, P3, P4) & col(P0, P2, P1) & col(P,P2,P3)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
@@ -666,10 +743,12 @@ fof(foo, conjecture,
   wd(P, P2) &
   wd(P, P3) &
   wd(P2, P3) & wd(P2, P0) & wd(P3, P0) & wd(P3, P1) & wd(P2, P1) & wd(P, P1) &
- coinc(P2, P0, P3) & coinc(P,P0,P1) & coinc(P,P3,P1)  ) => 
- coinc(P,P2,P3)))).
+ col(P2, P0, P3) & col(P,P0,P1) & col(P,P3,P1)  ) => 
+ col(P,P2,P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6, P7] : (
 
@@ -684,13 +763,15 @@ fof(foo, conjecture,
   wd(P, P4) &
   wd(P3, P4) &
   wd(P1, P4) & wd(P2, P4) & wd(P5, P4) & wd(P1, P5) & wd(P2, P1) & wd(P, P1) &
- coinc(P,P2,P7) &
- coinc(P,P3,P4) &
- coinc(P4, P7, P6) &
- coinc(P4, P1, P5) & coinc(P3, P4, P1) & coinc(P2, P0, P3) & coinc(P,P0,P1)  ) =>
- coinc(P,P2,P3)))).
+ col(P,P2,P7) &
+ col(P,P3,P4) &
+ col(P4, P7, P6) &
+ col(P4, P1, P5) & col(P3, P4, P1) & col(P2, P0, P3) & col(P,P0,P1)  ) =>
+ col(P,P2,P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
 
@@ -701,10 +782,12 @@ fof(foo, conjecture,
   wd(P3, P1) &
   wd(P2, P4) &
   wd(P0, P3) & wd(P, P1) & wd(P2, P )& wd(P3, P )& wd(P4, P )& wd(P0, P2) &
- coinc(P3, P4, P1) & coinc(P2, P3, P4) & coinc(P0, P2, P3) & coinc(P,P0,P3)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P4, P1) & col(P2, P3, P4) & col(P0, P2, P3) & col(P,P0,P3)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
 
@@ -714,10 +797,12 @@ fof(foo, conjecture,
   wd(P3, P4) &
   wd(P3, P1) &
   wd(P2, P4) & wd(P0, P3) & wd(P, P1) & wd(P2, P )& wd(P3, P )& wd(P4, P )&
- coinc(P,P3,P4) & coinc(P3, P4, P1) & coinc(P2, P3, P4) & coinc(P0, P2, P3)  ) =>
- coinc(P,P0,P3)))).
+ col(P,P3,P4) & col(P3, P4, P1) & col(P2, P3, P4) & col(P0, P2, P3)  ) =>
+ col(P,P0,P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6] : (
  (wd(P0, P1) &
@@ -729,10 +814,12 @@ fof(foo, conjecture,
   wd(P1, P4) &
   wd(P0, P2) &
   wd(P3, P0) & wd(P4, P0) & wd(P5, P0) & wd(P0, P6) & wd(P4, P6) &
- coinc(P4, P5, P2) & coinc(P3, P4, P5) & coinc(P1, P3, P4)  ) => 
- coinc(P1, P2, P4)))).
+ col(P4, P5, P2) & col(P3, P4, P5) & col(P1, P3, P4)  ) => 
+ col(P1, P2, P4)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4, P5, P6] : (  
  (wd(P0, P1) &
@@ -744,10 +831,12 @@ fof(foo, conjecture,
   wd(P1, P4) &
   wd(P0, P2) &
   wd(P3, P0) & wd(P4, P0) & wd(P5, P0) & wd(P6, P4) & wd(P0, P6) &
- coinc(P0, P4, P5) & coinc(P4, P5, P2) & coinc(P3, P4, P5) & coinc(P1, P3, P4)  ) =>
- coinc(P0, P1, P4)))).
+ col(P0, P4, P5) & col(P4, P5, P2) & col(P3, P4, P5) & col(P1, P3, P4)  ) =>
+ col(P0, P1, P4)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9] : (
  (wd(P3, P1) &
@@ -760,11 +849,13 @@ fof(foo, conjecture,
   wd(P8, P0) &
   wd(P2, P7) &
   wd(P9, P2) & wd(P0, P7) & wd(P1, P7) & wd(P9, P0) & wd(P1, P8) &
- coinc(P1, P9, P7) &
- coinc(P1, P7, P3) & coinc(P1, P2, P3) & coinc(P0, P9, P2) & coinc(P0, P7, P8)  ) =>
- coinc(P1, P0, P7)))).
+ col(P1, P9, P7) &
+ col(P1, P7, P3) & col(P1, P2, P3) & col(P0, P9, P2) & col(P0, P7, P8)  ) =>
+ col(P1, P0, P7)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14] : (
  (wd(P0, P2) &
@@ -781,15 +872,17 @@ fof(foo, conjecture,
   wd(P9, P0) &
   wd(P8, P7) &
   wd(P9, P14) & wd(P2, P14) & wd(P11, P12) & wd(P13, P12) & wd(P14, P0) &
- coinc(P9, P0, P14) &
- coinc(P2, P14, P1) &
- coinc(P2, P3, P14) &
- coinc(P2, P10, P9) &
- coinc(P2, P9, P1) & coinc(P2, P3, P9) & coinc(P2, P4, P5) & coinc(P2, P3, P1)  ) =>
- coinc(P2, P0, P3)))).
+ col(P9, P0, P14) &
+ col(P2, P14, P1) &
+ col(P2, P3, P14) &
+ col(P2, P10, P9) &
+ col(P2, P9, P1) & col(P2, P3, P9) & col(P2, P4, P5) & col(P2, P3, P1)  ) =>
+ col(P2, P0, P3)))).
 
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 ] : (
  (wd(P0, P1) &
@@ -805,13 +898,15 @@ fof(foo, conjecture,
   wd(P11, P3) &
   wd(P3, P9) &
   wd(P3, P10) & wd(P5, P3) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P3, P11, P9)&
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P3, P7, P8)))).
+ col(P2, P3, P11) &
+ col(P3, P11, P9)&
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P3, P7, P8)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 ] : (
@@ -828,13 +923,15 @@ fof(foo, conjecture,
   wd(P11, P3) &
   wd(P10, P3) &
   wd(P3, P9) & wd(P5, P3) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P3, P9, P11) &
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P3, P7, P8)))).
+ col(P2, P3, P11) &
+ col(P3, P9, P11) &
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P3, P7, P8)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12 ] : (
  (wd(P0, P1) &
@@ -854,15 +951,17 @@ fof(foo, conjecture,
   wd(P8, P7) &
   wd(P7, P3) &
   wd(P5, P3) & wd(P3, P8) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P10, P3, P12) &
- coinc(P3, P9, P12) &
- coinc(P11, P12, P10) &
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P2, P3, P4)))).
+ col(P2, P3, P11) &
+ col(P10, P3, P12) &
+ col(P3, P9, P12) &
+ col(P11, P12, P10) &
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P2, P3, P4)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12 ] : (  
  (wd(P0, P1) &
@@ -885,14 +984,16 @@ fof(foo, conjecture,
   wd(P10, P9 )&
   wd(P11, P7 )&
   wd(P11, P9 )& wd(P3, P8) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P3, P10, P11) &
- coinc(P3, P7, P11) &
- coinc(P3, P12, P9 )&
- coinc(P11, P12, P10) &
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P2, P3, P4)))).
+ col(P2, P3, P11) &
+ col(P3, P10, P11) &
+ col(P3, P7, P11) &
+ col(P3, P12, P9 )&
+ col(P11, P12, P10) &
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P2, P3, P4)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -919,14 +1020,16 @@ fof(foo, conjecture,
   wd(P10, P9 )&
   wd(P11, P7 )&
   wd(P11, P9 )& wd(P3, P8) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P9, P10, P11) &
- coinc(P3, P7, P11) &
- coinc(P3, P12, P9 )&
- coinc(P11, P12, P10) &
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P2, P3, P4)))).
+ col(P2, P3, P11) &
+ col(P9, P10, P11) &
+ col(P3, P7, P11) &
+ col(P3, P12, P9 )&
+ col(P11, P12, P10) &
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P2, P3, P4)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -953,16 +1056,18 @@ fof(foo, conjecture,
   wd(P10, P9 )&
   wd(P11, P7 )&
   wd(P11, P9 )& wd(P3, P8) & wd(P7, P4) & wd(P2, P5) & wd(P6, P7) &
- coinc(P2, P3, P11) &
- coinc(P10, P11, P3 )&
- coinc(P3, P7, P11) &
- coinc(P3, P12, P9 )&
- coinc(P11, P12, P10) &
- coinc(P3, P4, P10) &
- coinc(P7, P8, P9) & coinc(P3, P7, P2) & coinc(P3, P5, P6)  ) => 
- coinc(P2, P3, P4)))).
+ col(P2, P3, P11) &
+ col(P10, P11, P3 )&
+ col(P3, P7, P11) &
+ col(P3, P12, P9 )&
+ col(P11, P12, P10) &
+ col(P3, P4, P10) &
+ col(P7, P8, P9) & col(P3, P7, P2) & col(P3, P5, P6)  ) => 
+ col(P2, P3, P4)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9] : (
@@ -981,11 +1086,13 @@ fof(foo, conjecture,
   wd(P7, P8) &
   wd(P7, P3) &
   wd(P8, P9) & wd(P7, P9) & wd(P2, P9) & wd(P8, P1) & wd(P1, P9) &
- coinc(P2, P1, P9) & coinc(P7, P8, P9) & coinc(P2, P3, P8) & coinc(P7, P1, P2)  ) =>
- coinc(P8, P2, P1)))).
+ col(P2, P1, P9) & col(P7, P8, P9) & col(P2, P3, P8) & col(P7, P1, P2)  ) =>
+ col(P8, P2, P1)))).
 
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
 
@@ -996,8 +1103,10 @@ fof(foo, conjecture,
   wd(P1, P2) &
   wd(P, P1) &
   wd(P, P2) & wd(P0, P1) & wd(P0, P2) & wd(P4, P6) & wd(P0, P5) & wd(P, P5) &
- coinc(P,P0,P3) & coinc(P,P0,P4) & coinc(P1, P2, P5) & coinc(P4, P3, P5)  ) =>
- coinc(P,P0,P5)))).
+ col(P,P0,P3) & col(P,P0,P4) & col(P1, P2, P5) & col(P4, P3, P5)  ) =>
+ col(P,P0,P5)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1008,8 +1117,10 @@ fof(foo, conjecture,
   wd(P2, P4) &
   wd(P4, P3) &
   wd(P0, P2) & wd(P2, P5) & wd(P0, P5) & wd(P2, P3) & wd(P0, P1) &
- coinc(P0, P1, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1)  ) => 
- coinc(P3, P1, P0)))).
+ col(P0, P1, P2) & col(P2, P4, P3) & col(P0, P4, P1)  ) => 
+ col(P3, P1, P0)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1026,9 +1137,11 @@ fof(foo, conjecture,
   wd(P1, P3) &
   wd(P0, P3) &
   wd(P1, P2) & wd(P2, P3) & wd(P5, P6) & wd(P2, P6) & wd(P0, P2) &
- coinc(P5, P0, P6) &
- coinc(P1, P5, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1) & coinc(P0, P2, P6)  ) =>
- coinc(P0, P1, P3)))).
+ col(P5, P0, P6) &
+ col(P1, P5, P2) & col(P2, P4, P3) & col(P0, P4, P1) & col(P0, P2, P6)  ) =>
+ col(P0, P1, P3)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1048,15 +1161,17 @@ fof(foo, conjecture,
   wd(P0, P3) &
   wd(P1, P2) &
   wd(P2, P3) & wd(P0, P2) & wd(P2, P6) & wd(P0, P6) & wd(P0, P8) &
- coinc(P1, P0, P5) &
- coinc(P0, P1, P9) &
- coinc(P8, P1, P9) &
- coinc(P0, P5, P9) &
- coinc(P0, P6, P8) &
- coinc(P5, P7, P6) &
- coinc(P0, P7, P1) &
- coinc(P1, P5, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1) & coinc(P0, P2, P6)  ) =>
- coinc(P0, P1, P3)))).
+ col(P1, P0, P5) &
+ col(P0, P1, P9) &
+ col(P8, P1, P9) &
+ col(P0, P5, P9) &
+ col(P0, P6, P8) &
+ col(P5, P7, P6) &
+ col(P0, P7, P1) &
+ col(P1, P5, P2) & col(P2, P4, P3) & col(P0, P4, P1) & col(P0, P2, P6)  ) =>
+ col(P0, P1, P3)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1076,15 +1191,17 @@ fof(foo, conjecture,
   wd(P0, P9) &
   wd(P0, P2) &
   wd(P1, P3) & wd(P0, P3) & wd(P2, P6) & wd(P0, P6) & wd(P0, P8) &
- coinc(P5, P1, P3) &
- coinc(P3, P1, P2) &
- coinc(P8, P1, P9) &
- coinc(P0, P5, P9) &
- coinc(P0, P6, P8) &
- coinc(P5, P7, P6) &
- coinc(P0, P7, P1) &
- coinc(P1, P5, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1) & coinc(P0, P2, P6)  ) =>
- coinc(P0, P1, P3)))).
+ col(P5, P1, P3) &
+ col(P3, P1, P2) &
+ col(P8, P1, P9) &
+ col(P0, P5, P9) &
+ col(P0, P6, P8) &
+ col(P5, P7, P6) &
+ col(P0, P7, P1) &
+ col(P1, P5, P2) & col(P2, P4, P3) & col(P0, P4, P1) & col(P0, P2, P6)  ) =>
+ col(P0, P1, P3)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1105,17 +1222,19 @@ fof(foo, conjecture,
   wd(P0, P9) &
   wd(P1, P2) &
   wd(P2, P3) & wd(P0, P2) & wd(P2, P6) & wd(P0, P6) & wd(P0, P8) &
- coinc(P10, P1, P3) &
- coinc(P0, P1, P2) &
- coinc(P0, P5, P10) &
- coinc(P0, P10, P9) &
- coinc(P8, P1, P9) &
- coinc(P0, P5, P9) &
- coinc(P0, P6, P8) &
- coinc(P5, P7, P6) &
- coinc(P0, P7, P1) &
- coinc(P1, P5, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1) & coinc(P0, P2, P6)  ) =>
- coinc(P0, P1, P3)))).
+ col(P10, P1, P3) &
+ col(P0, P1, P2) &
+ col(P0, P5, P10) &
+ col(P0, P10, P9) &
+ col(P8, P1, P9) &
+ col(P0, P5, P9) &
+ col(P0, P6, P8) &
+ col(P5, P7, P6) &
+ col(P0, P7, P1) &
+ col(P1, P5, P2) & col(P2, P4, P3) & col(P0, P4, P1) & col(P0, P2, P6)  ) =>
+ col(P0, P1, P3)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1134,19 +1253,21 @@ fof(foo, conjecture,
   wd(P1, P3) &
   wd(P3, P2) &
   wd(P1, P2) & wd(P0, P1) & wd(P0, P3) & wd(P0, P10) & wd(P0, P9) &
- coinc(P10, P1, P3) &
- coinc(P10, P1, P2) &
- coinc(P0, P5, P10) &
- coinc(P0, P10, P9)&
- coinc(P8, P1, P9) &
- coinc(P0, P5, P9) &
- coinc(P0, P6, P8) &
- coinc(P5, P7, P6) &
- coinc(P0, P7, P1) &
- coinc(P1, P5, P2) & coinc(P2, P4, P3) & coinc(P0, P4, P1) & coinc(P0, P2, P6)  ) =>
- coinc(P1, P3, P2)))).
+ col(P10, P1, P3) &
+ col(P10, P1, P2) &
+ col(P0, P5, P10) &
+ col(P0, P10, P9)&
+ col(P8, P1, P9) &
+ col(P0, P5, P9) &
+ col(P0, P6, P8) &
+ col(P5, P7, P6) &
+ col(P0, P7, P1) &
+ col(P1, P5, P2) & col(P2, P4, P3) & col(P0, P4, P1) & col(P0, P2, P6)  ) =>
+ col(P1, P3, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
@@ -1155,8 +1276,10 @@ fof(foo, conjecture,
   wd(P, P1) &
   wd(P2, P )&
   wd(P2, P0) & wd(P2, P1) & wd(P1, P3) & wd(P2, P3) & wd(P0, P3) & wd(P, P3) &
- coinc(P,P1,P3) & coinc(P2, P, P0) & coinc(P2, P1, P3)  ) => 
- coinc(P,P0,P1)))).
+ col(P,P1,P3) & col(P2, P, P0) & col(P2, P1, P3)  ) => 
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1167,10 +1290,12 @@ fof(foo, conjecture,
   wd(P, P1) &
   wd(P2, P )&
   wd(P2, P0) & wd(P2, P1) & wd(P1, P3) & wd(P2, P3) & wd(P, P3) & wd(P0, P3) &
- coinc(P0, P1, P3) & coinc(P2, P, P0) & coinc(P2, P1, P3)  ) => 
- coinc(P,P0,P1)))).
+ col(P0, P1, P3) & col(P2, P, P0) & col(P2, P1, P3)  ) => 
+ col(P,P0,P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 ] : (
@@ -1181,33 +1306,15 @@ fof(foo, conjecture,
   wd(P9, P11) &
   wd(P7, P10) &
   wd(P8, P10) & wd(P1, P2) & wd(P5, P6) & wd(P, P0) & wd(P3, P4) &
- coinc(P,P0,P7) &
- coinc(P1, P2, P7) &
- coinc(P,P0,P8) &
- coinc(P3, P4, P8) &
- coinc(P1, P2, P9) &
- coinc(P5, P6, P9) & coinc(P9, P7, P11) & coinc(P8, P7, P10)  ) =>
- coinc(P,P0,P10)))).
+ col(P,P0,P7) &
+ col(P1, P2, P7) &
+ col(P,P0,P8) &
+ col(P3, P4, P8) &
+ col(P1, P2, P9) &
+ col(P5, P6, P9) & col(P9, P7, P11) & col(P8, P7, P10)  ) =>
+ col(P,P0,P10)))).
  
- fof(foo, conjecture,
-(
-   
-   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 ] : (
-
- (wd(P7, P8) &
-  wd(P7, P9) &
-  wd(P7, P11) &
-  wd(P9, P11) &
-  wd(P7, P10) &
-  wd(P8, P10) &
-  wd(P1, P2) & wd(P5, P6) & wd(P, P0) & wd(P3, P4) & wd(P8, P9) &
- coinc(P,P0,P7) &
- coinc(P1, P2, P7) &
- coinc(P,P0,P8) &
- coinc(P3, P4, P8) &
- coinc(P1, P2, P9) &
- coinc(P5, P6, P9) & coinc(P9, P7, P11) & coinc(P8, P7, P10)  ) =>
- coinc(P1, P2, P11)))).
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1221,13 +1328,37 @@ fof(foo, conjecture,
   wd(P7, P10) &
   wd(P8, P10) &
   wd(P1, P2) & wd(P5, P6) & wd(P, P0) & wd(P3, P4) & wd(P8, P9) &
- coinc(P,P0,P7) &
- coinc(P1, P2, P7) &
- coinc(P,P0,P8) &
- coinc(P3, P4, P8) &
- coinc(P1, P2, P9) &
- coinc(P5, P6, P9) & coinc(P9, P7, P11) & coinc(P8, P7, P10)  ) =>
- coinc(P,P0,P10)))).
+ col(P,P0,P7) &
+ col(P1, P2, P7) &
+ col(P,P0,P8) &
+ col(P3, P4, P8) &
+ col(P1, P2, P9) &
+ col(P5, P6, P9) & col(P9, P7, P11) & col(P8, P7, P10)  ) =>
+ col(P1, P2, P11)))).
+
+include('col-axioms.ax').
+
+fof(foo, conjecture,
+(
+   
+   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 ] : (
+
+ (wd(P7, P8) &
+  wd(P7, P9) &
+  wd(P7, P11) &
+  wd(P9, P11) &
+  wd(P7, P10) &
+  wd(P8, P10) &
+  wd(P1, P2) & wd(P5, P6) & wd(P, P0) & wd(P3, P4) & wd(P8, P9) &
+ col(P,P0,P7) &
+ col(P1, P2, P7) &
+ col(P,P0,P8) &
+ col(P3, P4, P8) &
+ col(P1, P2, P9) &
+ col(P5, P6, P9) & col(P9, P7, P11) & col(P8, P7, P10)  ) =>
+ col(P,P0,P10)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1248,10 +1379,12 @@ fof(foo, conjecture,
   wd(P1, P7) &
   wd(P6, P7) &
   wd(P0, P4) & wd(P0, P5) & wd(P1, P4) & wd(P1, P5) & wd(P4, P5) &
- coinc(P2, P4, P5) &
- coinc(P2, P6, P7) &
- coinc(P4, P5, P8) & coinc(P6, P7, P8) & coinc(P1, P3, P8) & coinc(P2, P0, P3)  ) =>
- coinc(P6, P4, P5)))).
+ col(P2, P4, P5) &
+ col(P2, P6, P7) &
+ col(P4, P5, P8) & col(P6, P7, P8) & col(P1, P3, P8) & col(P2, P0, P3)  ) =>
+ col(P6, P4, P5)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1272,12 +1405,14 @@ fof(foo, conjecture,
   wd(P1, P7) &
   wd(P6, P7) &
   wd(P0, P4) & wd(P0, P5) & wd(P1, P4) & wd(P1, P5) & wd(P4, P5) &
- coinc(P2, P4, P5) &
- coinc(P2, P6, P7) &
- coinc(P4, P5, P8) & coinc(P6, P7, P8) & coinc(P1, P3, P8) & coinc(P2, P0, P3)  ) =>
- coinc(P7, P4, P5)))).
+ col(P2, P4, P5) &
+ col(P2, P6, P7) &
+ col(P4, P5, P8) & col(P6, P7, P8) & col(P1, P3, P8) & col(P2, P0, P3)  ) =>
+ col(P7, P4, P5)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
 
@@ -1288,10 +1423,12 @@ fof(foo, conjecture,
   wd(P1, P3) &
   wd(P1, P4) &
   wd(P1, P5) & wd(P6, P4) & wd(P5, P4) & wd(P3, P4) & wd(P3, P )& wd(P6, P5) &
- coinc(P,P0,P3) &
- coinc(P4, P, P0) &
- coinc(P4, P1, P2) & coinc(P,P0,P6) & coinc(P1, P3, P4) & coinc(P5, P1, P4)  ) =>
- coinc(P3, P1, P6)))).
+ col(P,P0,P3) &
+ col(P4, P, P0) &
+ col(P4, P1, P2) & col(P,P0,P6) & col(P1, P3, P4) & col(P5, P1, P4)  ) =>
+ col(P3, P1, P6)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1305,12 +1442,14 @@ fof(foo, conjecture,
   wd(P1, P4) &
   wd(P1, P5) &
   wd(P6, P4) & wd(P5, P4) & wd(P3, P4) & wd(P3, P0) & wd(P6, P5) &
- coinc(P,P0,P3) &
- coinc(P4, P, P0) &
- coinc(P4, P1, P2) & coinc(P,P0,P6) & coinc(P1, P3, P4) & coinc(P5, P1, P4)  ) =>
- coinc(P3, P1, P6)))).
+ col(P,P0,P3) &
+ col(P4, P, P0) &
+ col(P4, P1, P2) & col(P,P0,P6) & col(P1, P3, P4) & col(P5, P1, P4)  ) =>
+ col(P3, P1, P6)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9] : (
@@ -1333,12 +1472,14 @@ fof(foo, conjecture,
   wd(P1, P7) &
   wd(P0, P4) &
   wd(P0, P5) & wd(P1, P4) & wd(P1, P5) & wd(P1, P2) & wd(P1, P3) &
- coinc(P6, P2, P3) &
- coinc(P6, P4, P5) &
- coinc(P4, P5, P7) &
- coinc(P8, P2, P3) &
- coinc(P8, P6, P9) & coinc(P6, P6, P0) & coinc(P7, P6, P9) & coinc(P0, P8, P7)  ) =>
- coinc(P7, P2, P3)))).
+ col(P6, P2, P3) &
+ col(P6, P4, P5) &
+ col(P4, P5, P7) &
+ col(P8, P2, P3) &
+ col(P8, P6, P9) & col(P6, P6, P0) & col(P7, P6, P9) & col(P0, P8, P7)  ) =>
+ col(P7, P2, P3)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1365,16 +1506,18 @@ fof(foo, conjecture,
   wd(P1, P7) &
   wd(P0, P4) &
   wd(P0, P5) & wd(P1, P4) & wd(P1, P5) & wd(P1, P2) & wd(P1, P3) &
- coinc(P6, P2, P3) &
- coinc(P6, P4, P5) &
- coinc(P4, P5, P7) &
- coinc(P8, P2, P3) &
- coinc(P11, P0, P12) &
- coinc(P6, P9, P12) &
- coinc(P6, P8, P11) &
- coinc(P6, P10, P0) &
- coinc(P8, P10, P9) & coinc(P7, P6, P9) & coinc(P0, P8, P7)  ) =>
- coinc(P2, P3, P11)))).
+ col(P6, P2, P3) &
+ col(P6, P4, P5) &
+ col(P4, P5, P7) &
+ col(P8, P2, P3) &
+ col(P11, P0, P12) &
+ col(P6, P9, P12) &
+ col(P6, P8, P11) &
+ col(P6, P10, P0) &
+ col(P8, P10, P9) & col(P7, P6, P9) & col(P0, P8, P7)  ) =>
+ col(P2, P3, P11)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1404,16 +1547,18 @@ fof(foo, conjecture,
   wd(P0, P4) &
   wd(P0, P5) &
   wd(P1, P4) & wd(P1, P5) & wd(P1, P2) & wd(P1, P3) & wd(P11, P12) &
- coinc(P6, P2, P3) &
- coinc(P6, P4, P5) &
- coinc(P4, P5, P7) &
- coinc(P8, P2, P3) &
- coinc(P11, P0, P12) &
- coinc(P6, P9, P12) &
- coinc(P6, P8, P11) &
- coinc(P6, P10, P0 )&
- coinc(P8, P10, P9 )& coinc(P7, P6, P9) & coinc(P0, P8, P7)  ) =>
- coinc(P4, P5, P12)))).
+ col(P6, P2, P3) &
+ col(P6, P4, P5) &
+ col(P4, P5, P7) &
+ col(P8, P2, P3) &
+ col(P11, P0, P12) &
+ col(P6, P9, P12) &
+ col(P6, P8, P11) &
+ col(P6, P10, P0 )&
+ col(P8, P10, P9 )& col(P7, P6, P9) & col(P0, P8, P7)  ) =>
+ col(P4, P5, P12)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1436,12 +1581,14 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P1, P8) &
   wd(P0, P8) & wd(P2, P4) & wd(P2, P5) & wd(P3, P4) & wd(P3, P5) &
- coinc(P0, P1, P6) &
- coinc(P2, P3, P6) &
- coinc(P0, P1, P7) &
- coinc(P4, P5, P7) &
- coinc(P2, P3, P8) & coinc(P4, P5, P10) & coinc(P7, P6, P10)  ) =>
- coinc(P6, P4, P5)))).
+ col(P0, P1, P6) &
+ col(P2, P3, P6) &
+ col(P0, P1, P7) &
+ col(P4, P5, P7) &
+ col(P2, P3, P8) & col(P4, P5, P10) & col(P7, P6, P10)  ) =>
+ col(P6, P4, P5)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1466,14 +1613,16 @@ fof(foo, conjecture,
   wd(P0, P8) &
   wd(P7, P11) &
   wd(P6, P11) & wd(P2, P4) & wd(P2, P5) & wd(P3, P4) & wd(P3, P5) &
- coinc(P0, P1, P6) &
- coinc(P2, P3, P6) &
- coinc(P0, P1, P7) &
- coinc(P4, P5, P7) &
- coinc(P2, P3, P8) & coinc(P4, P5, P10) & coinc(P10, P7, P11)  ) =>
- coinc(P4, P5, P11)))).
+ col(P0, P1, P6) &
+ col(P2, P3, P6) &
+ col(P0, P1, P7) &
+ col(P4, P5, P7) &
+ col(P2, P3, P8) & col(P4, P5, P10) & col(P10, P7, P11)  ) =>
+ col(P4, P5, P11)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13] : (
@@ -1496,16 +1645,18 @@ fof(foo, conjecture,
   wd(P0, P7) &
   wd(P1, P6) &
   wd(P1, P7) & wd(P2, P4) & wd(P2, P5) & wd(P3, P4) & wd(P3, P5) &
- coinc(P0, P1, P8) &
- coinc(P2, P3, P8) &
- coinc(P0, P1, P9) &
- coinc(P4, P5, P9) &
- coinc(P2, P3, P10) &
- coinc(P6, P7, P10) &
- coinc(P4, P5, P11) &
- coinc(P6, P7, P12) &
- coinc(P13, P4, P5) & coinc(P10, P13, P12) & coinc(P8, P11, P12)  ) =>
- coinc(P6, P7, P13)))).
+ col(P0, P1, P8) &
+ col(P2, P3, P8) &
+ col(P0, P1, P9) &
+ col(P4, P5, P9) &
+ col(P2, P3, P10) &
+ col(P6, P7, P10) &
+ col(P4, P5, P11) &
+ col(P6, P7, P12) &
+ col(P13, P4, P5) & col(P10, P13, P12) & col(P8, P11, P12)  ) =>
+ col(P6, P7, P13)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1530,32 +1681,38 @@ fof(foo, conjecture,
   wd(P0, P7) &
   wd(P1, P6) &
   wd(P1, P7) & wd(P2, P4) & wd(P2, P5) & wd(P3, P4) & wd(P3, P5) &
- coinc(P0, P1, P8) &
- coinc(P2, P3, P8) &
- coinc(P0, P1, P9) &
- coinc(P4, P5, P9) &
- coinc(P2, P3, P10) &
- coinc(P6, P7, P10) &
- coinc(P4, P5, P11) &
- coinc(P6, P7, P12) &
- coinc(P13, P6, P7) & coinc(P9, P13, P11) & coinc(P8, P12, P11)  ) =>
- coinc(P4, P5, P13)))).
+ col(P0, P1, P8) &
+ col(P2, P3, P8) &
+ col(P0, P1, P9) &
+ col(P4, P5, P9) &
+ col(P2, P3, P10) &
+ col(P6, P7, P10) &
+ col(P4, P5, P11) &
+ col(P6, P7, P12) &
+ col(P13, P6, P7) & col(P9, P13, P11) & col(P8, P12, P11)  ) =>
+ col(P4, P5, P13)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P, P0) & wd(P, P1) & wd(P, P2) & wd(P, P3) & wd(P3, P1) & wd(P2, P0) &
- coinc(P,P0,P1) & coinc(P,P2,P0) & coinc(P,P3,P1)  ) => 
- coinc(P,P2,P3)))).
+ col(P,P0,P1) & col(P,P2,P0) & col(P,P3,P1)  ) => 
+ col(P,P2,P3)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P0, P2) & wd(P, P1) & wd(P3, P1) & wd(P3, P0) & wd(P3, P2) & wd(P, P3) &
- coinc(P,P0,P1) & coinc(P,P3,P1) & coinc(P0, P3, P2)  ) => 
- coinc(P1, P2, P)))).
+ col(P,P0,P1) & col(P,P3,P1) & col(P0, P3, P2)  ) => 
+ col(P1, P2, P)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1566,8 +1723,10 @@ fof(foo, conjecture,
   wd(P0, P2) &
   wd(P2, P )&
   wd(P, P1) & wd(P2, P1) & wd(P0, P )& wd(P0, P1) & wd(P3, P0) & wd(P3, P2) &
- coinc(P1, P0, P2) & coinc(P3, P0, P2) & coinc(P3, P, P1)  ) => 
- coinc(P2, P, P1)))).
+ col(P1, P0, P2) & col(P3, P0, P2) & col(P3, P, P1)  ) => 
+ col(P2, P, P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1578,23 +1737,27 @@ fof(foo, conjecture,
   wd(P0, P2) &
   wd(P2, P )&
   wd(P, P1) & wd(P2, P1) & wd(P0, P )& wd(P0, P1) & wd(P3, P0) & wd(P3, P2) &
- coinc(P,P0,P2) & coinc(P3, P0, P2) & coinc(P3, P, P1)  ) => 
- coinc(P2, P, P1)))).
+ col(P,P0,P2) & col(P3, P0, P2) & col(P3, P, P1)  ) => 
+ col(P2, P, P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
 
  (wd(P0, P5) &
   wd(P1, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) & wd(P, P0) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P0, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P0, P3)  ) =>
+ col(P5, P, P2)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
 
@@ -1602,11 +1765,13 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) & wd(P, P0) & wd(P1, P0) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P0, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P0, P3)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1616,11 +1781,13 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) & wd(P, P1) & wd(P, P0) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P1, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P1, P3)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1630,11 +1797,13 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) & wd(P, P1) & wd(P, P0) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P1, P4)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P1, P4)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1644,11 +1813,13 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) & wd(P, P1) & wd(P, P0) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P0, P4)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P0, P4)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1657,12 +1828,14 @@ fof(foo, conjecture,
  (wd(P, P4) &
   wd(P0, P4) &
   wd(P2, P4) & wd(P3, P4) & wd(P1, P4) & wd(P, P1) & wd(P0, P1) & wd(P0, P2) &
- coinc(P4, P, P0) &
- coinc(P4, P, P )&
- coinc(P4, P1, P2) & coinc(P4, P2, P3) & coinc(P1, P2, P0) & coinc(P4, P3, P0)  ) =>
- coinc(P4, P, P1)))).
+ col(P4, P, P0) &
+ col(P4, P, P )&
+ col(P4, P1, P2) & col(P4, P2, P3) & col(P1, P2, P0) & col(P4, P3, P0)  ) =>
+ col(P4, P, P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
 
@@ -1671,22 +1844,12 @@ fof(foo, conjecture,
   wd(P3, P5) &
   wd(P4, P5) &
   wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) & wd(P1, P0) & wd(P1, P )&
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) & coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P0, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) & col(P5, P3, P4) & col(P5, P, P1) & col(P5, P0, P3)  ) =>
+ col(P5, P, P2)))).
  
- fof(foo, conjecture,
-(
-    ! [ P, P0, P1, P2, P3, P4, P5 ] : (
-
- (wd(P0, P5) &
-  wd(P1, P5) &
-  wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) & coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P1, P3)  ) =>
- coinc(P5, P, P2)))).
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1695,11 +1858,12 @@ fof(foo, conjecture,
  (wd(P0, P5) &
   wd(P1, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P, P4) & coinc(P,P1,P0)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) & col(P5, P3, P4) & col(P5, P, P1) & col(P5, P1, P3)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1708,12 +1872,29 @@ fof(foo, conjecture,
  (wd(P0, P5) &
   wd(P1, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) &
- coinc(P5, P, P1) & coinc(P5, P1, P3) & coinc(P5, P4, P2) & coinc(P,P1,P0)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P, P4) & col(P,P1,P0)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
+
+fof(foo, conjecture,
+(
+    ! [ P, P0, P1, P2, P3, P4, P5 ] : (
+
+ (wd(P0, P5) &
+  wd(P1, P5) &
+  wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) &
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) &
+ col(P5, P, P1) & col(P5, P1, P3) & col(P5, P4, P2) & col(P,P1,P0)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1723,13 +1904,15 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) & wd(P, P1) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P0, P4) & coinc(P,P0,P1)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P0, P4) & col(P,P0,P1)  ) =>
+ col(P5, P, P2)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
 
@@ -1737,11 +1920,13 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P5) &
   wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P0) & wd(P, P2) & wd(P, P1) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P, P4) & coinc(P,P0,P1)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P, P4) & col(P,P0,P1)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1749,9 +1934,11 @@ fof(foo, conjecture,
 
  (wd(P0, P5) &
   wd(P1, P5) & wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P2, P5) & wd(P, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) & coinc(P5, P2, P3) & coinc(P5, P3, P4) & coinc(P5, P0, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) & col(P5, P2, P3) & col(P5, P3, P4) & col(P5, P0, P3)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1760,11 +1947,13 @@ fof(foo, conjecture,
  (wd(P0, P5) &
   wd(P1, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P, P3) & wd(P, P2) & wd(P5, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P0, P4)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P0, P4)  ) =>
+ col(P5, P, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1773,13 +1962,15 @@ fof(foo, conjecture,
  (wd(P0, P5) &
   wd(P1, P5) &
   wd(P3, P5) & wd(P4, P5) & wd(P, P5) & wd(P, P3) & wd(P, P2) & wd(P5, P2) &
- coinc(P5, P, P0) &
- coinc(P5, P0, P1) &
- coinc(P5, P2, P3) &
- coinc(P5, P3, P4) & coinc(P5, P, P1) & coinc(P5, P2, P4) & coinc(P5, P1, P3)  ) =>
- coinc(P5, P, P2)))).
+ col(P5, P, P0) &
+ col(P5, P0, P1) &
+ col(P5, P2, P3) &
+ col(P5, P3, P4) & col(P5, P, P1) & col(P5, P2, P4) & col(P5, P1, P3)  ) =>
+ col(P5, P, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5 ] : (
 
@@ -1797,10 +1988,12 @@ fof(foo, conjecture,
   wd(P3, P4) &
   wd(P, P1) &
   wd(P, P0) & wd(P2, P1) & wd(P, P3) & wd(P0, P2) & wd(P0, P3) & wd(P1, P4) &
- coinc(P5, P, P2) & coinc(P5, P0, P3) & coinc(P5, P1, P4) & coinc(P5, P2, P4)  ) =>
- coinc(P5, P, P1)))).
+ col(P5, P, P2) & col(P5, P0, P3) & col(P5, P1, P4) & col(P5, P2, P4)  ) =>
+ col(P5, P, P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10] : (
@@ -1829,20 +2022,22 @@ fof(foo, conjecture,
   wd(P, P1) &
   wd(P2, P1) &
   wd(P10, P9 )& wd(P5, P10) & wd(P8, P5) & wd(P8, P3) & wd(P1, P4) &
- coinc(P5, P, P2) &
- coinc(P5, P0, P3) &
- coinc(P5, P1, P4) &
- coinc(P,P6,P7) &
- coinc(P8, P6, P7) &
- coinc(P8, P2, P4) &
- coinc(P9, P6, P7) &
- coinc(P9, P5, P1) &
- coinc(P10, P, P0) &
- coinc(P10, P8, P3) & coinc(P3, P5, P4) & coinc(P3, P10, P3 ) ) =>
- coinc(P5, P0, P1)))).
+ col(P5, P, P2) &
+ col(P5, P0, P3) &
+ col(P5, P1, P4) &
+ col(P,P6,P7) &
+ col(P8, P6, P7) &
+ col(P8, P2, P4) &
+ col(P9, P6, P7) &
+ col(P9, P5, P1) &
+ col(P10, P, P0) &
+ col(P10, P8, P3) & col(P3, P5, P4) & col(P3, P10, P3 ) ) =>
+ col(P5, P0, P1)))).
 
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
 
@@ -1853,16 +2048,18 @@ fof(foo, conjecture,
   wd(P0, P1) &
   wd(P2, P1) &
   wd(P3, P )& wd(P4, P )& wd(P6, P5) & wd(P, P6) & wd(P4, P5) & wd(P3, P6) &
- coinc(P,P0,P2) &
- coinc(P,P0,P3) &
- coinc(P,P0,P4) &
- coinc(P,P0,P5) &
- coinc(P,P2,P3) &
- coinc(P,P2,P4) &
- coinc(P,P2,P5) & coinc(P,P1,P6) & coinc(P4, P6, P5) & coinc(P,P6,P5)  ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P2) &
+ col(P,P0,P3) &
+ col(P,P0,P4) &
+ col(P,P0,P5) &
+ col(P,P2,P3) &
+ col(P,P2,P4) &
+ col(P,P2,P5) & col(P,P1,P6) & col(P4, P6, P5) & col(P,P6,P5)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6, P7] : (
 
@@ -1881,11 +2078,13 @@ fof(foo, conjecture,
   wd(P4, P7) &
   wd(P4, P6) &
   wd(P0, P6) & wd(P1, P4) & wd(P4, P2) & wd(P7, P0) & wd(P7, P2) &
- coinc(P,P0,P3) &
- coinc(P,P0,P4) &
- coinc(P,P0,P5) &
- coinc(P,P1,P6) & coinc(P,P2,P7) & coinc(P1, P6, P5) & coinc(P3, P6, P5)  ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P3) &
+ col(P,P0,P4) &
+ col(P,P0,P5) &
+ col(P,P1,P6) & col(P,P2,P7) & col(P1, P6, P5) & col(P3, P6, P5)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -1908,14 +2107,16 @@ fof(foo, conjecture,
   wd(P1, P4) &
   wd(P2, P5) &
   wd(P2, P4) & wd(P0, P5) & wd(P1, P3) & wd(P6, P0) & wd(P6, P1) &
- coinc(P,P0,P2) &
- coinc(P,P0,P3) &
- coinc(P,P0,P4) &
- coinc(P,P1,P5) &
- coinc(P,P1,P6) & coinc(P3, P3, P6) & coinc(P5, P3, P6) & coinc(P3, P5, P ) ) =>
- coinc(P,P0,P1)))).
+ col(P,P0,P2) &
+ col(P,P0,P3) &
+ col(P,P0,P4) &
+ col(P,P1,P5) &
+ col(P,P1,P6) & col(P3, P3, P6) & col(P5, P3, P6) & col(P3, P5, P ) ) =>
+ col(P,P0,P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
 
@@ -1939,12 +2140,14 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P6) &
   wd(P3, P5) & wd(P0, P6) & wd(P1, P4) & wd(P4, P2) & wd(P6, P2) &
- coinc(P,P0,P3) &
- coinc(P,P0,P4) &
- coinc(P,P0,P5) & coinc(P,P1,P6) & coinc(P,P2,P6) & coinc(P0, P1, P2)  ) =>
- coinc(P4, P6, P1)))).
+ col(P,P0,P3) &
+ col(P,P0,P4) &
+ col(P,P0,P5) & col(P,P1,P6) & col(P,P2,P6) & col(P0, P1, P2)  ) =>
+ col(P4, P6, P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
 
@@ -1968,12 +2171,14 @@ fof(foo, conjecture,
   wd(P1, P5) &
   wd(P3, P6) &
   wd(P3, P5) & wd(P0, P6) & wd(P1, P4) & wd(P4, P2) & wd(P6, P2) &
- coinc(P,P0,P3) &
- coinc(P,P0,P4) &
- coinc(P,P0,P5) & coinc(P,P1,P6) & coinc(P,P2,P6) & coinc(P0, P1, P2)  ) =>
- coinc(P4, P6, P2)))).
+ col(P,P0,P3) &
+ col(P,P0,P4) &
+ col(P,P0,P5) & col(P,P1,P6) & col(P,P2,P6) & col(P0, P1, P2)  ) =>
+ col(P4, P6, P2)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15] : (
@@ -2000,20 +2205,22 @@ fof(foo, conjecture,
   wd(P0, P9) &
   wd(P13, P12) &
   wd(P15, P0 )& wd(P11, P15) & wd(P8, P2) & wd(P11, P14) & wd(P15, P14) &
- coinc(P3, P4, P5) &
- coinc(P3, P6, P7) &
- coinc(P0, P1, P8) &
- coinc(P0, P1, P9) &
- coinc(P0, P1, P10) &
- coinc(P0, P1, P11) &
- coinc(P0, P13, P15) &
- coinc(P7, P4, P5) &
- coinc(P15, P11, P14) &
- coinc(P13, P10, P12) &
- coinc(P0, P12, P14) & coinc(P0, P8, P10) & coinc(P0, P10, P11)  ) =>
- coinc(P3, P4, P6)))).
+ col(P3, P4, P5) &
+ col(P3, P6, P7) &
+ col(P0, P1, P8) &
+ col(P0, P1, P9) &
+ col(P0, P1, P10) &
+ col(P0, P1, P11) &
+ col(P0, P13, P15) &
+ col(P7, P4, P5) &
+ col(P15, P11, P14) &
+ col(P13, P10, P12) &
+ col(P0, P12, P14) & col(P0, P8, P10) & col(P0, P10, P11)  ) =>
+ col(P3, P4, P6)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14] : (
@@ -2039,19 +2246,21 @@ fof(foo, conjecture,
   wd(P3, P7) &
   wd(P14, P11) &
   wd(P14, P9 )& wd(P13, P12) & wd(P14, P0 )& wd(P8, P2) & wd(P7, P5) &
- coinc(P3, P4, P5) &
- coinc(P3, P6, P7) &
- coinc(P0, P1, P8) &
- coinc(P0, P1, P9) &
- coinc(P0, P1, P10) &
- coinc(P0, P1, P11) &
- coinc(P0, P13, P14) &
- coinc(P10, P11, P9 )&
- coinc(P12, P11, P9 )&
- coinc(P14, P11, P9 )&
- coinc(P13, P10, P12) &
- coinc(P0, P12, P9 )& coinc(P0, P8, P10) & coinc(P0, P10, P11)  ) =>
- coinc(P0, P10, P12)))).
+ col(P3, P4, P5) &
+ col(P3, P6, P7) &
+ col(P0, P1, P8) &
+ col(P0, P1, P9) &
+ col(P0, P1, P10) &
+ col(P0, P1, P11) &
+ col(P0, P13, P14) &
+ col(P10, P11, P9 )&
+ col(P12, P11, P9 )&
+ col(P14, P11, P9 )&
+ col(P13, P10, P12) &
+ col(P0, P12, P9 )& col(P0, P8, P10) & col(P0, P10, P11)  ) =>
+ col(P0, P10, P12)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2062,19 +2271,21 @@ fof(foo, conjecture,
   wd(P4, P8) &
   wd(P6, P8) &
   wd(P16, P17) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P2, P3) &
- coinc(P,P0,P5) &
- coinc(P,P0,P7) &
- coinc(P,P0,P9) &
- coinc(P,P0,P10) &
- coinc(P,P0,P11) &
- coinc(P,P0,P15) &
- coinc(P,P0,P12) &
- coinc(P,P0,P13) &
- coinc(P,P0,P14) &
- coinc(P4, P16, P17) & coinc(P4, P6, P8) & coinc(P16, P17, P6 ) ) =>
- coinc(P16, P17, P8)))).
+ col(P,P0,P5) &
+ col(P,P0,P7) &
+ col(P,P0,P9) &
+ col(P,P0,P10) &
+ col(P,P0,P11) &
+ col(P,P0,P15) &
+ col(P,P0,P12) &
+ col(P,P0,P13) &
+ col(P,P0,P14) &
+ col(P4, P16, P17) & col(P4, P6, P8) & col(P16, P17, P6 ) ) =>
+ col(P16, P17, P8)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ![P, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19,
@@ -2089,23 +2300,25 @@ fof(foo, conjecture,
   wd(P8, P20) &
   wd(P6, P19) &
   wd(P4, P19) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P2, P3) &
- coinc(P,P0,P5) &
- coinc(P,P0,P7) &
- coinc(P,P0,P9) &
- coinc(P,P0,P10) &
- coinc(P,P0,P11) &
- coinc(P,P0,P15) &
- coinc(P,P0,P12) &
- coinc(P,P0,P13) &
- coinc(P,P0,P14) &
- coinc(P4, P16, P17) &
- coinc(P,P0,P21) &
- coinc(P,P0,P22) &
- coinc(P16, P17, P19) &
- coinc(P2, P3, P18) &
- coinc(P16, P17, P8 )&
- coinc(P2, P3, P20) & coinc(P6, P18, P19) & coinc(P4, P6, P8)  ) =>
- coinc(P4, P6, P19)))).
+ col(P,P0,P5) &
+ col(P,P0,P7) &
+ col(P,P0,P9) &
+ col(P,P0,P10) &
+ col(P,P0,P11) &
+ col(P,P0,P15) &
+ col(P,P0,P12) &
+ col(P,P0,P13) &
+ col(P,P0,P14) &
+ col(P4, P16, P17) &
+ col(P,P0,P21) &
+ col(P,P0,P22) &
+ col(P16, P17, P19) &
+ col(P2, P3, P18) &
+ col(P16, P17, P8 )&
+ col(P2, P3, P20) & col(P6, P18, P19) & col(P4, P6, P8)  ) =>
+ col(P4, P6, P19)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2120,22 +2333,24 @@ fof(foo, conjecture,
   wd(P8, P19) &
   wd(P6, P18) &
   wd(P4, P18) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P2, P3) &
- coinc(P,P0,P5) &
- coinc(P,P0,P7) &
- coinc(P,P0,P9) &
- coinc(P,P0,P10) &
- coinc(P,P0,P11) &
- coinc(P,P0,P15) &
- coinc(P,P0,P12) &
- coinc(P,P0,P13) &
- coinc(P,P0,P14) &
- coinc(P4, P16, P17) &
- coinc(P,P0,P20) &
- coinc(P,P0,P21) &
- coinc(P16, P17, P18) &
- coinc(P2, P3, P6) &
- coinc(P16, P17, P8 )& coinc(P2, P3, P19) & coinc(P4, P6, P8)  ) =>
- coinc(P4, P6, P18)))).
+ col(P,P0,P5) &
+ col(P,P0,P7) &
+ col(P,P0,P9) &
+ col(P,P0,P10) &
+ col(P,P0,P11) &
+ col(P,P0,P15) &
+ col(P,P0,P12) &
+ col(P,P0,P13) &
+ col(P,P0,P14) &
+ col(P4, P16, P17) &
+ col(P,P0,P20) &
+ col(P,P0,P21) &
+ col(P16, P17, P18) &
+ col(P2, P3, P6) &
+ col(P16, P17, P8 )& col(P2, P3, P19) & col(P4, P6, P8)  ) =>
+ col(P4, P6, P18)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2150,22 +2365,24 @@ fof(foo, conjecture,
   wd(P8, P19) &
   wd(P6, P18) &
   wd(P4, P18) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P2, P3) &
- coinc(P,P0,P5) &
- coinc(P,P0,P7) &
- coinc(P,P0,P9) &
- coinc(P,P0,P10) &
- coinc(P,P0,P11) &
- coinc(P,P0,P15) &
- coinc(P,P0,P12) &
- coinc(P,P0,P13) &
- coinc(P,P0,P14) &
- coinc(P4, P16, P17) &
- coinc(P,P0,P20) &
- coinc(P,P0,P21) &
- coinc(P16, P17, P18) &
- coinc(P2, P3, P18) &
- coinc(P16, P17, P8 )& coinc(P2, P3, P19) & coinc(P4, P6, P8)  ) =>
- coinc(P4, P6, P18)))).
+ col(P,P0,P5) &
+ col(P,P0,P7) &
+ col(P,P0,P9) &
+ col(P,P0,P10) &
+ col(P,P0,P11) &
+ col(P,P0,P15) &
+ col(P,P0,P12) &
+ col(P,P0,P13) &
+ col(P,P0,P14) &
+ col(P4, P16, P17) &
+ col(P,P0,P20) &
+ col(P,P0,P21) &
+ col(P16, P17, P18) &
+ col(P2, P3, P18) &
+ col(P16, P17, P8 )& col(P2, P3, P19) & col(P4, P6, P8)  ) =>
+ col(P4, P6, P18)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2176,8 +2393,10 @@ fof(foo, conjecture,
   wd(P4, P5) &
   wd(P0, P5) &
   wd(P4, P6) & wd(P1, P2) & wd(P0, P2) & wd(P5, P6) & wd(P5, P2) &
- coinc(P0, P1, P4) & coinc(P0, P1, P5) & coinc(P4, P5, P6)  ) => 
- coinc(P0, P1, P6)))).
+ col(P0, P1, P4) & col(P0, P1, P5) & col(P4, P5, P6)  ) => 
+ col(P0, P1, P6)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2199,26 +2418,32 @@ fof(foo, conjecture,
   wd(P4, P7) &
   wd(P5, P7) &
   wd(P3, P6) & wd(P5, P6) & wd(P5, P )& wd(P5, P0) & wd(P, P7) & wd(P0, P7) &
- coinc(P3, P4, P5) & coinc(P5, P, P0) & coinc(P7, P4, P5) & coinc(P6, P3, P5)  ) =>
- coinc(P6, P7, P5)))).
+ col(P3, P4, P5) & col(P5, P, P0) & col(P7, P4, P5) & col(P6, P3, P5)  ) =>
+ col(P6, P7, P5)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P, P0) & wd(P, P1) & wd(P, P2) & wd(P, P3) & wd(P3, P1) & wd(P2, P0) &
- coinc(P,P0,P1) & coinc(P,P2,P0) & coinc(P,P3,P1)  ) => 
- coinc(P,P2,P3)))).
+ col(P,P0,P1) & col(P,P2,P0) & col(P,P3,P1)  ) => 
+ col(P,P2,P3)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3, P4 ] : (
 
  (wd(P, P0) &
   wd(P0, P1) &
   wd(P, P1) & wd(P4, P3) & wd(P4, P0) & wd(P4, P1) & wd(P3, P )& wd(P3, P0) &
- coinc(P,P0,P1) & coinc(P2, P4, P3) & coinc(P4, P0, P1) & coinc(P3, P, P0)  ) =>
- coinc(P,P2,P0)))).
+ col(P,P0,P1) & col(P2, P4, P3) & col(P4, P0, P1) & col(P3, P, P0)  ) =>
+ col(P,P2,P0)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2237,13 +2462,15 @@ fof(foo, conjecture,
   wd(P0, P5) &
   wd(P0, P6) &
   wd(P, P5) & wd(P2, P5) & wd(P3, P5) & wd(P6, P5) & wd(P5, P1) & wd(P1, P6) &
- coinc(P5, P, P2) &
- coinc(P5, P0, P3) &
- coinc(P5, P1, P6) &
- coinc(P4, P, P0) & coinc(P3, P, P1) & coinc(P2, P0, P1) & coinc(P5, P, P6)  ) =>
- coinc(P,P0,P1)))).
+ col(P5, P, P2) &
+ col(P5, P0, P3) &
+ col(P5, P1, P6) &
+ col(P4, P, P0) & col(P3, P, P1) & col(P2, P0, P1) & col(P5, P, P6)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
@@ -2255,15 +2482,17 @@ fof(foo, conjecture,
   wd(P5, P1) &
   wd(P4, P0) &
   wd(P4, P1) & wd(P6, P )& wd(P6, P0) & wd(P2, P )& wd(P3, P )& wd(P3, P2) &
- coinc(P2, P, P4) &
- coinc(P2, P0, P5) &
- coinc(P2, P6, P1) &
- coinc(P,P2,P1) &
- coinc(P8, P4, P3) &
- coinc(P8, P6, P7) &
- coinc(P7, P1, P2) &
- coinc(P6, P, P0) & coinc(P3, P, P2) & coinc(P5, P, P1) & coinc(P4, P0, P1)  ) =>
- coinc(P,P0,P1)))).
+ col(P2, P, P4) &
+ col(P2, P0, P5) &
+ col(P2, P6, P1) &
+ col(P,P2,P1) &
+ col(P8, P4, P3) &
+ col(P8, P6, P7) &
+ col(P7, P1, P2) &
+ col(P6, P, P0) & col(P3, P, P2) & col(P5, P, P1) & col(P4, P0, P1)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2282,12 +2511,14 @@ fof(foo, conjecture,
   wd(P5, P6) &
   wd(P2, P1) &
   wd(P4, P5) & wd(P4, P6) & wd(P6, P1) & wd(P6, P2) & wd(P4, P )& wd(P4, P2) &
- coinc(P2, P, P4) &
- coinc(P2, P0, P3) &
- coinc(P2, P5, P1) &
- coinc(P4, P5, P6) &
- coinc(P6, P1, P2) & coinc(P5, P, P0) & coinc(P3, P, P1) & coinc(P4, P0, P1)  ) =>
- coinc(P,P0,P1)))).
+ col(P2, P, P4) &
+ col(P2, P0, P3) &
+ col(P2, P5, P1) &
+ col(P4, P5, P6) &
+ col(P6, P1, P2) & col(P5, P, P0) & col(P3, P, P1) & col(P4, P0, P1)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2306,12 +2537,14 @@ fof(foo, conjecture,
   wd(P4, P3) &
   wd(P2, P1) &
   wd(P6, P4) & wd(P6, P3) & wd(P6, P1) & wd(P6, P2) & wd(P3, P )& wd(P3, P2) &
- coinc(P2, P, P4) &
- coinc(P2, P0, P5) &
- coinc(P2, P6, P1) &
- coinc(P6, P4, P3) &
- coinc(P6, P, P0) & coinc(P3, P, P2) & coinc(P5, P, P1) & coinc(P4, P0, P1)  ) =>
- coinc(P,P0,P1)))).
+ col(P2, P, P4) &
+ col(P2, P0, P5) &
+ col(P2, P6, P1) &
+ col(P6, P4, P3) &
+ col(P6, P, P0) & col(P3, P, P2) & col(P5, P, P1) & col(P4, P0, P1)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2334,14 +2567,16 @@ fof(foo, conjecture,
   wd(P8, P4) &
   wd(P8, P3) &
   wd(P8, P6) & wd(P8, P7) & wd(P7, P1) & wd(P7, P2) & wd(P3, P )& wd(P3, P2) &
- coinc(P2, P, P4) &
- coinc(P2, P0, P5) &
- coinc(P2, P6, P1) &
- coinc(P8, P4, P3) &
- coinc(P8, P6, P7) &
- coinc(P7, P1, P2) &
- coinc(P6, P, P0) & coinc(P3, P, P2) & coinc(P5, P, P1) & coinc(P4, P0, P1)  ) =>
- coinc(P,P2,P8)))).
+ col(P2, P, P4) &
+ col(P2, P0, P5) &
+ col(P2, P6, P1) &
+ col(P8, P4, P3) &
+ col(P8, P6, P7) &
+ col(P7, P1, P2) &
+ col(P6, P, P0) & col(P3, P, P2) & col(P5, P, P1) & col(P4, P0, P1)  ) =>
+ col(P,P2,P8)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2364,14 +2599,16 @@ fof(foo, conjecture,
   wd(P8, P4) &
   wd(P8, P3) &
   wd(P8, P6) & wd(P8, P7) & wd(P7, P1) & wd(P7, P2) & wd(P3, P )& wd(P3, P2) &
- coinc(P2, P, P4) &
- coinc(P2, P0, P5) &
- coinc(P2, P6, P1) &
- coinc(P8, P4, P3) &
- coinc(P8, P6, P7) &
- coinc(P7, P1, P2) &
- coinc(P6, P, P0) & coinc(P3, P, P2) & coinc(P5, P, P1) & coinc(P4, P0, P1)  ) =>
- coinc(P1, P2, P8)))).
+ col(P2, P, P4) &
+ col(P2, P0, P5) &
+ col(P2, P6, P1) &
+ col(P8, P4, P3) &
+ col(P8, P6, P7) &
+ col(P7, P1, P2) &
+ col(P6, P, P0) & col(P3, P, P2) & col(P5, P, P1) & col(P4, P0, P1)  ) =>
+ col(P1, P2, P8)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2397,14 +2634,16 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P3, P7, P3) &
- coinc(P2, P4, P3) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P3, P7, P3) &
+ col(P2, P4, P3) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) & col(P4, P, P2) & col(P3, P0, P1) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2430,14 +2669,16 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P3, P7, P3) &
- coinc(P2, P4, P3) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P3, P7, P2)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P3, P7, P3) &
+ col(P2, P4, P3) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) & col(P4, P, P2) & col(P3, P0, P1) & col(P3, P7, P2)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2463,14 +2704,16 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P3, P7, P7) &
- coinc(P2, P8, P7) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P3, P7, P7) &
+ col(P2, P8, P7) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2496,14 +2739,16 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P3, P7, P7) &
- coinc(P2, P8, P7) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P3, P7, P2)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P3, P7, P7) &
+ col(P2, P8, P7) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P3, P7, P2)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2529,45 +2774,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
 
- fof(foo, conjecture,
-(
-   
-   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
-
- (wd(P3, P7) &
-  wd(P, P0) &
-  wd(P0, P1) &
-  wd(P, P1) &
-  wd(P5, P )&
-  wd(P5, P1) &
-  wd(P3, P0) &
-  wd(P3, P1) &
-  wd(P6, P )&
-  wd(P6, P0) &
-  wd(P4, P7) &
-  wd(P3, P8) &
-  wd(P3, P5) &
-  wd(P5, P8) &
-  wd(P2, P3) &
-  wd(P2, P4) &
-  wd(P2, P7) &
-  wd(P7, P8) &
-  wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P5, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2593,47 +2808,49 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P8, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P5, P3, P7)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
+
+fof(foo, conjecture,
+(
+   
+   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
+
+ (wd(P3, P7) &
+  wd(P, P0) &
+  wd(P0, P1) &
+  wd(P, P1) &
+  wd(P5, P )&
+  wd(P5, P1) &
+  wd(P3, P0) &
+  wd(P3, P1) &
+  wd(P6, P )&
+  wd(P6, P0) &
+  wd(P4, P7) &
+  wd(P3, P8) &
+  wd(P3, P5) &
+  wd(P5, P8) &
+  wd(P2, P3) &
+  wd(P2, P4) &
+  wd(P2, P7) &
+  wd(P7, P8) &
+  wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P8, P3, P7)  ) =>
+ col(P,P0,P2)))).
  
- fof(foo, conjecture,
-(
-   
-   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
-
- (wd(P, P0) &
-  wd(P0, P1) &
-  wd(P, P1) &
-  wd(P5, P )&
-  wd(P5, P1) &
-  wd(P3, P0) &
-  wd(P3, P1) &
-  wd(P6, P )&
-  wd(P6, P0) &
-  wd(P4, P7) &
-  wd(P3, P8) &
-  wd(P3, P5) &
-  wd(P5, P8) &
-  wd(P2, P3) &
-  wd(P2, P4) &
-  wd(P2, P7) &
-  wd(P3, P7) &
-  wd(P7, P8) &
-  wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) &
- coinc(P4, P, P2) &
- coinc(P3, P0, P1) & coinc(P3, P7, P3) & coinc(P2, P, P3) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2659,15 +2876,53 @@ fof(foo, conjecture,
   wd(P3, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) &
- coinc(P4, P, P2) &
- coinc(P3, P0, P1) & coinc(P3, P7, P3) & coinc(P2, P, P3) & coinc(P3, P7, P2)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) &
+ col(P4, P, P2) &
+ col(P3, P0, P1) & col(P3, P7, P3) & col(P2, P, P3) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
+
+fof(foo, conjecture,
+(
+   
+   ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
+
+ (wd(P, P0) &
+  wd(P0, P1) &
+  wd(P, P1) &
+  wd(P5, P )&
+  wd(P5, P1) &
+  wd(P3, P0) &
+  wd(P3, P1) &
+  wd(P6, P )&
+  wd(P6, P0) &
+  wd(P4, P7) &
+  wd(P3, P8) &
+  wd(P3, P5) &
+  wd(P5, P8) &
+  wd(P2, P3) &
+  wd(P2, P4) &
+  wd(P2, P7) &
+  wd(P3, P7) &
+  wd(P7, P8) &
+  wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) &
+ col(P4, P, P2) &
+ col(P3, P0, P1) & col(P3, P7, P3) & col(P2, P, P3) & col(P3, P7, P2)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2693,13 +2948,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2725,13 +2982,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P2, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P2, P3, P7)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2757,13 +3016,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P0, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P0, P3, P7)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2789,13 +3050,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2821,13 +3084,15 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P1, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P1, P3, P7)  ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2853,15 +3118,17 @@ fof(foo, conjecture,
   wd(P2, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) & coinc(P4, P, P2) & coinc(P3, P0, P1) & coinc(P0, P3, P7)  ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) & col(P4, P, P2) & col(P3, P0, P1) & col(P0, P3, P7)  ) =>
+ col(P,P0,P2)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P, P0, P1, P2, P3, P4, P5, P6, P7, P8 ] : (
@@ -2885,15 +3152,17 @@ fof(foo, conjecture,
   wd(P3, P7) &
   wd(P7, P8) &
   wd(P2, P8) & wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )&
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) &
- coinc(P4, P, P2) &
- coinc(P3, P0, P1) & coinc(P3, P7, P3) & coinc(P,P4,P3) & coinc(P,P0,P2)  ) =>
- coinc(P,P0,P1)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) &
+ col(P4, P, P2) &
+ col(P3, P0, P1) & col(P3, P7, P3) & col(P,P4,P3) & col(P,P0,P2)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2920,15 +3189,17 @@ fof(foo, conjecture,
   wd(P7, P8) &
   wd(P2, P8) &
   wd(P3, P4) & wd(P0, P2) & wd(P7, P0) & wd(P, P2) & wd(P4, P )& wd(P, P3) &
- coinc(P3, P5, P8) &
- coinc(P2, P7, P8) &
- coinc(P7, P0, P2) &
- coinc(P6, P, P0) &
- coinc(P5, P, P1) &
- coinc(P2, P3, P4) &
- coinc(P4, P, P2) &
- coinc(P3, P0, P1) & coinc(P3, P7, P3) & coinc(P,P4,P3) & coinc(P3, P7, P ) ) =>
- coinc(P,P0,P2)))).
+ col(P3, P5, P8) &
+ col(P2, P7, P8) &
+ col(P7, P0, P2) &
+ col(P6, P, P0) &
+ col(P5, P, P1) &
+ col(P2, P3, P4) &
+ col(P4, P, P2) &
+ col(P3, P0, P1) & col(P3, P7, P3) & col(P,P4,P3) & col(P3, P7, P ) ) =>
+ col(P,P0,P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2939,32 +3210,10 @@ fof(foo, conjecture,
   wd(P0, P1) &
   wd(P2, P3) &
   wd(P2, P4) & wd(P3, P4) & wd(P4, P )& wd(P4, P1) & wd(P3, P )& wd(P3, P0) &
- coinc(P,P0,P1) & coinc(P2, P3, P4) & coinc(P4, P, P1) & coinc(P3, P, P0)  ) =>
- coinc(P,P2,P0)))).
+ col(P,P0,P1) & col(P2, P3, P4) & col(P4, P, P1) & col(P3, P, P0)  ) =>
+ col(P,P2,P0)))).
 
- fof(foo, conjecture,
-(
-    ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
-
- (wd(P, P0) &
-  wd(P0, P1) &
-  wd(P, P1) &
-  wd(P4, P )&
-  wd(P4, P1) &
-  wd(P2, P )&
-  wd(P2, P0) &
-  wd(P5, P6) &
-  wd(P4, P6) &
-  wd(P2, P5) &
-  wd(P2, P4) &
-  wd(P0, P4) &
-  wd(P, P3) &
-  wd(P1, P2) &
-  wd(P3, P0) &
-  wd(P3, P1) & wd(P6, P3) & wd(P6, P1) & wd(P5, P0) & wd(P5, P3) &
- coinc(P1, P3, P0) &
- coinc(P6, P3, P1) & coinc(P5, P0, P3) & coinc(P4, P, P1) & coinc(P2, P, P0)  ) =>
- coinc(P5, P3, P6)))).
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -2986,12 +3235,40 @@ fof(foo, conjecture,
   wd(P1, P2) &
   wd(P3, P0) &
   wd(P3, P1) & wd(P6, P3) & wd(P6, P1) & wd(P5, P0) & wd(P5, P3) &
- coinc(P1, P3, P0) &
- coinc(P6, P3, P1) &
- coinc(P5, P0, P3) & coinc(P4, P, P1) & coinc(P2, P, P0) & coinc(P2, P5, P6)  ) =>
- coinc(P,P0,P1)))).
+ col(P1, P3, P0) &
+ col(P6, P3, P1) & col(P5, P0, P3) & col(P4, P, P1) & col(P2, P, P0)  ) =>
+ col(P5, P3, P6)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
+(
+    ! [ P, P0, P1, P2, P3, P4, P5, P6] : (
+
+ (wd(P, P0) &
+  wd(P0, P1) &
+  wd(P, P1) &
+  wd(P4, P )&
+  wd(P4, P1) &
+  wd(P2, P )&
+  wd(P2, P0) &
+  wd(P5, P6) &
+  wd(P4, P6) &
+  wd(P2, P5) &
+  wd(P2, P4) &
+  wd(P0, P4) &
+  wd(P, P3) &
+  wd(P1, P2) &
+  wd(P3, P0) &
+  wd(P3, P1) & wd(P6, P3) & wd(P6, P1) & wd(P5, P0) & wd(P5, P3) &
+ col(P1, P3, P0) &
+ col(P6, P3, P1) &
+ col(P5, P0, P3) & col(P4, P, P1) & col(P2, P, P0) & col(P2, P5, P6)  ) =>
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10] : (
@@ -3008,12 +3285,14 @@ fof(foo, conjecture,
   wd(P0, P8) &
   wd(P9, P7) &
   wd(P7, P2) & wd(P9, P2) & wd(P6, P9) & wd(P10, P9 )& wd(P10, P2 )&
- coinc(P9, P10, P7 )&
- coinc(P0, P7, P8) &
- coinc(P4, P6, P5) & coinc(P2, P9, P10) & coinc(P2, P6, P7)  ) =>
- coinc(P2, P6, P9)))).
+ col(P9, P10, P7 )&
+ col(P0, P7, P8) &
+ col(P4, P6, P5) & col(P2, P9, P10) & col(P2, P6, P7)  ) =>
+ col(P2, P6, P9)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
    
    ! [ P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10] : (
@@ -3031,12 +3310,14 @@ fof(foo, conjecture,
   wd(P9, P7) &
   wd(P8, P0) &
   wd(P7, P2) & wd(P9, P2) & wd(P6, P9) & wd(P10, P9 )& wd(P10, P2 )&
- coinc(P9, P10, P7 )&
- coinc(P0, P8, P7) &
- coinc(P4, P6, P5) & coinc(P2, P9, P10) & coinc(P2, P6, P7)  ) =>
- coinc(P2, P6, P9)))).
+ col(P9, P10, P7 )&
+ col(P0, P8, P7) &
+ col(P4, P6, P5) & col(P2, P9, P10) & col(P2, P6, P7)  ) =>
+ col(P2, P6, P9)))).
 
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4 ] : (
   
@@ -3044,18 +3325,22 @@ fof(foo, conjecture,
   wd(P3, P2) &
   wd(P4, P2) &
   wd(P1, P4) & wd(P0, P2) & wd(P0, P1) & wd(P2, P1) & wd(P3, P1) &
- coinc(P3, P4, P1) & coinc(P1, P4, P2) & coinc(P0, P3, P2)  ) => 
- coinc(P0, P1, P2)))).
+ col(P3, P4, P1) & col(P1, P4, P2) & col(P0, P3, P2)  ) => 
+ col(P0, P1, P2)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P3, P1) &
   wd(P, P3) &
   wd(P0, P2) & wd(P2, P1) & wd(P, P1) & wd(P, P0) & wd(P1, P0) & wd(P2, P )&
- coinc(P2, P3, P )& coinc(P0, P2, P1) & coinc(P,P3,P1)  ) => 
- coinc(P,P0,P1)))).
+ col(P2, P3, P )& col(P0, P2, P1) & col(P,P3,P1)  ) => 
+ col(P,P0,P1)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -3065,8 +3350,10 @@ fof(foo, conjecture,
   wd(P3, P2) &
   wd(P1, P2) &
   wd(P2, P4) & wd(P1, P4) & wd(P1, P0) & wd(P4, P0) & wd(P0, P2) &
- coinc(P1, P3, P0) & coinc(P1, P2, P4) & coinc(P0, P3, P2)  ) => 
- coinc(P1, P0, P4)))).
+ col(P1, P3, P0) & col(P1, P2, P4) & col(P0, P3, P2)  ) => 
+ col(P1, P0, P4)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -3076,21 +3363,25 @@ fof(foo, conjecture,
   wd(P3, P2) &
   wd(P1, P2) &
   wd(P1, P4) & wd(P2, P4) & wd(P1, P0) & wd(P4, P0) & wd(P0, P2) &
- coinc(P1, P3, P4) & coinc(P1, P2, P4) & coinc(P0, P3, P2)  ) => 
- coinc(P1, P0, P4)))).
+ col(P1, P3, P4) & col(P1, P2, P4) & col(P0, P3, P2)  ) => 
+ col(P1, P0, P4)))).
 
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P, P0, P1, P2, P3 ] : (
 
  (wd(P3, P1) &
   wd(P, P3) &
   wd(P0, P2) & wd(P2, P1) & wd(P, P0) & wd(P0, P1) & wd(P, P1) & wd(P2, P )&
- coinc(P2, P3, P )& coinc(P0, P2, P1) & coinc(P,P3,P1) & coinc(P3, P3, P0)  ) =>
- coinc(P,P0,P1)))).
+ col(P2, P3, P )& col(P0, P2, P1) & col(P,P3,P1) & col(P3, P3, P0)  ) =>
+ col(P,P0,P1)))).
  
- fof(foo, conjecture,
+include('col-axioms.ax').
+
+fof(foo, conjecture,
 (
     ! [ P0, P1, P2, P3, P4 ] : (
   
@@ -3098,8 +3389,10 @@ fof(foo, conjecture,
   wd(P3, P2) &
   wd(P4, P2) &
   wd(P1, P4) & wd(P0, P1) & wd(P1, P2) & wd(P0, P2) & wd(P3, P1) &
- coinc(P4, P4, P0) & coinc(P3, P4, P1) & coinc(P1, P4, P2) & coinc(P0, P3, P2)  ) =>
- coinc(P0, P1, P2)))).
+ col(P4, P4, P0) & col(P3, P4, P1) & col(P1, P4, P2) & col(P0, P3, P2)  ) =>
+ col(P0, P1, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -3110,8 +3403,10 @@ fof(foo, conjecture,
   wd(P3, P4) &
   wd(P0, P1) &
   wd(P1, P2) & wd(P0, P2) & wd(P4, P5) & wd(P3, P5) & wd(P2, P3) &
- coinc(P0, P1, P3) & coinc(P0, P1, P4) & coinc(P4, P3, P5)  ) => 
- coinc(P0, P1, P5)))).
+ col(P0, P1, P3) & col(P0, P1, P4) & col(P4, P3, P5)  ) => 
+ col(P0, P1, P5)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -3130,10 +3425,12 @@ fof(foo, conjecture,
   wd(P2, P4) &
   wd(P3, P7) &
   wd(P2, P7) & wd(P7, P5) & wd(P3, P6) & wd(P2, P6) & wd(P6, P4) &
- coinc(P0, P1, P3) &
- coinc(P0, P1, P4) &
- coinc(P0, P1, P5) & coinc(P7, P6, P2) & coinc(P5, P2, P3) & coinc(P4, P3, P5)  ) =>
- coinc(P0, P1, P2)))).
+ col(P0, P1, P3) &
+ col(P0, P1, P4) &
+ col(P0, P1, P5) & col(P7, P6, P2) & col(P5, P2, P3) & col(P4, P3, P5)  ) =>
+ col(P0, P1, P2)))).
+
+include('col-axioms.ax').
 
 fof(foo, conjecture,
 (
@@ -3152,7 +3449,7 @@ fof(foo, conjecture,
   wd(P2, P4) &
   wd(P3, P7) &
   wd(P2, P7) & wd(P7, P5) & wd(P3, P6) & wd(P2, P6) & wd(P6, P4) &
- coinc(P0, P1, P3) &
- coinc(P0, P1, P4) &
- coinc(P0, P1, P5) & coinc(P7, P6, P2) & coinc(P4, P2, P3) & coinc(P4, P3, P5)  ) =>
- coinc(P0, P1, P2)))).
+ col(P0, P1, P3) &
+ col(P0, P1, P4) &
+ col(P0, P1, P5) & col(P7, P6, P2) & col(P4, P2, P3) & col(P4, P3, P5)  ) =>
+ col(P0, P1, P2)))).
