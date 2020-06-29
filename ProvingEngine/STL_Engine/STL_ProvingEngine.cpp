@@ -344,7 +344,14 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs)
         else
             return false;
     }
-    (*pcs)->SetCases(dnf);
+    vector<DNFFormula> vd;
+    for(size_t i = 0; i < dnf.GetSize(); i++) {
+        DNFFormula dn;
+        dn.Add(dnf.GetElement(i));
+        vd.push_back(dn);
+    }
+    (*pcs)->SetCases(vd);
+    //(*pcs)->SetCases(dnf);
     return true;
 }
 
