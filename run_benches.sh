@@ -264,22 +264,33 @@ echo "Find shortest proof:" $opt4 | tee -a $filename
 echo "Use implicit lemmas:" $opt5 | tee -a $filename
 fi
 
+tm() {
+  local start=$(gdate +%s)
+  $@
+  local exit_code=$?
+  printf >&2 " ~$(($(gdate +%s)-${start})) seconds. "
+  echo " ~$(($(gdate +%s)-${start})) seconds. " >> data.csv
+  return $exit_code
+}
+
+
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
+  echo $file >> data.csv
   if [[ $prover = "CLprover" ]]; then
       echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof $implicit -vcoq "$axioms" "$axiomsb" "$file"
-    ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
+    tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
     else
       if [[ $prover = "eprover" ]]; then
         echo "eprove"
-        eprover -xAuto -tAuto --cpu-limit="$time" "$file" | tee -a $filename
+        tm eprover -xAuto -tAuto --cpu-limit="$time" "$file" | tee -a $filename
       else 
 	  if [[ $prover = "zenon" ]]; then
-              zenon -itptp -max-time "$time" "$file" | tee -a $filename
+              tm zenon -itptp -max-time "$time" "$file" | tee -a $filename
 	  else
 	      if [[ $prover = "vampire" ]]; then
-		  vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
+		  tm vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
 	      fi
 	  fi
       fi
