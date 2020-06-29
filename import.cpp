@@ -242,7 +242,8 @@ vampire_succeeded = true;
            cout << endl << "Done! (simplified proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
 
-        proof.CL2toCL();
+        if (params.eEngine != eSTL_ProvingEngine)
+            proof.CL2toCL();
 
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName, params);
         delete ex;
