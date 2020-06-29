@@ -95,7 +95,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
     proof.SetTheory(&T);
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
         Fact premiseFactInstantiated;
-        T.InstantiateFact(theorem.GetPremises().GetElement(i), instantiation, premiseFactInstantiated, true);
+        T.InstantiateFact(theorem, theorem.GetPremises().GetElement(i), instantiation, premiseFactInstantiated, true);
         engine->AddPremise(premiseFactInstantiated);
         proof.AddAssumption(premiseFactInstantiated);
     }
@@ -114,7 +114,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
             Fact premiseFactInstantiated;
             T.AddSymbol(f.GetName(), f.GetArity());
 
-            T.InstantiateFact(f, instantiation, premiseFactInstantiated, true);
+            T.InstantiateFact(theorem, f, instantiation, premiseFactInstantiated, true);
             engine->AddPremise(premiseFactInstantiated);
             proof.AddAssumption(premiseFactInstantiated);
 

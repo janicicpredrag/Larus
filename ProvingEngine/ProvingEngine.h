@@ -27,8 +27,8 @@ public:
 
     virtual PROVING_ENGINE GetKind() = 0;
 
-    virtual void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)
-        { mpT->InstantiateFact(f, instantiation, fout, bInstantiateVars);  }
+    virtual void InstantiateFact(const CLFormula& cl, const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)
+        { mpT->InstantiateFact(cl, f, instantiation, fout, bInstantiateVars);  }
     virtual void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars)
         { mpT->InstantiateGoal(f, instantiation, fout, bInstantiateVars); }
 

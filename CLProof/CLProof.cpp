@@ -147,7 +147,6 @@ void CLProof::MakeRelevant(set<Fact>& relevant, const ConjunctionFormula& f)
         MakeRelevant(relevant, f.GetElement(i));
 }
 
-
 // ---------------------------------------------------------------------------------
 
 void CLProof::Simplify()
@@ -156,14 +155,10 @@ void CLProof::Simplify()
     CLProof::Simplify(relevant);
 }
 
-
 // ---------------------------------------------------------------------------------
 
 void CLProof::Simplify(set<Fact>& relevant)
 {
-    //TODO temporarily!
-    //return;
-
     CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
     if(pe) {
         for(size_t i=0, size = pe->GetNumOfCases(); i < size; i++) {
@@ -758,7 +753,7 @@ bool CLProof::CL2toCL()
 
             for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {
                 DNFFormula dnf;
-                b |= mpT->Rewrite(LHS,RHS,mAssumptions[j],dnf);
+                b |= mpT->Rewrite(LHS,RHS,mCLAssumptions[j],dnf);
                 mCLAssumptions[j] = dnf;
             }
 

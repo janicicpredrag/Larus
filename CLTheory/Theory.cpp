@@ -521,14 +521,14 @@ void Theory::InstantiateGoalDisj(const CLFormula& cl, size_t i, map<string,strin
     fout = f;
     size_t size = f.GetSize();
     for(size_t j = 0; j < size; j++) {
-        InstantiateFact(f.GetElement(j), instantiation, fact, bInstantiateVars);
+        InstantiateFact(cl, f.GetElement(j), instantiation, fact, bInstantiateVars);
         fout.SetElement(j,fact);
     }
 }
 
 // ---------------------------------------------------------------------------------------
 
-void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)
+void Theory::InstantiateFact(const CLFormula& cl, const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars)
 {
     fout = f;
     size_t size = f.GetArity();
@@ -536,9 +536,18 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
         if (instantiation.find(f.GetArg(i)) == instantiation.end()) {
             if (!IsConstant(f.GetArg(i)) && bInstantiateVars)
             {
-                //string newc = MakeNewConstant();
-                assert (!mConstantsPermissible.empty());
-                string newc = *(mConstantsPermissible.begin());
+                bool bUnivVar = false;
+                for(size_t j = 0; j < cl.GetNumOfUnivVars() && !bUnivVar; j++) {
+                    if (cl.GetUnivVar(j) == f.GetArg(i))
+                        bUnivVar = true;
+                }
+                string newc;
+                if (bUnivVar) {
+                    assert (!mConstantsPermissible.empty());
+                    newc = *(mConstantsPermissible.begin());
+                }
+                else
+                    newc = MakeNewConstant();
                 instantiation[f.GetArg(i)] = newc;
                 fout.SetArg(i, instantiation[f.GetArg(i)]);
             }

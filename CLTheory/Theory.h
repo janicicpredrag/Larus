@@ -56,7 +56,7 @@ public:
     void UpdateSignature(CLFormula& axiom);
     size_t GetSymbolArity(string p);
 
-    void InstantiateFact(const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars);
+    void InstantiateFact(const CLFormula& cl, const Fact& f, map<string,string>& instantiation, Fact& fout, bool bInstantiateVars);
     void InstantiateGoal(const CLFormula& f, map<string,string>& instantiation, DNFFormula& fout, bool bInstantiateVars);
     void InstantiateGoalDisj(const CLFormula& cl, size_t i, map<string,string>& instantiation, ConjunctionFormula& fout, bool bInstantiateVars);
 
