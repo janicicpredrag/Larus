@@ -166,7 +166,7 @@ void CLProof::Simplify(set<Fact>& relevant)
        /* for(size_t i=0; i<pe->mCases.GetSize(); i++)
             for(size_t k=0; k < pe->mCases.GetElement(i).GetSize(); k++)
                 MakeRelevant(relevant,pe->mCases.GetElement(i).GetElement(k));*/
-            MakeRelevant(relevant, pe->GetCases().GetElement(i));
+            MakeRelevant(relevant, pe->GetCases()[i].GetElement(0));
         }
     }
     else {
@@ -576,8 +576,8 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                         f.SetArg(i,mpT->GetConstantName(nArgs[i]));
                     cfconc2.Add(f);
                     d.Add(cfconc2);
-                    pcs = new CaseSplit;
-                    pcs->SetCases(d);
+                   // pcs = new CaseSplit;
+                   // pcs->SetCases(d);
                 }
 
                 proofTrace.push_back(f); // this is not used if the axiom is branching
@@ -687,9 +687,18 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     }
                     cfconc2.Add(f);
                     d.Add(cfconc2);
+
+                    pcs = new CaseSplit;
+                    vector<DNFFormula> vd;
+                    DNFFormula d1;
+                    d1.Add(cfconc1);
+                    DNFFormula d2;
+                    d2.Add(cfconc2);
+                    vd.push_back(d1);
+                    vd.push_back(d2);
+                    pcs->SetCases(vd);
+                    // pcs->SetCases(d);
                 }
-                pcs = new CaseSplit;
-                pcs->SetCases(d);
 
                 // Instantiation of fact derived inline from univ axioms
                 for(size_t ii = 0; ii < cfPremises.GetSize(); ii++) {
@@ -774,9 +783,11 @@ bool CLProof::CL2toCL()
 
             CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
             if(pe) {
-                DNFFormula dnf;
-                b |= mpT->Rewrite(LHS,RHS,pe->mCases,dnf);
-                pe->mCases = dnf;
+                for(size_t j = 0; j < pe->mCases.size(); j++) {
+                    DNFFormula dnf;
+                    b |= mpT->Rewrite(LHS,RHS,pe->mCases[j],dnf);
+                    pe->mCases[j] = dnf;
+                }
 
                 for(size_t j = 0; j < pe->mSubproofs.size(); j++)
                     pe->mSubproofs[j].CL2toCL();

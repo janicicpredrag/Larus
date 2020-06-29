@@ -163,7 +163,11 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream& outfile, const CaseSplit* cs
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++)
         OutputProof(outfile, cs->GetSubproof(i), level+1);
     outfile << "from note2 and note3 and '";
-    OutputDNF(outfile, cs->GetCases());
+    for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
+        OutputDNF(outfile, cs->GetCases()[i]);
+        if (i+1 < cs->GetNumOfCases())
+            outfile << " \\<or> ";
+    }
     outfile << "' have ?thesis by auto" << endl;
 }
 

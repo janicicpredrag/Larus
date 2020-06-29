@@ -218,7 +218,11 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, u
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++)
         OutputProof(outfile, cs->GetSubproof(i), level+1);
     outfile << "\\proofstep{" << level << "}{Proved by case split! (by $";
-    OutputDNF(outfile, cs->GetCases());
+    for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
+        OutputDNF(outfile, cs->GetCases()[i]);
+        if (i+1 < cs->GetNumOfCases())
+            outfile << " , ";
+    }
     outfile << " $)}" << endl;
 }
 

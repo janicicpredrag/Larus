@@ -264,7 +264,13 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 void ProofExport2Coq::OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level)
 {
     outfile << Indent(level) << "by cases on (";
-    OutputDNF(outfile, cs->GetCases());
+    for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
+        outfile << " ( ";
+        OutputDNF(outfile, cs->GetCases()[i]);
+        outfile << " ) ";
+        if (i+1 < cs->GetNumOfCases())
+            outfile << " \\/ ";
+    }
     outfile << ")." << endl;
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
         outfile << Indent(level) << "- {" << endl;

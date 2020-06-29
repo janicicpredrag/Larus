@@ -1260,6 +1260,9 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
     // smtFile << "(check-sat)" << endl << endl;
 
+    //string s = appeq("nProofSize", nFinalStep);
+    //smtFile << "(assert " + s + ")" << endl << endl;
+
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
     smtFile << "(assert (or " + sbProofFinished + "))" << endl << endl;
 

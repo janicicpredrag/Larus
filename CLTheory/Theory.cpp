@@ -722,7 +722,23 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f, DNFFormula& f
     assert(f.GetSize() == 1 || allsingleconjuncts);
 
     fout.Clear();
-    if (f.GetSize() == 1) {
+
+    if (allsingleconjuncts) {
+        for (size_t i = 0; i < f.GetSize(); i++) {
+            DNFFormula fout1;
+            const Fact& fact = f.GetElement(i).GetElement(0);
+            bool b = Rewrite(LHS, RHS, fact, fout1);
+            if (!b) {
+                fout.Add(f.GetElement(i));
+            }
+            else {
+                for (size_t j = 0; j < fout1.GetSize(); j++)
+                    fout.Add(fout1.GetElement(j));
+                changed = true;
+            }
+        }
+    }
+    else if (f.GetSize() == 1) {
         ConjunctionFormula cf;
         for (size_t j = 0; j < f.GetElement(0).GetSize(); j++) {
             DNFFormula fout1;
@@ -740,19 +756,6 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f, DNFFormula& f
         return changed;
     }
 
-    for (size_t i = 0; i < f.GetSize(); i++) {
-        DNFFormula fout1;
-        const Fact& fact = f.GetElement(i).GetElement(0);
-        bool b = Rewrite(LHS, RHS, fact, fout1);
-        if (!b) {
-            fout.Add(f.GetElement(i));
-        }
-        else {
-            for (size_t j = 0; j < fout1.GetSize(); j++)
-                fout.Add(fout1.GetElement(j));
-            changed = true;
-        }
-    }
     return changed;
 }
 

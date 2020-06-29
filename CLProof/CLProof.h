@@ -87,15 +87,16 @@ private:
 class CaseSplit : public CLProofEnd
 {
 public:
-    const CLProof& GetSubproof(size_t i) const { assert(i<mCases.GetSize()); return mSubproofs[i]; }
+    const CLProof& GetSubproof(size_t i) const { assert(i<mCases.size()); return mSubproofs[i]; }
     void AddSubproof(CLProof& proof) { mSubproofs.push_back(proof); }
-    void SimplifySubproof(set<Fact>& relevant, size_t i) { assert(i<mCases.GetSize()); mSubproofs[i].Simplify(relevant); }
-    void SetCases(const DNFFormula& dnf) { mCases = dnf; }
-    size_t GetNumOfCases() const { return mCases.GetSize(); }
-    const DNFFormula& GetCases() const { return mCases; }
+    void SimplifySubproof(set<Fact>& relevant, size_t i) { assert(i<mCases.size()); mSubproofs[i].Simplify(relevant); }
+    void SetCases(const vector<DNFFormula>& dnf) { mCases = dnf; }
+    size_t GetNumOfCases() const { return mCases.size(); }
+    const vector<DNFFormula>& GetCases() const { return mCases; }
     unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s+1; }
 
-    DNFFormula mCases;
+    vector<DNFFormula> mCases;
+    //vector<DNFFormula> mCLCases;
     vector<CLProof> mSubproofs;
 protected:
 
