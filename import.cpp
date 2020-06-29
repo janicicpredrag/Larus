@@ -244,14 +244,14 @@ vampire_succeeded = true;
 
         proof.CL2toCL();
 
-        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
+        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName, params);
         delete ex;
 
         if (params.mbCoq) {
             string sFileName3("proofs/PROOF" + fileName + ".v");
             ProofExport *excoq;
             excoq = new ProofExport2Coq;
-            excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
+            excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3, params);
 
             cout << "Verifying Coq proof ... " << flush;
             string s = "coqc -R proofs src -q  " + sFileName3;
@@ -266,7 +266,7 @@ vampire_succeeded = true;
             string sFileName3("proofs/PROOF" + fileName + ".thy");
             ProofExport *exisa;
             exisa = new ProofExport2Isabelle;
-            exisa->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3);
+            exisa->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3, params);
 
             cout << "Verifying Isabelle proof ... " << flush;
             string s = "./isabelle  process -T " + sFileName3;

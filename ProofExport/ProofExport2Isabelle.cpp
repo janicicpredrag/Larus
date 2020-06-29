@@ -84,7 +84,7 @@ string repeat2(int n, string s) {
 }
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl , const string& theoremName, const map<string,string>& /*instantiation*/)
+void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl , const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& /* params */)
 {
     outfile << "theory Th" << endl;
     outfile << "imports Main" << endl;

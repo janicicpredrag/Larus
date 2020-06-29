@@ -104,7 +104,7 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& params)
 {
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;

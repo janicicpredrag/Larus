@@ -106,11 +106,14 @@ string repeat(int n, string s) {
     return os.str();
 }
 //-----------------------------------------------------------------------------------
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation, proverParams& params)
 {
  //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
-     outfile << "Require Import src.general_tactics." << endl << endl;
-     outfile << "Section Sec." << endl;
+     outfile << "Require Import src.general_tactics." << endl;
+     if (params.mbExcludedMiddle)
+        outfile << "Require Import Classical." << endl;
+    outfile << endl;
+    outfile << "Section Sec." << endl;
 //    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
     outfile << "Parameter MyT : Type." << endl;
@@ -198,12 +201,43 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 
         OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << ") ";
-        outfile << "by applying (" << p.GetMP(i).axiomName;
-        vector<pair<string,string>> inst = p.GetMP(i).instantiation;
-        for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
-            outfile << " " << inst[j].second;
-        outfile << ")";
 
+        if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
+        {
+            outfile << "by contradiction_on (";
+            std::size_t dpos = PREFIX_NEGATED.length();
+            std::size_t epos = p.GetMP(i).axiomName.find("NegElim");
+            string pred_name = p.GetMP(i).axiomName.substr(dpos,epos-dpos);
+            outfile << pred_name;
+            vector<pair<string,string>> inst = p.GetMP(i).instantiation;
+            for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
+                outfile << " " << inst[j].second;
+            outfile << ")";
+        }
+        else if (p.GetMP(i).axiomName.find("ExcludedMiddle") != std::string::npos)
+        {
+            outfile << "by (destruct (classic (";
+            std::size_t epos = p.GetMP(i).axiomName.find("ExcludedMiddle");
+            string pred_name = p.GetMP(i).axiomName.substr(0,epos);
+            outfile << pred_name;
+            vector<pair<string,string>> inst = p.GetMP(i).instantiation;
+            for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
+                outfile << " " << inst[j].second;
+            outfile << "));auto)";
+
+        }
+         else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos || p.GetMP(i).axiomName.find("EqSub") != std::string::npos)
+        {
+            outfile << "by (congruence)";
+        }
+        else
+        {
+            outfile << "by applying (" << p.GetMP(i).axiomName;
+            vector<pair<string,string>> inst = p.GetMP(i).instantiation;
+            for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
+                outfile << " " << inst[j].second;
+            outfile << ")";
+        }
         if (new_witnesses.size() > 0) {
             outfile << "; destruct Tf as [";
             for (size_t j = 0; j != new_witnesses.size(); j++) {
