@@ -338,6 +338,20 @@ const pair<CLFormula,string>& Theory::Axiom(size_t i) const
 
 // --------------------------------------------------------------
 
+size_t Theory::NumberOfOriginalAxioms() const
+{
+    return mCLOriginalAxioms.size();
+}
+
+// --------------------------------------------------------------
+
+const pair<CLFormula,string>& Theory::OriginalAxiom(size_t i) const
+{
+    return mCLOriginalAxioms[i];
+}
+
+// --------------------------------------------------------------
+
 void Theory::AddConstant(string s)
 {
     //    mConstants.insert(s);
@@ -522,8 +536,9 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
         if (instantiation.find(f.GetArg(i)) == instantiation.end()) {
             if (!IsConstant(f.GetArg(i)) && bInstantiateVars)
             {
-                string newc = MakeNewConstant();
-                // AddConstant(newc);
+                //string newc = MakeNewConstant();
+                assert (!mConstantsPermissible.empty());
+                string newc = *(mConstantsPermissible.begin());
                 instantiation[f.GetArg(i)] = newc;
                 fout.SetArg(i, instantiation[f.GetArg(i)]);
             }
@@ -537,11 +552,6 @@ void Theory::InstantiateFact(const Fact& f, map<string,string>& instantiation, F
 
 bool Theory::Saturate()
 {
-  //  vector<CLFormula> axioms;
-  //  for (size_t i = 0; i < mCLaxioms.size(); i++) {
-  //      axioms.push_back(mCLaxioms[i].first);
-  //  }
-
     bool updated = false;
     unsigned count_sat=0;
     do {
@@ -569,7 +579,6 @@ bool Theory::Saturate()
                         }
                         inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
                     }
-
                     if (no_match)
                         continue;
 
@@ -580,7 +589,6 @@ bool Theory::Saturate()
                         else
                             fact_new.SetArg(k,inst.find(fact_new.GetArg(k))->second);
                     }
-
                     if (no_match)
                         continue;
 
@@ -628,7 +636,7 @@ void Theory::normalizeToCL2()
     for (vector< pair<CLFormula,string> >::iterator it = mCLaxioms.begin(); it < mCLaxioms.end(); it++) {
         vector< pair<CLFormula,string> > normalizedAxioms;
         CLFormula& ax = it->first;
-        ax.Normalize(it->second, to_string(noAxioms++), normalizedAxioms);
+        ax.Normalize(it->second, to_string(noAxioms++), normalizedAxioms, mDefinitions);
         cout << "       Input Axiom: " << it->first << endl;
         if (normalizedAxioms.size()>1) {
             it = mCLaxioms.erase(it);
@@ -641,7 +649,104 @@ void Theory::normalizeToCL2()
             it += normalizedAxioms.size()-1;
         }
     }
+
+    cout << "Definitions : " << endl;
+    for (unsigned i=0; i<mDefinitions.size(); i++)
+        cout << mDefinitions[i].first << " -> " << mDefinitions[i].second << endl;
+    cout << "Definitions end " << endl << endl;
+    //exit(0);
 }
+
+// ---------------------------------------------------------------------------------------
+
+bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f, DNFFormula& fout) const
+{
+    bool nontrivial = false;
+    map<string,string> inst;
+    if (f.GetName() != LHS.GetName() || f.GetArity() != LHS.GetArity())
+        return false;
+    for (size_t k = 0; k < f.GetArity(); k++) {
+        if (IsConstant(LHS.GetArg(k))) {
+            if (!IsConstant(f.GetArg(k)) || LHS.GetArg(k)!=f.GetArg(k))
+                return false;
+        }
+        if (LHS.GetArg(k) != f.GetArg(k))
+            nontrivial = true;
+        inst[LHS.GetArg(k)] = f.GetArg(k);
+    }
+    fout.Clear();
+    for (size_t i = 0; i < RHS.GetSize(); i++) {
+        ConjunctionFormula cf;
+        for (size_t j = 0; j < RHS.GetElement(i).GetSize(); j++) {
+            Fact fact = RHS.GetElement(i).GetElement(j);
+            for (size_t k = 0; k < RHS.GetElement(i).GetElement(j).GetArity(); k++) {
+                if (inst.find(fact.GetArg(k)) != inst.cend()) {
+                    string s = inst.find(fact.GetArg(k))->second;
+                    fact.SetArg(k, s);
+                }
+            }
+            cf.Add(fact);
+        }
+        fout.Add(cf);
+    }
+    return nontrivial;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f, DNFFormula& fout) const
+{
+    // This is just for a special form of DNF - for definitional formulae generated while CL->CL2
+    bool changed = false;
+    bool allsingleconjuncts = true;
+    for (size_t i = 0; i < RHS.GetSize() && !allsingleconjuncts; i++) {
+        if (RHS.GetElement(i).GetSize() != 1)
+            allsingleconjuncts = false;
+    }
+    assert(RHS.GetSize() == 1 || allsingleconjuncts);
+
+    allsingleconjuncts = true;
+    for (size_t i = 0; i < f.GetSize() && !allsingleconjuncts; i++) {
+        if (f.GetElement(i).GetSize() != 1)
+            allsingleconjuncts = false;
+    }
+    assert(f.GetSize() == 1 || allsingleconjuncts);
+
+    fout.Clear();
+    if (f.GetSize() == 1) {
+        ConjunctionFormula cf;
+        for (size_t j = 0; j < f.GetElement(0).GetSize(); j++) {
+            DNFFormula fout1;
+            const Fact& fact = f.GetElement(0).GetElement(j);
+            bool b = Rewrite(LHS, RHS, fact, fout1);
+            if (!b)
+                cf.Add(fact);
+            else {
+                for (size_t k = 0; k < fout1.GetElement(0).GetSize(); k++)
+                    cf.Add(fout1.GetElement(0).GetElement(k));
+                changed = true;
+            }
+        }
+        fout.Add(cf);
+        return changed;
+    }
+
+    for (size_t i = 0; i < f.GetSize(); i++) {
+        DNFFormula fout1;
+        const Fact& fact = f.GetElement(i).GetElement(0);
+        bool b = Rewrite(LHS, RHS, fact, fout1);
+        if (!b) {
+            fout.Add(f.GetElement(i));
+        }
+        else {
+            for (size_t j = 0; j < fout1.GetSize(); j++)
+                fout.Add(fout1.GetElement(j));
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 
 // ---------------------------------------------------------------------------------------
 

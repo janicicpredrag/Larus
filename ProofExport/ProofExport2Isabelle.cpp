@@ -132,22 +132,22 @@ void ProofExport2Isabelle::OutputProof(ofstream& outfile, const CLProof& p, unsi
     outfile << endl;
 
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-        ConjunctionFormula conj = get<0>(p.GetMP(i));
-        if (conj.GetSize() > 0) {
+        const vector<DNFFormula>& conj = p.GetMP(i).CLfrom;
+        if (conj.size() > 0) {
             outfile << "from ";
-            for(size_t i=0; i<conj.GetSize(); i++) {
+            for(size_t j=0; j<conj.size(); j++) {
                 outfile << "`";
-                OutputFact(outfile, conj.GetElement(i));
+             //   OutputFact(outfile, conj[i]);
                 outfile << "`";
-                if(i+1<conj.GetSize())
-                outfile << " and ";
+                if (j+1<conj.size())
+                    outfile << " and ";
             }
             //OutputConjFormula(outfile, get<0>(p.GetMP(i)));
             outfile << " ";
         }
         outfile << "have \"";
-        OutputDNF(outfile, get<1>(p.GetMP(i)));
-        outfile << "\" using " << get<2>(p.GetMP(i)) << " by blast" << endl;
+        OutputDNF(outfile, p.GetMP(i).conclusion);
+        outfile << "\" using " << p.GetMP(i).axiomName << " by blast" << endl;
        // vector<pair<string,string>> inst = get<3>(p.GetMP(i));
        // vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
        // for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)

@@ -370,7 +370,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
+            string smt_proofencoded_filename =  tmpnam(NULL); //"prove.smt"; //
             string smt_model_filename =  tmpnam(NULL); //"smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
@@ -750,6 +750,37 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
                  string sb = appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
+
+                 /*string sb1, sb2, sb3;
+                 for (unsigned nInd = 0; nInd < ar; nInd++) {
+                     if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
+                        sb1 += appeq(app("nArg" , n_from, nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                     else
+                        sb1 += appeq(app("nArg" , n_from, nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+
+                     if (nProofStep>0 && mParams.mbNativeEQ) {
+                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0) {
+                            sb2 += appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+EQ_NATIVE_NAME);
+                            sb2 += appeq(app("nArg" , n_from, nInd), app("nArg" , nProofStep-1, 0));
+                            sb2 += appeq(app("nArg" , nProofStep-1, 1), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                         }
+                         else
+                            sb2 += appeq(app("nArg" , n_from, nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+
+                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0) {
+                            sb3 += appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+EQ_NATIVE_NAME);
+                            sb3 += appeq(app("nArg" , n_from, nInd), app("nArg" , nProofStep-1, 1));
+                            sb3 += appeq(app("nArg" , nProofStep-1, 0), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
+                         }
+                         else
+                            sb3 += appeq(app("nArg" , n_from, nInd), nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
+                     }
+                     else {
+                         sb2 = "false"; sb3 = "false";
+                     }
+                 }
+                 sb += "(or " "(and " + sb1 + ") (and " + sb2 + ") (and " + sb3 + "))";*/
+
                  for (unsigned nInd = 0; nInd < ar; nInd++) {
                      if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
                         sb += appeq(app("nArg" , n_from, nInd), app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));

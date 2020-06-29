@@ -123,13 +123,13 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
         outfile << "Parameter " << (*it) << " : MyT." << endl;
     }
     outfile << endl;
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-        std::string name = get<1>(T.Axiom(i));
+    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
+        std::string name = get<1>(T.OriginalAxiom(i));
         std::size_t found = name.find("sat");
         if (found == std::string::npos)
           {
                 outfile << "Hypothesis " << name << " : ";
-                OutputCLFormula(outfile, get<0>(T.Axiom(i)), name);
+                OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
           }
     }
     outfile << endl;
@@ -184,7 +184,7 @@ string Indent(unsigned level)
 void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-        vector<pair<string,string>> new_witnesses = get<4>(p.GetMP(i));
+        vector<pair<string,string>> new_witnesses = p.GetMP(i).new_witnesses;
 
         if (new_witnesses.size() > 0)
             outfile << Indent(level) << "let Tf:=fresh in" << endl;
@@ -196,10 +196,10 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             outfile << ", ";
         }
 
-        OutputDNF(outfile, get<1>(p.GetMP(i)));
+        OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << ") ";
-        outfile << "by applying (" << get<2>(p.GetMP(i));
-        vector<pair<string,string>> inst = get<3>(p.GetMP(i));
+        outfile << "by applying (" << p.GetMP(i).axiomName;
+        vector<pair<string,string>> inst = p.GetMP(i).instantiation;
         for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
             outfile << " " << inst[j].second;
         outfile << ")";
@@ -215,7 +215,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
                 outfile << "]";
             outfile << ";spliter";
         }
-        if (get<1>(p.GetMP(i)).GetSize() == 1 && get<1>(p.GetMP(i)).GetElement(0).GetSize() > 1)
+        if (p.GetMP(i).conclusion.GetSize() == 1 && p.GetMP(i).conclusion.GetElement(0).GetSize() > 1)
         {
             outfile << ". spliter." << endl;
         }

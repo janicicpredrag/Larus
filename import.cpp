@@ -157,6 +157,7 @@ vampire_succeeded = true;
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
     }
+    T.printAxioms();
 
     if (params.mbNativeEQ) {
         T.AddAxiomEqReflexive();
@@ -240,6 +241,8 @@ vampire_succeeded = true;
            proof.Simplify();
            cout << endl << "Done! (simplified proof length without assumptions: " << proof.Size()-proof.NumOfAssumptions() << ")" << endl;
         }
+
+        proof.CL2toCL();
 
         ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName);
         delete ex;
@@ -411,6 +414,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
     cout << "--- Input axioms : " << endl;
     T.printAxioms();
+
+    T.mCLOriginalAxioms = T.mCLaxioms;
 
 /*
     To be used in situations when we don't have dependencies, but a global set of axioms
