@@ -879,7 +879,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                         axiom.mUniversalVars.push_back(current.GetArg(j));
                 }
             }
-            output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+            output.push_back(pair<CLFormula,string>(axiom, name+"AuxConjPrem"+std::to_string(count_aux++)));
         }
         premises.Clear();
         premises.Add(current);
@@ -926,7 +926,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                         }
                     }
                 }
-                output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+                output.push_back(pair<CLFormula,string>(axiom, name+"AuxConjConcl"+std::to_string(count_aux++)));
             }
             return;
         }
@@ -959,7 +959,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                             axiom.mUniversalVars.push_back(disjuncts[i].GetArg(jj));
                     }
                 }
-                output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+                output.push_back(pair<CLFormula,string>(axiom, name+"AuxConjDisj"+std::to_string(count_aux++)));
             }
         }
         else {
@@ -993,7 +993,7 @@ void CLFormula::Normalize(const string& name, const string& suffix, vector< pair
                         axiom.mUniversalVars.push_back(current.GetArg(j));
                 }
             }
-            output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+            output.push_back(pair<CLFormula,string>(axiom, name+"AuxDisj"+std::to_string(count_aux++)));
         }
         ConjunctionFormula conj1;
         conj1.Add(current);
@@ -1053,7 +1053,7 @@ void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< 
                 if (!bAlreadyThere)
                     axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
             }
-            output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+            output.push_back(pair<CLFormula,string>(axiom, name+"AuxGoal"+std::to_string(count_aux++)));
         }
         else {
             disjuncts[i] = GetGoal().GetElement(i).GetElement(0);
@@ -1082,7 +1082,7 @@ void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< 
                 if (!bAlreadyThere)
                     axiom.mUniversalVars.push_back(current.GetArg(j));
             }
-            output.push_back(pair<CLFormula,string>(axiom, name+"Aux"+std::to_string(count_aux++)));
+            output.push_back(pair<CLFormula,string>(axiom, name+"AuxGoal"+std::to_string(count_aux++)));
         }
         ConjunctionFormula conj;
         conj.Add(current);
