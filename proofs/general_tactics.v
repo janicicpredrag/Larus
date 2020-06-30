@@ -5,7 +5,7 @@ Ltac hyp_of_type t :=
 
 Ltac one_lemma :=
  match goal with
- | H:_ |- _ => apply H;trivial
+ | H:_ |- _ => solve [apply H;trivial]
   end.
 
 Ltac mysubst :=
