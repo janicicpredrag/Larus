@@ -113,13 +113,17 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
      if (params.mbExcludedMiddle)
         outfile << "Require Import Classical." << endl;
     outfile << endl;
-    outfile << "Section Sec." << endl;
+    outfile << "Section Sec." << endl << endl;
 //    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
     outfile << "Parameter MyT : Type." << endl;
     for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
     {
-        outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
+        string name = get<0>(*it);
+        if (name != "false" & name != "true" & name.find(PREFIX_NEGATED) != 0)
+        {
+            outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
+        }
     }
     for(vector<string>::iterator it = T.mInitialConstants.begin(); it!=T.mInitialConstants.end(); ++it)
     {
@@ -135,13 +139,12 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
                 OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
           }
     }
-    outfile << endl;
-    outfile << endl;
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-        if (get<0>(T.Axiom(i)).IsSimpleImplication() &&
-            get<1>(T.Axiom(i)).find("sat") == std::string::npos)            
-                outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
-    }
+    // outfile << endl;
+    // for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+    //     if (get<0>(T.Axiom(i)).IsSimpleImplication() &&
+    //         get<1>(T.Axiom(i)).find("sat") == std::string::npos)            
+    //             outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
+    // }
     outfile << endl;
     for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
         std::string name = get<1>(T.Axiom(i));
