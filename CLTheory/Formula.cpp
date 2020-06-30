@@ -562,22 +562,27 @@ bool CLFormula::IsSimpleImplication() const
 {
    size_t numPremises = GetPremises().GetSize();
    size_t numDisj = GetGoal().GetSize();
-   if (numPremises != 1 || numDisj != 1 || GetNumOfExistVars()!=0)
-        return false;
-/*    else  {
-        string premisse_pred = GetPremises().GetElement(0).GetName();
-        for (size_t i = 0; i < GetGoal().GetElement(0).GetSize(); i++)
-            if (premisse_pred != GetGoal().GetElement(0).GetElement(i).GetName())
-                return false;
+
+   if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
+           GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+       return false;
+
+   if (numPremises == 1 && numDisj == 1 && GetNumOfExistVars()==0)
         return true;
-    }*/
-   return true;
+
+   return false;
 }
 
 // ---------------------------------------------------------------------------------------
 
 bool CLFormula::IsSimpleUnivFormula() const
 {
+    if (GetPremises().GetSize() == 0 &&
+        GetGoal().GetSize() == 1 &&
+        GetGoal().GetElement(0).GetSize() == 1 &&
+        GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+        return false;
+
     return (GetNumOfExistVars() == 0 &&
         GetPremises().GetSize() == 0 &&
         GetGoal().GetSize() == 1

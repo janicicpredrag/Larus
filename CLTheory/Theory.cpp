@@ -623,7 +623,7 @@ bool Theory::Saturate()
                             found = true;
                     }
                     if (!found) {
-                        // cout << "Success!" << newUnivAx << endl;
+                        cout << "Success!" << newUnivAx << endl;
                         // axioms.push_back(newUnivAx);
                         mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
                         updated = true;

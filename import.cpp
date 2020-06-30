@@ -318,7 +318,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)
                     {
-                        string filename = dirnameOf(inputFile)+"/"+s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        string filename = /* dirnameOf(inputFile)+"/"+*/ s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
 
                         cout << "       Including file : " << filename << endl;
                         ifstream input_file(filename,ios::in);
@@ -418,9 +418,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
     T.mCLOriginalAxioms = T.mCLaxioms;
 
-/*
-    To be used in situations when we don't have dependencies, but a global set of axioms
-    cout << "--- Reachability filtering: filtering out input axioms (input: " <<  T.mCLaxioms.size() << ")" << endl;
+
+//    To be used in situations when we don't have dependencies, but a global set of axioms
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
     cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
     T.printAxioms();
@@ -432,7 +431,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         USING_ORIGINAL_SIGNATURE_NEG = false;
     }
     T.printAxioms();
-*/
+
     if (params.eEngine != eSTL_ProvingEngine) {
         cout << "--- Normalization to CL2 : input size: " << T.mCLaxioms.size() << endl;
         T.normalizeToCL2();

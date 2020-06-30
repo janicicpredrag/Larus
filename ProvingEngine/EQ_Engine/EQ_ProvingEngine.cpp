@@ -1030,7 +1030,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                     sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
                                                 nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
                             }
-                            sb = "(or (and " + sb + ")" + appeq(URSA_NUM_PREFIX+"false", nPredicate[nSimpleAxiom][1]) + ")";
+                            //sb = "(or (and " + sb + ")" + appeq(URSA_NUM_PREFIX+"false", nPredicate[nSimpleAxiom][1]) + ")";
+
                             string allfrom;
                             // QED step is always based only on the previous step
                             for (unsigned n_from = nProofStep-1; n_from < nProofStep; n_from++) {
