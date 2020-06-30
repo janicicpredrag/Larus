@@ -153,7 +153,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
                 outfile << "Lemma " << name << " : ";
                 OutputCLFormula(outfile, get<0>(T.Axiom(i)), name);
                 outfile << "Proof." << endl;    
-                outfile << "eauto with Sym." << endl;
+                outfile << "spliter;eauto with Sym." << endl;
                 outfile << "Qed." << endl << endl;
                 outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl << endl;
             }
