@@ -5,7 +5,7 @@ Ltac hyp_of_type t :=
 
 Ltac one_lemma :=
  match goal with
- | H:_ |- _ => solve [apply H;trivial]
+ | H:_ |- _ => solve [eapply H;trivial]
   end.
 
 Ltac mysubst :=
@@ -39,7 +39,7 @@ end.
 
 Create HintDb Sym.
 
-Ltac finish_conj := splits;(eassumption || trivial || one_lemma).
+Ltac finish_conj := splits;(eassumption || trivial || one_lemma || auto with Sym).
 
 Ltac one_of_disjunct :=
  solve [repeat (solve [finish_conj] || (left;solve [finish_conj]) || right)].
@@ -48,7 +48,7 @@ Ltac one_of_disjunct :=
 Ltac rename_H H := let T := fresh in try rename H into T.
 
 Ltac applying t :=
-apply t;(assumption || trivial || one_lemma).
+apply t;(assumption || trivial || one_lemma || auto with Sym ).
 
 Ltac conclude := spliter;remove_exists;one_of_disjunct.
 
