@@ -229,7 +229,11 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             outfile << "));auto)";
 
         }
-         else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos || p.GetMP(i).axiomName.find("EqSub") != std::string::npos)
+         else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos || 
+                  p.GetMP(i).axiomName.find("EqSub") != std::string::npos || 
+                  p.GetMP(i).axiomName.find("eq_sym") != std::string::npos
+                  
+                  )
         {
             outfile << "by (congruence)";
         }
