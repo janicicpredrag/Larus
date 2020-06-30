@@ -420,8 +420,8 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
 
 //    To be used in situations when we don't have dependencies, but a global set of axioms
-    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
+                     // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+                     // cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
     T.printAxioms();
     if (params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
