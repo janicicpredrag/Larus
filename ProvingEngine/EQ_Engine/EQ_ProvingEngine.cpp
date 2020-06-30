@@ -1009,7 +1009,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                           disj += "(and " + sb + ")";
                   }
                   sbTrivGoalReachedInlined += disj;
-                  sbTrivGoalReachedInlined += appeq(URSA_NUM_PREFIX+"false", nPredicate[nUnivAxiom][0]);;
+                  sbTrivGoalReachedInlined += appeq(URSA_NUM_PREFIX+"false", nPredicate[nUnivAxiom][0]);
                }
            }
            // Support for simple implication axioms
@@ -1030,6 +1030,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                     sb += appeq(app("nArg", nFinalStep, i*mnMaxArity+nInd),
                                                 nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd]);
                             }
+                            sb = "(or (and " + sb + ")" + appeq(URSA_NUM_PREFIX+"false", nPredicate[nSimpleAxiom][1]) + ")";
                             string allfrom;
                             // QED step is always based only on the previous step
                             for (unsigned n_from = nProofStep-1; n_from < nProofStep; n_from++) {
@@ -1048,7 +1049,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                 }
                                 allfrom += "(and " + allfrom1 + ")";
                              }
-                             sb += "(or false " + allfrom + ")";
+                             sb += "(or false " + allfrom + appeq(URSA_NUM_PREFIX+"true", nPredicate[nSimpleAxiom][0]) + ")";
                              sb += "\n; checking simple axiom END \n";
                              disj += "(and " + sb + ")";
                          }

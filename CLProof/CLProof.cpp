@@ -788,9 +788,6 @@ bool CLProof::CL2toCL()
                     b |= mpT->Rewrite(LHS,RHS,pe->mCases[j],dnf);
                     pe->mCases[j] = dnf;
                 }
-
-                for(size_t j = 0; j < pe->mSubproofs.size(); j++)
-                    pe->mSubproofs[j].CL2toCL();
             }
             else {
                 ByAssumption* ba = dynamic_cast<ByAssumption*>(mpProofEnd);
@@ -805,6 +802,13 @@ bool CLProof::CL2toCL()
         }
     }
     while (b);
+
+    CaseSplit* pe = dynamic_cast<CaseSplit*>(mpProofEnd);
+    if(pe) {
+        for(size_t j = 0; j < pe->mSubproofs.size(); j++)
+            pe->mSubproofs[j].CL2toCL();
+    }
+
 
     return true;
 }
