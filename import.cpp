@@ -208,8 +208,11 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         DerivedLemma lemma;
         for (size_t k = 0; k < T.Axiom(j).first.GetNumOfUnivVars(); k++)
             lemma.mUniversalVars.push_back(T.Axiom(j).first.GetUnivVar(k));
-        ConjunctionFormula cf = T.Axiom(j).first.GetPremises();
-        lemma.lhs.Add(cf);
+        ConjunctionFormula cf;
+        if (T.Axiom(j).first.GetPremises().GetSize() > 0) {
+            cf = T.Axiom(j).first.GetPremises();
+            lemma.lhs.Add(cf);
+        }
         lemma.rhs = T.Axiom(j).first.GetGoal();
         lemma.name = T.Axiom(j).second;
         T.mDerivedLemmas.push_back(lemma);

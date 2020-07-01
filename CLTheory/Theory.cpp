@@ -661,7 +661,6 @@ void Theory::normalizeToCL2()
         cout << "          Definitions : " << endl;
         for (unsigned i=0; i<mDefinitions.size(); i++)
             cout << "          " << mDefinitions[i].first << " -> " << mDefinitions[i].second << endl;
-        cout << "Definitions end " << endl << endl;
     }
 
 }
