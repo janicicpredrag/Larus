@@ -144,20 +144,18 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
     engine->SetMaxNestingDepth(params.max_nesting_depth);
     engine->SetHints(&hints);
 
-    bool vampire_succeeded = false;
-
-// TODO / FIXME: experimental - only the third round of filtering kept
-vampire_succeeded = true;
+    // TODO / FIXME: filterin can be used in different stages
+    bool vampire_succeeded = true;
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != "") {
+    if (vampire_succeeded && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
+        T.printAxioms();
     }
-    T.printAxioms();
 
     if (params.mbNativeEQ) {
         T.AddAxiomEqReflexive();
@@ -167,6 +165,7 @@ vampire_succeeded = true;
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
         if (false && params.msHammerInvoke != "" && vampire_succeeded) {
+            // TODO / FIXME: filterin can be used in different stages
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
             vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -191,7 +190,7 @@ vampire_succeeded = true;
     T.printAxioms();
 
     // **************************** filtering axioms a la hammer by FOL prover
-    if (params.msHammerInvoke != ""  && vampire_succeeded) {
+    if (vampire_succeeded && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
@@ -215,9 +214,6 @@ vampire_succeeded = true;
         lemma.name = T.Axiom(j).second;
         T.mDerivedLemmas.push_back(lemma);
     }
-
-
-
 
     // **************************** checking if case split support is needed
     params.mbNeedsCaseSplits = false;
@@ -332,7 +328,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)
                     {
-                        string filename = /* dirnameOf(inputFile)+"/"+*/ s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        string filename = dirnameOf(inputFile)+"/"+ s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
 
                         cout << "       Including file : " << filename << endl;
                         ifstream input_file(filename,ios::in);
@@ -429,22 +425,19 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
 
     cout << "--- Input axioms : " << endl;
     T.printAxioms();
-
     T.mCLOriginalAxioms = T.mCLaxioms;
 
-
 //    To be used in situations when we don't have dependencies, but a global set of axioms
-                     // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-                     // cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
-    T.printAxioms();
-    if (params.msHammerInvoke != "") {
+    if (false && params.msHammerInvoke != "") {
+        // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+        // cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
         FilterOutNeededAxioms(T.mCLaxioms, theorem, theoremName, params.msHammerInvoke);
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
+        T.printAxioms();
     }
-    T.printAxioms();
 
     if (params.eEngine != eSTL_ProvingEngine) {
         cout << "--- Normalization to CL2 : input size: " << T.mCLaxioms.size() << endl;
@@ -460,7 +453,6 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         if (output.size()>0)
                 theorem = output[output.size()-1].first;
     }
-
 
     for (vector< pair<CLFormula,string> >::iterator it = T.mCLaxioms.begin(); it < T.mCLaxioms.end(); it++) {
         if (it->first.UsesNativeEq())
@@ -500,8 +492,6 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
                 thm.AddUnivVar(theorem.GetUnivVar(i));
             for(size_t i = 0; i<theorem.GetNumOfExistVars(); i++)
                 thm.AddExistVar(theorem.GetExistVar(i));
-
-            // T1.printAxioms();
 
             ReturnValue r = ProveTheorem(T1, engine, thm, theoremName+itos(i), inputFile+itos(i), params, hints);
             delete engine;
@@ -626,7 +616,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms,
 
     vector<string> neededAxioms;
     string vampire_solution =  tmpnam(NULL); // "vampire.txt";//
-    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " --proof tptp --output_axiom_names on " + " > " +  vampire_solution;
+    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv)
     {

@@ -623,8 +623,7 @@ bool Theory::Saturate()
                             found = true;
                     }
                     if (!found) {
-                        cout << "Success!" << newUnivAx << endl;
-                        // axioms.push_back(newUnivAx);
+                        cout << "       Derived lemma: " << newUnivAx << endl;
                         mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
                         updated = true;
                     }
@@ -646,12 +645,11 @@ void Theory::normalizeToCL2()
         vector< pair<CLFormula,string> > normalizedAxioms;
         CLFormula& ax = it->first;
         ax.Normalize(it->second, to_string(noAxioms++), normalizedAxioms, mDefinitions);
-        cout << "       Input Axiom: " << it->first << endl;
+        cout << "          Input Axiom: " << it->first << endl;
         if (normalizedAxioms.size()>1) {
             it = mCLaxioms.erase(it);
             for (size_t i=0; i<normalizedAxioms.size(); i++) {
                it = mCLaxioms.insert(it,pair<CLFormula,string>(normalizedAxioms[i].first, normalizedAxioms[i].second));
-               // AddAxiom(normalizedAxioms[i].first, normalizedAxioms[i].second);
                UpdateSignature(normalizedAxioms[i].first);
                cout << "                    " << i << ". " << normalizedAxioms[i].first << endl;
             }
@@ -659,11 +657,13 @@ void Theory::normalizeToCL2()
         }
     }
 
-    cout << "Definitions : " << endl;
-    for (unsigned i=0; i<mDefinitions.size(); i++)
-        cout << mDefinitions[i].first << " -> " << mDefinitions[i].second << endl;
-    cout << "Definitions end " << endl << endl;
-    //exit(0);
+    if (mDefinitions.size() > 0) {
+        cout << "          Definitions : " << endl;
+        for (unsigned i=0; i<mDefinitions.size(); i++)
+            cout << "          " << mDefinitions[i].first << " -> " << mDefinitions[i].second << endl;
+        cout << "Definitions end " << endl << endl;
+    }
+
 }
 
 // ---------------------------------------------------------------------------------------
