@@ -1,7 +1,7 @@
 #!/bin/sh
-compare=1 # compare to eprover and zenon
+compare=0 # compare to eprover and zenon
 clprov=1
-time=300
+time=20
 maxlength=-p32
 nesting=-n3
 axioms1=-aexcludedmiddle 
@@ -81,15 +81,19 @@ do
 	printf "SMTBV: "
 	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
 	test_success ressmtbv.txt
-	printf "SMTLIA:"
-	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
-	test_success ressmtlia.txt
-	printf "SMTUFBV: "
-	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtufbv -ftptp -vcoq "$file" > ressmtufbv.txt
-	test_success ressmtufbv.txt
-	printf "SMTUFLIA:"
-	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtuflia -ftptp -vcoq "$file" > ressmtuflia.txt
-	test_success ressmtuflia.txt
+        printf "SMTBV -i: "
+        tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -i -esmtbv -ftptp -vcoq "$file" > ressmtbv.txt
+        test_success ressmtbv.txt
+
+#	printf "SMTLIA:"
+#	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtlia -ftptp -vcoq "$file" > ressmtlia.txt
+#	test_success ressmtlia.txt
+#	printf "SMTUFBV: "
+#	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtufbv -ftptp -vcoq "$file" > ressmtufbv.txt
+#	test_success ressmtufbv.txt
+#	printf "SMTUFLIA:"
+#	tm ./CLprover -l$time $maxlength $axioms1 $axioms2 $nesting -esmtuflia -ftptp -vcoq "$file" > ressmtuflia.txt
+#	test_success ressmtuflia.txt
     fi
     if [ $compare = "1" ]; then
         echo "Other prover results:"
