@@ -83,7 +83,7 @@ public:
     virtual void OutputOr(ofstream& outfile) = 0;
     virtual void OutputFact(ofstream& outfile, const Fact& f) = 0;
 
-    virtual void OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& instantiation, proverParams& params) = 0;
+    virtual void OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem, const string& theoremName, const map<string,string>& instantiation, proverParams& params) = 0;
     virtual void OutputProof(ofstream& outfile, const CLProof& p, unsigned level) = 0;
     virtual void OutputEpilogue(ofstream& outfile) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const CaseSplit* cs, unsigned level) = 0;

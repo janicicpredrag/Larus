@@ -104,7 +104,7 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& cl, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& params)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& params)
 {
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
@@ -125,8 +125,34 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
     outfile << "\\end{enumerate}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
 
+    outfile << "\\noindent " << endl;
+    outfile << "{\\bfseries Derived lemmas:} " << endl;
+    outfile << "\\begin{enumerate}" << endl;
+
+    for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
+       outfile << "\\item ";
+       outfile << T.mDerivedLemmas[i].name << " : $";
+       if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
+           outfile << "\\forall \\; ";
+           for(size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
+               outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
+               if (j+1 < T.mDerivedLemmas[i].mUniversalVars.size())
+                   outfile << ", ";
+               else
+                   outfile << " ";
+           }
+           outfile << "\\; (";
+       }
+       OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
+       OutputImplication(outfile);
+       OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
+       outfile << ")$" << endl;
+    }
+    outfile << "\\end{enumerate}" << endl << endl;
+    outfile << "\\hrulefill" << endl << endl;
+
     outfile << "\\begin{theorem}" << endl;
-    OutputCLFormula(outfile, cl, theoremName);
+    OutputCLFormula(outfile, theorem, theoremName);
     outfile << "\\end{theorem}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
     outfile << "\\vspace{3mm}" << endl;

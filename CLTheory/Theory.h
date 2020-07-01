@@ -12,6 +12,13 @@
 
 using namespace std;
 
+
+typedef struct DerivedLemma {
+    vector<string> mUniversalVars;
+    DNFFormula lhs, rhs;
+    string name;
+} DerivedLemma;
+
 class Theory {
     friend class ProvingEngine;
     friend class STLProvingEngine;
@@ -69,6 +76,8 @@ public:
 
     void normalizeToCL2();
     bool Saturate();
+    void SetNumberOfAxiomsBeforeSaturation() { mBeforeSaturation = NumberOfAxioms(); }
+    size_t GetNumberOfAxiomsBeforeSaturation() { return mBeforeSaturation; }
 
     bool Rewrite(Fact LHS, DNFFormula RHS, Fact f, DNFFormula& fout) const;
     bool Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f, DNFFormula& fout) const;
@@ -82,11 +91,16 @@ public:
     vector< pair<string,unsigned> > mSignature;
     set<string> mOccuringSymbols;
 
+    size_t mBeforeSaturation;
+    vector<DerivedLemma> mDerivedLemmas;
+
 protected:
     unsigned int miConstantsCounter;
     bool mbUseNativeEq;
 
     vector< pair<Fact, DNFFormula> > mDefinitions;
+
+
 };
 
 #endif // THEORY_H

@@ -198,12 +198,26 @@ vampire_succeeded = true;
         T.printAxioms();
     }
 
+    size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
     if (params.mbInlineAxioms) {
         cout << "--- Saturating for inlining. " << endl;
         T.Saturate();
         cout << "       After saturation: output size: " << T.mCLaxioms.size() << endl;
         T.printAxioms(true);
     }
+    for (size_t j = AxiomsBeforeSaturation, size = T.NumberOfAxioms(); j < size; j++) {
+        DerivedLemma lemma;
+        for (size_t k = 0; k < T.Axiom(j).first.GetNumOfUnivVars(); k++)
+            lemma.mUniversalVars.push_back(T.Axiom(j).first.GetUnivVar(k));
+        ConjunctionFormula cf = T.Axiom(j).first.GetPremises();
+        lemma.lhs.Add(cf);
+        lemma.rhs = T.Axiom(j).first.GetGoal();
+        lemma.name = T.Axiom(j).second;
+        T.mDerivedLemmas.push_back(lemma);
+    }
+
+
+
 
     // **************************** checking if case split support is needed
     params.mbNeedsCaseSplits = false;

@@ -683,11 +683,17 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f, DNFFormula& fout) c
             nontrivial = true;
         inst[LHS.GetArg(k)] = f.GetArg(k);
     }
+    if (RHS.GetSize() > 1)
+        nontrivial = true;
     fout.Clear();
     for (size_t i = 0; i < RHS.GetSize(); i++) {
         ConjunctionFormula cf;
         for (size_t j = 0; j < RHS.GetElement(i).GetSize(); j++) {
             Fact fact = RHS.GetElement(i).GetElement(j);
+            if (f.GetArity() != fact.GetArity())
+                nontrivial = true;
+            if (f.GetName() != fact.GetName())
+                nontrivial = true;
             for (size_t k = 0; k < RHS.GetElement(i).GetElement(j).GetArity(); k++) {
                 if (inst.find(fact.GetArg(k)) != inst.cend()) {
                     string s = inst.find(fact.GetArg(k))->second;

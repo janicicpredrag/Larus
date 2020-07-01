@@ -106,7 +106,7 @@ string repeat(int n, string s) {
     return os.str();
 }
 //-----------------------------------------------------------------------------------
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula&  cl , const string& theoremName, const map<string,string>& instantiation, proverParams& params)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem , const string& theoremName, const map<string,string>& instantiation, proverParams& params)
 {
  //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
      outfile << "Require Import src.general_tactics." << endl;
@@ -160,12 +160,12 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     }
     outfile << endl;
     outfile << "Theorem " << theoremName << " : ";
-    OutputCLFormula(outfile, cl, theoremName);
+    OutputCLFormula(outfile, theorem, theoremName);
     outfile << "Proof. " << endl;
     outfile << "intros ";
-    for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
-        // outfile << cl.GetUnivVar(i);
-        outfile << instantiation.find(cl.GetUnivVar(i))->second;
+    for(size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++) {
+        // outfile << theorem.GetUnivVar(i);
+        outfile << instantiation.find(theorem.GetUnivVar(i))->second;
         if (i < size - 1)
             outfile << " ";
     }

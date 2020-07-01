@@ -760,6 +760,14 @@ bool CLProof::CL2toCL()
             Fact LHS = mpT->GetDefinitions()[i].first;
             DNFFormula RHS = mpT->GetDefinitions()[i].second;
 
+            for (size_t j = 0; j < mpT->mDerivedLemmas.size(); j++) {
+                DNFFormula dnf;
+                b |= mpT->Rewrite(LHS,RHS, mpT->mDerivedLemmas[j].lhs, dnf);
+                mpT->mDerivedLemmas[j].lhs = dnf;
+                b |= mpT->Rewrite(LHS,RHS, mpT->mDerivedLemmas[j].rhs, dnf);
+                mpT->mDerivedLemmas[j].rhs = dnf;
+            }
+
             for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {
                 DNFFormula dnf;
                 b |= mpT->Rewrite(LHS,RHS,mCLAssumptions[j],dnf);

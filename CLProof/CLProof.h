@@ -14,6 +14,8 @@ using namespace std;
 class ModusPonens;
 class CLProofEnd;
 
+
+
 // typedef tuple < ConjunctionFormula, DNFFormula, string, vector< pair <string, string> >, vector< pair <string,string> > >  MP_Step;
 typedef struct {
     ConjunctionFormula from;
