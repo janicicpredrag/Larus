@@ -265,11 +265,11 @@ echo "Use implicit lemmas:" $opt5 | tee -a $filename
 fi
 
 tm() {
-  local start=$(gdate +%s)
+  local start=$(date +%s)
   $@
   local exit_code=$?
-  printf >&2 " ~$(($(gdate +%s)-${start})) seconds. "
-  echo " ~$(($(gdate +%s)-${start})) seconds. " >> data.csv
+  printf >&2 " ~$(($(date +%s)-${start})) seconds. "
+  echo " ~$(($(date +%s)-${start})) seconds. " >> data.csv
   return $exit_code
 }
 
@@ -280,7 +280,7 @@ do
   echo $file >> data.csv
   if [[ $prover = "CLprover" ]]; then
       echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof $implicit -vcoq "$axioms" "$axiomsb" "$file"
-    tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
+    tm ./CLprover -h -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
     else
       if [[ $prover = "eprover" ]]; then
         echo "eprove"

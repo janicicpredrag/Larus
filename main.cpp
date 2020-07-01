@@ -22,6 +22,8 @@ extern void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_s
 
 using namespace std;
 
+// ---------------------------------------------------------------------------------------
+
 int main(int argc , char** argv)
 {
     proverParams params;
@@ -149,9 +151,6 @@ int main(int argc , char** argv)
     }
     else
         wrongInput = true;
-
-    params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
-
 
     if (inputFilename == "")
         wrongInput = true;
