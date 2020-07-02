@@ -234,7 +234,11 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
         OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << ") ";
 
-        if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
+        if (p.GetMP(i).axiomName == "trivial")
+        {
+            outfile << "by eauto";
+        }
+        else if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
         {
             outfile << "by contradiction_on (";
             std::size_t dpos = PREFIX_NEGATED.length();
@@ -258,7 +262,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             outfile << "));auto)";
 
         }
-         else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos || 
+        else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos ||
                   p.GetMP(i).axiomName.find("EqSub") != std::string::npos || 
                   p.GetMP(i).axiomName.find("eq_sym") != std::string::npos
                   
