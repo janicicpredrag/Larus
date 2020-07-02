@@ -120,7 +120,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
     {
         string name = get<0>(*it);
-        if (name != "false" & name != "true" & name.find(PREFIX_NEGATED) != 0)
+        if (name != "false" & name != "true" & name.find(PREFIX_NEGATED) != 0 & name.find("eqnative") != 0)
         {
             outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
         }
