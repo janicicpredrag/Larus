@@ -50,7 +50,7 @@ Ltac rename_H H := let T := fresh in try rename H into T.
 Ltac applying t :=
 apply t;(assumption || trivial || one_lemma || auto with Sym ).
 
-Ltac conclude := spliter;remove_exists;one_of_disjunct.
+Ltac conclude := unshelve (spliter;remove_exists;one_of_disjunct);assumption.
 
 Ltac contradict :=
  match goal with

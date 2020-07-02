@@ -124,11 +124,13 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
         {
             outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
         }
+
     }
-    for(vector<string>::iterator it = T.mInitialConstants.begin(); it!=T.mInitialConstants.end(); ++it)
+     for(vector<string>::iterator it = T.mInitialConstants.begin(); it!=T.mInitialConstants.end(); ++it)
     {
-        outfile << "Parameter " << (*it) << " : MyT." << endl;
+        outfile << "Hypothesis " << (*it) << " : MyT." << endl;
     }
+     
     outfile << endl;
     for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
         std::string name = get<1>(T.OriginalAxiom(i));
