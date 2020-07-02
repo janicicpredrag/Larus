@@ -125,31 +125,33 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
     outfile << "\\end{enumerate}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
 
-    outfile << "\\noindent " << endl;
-    outfile << "{\\bfseries Derived lemmas:} " << endl;
-    outfile << "\\begin{enumerate}" << endl;
+    if (T.mDerivedLemmas.size() > 0) {
+        outfile << "\\noindent " << endl;
+        outfile << "{\\bfseries Derived lemmas:} " << endl;
+        outfile << "\\begin{enumerate}" << endl;
 
-    for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
-       outfile << "\\item ";
-       outfile << T.mDerivedLemmas[i].name << " : $";
-       if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
-           outfile << "\\forall \\; ";
-           for(size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
-               outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
-               if (j+1 < T.mDerivedLemmas[i].mUniversalVars.size())
-                   outfile << ", ";
-               else
-                   outfile << " ";
+        for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
+           outfile << "\\item ";
+           outfile << T.mDerivedLemmas[i].name << " : $";
+           if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
+               outfile << "\\forall \\; ";
+               for(size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
+                   outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
+                   if (j+1 < T.mDerivedLemmas[i].mUniversalVars.size())
+                       outfile << ", ";
+                   else
+                       outfile << " ";
+               }
+               outfile << "\\; (";
            }
-           outfile << "\\; (";
-       }
-       OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
-       OutputImplication(outfile);
-       OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
-       outfile << ")$" << endl;
+           OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
+           OutputImplication(outfile);
+           OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
+           outfile << ")$" << endl;
+        }
+        outfile << "\\end{enumerate}" << endl << endl;
+        outfile << "\\hrulefill" << endl << endl;
     }
-    outfile << "\\end{enumerate}" << endl << endl;
-    outfile << "\\hrulefill" << endl << endl;
 
     outfile << "\\begin{theorem}" << endl;
     OutputCLFormula(outfile, theorem, theoremName);

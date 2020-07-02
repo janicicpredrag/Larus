@@ -79,6 +79,8 @@ bool stoi(string s, int& i)
 
 ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
 {
+    T.StoreInitialConstants();
+
     map<string,string> instantiation;
     for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++)  {
         string constantName = T.MakeNewConstant();
@@ -87,8 +89,6 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
 
     if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
         T.MakeNewConstant();
-
-    T.StoreInitialConstants();
 
     cout << "--- Instantiating the goal." << endl;
     CLProof proof;
