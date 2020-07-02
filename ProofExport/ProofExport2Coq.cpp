@@ -236,7 +236,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 
         if (p.GetMP(i).axiomName == "trivial")
         {
-            outfile << "by eauto";
+            outfile << "by one_lemma";
         }
         else if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
         {
