@@ -148,7 +148,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     //             outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl;
     // }
     outfile << endl;
-    for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
+    /* for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
         std::string name = get<1>(T.Axiom(i));
         if (name.find("sat") != std::string::npos)
             {
@@ -159,7 +159,34 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
                 outfile << "Qed." << endl << endl;
                 outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl << endl;
             }
+    } */
+ 
+    for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
+        outfile << "Lemma ";
+        outfile << T.mDerivedLemmas[i].name << " : ";
+        if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
+            outfile << "forall ";
+            for(size_t j = 0, size =T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
+                outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
+                if (j+1 < T.mDerivedLemmas[i].mUniversalVars.size())
+                    outfile << " ";
+                else
+                    outfile << ", ";
+            }
+            outfile << " ";
+        }
+        OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
+        if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
+            OutputImplication(outfile);
+        OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
+        outfile << "." << endl;
+        outfile << "Proof." << endl;    
+        outfile << "intros;spliter;eauto with Sym." << endl;
+        outfile << "Qed." << endl << endl;
+        outfile << "Hint Resolve " << T.mDerivedLemmas[i].name << " : Sym." << endl << endl;
     }
+
+
     outfile << endl;
     outfile << "Theorem " << theoremName << " : ";
     OutputCLFormula(outfile, theorem, theoremName);
