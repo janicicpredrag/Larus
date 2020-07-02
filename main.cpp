@@ -183,22 +183,27 @@ int main(int argc , char** argv)
     switch (rv) {
         case eBadOrMissingInputFile:
             cout << "Bad or missing input file." << endl;
+            cout << "% SZS status GaveUp" << endl;
             return -1;
 
         case eWrongFormatParameter:
             cout << "Unknown input format selected." << endl;
+            cout << "% SZS status GaveUp" << endl;
             return -1;
 
         case eErrorReadingAxioms:
             cout << "Error reading axioms." << endl;
+            cout << "% SZS status GaveUp" << endl;
             return -1;
 
         case eNoConjectureGiven:
             cout << "No conjecture given! " << endl;
+            cout << "% SZS status GaveUp" << endl;
             return -1;
 
         case eTimeLimitExceeded:
             cout << "[TIME LIMIT EXCEEDED!]" << endl;
+            cout << "% SZS status GaveUp" << endl;
             return -1;
 
         case eConjectureProved:

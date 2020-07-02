@@ -79,7 +79,7 @@ bool stoi(string s, int& i)
 
 ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
 {
-    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0)
+    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 && theorem.GetNumOfUnivVars() == 0)
         T.MakeNewConstant();
 
     T.StoreInitialConstants();
