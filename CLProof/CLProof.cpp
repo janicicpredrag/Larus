@@ -739,7 +739,8 @@ bool CLProof::CL2toCL()
             dnf.Add(cf);
             mMPs[j].CLfrom.push_back(dnf);
         }
-        if (mMPs[j].axiomName.find("Aux") != string::npos) {
+        // TODO this is ugly, derived lemmas should be distinguished in some better way, not by name
+        if (mMPs[j].axiomName.find("Aux") != string::npos && mMPs[j].axiomName.find("sat") == string::npos) {
             int pos = mMPs[j].axiomName.find("Aux");
             mMPs[j].axiomName = mMPs[j].axiomName.substr(0, pos);
         }
