@@ -128,6 +128,7 @@ public:
     CLFormula(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
     CLFormula& operator=(const CLFormula& cf)
         { mA = cf.mA; mB = cf.mB; mUniversalVars = cf.mUniversalVars; mExistentialVars = cf.mExistentialVars; return *this; }
+    void SetBody(const ConjunctionFormula& a, const DNFFormula& b)  { mA=a; mB=b; }
     bool operator==(const CLFormula& cf) // up to quantifiers
         { return (mA == cf.mA && mB == cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/); }
     friend ostream& operator<<(ostream& os, const CLFormula& f);
@@ -158,7 +159,9 @@ public:
     void Normalize(const string& name, const string& suffix,
                    vector< pair<CLFormula,string> >& output,
                    vector< pair<Fact, DNFFormula> >& definitions) const;
-    void NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const;
+    void NormalizeGoal(const string& name, const string& suffix,
+                       vector< pair<CLFormula,string> >& output,
+                       vector< pair<Fact, DNFFormula> >& definitions) const;
     static Fact MergeFacts(const string& suffix, const Fact a, const Fact b);
 
     bool UsesNativeEq() const;

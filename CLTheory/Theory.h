@@ -93,12 +93,13 @@ public:
 
     size_t mBeforeSaturation;
     vector<DerivedLemma> mDerivedLemmas;
+    vector< pair<Fact, DNFFormula> > mDefinitions;
 
 protected:
     unsigned int miConstantsCounter;
     bool mbUseNativeEq;
 
-    vector< pair<Fact, DNFFormula> > mDefinitions;
+
 
 
 };

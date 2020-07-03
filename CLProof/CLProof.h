@@ -31,9 +31,13 @@ public:
     CLProof();
     void Clear();
     void SetTheory(Theory* pT);
+
+    void SetTheorem(const CLFormula& theorem, const string& theoremName, const map<string,string>& instantiation)
+        { mTheorem = theorem; mTheoremName = theoremName; mInstantiation = instantiation; }
+
     unsigned Size() const;
     void AddAssumption(const Fact& f);
-    void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp,string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses);
+    void AddMPstep(const ConjunctionFormula from, const DNFFormula& mp, string name, vector< pair<string,string> >& instantiation, vector< pair<string,string> >& new_witnesses);
     void SetProofEnd(CLProofEnd *p);
 
     void Simplify();
@@ -59,6 +63,10 @@ public:
 
     bool CL2toCL();
 
+    const CLFormula& GetTheorem() const { return mTheorem; }
+    const string& GetTheoremName() const { return mTheoremName; }
+    const map<string,string>& GetInstantiation() const { return mInstantiation; }
+
 private:
     Theory* mpT;
 
@@ -69,6 +77,10 @@ private:
 
     vector<MP_Step> mMPs;
     CLProofEnd* mpProofEnd;
+
+    CLFormula mTheorem;
+    string mTheoremName;
+    map<string,string> mInstantiation;
 };
 
 

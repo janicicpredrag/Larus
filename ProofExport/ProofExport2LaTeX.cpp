@@ -21,10 +21,15 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
 
         }
     }
-    outfile << "\\; ( ";
+    outfile << "\\; ";
+
+    if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
+        outfile << "( ";
 
     OutputConjFormula(outfile, cl.GetPremises());
-    OutputImplication(outfile);
+
+    if (cl.GetPremises().GetSize() > 0)
+       OutputImplication(outfile);
 
     if (cl.GetNumOfExistVars() > 0) {
         outfile << "\\exists \\; (";
@@ -38,8 +43,10 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
     }
     OutputDNF(outfile, cl.GetGoal());
     outfile << "\\;";
-    outfile << ")$";
-    outfile << endl;
+
+    if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
+        outfile << ")";
+    outfile << "$" << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -104,26 +111,28 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& params)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& params)
 {
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
     outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
     outfile << "\\begin{document}" << endl << endl;
 
-    outfile << "\\title{Proof of theorem ,," << theoremName << "``}" << endl;
+    outfile << "\\title{Proof of theorem ,," << p.GetTheoremName() << "``}" << endl;
     outfile << "\\author{CLprover}" << endl;
     outfile << "\\maketitle" << endl << endl;
 
-    outfile << "\\noindent " << endl;
-    outfile << "{\\bfseries Axioms:} " << endl;
-    outfile << "\\begin{enumerate}" << endl;
-    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
-        outfile << "\\item ";
-        OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), get<1>(T.OriginalAxiom(i)));
+    if (T.NumberOfOriginalAxioms() > 0) {
+        outfile << "\\noindent " << endl;
+        outfile << "{\\bfseries Axioms:} " << endl;
+        outfile << "\\begin{enumerate}" << endl;
+        for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
+            outfile << "\\item ";
+            OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), get<1>(T.OriginalAxiom(i)));
+        }
+        outfile << "\\end{enumerate}" << endl << endl;
+        outfile << "\\hrulefill" << endl << endl;
     }
-    outfile << "\\end{enumerate}" << endl << endl;
-    outfile << "\\hrulefill" << endl << endl;
 
     if (T.mDerivedLemmas.size() > 0) {
         outfile << "\\noindent " << endl;
@@ -145,16 +154,19 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
                outfile << "\\; (";
            }
            OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
-           OutputImplication(outfile);
+           if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
+              OutputImplication(outfile);
            OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
-           outfile << ")$" << endl;
+           if (T.mDerivedLemmas[i].mUniversalVars.size() > 0)
+              outfile << ")";
+           outfile << "$" << endl;
         }
         outfile << "\\end{enumerate}" << endl << endl;
         outfile << "\\hrulefill" << endl << endl;
     }
 
     outfile << "\\begin{theorem}" << endl;
-    OutputCLFormula(outfile, theorem, theoremName);
+    OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
     outfile << "\\end{theorem}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
     outfile << "\\vspace{3mm}" << endl;
