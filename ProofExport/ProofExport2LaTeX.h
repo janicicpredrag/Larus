@@ -1,7 +1,6 @@
 #ifndef PROOFEXPORT2LATEX_H
 #define PROOFEXPORT2LATEX_H
 
-#include <iostream>
 #include "ProofExport.h"
 
 class ProofExport2LaTeX : public ProofExport
