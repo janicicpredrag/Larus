@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 compare=0 # compare to eprover and zenon
 clprov=1
 time=20
