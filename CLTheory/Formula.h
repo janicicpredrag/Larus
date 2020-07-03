@@ -3,13 +3,8 @@
 #define NATIVE_EQ 1
 #define NATIVE_NEG 1
 
-#include <string>
-#include <vector>
-#include <set>
-#include <map>
-#include <iostream>
 #include "common.h"
-// #include "Theory/theory.h"
+
 
 using namespace std;
 
@@ -306,5 +301,6 @@ bool ReadSetOfTPTPStatements(Theory *pT, const vector<string>& statements);
 
 // ---------------------------------------------------------------------------------------
 
+typedef tuple<CLFormula,string,string,Fact> tHint;
 
 #endif // FORMULA_H

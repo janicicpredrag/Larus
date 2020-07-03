@@ -1,9 +1,7 @@
 #ifndef SQLFACTSDATABASE_H
 #define SQLFACTSDATABASE_H
 
-#include <set>
-#include <map>
-#include <vector>
+#include "common.h"
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
 #include "ProvingEngine/FactsDatabase.h"

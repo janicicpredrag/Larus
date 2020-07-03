@@ -1,9 +1,7 @@
 #ifndef FACTSDATABASE_H
 #define FACTSDATABASE_H
 
-#include <set>
-#include <map>
-#include <vector>
+#include "common.h"
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
 

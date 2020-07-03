@@ -1,7 +1,6 @@
 #ifndef PROOFEXPORT2Isabelle_H
 #define PROOFEXPORT2Isabelle_H
 
-#include <iostream>
 #include "ProofExport.h"
 
 

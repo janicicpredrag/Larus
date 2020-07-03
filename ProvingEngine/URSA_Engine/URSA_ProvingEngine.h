@@ -1,12 +1,11 @@
 #ifndef SATPROVINGENGINE_H
 #define SATPROVINGENGINE_H
 
-#include <string>
-#include <tuple>
+#include "common.h"
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "ProvingEngine/ProvingEngine.h"
-#include "common.h"
+
 
 using namespace std;
 

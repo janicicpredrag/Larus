@@ -2,23 +2,15 @@
 #include <ctype.h>
 #include <iostream>
 #include <string.h>
-
-#include "CLTheory/Theory.h"
-#include "CLTheory/Formula.h"
 #include "common.h"
+#include "CLTheory/Theory.h"
 
 bool USING_ORIGINAL_SIGNATURE_EQ;
 bool USING_ORIGINAL_SIGNATURE_NEG;
 
-extern ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, const CLFormula& theorem, const string& theoremName, proverParams& params);
-extern ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& params);
-extern bool ProveFromTPTPTheory(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName, PROVING_ENGINE proving_engine, size_t timelimit, unsigned max_nesting_depth);
-// extern bool ProveFromTPTPAAxioms(const vector<string>& axioms, const string strTheorem, INPUT_FORMAT input_format, PROVING_ENGINE proving_engine, size_t timelimit);
-extern string replaceFirstOccurrence(std::string& s,const std::string& toReplace,const std::string& replaceWith);
-
-extern bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName);
-extern void ExportCaseStudyToTPTP(vector< pair<string, vector<string> > > case_study, vector<string>& theory);
-//extern void RunCaseStudy(vector< pair<string, vector<string> > > case_study, vector<string>& theory);
+extern ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, vector<tHint>& hints);
+extern ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, const string& theoremFileName, vector<tHint>& hints);
+extern ReturnValue AdjustAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
 
 using namespace std;
 
@@ -46,9 +38,6 @@ int main(int argc , char** argv)
 
     USING_ORIGINAL_SIGNATURE_EQ = false;
     USING_ORIGINAL_SIGNATURE_NEG = false;
-
-//    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
-//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
 
     bool wrongInput = false;
 
@@ -172,13 +161,23 @@ int main(int argc , char** argv)
     }
 
     clock_t startTime = clock();
-    ReturnValue rv = ReadAndProveTPTPConjecture(inputFilename, params);
+    Theory T;
+    CLFormula theorem;
+    string theoremName;
+    vector<tHint> hints;
+    ReturnValue rv;
+
+    if ((rv = ReadTPTPConjecture(inputFilename, params, T, theorem, theoremName, hints)) == eOK)
+        if ((rv = AdjustAxioms(params, T, theorem, theoremName)) == eOK)
+            rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName, inputFilename, hints);
+
     clock_t current = clock();
 
     float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
+    cout << "Elapsed time: " << elapsed_secs << endl;
+
     if (rv == eConjectureNotProved && elapsed_secs >= params.time_limit)
         rv = eTimeLimitExceeded;
-    cout << "Elapsed time: " << elapsed_secs << endl;
 
     switch (rv) {
         case eBadOrMissingInputFile:
@@ -218,33 +217,6 @@ int main(int argc , char** argv)
             cout << "% SZS status GaveUp" << endl;
             return -1;
     }
-
-/*
-  vector< pair<string, vector<string> > > case_study =   euclids_thms1 ;
-    int numberProved = 0, numberNotProved = 0;
-    for (size_t i = 0, size = case_study.size(); i<size; i++) {
-        string thm = case_study[i].first;
-        cout << endl << " Proving " << thm << " ... " << case_study[i].first << endl;
-        vector<string> depends = case_study[i].second;
-        if (ProveFromTPTPTheory(    EuclidAxioms , depends, thm, eEQ_ProvingEngine, 30)) {
-            numberProved++;
-            cerr << "1 proved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-        }
-        else {
-            numberNotProved++;
-            cerr << "0 NOTproved: " << thm  << " total: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-         }
-         cout << "proved: " << numberProved << " out of : " << (numberProved+numberNotProved) << " (total: " << size << ")" << endl;
-    }
-*/
-
-//    vector< pair<string, vector<string> > > case_study =   euclids_thms1;
-//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
-
-
-//    RunCaseStudy(case_study,EuclidAxioms);
-//    ExportCaseStudyToTPTP(case_study,EuclidAxioms);
-
     return 0;
 }
 

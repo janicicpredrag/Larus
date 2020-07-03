@@ -1,7 +1,7 @@
 #ifndef PROOFEXPORT2COQ_H
 #define PROOFEXPORT2COQ_H
 
-#include <iostream>
+
 #include "ProofExport.h"
 
 

@@ -1,11 +1,7 @@
 #ifndef CLPROOF_H
 #define CLPROOF_H
 
-#include <iostream>
-#include <tuple>
-#include <vector>
-#include <string>
-#include <assert.h>
+
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
 

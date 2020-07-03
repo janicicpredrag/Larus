@@ -1,7 +1,18 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include<string>
+#include <ctype.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <set>
+#include <map>
+#include <tuple>
+#include <assert.h>
 
 using namespace std;
 
@@ -19,7 +30,7 @@ enum PROVING_ENGINE {
 
 enum fofType { eAxiom, eConjecture, eHint, eAny };
 
-enum ReturnValue { eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
+enum ReturnValue { eOK, eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
 
 enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eEQReflex, eEQSymm, eNegElim, eExcludedMiddle, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
@@ -41,9 +52,7 @@ const string DEFAULT_HAMMER = "";
 const bool DEFAULT_INLINE_AXIOMS = true;
 
 const string EQ_NATIVE_NAME = "eqnative";
-
 const string PREFIX_NEGATED = "nnn";
-
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
 
 typedef struct proverParams {
@@ -70,12 +79,10 @@ string itos(PROVING_ENGINE T, unsigned int i);
 bool stoi(string s, int& i);
 string SkipChar(const string& str, char c);
 string ToUpper(const string& str);
-
+string dirnameOf(const string& fname);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
-
 extern bool USING_ORIGINAL_SIGNATURE_NEG;
-
 
 
 #endif // COMMON_H

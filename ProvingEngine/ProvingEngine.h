@@ -1,16 +1,14 @@
 #ifndef PROVINGENGINE_H
 #define PROVINGENGINE_H
 
+#include "common.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
-#include "common.h"
+
 
 using namespace std;
 
 extern string itos(unsigned int i);
-
-typedef tuple<CLFormula,string,string,Fact> tHint;
-
 
 class ProvingEngine
 {

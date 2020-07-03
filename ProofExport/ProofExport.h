@@ -1,8 +1,7 @@
 #ifndef PROOFEXPORT_H
 #define PROOFEXPORT_H
 
-#include <iostream>
-#include <fstream>
+#include "common.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
 

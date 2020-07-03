@@ -1,12 +1,11 @@
 #ifndef SQLPROVINGENGINE_H
 #define SQLPROVINGENGINE_H
 
+#include "common.h"
 #include "CLProof/CLProof.h"
+#include "CLTheory/Theory.h"
 #include "ProvingEngine/ProvingEngine.h"
 #include "ProvingEngine/SQL_Engine/SQL_FactsDatabase.h"
-#include "CLTheory/Theory.h"
-#include "common.h"
-
 
 using namespace std;
 
