@@ -6,30 +6,141 @@
 
 // ---------------------------------------------------------------------------------------
 
-string SkipChar(const string& str, char c)
+Fact::Fact (const string& s)
 {
-    string out;
-    size_t slen = str.size();
-    for(size_t i=0; i<slen; i++) {
-        if (str[i] != c)
-        out += str[i];
-    }
-    return out;
+    Read(s);
 }
 
 // ---------------------------------------------------------------------------------------
 
-string ToUpper(const string& str)
+bool Fact::Read(const string& s)
 {
-    return str;
-    /*
-    string res;
-    res.resize(str.size());
-    for (size_t i=0; i<str.size(); i++)
-         res[i] = toupper(str[i]);
-    return res;*/
+    size_t pos1, pos2, pos;
+    #ifdef DEBUG_PARSER
+    cout << "Currently Reading fact : " << s << endl;
+    #endif
+
+    if (!MatchingBrackets(s))
+        return false;
+
+    pos = s.size();
+    while (s[0] == '(' && s[pos-1] == ')') {
+        return Read(s.substr(1,pos-2));
+    }
+
+    if (s=="false" || s=="$false") {
+        mName = "false";
+        return true;
+    }
+    if (s=="true" || s=="$true") {
+        mName = "true";
+        return true;
+    }
+
+    if (s[0] == '~')
+    {
+        if (!Read(s.substr(1,pos-1)))
+            return false;
+        mName = PREFIX_NEGATED+mName;
+        return true;
+    }
+
+    pos = s.find("!=",0);
+    if (pos != string::npos)
+    {
+        unsigned l = 2;
+        mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
+        mArgs.push_back(s.substr(0,pos));
+        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
+        return true;
+    }
+    pos = s.find("=",0);
+    if (pos != string::npos)
+    {
+        unsigned l = 1;
+        mName = EQ_NATIVE_NAME;
+        mArgs.push_back(s.substr(0,pos));
+        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
+        return true;
+    }
+
+    pos1 = s.find('(',0);
+    if (pos1 == string::npos)
+    {
+        /*#ifdef DEBUG_PARSER
+        cout << "Name not found in : " << s << endl;
+        #endif*/
+        mName = s;
+        return true;
+    }
+
+    pos2 = s.find(')',0);
+    if (pos2 == string::npos)
+    {
+        #ifdef DEBUG_PARSER
+        cout << "Ending parenthesis not found in : " << s << endl;
+        #endif
+        return false;
+    }
+
+    if (s.find('(',pos1+1) != string::npos)
+    {
+        #ifdef DEBUG_PARSER
+        cout << "Error ( not found in : " << s << endl;
+        #endif
+        return false;
+    }
+    #ifdef DEBUG_PARSER
+    cout << "the constant is " << s.substr(0, pos1) << endl;
+    #endif
+    mName = s.substr(0, pos1);
+
+    pos1++;
+    pos2 = s.size();
+    while(pos1<pos2) {
+        pos = s.find(',',pos1);
+        if (pos == string::npos) {
+        pos = s.find(')',pos1);
+            if (pos == string::npos) {
+                #ifdef DEBUG_PARSER
+                cout << "Error ) not found in " << s << endl;
+                #endif
+                return false;
+            }
+            if (pos < pos2-1)     {
+                #ifdef DEBUG_PARSER
+                cout << "Error ) should be the last character of :" << s << endl;
+                #endif
+                return false;
+              }
+        }
+        if (pos==pos1)
+        {
+            #ifdef DEBUG_PARSER
+            cout << "Error " << endl;
+            #endif
+            return false;
+        }
+        mArgs.push_back(s.substr(pos1, pos-pos1));
+        pos1=pos+1;
+    }
+    return true;
 }
 
+// ---------------------------------------------------------------------------------------
+
+bool Fact::Equals(const Fact& f) const
+{
+    if (GetName() != f.GetName())
+        return false;
+    if (GetArity() != f.GetArity())
+        return false;
+    for (size_t i = 0; i < GetArity(); i++) {
+        if (GetArg(i) != f.GetArg(i))
+            return false;
+    }
+    return true;
+}
 
 // ---------------------------------------------------------------------------------------
 
@@ -91,9 +202,35 @@ bool ConjunctionFormula::Read(const string& s)
     return true;
 }
 
+// ---------------------------------------------------------------------------------------
+
+bool ConjunctionFormula::Equals(const ConjunctionFormula& f) const
+{
+    if (GetSize() != f.GetSize())
+        return false;
+    for (size_t i = 0; i < GetSize(); i++) {
+        bool found = false;
+        for (size_t j = 0; j < GetSize() && !found; j++) {
+            if (GetElement(i).Equals(f.GetElement(j)))
+                found = true;
+        }
+        if (!found)
+            return false;
+    }
+    return true;
+}
 
 // ---------------------------------------------------------------------------------------
 
+bool ConjunctionFormula::UsesNativeEq() const
+{
+    for (size_t i = 0; i < GetSize(); i++)
+        if (GetElement(i).GetName() == EQ_NATIVE_NAME || GetElement(i).GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME)
+            return true;
+    return false;
+}
+
+// ---------------------------------------------------------------------------------------
 
 bool DNFFormula::Read(const string& s)
 {
@@ -116,10 +253,6 @@ bool DNFFormula::Read(const string& s)
 
     pos1 = 0;
     pos2 = s0.size();
-/*    if (s0[0] == '(' and s0[pos2-1]==')') {
-        if (Read(s.substr(1, pos2-2)))
-            return true;
-    }*/
     while(pos1<pos2) {
         pos = s0.find('|',pos1);
         if (pos != string::npos) {
@@ -192,48 +325,6 @@ bool MatchingBrackets(const string& v)
 }
 
 
-// ---------------------------------------------------------------------------------------
-
-bool ConjunctionFormula::Equals(const ConjunctionFormula& f) const
-{
-    if (GetSize() != f.GetSize())
-        return false;
-    for (size_t i = 0; i < GetSize(); i++) {
-        bool found = false;
-        for (size_t j = 0; j < GetSize() && !found; j++) {
-            if (GetElement(i).Equals(f.GetElement(j)))
-                found = true;
-        }
-        if (!found)
-            return false;
-    }
-    return true;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool ConjunctionFormula::UsesNativeEq() const
-{
-    for (size_t i = 0; i < GetSize(); i++)
-        if (GetElement(i).GetName() == EQ_NATIVE_NAME || GetElement(i).GetName() == PREFIX_NEGATED+EQ_NATIVE_NAME)
-            return true;
-    return false;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool Fact::Equals(const Fact& f) const
-{
-    if (GetName() != f.GetName())
-        return false;
-    if (GetArity() != f.GetArity())
-        return false;
-    for (size_t i = 0; i < GetArity(); i++) {
-        if (GetArg(i) != f.GetArg(i))
-            return false;
-    }
-    return true;
-}
 
 // ---------------------------------------------------------------------------------------
 
@@ -534,8 +625,6 @@ bool CLFormula::ReadImplication(const string& v, ConjunctionFormula& A, DNFFormu
     return false;
 }
 
-
-
 // ---------------------------------------------------------------------------------------
 
 int CLFormula::UnivVarOrdinalNumber(string v) const
@@ -588,132 +677,6 @@ bool CLFormula::IsSimpleUnivFormula() const
         GetGoal().GetSize() == 1
         //GetGoal().GetElement(0).GetElement(0).GetArg()!=0
         );
-}
-
-
-
-// ---------------------------------------------------------------------------------------
-
-Fact::Fact (const string& s)
-{
-    Read(s);
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool Fact::Read(const string& s)
-{
-    size_t pos1, pos2, pos;
-    #ifdef DEBUG_PARSER
-    cout << "Currently Reading fact : " << s << endl;
-    #endif
-
-    if (!MatchingBrackets(s))
-        return false;
-
-    pos = s.size();
-    while (s[0] == '(' && s[pos-1] == ')') {
-        return Read(s.substr(1,pos-2));
-    }
-
-    if (s=="false" || s=="$false") {
-        mName = "false";
-        return true;
-    }
-    if (s=="true" || s=="$true") {
-        mName = "true";
-        return true;
-    }
-
-    if (s[0] == '~')
-    {
-        if (!Read(s.substr(1,pos-1)))
-            return false;
-        mName = PREFIX_NEGATED+mName;
-        return true;
-    }
-
-    pos = s.find("!=",0);
-    if (pos != string::npos)
-    {
-        unsigned l = 2;
-        mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
-        mArgs.push_back(s.substr(0,pos));
-        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
-        return true;
-    }
-    pos = s.find("=",0);
-    if (pos != string::npos)
-    {
-        unsigned l = 1;
-        mName = EQ_NATIVE_NAME;
-        mArgs.push_back(s.substr(0,pos));
-        mArgs.push_back(s.substr(pos+l, s.size()-pos-l));
-        return true;
-    }
-
-
-    pos1 = s.find('(',0);
-    if (pos1 == string::npos)
-    {
-        /*#ifdef DEBUG_PARSER
-        cout << "Name not found in : " << s << endl;
-        #endif*/
-        mName = s;
-        return true;
-    }
-
-    pos2 = s.find(')',0);
-    if (pos2 == string::npos)
-    {
-        #ifdef DEBUG_PARSER
-        cout << "Ending parenthesis not found in : " << s << endl;
-        #endif
-        return false;
-    }
-
-    if (s.find('(',pos1+1) != string::npos)
-    {
-        #ifdef DEBUG_PARSER
-        cout << "Error ( not found in : " << s << endl;
-        #endif
-        return false;
-    }
-    #ifdef DEBUG_PARSER
-    cout << "the constant is " << s.substr(0, pos1) << endl;
-    #endif
-    mName = s.substr(0, pos1);
-
-    pos1++;
-    pos2 = s.size();
-    while(pos1<pos2) {
-        pos = s.find(',',pos1);
-        if (pos == string::npos) {
-        pos = s.find(')',pos1);
-            if (pos == string::npos) {
-                #ifdef DEBUG_PARSER
-                cout << "Error ) not found in " << s << endl;
-                #endif
-                return false;
-            }
-            if (pos < pos2-1)     {
-                #ifdef DEBUG_PARSER
-                cout << "Error ) should be the last character of :" << s << endl;
-                #endif
-                return false;
-              }
-        }
-        if (pos==pos1)
-        {
-            #ifdef DEBUG_PARSER
-            cout << "Error " << endl;
-            #endif
-            return false;
-        }
-        mArgs.push_back(s.substr(pos1, pos-pos1));
-        pos1=pos+1;
-    }
-    return true;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -813,23 +776,6 @@ bool ReadTPTPStatement(const string s, CLFormula& cl, string& name, string& ordi
         }
     }
 }
-
-// ---------------------------------------------------------------------------------------
-
-bool ReadSetOfTPTPStatements(Theory* T, const vector<string>& statements)
-{
-    string statementName, ordinal;
-    for(size_t i=0, size = statements.size(); i < size; i++) {
-        CLFormula cl;
-        Fact justification;
-        string s = statements[i];
-        fofType type = eAxiom;
-        if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type))
-            T->AddAxiom(cl, statementName);
-    }
-    return true;
-}
-
 
 // ---------------------------------------------------------------------------------------
 
@@ -1048,7 +994,6 @@ void CLFormula::NormalizeGoal(const string& name,
 {
     if (mExistentialVars.size() == 0 && GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
         return;
-
     unsigned count_aux = 0;
     /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */
     size_t numGoalDisjuncts = GetGoal().GetSize();
@@ -1134,7 +1079,6 @@ void CLFormula::NormalizeGoal(const string& name,
 }
 
 // ---------------------------------------------------------------------------------------
-
 
 Fact CLFormula::CLFormula::MergeFacts(const string& suffix, const Fact a, const Fact b)
 {

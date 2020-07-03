@@ -294,13 +294,6 @@ inline ostream& operator<<(ostream& os, const CLFormula& f)
 
 // ---------------------------------------------------------------------------------------
 
-string SkipChar(const string& str, char c);
-string ToUpper(const string& str);
-bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, string& ordinal, Fact& justification, fofType& type);
-bool ReadSetOfTPTPStatements(Theory *pT, const vector<string>& statements);
-
-// ---------------------------------------------------------------------------------------
-
 typedef tuple<CLFormula,string,string,Fact> tHint;
 
 #endif // FORMULA_H

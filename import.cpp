@@ -10,6 +10,9 @@
 #include "ProofExport/ProofExport2Coq.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 
+extern bool ReadTPTPStatement(const string s, CLFormula& cl, string& axname, string& ordinal, Fact& justification, fofType& type);
+ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, vector<tHint>& hints);
+bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName);
 
 ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, const string& theoremFileName, vector<tHint>& hints);
 ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
@@ -17,8 +20,6 @@ ReturnValue ProveTheorem(proverParams& params, Theory& T, ProvingEngine& engine,
 bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem, const string& hammer_invoke);
 bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem);
 
-ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, vector<tHint>& hints);
-bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesOfAxiomsToBeUsed, const string theoremName);
 
 
 // ---------------------------------------------------------------------------------------------------------------------------
