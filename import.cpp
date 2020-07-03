@@ -101,6 +101,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         proof.AddAssumption(premiseFactInstantiated);
     }
     proof.SetTheorem(theorem, theoremName, instantiation);
+    proof.SetByRefutation(false);
 
     if (theorem.GetGoal().GetSize() == 1 && theorem.GetGoal().GetElement(0).GetSize() == 1
             && theorem.GetNumOfExistVars()==0)   { // Try proving by refutation if the goal is ~Something
@@ -109,6 +110,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         if (f.GetName().substr(0,len) == PREFIX_NEGATED
             && f.GetName().find('_') == string::npos)
         {
+            proof.SetByRefutation(true);
 
             f.SetName(f.GetName().substr(len, f.GetName().size()-len));
             // else

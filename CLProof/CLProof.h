@@ -34,6 +34,8 @@ public:
 
     void SetTheorem(const CLFormula& theorem, const string& theoremName, const map<string,string>& instantiation)
         { mTheorem = theorem; mTheoremName = theoremName; mInstantiation = instantiation; }
+    void SetByRefutation(bool byRefutation) { mByRefutation = byRefutation; }
+    bool GetByRefutation() const { return mByRefutation; }
 
     unsigned Size() const;
     void AddAssumption(const Fact& f);
@@ -81,6 +83,8 @@ private:
     CLFormula mTheorem;
     string mTheoremName;
     map<string,string> mInstantiation;
+
+    bool mByRefutation;
 };
 
 
