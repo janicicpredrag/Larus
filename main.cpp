@@ -9,8 +9,9 @@ bool USING_ORIGINAL_SIGNATURE_EQ;
 bool USING_ORIGINAL_SIGNATURE_NEG;
 
 extern ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, vector<tHint>& hints);
+extern ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
 extern ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, const string& theoremFileName, vector<tHint>& hints);
-extern ReturnValue AdjustAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
+
 
 using namespace std;
 
@@ -168,7 +169,7 @@ int main(int argc , char** argv)
     ReturnValue rv;
 
     if ((rv = ReadTPTPConjecture(inputFilename, params, T, theorem, theoremName, hints)) == eOK)
-        if ((rv = AdjustAxioms(params, T, theorem, theoremName)) == eOK)
+        if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK)
             rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName, inputFilename, hints);
 
     clock_t current = clock();
