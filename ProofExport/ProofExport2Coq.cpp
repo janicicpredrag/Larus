@@ -200,6 +200,8 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
     }
     outfile << "." << endl;
     outfile << "intros." << endl;
+    if (p.GetByRefutation())
+        outfile << "intro." << endl;
 }
 
 // ---------------------------------------------------------------------------------

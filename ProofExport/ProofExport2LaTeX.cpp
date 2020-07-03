@@ -32,16 +32,19 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
        OutputImplication(outfile);
 
     if (cl.GetNumOfExistVars() > 0) {
-        outfile << "\\exists \\; (";
+        outfile << "\\exists \\; ";
         for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
             outfile << " " << cl.GetExistVar(i);
             if (i+1 < cl.GetNumOfExistVars())
                 outfile << ", ";
             else
-                outfile << " )";
+                outfile << "\\; ";
         }
+        outfile << "(";
     }
     OutputDNF(outfile, cl.GetGoal());
+    if (cl.GetNumOfExistVars() > 0)
+        outfile << ")";
     outfile << "\\;";
 
     if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
