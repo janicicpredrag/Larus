@@ -329,9 +329,10 @@ echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
 if [ "$prover" = "zenon" ]; then
     grep FOUND < $filename | wc -l | tee -a $summary
-    if [ "$prover" = "geo" ]; then
+else if [ "$prover" = "geo" ]; then
+	echo "here"
 	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
-    else
+else
 	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
 	echo "Contradictory axioms:"
 	grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
