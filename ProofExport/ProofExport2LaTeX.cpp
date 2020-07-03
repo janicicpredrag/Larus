@@ -21,10 +21,15 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
 
         }
     }
-    outfile << "\\; ( ";
+    outfile << "\\; ";
+
+    if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
+        outfile << "( ";
 
     OutputConjFormula(outfile, cl.GetPremises());
-    OutputImplication(outfile);
+
+    if (cl.GetPremises().GetSize() > 0)
+       OutputImplication(outfile);
 
     if (cl.GetNumOfExistVars() > 0) {
         outfile << "\\exists \\; (";
@@ -38,8 +43,10 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
     }
     OutputDNF(outfile, cl.GetGoal());
     outfile << "\\;";
-    outfile << ")$";
-    outfile << endl;
+
+    if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
+        outfile << ")";
+    outfile << "$" << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -147,9 +154,12 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLPro
                outfile << "\\; (";
            }
            OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
-           OutputImplication(outfile);
+           if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
+              OutputImplication(outfile);
            OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
-           outfile << ")$" << endl;
+           if (T.mDerivedLemmas[i].mUniversalVars.size() > 0)
+              outfile << ")";
+           outfile << "$" << endl;
         }
         outfile << "\\end{enumerate}" << endl << endl;
         outfile << "\\hrulefill" << endl << endl;
