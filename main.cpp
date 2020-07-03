@@ -12,10 +12,52 @@ extern ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& para
 extern ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
 extern ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, const string& theoremFileName, vector<tHint>& hints);
 
-
 using namespace std;
 
-// ---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------------
+
+string itos(unsigned int i)
+{
+    stringstream ss;
+    ss << i;
+    return ss.str();
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+string itos(PROVING_ENGINE T, unsigned int i)
+{
+    stringstream ss;
+    if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine) {
+        ss << setfill('0') << setw(3) << right << hex << i;
+        return "#x"+ss.str();
+    }
+    else {
+        ss << i;
+        return ss.str();
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+bool stoi(string s, int& i)
+{
+    char *p;
+    i = strtol(s.c_str(), &p, 10);
+    return (strlen(p) == 0);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+std::string dirnameOf(const std::string& fname)
+{
+     size_t pos = fname.find_last_of("\\/");
+     return (std::string::npos == pos)
+         ? ""
+         : fname.substr(0, pos);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 
 int main(int argc , char** argv)
 {

@@ -8,29 +8,22 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
 {
     if (name != "")
         outfile << name << " : ";
-
     outfile << "$";
     if (cl.GetNumOfUnivVars() > 0) {
         outfile << "\\forall \\; ";
         for(size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
             outfile << cl.GetUnivVar(i);
             if (i+1 < cl.GetNumOfUnivVars())
-                outfile << ", ";
-            else
-                outfile << " ";
-
+                outfile << ",";
+            outfile << " ";
         }
+        outfile << "\\; ";
     }
-    outfile << "\\; ";
-
     if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
         outfile << "( ";
-
     OutputConjFormula(outfile, cl.GetPremises());
-
     if (cl.GetPremises().GetSize() > 0)
        OutputImplication(outfile);
-
     if (cl.GetNumOfExistVars() > 0) {
         outfile << "\\exists \\; ";
         for(size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
@@ -56,12 +49,10 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream& outfile, const CLFormula& cl, 
 
 void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
 {
-    if (f.GetName().compare("false") == 0)  {
+    if (f.GetName() == "false")
         outfile << "\\bot";
-    }
-    else if (f.GetName().compare("true") == 0) {
+    else if (f.GetName() == "true")
         outfile << "\\top";
-    }
     else {
         if (f.GetName() == EQ_NATIVE_NAME)  {
             outfile << f.GetArg(0) << " = " << f.GetArg(1);
@@ -72,13 +63,9 @@ void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
         else {
             int ns = PREFIX_NEGATED.size();
             if (f.GetName().find(PREFIX_NEGATED) == 0)
-            {
                 outfile << "\\neg " << f.GetName().substr(ns, string::npos);
-            }
             else
-            {
                 outfile << f.GetName();
-            }
             if (f.GetArity() > 0) {
                 outfile << "(";
                 for (size_t i=0; i<f.GetArity()-1; i++)
@@ -88,7 +75,6 @@ void ProofExport2LaTeX::OutputFact(ofstream& outfile, const Fact& f)
             }
         }
     }
-    //outfile << " ";
 }
 
 // ---------------------------------------------------------------------------------
@@ -150,9 +136,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLPro
                for(size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
                    outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
                    if (j+1 < T.mDerivedLemmas[i].mUniversalVars.size())
-                       outfile << ", ";
-                   else
-                       outfile << " ";
+                       outfile << ",";
+                   outfile << " ";
                }
                outfile << "\\; (";
            }
@@ -179,8 +164,6 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLPro
     outfile << "{\\em Proof:}" << endl;
     outfile << "\\vspace{5pt}" << endl << endl;
     outfile << endl;
-
-
 }
 
 // ---------------------------------------------------------------------------------
@@ -196,21 +179,17 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream& outfile)
 void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigned level)
 {
     if (p.NumOfCLAssumptions() > 0)
-    {
         for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
             outfile << "\\proofstep{" << level << "}{Assumption: ";
             outfile << "$";
             OutputDNF(outfile, p.GetCLAssumption(i));
             outfile << "$ }" << endl;
         }
-    }
-
     for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
         outfile << "\\proofstep{" << level << "}{MP application: $";
         OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << "$ (";
-        if (p.GetMP(i).CLfrom.size() > 0)
-        {
+        if (p.GetMP(i).CLfrom.size() > 0)  {
             outfile << "from ";
             for (size_t j = 0; j < p.GetMP(i).CLfrom.size(); j++) {
                 outfile << "$";
@@ -228,7 +207,6 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
 
         vector<pair<string,string>> instantiation = p.GetMP(i).instantiation;
         vector<pair<string,string>> new_witnesses = p.GetMP(i).new_witnesses;
-
         if (instantiation.size() > new_witnesses.size()) {
             outfile << "{\\scriptsize instantiation: ";
             for (size_t j = 0; j != instantiation.size()-new_witnesses.size(); j++) {
@@ -238,7 +216,6 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
             }
             outfile << ";}";
         }
-
         if (new_witnesses.size() > 0) {
             outfile << "{\\scriptsize $\\;\\;$ new witnesses: ";
             for (size_t j = 0; j != new_witnesses.size(); j++) {
@@ -248,7 +225,6 @@ void ProofExport2LaTeX::OutputProof(ofstream& outfile, const CLProof& p, unsigne
             }
             outfile << "}";
         }
-
         outfile << ") }" << endl;
     }
     OutputProofEndGeneric(outfile, p.GetProofEnd(), level);

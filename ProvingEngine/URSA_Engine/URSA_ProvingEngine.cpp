@@ -1,14 +1,8 @@
-#include <string>
-#include <set>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string.h>
+#include "common.h"
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "URSA_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
-
 
 //#define DEBUG_OUTPUT
 

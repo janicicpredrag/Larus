@@ -1,15 +1,8 @@
-#include <string>
-#include <set>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <sstream>
+#include "common.h"
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
 #include "EQ_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
-#include "common.h"
-
 
 
 //#define INCREMENTAL_CONSTRAINTS
@@ -34,7 +27,6 @@ EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT, proverParams& params)
         mName = "QF_UFBV";
     else
         mName = "UNKNOWN";
-
     mSMT_theory = params.eEngine;
 }
 
@@ -61,9 +53,9 @@ string EQ_ProvingEngine::app(string s, unsigned arg1)
     }
     else
         return appack(s,arg1);
-
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::appack(string s, unsigned arg1)
 {
@@ -75,6 +67,7 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1)
     return ss;
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2)
 {
@@ -91,6 +84,7 @@ string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2)
         return appack(s,arg1,arg2);
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2, unsigned arg3)
 {
@@ -107,6 +101,7 @@ string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2, unsigned ar
         return appack(s,arg1,arg2,arg3);
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2, unsigned arg3)
 {
@@ -117,6 +112,7 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2, unsigned
     return ss;
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2)
 {
@@ -127,18 +123,21 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2)
     return ss;
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::appeq(string arg1, string arg2)
 {
     return "(= " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::appeq(string arg1, int arg2)
 {
     return appeq(arg1, itos(mSMT_theory,arg2));
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_sum(string arg1, string arg2)
 {
@@ -148,6 +147,7 @@ string EQ_ProvingEngine::smt_sum(string arg1, string arg2)
         return "(+ " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_sum(string arg1)
 {
@@ -157,7 +157,7 @@ string EQ_ProvingEngine::smt_sum(string arg1)
         return "(+ " + arg1 + ")";
 }
 
-
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_sub(string arg1, string arg2)
 {
@@ -167,6 +167,7 @@ string EQ_ProvingEngine::smt_sub(string arg1, string arg2)
         return "(- " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_sum(string arg1, int arg2)
 {
@@ -176,6 +177,7 @@ string EQ_ProvingEngine::smt_sum(string arg1, int arg2)
         return smt_sum(arg1, itos(mSMT_theory,arg2));
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_prod(string arg1, string arg2)
 {
@@ -185,12 +187,14 @@ string EQ_ProvingEngine::smt_prod(string arg1, string arg2)
         return "(* " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_prod(string arg1, int arg2)
 {
     return smt_prod(arg1, itos(mSMT_theory,arg2));
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_geq(string arg1, string arg2)
 {
@@ -200,12 +204,14 @@ string EQ_ProvingEngine::smt_geq(string arg1, string arg2)
         return "(>= " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_geq(string arg1, int arg2)
 {
    return smt_geq(arg1, itos(mSMT_theory,arg2));
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_less(string arg1, string arg2)
 {
@@ -215,18 +221,21 @@ string EQ_ProvingEngine::smt_less(string arg1, string arg2)
         return "(< " + arg1 + " " + arg2 + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_less(string arg1, int arg2)
 {
     return smt_less(arg1, itos(mSMT_theory,arg2));
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_ite(string arg1, int arg2, int arg3)
 {
     return "(ite " + arg1 + " " + itos(mSMT_theory, arg2) + " " + itos(mSMT_theory, arg3) + ")";
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_odd(string arg1, unsigned max)
 {
@@ -241,6 +250,7 @@ string EQ_ProvingEngine::smt_odd(string arg1, unsigned max)
     }
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_even(string arg1, unsigned max)
 {
@@ -255,6 +265,7 @@ string EQ_ProvingEngine::smt_even(string arg1, unsigned max)
     }
 }
 
+// ---------------------------------------------------------------------------------------
 
 string EQ_ProvingEngine::smt_prefix(string arg1, string arg2)
 {
@@ -268,8 +279,6 @@ string EQ_ProvingEngine::smt_prefix(string arg1, string arg2)
     s = "(or " + s + ")";
     return s;
 }
-
-
 
 // ---------------------------------------------------------------------------------------
 
