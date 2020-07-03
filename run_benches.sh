@@ -66,7 +66,7 @@ do
    	"Col trans all")
 	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
-	    benches="tptp-problems/col-trans/col-trans-*.p"
+	    benches="tptp-problems/col-trans/col-trans-*.p" 
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
@@ -75,7 +75,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -133,6 +133,13 @@ do
             engine=""
             break
             ;;
+	 "Geo")
+            echo "$opt selected"
+            prover="geo"
+            engine=""
+            break
+            ;;
+	
         *) echo "invalid option $REPLY";;
     esac
 done
@@ -291,6 +298,9 @@ do
 	  else
 	      if [[ $prover = "vampire" ]]; then
 		  tm vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
+	      else if  [[ $prover = "geo" ]]; then
+		  tm timeout $time geo -tptp_input -inputfile "$file" | tee -a $filename
+		  fi
 	      fi
 	  fi
       fi
@@ -299,8 +309,11 @@ do
   echo "Number of theorems proved until now:" | tee -a $summary
   if [ "$prover" = "zenon" ]; then
       grep FOUND < $filename | wc -l | tee -a $summary
-  else
-      grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
+  else if [ "$prover" = "geo" ]; then
+	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
+       else
+	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
+       fi
   fi
 done
 echo "------------------------------------------------------"
@@ -315,13 +328,16 @@ echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" | tee -a $summary
 if [ "$prover" = "zenon" ]; then
-   grep FOUND < $filename | wc -l | tee -a $summary
-else
-    grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
-    echo "Contradictory axioms:"
-    grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
-    echo "Counter sat:"
-    grep "SZS status Counter" < $filename | wc -l | tee -a $summary
-    echo "Number of theorems checked by Coq:" | tee -a $summary
-    grep Correct < $filename | wc -l | tee -a $summary
+    grep FOUND < $filename | wc -l | tee -a $summary
+    if [ "$prover" = "geo" ]; then
+	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
+    else
+	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
+	echo "Contradictory axioms:"
+	grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
+	echo "Counter sat:"
+	grep "SZS status Counter" < $filename | wc -l | tee -a $summary
+	echo "Number of theorems checked by Coq:" | tee -a $summary
+	grep Correct < $filename | wc -l | tee -a $summary
+    fi
 fi
