@@ -1041,7 +1041,10 @@ void CLFormula::Normalize(const string& name, const string& suffix,
 
 // ---------------------------------------------------------------------------------------
 
-void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< pair<CLFormula,string> >& output) const
+void CLFormula::NormalizeGoal(const string& name,
+                              const string& suffix,
+                              vector< pair<CLFormula,string> >& output,
+                              vector< pair<Fact, DNFFormula> >& definitions) const
 {
     if (mExistentialVars.size() == 0 && GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
         return;
@@ -1063,6 +1066,11 @@ void CLFormula::NormalizeGoal(const string& name, const string& suffix, vector< 
             DNFFormula disj;
             disj.Add(conj);
             CLFormula axiom(GetGoal().GetElement(i),disj);
+
+            DNFFormula dnf;
+            dnf.Add(GetGoal().GetElement(i));
+            definitions.push_back(pair<Fact,DNFFormula>(current, dnf));
+
             for(size_t j=0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
                 bool bAlreadyThere = false;
                 for(size_t k=0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)

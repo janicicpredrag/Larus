@@ -79,7 +79,8 @@ bool stoi(string s, int& i)
 
 ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, const string& theoremName, const string& theoremFileName, proverParams& params, const vector<tHint>& hints)
 {
-    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 && theorem.GetNumOfUnivVars() == 0)
+    if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
+        (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
         T.MakeNewConstant();
 
     T.StoreInitialConstants();
@@ -90,15 +91,16 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         instantiation[theorem.GetUnivVar(i)] = constantName;
     }
 
-    cout << "--- Instantiating the goal." << endl;
     CLProof proof;
     proof.SetTheory(&T);
+    cout << "--- Instantiating the goal." << endl;
     for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++)  {
         Fact premiseFactInstantiated;
         T.InstantiateFact(theorem, theorem.GetPremises().GetElement(i), instantiation, premiseFactInstantiated, true);
         engine->AddPremise(premiseFactInstantiated);
         proof.AddAssumption(premiseFactInstantiated);
     }
+    proof.SetTheorem(theorem, theoremName, instantiation);
 
     if (theorem.GetGoal().GetSize() == 1 && theorem.GetGoal().GetElement(0).GetSize() == 1
             && theorem.GetNumOfExistVars()==0)   { // Try proving by refutation if the goal is ~Something
@@ -258,14 +260,14 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
         if (params.eEngine != eSTL_ProvingEngine)
             proof.CL2toCL();
 
-        ex->ToFile(T, theorem, theoremName, instantiation, proof, sFileName, params);
+        ex->ToFile(T, proof, sFileName, params);
         delete ex;
 
         if (params.mbCoq) {
             string sFileName3("proofs/PROOF" + fileName + ".v");
             ProofExport *excoq;
             excoq = new ProofExport2Coq;
-            excoq->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3, params);
+            excoq->ToFile(T, proof, sFileName3, params);
 
             cout << "Verifying Coq proof ... " << flush;
             string s = "coqc -R proofs src -q  " + sFileName3;
@@ -280,7 +282,7 @@ ReturnValue ProveTheorem(Theory& T, ProvingEngine* engine, CLFormula& theorem, c
             string sFileName3("proofs/PROOF" + fileName + ".thy");
             ProofExport *exisa;
             exisa = new ProofExport2Isabelle;
-            exisa->ToFile(T, theorem, theoremName, instantiation, proof, sFileName3, params);
+            exisa->ToFile(T, proof, sFileName3, params);
 
             cout << "Verifying Isabelle proof ... " << flush;
             string s = "./isabelle  process -T " + sFileName3;
@@ -446,7 +448,7 @@ ReturnValue ReadAndProveTPTPConjecture(const string inputFile, proverParams& par
         cout << "--- Normalization to CL2 : input size: " << T.mCLaxioms.size() << endl;
         T.normalizeToCL2();
         vector< pair<CLFormula,string> > output;
-        theorem.NormalizeGoal(statementName, to_string(0), output);
+        theorem.NormalizeGoal(statementName, to_string(0), output, T.mDefinitions);
         if (output.size()>1) {
            for(size_t j=0; j<output.size()-1; j++) {
               T.AddAxiom(output[j].first, output[j].second);

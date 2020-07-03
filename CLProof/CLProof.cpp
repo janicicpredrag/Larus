@@ -765,6 +765,21 @@ bool CLProof::CL2toCL()
             Fact LHS = mpT->GetDefinitions()[i].first;
             DNFFormula RHS = mpT->GetDefinitions()[i].second;
 
+            DNFFormula dnfPremises, dnfGoal;
+            ConjunctionFormula cf;
+            if (mTheorem.GetPremises().GetSize() > 0) {
+                cf = mTheorem.GetPremises();
+                DNFFormula dnf;
+                dnf.Add(cf);
+                b |= mpT->Rewrite(LHS,RHS, dnf, dnfPremises);
+                assert(dnfPremises.GetSize() <= 1);
+                cf = dnfPremises.GetElement(0);
+            }
+            if (mTheorem.GetGoal().GetSize() > 0) {
+                b |= mpT->Rewrite(LHS,RHS, mTheorem.GetGoal(), dnfGoal);
+            }
+            mTheorem.SetBody(cf, dnfGoal);
+
             for (size_t j = 0; j < mpT->mDerivedLemmas.size(); j++) {
                 DNFFormula dnf;
                 b |= mpT->Rewrite(LHS,RHS, mpT->mDerivedLemmas[j].lhs, dnf);

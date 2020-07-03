@@ -106,7 +106,7 @@ string repeat(int n, string s) {
     return os.str();
 }
 //-----------------------------------------------------------------------------------
-void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem , const string& theoremName, const map<string,string>& instantiation, proverParams& params)
+void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& params)
 {
  //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
      outfile << "Require Import src.general_tactics." << endl;
@@ -120,7 +120,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
     for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
     {
         string name = get<0>(*it);
-        if (name != "false" & name != "true" & name.find(PREFIX_NEGATED) != 0 & name.find("eqnative") != 0)
+        if (name != "false" && name != "true" && name.find(PREFIX_NEGATED) != 0 && name.find("eqnative") != 0)
         {
             outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
         }
@@ -188,13 +188,13 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLFormu
 
 
     outfile << endl;
-    outfile << "Theorem " << theoremName << " : ";
-    OutputCLFormula(outfile, theorem, theoremName);
+    outfile << "Theorem " << p.GetTheoremName() << " : ";
+    OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
     outfile << "Proof. " << endl;
     outfile << "intros ";
-    for(size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++) {
+    for(size_t i = 0, size = p.GetTheorem().GetNumOfUnivVars(); i < size; i++) {
         // outfile << theorem.GetUnivVar(i);
-        outfile << instantiation.find(theorem.GetUnivVar(i))->second;
+        outfile << p.GetInstantiation().find(p.GetTheorem().GetUnivVar(i))->second;
         if (i < size - 1)
             outfile << " ";
     }

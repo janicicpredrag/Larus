@@ -104,26 +104,28 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& params)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& params)
 {
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
     outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
     outfile << "\\begin{document}" << endl << endl;
 
-    outfile << "\\title{Proof of theorem ,," << theoremName << "``}" << endl;
+    outfile << "\\title{Proof of theorem ,," << p.GetTheoremName() << "``}" << endl;
     outfile << "\\author{CLprover}" << endl;
     outfile << "\\maketitle" << endl << endl;
 
-    outfile << "\\noindent " << endl;
-    outfile << "{\\bfseries Axioms:} " << endl;
-    outfile << "\\begin{enumerate}" << endl;
-    for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
-        outfile << "\\item ";
-        OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), get<1>(T.OriginalAxiom(i)));
+    if (T.NumberOfOriginalAxioms() > 0) {
+        outfile << "\\noindent " << endl;
+        outfile << "{\\bfseries Axioms:} " << endl;
+        outfile << "\\begin{enumerate}" << endl;
+        for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
+            outfile << "\\item ";
+            OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), get<1>(T.OriginalAxiom(i)));
+        }
+        outfile << "\\end{enumerate}" << endl << endl;
+        outfile << "\\hrulefill" << endl << endl;
     }
-    outfile << "\\end{enumerate}" << endl << endl;
-    outfile << "\\hrulefill" << endl << endl;
 
     if (T.mDerivedLemmas.size() > 0) {
         outfile << "\\noindent " << endl;
@@ -154,7 +156,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLFor
     }
 
     outfile << "\\begin{theorem}" << endl;
-    OutputCLFormula(outfile, theorem, theoremName);
+    OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
     outfile << "\\end{theorem}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
     outfile << "\\vspace{3mm}" << endl;

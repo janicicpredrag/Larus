@@ -84,7 +84,7 @@ string repeat2(int n, string s) {
 }
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CLFormula& theorem, const string& theoremName, const map<string,string>& /*instantiation*/, proverParams& /* params */)
+void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& /* params */)
 {
     outfile << "theory Th" << endl;
     outfile << "imports Main" << endl;
@@ -104,8 +104,8 @@ void ProofExport2Isabelle::OutputPrologue(ofstream& outfile, Theory& T, const CL
     }
     outfile << endl;
 
-    outfile << "lemma " << theoremName << ": \"";
-    OutputCLFormula(outfile, theorem, theoremName);
+    outfile << "lemma " << p.GetTheoremName() << ": \"";
+    OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
     outfile << "\"" << endl;
     //outfile << "by meeson";
     outfile << "proof - " << endl << endl;
