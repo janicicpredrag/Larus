@@ -75,7 +75,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -139,7 +139,24 @@ do
             engine=""
             break
             ;;
-	
+	 "LeanCop")
+            echo "$opt selected"
+            prover="leancop"
+            engine=""
+            break
+            ;;
+	  "NanoCop")
+            echo "$opt selected"
+            prover="nanocop"
+            engine=""
+            break
+            ;;
+	    "Isabelle 2016")
+            echo "$opt selected"
+            prover="isabelle"
+            engine=""
+            break
+            ;;
         *) echo "invalid option $REPLY";;
     esac
 done
@@ -300,6 +317,16 @@ do
 		  tm vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
 	      else if  [[ $prover = "geo" ]]; then
 		  tm timeout $time geo -tptp_input -inputfile "$file" | tee -a $filename
+ 		else if  [[ $prover = "leancop" ]]; then
+			 tm ~/provers/leancop21/leancop.sh  "$file" $time | tee -a $filename
+			 	else if  [[ $prover = "nanocop" ]]; then
+					 tm ~/provers/nanocop11/nanocop.sh  "$file" $time | tee -a $filename
+					 else if  [[ $prover = "isabelle" ]]; then
+					 tm ~/provers/Isabelle2016/bin/isabelle tptp_isabelle  $time "$file" | tee -a $filename
+					 
+					 fi
+				  fi
+			 fi
 		  fi
 	      fi
 	  fi
@@ -311,9 +338,12 @@ do
       grep FOUND < $filename | wc -l | tee -a $summary
   else if [ "$prover" = "geo" ]; then
 	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
-       else
+  else if [ "$prover" = "leancop" ]; then
+	   grep "End of proof" <  $filename | wc -l | tee -a $summary
+  else
 	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
        fi
+     fi
   fi
 done
 echo "------------------------------------------------------"
@@ -332,6 +362,9 @@ if [ "$prover" = "zenon" ]; then
 else if [ "$prover" = "geo" ]; then
 	echo "here"
 	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
+else if [ "$prover" = "leancop" ]; then
+	echo "here"
+	grep "End of proof" < $filename | wc -l | tee -a $summary
 else
 	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
 	echo "Contradictory axioms:"
@@ -341,4 +374,5 @@ else
 	echo "Number of theorems checked by Coq:" | tee -a $summary
 	grep Correct < $filename | wc -l | tee -a $summary
     fi
+fi
 fi
