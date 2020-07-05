@@ -879,8 +879,8 @@ void CLFormula::Normalize(const string& name, const string& suffix,
                         }
                     }
                 }
-                //output.push_back(pair<CLFormula,string>(axiom, name+"AuxConjConcl"+std::to_string(count_aux++)));
-                output.push_back(pair<CLFormula,string>(axiom, name));
+                output.push_back(pair<CLFormula,string>(axiom, name+"AuxConjConcl"+std::to_string(count_aux++)));
+                //output.push_back(pair<CLFormula,string>(axiom, name));
                 count_aux++;
             }
             return;

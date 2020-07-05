@@ -739,15 +739,23 @@ bool CLProof::CL2toCL()
             dnf.Add(cf);
             mMPs[j].CLfrom.push_back(dnf);
         }
+        if (mMPs[j].axiomName.find("AuxConjConcl") != string::npos && mMPs[j].axiomName.find("sat") == string::npos) {
+            int pos = mMPs[j].axiomName.find("AuxConjConcl");
+            mMPs[j].axiomName = mMPs[j].axiomName.substr(0, pos);
+            //mMPs[j].axiomName = "trivial";
+            mMPs[j].instantiation.clear();
+            mMPs[j].new_witnesses.clear();
+        }
         // TODO this is ugly, derived lemmas should be distinguished in some better way, not by name
-        if (mMPs[j].axiomName.find("Aux") != string::npos && mMPs[j].axiomName.find("sat") == string::npos) {
-
+        else if (mMPs[j].axiomName.find("Aux") != string::npos && mMPs[j].axiomName.find("sat") == string::npos) {
             // int pos = mMPs[j].axiomName.find("Aux");
             // mMPs[j].axiomName = mMPs[j].axiomName.substr(0, pos);
             mMPs[j].axiomName = "trivial";
             mMPs[j].instantiation.clear();
             mMPs[j].new_witnesses.clear();
         }
+
+
     }
 
     for (size_t j = 0, size = NumOfAssumptions(); j < size; j++) {

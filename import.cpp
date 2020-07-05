@@ -256,7 +256,7 @@ ReturnValue ProveTheorem(proverParams& params, Theory& T, ProvingEngine& engine,
     proof.SetTheorem(theorem, theoremName, instantiation);
     proof.SetByRefutation(false);
 
-    if (theorem.GetGoal().GetSize() == 1 &&
+    if (false && theorem.GetGoal().GetSize() == 1 &&
         theorem.GetGoal().GetElement(0).GetSize() == 1 &&
         theorem.GetNumOfExistVars()==0)   {  // Try proving by refutation if the goal is ~Something
         Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
@@ -351,7 +351,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
 {
     cout << "--- Vampire filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
     // export to TPTP
-    string for_FOL_prover =  tmpnam(NULL); // "tptpfile.txt";//
+    string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
     ofstream TPTPfile;
     TPTPfile.open(for_FOL_prover);
     for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++)
@@ -360,7 +360,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
     TPTPfile.close();
 
     vector<string> neededAxioms;
-    string vampire_solution =  tmpnam(NULL); // "vampire.txt";//
+    string vampire_solution = tmpnam(NULL); // "vampire.txt";//
     const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv) {
