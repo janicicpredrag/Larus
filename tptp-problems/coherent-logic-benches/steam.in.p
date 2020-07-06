@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(w)  &  dom(f)  &  dom(b)  &  dom(s)  &  dom(c)  &  dom(g)  &  Wolf(w)  &  Fox(f)  &  Bird(b)  &  Snail(s)  &  Caterpillar(c)  &  Grain(g)). 
+fof(initial_model, axiom, (dom(w)  &  dom(f)  &  dom(b)  &  dom(s)  &  dom(c)  &  dom(g)  &  Wolf(w)  &  Fox(f)  &  Bird(b)  &  Snail(s)  &  Caterpillar(c)  &  Grain(g))). 
 fof(axiom_0,axiom, ![ X, Y, Z] : ((Animal(X) & Animal(Y) & eats(X,Y) & Grain(Z) & eats(Y,Z)) =>  goal )).
 fof(axiom_1,axiom, ![ X] : (Wolf(X) => Animal(X) )).
 fof(axiom_2,axiom, ![ X] : (Fox(X) => Animal(X) )).

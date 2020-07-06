@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  dom(d)). 
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  &  dom(d))). 
 fof(p_total,axiom, (p(a,b) =>  goal )).
 fof(q_total,axiom, (q(c,d) =>  goal )).
 fof(sym_p,axiom, ![ X, Y] : (p(X,Y) => p(Y,X) )).

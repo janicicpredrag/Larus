@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(num_0)  &  dom(x)  & is_nat(num_0) & is_nat(x)).
+fof(initial_model, axiom, (dom(num_0)  &  dom(x)  & is_nat(num_0) & is_nat(x))).
 fof(assump,axiom, (my_plus(num_0,x,x) =>  goal )).
 fof(hmnotplus,axiom, ![ X, Y, Z] : ((my_plus(X,Y,Z) & mnotplus(X,Y,Z)) =>  goal )).
 fof(plusnull,axiom, ![ X] : (is_nat(X) => my_plus(X,num_0,X) )).

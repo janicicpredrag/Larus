@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  dom(m)  &  dom(n)  &  dom(n1)  & s(n,n1) & lt(m,n1) & rn(m,a,b) & rn(n1,a,c)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  &  dom(m)  &  dom(n)  &  dom(n1)  & s(n,n1) & lt(m,n1) & rn(m,a,b) & rn(n1,a,c))).
 fof(found,axiom, ![ N, D] : ((mInus(n1,m,N) & rn(N,b,D)) =>  goal )).
 fof(arith1,axiom, ![ N1, M1, N, M] : ((lt(N1,M1) & s(N,N1) & s(M,M1)) => lt(N,M) )).
 fof(arith2,axiom, ![ N, M, L, M1, N1] : ((mInus(N,M,L) & s(M,M1) & s(N,N1)) => mInus(N1,M1,L) )).

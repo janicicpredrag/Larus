@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  ss(a,b)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  ss(a,b))).
 fof(toprove,axiom, (rr(a,b) =>  goal )).
 fof(e_in_ss,axiom, ![ X, Y] : (e(X,Y) => ss(X,Y) )).
 fof(e_in_rr,axiom, ![ X, Y] : (e(X,Y) => rr(X,Y) )).

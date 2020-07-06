@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(y)  &  dom(p)  &  dom(v)  &  dom(u)  &  dom(z)  &  dom(w)  &  dom(t)  &  dom(x)  &  j(x,y,t) & j(x,z,u)  &  m(t,u,v)  &  m(y,z,w) & j(x,w,p)).
+fof(initial_model, axiom, (dom(y)  &  dom(p)  &  dom(v)  &  dom(u)  &  dom(z)  &  dom(w)  &  dom(t)  &  dom(x)  &  j(x,y,t) & j(x,z,u)  &  m(t,u,v)  &  m(y,z,w) & j(x,w,p))).
 fof(goal_ax,axiom, (lt(v,p) =>  goal )).
 fof(lt_refl,axiom, ![ X] : (dom(X) => lt(X,X) )).
 fof(lt_trans,axiom, ![ X, Y, Z] : ((lt(X,Y) & lt(Y,Z)) => lt(X,Z) )).
