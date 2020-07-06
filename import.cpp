@@ -90,7 +90,7 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         T.AddAxiomEqReflexive();
         T.AddAxiomEqSymm();
         T.AddAxiomNEqSymm();
-        T.AddEqSubAxioms();
+   //     T.AddEqSubAxioms();
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
         // TODO / FIXME: filtering can be used in different stages
