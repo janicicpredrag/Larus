@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  dom(d)  &  dom(e)  &  dom(f)  &  dom(g)  &  dom(h)  &  dom(i)  &  dom(l)  &  dom(m)  &  dom(n)  &  dom(o)  &  dom(p)  &  dom(q)  &  dom(r)  &  dom(s)  &  col(a,b,c,l) & col(d,e,f,m)  & col(b,f,g,n) & col(c,e,g,o)  &  col(b,d,h,p) & col(a,e,h,q)  &  col(c,d,i,r) & col(a,f,i,s)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  &  dom(d)  &  dom(e)  &  dom(f)  &  dom(g)  &  dom(h)  &  dom(i)  &  dom(l)  &  dom(m)  &  dom(n)  &  dom(o)  &  dom(p)  &  dom(q)  &  dom(r)  &  dom(s)  &  col(a,b,c,l) & col(d,e,f,m)  & col(b,f,g,n) & col(c,e,g,o)  &  col(b,d,h,p) & col(a,e,h,q)  &  col(c,d,i,r) & col(a,f,i,s))).
 fof(goalam,axiom, (pl(a,m) =>  goal )).
 fof(goalbm,axiom, (pl(b,m) =>  goal )).
 fof(goalcm,axiom, (pl(c,m) =>  goal )).

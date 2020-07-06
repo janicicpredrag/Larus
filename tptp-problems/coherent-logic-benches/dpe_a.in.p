@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(x)  &  dom(y)  &  dom(z)  &  tREFLEXIVE_REWRITE(x,y) & tREFLEXIVE_REWRITE(x,z)).
+fof(initial_model, axiom, (dom(x)  &  dom(y)  &  dom(z)  &  tREFLEXIVE_REWRITE(x,y) & tREFLEXIVE_REWRITE(x,z))).
 fof(ax1,axiom, ![ A] : ((tREFLEXIVE_REWRITE(y,A) & tREFLEXIVE_REWRITE(z,A)) =>  goal )).
 fof(ax2,axiom, ![ A, B] : (tREWRITE(A,B) => tREFLEXIVE_REWRITE(A,B) )).
 fof(ax3,axiom, ![ A, B] : (tEQUALISH(A,B) => tREFLEXIVE_REWRITE(A,B) )).

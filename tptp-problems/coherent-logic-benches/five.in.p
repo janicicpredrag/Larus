@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  dom(d)  & ep(a,a) & ep(b,b) & ep(c,c) & ep(d,d)  & neq(a,b) & neq(a,c) & neq(a,d) & neq(b,c) & neq(b,d) & neq(c,d)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  &  dom(d)  & ep(a,a) & ep(b,b) & ep(c,c) & ep(d,d)  & neq(a,b) & neq(a,c) & neq(a,d) & neq(b,c) & neq(b,d) & neq(c,d))).
 fof(goal_ax,axiom, ![ L, X, Y, Z] : ((el(L,L) & neq(X,Y) & neq(Y,Z) & neq(X,Z) & pl(X,L) & pl(Y,L) & pl(Z,L)) =>  goal )).
 fof(pref,axiom, ![ P, L] : (pl(P,L) => ep(P,P) )).
 fof(psym,axiom, ![ P, Q] : (ep(P,Q) => ep(Q,P) )).

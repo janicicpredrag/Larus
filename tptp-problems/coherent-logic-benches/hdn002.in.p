@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(num_0)  &  dom(num_1)  &  p(num_0,num_0,num_0,num_0,num_0)). 
+fof(initial_model, axiom, (dom(num_0)  &  dom(num_1)  &  p(num_0,num_0,num_0,num_0,num_0))). 
 fof(qed,axiom, (p(num_1,num_1,num_1,num_1,num_1) =>  goal )).
 fof(p5,axiom, ![ U, X, Y, Z] : (p(U,X,Y,Z,num_0) => p(U,X,Y,Z,num_1) )).
 fof(p4,axiom, ![ U, X, Y] : (p(U,X,Y,num_0,num_1) => p(U,X,Y,num_1,num_0) )).

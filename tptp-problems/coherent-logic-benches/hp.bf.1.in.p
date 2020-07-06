@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(good) & dom(bad) & dom(X1) & tAnd_19(X1) & tALGORITHM(X1) ).
+fof(initial_model, axiom, (dom(good) & dom(bad) & dom(X1) & tAnd_19(X1) & tALGORITHM(X1) )).
 fof(botALGORITHM,axiom, ![ V1] : ((tALGORITHM(V1) & fALGORITHM(V1)) =>  goal )).
 fof(botDECIDES,axiom, ![ V1, V2, V3] : ((tDECIDES(V1,V2,V3) & fDECIDES(V1,V2,V3)) =>  goal )).
 fof(botPROGRAM,axiom, ![ V1] : ((tPROGRAM(V1) & fPROGRAM(V1)) =>  goal )).

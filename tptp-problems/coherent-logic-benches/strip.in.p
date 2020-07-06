@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  &  rr(a,b)  &  r(a,c)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  &  rr(a,b)  &  r(a,c))).
 fof(qEd,axiom, ![ X] : ((dom(X) & rr(c,X) & r(b,X)) =>  goal )).
 fof(ref_e,axiom, ![ X] : (dom(X) => e(X,X) )).
 fof(congl,axiom, ![ X, Y, Z] : ((r(X,Y) & e(X,Z)) => r(Z,Y) )).

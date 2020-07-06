@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  q(a,b)). 
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  q(a,b))). 
 fof(done,axiom, (q(b,a) =>  goal )).
 fof(ifq1,axiom, ![ X, Y, Z] : ((q(X,Y) & p(Z,X)) => p(Z,Y) )).
 fof(ifq2,axiom, ![ X, Y, Z] : ((q(X,Y) & p(Z,Y)) => p(Z,X) )).

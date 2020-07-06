@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  fGOAL0). 
+fof(initial_model, axiom, (dom(a)  &  fGOAL0)). 
 fof(bot02,axiom, ((tGOAL0 & fGOAL0) =>  goal )).
 fof(ax005,axiom, ![ A] : (dom(A) => t_AND_006(A) )).
 fof(ax006,axiom, ![ A] : (t_AND_006(A) => (tD1(A) & tNEG_PSI0) )).

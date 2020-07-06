@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(a)  &  dom(b)  &  dom(c)  & s(a,b) & s(a,c)).
+fof(initial_model, axiom, (dom(a)  &  dom(b)  &  dom(c)  & s(a,b) & s(a,c))).
 fof(found,axiom, ![ X] : ((s(b,X) & s(c,X)) =>  goal )).
 fof(ref_e,axiom, ![ X] : (dom(X) => e(X,X) )).
 fof(sym_e,axiom, ![ X, Y] : (e(X,Y) => e(Y,X) )).

@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(num_0)  &  dom(num_1)  &  bin_count(num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0)). 
+fof(initial_model, axiom, (dom(num_0)  &  dom(num_1)  &  bin_count(num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0,num_0))). 
 fof(qed3,axiom, ![ A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X] : (bin_count(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,num_1,num_1,num_1) =>  goal )).
 fof(qed5,axiom, ![ A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V] : (bin_count(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,num_1,num_1,num_1,num_1,num_1) =>  goal )).
 fof(qed10,axiom, ![ A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q] : (bin_count(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,num_1,num_1,num_1,num_1,num_1,num_1,num_1,num_1,num_1,num_1) =>  goal )).

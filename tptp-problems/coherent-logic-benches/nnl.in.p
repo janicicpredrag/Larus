@@ -1,4 +1,4 @@
-fof(initial_model, axiom, dom(b) & dom(c) & dom(a)  &  tTRANSITIVE_REFLEXIVE_REWRITE(a,b)  &  tTRANSITIVE_REFLEXIVE_REWRITE(a,c)).
+fof(initial_model, axiom, (dom(b) & dom(c) & dom(a)  &  tTRANSITIVE_REFLEXIVE_REWRITE(a,b)  &  tTRANSITIVE_REFLEXIVE_REWRITE(a,c))).
 fof(botEQUALISH,axiom, ![ V1, V2] : ((tEQUALISH(V1,V2) & fEQUALISH(V1,V2)) =>  goal )).
 fof(botREWRITE,axiom, ![ V1, V2] : ((tREWRITE(V1,V2) & fREWRITE(V1,V2)) =>  goal )).
 fof(botTRANSITIVE_REFLEXIVE_REWRITE,axiom, ![ V1, V2] : ((tTRANSITIVE_REFLEXIVE_REWRITE(V1,V2) & fTRANSITIVE_REFLEXIVE_REWRITE(V1,V2)) =>  goal )).
