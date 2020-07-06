@@ -22,6 +22,6 @@ fof(pipo,conjecture,
                  col(O1,A1,A1prime) &
                   col(O2,A2,A2prime) &
                    col(O1,B1,B1prime) &
-                    col(O2,B2,B2prime) & col(O1,A1prime,B1prime) => col(O1, A1, B1)
+                    col(O2,B2,B2prime) & col(O1,A1prime,B1prime) ) => col(O1, A1, B1)))
 ).
 
