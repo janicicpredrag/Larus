@@ -340,11 +340,14 @@ do
 	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
   else if [ "$prover" = "leancop" ]; then
 	   grep "End of proof" <  $filename | wc -l | tee -a $summary
+  else if [ "$prover" = "nanocop" ]; then
+	   grep "End of proof" <  $filename | wc -l | tee -a $summary	   
   else
 	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
        fi
      fi
-  fi
+       fi
+       fi
 done
 echo "------------------------------------------------------"
 echo "Summary:"
