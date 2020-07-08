@@ -283,7 +283,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
 
             size_t numOfUnivVars = 0;
             size_t numOfExistVars = 0;
-            if (nAxiom >= eNumberOfStepKinds) {
+            if (nAxiom != eEQSub && nAxiom >= eNumberOfStepKinds) {
                 numOfUnivVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfUnivVars();
                 numOfExistVars = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetNumOfExistVars();
             }
@@ -383,7 +383,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     return false;
                 pcs->AddSubproof(*subproof);
             }
-            else if (nAxiom == eEQSub) {
+         /*   else if (nAxiom == eEQSub) {
 
                 Fact f;
                 f.SetName(string(sPredicates[nPredicate]));
@@ -429,7 +429,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
                 }
                 AddMPstep(cfPremises, d, sPredicates[nPredicate]+"_eq_sub_"+itos(nJ), instantiation, new_witnesses);
-            }
+            }*/
 
             else if (nAxiom == eEQReflex) {
 
@@ -601,7 +601,7 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 ConjunctionFormula cfPremises;
                 AddMPstep(cfPremises, d, sPredicates[nPredicate-1]+"_excluded_middle", instantiation, new_witnesses);
             }
-            else if (nAxiom >= eNumberOfStepKinds) {
+            else if (nAxiom == eEQSub || nAxiom >= eNumberOfStepKinds) {
 
                 int nPredicate1, nArgs1[100];
                 if (nBranching) {
@@ -619,7 +619,13 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 ConjunctionFormula cfPremises;
                 unsigned noPremises;
 
-                noPremises = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetSize();
+                if (nAxiom == eEQSub) {
+                    noPremises = 2;
+                    numOfExistVars = 0;
+                    numOfUnivVars = mpT->GetSymbolArity(sPredicates[nPredicate]) + 1;
+                }
+                else
+                    noPremises = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetSize();
                 if (noPremises == 1 && mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetPremises().GetElement(1).GetName() == "true")
                     noPremises = 0;
                 size_t numOfVars = numOfUnivVars + numOfExistVars;
@@ -649,7 +655,12 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                 vector<pair<string,string>> instantiation;
                 vector<pair<string,string>> new_witnesses;
                 for(size_t i=0; i < numOfUnivVars; i++) {
-                    const string UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
+                    string UnivVar;
+                    if (nAxiom == eEQSub)
+                        //UnivVar = "X" + to_string(i);
+                        UnivVar = string(1,'A' + i);
+                    else
+                        UnivVar = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].first.GetUnivVar(i);
                     if (sConstants.find(inst[i]) == sConstants.end()  && numOfExistVars == 0)
                         inst[i] = 0; // eliminate spurious constants
                     instantiation.push_back(pair<string,string>(UnivVar, sConstants[inst[i]]));
@@ -713,7 +724,14 @@ bool CLProof::DecodeSubproof(const DNFFormula& formula, const vector<string>& sP
                         cfPremises.SetElement(ii,univAxFact);
                     }
                 }
-                AddMPstep(cfPremises, d, mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second, instantiation, new_witnesses);
+
+                string axiomName;
+                if (nAxiom == eEQSub)
+                    axiomName = "EqSub";
+                else
+                    axiomName = mpT->mCLaxioms[nAxiom-eNumberOfStepKinds].second;
+
+                AddMPstep(cfPremises, d, axiomName, instantiation, new_witnesses);
                 if (bNegIntro && mpT->GetSymbolArity(sPredicates[nPredicate]) == 0 && !nBranching) { // false reached
                     SetProofEnd(NULL);
                     return true;

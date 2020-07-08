@@ -90,10 +90,13 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         T.AddAxiomEqReflexive();
         T.AddAxiomEqSymm();
         T.AddAxiomNEqSymm();
-   //     T.AddEqSubAxioms();
+
+        if (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)
+            T.AddEqSubAxioms(); // no built in support
+
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
-        // TODO / FIXME: filtering can be used in different stages
+        // TODO / FIXME: filtering can be used in different stages, it is turned-off here
         if (false && params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
@@ -120,12 +123,13 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
     T.printAxioms();
 
     // ************ Filtering axioms a la hammer by FOL prover ************
-    if (vampire_succeeded && params.msHammerInvoke != "") {
-        USING_ORIGINAL_SIGNATURE_EQ = false;
-        USING_ORIGINAL_SIGNATURE_NEG = false;
-        vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
-        T.printAxioms();
-    }
+    if (!(params.mbNativeEQ && params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine))
+        if (vampire_succeeded && params.msHammerInvoke != "") {
+            USING_ORIGINAL_SIGNATURE_EQ = false;
+            USING_ORIGINAL_SIGNATURE_NEG = false;
+            vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+            T.printAxioms();
+        }
 
     // ************ Saturation for simple axioms ************
     size_t AxiomsBeforeSaturation = T.mCLaxioms.size();

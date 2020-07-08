@@ -666,17 +666,28 @@ bool CLFormula::IsSimpleImplication() const
 
 bool CLFormula::IsSimpleUnivFormula() const
 {
-    if (GetPremises().GetSize() == 0 &&
-        GetGoal().GetSize() == 1 &&
-        GetGoal().GetElement(0).GetSize() == 1 &&
-        GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+    if (GetNumOfExistVars() != 0)
+        return false;
+    if (GetPremises().GetSize() != 0)
+        return false;
+    if (GetGoal().GetSize() != 1)
+        return false;
+    if (GetGoal().GetElement(0).GetSize() != 1)
+        return false;
+    if (GetGoal().GetElement(0).GetElement(0).GetName() == "false")
         return false;
 
-    return (GetNumOfExistVars() == 0 &&
-        GetPremises().GetSize() == 0 &&
-        GetGoal().GetSize() == 1
-        //GetGoal().GetElement(0).GetElement(0).GetArg()!=0
-        );
+    for (size_t i = 0; i<GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
+        bool notVar = true;
+        for (size_t j = 0; j<GetNumOfUnivVars() && notVar; j++) {
+            if (GetGoal().GetElement(0).GetElement(0).GetArg(i) == GetUnivVar(j))
+                notVar = false;
+        }
+        if (notVar)
+            return false;
+    }
+
+    return true;
 }
 
 // ---------------------------------------------------------------------------------------
