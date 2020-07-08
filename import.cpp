@@ -87,20 +87,38 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
 
     // ************ If equality is used, use equality axioms ************
     if (params.mbNativeEQ) {
+        cout << "--- Adding axioms for =." << endl;
         T.AddAxiomEqReflexive();
         T.AddAxiomEqSymm();
         T.AddAxiomNEqSymm();
-
-        if (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)
-            T.AddEqSubAxioms(); // no built in support
-
         T.AddEqExcludedMiddleAxiom();
         T.AddEqNegElimAxioms();
-        // TODO / FIXME: filtering can be used in different stages, it is turned-off here
-        if (false && params.msHammerInvoke != "" && vampire_succeeded) {
+
+        params.mbNativeEQsub = true;
+        Theory T1 = T;
+        T.AddEqSubAxioms(); // no built in support
+
+        if (params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
             vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+            if (vampire_succeeded) {
+                params.mbNativeEQsub = false; // do not use native EqSub support
+                T.printAxioms();
+            }
+            else
+                if (!(params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)) {
+                    T = T1;
+                    params.mbNativeEQsub = true;
+                    T.printAxioms();
+                }
+        }
+        else {
+            if (!(params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)) {
+                T = T1;
+                params.mbNativeEQsub = true;
+                T.printAxioms();
+            }
         }
     }
     //  FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
@@ -111,19 +129,19 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
-    if (params.mbNativeEQ || params.mbExcludedMiddle || params.mbNegElim) {
-        cout << "--- Adding axioms for =, excluded middle and negation elimination." << endl;
-        cout << "       After adding axioms for =, excluded middle and negation elimination: output size: " << T.mCLaxioms.size() << endl;
+    if (params.mbExcludedMiddle || params.mbNegElim) {
+        cout << "--- Adding axioms for excluded middle and negation elimination." << endl;
+        cout << "       After adding axioms for excluded middle and negation elimination: output size: " << T.mCLaxioms.size() << endl;
+        T.printAxioms();
+
+        // ************ Filtering by reachability ************
+        FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+        cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
         T.printAxioms();
     }
 
-    // ************ Filtering by reachability ************
-    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
-    T.printAxioms();
-
     // ************ Filtering axioms a la hammer by FOL prover ************
-    if (!(params.mbNativeEQ && params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine))
+    if (!(params.mbNativeEQ && (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)))
         if (vampire_succeeded && params.msHammerInvoke != "") {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = false;

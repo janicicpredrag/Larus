@@ -65,6 +65,7 @@ typedef struct proverParams {
     bool shortest_proof;
     bool mbNegElim;
     bool mbNativeEQ;
+    bool mbNativeEQsub;
     bool mbExcludedMiddle;
     bool mbCoq;
     bool mbIsa;
