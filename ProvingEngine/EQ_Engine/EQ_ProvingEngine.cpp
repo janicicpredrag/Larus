@@ -360,7 +360,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename =  "smt-proof.txt"; //tmpnam(NULL); //
+    string smt_proofout_filename =  tmpnam(NULL); // "smt-proof.txt"; //
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -379,7 +379,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = "prove.smt"; // tmpnam(NULL); //
+            string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
             string smt_model_filename =  tmpnam(NULL); //"smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
@@ -942,7 +942,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        // Special case MP: use the generic, implicit eq sub axiom:
        // 0  1      n
        // B,A1,...,An: eq(B,Ai) & P(A1,..B.,An) => P(A1,...Ai...,An)
-       if (nProofStep+1 < mnPremisesCount+nProofLen && mParams.mbNativeEQ)  {
+       if (nProofStep+1 < mnPremisesCount+nProofLen && mParams.mbNativeEQsub)  {
            if (mpT->mConstants.size() + mpT->mConstantsPermissible.size() == 0)
               if (nProofStep == 0)
                     continue;
