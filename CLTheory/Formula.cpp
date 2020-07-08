@@ -677,7 +677,7 @@ bool CLFormula::IsSimpleUnivFormula() const
     if (GetGoal().GetElement(0).GetElement(0).GetName() == "false")
         return false;
 
-    for (size_t i = 0; i<GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
+/*    for (size_t i = 0; i<GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
         bool notVar = true;
         for (size_t j = 0; j<GetNumOfUnivVars() && notVar; j++) {
             if (GetGoal().GetElement(0).GetElement(0).GetArg(i) == GetUnivVar(j))
@@ -685,7 +685,7 @@ bool CLFormula::IsSimpleUnivFormula() const
         }
         if (notVar)
             return false;
-    }
+    }*/
 
     return true;
 }

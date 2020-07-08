@@ -569,10 +569,19 @@ bool Theory::Saturate()
 {
     bool updated = false;
     unsigned count_sat=0;
+
+    time_t start_time = time(NULL);
+    unsigned time_limit = 5;
+
     do {
          updated = false;
          for (size_t i = 0; i < mCLaxioms.size(); i++) {
-            const CLFormula ax1 = mCLaxioms[i].first;
+
+             time_t current_time = time(NULL);
+             if (difftime(current_time, start_time) > time_limit)
+                 return false;
+
+             const CLFormula ax1 = mCLaxioms[i].first;
             if (!ax1.IsSimpleImplication())
                 continue;
             Fact fact_ax1 = ax1.GetPremises().GetElement(0);
@@ -592,16 +601,15 @@ bool Theory::Saturate()
                             if (!IsConstant(fact_ax2.GetArg(k)) || fact_ax1.GetArg(k)!=fact_ax2.GetArg(k))
                                 no_match = true;
                         }
-                        inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
+                        else
+                            inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
                     }
                     if (no_match)
                         continue;
 
                     Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
                     for (size_t k = 0; k < fact_new.GetArity() && !no_match; k++) {
-                        if (inst.find(fact_new.GetArg(k)) == inst.cend())
-                            no_match = true;
-                        else
+                        if (inst.find(fact_new.GetArg(k)) != inst.cend())
                             fact_new.SetArg(k,inst.find(fact_new.GetArg(k))->second);
                     }
                     if (no_match)
