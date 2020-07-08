@@ -97,6 +97,7 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         params.mbNativeEQsub = true;
         Theory T1 = T;
         T.AddEqSubAxioms(); // no built in support
+        T.printAxioms();
 
         if (params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
