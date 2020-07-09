@@ -139,16 +139,16 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
         cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
         T.printAxioms();
-    }
 
-    // ************ Filtering axioms a la hammer by FOL prover ************
-    if (!(params.mbNativeEQ && (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)))
-        if (vampire_succeeded && params.msHammerInvoke != "") {
-            USING_ORIGINAL_SIGNATURE_EQ = false;
-            USING_ORIGINAL_SIGNATURE_NEG = false;
-            vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
-            T.printAxioms();
-        }
+        // ************ Filtering axioms a la hammer by FOL prover ************
+        if (!(params.mbNativeEQ && (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)))
+            if (vampire_succeeded && params.msHammerInvoke != "") {
+                USING_ORIGINAL_SIGNATURE_EQ = false;
+                USING_ORIGINAL_SIGNATURE_NEG = false;
+                vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+                T.printAxioms();
+            }
+    }
 
     // ************ Saturation for simple axioms ************
     size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
@@ -396,7 +396,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
                         cout << "Satisfiable! " << endl;
                         return false;
                     }
-                    if (ss!= "" && ss.at(0) != '%' && ss.find(it->second) != std::string::npos)
+                    if (ss!= "" && ss.at(0) != '%' && ss.find(it->second + ")") != std::string::npos)
                            neededAxioms.push_back(it->second);
                 }
             }
