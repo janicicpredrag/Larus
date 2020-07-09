@@ -379,7 +379,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename =  tmpnam(NULL); // "prove.smt"; //
+            string smt_proofencoded_filename = "prove.smt"; // tmpnam(NULL); //
             string smt_model_filename =  tmpnam(NULL); //"smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
@@ -753,6 +753,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
            for (unsigned nPremisesCounter = 0; nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
               string sbMatchOnePremise = "(or false ";
+
               sbMatchOnePremise += "(and " +  appeq(URSA_NUM_PREFIX+ "true", nPredicate[nAxiom][nPremisesCounter]) + appeq(app("nFrom", nProofStep, 0),99) + ")";
               for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
                  unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
@@ -809,46 +810,46 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                         for (unsigned nSimpleAxiom = eNumberOfStepKinds; nSimpleAxiom <= mnAxiomsCount; nSimpleAxiom++) {
                             const CLFormula& cf = mpT->mCLaxioms[nSimpleAxiom-eNumberOfStepKinds].first;
                             if (cf.IsSimpleImplication()) {
+
                                 // we check for the premise fact B, and there is an axiom A=>B
                                 if (nPredicate[nSimpleAxiom][1] != nPredicate[nAxiom][nPremisesCounter])
                                     continue;
-                                string sb = appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                                string sbi = appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
                                 unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][0]];
                                 for (unsigned nInd = 0; nInd < ar1; nInd++) { // match A
                                     if (nBinding[nSimpleAxiom][nInd] != 0)
-                                        sb += appeq(app("nArg" , n_from, nInd),
+                                        sbi += appeq(app("nArg" , n_from, nInd),
                                                     app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][nInd]));
                                     else
-                                        sb += appeq(app("nArg" , n_from, nInd),
+                                        sbi += appeq(app("nArg" , n_from, nInd),
                                                     nAxiomArgument[nSimpleAxiom][nInd]);
                                 }
                                 for (unsigned nInd = 0; nInd < ar; nInd++) { // match B
                                     if (nBinding[nSimpleAxiom][1*mnMaxArity+nInd] != 0) {
                                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                            sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                            sbi += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
                                                         app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
                                         else
-                                            sb += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
+                                            sbi += appeq(app("nInstSimpleAx", nProofStep, nPremisesCounter, nBinding[nSimpleAxiom][1*mnMaxArity+nInd]),
                                                         nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
                                     }
                                     else {
                                         if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
-                                            sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                            sbi += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
                                                         app("nInst", nProofStep, nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd]));
                                         else
-                                            sb += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
+                                            sbi += appeq(nAxiomArgument[nSimpleAxiom][1*mnMaxArity+nInd],
                                                     nAxiomArgument[nAxiom][nPremisesCounter*mnMaxArity+nInd]);
                                     }
                                 }
-                                sbMatchOnePremise += string(
-                                                          "\n; matching premise " + itos(nPremisesCounter) + "of the axiom " +
-                                                           itos(nSimpleAxiom) + " by step " + itos(n_from) + "\n" +
-                                                           " (and ") +
-                                                           appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
-                                                           sb +
-                                                           app("bSameProofBranch", n_from, nProofStep) +
-                                                           "(not " + app("bCases", n_from) + ")" + ")";
-                            }
+                                sbMatchOnePremise += "\n; matching inline premise " + itos(nPremisesCounter) + " of the axiom " +
+                                                     itos(nSimpleAxiom) + " by step " + itos(n_from) + "\n" +
+                                                     " (and " +
+                                                     appeq(app("nFrom", nProofStep, nPremisesCounter), n_from) +
+                                                     sbi +
+                                                     app("bSameProofBranch", n_from, nProofStep) +
+                                                     "(not " + app("bCases", n_from) + ")" + ") \n";
+                          }
                       }
                   }
               }
@@ -1184,19 +1185,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        // neg intro temporarily disabled
        /* ... the proof step is correct if it was one of cases from some case split */
        sbProofStepCorrect += "\n(or " +
-                                 // sbMPStep +
                                  app("sbaMPStep", nProofStep) +
                                  /* sbNegIntroStep +*/ " " + sbFirstCaseStep + " " + sbSecondCaseStep + " " +
-                                app("bStepQED", nProofStep) +
-                                // sbQEDbyCasesStep + " " + sbQEDbyAssumptionStep + " " + sbQEDbyEFQStep + " "
+                                 app("bStepQED", nProofStep) +
                                  /*+ app("sbQEDbyNegIntroStep", nProofStep) */ + ")\n";
 
        sbProofStepCorrect += "(= " + app("sbaMPStep", nProofStep) +
                "(or " + appeq(app("nAxiomApplied",nProofStep),eEQSub) +
                "(and " + smt_geq(app("nAxiomApplied",nProofStep),13) + smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1) + ")))";
-
-
-       //   sbProofStepCorrect += smt_less(app("nAxiomApplied",nProofStep),mnAxiomsCount+1);
 
        if (nProofStep != 0) {
            sbProofStepCorrect += "(or (not " + sbPrevStepQED + ")" +
@@ -1216,11 +1212,13 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
        //                            + appeq(smt_sub(smt_sum(snNegIntroCheck),smt_sum(snNegIntroCheckNeg)), 2) + ")";
 
        // a kind of memoization:
-       sbProofStepCorrect += appeq(app("bOddNesting", nProofStep), smt_odd(app("nNesting", nProofStep), 32));
+       if (mParams.mbNeedsCaseSplits)
+          sbProofStepCorrect += appeq(app("bOddNesting", nProofStep), smt_odd(app("nNesting", nProofStep), 32));
 
        for (unsigned nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) {
            // a kind of memoization:
-           sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
+           if (mParams.mbNeedsCaseSplits)
+              sbProofStepCorrect += appeq(app("bSameProofBranch", nProofStep1, nProofStep),
                                        smt_prefix(app("nNesting", nProofStep1), app("nNesting", nProofStep)));
 
        /*    string bb = " false ";
@@ -1271,7 +1269,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
            sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
                app("sbaMPStep", nProofStep) + " " +
-               // app("bSameProofBranch", nProofStep1, nProofStep) +
                appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                "(not " +  app("bCases", nProofStep) + ")" +
                "(not " +  app("bCases", nProofStep1) + ")" +
