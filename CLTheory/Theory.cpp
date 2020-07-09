@@ -622,16 +622,6 @@ bool Theory::Saturate()
                     CLFormula newUnivAx;
                     if (ax2.IsSimpleImplication()) {
                         newUnivAx = CLFormula(ax2.GetPremises(), df);
-
-                    /*    Fact ff = ax2.GetPremises().GetElement(0);
-                        for (size_t l = 0; l < ff.GetArity(); l++) {
-                            bool found = false;
-                            for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found; ll++)
-                                if (ff.GetArg(l) == newUnivAx.GetUnivVar(ll))
-                                    found = true;
-                            if (!found)
-                                newUnivAx.AddUnivVar(ff.GetArg(l));
-                        }*/
                     }
                     else {
                         ConjunctionFormula empty;
@@ -642,14 +632,14 @@ bool Theory::Saturate()
 
                     for (size_t l = 0; l < fact_new.GetArity(); l++) {
                         bool found = false;
-                        for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found; ll++)
-                            if (fact_new.GetArg(l) == newUnivAx.GetUnivVar(ll))
-                                found = true;
-                        if (!found)
-                            newUnivAx.AddUnivVar(fact_new.GetArg(l));
+                        if (!IsConstant(fact_new.GetArg(l))) {
+                           for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found; ll++)
+                               if (fact_new.GetArg(l) == newUnivAx.GetUnivVar(ll))
+                                   found = true;
+                           if (!found)
+                               newUnivAx.AddUnivVar(fact_new.GetArg(l));
+                        }
                     }
-
-
 
                     bool found = false;
                     if (ax2.IsSimpleImplication() && fact_new == ax2.GetPremises().GetElement(0))
