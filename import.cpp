@@ -150,28 +150,30 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
             }
     }
 
-    // ************ Saturation for simple axioms ************
-    size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
-    if (params.mbInlineAxioms) {
-        cout << "--- Saturating for inlining. " << endl;
-        T.Saturate();
-        cout << "       After saturation: output size: " << T.mCLaxioms.size() << endl;
-        T.printAxioms(true);
-    }
-
-    // ************ Store derived lemmas ************
-    for (size_t j = AxiomsBeforeSaturation, size = T.NumberOfAxioms(); j < size; j++) {
-        DerivedLemma lemma;
-        for (size_t k = 0; k < T.Axiom(j).first.GetNumOfUnivVars(); k++)
-            lemma.mUniversalVars.push_back(T.Axiom(j).first.GetUnivVar(k));
-        ConjunctionFormula cf;
-        if (T.Axiom(j).first.GetPremises().GetSize() > 0) {
-            cf = T.Axiom(j).first.GetPremises();
-            lemma.lhs.Add(cf);
+    if (!(params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)) {
+        // ************ Saturation for simple axioms ************
+        size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
+        if (params.mbInlineAxioms) {
+            cout << "--- Saturating for inlining. " << endl;
+            T.Saturate();
+            cout << "       After saturation: output size: " << T.mCLaxioms.size() << endl;
+            T.printAxioms(true);
         }
-        lemma.rhs = T.Axiom(j).first.GetGoal();
-        lemma.name = T.Axiom(j).second;
-        T.mDerivedLemmas.push_back(lemma);
+
+        // ************ Store derived lemmas ************
+        for (size_t j = AxiomsBeforeSaturation, size = T.NumberOfAxioms(); j < size; j++) {
+            DerivedLemma lemma;
+            for (size_t k = 0; k < T.Axiom(j).first.GetNumOfUnivVars(); k++)
+                lemma.mUniversalVars.push_back(T.Axiom(j).first.GetUnivVar(k));
+            ConjunctionFormula cf;
+            if (T.Axiom(j).first.GetPremises().GetSize() > 0) {
+                cf = T.Axiom(j).first.GetPremises();
+                lemma.lhs.Add(cf);
+            }
+            lemma.rhs = T.Axiom(j).first.GetGoal();
+            lemma.name = T.Axiom(j).second;
+            T.mDerivedLemmas.push_back(lemma);
+        }
     }
 
     // ************ Use or not support for case splits ************
