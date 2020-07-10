@@ -17,7 +17,7 @@ bool OutputToTPTPfile(const vector<string>& theory, const vector<string>& namesO
 ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName, const string& theoremFileName, vector<tHint>& hints);
 ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName);
 ReturnValue ProveTheorem(proverParams& params, Theory& T, ProvingEngine& engine, CLFormula& theorem, const string& theoremName, const string& theoremFileName, const vector<tHint>& hints);
-bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem, const string& hammer_invoke);
+VampireReturnValue FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem, const string& hammer_invoke, unsigned time_limit);
 bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem);
 
 
@@ -26,6 +26,15 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
 
 ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, string& theoremName)
 {
+    // ************ Check if equality is used ************
+    for (vector< pair<CLFormula,string> >::iterator it = T.mCLaxioms.begin(); it < T.mCLaxioms.end(); it++)
+        if (it->first.UsesNativeEq())
+            T.SetUseNativeEq(true);
+    if (theorem.UsesNativeEq())
+        T.SetUseNativeEq(true);
+    if (T.GetUseNativeEq())
+        params.mbNativeEQ = true;
+
     cout << "--- Input axioms : " << endl;
     T.printAxioms();
     T.mCLOriginalAxioms = T.mCLaxioms;
@@ -36,15 +45,17 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
 
     //  ************ Early filtering ************
     //  is to be used only in situations when we don't have dependencies, but a global set of axioms
+    vampire_succeeded = false;
     if (vampire_succeeded && params.msHammerInvoke != "") {
         // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
         // cout << "       After initial filtering : output size: " << T.mCLaxioms.size() << endl;
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
-        FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+        if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
+            vampire_succeeded = true;
+        T.printAxioms();
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
-        T.printAxioms();
     }
 
     // ************  CL -> CL2 normalization  ************
@@ -60,30 +71,20 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
            }
         }
         if (output.size()>0)
-                theorem = output[output.size()-1].first;
+           theorem = output[output.size()-1].first;
     }
 
     vampire_succeeded = true;
-
     // ************ Filtering axioms a la hammer by FOL prover ************
     if (vampire_succeeded && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
-        vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+        if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
+            vampire_succeeded = true;
+        T.printAxioms();
         USING_ORIGINAL_SIGNATURE_EQ = false;
         USING_ORIGINAL_SIGNATURE_NEG = false;
-        T.printAxioms();
     }
-
-    // ************ Check if equality is used ************
-    for (vector< pair<CLFormula,string> >::iterator it = T.mCLaxioms.begin(); it < T.mCLaxioms.end(); it++) {
-        if (it->first.UsesNativeEq())
-            T.SetUseNativeEq(true);
-    }
-    if (theorem.UsesNativeEq())
-        T.SetUseNativeEq(true);
-    if (T.GetUseNativeEq())
-        params.mbNativeEQ = true;
 
     // ************ If equality is used, use equality axioms ************
     if (params.mbNativeEQ) {
@@ -102,7 +103,7 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         if (params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
             USING_ORIGINAL_SIGNATURE_NEG = true;
-            vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
+            vampire_succeeded = (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat);
             if (vampire_succeeded) {
                 params.mbNativeEQsub = false; // do not use native EqSub support
                 T.printAxioms();
@@ -122,33 +123,48 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
             }
         }
     }
-    //  FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
 
     // ************ Use or not "excluded middle" and "neg elim" ************
-    if (params.mbExcludedMiddle)
-        T.AddExcludedMiddleAxioms();
     if (params.mbNegElim)
         T.AddNegElimAxioms();
 
     if (params.mbExcludedMiddle || params.mbNegElim) {
         cout << "--- Adding axioms for excluded middle and negation elimination." << endl;
-        cout << "       After adding axioms for excluded middle and negation elimination: output size: " << T.mCLaxioms.size() << endl;
+        cout << "       Check validity without excluded middle: output size: " << T.mCLaxioms.size() << endl;
         T.printAxioms();
 
-        // ************ Filtering by reachability ************
-        FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-        cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
-        T.printAxioms();
-
-        // ************ Filtering axioms a la hammer by FOL prover ************
-        if (!(params.mbNativeEQ && (params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)))
+        if (params.mbExcludedMiddle) {
+            // ************ Filtering axioms a la hammer by FOL prover ************
             if (vampire_succeeded && params.msHammerInvoke != "") {
                 USING_ORIGINAL_SIGNATURE_EQ = false;
                 USING_ORIGINAL_SIGNATURE_NEG = false;
-                vampire_succeeded = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke);
-                T.printAxioms();
+                VampireReturnValue rv = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit);
+                if (rv == eVampireSat) {
+                    vampire_succeeded = false;
+                    T.AddExcludedMiddleAxioms();
+                    if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
+                        vampire_succeeded = true;
+                }
+                else if (rv == eVampireUnsat)
+                    vampire_succeeded = true;
             }
+            else
+                T.AddExcludedMiddleAxioms();
+            T.printAxioms();
+        }
+
+        // ************ Filtering by reachability ************
+        // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+        // cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
+        // T.printAxioms();
     }
+
+
+
+    // ************ Filtering by reachability ************
+    // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+    // cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
+    // T.printAxioms();
 
     if (!(params.eEngine == eSTL_ProvingEngine || params.eEngine == eURSA_ProvingEngine)) {
         // ************ Saturation for simple axioms ************
@@ -372,7 +388,7 @@ ReturnValue ProveTheorem(proverParams& params, Theory& T, ProvingEngine& engine,
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem, const string& hammer_invoke)
+VampireReturnValue FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFormula& theorem, const string& hammer_invoke, unsigned time_limit)
 {
     cout << "--- Vampire filtering: filtering out input axioms (input: " <<  axioms.size() << ")" << endl;
     // export to TPTP
@@ -386,7 +402,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
 
     vector<string> neededAxioms;
     string vampire_solution = tmpnam(NULL); // "vampire.txt";//
-    const string sCall = "timeout " + itos(15 /*params.time_limit*/) + " " + hammer_invoke + " " + for_FOL_prover + " > " +  vampire_solution;
+    const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke + " " + for_FOL_prover + " > " +  vampire_solution;
     int rv = system(sCall.c_str());
     if (!rv) {
         for (vector<pair<CLFormula,string>>::iterator it = axioms.begin(); it != axioms.end(); it++) {
@@ -395,8 +411,8 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
                 string ss;
                 while(getline(input_file, ss)) {
                     if (ss.find("Satisfiable") != std::string::npos) {
-                        cout << "Satisfiable! " << endl;
-                        return false;
+                        cout << "    Not valid! " << endl;
+                        return eVampireSat;
                     }
                     if (ss!= "" && ss.at(0) != '%' && ss.find(it->second + ")") != std::string::npos)
                            neededAxioms.push_back(it->second);
@@ -405,7 +421,7 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
             else
             {
                 cout << "Error reading input file :" << vampire_solution << endl;
-                return eErrorReadingAxioms;
+                return eVampireErrorReadingAxioms;
             }
             input_file.close();
         }
@@ -424,10 +440,10 @@ bool FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axioms, const CLFor
                 it++;
         }
         cout << "       Vampire filtering (success): output size: " <<  axioms.size() << endl;
-        return true;
+        return eVampireUnsat;
     }
     cout << "       Vampire filtering (failure): output size: " <<  axioms.size() << endl;
-    return false;
+    return eVampireUnknown;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
