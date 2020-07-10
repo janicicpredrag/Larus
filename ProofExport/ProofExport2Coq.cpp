@@ -110,7 +110,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
 {
  //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
      outfile << "Require Import src.general_tactics." << endl;
-     if (params.mbExcludedMiddle)
+    // if (params.mbExcludedMiddle) TODO FIX This
         outfile << "Require Import Classical." << endl;
     outfile << endl;
     outfile << "Section Sec." << endl << endl;
@@ -238,7 +238,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
 
         if (p.GetMP(i).axiomName == "trivial")
         {
-            outfile << "by one_lemma";
+            outfile << "by (splits;one_lemma)";
         }
         else if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
         {
