@@ -181,6 +181,7 @@ int main(int argc , char** argv)
                 //                params.msHammerInvoke = argv[i+1];
                 // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
                 params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
+                params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'e') {
                 if (!strcmp(argv[i]+2, "stl"))

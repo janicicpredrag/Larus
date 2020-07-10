@@ -34,6 +34,8 @@ enum ReturnValue { eOK, eBadOrMissingInputFile, eWrongFormatParameter, eErrorRea
 
 enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eEQReflex, eEQSymm, eNegElim, eExcludedMiddle, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
 
+enum VampireReturnValue { eVampireUnsat, eVampireSat, eVampireErrorReadingAxioms, eVampireUnknown };
+
 const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
@@ -49,6 +51,7 @@ const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
+const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 10;
 const bool DEFAULT_INLINE_AXIOMS = true;
 
 const string EQ_NATIVE_NAME = "eqnative";
@@ -72,6 +75,7 @@ typedef struct proverParams {
     bool mbSimp;
     bool mbNeedsCaseSplits;
     string msHammerInvoke;
+    unsigned vampire_time_limit;
     bool mbInlineAxioms;
 } proverParams;
 
