@@ -571,7 +571,7 @@ bool Theory::Saturate()
     unsigned count_sat=0;
 
     time_t start_time = time(NULL);
-    unsigned time_limit = 5;
+    unsigned time_limit = SATURATION_TIME_LIMIT;
 
     do {
          updated = false;

@@ -51,8 +51,10 @@ const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_SIMP = false;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
-const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 10;
+const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18  ;
 const bool DEFAULT_INLINE_AXIOMS = true;
+
+const unsigned SATURATION_TIME_LIMIT = 5;
 
 const string EQ_NATIVE_NAME = "eqnative";
 const string PREFIX_NEGATED = "nnn";
