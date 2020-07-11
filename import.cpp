@@ -86,6 +86,54 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         USING_ORIGINAL_SIGNATURE_NEG = false;
     }
 
+    // ************ Use or not "excluded middle" and "neg elim" ************
+    if (params.mbNegElim)
+        T.AddNegElimAxioms();
+    if (params.mbExcludedMiddle || params.mbNegElim) {
+        cout << "--- Adding axioms for excluded middle and negation elimination." << endl;
+        cout << "       Check validity without excluded middle: output size: " << T.mCLaxioms.size() << endl;
+        T.printAxioms();
+
+        //FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+        //cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
+        //T.printAxioms();
+
+        if (params.mbExcludedMiddle) {
+            // ************ Filtering axioms a la hammer by FOL prover ************
+            if (vampire_succeeded && params.msHammerInvoke != "") {
+                USING_ORIGINAL_SIGNATURE_EQ = true;
+                USING_ORIGINAL_SIGNATURE_NEG = false;
+                VampireReturnValue rv = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit);
+                if (rv == eVampireSat) {
+                    vampire_succeeded = false;
+                    T.AddExcludedMiddleAxioms();
+                    if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
+                        vampire_succeeded = true;
+                }
+                else if (rv == eVampireUnsat)
+                    vampire_succeeded = true;
+                else {
+                    vampire_succeeded = false;
+                    T.AddExcludedMiddleAxioms();
+                }
+            }
+            else
+                T.AddExcludedMiddleAxioms();
+
+
+            /*T.AddExcludedMiddleAxioms();
+            if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
+                vampire_succeeded = true;*/
+            T.printAxioms();
+        }
+
+        // ************ Filtering by reachability ************
+        // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+        // cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
+        // T.printAxioms();
+    }
+
+
     // ************ If equality is used, use equality axioms ************
     if (params.mbNativeEQ) {
         cout << "--- Adding axioms for =." << endl;
@@ -102,7 +150,7 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
 
         if (params.msHammerInvoke != "" && vampire_succeeded) {
             USING_ORIGINAL_SIGNATURE_EQ = false;
-            USING_ORIGINAL_SIGNATURE_NEG = true;
+            USING_ORIGINAL_SIGNATURE_NEG = false;
             vampire_succeeded = (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat);
             if (vampire_succeeded) {
                 params.mbNativeEQsub = false; // do not use native EqSub support
@@ -124,40 +172,6 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         }
     }
 
-    // ************ Use or not "excluded middle" and "neg elim" ************
-    if (params.mbNegElim)
-        T.AddNegElimAxioms();
-
-    if (params.mbExcludedMiddle || params.mbNegElim) {
-        cout << "--- Adding axioms for excluded middle and negation elimination." << endl;
-        cout << "       Check validity without excluded middle: output size: " << T.mCLaxioms.size() << endl;
-        T.printAxioms();
-
-        if (params.mbExcludedMiddle) {
-            // ************ Filtering axioms a la hammer by FOL prover ************
-            if (vampire_succeeded && params.msHammerInvoke != "") {
-                USING_ORIGINAL_SIGNATURE_EQ = false;
-                USING_ORIGINAL_SIGNATURE_NEG = false;
-                VampireReturnValue rv = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit);
-                if (rv == eVampireSat) {
-                    vampire_succeeded = false;
-                    T.AddExcludedMiddleAxioms();
-                    if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
-                        vampire_succeeded = true;
-                }
-                else if (rv == eVampireUnsat)
-                    vampire_succeeded = true;
-            }
-            else
-                T.AddExcludedMiddleAxioms();
-            T.printAxioms();
-        }
-
-        // ************ Filtering by reachability ************
-        // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-        // cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
-        // T.printAxioms();
-    }
 
 
 
