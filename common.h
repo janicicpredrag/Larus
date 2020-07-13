@@ -48,6 +48,7 @@ const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
+const bool DEFAULT_EXACT_LENGTH = false;
 const bool DEFAULT_SIMP = false;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
@@ -67,6 +68,7 @@ typedef struct proverParams {
     unsigned max_nesting_depth;
     unsigned starting_proof_length;
     unsigned max_proof_length;
+    bool exact_length;
     bool shortest_proof;
     bool mbNegElim;
     bool mbNativeEQ;

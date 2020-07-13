@@ -360,7 +360,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
     }
 
     set<string> decl = DECLARATIONS;
-    string smt_proofout_filename =  tmpnam(NULL); // "smt-proof.txt"; //
+    string smt_proofout_filename = tmpnam(NULL); //"smt-proof.txt"; //
     if (system(NULL)) {
 
         if (formula.GetSize()>0)  // disjunctions in the goal can have only one disjunct
@@ -379,8 +379,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
-            string smt_model_filename =  tmpnam(NULL); // "smt-model.txt"; //
+            string smt_proofencoded_filename = tmpnam(NULL); //"prove.smt"; //
+            string smt_model_filename = tmpnam(NULL); //"smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             int rv;
@@ -586,27 +586,30 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     string sbMatchConclusion;
 
 
-    for (unsigned nProofStep = 0; nProofStep < mnPremisesCount+nProofLen; nProofStep++) {
+    for (unsigned nProofStep = 0; nProofStep+1 < mnPremisesCount+nProofLen; nProofStep++) {
         unsigned ArityFinal = formula.GetElement(0).GetElement(0).GetArity();
         string sbPrevStepGoal, sbPrevStepGoal2;
-        sbPrevStepGoal = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0)) +
-                               "(not " + app("bCases", nProofStep) + ")";
+        sbPrevStepGoal = "(and true ";
+        if (formula.GetSize() == 1)
+            sbPrevStepGoal += "(not " + app("bCases", nProofStep) + ")";
+        sbPrevStepGoal += appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0));
         for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
-           sbPrevStepGoal += appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, nInd));
+           if (exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(nInd)) == exi_vars.end())
+               sbPrevStepGoal += appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, nInd));
         sbPrevStepGoal += ")";
         sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX+"true") + ")";
         unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
         if (formula.GetSize()>1) {
-            sbPrevStepGoal2 = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1)) +
-                                   "(not " + app("bCases", nProofStep) + ")";
+            sbPrevStepGoal2 = "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1));
             for (unsigned nInd = 0; nInd < ArityFinal1; nInd++)
-               sbPrevStepGoal2 += appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, mnMaxArity + nInd));
+                if (exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(nInd)) == exi_vars.end())
+                    sbPrevStepGoal2 += appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, mnMaxArity + nInd));
             sbPrevStepGoal2 += ")";
-            sbPrevStepGoal = "(or " + sbPrevStepGoal + sbPrevStepGoal2 + ")";
-            sbPrevStepGoal = "(or " + sbPrevStepGoal + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
+            sbPrevStepGoal = "(or " + sbPrevStepGoal + sbPrevStepGoal2 + appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX+"true") + ")";
         }
         GoalStepAsserts.push_back(appeq(app("bGoal", nProofStep),sbPrevStepGoal));
     }
+    GoalStepAsserts.push_back(appeq(app("bGoal", nFinalStep), "true"));
 
 
 // ************************************************************************************************
@@ -1267,7 +1270,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                bb +=   "(or " +
                        smt_less(app("nNumberOfPremises", nProofStep), i1+1) +
                        smt_less(app("nFrom", nProofStep, i1), nProofStep1) + ")";
-           sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
+               sbProofStepCorrect += "(or (not (and " + app("sbaMPStep", nProofStep1) + " " +
                app("sbaMPStep", nProofStep) + " " +
                appeq(app("nNesting", nProofStep1), app("nNesting", nProofStep)) +
                "(not " +  app("bCases", nProofStep) + ")" +
@@ -1335,10 +1338,10 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
         smtFile << "(check-sat)" << endl << endl;
     }
 
-    // smtFile << "(check-sat)" << endl << endl;
-
-    //string s = appeq("nProofSize", nFinalStep);
-    //smtFile << "(assert " + s + ")" << endl << endl;
+    // This is to be activated if a proof of the exact length n should be constructed
+    // otherwise, a proof of length <=n should be constructed
+    if (mParams.exact_length)
+        smtFile << "(assert " + appeq("nProofSize", nFinalStep) + ")" << endl << endl;
 
     smtFile << "\n; ********* Constraints for proof finishing " << " ********* " << endl;
     smtFile << "(assert (or " + sbProofFinished + "))" << endl << endl;

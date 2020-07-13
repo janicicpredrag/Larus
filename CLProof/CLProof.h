@@ -107,7 +107,12 @@ public:
     void SetCases(const vector<DNFFormula>& dnf) { mCases = dnf; }
     size_t GetNumOfCases() const { return mCases.size(); }
     const vector<DNFFormula>& GetCases() const { return mCases; }
-    unsigned Size() { unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++) s += mSubproofs[i].Size(); return s+1; }
+    unsigned Size()
+    {
+        unsigned s = 0; for(size_t i=0; i< mSubproofs.size(); i++)
+            s += mSubproofs[i].Size();
+        return s+1;
+    }
 
     vector<DNFFormula> mCases;
     //vector<DNFFormula> mCLCases;

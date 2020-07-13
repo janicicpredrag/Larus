@@ -104,6 +104,7 @@ int main(int argc , char** argv)
     params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
     params.msHammerInvoke = DEFAULT_HAMMER;
     params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
+    params.exact_length = DEFAULT_EXACT_LENGTH;
 
     USING_ORIGINAL_SIGNATURE_EQ = false;
     USING_ORIGINAL_SIGNATURE_NEG = false;
@@ -158,6 +159,9 @@ int main(int argc , char** argv)
                     params.starting_proof_length = d;
                 else
                     params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+            }
+            else if (argv[i][0] == '-' && argv[i][1] == 'x') {
+                params.exact_length = true;
             }
             else if (argv[i][0] == '-' && argv[i][1] == 'p') {
                 int d = atoi(argv[i]+2);
@@ -220,6 +224,8 @@ int main(int argc , char** argv)
         cout << "   -f<format>           for input format; example -ftptp; default: tptp \n" << endl;
         cout << "   -s                   for search for a single proof; example: -s; default: no, search for a shortest proof \n" << endl;
         cout << "   -d                   for disabling proof simplification; default is false \n" << endl; 
+        cout << "   -i                   without inlining simple axioms; default is true \n" << endl;
+        cout << "   -x                   find a proof of lenght equal to the given length; default it false = lengt <= n \n" << endl;
         cout << "   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv); examples: -eursa; default: stl \n" << endl;
         cout << "   -n<max nesting>      for maximal proof depht in which a fact can be used; example: -n3; default: 2 \n" << endl;
         cout << "   -m<starting lenght>  for the size of the proof search to start with (support for smt engines only); example: -m4; default: 2 \n" << endl; 
