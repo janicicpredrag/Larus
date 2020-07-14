@@ -1,4 +1,4 @@
-fof(initial_model, axiom, (dom(Y) & dom(X) & tAnd_29(Y,X) & tOr_25(Y,X))). 
+fof(initial_model, axiom, (dom(y) & dom(x) & tAnd_29(y,x) & tOr_25(y,x))). 
 fof(botP,axiom, ![ V1, V2] : ((tP(V1,V2) & fP(V1,V2)) =>  goal )).
 fof(botQ,axiom, ![ V1, V2] : ((tQ(V1,V2) & fQ(V1,V2)) =>  goal )).
 fof(ax00,axiom, ![ Y, X] : ((tAnd_29(Y,X) & fOr_28(Y,X)) =>  goal )).
