@@ -905,7 +905,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                                        nAxiomArgument[nAxiom][nGoalIndex*mnMaxArity+nInd]);
 
               unsigned original_constants = mpT->mConstants.size() + mpT->mConstantsPermissible.size();
-              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), original_constants+(nProofStep+2)<<3);
+              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), original_constants+((nProofStep+2)<<3));
           }
 
           string sb;
@@ -996,7 +996,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           for (unsigned nInd = 0; nInd < mnMaxArity; nInd++) {
               sbMatchConclusion += appeq(app("nArg", nProofStep, nInd), app("nInst", nProofStep, 2+nInd));
               unsigned original_constants = mpT->mConstants.size() + mpT->mConstantsPermissible.size();
-              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), original_constants+(nProofStep+2)<<3);
+              sbMatchConclusion += smt_less(app("nArg", nProofStep, nInd), original_constants+((nProofStep+2)<<3));
           }
           sbMatchConclusion += "(not " + app("bCases", nProofStep) + ")";
           /* The MP proof step is correct if it was derived by using some axiom  */
