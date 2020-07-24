@@ -653,9 +653,10 @@ bool Theory::Saturate()
                             found = true;
                     }
                     if (!found) {
-                        // cout << "       Derived lemma: " << newUnivAx << endl;
+                        cout << "       Derived lemma (" << std::to_string(count_sat) << "): " << newUnivAx << endl;
                         // cout << std::to_string(count_sat) << "           from " <<  mCLaxioms[i].second << " and " << mCLaxioms[j].second << endl;
-                        mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
+                        string lemmaName = mCLaxioms[j].second + "sat" + std::to_string(count_sat++);
+                        mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, lemmaName));
                         updated = true;
                     }
                 }
