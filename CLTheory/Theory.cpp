@@ -577,11 +577,11 @@ bool Theory::Saturate()
          updated = false;
          for (size_t i = 0; i < mCLaxioms.size(); i++) {
 
-             time_t current_time = time(NULL);
-             if (difftime(current_time, start_time) > time_limit)
+            time_t current_time = time(NULL);
+            if (difftime(current_time, start_time) > time_limit)
                  return false;
 
-             const CLFormula ax1 = mCLaxioms[i].first;
+            const CLFormula ax1 = mCLaxioms[i].first;
             if (!ax1.IsSimpleImplication())
                 continue;
             Fact fact_ax1 = ax1.GetPremises().GetElement(0);
@@ -599,6 +599,10 @@ bool Theory::Saturate()
                     for (size_t k = 0; k < fact_ax2.GetArity() && !no_match; k++) {
                         if (IsConstant(fact_ax1.GetArg(k))) {
                             if (!IsConstant(fact_ax2.GetArg(k)) || fact_ax1.GetArg(k)!=fact_ax2.GetArg(k))
+                                no_match = true;
+                        }
+                        else if (inst.find(fact_ax1.GetArg(k)) != inst.cend()) {
+                            if (inst.find(fact_ax1.GetArg(k))->second != fact_ax2.GetArg(k))
                                 no_match = true;
                         }
                         else
@@ -649,7 +653,8 @@ bool Theory::Saturate()
                             found = true;
                     }
                     if (!found) {
-                        cout << "       Derived lemma: " << newUnivAx << endl;
+                        // cout << "       Derived lemma: " << newUnivAx << endl;
+                        // cout << std::to_string(count_sat) << "           from " <<  mCLaxioms[i].second << " and " << mCLaxioms[j].second << endl;
                         mCLaxioms.push_back(pair<CLFormula,string>(newUnivAx, mCLaxioms[j].second+"sat"+std::to_string(count_sat++)));
                         updated = true;
                     }

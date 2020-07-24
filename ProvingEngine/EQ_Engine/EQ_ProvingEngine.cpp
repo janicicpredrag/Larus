@@ -383,10 +383,9 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
             string smt_model_filename = tmpnam(NULL); //"smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
-            int rv;
             const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename + " > " + smt_model_filename;
             cout << l << flush;
-            rv = system(sCall.c_str());
+            int rv = system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
                 l += 12;
                 // l *= 2;
@@ -423,11 +422,10 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 string smt_proofencoded_filename = tmpnam(NULL);
                 string smt_model_filename = tmpnam(NULL);
                 EncodeProof(formula, s, smt_proofencoded_filename);
-                int rv;
                 const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename +  " > " + smt_model_filename;
                 // cout << "Trying proof length " << s << ";" << flush;
                 cout << s << flush;
-                rv = system(sCall.c_str());
+                int rv = system(sCall.c_str());
                 if (!ReadModel(smt_model_filename, smt_proofout_filename)) { // Find a model
                     l = s+1;
                     cout << ", ";
@@ -1030,8 +1028,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
            sbFirstCaseStep = " false ";
        else {
            sbFirstCaseStep = "(and " "(not " + app("bCases", nProofStep) + ") " +
-                             // harmonize possible values for nesting TODO
-                             smt_less(app("nNesting",nProofStep-1),33) +
+                             app("bCases", nProofStep-1) +
+                             smt_less(app("nNesting",nProofStep-1),MAX_NESTING+1) +
                              appeq(app("nAxiomApplied", nProofStep), eFirstCase) +
                              appeq(app("nNesting", nProofStep), smt_prod(app("nNesting", nProofStep-1),2)) +
                              appeq(app("nP", nProofStep, 0),app("nP", nProofStep-1, 0));
@@ -1140,8 +1138,8 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        sbTrivGoalReached = "(or " + sbTrivGoalReached + sbTrivGoalReachedInlined + ")";
        string sbQEDbyCasesStep = ( nProofStep == mnPremisesCount || !mParams.mbNeedsCaseSplits ? " false " :
-                   "(and "
-                     "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                   "(and " +
+                   //  "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                      app("bOddNesting", nProofStep-1) +
                      appeq(app("nAxiomApplied", nProofStep), eQEDbyCases) +
                      appeq(smt_sum(smt_prod(app("nNesting", nProofStep),2),1), app("nNesting", nProofStep-1)) +
@@ -1152,14 +1150,14 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) + ")"
                    :
                    "(and " "(or " + app("bGoal", nProofStep-1) + sbTrivGoalReachedInlined + ")" +
-                    "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                  //  "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyAssumption) +
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) +
                     app("bGoal", nProofStep) + ")");
 
        string sbQEDbyEFQStep = ( nProofStep == mnPremisesCount ? " false " :
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
-                    "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                  //  "(or (not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     appeq(app("nNesting", nProofStep-1), app("nNesting", nProofStep)) + " " +
                     app("bGoal", nProofStep) +
                     appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) +
@@ -1167,7 +1165,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        string sbQEDbyNegIntroStep = ( nProofStep == mnPremisesCount ? " false " :
                    "(and " + appeq(app("nP", nProofStep-1, 0), URSA_NUM_PREFIX+ "false") +
-                    "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
+                 //   "(or " "(not " + app("bCases", nProofStep) + ") " + appeq("nProofSize", nProofStep) + ")" +
                     "(or " + appeq(app("nNesting", nProofStep-1), smt_prod(app("nNesting", nProofStep),2)) +
                      appeq(app("nNesting", nProofStep-1), smt_sum(smt_prod(app("nNesting", nProofStep),2), 1)) + ")" +
                      "(not " + app("bCases", nProofStep-1) + ")" +
@@ -1216,7 +1214,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
        // a kind of memoization:
        if (mParams.mbNeedsCaseSplits)
-          sbProofStepCorrect += appeq(app("bOddNesting", nProofStep), smt_odd(app("nNesting", nProofStep), 32));
+          sbProofStepCorrect += appeq(app("bOddNesting", nProofStep), smt_odd(app("nNesting", nProofStep), MAX_NESTING));
 
        for (unsigned nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) {
            // a kind of memoization:

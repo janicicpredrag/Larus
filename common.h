@@ -57,6 +57,8 @@ const bool DEFAULT_INLINE_AXIOMS = true;
 
 const unsigned SATURATION_TIME_LIMIT = 5;
 
+const unsigned MAX_NESTING = 32;
+
 const string EQ_NATIVE_NAME = "eqnative";
 const string PREFIX_NEGATED = "nnn";
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
