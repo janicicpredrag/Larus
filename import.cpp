@@ -532,12 +532,17 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, The
                 if (found_input != string::npos) {
                     size_t found_dot = s.find(").", found_input+1);
                     if (found_input != string::npos)  {
-                        string filename = dirnameOf(inputFile)+"/"+ s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        string filename = dirnameOf(inputFile);
+                        if (filename.empty())
+                            filename = s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
+                        else
+                            filename += "/"+ s.substr(found_input+str_input.size()+2, found_dot - found_input -str_input.size()-3);
                         cout << "       Including file : " << filename << endl;
                         ifstream input_file(filename,ios::in);
                         if (input_file.good())  {
                             string ss;
                             while(getline(input_file, ss)) {
+                                // cout << "Debug:" << ss << endl;
                                 if (ss!= "" && ss.at(0) != '%')
                                     str += ss;
                             }
@@ -575,6 +580,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams& params, The
             return eErrorReadingAxioms;
         s = str.substr(found1, found2-found1);
         fofType type = eAny;
+
         if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type)) {
 
             if (type != eHint) {

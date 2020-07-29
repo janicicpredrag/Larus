@@ -48,13 +48,16 @@ const bool DEFAULT_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
+const bool DEFAULT_EXACT_LENGTH = false;
 const bool DEFAULT_SIMP = false;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
-const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18  ;
+const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
 const bool DEFAULT_INLINE_AXIOMS = true;
 
 const unsigned SATURATION_TIME_LIMIT = 5;
+
+const unsigned MAX_NESTING = 32;
 
 const string EQ_NATIVE_NAME = "eqnative";
 const string PREFIX_NEGATED = "nnn";
@@ -67,6 +70,7 @@ typedef struct proverParams {
     unsigned max_nesting_depth;
     unsigned starting_proof_length;
     unsigned max_proof_length;
+    bool exact_length;
     bool shortest_proof;
     bool mbNegElim;
     bool mbNativeEQ;

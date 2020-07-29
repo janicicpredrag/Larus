@@ -498,6 +498,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula& formula)
     else
     {
         ursaFile <<"   bFirstCaseStep = nProofStep>0 "                                                                                                 << endl;
+        ursaFile <<"                    && bCases[nProofStep-1] "                                                                                      << endl;
         ursaFile <<"                    && !bCases[nProofStep] "                                                                                       << endl;
         // harmonize possible values for nesting TODO
         ursaFile <<"                    && (nNesting[nProofStep-1] < 33) "                                                                             << endl;
