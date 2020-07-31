@@ -379,8 +379,8 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = tmpnam(NULL); //"prove.smt"; //
-            string smt_model_filename = tmpnam(NULL); //"smt-model.txt"; //
+            string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
+            string smt_model_filename = tmpnam(NULL); // "smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename + " > " + smt_model_filename;
