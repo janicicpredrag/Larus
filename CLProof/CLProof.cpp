@@ -843,16 +843,15 @@ bool CLProof::CL2toCL()
                     pe->mCases[j] = dnf;
                 }
             }
-            else {
+            /*else {
                 ByAssumption* ba = dynamic_cast<ByAssumption*>(mpProofEnd);
                 if (ba) {
 
                 }
                 else {
                     EFQ* efq = dynamic_cast<EFQ*>(mpProofEnd);
-
                 }
-            }
+            }*/
         }
     }
     while (b);

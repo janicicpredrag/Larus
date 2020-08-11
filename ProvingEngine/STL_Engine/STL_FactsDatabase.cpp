@@ -314,7 +314,6 @@ bool STLFactsDatabase::PremisesTrueInInstantiation(const CLFormula& cl, Conjunct
 }
 
 
-
 // ---------------------------------------------------------------------------------------
 
 bool STLFactsDatabase::HoldsDisjunction(const DNFFormula& dnf, ConjunctionFormula& fin, vector<Fact>& AuxFacts)
@@ -390,7 +389,7 @@ bool STLFactsDatabase::MatchConjunction(const ConjunctionFormula& conj, Conjunct
 
 // ---------------------------------------------------------------------------------------
 
-bool STLFactsDatabase::MatchFact(const Fact& f1, const Fact& f2, map<string,string>& instantiation, bool checkingPremises, vector<Fact>& AuxFacts)
+bool STLFactsDatabase::MatchFact(const Fact& f1, const Fact& f2, map<string,string>& instantiation, bool checkingPremises, vector<Fact>& /*AuxFacts*/)
 {
     size_t f1s = f1.GetArity();
     if (f1s != f2.GetArity() || f1.GetName() != f2.GetName())
@@ -404,12 +403,8 @@ bool STLFactsDatabase::MatchFact(const Fact& f1, const Fact& f2, map<string,stri
                 //cout << "#" << *it << "#" << endl;
                 if (*it == f2.GetArg(j))
                     found = true;
-            if (!found) { // FIXME, the find below should work!
-                //string d = f2.GetArg(j);
-                //if (mConstantsPermissible.find(f2.GetArg(j)) != mConstantsPermissible.end())
-                //    assert(false);
+            if (!found)
                 return false;
-            }
         }
     }
 

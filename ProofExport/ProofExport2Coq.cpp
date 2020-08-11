@@ -64,13 +64,9 @@ void ProofExport2Coq::OutputFact(ofstream& outfile, const Fact& f)
         else {
             int ns = PREFIX_NEGATED.size();
             if (f.GetName().find(PREFIX_NEGATED) == 0)
-            {
                 outfile << "~ " << f.GetName().substr(ns, string::npos);
-            }
             else
-            {
                 outfile << f.GetName();
-            }
             for (size_t i=0; i<f.GetArity(); i++)
                 outfile << " " << f.GetArg(i);
         }
@@ -108,38 +104,30 @@ string repeat(int n, string s) {
 //-----------------------------------------------------------------------------------
 void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& params)
 {
- //   outfile << "Require Import CLProver.euclidean_axioms." << endl;
      outfile << "Require Import src.general_tactics." << endl;
      if (params.mbExcludedMiddle)
         outfile << "Require Import Classical." << endl;
     outfile << endl;
     outfile << "Section Sec." << endl << endl;
-//    outfile << "Context `{Ax:euclidean_neutral}." << endl << endl;
 
     outfile << "Parameter MyT : Type." << endl;
     for(vector<pair<string,unsigned>>::iterator it = T.mSignature.begin(); it!=T.mSignature.end(); ++it)
     {
         string name = get<0>(*it);
         if (name != "false" && name != "true" && name.find(PREFIX_NEGATED) != 0 && name.find("eqnative") != 0)
-        {
             outfile << "Parameter " << get<0>(*it) << " : " << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl; 
-        }
-
     }
-     for(vector<string>::iterator it = T.mInitialConstants.begin(); it!=T.mInitialConstants.end(); ++it)
-    {
+    for(vector<string>::iterator it = T.mInitialConstants.begin(); it!=T.mInitialConstants.end(); ++it)
         outfile << "Hypothesis " << (*it) << " : MyT." << endl;
-    }
      
     outfile << endl;
     for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
         std::string name = get<1>(T.OriginalAxiom(i));
         std::size_t found = name.find("sat");
-        if (found == std::string::npos)
-          {
-                outfile << "Hypothesis " << name << " : ";
-                OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
-          }
+        if (found == std::string::npos)  {
+            outfile << "Hypothesis " << name << " : ";
+            OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
+        }
     }
     // outfile << endl;
     // for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
@@ -185,7 +173,6 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
         outfile << "Qed." << endl << endl;
         outfile << "Hint Resolve " << T.mDerivedLemmas[i].name << " : Sym." << endl << endl;
     }
-
 
     outfile << endl;
     outfile << "Theorem " << p.GetTheoremName() << " : ";
@@ -236,12 +223,10 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
         OutputDNF(outfile, p.GetMP(i).conclusion);
         outfile << ") ";
 
-        if (p.GetMP(i).axiomName == "trivial")
-        {
+        if (p.GetMP(i).axiomName == "trivial")  {
             outfile << "by one_lemma";
         }
-        else if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos)
-        {
+        else if (p.GetMP(i).axiomName.find("NegElim") != std::string::npos) {
             outfile << "by contradiction_on (";
             std::size_t dpos = PREFIX_NEGATED.length();
             std::size_t epos = p.GetMP(i).axiomName.find("NegElim");
@@ -253,8 +238,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             outfile << ")";
         }
         else if ((p.GetMP(i).axiomName.find("ExcludedMiddle") != std::string::npos) ||
-                 (p.GetMP(i).axiomName.find("eq_excluded_middle") != std::string::npos))
-        {
+                 (p.GetMP(i).axiomName.find("eq_excluded_middle") != std::string::npos))  {
             outfile << "by (destruct (classic (";
             std::size_t epos = p.GetMP(i).axiomName.find("ExcludedMiddle");
             string pred_name = p.GetMP(i).axiomName.substr(0,epos);
@@ -263,18 +247,13 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
                 outfile << " " << inst[j].second;
             outfile << "));auto)";
-
         }
         else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos ||
                   p.GetMP(i).axiomName.find("EqSub") != std::string::npos || 
-                  p.GetMP(i).axiomName.find("eq_sym") != std::string::npos
-                  
-                  )
-        {
+                  p.GetMP(i).axiomName.find("eq_sym") != std::string::npos) {
             outfile << "by (congruence)";
         }
-        else
-        {
+        else {
             outfile << "by applying (" << p.GetMP(i).axiomName;
             vector<pair<string,string>> inst = p.GetMP(i).instantiation;
             for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
@@ -293,9 +272,7 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
             outfile << ";spliter";
         }
         if (p.GetMP(i).conclusion.GetSize() == 1 && p.GetMP(i).conclusion.GetElement(0).GetSize() > 1)
-        {
             outfile << ". spliter." << endl;
-        }
         else
             outfile << "." << endl;
     }
