@@ -1,7 +1,7 @@
 include('col-axioms.ax').
 
 fof(pipo,conjecture,
-(! [O, E, Eprime A, B, C, D U, Bu, Xu, Bprime, Dprime, Dprimeprime] : ( (
+(! [O, E, Eprime, A, B, C, D U, Bu, Xu, Bprime, Dprime, Dprimeprime] : ( (
  wd( U, O) &
  wd( O, E) &
   wd( O, Eprime) &

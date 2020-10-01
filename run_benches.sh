@@ -299,7 +299,6 @@ echo "Use implicit lemmas:" $opt5 | tee -a $filename
 fi
 
 print_result() {
-   echo $success_string
  output=$(grep -c "$success_string" one_res.txt) 
  if [[ $output = 1 ]]; then
     echo "Proved; " >> data.csv
