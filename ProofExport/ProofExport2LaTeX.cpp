@@ -100,7 +100,7 @@ void ProofExport2LaTeX::OutputOr(ofstream& outfile)
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& params)
+void ProofExport2LaTeX::OutputPrologue(ofstream& outfile, Theory& T, const CLProof& p, proverParams& /*params*/)
 {
     outfile << "\\documentclass{article}" << endl;
     outfile << "\\usepackage{argoclp}" << endl << endl;
@@ -260,7 +260,6 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream& outfile, const EFQ* /*efq*/, un
 {
     outfile << "\\proofstep{" << level << "}{Proved by EFQ!}" << endl;
 }
-
 
 // ---------------------------------------------------------------------------------
 

@@ -3,8 +3,7 @@
 #include "CLTheory/Formula.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
-#include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
-#include "ProvingEngine/EQ_Engine/EQ_ProvingEngine.h"
+#include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProofExport/ProofExport2Coq.h"
@@ -94,10 +93,6 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
         cout << "       Check validity without excluded middle: output size: " << T.mCLaxioms.size() << endl;
         T.printAxioms();
 
-        //FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-        //cout << "       After filtering by reachability: output size: " << T.mCLaxioms.size() << endl;
-        //T.printAxioms();
-
         if (params.mbExcludedMiddle) {
             // ************ Filtering axioms a la hammer by FOL prover ************
             if (vampire_succeeded && params.msHammerInvoke != "") {
@@ -120,10 +115,6 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
             else
                 T.AddExcludedMiddleAxioms();
 
-
-            /*T.AddExcludedMiddleAxioms();
-            if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit) == eVampireUnsat)
-                vampire_succeeded = true;*/
             T.printAxioms();
         }
 
@@ -171,9 +162,6 @@ ReturnValue SetUpAxioms(proverParams& params, Theory& T, CLFormula& theorem, str
             }
         }
     }
-
-
-
 
     // ************ Filtering by reachability ************
     // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
@@ -237,14 +225,14 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFor
             if (params.eEngine== eSTL_ProvingEngine)
                 engine = new STL_ProvingEngine(&T1,params);
             else if (params.eEngine == eSQL_ProvingEngine)
-                engine = new SQL_ProvingEngine(&T1,params);
+                assert(false); // not implemented yet
             else if (params.eEngine == eURSA_ProvingEngine)
                 engine = new URSA_ProvingEngine(&T1,params);
             else if (params.eEngine == eSMTLIA_ProvingEngine ||
                      params.eEngine == eSMTBV_ProvingEngine ||
                      params.eEngine == eSMTUFLIA_ProvingEngine ||
                      params.eEngine == eSMTUFBV_ProvingEngine)
-                engine = new EQ_ProvingEngine(&T1,params);
+                engine = new SMT_ProvingEngine(&T1,params);
             else // default
                 engine = new STL_ProvingEngine(&T1,params);
 
@@ -267,14 +255,14 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams& params, Theory& T, CLFor
         if (params.eEngine== eSTL_ProvingEngine)
             engine = new STL_ProvingEngine(&T,params);
         else if (params.eEngine == eSQL_ProvingEngine)
-            engine = new SQL_ProvingEngine(&T,params);
+            assert(false); // not implemented yet
         else if (params.eEngine == eURSA_ProvingEngine)
             engine = new URSA_ProvingEngine(&T,params);
         else if (params.eEngine == eSMTLIA_ProvingEngine ||
                  params.eEngine == eSMTBV_ProvingEngine ||
                  params.eEngine == eSMTUFLIA_ProvingEngine ||
                  params.eEngine == eSMTUFBV_ProvingEngine)
-            engine = new EQ_ProvingEngine(&T,params);
+            engine = new SMT_ProvingEngine(&T,params);
         else // default
             engine = new STL_ProvingEngine(&T,params);
         ReturnValue r = ProveTheorem(params, T, *engine, theorem, theoremName, theoremFileName, hints);
@@ -432,8 +420,7 @@ VampireReturnValue FilterOutNeededAxioms(vector< pair<CLFormula,string> >& axiom
                            neededAxioms.push_back(it->second);
                 }
             }
-            else
-            {
+            else {
                 cout << "Error reading input file :" << vampire_solution << endl;
                 return eVampireErrorReadingAxioms;
             }
@@ -502,10 +489,8 @@ bool FilterOurNeededAxiomsByReachability(vector< pair<CLFormula,string> >& axiom
                 break;
             }
         }
-        if (!bAllSymbolsReachable) {
-            // cout << "       erased : " << it->second << endl;
+        if (!bAllSymbolsReachable)
             it = axioms.erase(it);
-        }
         else
             it++;
     }

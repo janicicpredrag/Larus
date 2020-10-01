@@ -14,10 +14,10 @@ using namespace std;
 #define MAX_PROOF_LENGTH 100
 
 
-class EQ_ProvingEngine : public ProvingEngine
+class SMT_ProvingEngine : public ProvingEngine
 {
 public:
-    EQ_ProvingEngine(Theory *pT, proverParams& params);
+    SMT_ProvingEngine(Theory *pT, proverParams& params);
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);

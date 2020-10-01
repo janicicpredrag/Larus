@@ -1,7 +1,7 @@
 #include "common.h"
 #include "CLTheory/Theory.h"
 #include "CLProof/CLProof.h"
-#include "EQ_ProvingEngine.h"
+#include "SMT_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
 
 
@@ -10,7 +10,7 @@
 
 // ---------------------------------------------------------------------------------------
 
-EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT, proverParams& params)
+SMT_ProvingEngine::SMT_ProvingEngine(Theory *pT, proverParams& params)
 {
     mpT = pT;
     mParams = params;
@@ -32,7 +32,7 @@ EQ_ProvingEngine::EQ_ProvingEngine(Theory *pT, proverParams& params)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
+void SMT_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit)
 {
     mStartTime = startTime;
     mParams.time_limit = timeLimit;
@@ -40,7 +40,7 @@ void EQ_ProvingEngine::SetStartTimeAndLimit(const clock_t& startTime, unsigned t
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::app(string s, unsigned arg1)
+string SMT_ProvingEngine::app(string s, unsigned arg1)
 {
     string ss;
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -57,7 +57,7 @@ string EQ_ProvingEngine::app(string s, unsigned arg1)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::appack(string s, unsigned arg1)
+string SMT_ProvingEngine::appack(string s, unsigned arg1)
 {
     string ss;
     // use ackermanization
@@ -69,7 +69,7 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2)
+string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2)
 {
     string ss;
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -86,7 +86,7 @@ string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2, unsigned arg3)
+string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2, unsigned arg3)
 {
     string ss;
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -103,7 +103,7 @@ string EQ_ProvingEngine::app(string s, unsigned arg1, unsigned arg2, unsigned ar
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2, unsigned arg3)
+string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2, unsigned arg3)
 {
     // use ackermanization
     string ss = s+"_l_"+itos(arg1)+"_r__l_"+itos(arg2)+"_r__l_"+itos(arg3)+"_r_";
@@ -114,7 +114,7 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2, unsigned
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2)
+string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2)
 {
     // use ackermanization
     string ss = s+"_l_"+itos(arg1)+"_r__l_"+itos(arg2)+"_r_";
@@ -125,21 +125,21 @@ string EQ_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::appeq(string arg1, string arg2)
+string SMT_ProvingEngine::appeq(string arg1, string arg2)
 {
     return "(= " + arg1 + " " + arg2 + ")";
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::appeq(string arg1, int arg2)
+string SMT_ProvingEngine::appeq(string arg1, int arg2)
 {
     return appeq(arg1, itos(mSMT_theory,arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_sum(string arg1, string arg2)
+string SMT_ProvingEngine::smt_sum(string arg1, string arg2)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvadd " + arg1 + " " + arg2 + ")";
@@ -149,7 +149,7 @@ string EQ_ProvingEngine::smt_sum(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_sum(string arg1)
+string SMT_ProvingEngine::smt_sum(string arg1)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvadd " + arg1 + ")";
@@ -159,7 +159,7 @@ string EQ_ProvingEngine::smt_sum(string arg1)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_sub(string arg1, string arg2)
+string SMT_ProvingEngine::smt_sub(string arg1, string arg2)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvsub " + arg1 + " " + arg2 + ")";
@@ -169,7 +169,7 @@ string EQ_ProvingEngine::smt_sub(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_sum(string arg1, int arg2)
+string SMT_ProvingEngine::smt_sum(string arg1, int arg2)
 {
     if (arg2<0)
         return smt_sub(arg1, itos(mSMT_theory,arg2));
@@ -179,7 +179,7 @@ string EQ_ProvingEngine::smt_sum(string arg1, int arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_prod(string arg1, string arg2)
+string SMT_ProvingEngine::smt_prod(string arg1, string arg2)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvmul " + arg1 + " " + arg2 + ")";
@@ -189,14 +189,14 @@ string EQ_ProvingEngine::smt_prod(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_prod(string arg1, int arg2)
+string SMT_ProvingEngine::smt_prod(string arg1, int arg2)
 {
     return smt_prod(arg1, itos(mSMT_theory,arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_geq(string arg1, string arg2)
+string SMT_ProvingEngine::smt_geq(string arg1, string arg2)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvuge " + arg1 + " " + arg2 + ")";
@@ -206,14 +206,14 @@ string EQ_ProvingEngine::smt_geq(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_geq(string arg1, int arg2)
+string SMT_ProvingEngine::smt_geq(string arg1, int arg2)
 {
    return smt_geq(arg1, itos(mSMT_theory,arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_less(string arg1, string arg2)
+string SMT_ProvingEngine::smt_less(string arg1, string arg2)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine )
         return "(bvult " + arg1 + " " + arg2 + ")";
@@ -223,21 +223,21 @@ string EQ_ProvingEngine::smt_less(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_less(string arg1, int arg2)
+string SMT_ProvingEngine::smt_less(string arg1, int arg2)
 {
     return smt_less(arg1, itos(mSMT_theory,arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_ite(string arg1, int arg2, int arg3)
+string SMT_ProvingEngine::smt_ite(string arg1, int arg2, int arg3)
 {
     return "(ite " + arg1 + " " + itos(mSMT_theory, arg2) + " " + itos(mSMT_theory, arg3) + ")";
 }
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_odd(string arg1, unsigned max)
+string SMT_ProvingEngine::smt_odd(string arg1, unsigned max)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine)
         return appeq( "(bvand " + arg1 + " " + itos(mSMT_theory, 1) + ")" , 1);
@@ -252,7 +252,7 @@ string EQ_ProvingEngine::smt_odd(string arg1, unsigned max)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_even(string arg1, unsigned max)
+string SMT_ProvingEngine::smt_even(string arg1, unsigned max)
 {
     if (mSMT_theory == eSMTBV_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine)
         return appeq( "(bvand " + arg1 + " " + itos(mSMT_theory, 1) + ")" , 0);
@@ -267,7 +267,7 @@ string EQ_ProvingEngine::smt_even(string arg1, unsigned max)
 
 // ---------------------------------------------------------------------------------------
 
-string EQ_ProvingEngine::smt_prefix(string arg1, string arg2)
+string SMT_ProvingEngine::smt_prefix(string arg1, string arg2)
 {
     string s = appeq(arg2, arg1);
     for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
@@ -282,7 +282,7 @@ string EQ_ProvingEngine::smt_prefix(string arg1, string arg2)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
+void SMT_ProvingEngine::EncodeAxiom(CLFormula& axiom)
 {
     mnAxiomsCount++;
     nAxiomUniVars[mnAxiomsCount] = axiom.GetNumOfUnivVars();
@@ -332,7 +332,7 @@ void EQ_ProvingEngine::EncodeAxiom(CLFormula& axiom)
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::AddPremise(const Fact& f)
+void SMT_ProvingEngine::AddPremise(const Fact& f)
 {
     mpT->AddSymbol(f.GetName(), f.GetArity());
 
@@ -348,7 +348,7 @@ void EQ_ProvingEngine::AddPremise(const Fact& f)
 
 // ---------------------------------------------------------------------------------------
 
-bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
+bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof)
 {
     bool ret = false;
 
@@ -379,13 +379,13 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 break;
 
             DECLARATIONS = decl;
-            string smt_proofencoded_filename = tmpnam(NULL); //"prove.smt"; //
-            string smt_model_filename = tmpnam(NULL); //"smt-model.txt"; //
+            string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
+            string smt_model_filename = tmpnam(NULL); // "smt-model.txt"; //
             
             EncodeProof(formula, l, smt_proofencoded_filename);
             const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename + " > " + smt_model_filename;
             cout << l << flush;
-            int rv = system(sCall.c_str());
+            /*int rv =*/ system(sCall.c_str());
             if (!ReadModel(smt_model_filename, smt_proofout_filename)) {  // Find a model
                 l += 12;
                 // l *= 2;
@@ -425,7 +425,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
                 const string sCall = "timeout " + to_string(remainingTime) + " z3  " + smt_proofencoded_filename +  " > " + smt_model_filename;
                 // cout << "Trying proof length " << s << ";" << flush;
                 cout << s << flush;
-                int rv = system(sCall.c_str());
+                /*int rv =*/ system(sCall.c_str());
                 if (!ReadModel(smt_model_filename, smt_proofout_filename)) { // Find a model
                     l = s+1;
                     cout << ", ";
@@ -465,7 +465,7 @@ bool EQ_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pro
 
 // ---------------------------------------------------------------------------------------
 
-void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen, string prove_smt_filename)
+void SMT_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen, string prove_smt_filename)
 {
     ofstream smtFile;
     smtFile.open (prove_smt_filename);
@@ -582,7 +582,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     string sbMatchExiQuantifiers;
     string sbMPStep;
     string sbMatchConclusion;
-
 
     for (unsigned nProofStep = 0; nProofStep+1 < mnPremisesCount+nProofLen; nProofStep++) {
         unsigned ArityFinal = formula.GetElement(0).GetElement(0).GetArity();
@@ -940,7 +939,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
                            appeq(app("nNesting", nProofStep), 1) + ")";
        }
 
-
        // Special case MP: use the generic, implicit eq sub axiom:
        // 0  1      n
        // B,A1,...,An: eq(B,Ai) & P(A1,..B.,An) => P(A1,...Ai...,An)
@@ -1001,7 +999,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
           sbMPStep += "\n      (and " + sbMatchPremises + " " +  sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                          appeq(app("nNesting", nProofStep), app("nNesting", nProofStep-1)) + ")";
        }
-
 
        sbMPStep += ") ";
 
@@ -1348,8 +1345,6 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
     //smtFile << "(check-sat-using ctx-solver-simplify)" << endl;
     smtFile << "(check-sat)" << endl;
 
-
-
     if (mSMT_theory == eSMTUFLIA_ProvingEngine || mSMT_theory == eSMTUFBV_ProvingEngine) {
         smtFile << "(get-value (" << endl;
         for(set<string>::iterator it = GETVALUE.begin(); it != GETVALUE.end(); it++)
@@ -1370,7 +1365,7 @@ void EQ_ProvingEngine::EncodeProof(const DNFFormula& formula, unsigned nProofLen
 
 // ---------------------------------------------------------------------------------------
 
-bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncodedProofFile)
+bool SMT_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncodedProofFile)
 {
     map<string, unsigned> nmodel;
     map<string, bool> bmodel;
@@ -1779,7 +1774,6 @@ bool EQ_ProvingEngine::ReadModel(const string& sModelFile, const string& sEncode
   }
 
   proofTxt.close();
-
 
   return true;
 }

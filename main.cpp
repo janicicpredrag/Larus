@@ -96,6 +96,7 @@ int main(int argc , char** argv)
     params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
     params.shortest_proof = DEFAULT_SHORTEST_PROOF;
     params.mbNativeEQ = DEFAULT_NATIVE_EQ;
+    params.mbNativeEQsub = DEFAULT_NATIVE_EQ_SUB;
     params.mbNegElim =  DEFAULT_NEG_ELIM;
     params.mbExcludedMiddle =  DEFAULT_EXCLUDED_MIDDLE;
     params.mbCoq =  DEFAULT_COQ;
