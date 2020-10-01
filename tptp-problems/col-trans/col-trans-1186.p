@@ -11,5 +11,5 @@ fof(pipo,conjecture,
       wd( E, Eprimeprime) &
        col( O, E, A) &
         col( O, E, B) &
-         col( O, E, C) & col( O, Eprimeprime, A) ) => col( O, E, Eprimeprime))  ).
+         col( O, E, C) & col( O, Eprimeprime, A) ) => col( O, E, Eprimeprime))  )).
 

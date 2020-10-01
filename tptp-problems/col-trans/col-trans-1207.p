@@ -20,5 +20,5 @@ fof(pipo,conjecture,
                col( O, Eprime, Bprime) &
                 col( O, Eprimeprime, Bprimeprime) &
                  col( B, E, Eprimeprime) & col( Bprimeprime, E, Eprimeprime) ) => col( O, E, Eprimeprime)) 
-).
+)).
 
