@@ -7,5 +7,5 @@ fof(pipo,conjecture,
   wd( O, Eprime) &
    col( O, E, X) &
     col( O, E, Y) &
-     col( O, E, XMY) & col( O, E, XY) ) => col( XY, O, XMY))  ).
+     col( O, E, XMY) & col( O, E, XY) ) => col( XY, O, XMY))  )).
 

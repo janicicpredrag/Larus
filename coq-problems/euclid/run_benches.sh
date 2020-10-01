@@ -4,6 +4,6 @@ for file in $benches
 do
     echo $file
     out=`basename $file .v`.vo
-    gtimeout 60 make $out
+    timeout 5 time -f %E coqc -R . Test $file > $file.txt
 done
 

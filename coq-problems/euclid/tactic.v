@@ -1,3 +1,3 @@
 From Hammer Require Export Tactics.
 
-Ltac tac:= hprover.
+Ltac tac:= sauto.

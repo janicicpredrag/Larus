@@ -5,9 +5,12 @@ printout() {
    exit
 }
 i=0
+proved=0
+failed=0
 time=10
 maxProofLen=128
 startinglength=4
+success_string="FOUND"
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
@@ -75,7 +78,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016" "ChewTPTP")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -157,6 +160,13 @@ do
             engine=""
             break
             ;;
+	    "ChewTPTP")
+            echo "$opt selected"
+            prover="ChewTPTP"
+            engine=""
+            break
+            ;;
+
         *) echo "invalid option $REPLY";;
     esac
 done
@@ -288,66 +298,86 @@ echo "Find shortest proof:" $opt4 | tee -a $filename
 echo "Use implicit lemmas:" $opt5 | tee -a $filename
 fi
 
+print_result() {
+ output=$(grep -c "$success_string" one_res.txt) 
+ if [[ $output = 1 ]]; then
+    echo "Proved; " >> data.csv
+    ((proved++))
+ else
+    echo "Failed; " >> data.csv
+    ((failed++))
+ fi
+}
+
+
 tm() {
   local start=$(date +%s)
-  $@
+  $@ > one_res.txt
   local exit_code=$?
   printf >&2 " ~$(($(date +%s)-${start})) seconds. "
-  echo " ~$(($(date +%s)-${start})) seconds. " >> data.csv
+  echo -n $prover >> data.csv
+  echo -n ";" >> data.csv
+  echo -n " $(($(date +%s)-${start})); " >> data.csv
+  print_result
   return $exit_code
 }
+
+
 
 
 for file in $benches
 do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
-  echo $file >> data.csv
+  echo -n $file >> data.csv
+  echo -n "; " >> data.csv
   if [[ $prover = "CLprover" ]]; then
-      echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof $implicit -vcoq "$axioms" "$axiomsb" "$file"
-    tm ./CLprover -h -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file" | tee -a $filename
-    else
-      if [[ $prover = "eprover" ]]; then
-        echo "eprove"
-        tm eprover -xAuto -tAuto --cpu-limit="$time" "$file" | tee -a $filename
-      else 
-	  if [[ $prover = "zenon" ]]; then
-              tm zenon -itptp -max-time "$time" "$file" | tee -a $filename
-	  else
-	      if [[ $prover = "vampire" ]]; then
-		  tm vampire --mode casc --time_limit "$time" "$file" | tee -a $filename
-	      else if  [[ $prover = "geo" ]]; then
-		  tm timeout $time geo -tptp_input -inputfile "$file" | tee -a $filename
- 		else if  [[ $prover = "leancop" ]]; then
-			 tm ~/provers/leancop21/leancop.sh  "$file" $time | tee -a $filename
-			 	else if  [[ $prover = "nanocop" ]]; then
-					 tm ~/provers/nanocop11/nanocop.sh  "$file" $time | tee -a $filename
-					 else if  [[ $prover = "isabelle" ]]; then
-					 tm ~/provers/Isabelle2016/bin/isabelle tptp_isabelle  $time "$file" | tee -a $filename
-					 
-					 fi
-				  fi
-			 fi
-		  fi
-	      fi
-	  fi
-      fi
-  fi
+        success_string="SZS status Theorem"
+        echo -l"$time" $engine -ftptp -vcoq -p"$maxProofLen" $minproof $implicit -vcoq "$axioms" "$axiomsb" "$file"
+	success_string="SZS status Theorem"
+        tm ./CLprover -h -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file"
+   else if [[ $prover = "eprover" ]]; then  
+        success_string="SZS status Theorem"
+        tm eprover -xAuto -tAuto --cpu-limit="$time" "$file" 
+   else if [[ $prover = "zenon" ]]; then
+        success_string="FOUND"
+        tm zenon -itptp -max-time "$time" "$file" 
+   else if [[ $prover = "vampire" ]]; then
+	success_string="SZS status Theorem"	 
+        tm vampire --mode casc --time_limit "$time" "$file"
+   else if  [[ $prover = "geo" ]]; then
+        success_string="END-OF-PROOF"
+        tm timeout $time geo -tptp_input -inputfile "$file"	
+   else if [[ $prover = "leancop" ]]; then
+	success_string="End of proof"
+	tm ~/provers/leancop21/leancop.sh  "$file" "$time" 
+   else if  [[ $prover = "nanocop" ]]; then
+	success_string="End of proof"
+	tm ~/provers/nanocop11/nanocop.sh  "$file" "$time" 
+   else if  [[ $prover = "isabelle" ]]; then
+	success_string="SZS status Theorem"
+	tm ~/provers/Isabelle2016/bin/isabelle tptp_isabelle  "$time" "$file"
+   else if [[ $prover = "ChewTPTP" ]]; then
+	success_string="Unsatisfiable"
+        vampire --mode clausify "$file" > chewing.p
+        tm timeout $time ~/provers/ChewTPTP-master/ChewTPTP/bin/chewtptp -v chewing.p
+  fi fi fi fi fi fi fi fi fi
  ((i++))
-  echo "Number of theorems proved until now:" | tee -a $summary
-  if [ "$prover" = "zenon" ]; then
-      grep FOUND < $filename | wc -l | tee -a $summary
-  else if [ "$prover" = "geo" ]; then
-	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
-  else if [ "$prover" = "leancop" ]; then
-	   grep "End of proof" <  $filename | wc -l | tee -a $summary
-  else if [ "$prover" = "nanocop" ]; then
-	   grep "End of proof" <  $filename | wc -l | tee -a $summary	   
-  else
-	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
-       fi
-     fi
-       fi
-       fi
+  echo -n "Number of theorems proved until now:" | tee -a $summary
+  echo $proved 
+#  if [ "$prover" = "zenon" ]; then
+#      grep FOUND < $filename | wc -l | tee -a $summary
+#  else if [ "$prover" = "geo" ]; then
+#	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
+#  else if [ "$prover" = "leancop" ]; then
+#	   grep "End of proof" <  $filename | wc -l | tee -a $summary
+#  else if [ "$prover" = "nanocop" ]; then
+#	   grep "End of proof" <  $filename | wc -l | tee -a $summary	   
+#  else
+#	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
+#       fi
+#     fi
+#       fi
+#       fi
 done
 echo "------------------------------------------------------"
 echo "Summary:"
@@ -359,23 +389,25 @@ echo "Find shortest proof:" $opt4 | tee -a $filename
 echo "Nesting:" $nest | tee -a $filename
 echo "Engine: $opt2" | tee -a $summary
 echo "Number of benches" $i | tee -a $summary
-echo "Number of theorems proved:" | tee -a $summary
-if [ "$prover" = "zenon" ]; then
-    grep FOUND < $filename | wc -l | tee -a $summary
-else if [ "$prover" = "geo" ]; then
-	echo "here"
-	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
-else if [ "$prover" = "leancop" ]; then
-	echo "here"
-	grep "End of proof" < $filename | wc -l | tee -a $summary
-else
-	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
-	echo "Contradictory axioms:"
-	grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
-	echo "Counter sat:"
-	grep "SZS status Counter" < $filename | wc -l | tee -a $summary
-	echo "Number of theorems checked by Coq:" | tee -a $summary
-	grep Correct < $filename | wc -l | tee -a $summary
-    fi
-fi
-fi
+echo "Number of theorems proved:" $proved | tee -a $summary
+
+
+#if [ "$prover" = "zenon" ]; then
+#    grep FOUND < $filename | wc -l | tee -a $summary
+#else if [ "$prover" = "geo" ]; then
+#	echo "here"
+#	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
+#else if [ "$prover" = "leancop" ]; then
+#	echo "here"
+#	grep "End of proof" < $filename | wc -l | tee -a $summary
+#else
+#	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
+#	echo "Contradictory axioms:"
+#	grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
+#	echo "Counter sat:"
+#	grep "SZS status Counter" < $filename | wc -l | tee -a $summary
+#	echo "Number of theorems checked by Coq:" | tee -a $summary
+#	grep Correct < $filename | wc -l | tee -a $summary
+#    fi
+#fi
+#fi
