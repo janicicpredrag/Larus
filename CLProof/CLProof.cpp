@@ -9,7 +9,14 @@ using namespace std;
 
 // ---------------------------------------------------------------------------------
 
-CLProof::CLProof() {}
+CLProof::CLProof() { mpProofEnd = NULL; }
+
+// ---------------------------------------------------------------------------------
+
+CLProof::~CLProof() {
+  if (mpProofEnd)
+    delete mpProofEnd;
+}
 
 // ---------------------------------------------------------------------------------
 
@@ -17,7 +24,7 @@ void CLProof::Clear() {
   mGoal.Clear();
   mAssumptions.clear();
   mMPs.clear();
-  // delete mpProofEnd;
+  delete mpProofEnd;
 }
 
 // ---------------------------------------------------------------------------------

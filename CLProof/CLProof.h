@@ -25,6 +25,7 @@ typedef struct {
 class CLProof {
 public:
   CLProof();
+  ~CLProof();
   void Clear();
   void SetTheory(Theory *pT);
   void SetTheorem(const CLFormula &theorem, const string &theoremName,
