@@ -13,6 +13,21 @@ CLProof::CLProof() { mpProofEnd = NULL; }
 
 // ---------------------------------------------------------------------------------
 
+CLProof::CLProof(const CLProof &proof) {
+  *this = proof;
+  if (dynamic_cast<const ByAssumption *>(proof.GetProofEnd()))
+    mpProofEnd = new ByAssumption(proof.GetProofEnd()->GetConjunctionFormula());
+  else if (dynamic_cast<const EFQ *>(proof.GetProofEnd()))
+    mpProofEnd = new EFQ();
+  else if (dynamic_cast<const CaseSplit *>(proof.GetProofEnd()))
+    mpProofEnd = new CaseSplit();
+  else
+    assert(false);
+  *mpProofEnd = *proof.GetProofEnd();
+}
+
+// ---------------------------------------------------------------------------------
+
 CLProof::~CLProof() {
   if (mpProofEnd)
     delete mpProofEnd;
@@ -76,10 +91,6 @@ void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
   m.instantiation = instantiation;
   m.new_witnesses = new_witnesses;
   mMPs.push_back(m);
-
-  // mMPs.push_back(tuple < ConjunctionFormula, DNFFormula, string, vector <
-  // pair < string, string > >, vector < pair < string, string > >
-  // >(from,mp,name,instantiation, new_witnesses));
 }
 
 // ---------------------------------------------------------------------------------
@@ -342,14 +353,14 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           f.SetArg(i, mpT->GetConstantName(nArgs[i]));
         proofTrace.push_back(f);
 
-        CLProof *subproof = new CLProof;
-        subproof->SetTheory(mpT);
-        subproof->AddAssumption(f); // add first case
-        bool r = subproof->DecodeSubproof(formula, sPredicates, sConstants,
-                                          encodedproof, proofTrace, false);
+        CLProof subproof;
+        subproof.SetTheory(mpT);
+        subproof.AddAssumption(f); // add first case
+        bool r = subproof.DecodeSubproof(formula, sPredicates, sConstants,
+                                         encodedproof, proofTrace, false);
         if (!r)
           return false;
-        pcs->AddSubproof(*subproof);
+        pcs->AddSubproof(subproof);
       } else if (nAxiom == eSecondCase) {
         Fact f;
         f.SetName(sPredicates[nPredicate]);
@@ -358,14 +369,14 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           f.SetArg(i, mpT->GetConstantName(nArgs[i]));
         proofTrace.push_back(f);
 
-        CLProof *subproof = new CLProof;
-        subproof->SetTheory(mpT);
-        subproof->AddAssumption(f); // add second case
-        bool r = subproof->DecodeSubproof(formula, sPredicates, sConstants,
-                                          encodedproof, proofTrace, false);
+        CLProof subproof;
+        subproof.SetTheory(mpT);
+        subproof.AddAssumption(f); // add second case
+        bool r = subproof.DecodeSubproof(formula, sPredicates, sConstants,
+                                         encodedproof, proofTrace, false);
         if (!r)
           return false;
-        pcs->AddSubproof(*subproof);
+        pcs->AddSubproof(subproof);
       }
       /*   else if (nAxiom == eEQSub) {
 
