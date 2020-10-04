@@ -19,6 +19,29 @@ match goal with
    | H:(?X1 /\ ?X2) |- _ => decompose [and] H; clear H
 end.
 
+Lemma split_conj_imp : forall A B C : Prop, (A -> (B /\ C)) <-> ((A->B) /\ (A->C)).
+Proof.
+intros.
+tauto.
+Qed.
+
+Lemma split_conj_forall : forall T: Type, forall (P Q: T -> Prop),
+ (forall X, P X /\ Q X) <-> ((forall X, P X) /\ (forall X, Q X)).
+Proof.
+intros P Q.
+split;intro H.
+split;auto;intro;apply H.
+spliter;auto.
+Qed.
+
+(* Splits conjunctions under forall *)
+Ltac strong_spliter := repeat
+ match goal with
+ | H:_ |- _ => progress (repeat (setoid_rewrite split_conj_imp in H );
+               repeat (setoid_rewrite (split_conj_forall) in H))
+  end;
+ spliter.
+
 Ltac splits :=
  repeat
  match goal with
@@ -48,9 +71,9 @@ Ltac one_of_disjunct :=
 Ltac rename_H H := let T := fresh in try rename H into T.
 
 Ltac applying t :=
-apply t;splits;(assumption || trivial || one_lemma || auto with Sym ).
+apply t;splits;(assumption || trivial || (strong_spliter;one_lemma) || (strong_spliter;auto with Sym) ).
 
-Ltac conclude := unshelve (spliter;remove_exists;one_of_disjunct);assumption.
+Ltac conclude := unshelve (strong_spliter;remove_exists;one_of_disjunct);assumption.
 
 Ltac contradict :=
  match goal with
