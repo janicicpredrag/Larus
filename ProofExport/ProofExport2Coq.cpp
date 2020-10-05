@@ -143,7 +143,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
                 outfile << "Lemma " << name << " : ";
                 OutputCLFormula(outfile, get<0>(T.Axiom(i)), name);
                 outfile << "Proof." << endl;    
-                outfile << "spliter;eauto with Sym." << endl;
+                outfile << "strong_spliter;eauto with Sym." << endl;
                 outfile << "Qed." << endl << endl;
                 outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym." << endl << endl;
             }
@@ -169,7 +169,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
         OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
         outfile << "." << endl;
         outfile << "Proof." << endl;    
-        outfile << "intros;spliter;eauto with Sym." << endl;
+        outfile << "intros;strong_spliter;eauto with Sym." << endl;
         outfile << "Qed." << endl << endl;
         outfile << "Hint Resolve " << T.mDerivedLemmas[i].name << " : Sym." << endl << endl;
     }
