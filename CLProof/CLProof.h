@@ -25,6 +25,8 @@ typedef struct {
 class CLProof {
 public:
   CLProof();
+  CLProof(const CLProof &proof);
+  ~CLProof();
   void Clear();
   void SetTheory(Theory *pT);
   void SetTheorem(const CLFormula &theorem, const string &theoremName,
@@ -154,6 +156,8 @@ public:
   ByAssumption(const ConjunctionFormula &f) { SetConjunctionFormula(f); }
   unsigned Size() { return 1; }
 };
+
+// ----------------------------------------------------------------------------
 
 class EFQ : public CLProofEnd {
   unsigned Size() { return 1; }
