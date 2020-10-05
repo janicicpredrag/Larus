@@ -26,8 +26,9 @@ def generate_graph(filename, list_of_provers, bench_directory, bench_display_nam
     plt.savefig(filename)
     plt.show()    
 
-with open('data.csv') as csvfile:
+with open('data2.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
     data= list( row for row in reader)
-    generate_graph("col-trans-graph.pdf", ["CLprover","vampire","eprover"], "col-trans", "Col transitivity", 100)
+    generate_graph("col-trans-graph.pdf", ["CLprover","vampire","eprover","zenon","nanocop","leancop","ChewTPTP"], "col-trans", "Col transitivity", 100)
+    generate_graph("euclid-graph.pdf", ["vampire","eprover"], "euclid", "Euclid", 100)
     
