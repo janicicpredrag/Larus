@@ -20,7 +20,8 @@ CLProof::CLProof(const CLProof &proof) {
   else if (dynamic_cast<const EFQ *>(proof.GetProofEnd()))
     mpProofEnd = new EFQ();
   else if (dynamic_cast<const CaseSplit *>(proof.GetProofEnd()))
-    mpProofEnd = new CaseSplit();
+    mpProofEnd =
+        new CaseSplit(*(dynamic_cast<const CaseSplit *>(proof.GetProofEnd())));
   else
     assert(false);
   *mpProofEnd = *proof.GetProofEnd();
