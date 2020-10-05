@@ -71,7 +71,7 @@ Ltac one_of_disjunct :=
 Ltac rename_H H := let T := fresh in try rename H into T.
 
 Ltac applying t :=
-apply t;splits;(assumption || trivial || (strong_spliter;one_lemma) || (strong_spliter;auto with Sym) ).
+apply t;splits;(assumption || trivial || (strong_spliter;one_lemma) || (strong_spliter;eauto with Sym) ).
 
 Ltac conclude := unshelve (strong_spliter;remove_exists;one_of_disjunct);assumption.
 
@@ -90,4 +90,6 @@ Ltac contradiction_on t := apply (negElimGen t);auto.
 
 Tactic Notation "by" "cases" "on" constr(t) :=
 (let H := hyp_of_type t in decompose [or] H; clear H;spliter).
+
+Hint Resolve not_eq_sym : Sym.
 
