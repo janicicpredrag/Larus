@@ -239,10 +239,19 @@ void ProofExport2Coq::OutputProof(ofstream& outfile, const CLProof& p, unsigned 
                 outfile << " " << inst[j].second;
             outfile << ")";
         }
-        else if ((p.GetMP(i).axiomName.find("ExcludedMiddle") != std::string::npos) ||
-                 (p.GetMP(i).axiomName.find("eq_excluded_middle") != std::string::npos))  {
+        else if (p.GetMP(i).axiomName.find("ExcludedMiddle") != std::string::npos)  {
             outfile << "by (destruct (classic (";
             std::size_t epos = p.GetMP(i).axiomName.find("ExcludedMiddle");
+            string pred_name = p.GetMP(i).axiomName.substr(0,epos);
+            outfile << pred_name;
+            vector<pair<string,string>> inst = p.GetMP(i).instantiation;
+            for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size(); j++)
+                outfile << " " << inst[j].second;
+            outfile << "));auto)";
+        }
+        else if (p.GetMP(i).axiomName.find("eq_excluded_middle") != std::string::npos) {
+                     outfile << "by (destruct (classic (";
+            std::size_t epos = p.GetMP(i).axiomName.find("_excluded_middle");
             string pred_name = p.GetMP(i).axiomName.substr(0,epos);
             outfile << pred_name;
             vector<pair<string,string>> inst = p.GetMP(i).instantiation;

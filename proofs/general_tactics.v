@@ -86,10 +86,18 @@ intros.
 contradiction.
 Qed.
 
-Ltac contradiction_on t := apply (negElimGen t);auto.
+Ltac contradiction_on t := apply (negElimGen t);strong_spliter;eauto with Sym.
 
 Tactic Notation "by" "cases" "on" constr(t) :=
 (let H := hyp_of_type t in decompose [or] H; clear H;spliter).
 
 Hint Resolve not_eq_sym : Sym.
+
+Require Export Classical.
+
+Lemma eq_excluded_middle : forall (T:Type) (A B:T), A = B \/ A <> B.
+Proof.
+intros.
+elim (classic (A=B));auto.
+Qed.
 
