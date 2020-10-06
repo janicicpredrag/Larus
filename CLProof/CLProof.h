@@ -105,6 +105,11 @@ private:
 
 class CaseSplit : public CLProofEnd {
 public:
+  CaseSplit() {}
+  CaseSplit(const CaseSplit &proof) {
+    mCases = proof.mCases;
+    mSubproofs = proof.mSubproofs;
+  }
   const CLProof &GetSubproof(size_t i) const {
     assert(i < mCases.size());
     return mSubproofs[i];

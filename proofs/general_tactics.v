@@ -89,9 +89,11 @@ Qed.
 Ltac contradiction_on t := apply (negElimGen t);strong_spliter;eauto with Sym.
 
 Tactic Notation "by" "cases" "on" constr(t) :=
-(let H := hyp_of_type t in decompose [or] H; clear H;spliter).
+(let H := hyp_of_type t in destruct H;spliter).
 
 Hint Resolve not_eq_sym : Sym.
+
+Ltac inline_lemma_solver := intros;strong_spliter; eauto 10 with Sym.
 
 Require Export Classical.
 
@@ -100,4 +102,6 @@ Proof.
 intros.
 elim (classic (A=B));auto.
 Qed.
+
+
 
