@@ -169,7 +169,7 @@ void ProofExport2Coq::OutputPrologue(ofstream& outfile, Theory& T, const CLProof
         OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
         outfile << "." << endl;
         outfile << "Proof." << endl;    
-        outfile << "intros;strong_spliter;eauto with Sym." << endl;
+        outfile << "inline_lemma_solver." << endl;
         outfile << "Qed." << endl << endl;
         outfile << "Hint Resolve " << T.mDerivedLemmas[i].name << " : Sym." << endl << endl;
     }
