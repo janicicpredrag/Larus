@@ -1,3 +1,4 @@
+file;prover;time;result;
 tptp-problems/col-trans/col-trans-0000.p; zenon; 0; Proved; 
 tptp-problems/col-trans/col-trans-0001.p; zenon; 0; Proved; 
 tptp-problems/col-trans/col-trans-0002.p; zenon; 0; Proved; 
@@ -11804,7 +11805,7 @@ tptp-problems/euclid-native-eq/023_lemma_NChelper.p; leancop; 1; Proved;
 tptp-problems/euclid-native-eq/023_lemma_NChelper.p.clausified.p; leancop; 31; Failed; 
 tptp-problems/euclid-native-eq/024_lemma_betweennesspreserved.p; leancop; 169; Failed; 
 tptp-problems/euclid-native-eq/024_lemma_betweennesspreserved.p.clausified.p; leancop; 31; Failed; 
-tptp-problems/euclid-native-eq/024_lemma_TTtransitive.p; tptp-problems/euclid-native-eq/006_lemma_3_5b.p; ChewTPTP; 1; Proved; 
+tptp-problems/euclid-native-eq/006_lemma_3_5b.p; ChewTPTP; 1; Proved; 
 tptp-problems/euclid-native-eq/006_lemma_3_5b.p.clausified.p; ChewTPTP; 0; Proved; 
 tptp-problems/euclid-native-eq/006_lemma_congruencesymmetric.p; ChewTPTP; 0; Proved; 
 tptp-problems/euclid-native-eq/006_lemma_congruencesymmetric.p.clausified.p; ChewTPTP; 0; Proved; 
