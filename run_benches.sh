@@ -345,8 +345,9 @@ do
 	success_string="SZS status Theorem"	 
         tm vampire --mode casc --time_limit "$time" "$file"
    else if  [[ $prover = "geo" ]]; then
-        success_string="END-OF-PROOF"
-        tm timeout $time geo -tptp_input -inputfile "$file"	
+            success_string="END-OF-PROOF"
+	    vampire --mode clausify "$file" > geo.p
+        tm timeout $time geo -tptp_input -inputfile geo.p	
    else if [[ $prover = "leancop" ]]; then
 	success_string="End of proof"
 	tm ~/provers/leancop21/leancop.sh  "$file" "$time" 
