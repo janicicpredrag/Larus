@@ -275,6 +275,9 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
                             .first.GetNumOfUnivVars();
         numOfExistVars = mpT->mCLaxioms[nAxiom - eNumberOfStepKinds]
                              .first.GetNumOfExistVars();
+      } else { // this branch is not used; eEQSub is not currently supported
+        numOfUnivVars = 0;
+        numOfExistVars = 0;
       }
 
       if (nAxiom == eQEDbyCases) {
@@ -532,7 +535,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         istringstream ss1(str);
         ConjunctionFormula cfPremises;
         unsigned noPremises;
-        size_t numOfUnivVars;
+        // size_t numOfUnivVars;
         noPremises = 2;
         for (unsigned int i = 0; i < noPremises; i++) {
           ss1 >> nFrom;
