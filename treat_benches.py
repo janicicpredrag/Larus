@@ -26,7 +26,7 @@ def generate_graph(filename, list_of_provers_colors, bench_directory, bench_disp
     plt.savefig(filename)
     plt.show()    
 
-with open('data2.csv') as csvfile:
+with open('data.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
     data= list( row for row in reader)
     big_list= [("CLprover","red","solid"),
