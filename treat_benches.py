@@ -35,7 +35,9 @@ with open('data.csv') as csvfile:
                ("zenon","darkblue","dotted"),
                ("nanocop","orange","-."),
                ("leancop","pink",":"),
-               ("ChewTPTP","purple","solid")]
+               ("ChewTPTP","purple","solid"),
+               ("geo","gold","solid")
+    ]
     generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", 100)
     generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", 100)
     generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", 100)
