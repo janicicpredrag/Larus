@@ -1,4 +1,5 @@
 import csv
+import sys
 import matplotlib.pyplot as plt
 
 
@@ -12,7 +13,27 @@ def number_of_benches(data, list_of_provers, bench_name):
         return(max(l))
     else:
         return(max(l))
-    
+
+
+def print_summary(data, list_of_provers, bench_names):
+    original_stdout = sys.stdout
+    with open('tab_results.tex','w') as f:
+        sys.stdout = f
+        print("""\\documentclass{article}
+\\begin{document}""")
+        print("\\begin{tabular}{ll"+"r"*len(bench_names)+"}")
+        print(" &  &  ", end='')
+        print(" & ".join(bench_names), end=' \\\\\n')
+        for x in list_of_provers:
+            print(x[0],end=" & Total &")
+            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
+            print("      & Proved & ", end='')
+            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Proved"])) for b in bench_names] ), end=' \\\\\n')
+            print("      & Failed & ", end='')
+            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Failed"])) for b in bench_names] ), end=' \\\\\n')
+        print("\\end{tabular}")
+        print("\\end{document}")
+        sys.stdout = original_stdout
 
 def generate_graph(filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
     for (prover_name,color_name,l_style) in list_of_provers_colors:
@@ -38,7 +59,8 @@ with open('data.csv') as csvfile:
                ("ChewTPTP","purple","solid"),
                ("geo","gold","solid")
     ]
-    generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", 100)
-    generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", 100)
-    generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", 100)
+    print_summary(data, big_list, ["coherent", "euclid", "col-trans"])
+  #  generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", 100)
+  #  generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", 100)
+  #  generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", 100)
   
