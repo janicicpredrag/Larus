@@ -15,7 +15,7 @@ def number_of_benches(data, list_of_provers, bench_name):
         return(max(l))
 
 
-def print_summary(data, list_of_provers, bench_names):
+def generate_tabular(list_of_provers, bench_names, maxtime):
     original_stdout = sys.stdout
     with open('tab_results.tex','w') as f:
         sys.stdout = f
@@ -26,18 +26,18 @@ def print_summary(data, list_of_provers, bench_names):
         print(" & ".join(bench_names), end=' \\\\\n')
         for x in list_of_provers:
             print(x[0],end=" & Total &")
-            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
+            print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
             print("      & Proved & ", end='')
-            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Proved"])) for b in bench_names] ), end=' \\\\\n')
+            print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Proved"])) for b in bench_names] ), end=' \\\\\n')
             print("      & Failed & ", end='')
-            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Failed"])) for b in bench_names] ), end=' \\\\\n')
+            print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Failed"])) for b in bench_names] ), end=' \\\\\n')
         print("\\end{tabular}")
         print("\\end{document}")
         sys.stdout = original_stdout
 
 def generate_graph(filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
     for (prover_name,color_name,l_style) in list_of_provers_colors:
-        plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name)
+        plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name.capitalize())
     plt.ylim(1,number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)+10) 
     plt.xlim(1,maxtime) 
     plt.xlabel('time in seconds') 
@@ -59,8 +59,9 @@ with open('data.csv') as csvfile:
                ("ChewTPTP","purple","solid"),
                ("geo","gold","solid")
     ]
-    print_summary(data, big_list, ["coherent", "euclid", "col-trans"])
-  #  generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", 100)
-  #  generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", 100)
-  #  generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", 100)
+    maxtime=100
+    generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
+    generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
+    generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+    generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
   
