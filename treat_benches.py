@@ -20,10 +20,13 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
     with open('Figures/'+'tab_results.tex','w') as f:
         sys.stdout = f
         print("""\\documentclass{article}
+\\usepackage{booktabs}
 \\begin{document}""")
         print("\\begin{tabular}{ll"+"r"*len(bench_names)+"}")
+        print("\\toprule")
         print(" &  &  ", end='')
         print(" & ".join(bench_names), end=' \\\\\n')
+        print("\\midrule")
         for x in list_of_provers:
             print(x[0].capitalize(),end=" & Total &")
             print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
@@ -31,6 +34,7 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
             print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Proved"])) for b in bench_names] ), end=' \\\\\n')
             print("      & Failed & ", end='')
             print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file'] and (row['result'].strip()=="Failed" or int(row['time']) > maxtime)])) for b in bench_names] ), end=' \\\\\n')
+        print("\\bottomrule")
         print("\\end{tabular}")
         print("\\end{document}")
         sys.stdout = original_stdout
