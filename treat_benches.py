@@ -25,12 +25,12 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
         print(" &  &  ", end='')
         print(" & ".join(bench_names), end=' \\\\\n')
         for x in list_of_provers:
-            print(x[0],end=" & Total &")
-            print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
+            print(x[0].capitalize(),end=" & Total &")
+            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file']])) for b in bench_names] ), end=' \\\\\n')
             print("      & Proved & ", end='')
             print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Proved"])) for b in bench_names] ), end=' \\\\\n')
             print("      & Failed & ", end='')
-            print(" & ".join([ str(len([row['prover'] for row in data if int(row['time']) <= maxtime and x[0] in row['prover'] and b in row['file']and row['result'].strip()=="Failed"])) for b in bench_names] ), end=' \\\\\n')
+            print(" & ".join([ str(len([row['prover'] for row in data if x[0] in row['prover'] and b in row['file'] and (row['result'].strip()=="Failed" or int(row['time']) > maxtime)])) for b in bench_names] ), end=' \\\\\n')
         print("\\end{tabular}")
         print("\\end{document}")
         sys.stdout = original_stdout
