@@ -17,7 +17,7 @@ def number_of_benches(data, list_of_provers, bench_name):
 
 def generate_tabular(list_of_provers, bench_names, maxtime):
     original_stdout = sys.stdout
-    with open('tab_results.tex','w') as f:
+    with open('Figures/'+'tab_results.tex','w') as f:
         sys.stdout = f
         print("""\\documentclass{article}
 \\begin{document}""")
@@ -38,13 +38,13 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
 def generate_graph(filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
     for (prover_name,color_name,l_style) in list_of_provers_colors:
         plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name.capitalize())
-    plt.ylim(1,number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)+10) 
+    plt.ylim(1,number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)) 
     plt.xlim(1,maxtime) 
     plt.xlabel('time in seconds') 
     plt.ylabel('number of problem solved') 
     plt.title('Results about ' + bench_display_name) 
     plt.legend() 
-    plt.savefig(filename)
+    plt.savefig('Figures/'+filename)
     plt.show()    
 
 def size_from_bench_filename(s):
