@@ -752,13 +752,6 @@ void Theory::normalizeToCL2() {
       it += normalizedAxioms.size() - 1;
     }
   }
-
-  if (mDefinitions.size() > 0) {
-    cout << "          Definitions : " << endl;
-    for (unsigned i = 0; i < mDefinitions.size(); i++)
-      cout << "          " << mDefinitions[i].first << " -> "
-           << mDefinitions[i].second << endl;
-  }
 }
 
 // ---------------------------------------------------------------------------------------

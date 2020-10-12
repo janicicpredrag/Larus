@@ -84,6 +84,14 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     T.normalizeToCL2();
     vector<pair<CLFormula, string>> output;
     theorem.NormalizeGoal(theoremName, to_string(0), output, T.mDefinitions);
+
+    if (T.mDefinitions.size() > 0) {
+      cout << "          Definitions : " << endl;
+      for (unsigned i = 0; i < T.mDefinitions.size(); i++)
+        cout << "          " << T.mDefinitions[i].first << " -> "
+             << T.mDefinitions[i].second << endl;
+    }
+
     if (output.size() > 1) {
       for (size_t j = 0; j < output.size() - 1; j++) {
         T.AddAxiom(output[j].first, output[j].second);

@@ -1019,7 +1019,7 @@ void CLFormula::NormalizeGoal(
     /* P => C1 | C2 | C3 gives  axioms: C1 => C12, C2 => C12... and the new
      * goal: P => C12 */
     Fact current = disjuncts[0];
-    for (size_t i = 1; i < numGoalDisjuncts - 1; i++)
+    for (size_t i = 1; i < numGoalDisjuncts; i++)
       current = MergeFacts(suffix, current, disjuncts[i]);
     for (size_t i = 0; i < numGoalDisjuncts; i++) {
       ConjunctionFormula conj;
@@ -1030,7 +1030,7 @@ void CLFormula::NormalizeGoal(
       disj.Add(conj1);
       CLFormula axiom(conj, disj);
       for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occuring variables
+           j++) // quantify only occurring variables
       {
         bool bAlreadyThere = false;
         for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
@@ -1042,6 +1042,8 @@ void CLFormula::NormalizeGoal(
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));
+
+      definitions.push_back(pair<Fact, DNFFormula>(current, GetGoal()));
     }
     ConjunctionFormula conj;
     conj.Add(current);
