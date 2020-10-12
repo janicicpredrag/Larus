@@ -1,10 +1,13 @@
 \documentclass{article}
+\usepackage{booktabs}
 \begin{document}
 \begin{tabular}{llrrr}
+\toprule
  &  &  coherent & euclid & col-trans \\
-Clprover & Total &0 & 234 & 1361 \\
-      & Proved & 0 & 80 & 1359 \\
-      & Failed & 0 & 154 & 2 \\
+\midrule
+Clprover & Total &64 & 234 & 1361 \\
+      & Proved & 32 & 80 & 1359 \\
+      & Failed & 32 & 154 & 2 \\
 Vampire & Total &64 & 234 & 1361 \\
       & Proved & 56 & 138 & 1361 \\
       & Failed & 8 & 96 & 0 \\
@@ -26,5 +29,6 @@ Chewtptp & Total &64 & 234 & 1361 \\
 Geo & Total &64 & 234 & 1361 \\
       & Proved & 54 & 123 & 1361 \\
       & Failed & 10 & 111 & 0 \\
+\bottomrule
 \end{tabular}
 \end{document}
