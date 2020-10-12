@@ -750,7 +750,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
    * F123 & F4 => Goal */
   ConjunctionFormula premises;
   size_t numPremises = GetPremises().GetSize();
-  if (numPremises <= 20) {
+  if (numPremises <= 100) {
     premises = GetPremises();
   } else {
     Fact current;
