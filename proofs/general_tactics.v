@@ -93,11 +93,19 @@ Tactic Notation "by" "cases" "on" constr(t) :=
 
 Hint Resolve not_eq_sym : Sym.
 
-Ltac inline_lemma_solver := intros;strong_spliter; eauto 10 with Sym || congruence.
+Ltac inline_lemma_solver := intros;strong_spliter; eauto 15 with Sym || congruence.
 
 Require Export Classical.
 
-Lemma eq_excluded_middle : forall (T:Type) (A B:T), A = B \/ A <> B.
+Lemma eq_neg_elim : forall {T:Type} (A B:T), A=B -> A<>B -> False.
+Proof.
+intros.
+apply H0.
+apply H.
+Qed.
+
+
+Lemma eq_excluded_middle : forall {T:Type} (A B:T), A = B \/ A <> B.
 Proof.
 intros.
 elim (classic (A=B));auto.
