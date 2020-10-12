@@ -47,6 +47,37 @@ def generate_graph(filename, list_of_provers_colors, bench_directory, bench_disp
     plt.savefig(filename)
     plt.show()    
 
+def size_from_bench_filename(s):
+    pos=s.rfind('/')
+    res=s[pos+1:pos+4]
+    if res.isdecimal():
+        return(int(res))
+    else:
+        return(-1)
+
+def pairs_size_vs_time(prover_name,maxtime):
+    return([(int(row['time']), row['file'], size_from_bench_filename(row['file'])) for row in data 
+        if int(row['time']) <= maxtime and 
+           size_from_bench_filename(row['file']) != -1 and
+           row['prover'].strip()==prover_name and
+           row['result'].strip()=="Proved" and 
+           "euclid" in row['file']]) 
+
+
+def generate_graph_size_vs_time(filename,provers,maxtime):
+    for prover_name,color,style in provers:
+        points=pairs_size_vs_time(prover_name,maxtime)
+        xs=[x[0] for x in points]
+        ys=[x[2] for x in points]
+        plt.plot(xs,ys,".", color=color, label=prover_name.capitalize() )
+    plt.xlabel('time in seconds') 
+    plt.ylabel('length of the formal proof') 
+    plt.title('Time vs size of the manual formal proof') 
+    plt.legend() 
+    plt.savefig(filename)
+    plt.show()    
+
+
 with open('data.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
     data= list( row for row in reader)
@@ -60,6 +91,8 @@ with open('data.csv') as csvfile:
                ("geo","gold","solid")
     ]
     maxtime=100
+    print(pairs_size_vs_time(["vampire","clprover"],maxtime))
+    generate_graph_size_vs_time("size_vs_time.pdf", big_list, 100)
     generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
     generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
     generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
