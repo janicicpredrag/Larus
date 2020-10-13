@@ -42,7 +42,7 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
 def generate_graph(filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
     for (prover_name,color_name,l_style) in list_of_provers_colors:
         plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name.capitalize())
-    plt.ylim(1,number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)) 
+    plt.ylim(1,1.05*number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)) 
     plt.xlim(1,maxtime) 
     plt.xlabel('time in seconds') 
     plt.xscale('log')
@@ -90,12 +90,12 @@ with open('data.csv') as csvfile:
     data= list( row for row in reader)
     big_list= [("CLprover","red","solid"),
                ("vampire","green","dashed"),
-               ("eprover","darkred","--"),
+               ("eprover","darkred",(0, (3, 1, 1, 1, 1, 1))),
                ("zenon","darkblue","dotted"),
-               ("nanocop","orange","-."),
-               ("leancop","pink",":"),
-               ("ChewTPTP","purple","solid"),
-               ("geo","gold","solid")
+               ("nanocop","orange",(0, (3, 10, 1, 10))),
+               ("leancop","pink",(0, (3, 1, 1, 1))),
+               ("ChewTPTP","purple",(0, (1, 10))),
+               ("geo","gold",(0, (3, 5, 1, 5)))
     ]
     maxtime=100
     print(pairs_size_vs_time(["vampire","clprover"],maxtime))
