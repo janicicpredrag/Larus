@@ -792,8 +792,8 @@ bool CLProof::CL2toCL() {
         mMPs[j].axiomName.find("sat") == string::npos) {
       int pos = mMPs[j].axiomName.find("AuxConjConcl");
       mMPs[j].axiomName = mMPs[j].axiomName.substr(0, pos);
-      mMPs[j].instantiation.clear();
-      mMPs[j].new_witnesses.clear();
+      // mMPs[j].instantiation.clear();
+      // mMPs[j].new_witnesses.clear();
     }
     // TODO this is ugly, derived lemmas should be distinguished in some better
     // way, not by name

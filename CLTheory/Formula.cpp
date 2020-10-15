@@ -750,7 +750,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
    * F123 & F4 => Goal */
   ConjunctionFormula premises;
   size_t numPremises = GetPremises().GetSize();
-  if (numPremises <= 20) {
+  if (numPremises <= 100) {
     premises = GetPremises();
   } else {
     Fact current;
@@ -815,7 +815,8 @@ void CLFormula::Normalize(const string &name, const string &suffix,
         DNFFormula disj;
         disj.Add(conj1);
         CLFormula axiom(conj, disj);
-        Fact current = GetGoal().GetElement(0).GetElement(j);
+        /*Fact current = GetGoal().GetElement(0).GetElement(j);
+
         for (size_t jj = 0; jj < current.GetArity();
              jj++) { // quantify only occuring variables
           if (UnivVarOrdinalNumber(current.GetArg(jj)) != -1 ||
@@ -829,7 +830,6 @@ void CLFormula::Normalize(const string &name, const string &suffix,
               axiom.mUniversalVars.push_back(current.GetArg(jj));
           }
         }
-
         for (size_t kk = 0; kk < GetPremises().GetSize(); kk++) {
           Fact current = GetPremises().GetElement(kk);
           for (size_t jj = 0; jj < current.GetArity();
@@ -845,7 +845,9 @@ void CLFormula::Normalize(const string &name, const string &suffix,
                 axiom.mUniversalVars.push_back(current.GetArg(jj));
             }
           }
-        }
+        }*/
+        axiom.mUniversalVars = mUniversalVars;
+        axiom.mExistentialVars = mExistentialVars;
         output.push_back(pair<CLFormula, string>(
             axiom, name + "AuxConjConcl" + std::to_string(count_aux++)));
         // output.push_back(pair<CLFormula,string>(axiom, name));

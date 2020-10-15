@@ -16,8 +16,8 @@ Ltac mysubst :=
    
 Ltac spliter := repeat
 match goal with
-   | H:(?X1 /\ ?X2) |- _ => decompose [and] H; clear H
-end.
+   | H:(?X1 /\ ?X2) |- _ => decompose [and] H;revert H
+end;intros.
 
 Lemma split_conj_imp : forall A B C : Prop, (A -> (B /\ C)) <-> ((A->B) /\ (A->C)).
 Proof.
@@ -93,7 +93,7 @@ Tactic Notation "by" "cases" "on" constr(t) :=
 
 Hint Resolve not_eq_sym : Sym.
 
-Ltac inline_lemma_solver := intros;strong_spliter; eauto 15 with Sym || congruence.
+Ltac inline_lemma_solver := intros;eauto 3 with Sym || (strong_spliter; eauto 15 with Sym || congruence).
 
 Require Export Classical.
 
