@@ -78,7 +78,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016" "ChewTPTP")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "iprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016" "ChewTPTP")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -121,6 +121,12 @@ do
         "eprover")
             echo "$opt selected"
             prover="eprover"
+            engine=""
+            break
+            ;;
+	"iprover")
+            echo "$opt selected"
+            prover="iprover"
             engine=""
             break
             ;;
@@ -316,6 +322,7 @@ tm() {
   local exit_code=$?
   printf >&2 " ~$(($(date +%s)-${start})) seconds. "
   echo -n $prover >> data.csv
+  echo -n "-h" "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
   echo -n ";" >> data.csv
   echo -n " $(($(date +%s)-${start})); " >> data.csv
   print_result
@@ -337,7 +344,10 @@ do
         tm ./CLprover -h -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
-        tm eprover -xAuto -tAuto --cpu-limit="$time" "$file" 
+        tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
+   else if [[ $prover = "iprover" ]]; then  
+        success_string="SZS status Theorem"
+        tm ~/provers/iProver_v3.1_e_bundle_static/iproveropt_v3.1_static --time_out_real "$time" "$file"
    else if [[ $prover = "zenon" ]]; then
         success_string="FOUND"
         tm zenon -itptp -max-time "$time" "$file" 
@@ -361,7 +371,7 @@ do
 	success_string="Unsatisfiable"
         vampire --mode clausify "$file" > chewing.p
         tm timeout $time ~/provers/ChewTPTP-master/ChewTPTP/bin/chewtptp -v chewing.p
-  fi fi fi fi fi fi fi fi fi
+  fi fi fi fi fi fi fi fi fi fi
  ((i++))
   echo -n "Number of theorems proved until now:" | tee -a $summary
   echo $proved 
