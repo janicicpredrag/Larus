@@ -102,10 +102,10 @@ with open('data-clprover-variants.csv') as csvfile:
                ("CLprover","red","solid")
     ]
     variants= [
-               ("CLproverursa","red",(0, (3, 5, 1, 10))),
+               ("CLproverursa","yellow",(0, (3, 5, 1, 10))),
                ("CLproverstl","green","dashed"),
                ("CLprover-i","blue","dotted"),
-               ("CLproverbase","yellow","solid"),
+               ("CLproverbase","red","solid"),
                ]
     maxtime=100
     generate_graph_size_vs_time("size_vs_time.pdf", big_list, maxtime)
