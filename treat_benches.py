@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 
 
 def number_solved_in_less_than(data, prover_name, bench_name, maxtime):
-    return([ len([ row for row in data if int(row['time'])<i and row['prover'].strip()==prover_name and row['result'].strip()=="Proved" and bench_name in row['file']]) for  i in range(1,maxtime)])
+    return([ len([ row for row in data if int(row['time'])<i and prover_name in row['prover'] and row['result'].strip()=="Proved" and bench_name in row['file']]) for  i in range(1,maxtime)])
 
 def number_of_benches(data, list_of_provers, bench_name):
-    l=[len([row for row in data if row['prover'].strip()==prover_name and bench_name in row['file']]) for prover_name in list_of_provers]
+    l=[len([row for row in data if prover_name in row['prover'].strip() and bench_name in row['file']]) for prover_name in list_of_provers]
     if min(l) != max(l):
         print("Warning not same number of benches for all provers !")
         return(max(l))
@@ -39,7 +39,7 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
         print("\\end{document}")
         sys.stdout = original_stdout
 
-def generate_graph(filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
+def generate_graph(data,filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
     for (prover_name,color_name,l_style) in list_of_provers_colors:
         plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name.capitalize())
     plt.ylim(1,1.05*number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)) 
@@ -88,20 +88,29 @@ def generate_graph_size_vs_time(filename,provers,maxtime):
 with open('data.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
     data= list( row for row in reader)
-    big_list= [("CLprover","red","solid"),
-               ("vampire","green","dashed"),
+with open('data-clprover-variants.csv') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=';')
+    data_clprover= list( row for row in reader)
+    big_list= [("vampire","green","dashed"),
                ("eprover","darkred",(0, (3, 1, 1, 1, 1, 1))),
-               ("zenon","darkblue","dotted"),
+               ("iprover","darkgreen",(0,(3,5,1,5))),
                ("nanocop","orange",(0, (3, 10, 1, 10))),
                ("leancop","pink",(0, (3, 1, 1, 1))),
+               ("zenon","darkblue","dotted"),
                ("ChewTPTP","purple",(0, (1, 10))),
-               ("geo","gold",(0, (3, 5, 1, 5)))
+               ("geo","gold",(0, (3, 5, 1, 5))),
+               ("CLprover","red","solid")
     ]
+    variants= [
+               ("CLproverursa","red",(0, (3, 5, 1, 10))),
+               ("CLproverstl","green","dashed"),
+               ("CLprover-i","blue","dotted"),
+               ("CLproverbase","yellow","solid"),
+               ]
     maxtime=100
-    print(pairs_size_vs_time(["vampire","clprover"],maxtime))
-    generate_graph_size_vs_time("size_vs_time.pdf", big_list, 100)
+    generate_graph_size_vs_time("size_vs_time.pdf", big_list, maxtime)
     generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
-    generate_graph("col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-    generate_graph("euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
-    generate_graph("cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
-  
+    generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
+    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+    generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
+    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
