@@ -122,8 +122,8 @@ with open('data-clprover-variants.csv') as csvfile:
                ]
     maxtime=100
     generate_graph_size_vs_time(data,"size_vs_time.pdf", big_list, maxtime)
-  #  generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
-  #  generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-  #  generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
-  #  generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
-  #  generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
+    generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
+    generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
+    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+    generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
+    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
