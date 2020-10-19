@@ -66,20 +66,33 @@ def pairs_size_vs_time(prover_name,maxtime):
     return([(int(row['time']), row['file'], size_from_bench_filename(row['file'])) for row in data 
         if int(row['time']) <= maxtime and 
            size_from_bench_filename(row['file']) != -1 and
-           row['prover'].strip()==prover_name and
+           prover_name in row['prover'].strip() and
            row['result'].strip()=="Proved" and 
            "euclid" in row['file']]) 
 
+def pourcentage_proved_vs_size(data,prover_name):
+    return(
+    [len([ row['file']
+    for row in data 
+      if prover_name in row['prover'].strip() and
+         row['result'].strip()=="Proved" and 
+         "euclid" in row['file'] and
+         size_from_bench_filename(row['file']) < i
+    ])*100/ len([ row['file']
+    for row in data 
+      if prover_name in row['prover'].strip() and
+         "euclid" in row['file'] and
+         size_from_bench_filename(row['file']) < i
+    ]) for i in range(7,300)])
 
-def generate_graph_size_vs_time(filename,provers,maxtime):
+
+def generate_graph_size_vs_time(data,filename,provers,maxtime):
     for prover_name,color,style in provers:
-        points=pairs_size_vs_time(prover_name,maxtime)
-        xs=[x[0] for x in points]
-        ys=[x[2] for x in points]
-        plt.plot(xs,ys,".", color=color, label=prover_name.capitalize() )
-    plt.xlabel('time in seconds') 
-    plt.ylabel('length of the formal proof') 
-    plt.title('Time vs size of the manual formal proof') 
+        plt.plot(pourcentage_proved_vs_size(data,prover_name),".", color=color, label=prover_name.capitalize() )
+    plt.ylabel('percentage proved') 
+    plt.xlabel('proofs smaller than') 
+    plt.xlim(7,300)
+    plt.title('Percentage of proofs found within 100 seconds vs size of the manual formal proof') 
     plt.legend() 
     plt.savefig(filename)
     plt.show()    
@@ -108,9 +121,9 @@ with open('data-clprover-variants.csv') as csvfile:
                ("CLproverbase","red","solid"),
                ]
     maxtime=100
-    generate_graph_size_vs_time("size_vs_time.pdf", big_list, maxtime)
-    generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
-    generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
-    generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
-    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
+    generate_graph_size_vs_time(data,"size_vs_time.pdf", big_list, maxtime)
+  #  generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
+  #  generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
+  #  generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+  #  generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
+  #  generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
