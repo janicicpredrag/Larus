@@ -94,7 +94,7 @@ def generate_graph_size_vs_time(data,filename,provers,maxtime):
     plt.xlim(7,300)
     plt.title('Percentage of proofs found within 100 seconds vs size of the manual formal proof') 
     plt.legend() 
-    plt.savefig(filename)
+    plt.savefig("Figures/"+filename)
     plt.show()    
 
 
