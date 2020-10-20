@@ -345,9 +345,9 @@ do
   echo -n "; " >> data.csv
   if [[ $prover = "CLprover" ]]; then
         success_string="SZS status Theorem"
-	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit"
+	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp" "$neaxioms" "$exaxioms" "$implicit"
 	success_string="SZS status Theorem"
-        tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file"
+        tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
         tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
