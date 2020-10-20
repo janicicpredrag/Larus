@@ -118,7 +118,8 @@ with open('data-clprover-variants.csv') as csvfile:
                ("zenon","darkblue","dotted"),
                ("ChewTPTP","purple",(0, (1, 10))),
                ("geo","gold",(0, (3, 5, 1, 5))),
-               ("CLprover","red","solid")
+               ("CLprover","red","solid"),
+               ("Coq-sauto","black",(0,(3,7,4,9)))
     ]
     variants= [
                ("CLproverursa","yellow",(0, (3, 5, 1, 10))),
