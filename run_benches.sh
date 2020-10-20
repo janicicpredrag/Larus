@@ -15,7 +15,7 @@ today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/clprover-results-$today.out"
 summary="results/clprover-summary-$today.out"
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans all" )
+options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans all" "Crafted hard" "Coq files")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -70,6 +70,16 @@ do
 	    echo "$opt selected"
             cp tptp-problems/col-trans/col-axioms-orig.ax tptp-problems/col-trans/col-axioms.ax
 	    benches="tptp-problems/col-trans/col-trans-*.p" 
+	    break
+	    ;;
+        "Crafted hard")
+	    echo "$opt selected"
+	    benches="tptp-problems/crafted-hard/*.p" 
+	    break
+	    ;;
+        "Coq files")
+	    echo "$opt selected"
+	    benches="coq-problems/*/*.v" 
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
@@ -379,8 +389,8 @@ do
         tm timeout $time ~/provers/ChewTPTP-master/ChewTPTP/bin/chewtptp -v chewing.p
    else if [[ $prover = "coqc" ]]; then
 	success_string="success"
-	tptp2coq "$file" > temporary.v
-	tm timeout $time coqc -R . Test temporary.v   
+#	tptp2coq "$file" > temporary.v
+	tm timeout $time coqc -R . Test $file   
   fi fi fi fi fi fi fi fi fi fi fi
  ((i++))
   echo -n "Number of theorems proved until now:" | tee -a $summary
