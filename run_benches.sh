@@ -322,7 +322,7 @@ tm() {
   local exit_code=$?
   printf >&2 " ~$(($(date +%s)-${start})) seconds. "
   echo -n $prover >> data.csv
-  echo -n "-h" "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
+  echo -n  "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
   echo -n ";" >> data.csv
   echo -n " $(($(date +%s)-${start})); " >> data.csv
   print_result
@@ -339,9 +339,9 @@ do
   echo -n "; " >> data.csv
   if [[ $prover = "CLprover" ]]; then
         success_string="SZS status Theorem"
-	echo  "-h" "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit"
+	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit"
 	success_string="SZS status Theorem"
-        tm ./CLprover -h -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file"
+        tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp -vcoq "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
         tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
