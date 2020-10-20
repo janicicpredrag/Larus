@@ -2,6 +2,12 @@ import csv
 import sys
 import matplotlib.pyplot as plt
 
+from matplotlib import rc
+rc('font',**{'family':'sans-serif','sans-serif':['Computer Modern Roman']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
+
 
 def number_solved_in_less_than(data, prover_name, bench_name, maxtime):
     return([ len([ row for row in data if int(row['time'])<i and prover_name in row['prover'] and row['result'].strip()=="Proved" and bench_name in row['file']]) for  i in range(1,maxtime)])
@@ -92,7 +98,7 @@ def generate_graph_size_vs_time(data,filename,provers,maxtime):
     plt.ylabel('percentage proved') 
     plt.xlabel('proofs smaller than') 
     plt.xlim(7,300)
-    plt.title('Percentage of proofs found within 100 seconds vs size of the manual formal proof') 
+    #plt.title('Percentage of proofs found within 100 seconds vs size of the manual formal proof') 
     plt.legend() 
     plt.savefig("Figures/"+filename)
     plt.show()    
