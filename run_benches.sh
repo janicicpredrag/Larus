@@ -78,7 +78,7 @@ done
 
 
 PS3='Please enter your engine: '
-options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "iprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016" "ChewTPTP")
+options2=("URSA" "STL" "SMT-LIA" "SMT-UFLIA" "SMT-BV" "SMT-UFBV" "eprover" "iprover" "zenon" "vampire" "Geo" "LeanCop" "NanoCop" "Isabelle 2016" "ChewTPTP" "Coq")
 select opt2 in "${options2[@]}"
 do
     case $opt2 in
@@ -169,6 +169,12 @@ do
 	    "ChewTPTP")
             echo "$opt selected"
             prover="ChewTPTP"
+            engine=""
+            break
+            ;;
+            "Coq")
+            echo "$opt selected"
+            prover="coqc"
             engine=""
             break
             ;;
@@ -371,7 +377,11 @@ do
 	success_string="Unsatisfiable"
         vampire --mode clausify "$file" > chewing.p
         tm timeout $time ~/provers/ChewTPTP-master/ChewTPTP/bin/chewtptp -v chewing.p
-  fi fi fi fi fi fi fi fi fi fi
+   else if [[ $prover = "coqc" ]]; then
+	success_string="success"
+	tptp2coq "$file" > temporary.v
+	tm timeout $time coqc -R . Test temporary.v   
+  fi fi fi fi fi fi fi fi fi fi fi
  ((i++))
   echo -n "Number of theorems proved until now:" | tee -a $summary
   echo $proved 
