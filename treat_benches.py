@@ -118,6 +118,7 @@ with open('data-clprover-variants.csv') as csvfile:
                ("CLproverursa","yellow",(0, (3, 5, 1, 10))),
                ("CLproverstl","green","dashed"),
                ("CLprover-i","blue","dotted"),
+               ("CLproverlia","purple",(0,(1,5,2,5))),
                ("CLproverbase","red","solid"),
                ]
     maxtime=100
