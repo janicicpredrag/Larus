@@ -55,7 +55,7 @@ def generate_graph(data,filename, list_of_provers_colors, bench_directory, bench
     #ax=plt.axes()
     #plt.xaxis.set_major_locator(ticker.FixedLocator([2,4,8,16,32,64,100]))  
     plt.ylabel('number of problem solved') 
-    plt.title('Results about ' + bench_display_name) 
+   #plt.title('Results about ' + bench_display_name) 
     plt.legend() 
     plt.savefig('Figures/'+filename)
     plt.show()    
@@ -120,8 +120,8 @@ with open('data-clprover-variants.csv') as csvfile:
                ("geo","gold",(0, (3, 5, 1, 5))),
                ("CLprover","red","solid"),
                ("Coq-sauto","black",(0,(3,7,4,9))),
-               ("Coq-firstorder","gray",(0,(3,4,4,9)))
-    ]
+               ("Coq-firstorder","gray",(0,(3,4,4,9))),
+               ("isabelle","red",(0,(3,10,4,9)))]
     variants= [
                ("CLproverursa","yellow",(0, (3, 5, 1, 10))),
                ("CLproverstl","green","dashed"),
@@ -130,9 +130,10 @@ with open('data-clprover-variants.csv') as csvfile:
                ("CLproverbase","red","solid"),
                ]
     maxtime=100
-    generate_graph_size_vs_time(data,"size_vs_time.pdf", big_list, maxtime)
-    generate_tabular(big_list, ["coherent", "euclid", "col-trans"], maxtime)
+    generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list, maxtime)
+    generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
     generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
     generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
     generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
+    generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
     generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
