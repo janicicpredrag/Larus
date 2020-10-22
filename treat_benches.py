@@ -118,16 +118,16 @@ with open('data-clprover-variants.csv') as csvfile:
                ("zenon","darkblue","dotted"),
                ("ChewTPTP","purple",(0, (1, 10))),
                ("geo","gold",(0, (3, 5, 1, 5))),
-               ("CLprover","red","solid"),
+               ("Larus","red","solid"),
                ("Coq-sauto","black",(0,(3,7,4,9))),
                ("Coq-firstorder","gray",(0,(3,4,4,9))),
                ("isabelle","red",(0,(3,10,4,9)))]
     variants= [
-               ("CLproverursa","yellow",(0, (3, 5, 1, 10))),
-               ("CLproverstl","green","dashed"),
-               ("CLprover-i","blue","dotted"),
-               ("CLproverlia","purple",(0,(1,5,2,5))),
-               ("CLproverbase","red","solid"),
+               ("Larusursa","yellow",(0, (3, 5, 1, 10))),
+               ("Larusstl","green","dashed"),
+               ("Larus-i","blue","dotted"),
+               ("Laruslia","purple",(0,(1,5,2,5))),
+               ("Larusbase","red","solid"),
                ]
     maxtime=100
     generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list, maxtime)
@@ -136,4 +136,4 @@ with open('data-clprover-variants.csv') as csvfile:
     generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
     generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
     generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
-    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for CLprover", maxtime)
+    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for Larus", maxtime)
