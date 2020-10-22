@@ -21,7 +21,7 @@ Variable a1_ : Universe.
 
 Variable ax1_1 : (dom_ a1_ /\ (dom_ a2_ /\ (dom_ a3_ /\ (dom_ a4_ /\ (dom_ a5_ /\ (dom_ a6_ /\ (dom_ a7_ /\ (dom_ a8_ /\ dom_ a9_)))))))).
 Variable ax2_2 : (forall A1 A2 A3 A4 A5 A6 A7 A8 A9 : Universe, ((dom_ A1 /\ (dom_ A2 /\ (dom_ A3 /\ (dom_ A4 /\ (dom_ A5 /\ (dom_ A6 /\ (dom_ A7 /\ (dom_ A8 /\ dom_ A9)))))))) -> p_ A1 A2 A3 A4 A5 A6 A7 A8 A9)).
-Variable ax3_3 : (p_ a9_ a9_ a9_ a9_ a9_ a9_ a9_ a9_ a9_ -> goal_).
+Variable ax3_3 : (p_ a9_ a8_ a7_ a6_ a5_ a4_ a3_ a2_ a1_ -> goal_).
 
 Theorem lemma9_4 : goal_.
 Proof.
