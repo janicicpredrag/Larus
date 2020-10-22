@@ -8,12 +8,13 @@ int main(int argc, char** argv)
     if (argc != 2) 
        return -1;
     
-    int n = atoi(argv[1]);
+    int m = atoi(argv[1]);
 
-    char s[100];
-    strcpy(s,argv[1]);    
-    strcpy(s+strlen(argv[1]),"-hard.p");
-
+for (int n=1; n<=m; n++)
+{ 
+   char s[100];
+    sprintf(s, "%i-hard.p", n);
+    
     FILE* h = fopen(s,"wt");
 
     fprintf(h, "fof(ax1, axiom, (");
@@ -34,9 +35,11 @@ int main(int argc, char** argv)
 
     fprintf(h, "fof(ax3, axiom, (p(");
     for (int i = 1; i<n; i++) 
-        fprintf(h, "a%i,", n);
-    fprintf(h, "a%i", n);
+        fprintf(h, "a%i,", n+1-i);
+    fprintf(h, "a%i", 1);
     fprintf(h, ") => goal)).\n");  
 
     fprintf(h, "fof(lemma%i, conjecture, goal).\n",n);
+    fclose (h);
+}
 } 
