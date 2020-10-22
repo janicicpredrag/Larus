@@ -12,8 +12,8 @@ maxProofLen=128
 startinglength=4
 success_string="FOUND"
 today=`date '+%Y_%m_%d__%H_%M_%S'`;
-filename="results/clprover-results-$today.out"
-summary="results/clprover-summary-$today.out"
+filename="results/Larus-results-$today.out"
+summary="results/Larus-summary-$today.out"
 PS3='Please enter your choice of benches: '
 options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans all" "Crafted hard" "Coq files")
 select opt in "${options[@]}"
@@ -94,37 +94,37 @@ do
     case $opt2 in
         "URSA")
             echo "$opt2 selected."
-            prover="CLprover"
+            prover="Larus"
             engine="-eursa"
             break
             ;;
         "STL")
             echo "$opt2 selected"
-            prover="CLprover"
+            prover="Larus"
             engine="-estl"
             break
             ;;
         "SMT-LIA")
             echo "$opt selected"
-            prover="CLprover"
+            prover="Larus"
             engine="-esmtlia"
             break
             ;;
         "SMT-UFLIA")
             echo "$opt selected"
-            prover="CLprover"
+            prover="Larus"
             engine="-esmtuflia"
             break
             ;;
         "SMT-BV")
             echo "$opt selected"
-            prover="CLprover"
+            prover="Larus"
             engine="-esmtbv"
             break
             ;;
         "SMT-UFBV")
             echo "$opt selected"
-            prover="CLprover"
+            prover="Larus"
             engine="-esmtufbv"
             break
             ;;
@@ -204,7 +204,7 @@ else
 fi
 
 
-if [ "$prover" = "CLprover" ]; then
+if [ "$prover" = "Larus" ]; then
  PS3='Please select axioms: '
  options3=("None" "All" "Excluded Middle Only" "Neg Elim Only")
  select opt3 in "${options3[@]}"
@@ -311,7 +311,7 @@ do
 done
 
 
-echo "Running clprover with engine: " $engine | tee -a $filename
+echo "Running Larus with engine: " $engine | tee -a $filename
 echo "Nesting:" $nesting | tee -a $filename
 echo "Time limit: " $time | tee -a $filename
 echo "Starting proof length" $startinglength | tee -a $filename
@@ -353,11 +353,11 @@ do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   echo -n $file >> data.csv
   echo -n "; " >> data.csv
-  if [[ $prover = "CLprover" ]]; then
+  if [[ $prover = "" ]]; then
         success_string="SZS status Theorem"
 	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp" "$neaxioms" "$exaxioms" "$implicit"
 	success_string="SZS status Theorem"
-        tm ./CLprover -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
+        tm larus -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
         tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
