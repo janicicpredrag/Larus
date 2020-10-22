@@ -1,6 +1,6 @@
 #############################################################################
-# Makefile for building: CLprover
-# Project:  CLprover.pro
+# Makefile for building: larus
+# Project:  larus.pro
 # Template: app
 #############################################################################
 
@@ -12,7 +12,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       =
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -O2 -std=c++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
 MKDIR         = mkdir -p
@@ -96,9 +96,9 @@ DIST          = 		CLTheory/Formula.h \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
 		import.cpp
-QMAKE_TARGET  = CLprover
+QMAKE_TARGET  = larus
 DESTDIR       = 
-TARGET        = CLprover
+TARGET        = larus
 
 
 first: all
