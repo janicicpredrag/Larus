@@ -45,7 +45,7 @@ Variable a1_ : Universe.
 
 Variable ax1_1 : (dom_ a1_ /\ (dom_ a2_ /\ (dom_ a3_ /\ (dom_ a4_ /\ (dom_ a5_ /\ (dom_ a6_ /\ (dom_ a7_ /\ (dom_ a8_ /\ (dom_ a9_ /\ (dom_ a10_ /\ (dom_ a11_ /\ (dom_ a12_ /\ (dom_ a13_ /\ (dom_ a14_ /\ (dom_ a15_ /\ (dom_ a16_ /\ (dom_ a17_ /\ (dom_ a18_ /\ (dom_ a19_ /\ (dom_ a20_ /\ (dom_ a21_ /\ (dom_ a22_ /\ (dom_ a23_ /\ (dom_ a24_ /\ (dom_ a25_ /\ (dom_ a26_ /\ (dom_ a27_ /\ (dom_ a28_ /\ (dom_ a29_ /\ (dom_ a30_ /\ (dom_ a31_ /\ (dom_ a32_ /\ dom_ a33_)))))))))))))))))))))))))))))))).
 Variable ax2_2 : (forall A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 A12 A13 A14 A15 A16 A17 A18 A19 A20 A21 A22 A23 A24 A25 A26 A27 A28 A29 A30 A31 A32 A33 : Universe, ((dom_ A1 /\ (dom_ A2 /\ (dom_ A3 /\ (dom_ A4 /\ (dom_ A5 /\ (dom_ A6 /\ (dom_ A7 /\ (dom_ A8 /\ (dom_ A9 /\ (dom_ A10 /\ (dom_ A11 /\ (dom_ A12 /\ (dom_ A13 /\ (dom_ A14 /\ (dom_ A15 /\ (dom_ A16 /\ (dom_ A17 /\ (dom_ A18 /\ (dom_ A19 /\ (dom_ A20 /\ (dom_ A21 /\ (dom_ A22 /\ (dom_ A23 /\ (dom_ A24 /\ (dom_ A25 /\ (dom_ A26 /\ (dom_ A27 /\ (dom_ A28 /\ (dom_ A29 /\ (dom_ A30 /\ (dom_ A31 /\ (dom_ A32 /\ dom_ A33)))))))))))))))))))))))))))))))) -> p_ A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 A12 A13 A14 A15 A16 A17 A18 A19 A20 A21 A22 A23 A24 A25 A26 A27 A28 A29 A30 A31 A32 A33)).
-Variable ax3_3 : (p_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ a33_ -> goal_).
+Variable ax3_3 : (p_ a33_ a32_ a31_ a30_ a29_ a28_ a27_ a26_ a25_ a24_ a23_ a22_ a21_ a20_ a19_ a18_ a17_ a16_ a15_ a14_ a13_ a12_ a11_ a10_ a9_ a8_ a7_ a6_ a5_ a4_ a3_ a2_ a1_ -> goal_).
 
 Theorem lemma33_4 : goal_.
 Proof.
