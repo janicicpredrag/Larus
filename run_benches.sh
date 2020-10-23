@@ -79,7 +79,7 @@ do
 	    ;;
         "Coq files")
 	    echo "$opt selected"
-	    benches="coq-problems/*/*.v" 
+	    benches="coq-problems/col-trans/*.v" 
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
