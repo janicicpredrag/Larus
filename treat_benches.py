@@ -1,12 +1,13 @@
 import csv
 import sys
 import matplotlib.pyplot as plt
+import numpy as np
 
 from matplotlib import rc
-rc('font',**{'family':'sans-serif','sans-serif':['Computer Modern Roman']})
+#rc('font',**{'family':'sans-serif','sans-serif':['Computer Modern Roman']})
 ## for Palatino and other serif fonts use:
 #rc('font',**{'family':'serif','serif':['Palatino']})
-rc('text', usetex=True)
+#rc('text', usetex=True)
 
 
 def number_solved_in_less_than(data, prover_name, bench_name, maxtime):
@@ -76,29 +77,43 @@ def pairs_size_vs_time(prover_name,maxtime):
            row['result'].strip()=="Proved" and 
            "euclid" in row['file']]) 
 
-def pourcentage_proved_vs_size(data,prover_name):
-    return(
-    [len([ row['file']
-    for row in data 
-      if prover_name in row['prover'].strip() and
-         row['result'].strip()=="Proved" and 
-         "euclid" in row['file'] and
-         size_from_bench_filename(row['file']) < i
-    ])*100/ len([ row['file']
-    for row in data 
-      if prover_name in row['prover'].strip() and
-         "euclid" in row['file'] and
-         size_from_bench_filename(row['file']) < i
-    ]) for i in range(7,300)])
+def is_in_size_interval(row,a,b):
+    size = size_from_bench_filename(row['file'])
+    return(size >= a and size <= b)
+
+def pourcentage_proved_interval(data,prover_name,a,b):
+    selection=[row for row in data if prover_name in row['prover'] and "euclid" in row['file']]
+    selection_interval=list(filter(lambda row: is_in_size_interval(row,a,b),selection))
+    selection_proved=list(filter(lambda row: "Proved" in row['result'].strip(), selection_interval))
+    total=len(selection_interval)
+    proved=len(selection_proved)
+    if total!=0:
+        percentage=proved/total *100
+    else:
+     percentage=0
+    return(percentage)
+
+def pourcentage_proved_vs_size(data,prover_name,intervals):
+   return(
+    [pourcentage_proved_interval(data,prover_name,i,j) for (i,j) in  intervals])
 
 
 def generate_graph_size_vs_time(data,filename,provers,maxtime):
+    intervals=[(6,10),(11,20),(21,50),(51,100),(101,500)]
+    labels=list(map(lambda p: str(p[0])+"-"+str(p[1]), intervals))
+    x = np.arange(len(labels)) 
+    fig, ax = plt.subplots()
+    bar_width=0.05
+    shifting=len(provers)*bar_width / 2.0
+    i=0
     for prover_name,color,style in provers:
-        plt.plot(pourcentage_proved_vs_size(data,prover_name),".", color=color, label=prover_name.capitalize() )
+        i=i+1
+        print(pourcentage_proved_vs_size(data,prover_name,intervals))
+        plt.bar(x+i*bar_width-shifting, pourcentage_proved_vs_size(data,prover_name,intervals), width=bar_width, color=color, label=prover_name.capitalize() )
     plt.ylabel('percentage proved') 
-    plt.xlabel('proofs smaller than') 
-    plt.xlim(7,300)
-    #plt.title('Percentage of proofs found within 100 seconds vs size of the manual formal proof') 
+    plt.xlabel('size intervals') 
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
     plt.legend() 
     plt.savefig("Figures/"+filename)
     plt.show()    
