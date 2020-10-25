@@ -99,7 +99,7 @@ def pourcentage_proved_vs_size(data,prover_name,intervals):
 
 
 def generate_graph_size_vs_time(data,filename,provers,maxtime):
-    intervals=[(6,10),(11,20),(21,50),(51,100),(101,500)]
+    intervals=[(1,10),(11,20),(21,50),(51,100),(101,500)]
     labels=list(map(lambda p: str(p[0])+"-"+str(p[1]), intervals))
     x = np.arange(len(labels)) 
     fig, ax = plt.subplots()
