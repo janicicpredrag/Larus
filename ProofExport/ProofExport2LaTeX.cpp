@@ -4,6 +4,18 @@
 
 // ---------------------------------------------------------------------------------
 
+string latexize(string s) {
+  string result;
+  for (unsigned j = 0; j < s.size(); j++) {
+    if (s[j] == '_')
+      result += string(1, '\\');
+    result += string(1, s[j]);
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------------
+
 void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
                                         const string &name) {
   if (name != "")
@@ -98,8 +110,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
   outfile << "\\begin{document}" << endl << endl;
 
-  outfile << "\\title{Proof of theorem ,," << p.GetTheoremName() << "``}"
-          << endl;
+  outfile << "\\title{Proof of theorem ,," << latexize(p.GetTheoremName())
+          << "``}" << endl;
   outfile << "\\author{CLprover}" << endl;
   outfile << "\\maketitle" << endl << endl;
 
@@ -110,7 +122,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
       outfile << "\\item ";
       OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)),
-                      get<1>(T.OriginalAxiom(i)));
+                      latexize(get<1>(T.OriginalAxiom(i))));
     }
     outfile << "\\end{enumerate}" << endl << endl;
     outfile << "\\hrulefill" << endl << endl;
@@ -123,7 +135,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
     for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
       outfile << "\\item ";
-      outfile << T.mDerivedLemmas[i].name << " : $";
+      outfile << latexize(T.mDerivedLemmas[i].name) << " : $";
       if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
         outfile << "\\forall \\; ";
         for (size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size();
@@ -148,8 +160,45 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   }
 
   outfile << "\\begin{theorem}" << endl;
-  OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
+  OutputCLFormula(outfile, p.GetTheorem(), latexize(p.GetTheoremName()));
   outfile << "\\end{theorem}" << endl << endl;
+  outfile << "\\hrulefill" << endl << endl;
+  outfile << "\\vspace{3mm}" << endl;
+
+  DNFFormula fout;
+  Fact factout;
+  map<string, string> inst = p.GetInstantiation();
+  ConjunctionFormula cf = p.GetTheorem().GetPremises();
+
+  if (p.GetTheorem().GetNumOfUnivVars() > 0) {
+    outfile << "Instantiation used: ";
+    for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
+      outfile << "$" << p.GetTheorem().GetUnivVar(i) << "$"
+              << " $\\mapsto$ "
+              << "$" << inst.find(p.GetTheorem().GetUnivVar(i))->second << "$";
+      if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
+        outfile << ", ";
+    }
+    outfile << "." << endl << endl;
+  }
+
+  outfile << "From assumptions: ";
+  for (unsigned i = 0; i < cf.GetSize(); i++) {
+    T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
+    outfile << "$";
+    OutputFact(outfile, factout);
+    outfile << "$";
+    // if (i + 1 != cf.GetSize())
+    outfile << ", ";
+  }
+  // outfile << endl;
+  outfile << " it should be proved: ";
+  T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
+  outfile << "$";
+  OutputDNF(outfile, fout);
+  outfile << "$";
+  outfile << "." << endl << endl;
+
   outfile << "\\hrulefill" << endl << endl;
   outfile << "\\vspace{3mm}" << endl;
 
@@ -173,10 +222,18 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
                                     unsigned level) {
   if (p.NumOfCLAssumptions() > 0)
     for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
-      outfile << "\\proofstep{" << level << "}{Assumption: ";
+      if (level == 0)
+        outfile << "\\proofstep{" << level << "}{Assumption: ";
+      else {
+        outfile << "\\proofstep{" << level << "}{Case ";
+        level++;
+      }
       outfile << "$";
       OutputDNF(outfile, p.GetCLAssumption(i));
-      outfile << "$ }" << endl;
+      if (level == 0)
+        outfile << "$ }" << endl;
+      else
+        outfile << "$: }" << endl;
     }
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
     outfile << "\\proofstep{" << level << "}{MP application: $";
@@ -193,9 +250,9 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
         else
           outfile << " ";
       }
-      outfile << ", ";
+      // outfile << ", ";
     }
-    outfile << "by axiom " << p.GetMP(i).axiomName;
+    outfile << "by axiom " << latexize(p.GetMP(i).axiomName);
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     vector<pair<string, string>> new_witnesses = p.GetMP(i).new_witnesses;
     if (instantiation.size() > new_witnesses.size()) {
@@ -256,6 +313,7 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile,
 void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile, const EFQ * /*efq*/,
                                        unsigned level) {
   outfile << "\\proofstep{" << level << "}{Proved by EFQ!}" << endl;
+  level--;
 }
 
 // ---------------------------------------------------------------------------------

@@ -72,7 +72,8 @@ public:
 
   const CLFormula &GetTheorem() const { return mTheorem; }
   const string &GetTheoremName() const { return mTheoremName; }
-  const map<string, string> &GetInstantiation() const { return mInstantiation; }
+  const map<string, string> GetInstantiation() const { return mInstantiation; }
+  const CLFormula &GetGoal() const { return mGoal; }
 
 private:
   Theory *mpT;
