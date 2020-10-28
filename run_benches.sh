@@ -79,7 +79,7 @@ do
 	    ;;
         "Coq files")
 	    echo "$opt selected"
-	    benches="coq-problems/col-trans/*.v" 
+	    benches="coq-problems/crafted-hard/*.v" 
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
@@ -353,11 +353,11 @@ do
   echo No: $i; echo "Trying file $file ..." | tee -a $filename
   echo -n $file >> data.csv
   echo -n "; " >> data.csv
-  if [[ $prover = "" ]]; then
+  if [[ $prover = "Larus" ]]; then
         success_string="SZS status Theorem"
 	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp" "$neaxioms" "$exaxioms" "$implicit"
 	success_string="SZS status Theorem"
-        tm larus -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
+        tm ./larus -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
         tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
