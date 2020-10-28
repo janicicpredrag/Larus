@@ -103,13 +103,14 @@ def generate_graph_size_vs_time(data,filename,provers,maxtime):
     labels=list(map(lambda p: str(p[0])+"-"+str(p[1]), intervals))
     x = np.arange(len(labels)) 
     fig, ax = plt.subplots()
-    bar_width=0.05
-    shifting=len(provers)*bar_width / 2.0
+#    bar_width=0.05
+#    shifting=len(provers)*bar_width / 2.0
     i=0
-    for prover_name,color,style in provers:
+    for prover_name,color,l_style in provers:
         i=i+1
-        print(pourcentage_proved_vs_size(data,prover_name,intervals))
-        plt.bar(x+i*bar_width-shifting, pourcentage_proved_vs_size(data,prover_name,intervals), width=bar_width, color=color, label=prover_name.capitalize() )
+        
+        plt.plot(x, pourcentage_proved_vs_size(data,prover_name,intervals),  color=color, linestyle=l_style, label=prover_name.capitalize() )
+ #      plt.plot(x+i*bar_width-shifting, pourcentage_proved_vs_size(data,prover_name,intervals), width=bar_width, color=color, label=prover_name.capitalize() )
     plt.ylabel('percentage proved') 
     plt.xlabel('size intervals') 
     ax.set_xticks(x)
