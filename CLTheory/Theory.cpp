@@ -415,16 +415,24 @@ size_t Theory::GetSymbolArity(string p) {
 
 string Theory::MakeNewConstant() {
   unsigned id = mConstants.size() + mConstantsPermissible.size();
-  string s;
+  string s, ss;
   if (id < 26) {
     s = "a";
     s[0] += id;
-    while (IsConstant(s) || mOccuringSymbols.find(s) != mOccuringSymbols.end())
-      s += to_string(id);
+    ss = s;
+    unsigned counter = 1;
+    while (IsConstant(s) ||
+           mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+      s = ss + to_string(counter++);
+    }
   } else {
     s = "c" + to_string(id);
-    while (IsConstant(s) || mOccuringSymbols.find(s) != mOccuringSymbols.end())
-      s += to_string(id);
+    ss = s;
+    unsigned counter = 1;
+    while (IsConstant(s) ||
+           mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+      s = ss + to_string(counter++);
+    }
   }
   mConstants.push_back(s);
   return s;
