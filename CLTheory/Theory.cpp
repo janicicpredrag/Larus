@@ -433,18 +433,20 @@ string Theory::MakeNewConstant() {
 // --------------------------------------------------------------
 
 string Theory::GetConstantName(unsigned id) const {
-  assert(id < mConstants.size() + mConstantsPermissible.size());
-
   if (id >= mConstants.size() + mConstantsPermissible.size()) {
     string s;
     if (id < 26) {
-      // s = "ca";
       s = "a";
       s[0] += id;
-      if (IsConstant(s))
-        s = "c" + to_string(id);
-    } else
+      while (IsConstant(s) ||
+             mOccuringSymbols.find(s) != mOccuringSymbols.end())
+        s += to_string(id);
+    } else {
       s = "c" + to_string(id);
+      while (IsConstant(s) ||
+             mOccuringSymbols.find(s) != mOccuringSymbols.end())
+        s += to_string(id);
+    }
     return s;
   }
   return mConstants[id];
