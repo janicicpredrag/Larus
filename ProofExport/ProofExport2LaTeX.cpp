@@ -182,7 +182,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     outfile << "." << endl << endl;
   }
 
-  outfile << "From assumptions: ";
+  if (cf.GetSize() > 0)
+    outfile << "From assumptions: ";
   for (unsigned i = 0; i < cf.GetSize(); i++) {
     T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
     outfile << "$";
@@ -192,7 +193,10 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     outfile << ", ";
   }
   // outfile << endl;
-  outfile << " it should be proved: ";
+  if (cf.GetSize() > 0)
+    outfile << " it should be proved: ";
+  else
+    outfile << "It should be proved: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
   outfile << "$";
   OutputDNF(outfile, fout);

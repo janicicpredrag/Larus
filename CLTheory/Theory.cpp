@@ -414,14 +414,18 @@ size_t Theory::GetSymbolArity(string p) {
 // --------------------------------------------------------------
 
 string Theory::MakeNewConstant() {
-  // return GetConstantName(miConstantsCounter++);
   unsigned id = mConstants.size() + mConstantsPermissible.size();
   string s;
   if (id < 26) {
-    s = "ca";
-    s[1] += id;
-  } else
+    s = "a";
+    s[0] += id;
+    while (IsConstant(s) || mOccuringSymbols.find(s) != mOccuringSymbols.end())
+      s += to_string(id);
+  } else {
     s = "c" + to_string(id);
+    while (IsConstant(s) || mOccuringSymbols.find(s) != mOccuringSymbols.end())
+      s += to_string(id);
+  }
   mConstants.push_back(s);
   return s;
 }
@@ -429,22 +433,21 @@ string Theory::MakeNewConstant() {
 // --------------------------------------------------------------
 
 string Theory::GetConstantName(unsigned id) const {
+  assert(id < mConstants.size() + mConstantsPermissible.size());
+
   if (id >= mConstants.size() + mConstantsPermissible.size()) {
     string s;
     if (id < 26) {
-      s = "ca";
-      s[1] += id;
+      // s = "ca";
+      s = "a";
+      s[0] += id;
+      if (IsConstant(s))
+        s = "c" + to_string(id);
     } else
       s = "c" + to_string(id);
     return s;
   }
   return mConstants[id];
-  /*    if (id < 27) {
-          string s = "a";
-          s[0] += id;
-          return s;
-      }
-      return "p" + to_string(id);*/
 }
 
 // --------------------------------------------------------------
