@@ -442,18 +442,24 @@ string Theory::MakeNewConstant() {
 
 string Theory::GetConstantName(unsigned id) const {
   if (id >= mConstants.size() + mConstantsPermissible.size()) {
-    string s;
+    string s, ss;
     if (id < 26) {
       s = "a";
       s[0] += id;
+      ss = s;
+      unsigned counter = 1;
       while (IsConstant(s) ||
-             mOccuringSymbols.find(s) != mOccuringSymbols.end())
-        s += to_string(id);
+             mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+        s = ss + to_string(counter++);
+      }
     } else {
       s = "c" + to_string(id);
+      ss = s;
+      unsigned counter = 1;
       while (IsConstant(s) ||
-             mOccuringSymbols.find(s) != mOccuringSymbols.end())
-        s += to_string(id);
+             mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+        s = ss + to_string(counter++);
+      }
     }
     return s;
   }
