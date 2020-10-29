@@ -72,14 +72,14 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
-        outfile << "\\neg " << f.GetName().substr(ns, string::npos);
+        outfile << "\\neg " << latexize(f.GetName().substr(ns, string::npos));
       else
-        outfile << f.GetName();
+        outfile << latexize(f.GetName());
       if (f.GetArity() > 0) {
         outfile << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          outfile << f.GetArg(i) << ", ";
-        outfile << f.GetArg(f.GetArity() - 1);
+          outfile << latexize(f.GetArg(i)) << ", ";
+        outfile << latexize(f.GetArg(f.GetArity() - 1));
         outfile << ")";
       }
     }
@@ -171,37 +171,43 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   ConjunctionFormula cf = p.GetTheorem().GetPremises();
 
   if (p.GetTheorem().GetNumOfUnivVars() > 0) {
-    outfile << "Instantiation used: ";
+    outfile << "\\noindent Consider arbitrary ";
     for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-      outfile << "$" << p.GetTheorem().GetUnivVar(i) << "$"
-              << " $\\mapsto$ "
-              << "$" << inst.find(p.GetTheorem().GetUnivVar(i))->second << "$";
+      // outfile << "$" << p.GetTheorem().GetUnivVar(i) << " \\mapsto$ ";
+      outfile << "$" << inst.find(p.GetTheorem().GetUnivVar(i))->second << "$";
       if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
         outfile << ", ";
     }
-    outfile << "." << endl << endl;
+    outfile << " ";
+    // outfile << "." << endl << endl;
   }
 
-  if (cf.GetSize() > 0)
-    outfile << "From assumptions: ";
-  for (unsigned i = 0; i < cf.GetSize(); i++) {
-    T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
-    outfile << "$";
-    OutputFact(outfile, factout);
-    outfile << "$";
-    // if (i + 1 != cf.GetSize())
-    outfile << ", ";
+  if (cf.GetSize() > 0) {
+    if (p.GetTheorem().GetNumOfUnivVars() > 0)
+      outfile << "such that: $$";
+    else
+      outfile << "\\noindent The assumptions are: $$";
+    for (unsigned i = 0; i < cf.GetSize(); i++) {
+      T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
+      OutputFact(outfile, factout);
+      outfile << ", ";
+    }
+    outfile << "$$";
   }
-  // outfile << endl;
-  if (cf.GetSize() > 0)
-    outfile << " it should be proved: ";
-  else
-    outfile << "It should be proved: ";
+  outfile << "It should be proved that it holds: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
-  outfile << "$";
+  outfile << "$$";
+
+  for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
+    outfile << "\\exists ";
+    outfile << p.GetTheorem().GetExistVar(i);
+    if (i + 1 != p.GetTheorem().GetNumOfExistVars())
+      outfile << ", ";
+    outfile << "\\;";
+  }
+
   OutputDNF(outfile, fout);
-  outfile << "$";
-  outfile << "." << endl << endl;
+  outfile << ".$$" << endl << endl;
 
   outfile << "\\hrulefill" << endl << endl;
   outfile << "\\vspace{3mm}" << endl;
@@ -224,7 +230,7 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
 
 void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
                                     unsigned level) {
-  if (p.NumOfCLAssumptions() > 0)
+  if (p.NumOfCLAssumptions() > 0 && level > 0)
     for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
       if (level == 0)
         outfile << "\\proofstep{" << level << "}{Assumption: ";
@@ -240,7 +246,20 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
         outfile << "$: }" << endl;
     }
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-    outfile << "\\proofstep{" << level << "}{MP application: $";
+    outfile << "\\proofstep{" << level << "}{" /*MP application:*/;
+
+    vector<pair<string, string>> new_witnesses = p.GetMP(i).new_witnesses;
+    if (new_witnesses.size() > 0) {
+      outfile << "Let $";
+      for (size_t j = 0; j != new_witnesses.size(); j++) {
+        outfile << new_witnesses[j].second;
+        if (j + 1 != new_witnesses.size())
+          outfile << ", ";
+      }
+      outfile << "$ be such that ";
+    }
+    outfile << "$";
+
     OutputDNF(outfile, p.GetMP(i).conclusion);
     outfile << "$ (";
     if (p.GetMP(i).CLfrom.size() > 0) {
@@ -256,27 +275,17 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
       }
       // outfile << ", ";
     }
+
     outfile << "by axiom " << latexize(p.GetMP(i).axiomName);
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
-    vector<pair<string, string>> new_witnesses = p.GetMP(i).new_witnesses;
     if (instantiation.size() > new_witnesses.size()) {
       outfile << "; ";
       outfile << "{\\scriptsize instantiation: ";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        outfile << instantiation[j].first << " $\\mapsto$ "
-                << instantiation[j].second;
-        if (j + 1 != instantiation.size())
-          outfile << ", ";
-      }
-      outfile << ";}";
-    }
-    if (new_witnesses.size() > 0) {
-      outfile << "{\\scriptsize $\\;\\;$ new witnesses: ";
-      for (size_t j = 0; j != new_witnesses.size(); j++) {
-        outfile << new_witnesses[j].first << " $\\mapsto$ "
-                << new_witnesses[j].second;
-        if (j + 1 != new_witnesses.size())
+        outfile << (instantiation[j].first) << " $\\mapsto$ "
+                << " $" << latexize(instantiation[j].second) << "$";
+        if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }
       outfile << "}";
@@ -316,7 +325,8 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile,
 
 void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile, const EFQ * /*efq*/,
                                        unsigned level) {
-  outfile << "\\proofstep{" << level << "}{Proved by EFQ!}" << endl;
+  outfile << "\\proofstep{" << level << "}{Contradiction!}"
+          << endl; /*Proved by EFQ!*/
   level--;
 }
 
