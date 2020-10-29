@@ -283,7 +283,8 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
       outfile << "{\\scriptsize instantiation: ";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        outfile << (instantiation[j].first) << " $\\mapsto$ "
+        outfile << " $" << (instantiation[j].first) << "$"
+                << " $\\mapsto$ "
                 << " $" << latexize(instantiation[j].second) << "$";
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";

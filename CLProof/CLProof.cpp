@@ -622,10 +622,10 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           ss >> nPredicate1;
           for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]);
                i++) {
-            ss >> nArgs1[i];
             if (sConstants.find(nArgs1[i]) == sConstants.end() &&
                 numOfExistVars == 0)
               nArgs1[i] = 0; // eliminate spurious constants, also for inst[]
+            ss >> nArgs1[i];
           }
         }
 
