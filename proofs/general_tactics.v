@@ -93,7 +93,7 @@ Tactic Notation "by" "cases" "on" constr(t) :=
 
 Hint Resolve not_eq_sym : Sym.
 
-Ltac inline_lemma_solver := intros;eauto 3 with Sym || (strong_spliter; eauto 15 with Sym || congruence).
+Ltac inline_lemma_solver := intros;eauto 3 with Sym || (strong_spliter; eauto 4 with Sym || congruence).
 
 Require Export Classical.
 
