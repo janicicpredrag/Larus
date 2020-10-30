@@ -3,7 +3,7 @@
 Larus is a prover for coherent logic, a fragment of first order logic. It has several proving
 engines available. One is based on forward chaining and instantiations. The others are based on
 encoding a proof of the theorem being proved to SAT or SMT. Encoding to SAT is performed via
-the tool URSA. SAT solving is done using MiniSAT. 
+the tool URSA. SAT solving is done using the embedded Sat solver MiniSAT (http://minisat.se/). 
 Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 
 ## Install
@@ -13,9 +13,9 @@ To build it, just type make in the root folder.
 ## Depedencies
 
 Larus can use the following external tools:
- - URSA
- - Z3
- - Vampire
+ - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip)
+ - Z3 (https://github.com/Z3Prover/z3)
+ - Vampire (https://vprover.github.io/)
  
 ## Input
  
@@ -35,7 +35,7 @@ CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesti
 
    -i                   without inlining simple axioms; default is true
 
-   -x                   find a proof of lenght equal to the given length; default it false = length <= n
+   -x                   find a proof of length equal to the given length; default it false = length <= n
 
    -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv); 
                         examples: -eursa; default: stl
