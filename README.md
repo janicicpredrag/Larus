@@ -35,7 +35,7 @@ CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesti
 
    -i                   without inlining simple axioms; default is true
 
-   -x                   find a proof of lenght equal to the given length; default it false = length <= n
+   -x                   find a proof of length equal to the given length; default it false = length <= n
 
    -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv); 
                         examples: -eursa; default: stl
