@@ -23,7 +23,7 @@ Accepted input format is the standard TPTP FOF format, restricted to formulas wh
 
 Usage: 
 
-CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename 
+`CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename 
 
    -l<time limit>       for time limit; example: -l10; default: 10s
 
@@ -79,22 +79,22 @@ The hints can be given within such file (the position is irrelevant).
 
 The hint:
   `fof(hintname0, hint, r(?,?), _, _).`
-imposes that a fact r(?,?) will be present in some step of the proof. Arguments (?,?) 
-show that there is no condition on the arguments in that proof step.
+imposes that a fact `r(?,?)` will be present in some step of the proof. Arguments (?,?) 
+show that there is no constraint on the arguments in that proof step.
 
 The hint:
-  `fof(hintname0, hint, q(1,0), 1, _).`
-imposes that a fact q(1,0) will be present in the step 5 of the proof. The arguments 
+  `fof(hintname0, hint, q(1,0), 5, _).`
+imposes that a fact `q(1,0)` will be present in the step 5 of the proof. The arguments 
 will be 0th and 1st constants introduced.
 
 The hint:
   `fof(hintname0, hint, r(?,?), 1, _).`
-imposes that a fact r(?,?) will be present in the step 1 of the proof.
+imposes that a fact `r(?,?)` will be present in the step 1 of the proof.
 Here the numbering includes initial assumption steps. 
 
 The hint:
   `fof(hintname0, hint, _, _, ax2(?,?)).`
-imposes that the axiom ax2 must be used, not specified in which proof step.
+imposes that the axiom ax2 must be used in the proof, not specified in which proof step.
 
 The hint:
   `fof(hintname0, hint, _, 3, ax2(0,1)).`
@@ -103,8 +103,8 @@ constant introduced.
 
 The hint:
   `fof(hintname0, hint, _, 3, ax2(A,A)).`
-imposes that the axiom ax2 must be used in the step 3, in such a was that the
-first and the second universal variable are instantiated by a same constant.
+imposes that the axiom ax2 must be used in the step 3, in such a way that the
+first and the second universal variable are instantiated by the same constant.
 
 Note that the simplification at the end may eliminate the described proof 
 step if it is redundant.
