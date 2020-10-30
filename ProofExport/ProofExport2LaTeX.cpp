@@ -190,9 +190,12 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     for (unsigned i = 0; i < cf.GetSize(); i++) {
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
       OutputFact(outfile, factout);
-      outfile << ", ";
+      if (i + 1 == cf.GetSize())
+        outfile << ". ";
+      else
+        outfile << ", ";
     }
-    outfile << "$$";
+    outfile << "$$ ";
   }
   outfile << "It should be proved that it holds: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
