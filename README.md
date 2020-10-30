@@ -23,7 +23,7 @@ Accepted input format is the standard TPTP FOF format, restricted to formulas wh
 
 Usage: 
 
-`CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename 
+`CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename `
 
    -l<time limit>       for time limit; example: -l10; default: 10s
 
