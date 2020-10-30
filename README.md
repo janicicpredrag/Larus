@@ -10,7 +10,7 @@ Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 Larus is written in the C++ programming language. 
 To build it, just type make in the root folder. 
 
-## Depedencies
+### Depedencies
 
 Larus can use the following external tools:
  - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip)
@@ -21,7 +21,14 @@ Larus can use the following external tools:
  
 Accepted input format is the standard TPTP FOF format, restricted to formulas which are in coherent logic form.
 
-Usage: 
+## Output
+
+If a proof is found Larus will output:
+`% SZS status Theorem`
+otherwise:
+`% SZS status Unknown`
+
+#Usage: 
 
 `CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename `
 
@@ -55,7 +62,7 @@ Usage:
                         examples: -vcoq; default: no
 
 
-Hints: 
+# Hints: 
 
 The support for hints uses hints given through the input files specifying the conjecture.
 Currently, only the TPTP/fof format is supported. Also, currently, the support for hints
