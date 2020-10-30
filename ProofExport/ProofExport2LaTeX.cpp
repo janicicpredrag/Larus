@@ -16,6 +16,26 @@ string latexize(string s) {
 
 // ---------------------------------------------------------------------------------
 
+void ProofExport2LaTeX::modifyWitnessName(string w) {
+  string s;
+  s = "w";
+  unsigned counter = mWitnesses.size();
+  while (mSymbolsTaken.find(s) != mSymbolsTaken.end())
+    s = "w" + to_string(counter++);
+  mWitnesses[w] = s;
+  mSymbolsTaken.insert(s);
+}
+
+// ---------------------------------------------------------------------------------
+
+string ProofExport2LaTeX::beautify(string w) {
+  if (mWitnesses.find(w) != mWitnesses.end())
+    return (mWitnesses.find(w)->second);
+  return w;
+}
+
+// ---------------------------------------------------------------------------------
+
 void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
                                         const string &name) {
   if (name != "")
@@ -66,9 +86,9 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "\\top";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << f.GetArg(0) << " = " << f.GetArg(1);
+      outfile << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << f.GetArg(0) << " \\neq " << f.GetArg(1);
+      outfile << beautify(f.GetArg(0)) << " \\neq " << beautify(f.GetArg(1));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -78,8 +98,8 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         outfile << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          outfile << latexize(f.GetArg(i)) << ", ";
-        outfile << latexize(f.GetArg(f.GetArity() - 1));
+          outfile << latexize(beautify(f.GetArg(i))) << ", ";
+        outfile << latexize(beautify(f.GetArg(f.GetArity() - 1)));
         outfile << ")";
       }
     }
@@ -105,6 +125,15 @@ void ProofExport2LaTeX::OutputOr(ofstream &outfile) { outfile << "\\vee "; }
 void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
                                        const CLProof &p,
                                        proverParams & /*params*/) {
+
+  mSymbolsTaken = T.mOccuringSymbols;
+  for (vector<string>::const_iterator it = T.mConstants.begin();
+       it != T.mConstants.end(); it++)
+    mSymbolsTaken.insert(*it);
+  for (set<string>::iterator it = T.mConstantsPermissible.begin();
+       it != T.mConstantsPermissible.end(); it++)
+    mSymbolsTaken.insert(*it);
+
   outfile << "\\documentclass{article}" << endl;
   outfile << "\\usepackage{argoclp}" << endl << endl;
   outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
@@ -203,7 +232,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
     outfile << "\\exists ";
-    outfile << p.GetTheorem().GetExistVar(i);
+    outfile << latexize(p.GetTheorem().GetExistVar(i));
     if (i + 1 != p.GetTheorem().GetNumOfExistVars())
       outfile << ", ";
     outfile << "\\;";
@@ -255,7 +284,9 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
     if (new_witnesses.size() > 0) {
       outfile << "Let $";
       for (size_t j = 0; j != new_witnesses.size(); j++) {
-        outfile << new_witnesses[j].second;
+        modifyWitnessName(new_witnesses[j].second);
+        outfile << beautify(new_witnesses[j].second);
+        // outfile << new_witnesses[j].second;
         if (j + 1 != new_witnesses.size())
           outfile << ", ";
       }
@@ -286,9 +317,9 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
       outfile << "{\\scriptsize instantiation: ";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        outfile << " $" << (instantiation[j].first) << "$"
+        outfile << " $" << latexize(beautify(instantiation[j].first)) << "$"
                 << " $\\mapsto$ "
-                << " $" << latexize(instantiation[j].second) << "$";
+                << " $" << latexize(beautify(instantiation[j].second)) << "$";
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }
