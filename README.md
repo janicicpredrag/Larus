@@ -3,7 +3,7 @@
 Larus is a prover for coherent logic, a fragment of first order logic. It has several proving
 engines available. One is based on forward chaining and instantiations. The others are based on
 encoding a proof of the theorem being proved to SAT or SMT. Encoding to SAT is performed via
-the tool URSA. SAT solving is done using the embedded Sat solver MiniSAT (http://minisat.se/). 
+the tool URSA. SAT solving is done using the embedded solver clasp (https://potassco.org/clasp/). 
 Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 
 ## Install
@@ -28,7 +28,7 @@ If a proof is found Larus will output:
 otherwise:
 `% SZS status Unknown`
 
-#Usage: 
+## Usage 
 
 `CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -a<negelim|excludedmiddle> -vcoq filename `
 
@@ -62,7 +62,7 @@ otherwise:
                         examples: -vcoq; default: no
 
 
-# Hints: 
+## Hints 
 
 The support for hints uses hints given through the input files specifying the conjecture.
 Currently, only the TPTP/fof format is supported. Also, currently, the support for hints
