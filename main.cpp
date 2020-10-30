@@ -311,30 +311,31 @@ int main(int argc, char **argv) {
   if (rv == eConjectureNotProved && elapsed_secs >= params.time_limit)
     rv = eTimeLimitExceeded;
 
+  // http://www.tptp.org/TPTP/TPTPTParty/2007/PositionStatements/GeoffSutcliffe_SZS.html
   switch (rv) {
   case eBadOrMissingInputFile:
     cout << "Bad or missing input file." << endl;
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Error" << endl;
     return -1;
 
   case eWrongFormatParameter:
     cout << "Unknown input format selected." << endl;
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Inappropriate" << endl;
     return -1;
 
   case eErrorReadingAxioms:
     cout << "Error reading axioms." << endl;
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Inappropriate" << endl;
     return -1;
 
   case eNoConjectureGiven:
     cout << "No conjecture given! " << endl;
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Inappropriate" << endl;
     return -1;
 
   case eTimeLimitExceeded:
     cout << "[TIME LIMIT EXCEEDED!]" << endl;
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status TimeOut" << endl;
     return -1;
 
   case eConjectureProved:
@@ -342,11 +343,11 @@ int main(int argc, char **argv) {
     return 0;
 
   case eConjectureNotProved:
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Unknown" << endl;
     return -1;
 
   default:
-    cout << "% SZS status GaveUp" << endl;
+    cout << "% SZS status Unknown" << endl;
     return -1;
   }
   return 0;
