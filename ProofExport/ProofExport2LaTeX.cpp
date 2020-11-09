@@ -42,14 +42,13 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
     outfile << name << " : ";
   outfile << "$";
   if (cl.GetNumOfUnivVars() > 0) {
-    outfile << "\\forall \\; ";
     for (size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
-      outfile << cl.GetUnivVar(i);
-      if (i + 1 < cl.GetNumOfUnivVars())
-        outfile << ",";
-      outfile << " ";
+      outfile << "\\forall ";
+      outfile << cl.GetUnivVar(i) << " \\; ";
+      // if (i + 1 < cl.GetNumOfUnivVars())
+      //  outfile << ",";
     }
-    outfile << "\\; ";
+    // outfile << "\\; ";
   }
   if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars())
     outfile << "( ";
@@ -57,14 +56,13 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
   if (cl.GetPremises().GetSize() > 0)
     OutputImplication(outfile);
   if (cl.GetNumOfExistVars() > 0) {
-    outfile << "\\exists \\; ";
     for (size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
-      outfile << " " << cl.GetExistVar(i);
-      if (i + 1 < cl.GetNumOfExistVars())
-        outfile << ", ";
-      else
-        outfile << "\\; ";
+      outfile << "\\exists ";
+      outfile << cl.GetExistVar(i) << " \\; ";
+      // if (i + 1 < cl.GetNumOfExistVars())
+      //   outfile << ", ";
     }
+    // outfile << "\\; ";
     outfile << "(";
   }
   OutputDNF(outfile, cl.GetGoal());
@@ -166,15 +164,14 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
       outfile << "\\item ";
       outfile << latexize(T.mDerivedLemmas[i].name) << " : $";
       if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
-        outfile << "\\forall \\; ";
         for (size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size();
              j < size; j++) {
-          outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
-          if (j + 1 < T.mDerivedLemmas[i].mUniversalVars.size())
-            outfile << ",";
-          outfile << " ";
+          outfile << "\\forall ";
+          outfile << T.mDerivedLemmas[i].mUniversalVars[j] << "\\;";
+          // if (j + 1 < T.mDerivedLemmas[i].mUniversalVars.size())
+          //  outfile << ",";
         }
-        outfile << "\\; (";
+        // outfile << "\\; (";
       }
       OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
       if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
@@ -232,10 +229,11 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
     outfile << "\\exists ";
-    outfile << latexize(p.GetTheorem().GetExistVar(i));
-    if (i + 1 != p.GetTheorem().GetNumOfExistVars())
-      outfile << ", ";
-    outfile << "\\;";
+    outfile << latexize(p.GetTheorem().GetExistVar(i)) << "\\; ";
+    // if (i + 1 != p.GetTheorem().GetNumOfExistVars())
+    //  outfile << ", ";
+    if (i + 1 == p.GetTheorem().GetNumOfExistVars())
+      outfile << "\\; ";
   }
 
   OutputDNF(outfile, fout);
@@ -295,7 +293,7 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
     outfile << "$";
 
     OutputDNF(outfile, p.GetMP(i).conclusion);
-    outfile << "$ (";
+    outfile << "$ ({\\scriptsize by MP, ";
     if (p.GetMP(i).CLfrom.size() > 0) {
       outfile << "from ";
       for (size_t j = 0; j < p.GetMP(i).CLfrom.size(); j++) {
@@ -310,11 +308,11 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
       // outfile << ", ";
     }
 
-    outfile << "by axiom " << latexize(p.GetMP(i).axiomName);
+    outfile << "using axiom " << latexize(p.GetMP(i).axiomName);
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     if (instantiation.size() > new_witnesses.size()) {
       outfile << "; ";
-      outfile << "{\\scriptsize instantiation: ";
+      outfile << "instantiation: ";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
         outfile << " $" << latexize(beautify(instantiation[j].first)) << "$"
@@ -336,13 +334,14 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile, const CaseSplit *cs,
                                        unsigned level) {
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++)
     OutputProof(outfile, cs->GetSubproof(i), level + 1);
-  outfile << "\\proofstep{" << level << "}{Proved by case split! (by $";
+  outfile << "\\proofstep{" << level
+          << "}{Proved by case split! ({\\scriptsize by QEDcs, by $";
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
     OutputDNF(outfile, cs->GetCases()[i]);
     if (i + 1 < cs->GetNumOfCases())
       outfile << " , ";
   }
-  outfile << " $)}" << endl;
+  outfile << " $})}" << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -350,7 +349,8 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile, const CaseSplit *cs,
 void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile,
                                        const ByAssumption * /*ba*/,
                                        unsigned level) {
-  outfile << "\\proofstep{" << level << "}{Proved by ASM!}" << endl;
+  outfile << "\\proofstep{" << level
+          << "}{Proved by assumption! ({\\scriptsize by QEDas})}" << endl;
   // outfile << ($";
   // OutputConjFormula(outfile, ba->GetConjunctionFormula());
   // outfile << "$ holds)}" << endl;
@@ -360,8 +360,8 @@ void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile,
 
 void ProofExport2LaTeX::OutputProofEnd(ofstream &outfile, const EFQ * /*efq*/,
                                        unsigned level) {
-  outfile << "\\proofstep{" << level << "}{Contradiction!}"
-          << endl; /*Proved by EFQ!*/
+  outfile << "\\proofstep{" << level
+          << "}{Contradiction! ({\\scriptsize by QEDefq})}" << endl;
   level--;
 }
 
