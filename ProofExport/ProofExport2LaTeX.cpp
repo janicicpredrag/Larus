@@ -204,7 +204,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
       if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
         outfile << ", ";
     }
-    outfile << " ";
+    outfile << ". ";
     // outfile << "." << endl << endl;
   }
 

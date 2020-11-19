@@ -8,6 +8,26 @@ ProofExport2Coq::ProofExport2Coq() {}
 
 // ---------------------------------------------------------------------------------
 
+void ProofExport2Coq::modifyWitnessName(string w) {
+  string s;
+  s = "w";
+  unsigned counter = mWitnesses.size();
+  while (mSymbolsTaken.find(s) != mSymbolsTaken.end())
+    s = "w" + to_string(counter++);
+  mWitnesses[w] = s;
+  mSymbolsTaken.insert(s);
+}
+
+// ---------------------------------------------------------------------------------
+
+string ProofExport2Coq::beautify(string w) {
+  if (mWitnesses.find(w) != mWitnesses.end())
+    return (mWitnesses.find(w)->second);
+  return w;
+}
+
+// ---------------------------------------------------------------------------------
+
 void ProofExport2Coq::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
                                       const string & /*name*/) {
   // outfile << "Theorem " << name << " : ";
@@ -49,9 +69,9 @@ void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "True";
   } else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << f.GetArg(0) << " = " << f.GetArg(1);
+      outfile << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << f.GetArg(0) << " <> " << f.GetArg(1);
+      outfile << beautify(f.GetArg(0)) << " <> " << beautify(f.GetArg(1));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -59,7 +79,7 @@ void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
       else
         outfile << f.GetName();
       for (size_t i = 0; i < f.GetArity(); i++)
-        outfile << " " << f.GetArg(i);
+        outfile << " " << beautify(f.GetArg(i));
     }
   }
   // outfile << " ";
@@ -89,6 +109,15 @@ string repeat(int n, string s) {
 void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
                                      const CLProof &p,
                                      proverParams & /*params*/) {
+
+  mSymbolsTaken = T.mOccuringSymbols;
+  for (vector<string>::const_iterator it = T.mConstants.begin();
+       it != T.mConstants.end(); it++)
+    mSymbolsTaken.insert(*it);
+  for (set<string>::iterator it = T.mConstantsPermissible.begin();
+       it != T.mConstantsPermissible.end(); it++)
+    mSymbolsTaken.insert(*it);
+
   outfile << "Require Import src.general_tactics." << endl;
   // if (params.mbExcludedMiddle) TODO FIX This
   outfile << "Require Import Classical." << endl;
@@ -170,14 +199,17 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "Theorem " << p.GetTheoremName() << " : ";
   OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
   outfile << "Proof. " << endl;
-  outfile << "intros ";
-  for (size_t i = 0, size = p.GetTheorem().GetNumOfUnivVars(); i < size; i++) {
-    // outfile << theorem.GetUnivVar(i);
-    outfile << p.GetInstantiation().find(p.GetTheorem().GetUnivVar(i))->second;
-    if (i < size - 1)
-      outfile << " ";
+  if (p.GetTheorem().GetNumOfUnivVars() !=0)
+  {
+    outfile << "intros ";
+    for (size_t i = 0, size = p.GetTheorem().GetNumOfUnivVars(); i < size; i++) {
+      // outfile << theorem.GetUnivVar(i);
+      outfile << p.GetInstantiation().find(p.GetTheorem().GetUnivVar(i))->second;
+      if (i < size - 1)
+        outfile << " ";
+    }
+    outfile << "." << endl;
   }
-  outfile << "." << endl;
   outfile << "intros." << endl;
   if (p.GetByRefutation())
     outfile << "intro." << endl;
@@ -204,7 +236,10 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
     if (new_witnesses.size() > 0) {
       outfile << "Tf:exists";
       for (size_t j = 0; j != new_witnesses.size(); j++)
-        outfile << " " << new_witnesses[j].second;
+      {
+        modifyWitnessName(new_witnesses[j].second);
+        outfile << " " << beautify(new_witnesses[j].second);
+      }
       outfile << ", ";
     }
 
@@ -222,7 +257,7 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
       vector<pair<string, string>> inst = p.GetMP(i).instantiation;
       for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size();
            j++)
-        outfile << " " << inst[j].second;
+        outfile << " " << beautify(inst[j].second);
       outfile << ")";
     } else if (p.GetMP(i).axiomName.find("ExcludedMiddle") !=
                std::string::npos) {
@@ -233,7 +268,7 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
       vector<pair<string, string>> inst = p.GetMP(i).instantiation;
       for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size();
            j++)
-        outfile << " " << inst[j].second;
+        outfile << " " << beautify(inst[j].second);
       outfile << "));auto)";
     } else if (p.GetMP(i).axiomName.find("eq_excluded_middle") !=
                std::string::npos) {
@@ -244,7 +279,7 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
       vector<pair<string, string>> inst = p.GetMP(i).instantiation;
       for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size();
            j++)
-        outfile << " " << inst[j].second;
+        outfile << " " << beautify(inst[j].second);
       outfile << "));auto)";
     } else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos ||
                p.GetMP(i).axiomName.find("EqSub") != std::string::npos ||
@@ -255,13 +290,13 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
       vector<pair<string, string>> inst = p.GetMP(i).instantiation;
       for (size_t j = 0, size = inst.size(); j < size - new_witnesses.size();
            j++)
-        outfile << " " << inst[j].second;
+        outfile << " " << beautify(inst[j].second);
       outfile << ")";
     }
     if (new_witnesses.size() > 0) {
       outfile << "; destruct Tf as [";
       for (size_t j = 0; j != new_witnesses.size(); j++) {
-        outfile << new_witnesses[j].second;
+        outfile << beautify(new_witnesses[j].second);
         if (j < new_witnesses.size() - 1)
           outfile << "[";
       }

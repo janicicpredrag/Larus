@@ -1126,6 +1126,9 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         sbMatchPremises += " " + sbMatchOnePremise;
       }
 
+      unsigned original_constants =
+          mpT->mConstants.size() + mpT->mConstantsPermissible.size();
+
       /* Matching disjuncts in conclusions (one or two) */
       unsigned nGoalIndex = nAxiomPremises[nAxiom];
       sbMatchConclusion =
@@ -1141,12 +1144,9 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           sbMatchConclusion +=
               appeq(app("nArg", nProofStep, nInd),
                     nAxiomArgument[nAxiom][nGoalIndex * mnMaxArity + nInd]);
-
-        unsigned original_constants =
-            mpT->mConstants.size() + mpT->mConstantsPermissible.size();
         sbMatchConclusion +=
             smt_less(app("nArg", nProofStep, nInd),
-                     original_constants + ((nProofStep + 2) << 3));
+                     original_constants + ((nProofStep + 2) << 3) + 1);
       }
 
       string sb;
@@ -1165,7 +1165,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                         nAxiomArgument[nAxiom]
                                       [(nGoalIndex + 1) * mnMaxArity + nInd]);
           sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-                         (nProofStep + 2) << 3);
+                         original_constants + ((nProofStep + 2) << 3) + 1);
         };
         sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
       } else
@@ -1174,17 +1174,15 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       /* Introducing fresh constants if the axioms used has existential
        * quantifiers */
 
-      unsigned original_constants =
-          mpT->mConstants.size() + mpT->mConstantsPermissible.size();
-
       sbMatchExiQuantifiers = "";
       for (unsigned nL = 0; nL < nAxiomExiVars[nAxiom]; nL++) {
-        /* The id of a new constant is (nProofStep<<2) + nL, ie. 8*nProofStep+nL
+        /* The id of a new constant is (nProofStep + 2 << 3) + nL, ie.
+         * 8*(nProofStep+2)+nL
          * - so they don't overlap, */
         /* unless some axioms introduces >4 witnesses */
         sbMatchExiQuantifiers +=
             appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom] + nL + 1),
-                  original_constants + ((nProofStep + 1) << 3) + nL);
+                  original_constants + ((nProofStep + 2) << 3) + nL);
       }
       /* The MP proof step is correct if it was derived by using some axiom  */
       if (nProofStep != 0)

@@ -326,7 +326,7 @@ bool CLFormula::Read(const string &s) {
       return true;
   }
 
-  pos = s0.find('!');
+  pos = s0.find("![", 0);
   if (pos != string::npos) {
     ClearUnivVars();
     pos = s0.find('[');

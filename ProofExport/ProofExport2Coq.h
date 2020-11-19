@@ -23,6 +23,10 @@ private:
     void OutputProofEnd(ofstream& outfile, const ByAssumption* ba, unsigned level);
     void OutputProofEnd(ofstream& outfile, const EFQ* efq, unsigned);
     void OutputProofEnd(ofstream& outfile, const ByNegIntro* bni, unsigned level);
+    void modifyWitnessName(string w);
+    string beautify(string w);
+    map<string, string> mWitnesses;
+    set<string> mSymbolsTaken;
 
 };
 
