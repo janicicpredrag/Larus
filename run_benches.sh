@@ -79,7 +79,7 @@ do
 	    ;;
         "Coq files")
 	    echo "$opt selected"
-	    benches="coq-problems/crafted-hard/*.v" 
+	    benches="coq-problems/coherent-logic-benches/*.v" 
 	    break
 	    ;;
         *) echo "invalid option $REPLY";;
@@ -338,7 +338,9 @@ tm() {
   local exit_code=$?
   printf >&2 " ~$(($(date +%s)-${start})) seconds. "
   echo -n $prover >> data.csv
-  echo -n  "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
+  if [ "$prover" = "Larus" ]; then
+      echo -n  "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
+  fi
   echo -n ";" >> data.csv
   echo -n " $(($(date +%s)-${start})); " >> data.csv
   print_result
