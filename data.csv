@@ -21203,7 +21203,6 @@ coq-problems/coherent-logic-benches/ser_in.v; Coq-firstorder; 1; Failed;
 coq-problems/coherent-logic-benches/srr_in.v; Coq-firstorder; 1; Failed; 
 coq-problems/coherent-logic-benches/steam_in.v; Coq-firstorder; 0; Failed; 
 coq-problems/coherent-logic-benches/strip_in.v; Coq-firstorder; 9; Failed; 
-coq-problems/coherent-logic-benches/tactic.v; Coq-firstorder; 1; Failed; 
 coq-problems/coherent-logic-benches/tdpe2_in.v; Coq-firstorder; 12; Failed; 
 coq-problems/coherent-logic-benches/tdpe3_in.v; Coq-firstorder; 22; Failed; 
 coq-problems/coherent-logic-benches/tdpe4_in.v; Coq-firstorder; 8; Failed; 
