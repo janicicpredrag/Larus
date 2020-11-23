@@ -188,9 +188,12 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\begin{theorem}" << endl;
   OutputCLFormula(outfile, p.GetTheorem(), latexize(p.GetTheoremName()));
   outfile << "\\end{theorem}" << endl << endl;
- // outfile << "\\hrulefill" << endl << endl;
-  outfile << "\\vspace{3mm}" << endl;
-  outfile << "{\\em Proof:}" << endl;
+
+  outfile << "\\newcounter{proofstepnum}" << endl;
+  outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
+
+  outfile << "\\noindent{\\em Proof:}" << endl;
+  outfile << "\\vspace{5pt}" << endl << endl;
 
   DNFFormula fout;
   Fact factout;
@@ -200,7 +203,6 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   if (p.GetTheorem().GetNumOfUnivVars() > 0) {
     outfile << "\\noindent Consider arbitrary ";
     for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-      // outfile << "$" << p.GetTheorem().GetUnivVar(i) << " \\mapsto$ ";
       outfile << "$" << inst.find(p.GetTheorem().GetUnivVar(i))->second << "$";
       if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
         outfile << ", ";
@@ -209,45 +211,35 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
   if (cf.GetSize() > 0) {
     if (p.GetTheorem().GetNumOfUnivVars() > 0)
-      outfile << "such that: $$";
+      outfile << " such that: $";
     else
-      outfile << "\\noindent The assumptions are: $$";
+      outfile << "\\noindent The assumptions are: $";
     for (unsigned i = 0; i < cf.GetSize(); i++) {
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
       OutputFact(outfile, factout);
       if (i + 1 == cf.GetSize())
-        outfile << ". ";
+        outfile << ".";
       else
-        outfile << ", ";
+        outfile << ",";
     }
-    outfile << "$$ ";
+    outfile << "$ ";
   } else
     outfile << ". ";
 
   outfile << "It should be proved that it holds: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
-  outfile << "$$";
+  outfile << "$";
 
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
     outfile << "\\exists ";
     outfile << latexize(p.GetTheorem().GetExistVar(i)) << "\\; ";
-    // if (i + 1 != p.GetTheorem().GetNumOfExistVars())
-    //  outfile << ", ";
     if (i + 1 == p.GetTheorem().GetNumOfExistVars())
       outfile << "\\; ";
   }
 
   OutputDNF(outfile, fout);
-  outfile << ".$$" << endl << endl;
-
- // outfile << "\\hrulefill" << endl << endl;
-//  outfile << "\\vspace{3mm}" << endl;
-
-  outfile << "\\newcounter{proofstepnum}" << endl;
-  outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
-  
+  outfile << "$." << endl;
   outfile << "\\vspace{5pt}" << endl << endl;
-  outfile << endl;
 }
 
 // ---------------------------------------------------------------------------------
