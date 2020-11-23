@@ -226,7 +226,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   } else
     outfile << ". ";
 
-  outfile << "It should be proved that it holds: ";
+  outfile << "It should be proved that ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
   outfile << "$";
 
