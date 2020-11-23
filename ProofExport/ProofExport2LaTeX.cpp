@@ -188,8 +188,9 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\begin{theorem}" << endl;
   OutputCLFormula(outfile, p.GetTheorem(), latexize(p.GetTheoremName()));
   outfile << "\\end{theorem}" << endl << endl;
-  outfile << "\\hrulefill" << endl << endl;
+ // outfile << "\\hrulefill" << endl << endl;
   outfile << "\\vspace{3mm}" << endl;
+  outfile << "{\\em Proof:}" << endl;
 
   DNFFormula fout;
   Fact factout;
@@ -239,12 +240,12 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   OutputDNF(outfile, fout);
   outfile << ".$$" << endl << endl;
 
-  outfile << "\\hrulefill" << endl << endl;
-  outfile << "\\vspace{3mm}" << endl;
+ // outfile << "\\hrulefill" << endl << endl;
+//  outfile << "\\vspace{3mm}" << endl;
 
   outfile << "\\newcounter{proofstepnum}" << endl;
   outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
-  outfile << "{\\em Proof:}" << endl;
+  
   outfile << "\\vspace{5pt}" << endl << endl;
   outfile << endl;
 }
