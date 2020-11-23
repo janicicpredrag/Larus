@@ -204,8 +204,6 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
       if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
         outfile << ", ";
     }
-    outfile << ". ";
-    // outfile << "." << endl << endl;
   }
 
   if (cf.GetSize() > 0) {
@@ -222,7 +220,9 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
         outfile << ", ";
     }
     outfile << "$$ ";
-  }
+  } else
+    outfile << ". ";
+
   outfile << "It should be proved that it holds: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
   outfile << "$$";
