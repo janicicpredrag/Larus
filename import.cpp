@@ -412,9 +412,10 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
     cout << endl
          << "The proof found size (without assumptions): "
-         << proof.Size() - proof.NumOfAssumptions() << flush;
+         << proof.Size() - proof.NumOfAssumptions() << endl
+         << flush;
     if ((engine.GetKind() == eSTL_ProvingEngine || !params.shortest_proof) &&
-        !params.mbSimp) {
+        params.mbSimp) {
       proof.Simplify();
       cout << endl
            << "Done! (simplified proof length without assumptions: "

@@ -211,19 +211,19 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
   if (cf.GetSize() > 0) {
     if (p.GetTheorem().GetNumOfUnivVars() > 0)
-      outfile << " such that: $";
+      outfile << " such that: ";
     else
-      outfile << "\\noindent The assumptions are: $";
+      outfile << "\\noindent The assumptions are: ";
     for (unsigned i = 0; i < cf.GetSize(); i++) {
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
+      outfile << " $";
       OutputFact(outfile, factout);
       if (i + 1 == cf.GetSize())
-        outfile << ".";
+        outfile << "$. ";
       else
-        outfile << ",";
+        outfile << "$, ";
     }
-    outfile << "$ ";
-  } else
+  } else if (p.GetTheorem().GetNumOfUnivVars() > 0)
     outfile << ". ";
 
   outfile << "It should be proved that ";
@@ -314,9 +314,8 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }
-      outfile << "}";
     }
-    outfile << ") }" << endl;
+    outfile << "}) }" << endl;
   }
   OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }

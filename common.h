@@ -1,40 +1,71 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <assert.h>
 #include <ctype.h>
-#include <iostream>
-#include <sstream>
 #include <fstream>
 #include <iomanip>
-#include <string>
-#include <string.h>
-#include <vector>
-#include <set>
+#include <iostream>
 #include <map>
+#include <set>
+#include <sstream>
+#include <string.h>
+#include <string>
 #include <tuple>
-#include <assert.h>
+#include <vector>
 
 using namespace std;
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
 
 enum PROVING_ENGINE {
-    eSTL_ProvingEngine,
-    eSQL_ProvingEngine,
-    eURSA_ProvingEngine,
-    eSMTLIA_ProvingEngine,
-    eSMTBV_ProvingEngine,
-    eSMTUFLIA_ProvingEngine,
-    eSMTUFBV_ProvingEngine,
-    eNumberOfProvingEngines };
+  eSTL_ProvingEngine,
+  eSQL_ProvingEngine,
+  eURSA_ProvingEngine,
+  eSMTLIA_ProvingEngine,
+  eSMTBV_ProvingEngine,
+  eSMTUFLIA_ProvingEngine,
+  eSMTUFBV_ProvingEngine,
+  eNumberOfProvingEngines
+};
 
 enum fofType { eAxiom, eConjecture, eHint, eAny };
 
-enum ReturnValue { eOK, eBadOrMissingInputFile, eWrongFormatParameter, eErrorReadingAxioms, eNoConjectureGiven, eTimeLimitExceeded, eConjectureProved, eConjectureNotProved, eUnkown };
+enum ReturnValue {
+  eOK,
+  eBadOrMissingInputFile,
+  eWrongFormatParameter,
+  eErrorReadingAxioms,
+  eNoConjectureGiven,
+  eTimeLimitExceeded,
+  eConjectureProved,
+  eConjectureNotProved,
+  eUnkown
+};
 
-enum StepKind { eAssumption, eNegIntro, eFirstCase, eSecondCase, eEQSub, eEQReflex, eEQSymm, eNegElim, eExcludedMiddle, eQEDbyCases, eQEDbyAssumption, eQEDbyEFQ, eQEDbyNegIntro, eNumberOfStepKinds };
+enum StepKind {
+  eAssumption,
+  eNegIntro,
+  eFirstCase,
+  eSecondCase,
+  eEQSub,
+  eEQReflex,
+  eEQSymm,
+  eNegElim,
+  eExcludedMiddle,
+  eQEDbyCases,
+  eQEDbyAssumption,
+  eQEDbyEFQ,
+  eQEDbyNegIntro,
+  eNumberOfStepKinds
+};
 
-enum VampireReturnValue { eVampireUnsat, eVampireSat, eVampireErrorReadingAxioms, eVampireUnknown };
+enum VampireReturnValue {
+  eVampireUnsat,
+  eVampireSat,
+  eVampireErrorReadingAxioms,
+  eVampireUnknown
+};
 
 const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
 const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
@@ -50,7 +81,7 @@ const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_EXACT_LENGTH = false;
-const bool DEFAULT_SIMP = false;
+const bool DEFAULT_SIMP = true;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
 const string DEFAULT_HAMMER = "";
 const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
@@ -65,39 +96,37 @@ const string PREFIX_NEGATED = "nnn";
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
 
 typedef struct proverParams {
-    INPUT_FORMAT input_format;
-    PROVING_ENGINE eEngine;
-    float time_limit;
-    unsigned max_nesting_depth;
-    unsigned starting_proof_length;
-    unsigned max_proof_length;
-    bool exact_length;
-    bool shortest_proof;
-    bool mbNegElim;
-    bool mbNativeEQ;
-    bool mbNativeEQsub;
-    bool mbExcludedMiddle;
-    bool mbCoq;
-    bool mbIsa;
-    bool mbSimp;
-    bool mbNeedsCaseSplits;
-    string msHammerInvoke;
-    unsigned vampire_time_limit;
-    bool mbInlineAxioms;
+  INPUT_FORMAT input_format;
+  PROVING_ENGINE eEngine;
+  float time_limit;
+  unsigned max_nesting_depth;
+  unsigned starting_proof_length;
+  unsigned max_proof_length;
+  bool exact_length;
+  bool shortest_proof;
+  bool mbNegElim;
+  bool mbNativeEQ;
+  bool mbNativeEQsub;
+  bool mbExcludedMiddle;
+  bool mbCoq;
+  bool mbIsa;
+  bool mbSimp;
+  bool mbNeedsCaseSplits;
+  string msHammerInvoke;
+  unsigned vampire_time_limit;
+  bool mbInlineAxioms;
 } proverParams;
 
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
-bool stoi(string s, int& i);
-string SkipChar(const string& str, char c);
-string ToUpper(const string& str);
-string dirnameOf(const string& fname);
-string SkipChar(const string& str, char c);
-string ToUpper(const string& str);
-
+bool stoi(string s, int &i);
+string SkipChar(const string &str, char c);
+string ToUpper(const string &str);
+string dirnameOf(const string &fname);
+string SkipChar(const string &str, char c);
+string ToUpper(const string &str);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;
-
 
 #endif // COMMON_H

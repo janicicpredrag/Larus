@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
         params.mbInlineAxioms = false;
       } else if (argv[i][0] == '-' &&
                  argv[i][1] == 'd') { // disable simplification of proofs
-        params.mbSimp = true;
+        params.mbSimp = false;
       } else if (argv[i][0] == '-' && argv[i][1] == 'm') {
         if (strlen(argv[i] + 2) == 0) {
           wrongInput = true;
