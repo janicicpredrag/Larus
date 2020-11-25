@@ -253,21 +253,41 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
 
 void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
                                     unsigned level) {
-  if (p.NumOfCLAssumptions() > 0 && level > 0)
-    for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
-      if (level == 0)
-        outfile << "\\proofstep{" << level << "}{Assumption: ";
-      else {
-        outfile << "\\proofstep{" << level << "}{Case ";
-        level++;
+  if (level > 0) {
+
+    if (p.NumOfCLAssumptions() > 0) {
+      for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
+        if (level == 0)
+          outfile << "\\proofstep{" << level << "}{Assumption: ";
+        else {
+          outfile << "\\proofstep{" << level << "}{Case ";
+          level++;
+        }
+        outfile << "$";
+        OutputDNF(outfile, p.GetCLAssumption(i));
+        if (level == 0)
+          outfile << "$ }" << endl;
+        else
+          outfile << "$: }" << endl;
       }
-      outfile << "$";
-      OutputDNF(outfile, p.GetCLAssumption(i));
-      if (level == 0)
-        outfile << "$ }" << endl;
-      else
-        outfile << "$: }" << endl;
+    } else {
+      for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
+        if (level == 0)
+          outfile << "\\proofstep{" << level << "}{Assumption: ";
+        else {
+          outfile << "\\proofstep{" << level << "}{Case ";
+          level++;
+        }
+        outfile << "$";
+        OutputFact(outfile, p.GetAssumption(i));
+        if (level == 0)
+          outfile << "$ }" << endl;
+        else
+          outfile << "$: }" << endl;
+      }
     }
+  }
+
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
     outfile << "\\proofstep{" << level << "}{" /*MP application:*/;
 

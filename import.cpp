@@ -118,6 +118,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   // ************ Use or not "excluded middle" and "neg elim" ************
   if (params.mbNegElim)
     T.AddNegElimAxioms();
+
   if (params.mbExcludedMiddle || params.mbNegElim) {
     cout << "--- Adding axioms for excluded middle and negation elimination."
          << endl;
