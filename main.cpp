@@ -95,8 +95,8 @@ int main(int argc, char **argv) {
   params.shortest_proof = DEFAULT_SHORTEST_PROOF;
   params.mbNativeEQ = DEFAULT_NATIVE_EQ;
   params.mbNativeEQsub = DEFAULT_NATIVE_EQ_SUB;
-  params.mbNegElim = DEFAULT_NEG_ELIM;
-  params.mbExcludedMiddle = DEFAULT_EXCLUDED_MIDDLE;
+  params.mbNoNegElim = DEFAULT_NO_NEG_ELIM;
+  params.mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
   params.mbSimp = DEFAULT_SIMP;
@@ -177,15 +177,11 @@ int main(int argc, char **argv) {
           params.max_proof_length = d;
         else
           params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
-      } else if (argv[i][0] == '-' && argv[i][1] == 'a') {
-        if (!strcmp(argv[i] + 2, "negelim"))
-          params.mbNegElim = true;
-        else if (!strcmp(argv[i] + 2, "excludedmiddle"))
-          params.mbExcludedMiddle = true;
-        else {
-          wrongInput = true;
-          break;
-        }
+      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "nonegelim")) {
+        params.mbNoNegElim = true;
+      } else if (argv[i][0] == '-' &&
+                 !strcmp(argv[i] + 1, "noexcludedmiddle")) {
+        params.mbNoExcludedMiddle = true;
       } else if (argv[i][0] == '-' && argv[i][1] == 'h') {
         // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp
         // --output_axiom_names on"
@@ -269,13 +265,13 @@ int main(int argc, char **argv) {
     cout << "                        ursa/smt); example: -p64; default: 32"
          << endl
          << endl;
-    cout << "   -a<axiom>            for additional axioms "
-            "(negelim|excludedmiddle);"
+    cout << "   -nonegelim           do not use negation elimination axiom (R "
+            "& ~R => false)"
+         << endl
          << endl;
-    cout
-        << "                        example: -anegelim; default: do not include"
-        << endl
-        << endl;
+    cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"
+         << endl
+         << endl;
     cout << "   -h <invoke>          the way a FOL prover is invoked for "
          << endl;
     cout << "                        filtering out needed axioms" << endl
