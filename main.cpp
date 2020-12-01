@@ -221,7 +221,7 @@ int main(int argc, char **argv) {
   if (wrongInput) {
     cout << "Usage: CLprover -l<time limit> -f<format> -s ";
     cout << "-e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof ";
-    cout << "length> -a<negelim|excludedmiddle> -vcoq filename \n";
+    cout << "length> -vcoq filename \n";
     cout << endl;
     cout << "   -l<time limit>       for time limit; example: -l10; " << endl;
     cout << "                        default: 10s" << endl << endl;
