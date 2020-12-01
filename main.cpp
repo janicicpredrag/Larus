@@ -219,7 +219,7 @@ int main(int argc, char **argv) {
     wrongInput = true;
 
   if (wrongInput) {
-    cout << "Usage: CLprover -l<time limit> -f<format> -s ";
+    cout << "Usage: larus -l<time limit> -f<format> -s ";
     cout << "-e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof ";
     cout << "length> -vcoq filename \n";
     cout << endl;
