@@ -138,6 +138,16 @@ with open('data-clprover-variants.csv') as csvfile:
                ("Coq-sauto","black",(0,(3,7,4,9))),
                ("Coq-firstorder","gray",(0,(3,4,4,9))),
                ("isabelle","red",(0,(3,10,4,9)))]
+    big_list_no_coq= [("vampire","green","dashed"),
+               ("eprover","darkred",(0, (3, 1, 1, 1, 1, 1))),
+               ("iprover","darkgreen",(0,(3,5,1,5))),
+               ("nanocop","orange",(0, (3, 10, 1, 10))),
+	       ("leancop","pink",(0, (3, 1, 1, 1))),
+               ("zenon","darkblue","dotted"),
+               ("ChewTPTP","purple",(0, (1, 10))),
+               ("geo","gold",(0, (3, 5, 1, 5))),
+               ("Larus","red","solid"),
+               ("isabelle","red",(0,(3,10,4,9)))]
     variants= [
                ("Larusursa","yellow",(0, (3, 5, 1, 10))),
                ("Larusstl","green","dashed"),
@@ -146,7 +156,7 @@ with open('data-clprover-variants.csv') as csvfile:
                ("Larusbase","red","solid"),
                ]
     maxtime=100
-    generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list, maxtime)
+    generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list_no_coq, maxtime)
     generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
     generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
     generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
