@@ -116,16 +116,17 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   }
 
   // ************ Use or not "excluded middle" and "neg elim" ************
-  if (params.mbNegElim)
+  if (!params.mbNoNegElim)
     T.AddNegElimAxioms();
-  if (params.mbExcludedMiddle || params.mbNegElim) {
+
+  if (!params.mbNoExcludedMiddle || !params.mbNoNegElim) {
     cout << "--- Adding axioms for excluded middle and negation elimination."
          << endl;
-    cout << "       Check validity without excluded middle: output size: "
+    cout << "       Checking validity without excluded middle: size: "
          << T.mCLaxioms.size() << endl;
     T.printAxioms();
 
-    if (params.mbExcludedMiddle) {
+    if (!params.mbNoExcludedMiddle) {
       // ************ Filtering axioms a la hammer by FOL prover ************
       if (vampire_succeeded && params.msHammerInvoke != "") {
         USING_ORIGINAL_SIGNATURE_EQ = true;
@@ -147,7 +148,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         }
       } else
         T.AddExcludedMiddleAxioms();
-
+      cout << "       After check of excluded middle axioms: output size: "
+           << T.mCLaxioms.size() << endl;
       T.printAxioms();
     }
 
@@ -412,9 +414,10 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
     cout << endl
          << "The proof found size (without assumptions): "
-         << proof.Size() - proof.NumOfAssumptions() << flush;
+         << proof.Size() - proof.NumOfAssumptions() << endl
+         << flush;
     if ((engine.GetKind() == eSTL_ProvingEngine || !params.shortest_proof) &&
-        !params.mbSimp) {
+        params.mbSimp) {
       proof.Simplify();
       cout << endl
            << "Done! (simplified proof length without assumptions: "
@@ -490,7 +493,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
         string ss;
         while (getline(input_file, ss)) {
           if (ss.find("Satisfiable") != std::string::npos) {
-            cout << "    Not valid! " << endl;
+            cout << "       Not valid! " << endl;
             return eVampireSat;
           }
           if (ss != "" && ss.at(0) != '%' &&

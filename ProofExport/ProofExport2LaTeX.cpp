@@ -211,19 +211,19 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
   if (cf.GetSize() > 0) {
     if (p.GetTheorem().GetNumOfUnivVars() > 0)
-      outfile << " such that: $";
+      outfile << " such that: ";
     else
-      outfile << "\\noindent The assumptions are: $";
+      outfile << "\\noindent The assumptions are: ";
     for (unsigned i = 0; i < cf.GetSize(); i++) {
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
+      outfile << " $";
       OutputFact(outfile, factout);
       if (i + 1 == cf.GetSize())
-        outfile << ".";
+        outfile << "$. ";
       else
-        outfile << ",";
+        outfile << "$, ";
     }
-    outfile << "$ ";
-  } else
+  } else if (p.GetTheorem().GetNumOfUnivVars() > 0)
     outfile << ". ";
 
   outfile << "It should be proved that ";
@@ -253,21 +253,41 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
 
 void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
                                     unsigned level) {
-  if (p.NumOfCLAssumptions() > 0 && level > 0)
-    for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
-      if (level == 0)
-        outfile << "\\proofstep{" << level << "}{Assumption: ";
-      else {
-        outfile << "\\proofstep{" << level << "}{Case ";
-        level++;
+  if (level > 0) {
+
+    if (p.NumOfCLAssumptions() > 0) {
+      for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
+        if (level == 0)
+          outfile << "\\proofstep{" << level << "}{Assumption: ";
+        else {
+          outfile << "\\proofstep{" << level << "}{Case ";
+          level++;
+        }
+        outfile << "$";
+        OutputDNF(outfile, p.GetCLAssumption(i));
+        if (level == 0)
+          outfile << "$ }" << endl;
+        else
+          outfile << "$: }" << endl;
       }
-      outfile << "$";
-      OutputDNF(outfile, p.GetCLAssumption(i));
-      if (level == 0)
-        outfile << "$ }" << endl;
-      else
-        outfile << "$: }" << endl;
+    } else {
+      for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
+        if (level == 0)
+          outfile << "\\proofstep{" << level << "}{Assumption: ";
+        else {
+          outfile << "\\proofstep{" << level << "}{Case ";
+          level++;
+        }
+        outfile << "$";
+        OutputFact(outfile, p.GetAssumption(i));
+        if (level == 0)
+          outfile << "$ }" << endl;
+        else
+          outfile << "$: }" << endl;
+      }
     }
+  }
+
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
     outfile << "\\proofstep{" << level << "}{" /*MP application:*/;
 
@@ -314,9 +334,8 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }
-      outfile << "}";
     }
-    outfile << ") }" << endl;
+    outfile << "}) }" << endl;
   }
   OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }
