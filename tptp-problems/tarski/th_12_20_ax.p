@@ -1,9 +1,0 @@
-fof(ax_12_3_1,axiom,(![A,B,C,D]:((parallel_broad(A,B,C,D))=>((A!=B&C!=D&parallel(A,B,C,D))|(A!=B&C!=D&same_lines(A,B,C,D)))))).
-fof(ax_12_3_2,axiom,(![A,B,C,D]:((A!=B&C!=D&parallel(A,B,C,D))=>(parallel_broad(A,B,C,D))))).
-fof(ax_12_3_3,axiom,(![A,B,C,D]:((A!=B&C!=D&same_lines(A,B,C,D))=>(parallel_broad(A,B,C,D))))).
-fof(ax_9_1_1,axiom,(![P,Q,A,B]:((two_sides(A,B,P,Q))=>(?[T]:(P!=Q&npoint_on_line(A,P,Q)&npoint_on_line(B,P,Q)&point_on_line(T,P,Q)&bet(A,T,B)))))).
-fof(ax_9_1_2,axiom,(![P,Q,A,B,T]:((P!=Q&npoint_on_line(A,P,Q)&npoint_on_line(B,P,Q)&point_on_line(T,P,Q)&bet(A,T,B))=>two_sides(A,B,P,Q)))).
-fof(ax_4_10_1,axiom,(![A,B,C]:((col(A,B,C))=>(bet(A,B,C)|bet(B,C,A)|bet(C,A,B))))).
-fof(ax_4_10_2,axiom,(![A,B,C]:((bet(A,B,C))=>col(A,B,C)))).
-fof(ax_4_10_3,axiom,(![A,B,C]:((bet(B,C,A))=>col(A,B,C)))).
-fof(ax_4_10_4,axiom,(![A,B,C]:((bet(C,A,B))=>col(A,B,C)))).
