@@ -1,127 +1,5 @@
 TODO:
 
- 4. Explain the encoding in the paper  
- 3. Generate "excluded middle" axioms for Coq, when used/needed
-10. Julien: For equality, I had hope that with a native encoding we can have something more 
-    efficient than the version which adds the axioms.
-    Don’t you want to run run a full bench with/without native before dropping the support ?
-11. Julien: Maybe we could use this idea also using some meta-theorems or heuristics: 
-    if the goal has some given form then some of the hypotheses should be used:
-    (1) "use necessarily all the given axioms"
-    (2) "use necessarily this axioms" (can be repeated several times)
-12. Test interesting to test Isabelle and Coq hammer.
-14. CLprover generates proofs in terms of its CL2 conjecture. We have to transform it in terms
-    of the original axioms.
-    Julien: I think this is doable, it is just a matter of implementation, I am not worried about this. 
-15. proof simplification does not work properly, if some axiom is used inline in a QED step;
-16. there is possibly a problem in the coq tactic if some inline axioms were used in the last step 
-(see coherent-logic-benchmarks/pp.in.p )
-17. there is a bug in the STL enine - an invalid proof for continious-integration/inline_lemma_3.p
-uses a constants which is not in the context. 
-18. saturation may produce lemmas that are superfluous, same up to renaming variables. 
-20. coq proofs are not correct for:
-tptp-problems/continuous-integration/non_empty_model.p
-file tptp-problems/continuous-integration/triv_false.p ...
-21. Filtering: it will be useful if we take goals from Coq hammer or isabelle hammer in a 
-more realistic context with a lot of garbage. Our benches have very narrow dependencies.
-PJ: There is currently only filtering by reachability starting from the premises. But
-there should be another one, based on relevance, starting from the goal.
-
-The other way round: the symbols occurring in the goal are relevant. And relevant are 
-those appearing in premises, there where in the goal there are only relevant. Etc.
-All other symbols are irrelevant and we delete all axioms involving them?
-
-Each axiom can be seen as an edge in a graph. The nodes are the
-subsets of the set of all predicate symbols.
-
-If we are rules with the following "signatures":
-
-F1: Par
-F2: Col
-R1: Par-> Par
-R2: Col -> Par -> Col
-R3: Col -> Col
-R4: Perp-> Perp
-R5: Par -> Par \/ Perp
-
-Goal:
-Col
-
-We want to filter out the rules R4 and R5.
-The difficulty is to compute if there is a path of different rules
-from the hypotheses to the goal ?
-It does not seem to be so trivial.
-
-DONE:
-
- 1. Make looking for a shortest proof/any proof correct
- 2. Handle native equality (update corpus, parser, added axioms)
- 7. Remove hard coded old benches in the .cpp files.
- 9. Differentiate between "n" prefix for negation and "n" prefix for URSA; use longer prefix for negated predicates symbols
-12. Julien: names with underscore are assumed to be internal auxiliary predicates (introduced by CL2 normalization)
-    I think we should replace it with something less common , like starting with three underscores.
- 5. Make smt-uflia and smt-ufbf engines
-12. Julien: What about trying with hints (statements) taken from the Coq proof using euclid problems ?
-    The syntax could be: fof(name, hint, formula).
-    then we can reuse the parser?
-    For example, we could consider euclid prop 01 and give it these hints ?
-    exists J, CI J A A B
-    exists K, CI K B B A
-    The meaning of an "hint" for a statement, would be there is a proof step 
-    with this statement: if n is number of steps, it would be a big n ary conj ?
-    We could allow also for * in the statement, meaning any point. exists J, CI J * * * means one needs to build a point on a circle.
- 8. Handle nInst in ursa/smt in EQ/ExcludedMiddle axiom (currently they are not instantiate).
- 6. Do not use always the same file names for temporary files like prove.urs etc...
-    to be able to run instances of the provers in parallel.
-13. Julien: use incremental sat solver instead of restarting from scratch
-
-*******************************************************************************************************************
-
-BUGS:
-
-1. 23.03.2020. Julien
-CLprover/Stl prover seems to be stuck with some examples
-coherent-logic-benches
-I think it does not obey to the timeout command.
-[Many changes afterwards, maybe this is obsolete bug.]
-
-2. 24.03.2020. Julien
-the file:
-tptp-problems/coherent-logic-benches/anl.in.p
-produces a wrong proof:
-It wrongly assumes that the variables in the first axiom (initial_model) are universally quantified, but they are constants.
-In tptp constant starts with a lowercase and variables with an uppercase.
-assert (dom_dom_0_dom_0_rr_0_ss_0 a a a) by applying (initial_model).
-[Many changes afterwards, maybe this is obsolete bug.]
-
-3. 25.03.2020. 
-Using z3 i get a lot of errors like:
-Proving theorem: lemma_Euclid4:(! [A,B,C,Xa,Xb,Xc] : ((per(A,B,C) & per(Xa,Xb,Xc)) => ((congA(A,B,C,Xa,Xb,Xc)))))
-Trying proof length 1;
-Trying proof length 2;
-Trying proof length 4;
-Trying proof length 8;The model file is empty !
-Is it normal failure ?
-[Many changes afterwards, maybe this is obsolete bug.]
-
-4. Julien: 06.04.2020.
-Proofs only of size 32:
-Benches: Col trans 100
-Time given: 30
-Engine: SMT-BV
-0031 it fails to prove using proof size 32 can be proved using
-proof size 8!
-Number 0035 seems to be problematic as well. 
-
-RESOLVED:
-
-5. Predrag: 07.04.2020.
-// FIXME: BV complains about adding negative number
-       snNegIntroCheck += smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), -1, 0);
-- Adding -1 replaced by difference of two sums
-
-
-
 *******************************************************************************************************************
 
 IDEAS:
@@ -149,21 +27,12 @@ without introducing lemmas.
 4. Julien: It seems that for some problems the function which maps n to the time to 
 find a proof or fail to find a proof of n is not increasing in n!  
 larger value of n can sometimes give much smaller computing time.
-It would be hard to implement, but maybe on our several cores computer 
+On our several cores computer 
 we could run in parallel size 8, 16, 32 and take the first answer ? or 
 another solution is to give this problem to the solver.
 
-Predrag: This is absolutely sensible idea. But I see the following problems:
-(1) First and most important :) I don't have experience with 
-multicore programming - maybe it is not that difficult;
-(2) Even if I make it work on my computer, it might not work on 
-your Mac or StarExec, so we could have other troubles;
-(3) Parallelization of this kind is rather orthogonal to our
-current attempts: looking for suitable encodings etc. More
-cores or more computers is something that can be always 
-addressed later.
-
-5 Julien: to deal with symmetry we can make an experiment by imposing the order of the point in Col predicates, deriving Col X Y Z we can add a constraint that X <= Y <= Z.
+5 Julien: to deal with symmetry we can make an experiment by imposing the order of the point in 
+Col predicates, deriving Col X Y Z we can add a constraint that X <= Y <= Z.
 
 6. Julien: Idea for tree traversal for annotating Nesting
 
@@ -208,21 +77,16 @@ Qed.
     stl proves some theorems, and ursa does not. We have to exploit these things. 
 
 10. Julien:
-> Let's assume that we have natural language proof in latex and we want to turn it into a formal proof. The structure of such a proof is hard to  reconstruct automatically, it is hard to formalize each sentence in the proof. But it may help our prover to detect just a few things in the proofs and to try to reconstruct the proof using these pieces of information.
-> Maybe we could help the CLprover/SAT/SMT by saying that some proof steps is using (perp_bisect_cong2 G A' B C)
-> but we do not have to provide the precise information that it is in a subgoal to prove Cong B C C G.
-...
-> So the approach would be a little bit different that  just cutting the natural proof in small pieces in order to try to get a formal proof. Here we would help the system  by giving some information. I think it would be closer to what a human does when he formalizes a natural language proof: you have hints that you should use some proofs steps. But usually the natural language proof forgets some special cases. So if you try to prove automatically that one step can be derived from the previous it will fail because sometimes some assumptions are missing. For example, in Euclid proof, often only the proof in the general case is given.
+ Let's assume that we have natural language proof in latex and we want to turn it into a formal proof. The structure of such a proof is hard to  reconstruct automatically, it is hard to formalize each sentence in the proof. But it may help our prover to detect just a few things in the proofs and to try to reconstruct the proof using these pieces of information.
+ Maybe we could help the CLprover/SAT/SMT by saying that some proof steps is using (perp_bisect_cong2 G A' B C)
+ but we do not have to provide the precise information that it is in a subgoal to prove Cong B C C G.
+ So the approach would be a little bit different than just cutting the natural proof in small pieces in order to try to get a formal proof. Here we would help the system  by giving some information. I think it would be closer to what a human does when he formalizes a natural language proof: you have hints that you should use some proofs steps. But usually the natural language proof forgets some special cases. So if you try to prove automatically that one step can be derived from the previous it will fail because sometimes some assumptions are missing. For example, in Euclid proof, often only the proof in the general case is given.
 
-11. Julien:
-Yes I agree that for experimenting we should look at individual engines, but when comparing to other provers we can take into consideration that 
-they are portfolio prover using different strategies.
-
-13. Predrag: We can use incolmplete SAT solvers for SAT encoding:
+13. Predrag: We can try to use incolmplete SAT solvers for SAT solving:
 https://github.com/msoos/walksat
  Walksat cannot find a model for one conjecture (nested2)
 
-14. Julien: use some other SAT solver: I tried walksat on the two examples and I could not get a model.
+14. Julien: use some others SAT solvers: I tried walksat on the two examples and I could not get a model.
 On the nested2b-42s (of course we can not compare to 42s):
 Using glucose : 12s
 Using cryptominisat: 9s.
