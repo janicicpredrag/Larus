@@ -54,7 +54,9 @@ otherwise:
 
    -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32
 
-   -a<axiom>            for additional axioms (negelim|excludedmiddle); example: -anegelim; default: do not include
+   -nonegelim           do not use negation elimination axiom (R & ~R => false)
+
+   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)
 
    -h <invoke>          the way a FOL prover is invoked for iltering out needed axioms
 
