@@ -212,26 +212,26 @@ if [ "$prover" = "Larus" ]; then
      case $opt3 in
          "None")
              echo "$opt3 selected."
-             exaxioms=""
-             neaxioms=""
+             exaxioms="-noexcludedmiddle"
+             neaxioms="-nonegelim"
              break
              ;;
          "All")
              echo "$opt3 selected"
-             exaxioms="-aexcludedmiddle"
-             neaxioms="-anegelim"
+             exaxioms=""
+             neaxioms=""
              break
              ;;
          "Excluded Middle Only")
              echo "$opt3 selected"
-             exaxioms="-aexcludedmiddle"
-             neaxioms=""
+             exaxioms=""
+             neaxioms="-nonegelim"
              break
              ;;
           "Neg Elim Only")
              echo "$opt3 selected"
-             exaxioms=""
-             neaxioms="-anegelim"
+             exaxioms="-noexcludedmiddle"
+             neaxioms=""
              break
              ;;
          *) echo "invalid option $REPLY";;
@@ -339,7 +339,7 @@ tm() {
   printf >&2 " ~$(($(date +%s)-${start})) seconds. "
   echo -n $prover >> data.csv
   if [ "$prover" = "Larus" ]; then
-      echo -n  "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp -vcoq" "$neaxioms" "$exaxioms" "$implicit" >> data.csv
+      echo -n  "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp " "$neaxioms" "$exaxioms" "$implicit" >> data.csv
   fi
   echo -n ";" >> data.csv
   echo -n " $(($(date +%s)-${start})); " >> data.csv
@@ -359,7 +359,7 @@ do
         success_string="SZS status Theorem"
 	echo   "-l" "$time" "-m" $startinglength "-p" "$maxProofLen" "-n" "$nest" "$minproof" "$engine" "-ftptp" "$neaxioms" "$exaxioms" "$implicit"
 	success_string="SZS status Theorem"
-        tm ./larus -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
+        tm ../larus -l"$time" -m$startinglength -p"$maxProofLen" -n"$nest" $minproof $engine -ftptp  "$neaxioms" "$exaxioms" "$implicit" "$file"
    else if [[ $prover = "eprover" ]]; then  
         success_string="SZS status Theorem"
         tm eprover -xAuto -tAuto --cpu-limit="$time" "$file"
