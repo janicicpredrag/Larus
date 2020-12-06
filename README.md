@@ -6,6 +6,8 @@ encoding a proof of the theorem being proved to SAT or SMT. Encoding to SAT is p
 the tool URSA. SAT solving is done using the embedded solver clasp (https://potassco.org/clasp/). 
 Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 
+License: GPLv3
+
 ## Install
 Larus is written in the C++ programming language. 
 To build it, just type make in the root folder. 
