@@ -4,11 +4,9 @@ clprov=1
 time=20
 maxlength=-p32
 nesting=-n3
-axioms1=-aexcludedmiddle
-axioms2=-anegelim
-benches=tptp-problems/continuous-integration/*.p
-#benches=tptp-problems/col-trans/col-trans-00*.p
-#benches=tptp-problems/euclid-native-eq/*.p
+axioms1=
+axioms2=
+benches=continuous-integration/tests/*.p
 today=`date '+%Y_%m_%d__%H_%M'`;
 filename="results/bugs-$today.out"
 summary="results/time-benches-summary-$today.out"
@@ -22,7 +20,7 @@ orange=0
 if [ -z "$1" ]; then
     echo ""
 else
-    benches=tptp-problems/continuous-integration/$1
+    benches=tests/$1
 fi
 tm() {
   local start=$(gdate +%s)
@@ -67,13 +65,13 @@ test_success_eprover () {
     fi
 }
 
-
+cd ..
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
     if [ $clprov = "1" ]; then
 	printf "URSA:  "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -eursa -ftptp -vcoq "$file" > resursa.txt -s
+	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -eursa -ftptp -vcoq "$file" > resursa.txt 
 	test_success resursa.txt
 	printf "STL:   "
 	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -estl -ftptp -vcoq "$file" > resstl.txt
