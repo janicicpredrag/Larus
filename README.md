@@ -71,7 +71,7 @@ In order to check the output using Coq first you need to compile the Coq tactics
 `./configure.sh`
 `make`
 
-The if one use the option -vcoq to generate a .v file in the proofs directory and to compile it using Coq.
+The option -vcoq generates a .v file in the proofs directory and compiles it using the version of Coq found in the path.
 
 ## Hints 
 
