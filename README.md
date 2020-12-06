@@ -34,7 +34,7 @@ otherwise:
 
    -l<time limit>       for time limit; example: -l10; default: 10s
 
-   -f<format>           for input format; example -ftptp; default: tptp
+   -f<format>           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
 
    -s                   for search for a single proof; example:-s; default: no, search for a shortest proof
 
@@ -58,11 +58,20 @@ otherwise:
 
    -noexcludedmiddle    do not use excluded middle axiom (R | ~R)
 
-   -h <invoke>          the way a FOL prover is invoked for iltering out needed axioms
+   -h <invoke>          the way a FOL prover is invoked for filtering out needed axioms
 
-   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq); 
-                        examples: -vcoq; default: no
+   -v<prover>           for generating and verifying the proof by an interactive theorem prover;
+                        the only supported ITP is Coq.
+                        example: -vcoq; default: no
 
+## Checking proofs using Coq
+
+In order to check the output using Coq first you need to compile the Coq tactics necessary for checking the proofs:
+`cd proofs`
+`./configure.sh`
+`make`
+
+The if one use the option -vcoq to generate a .v file in the proofs directory and to compile it using Coq.
 
 ## Hints 
 
