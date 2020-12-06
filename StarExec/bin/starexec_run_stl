@@ -1,3 +1,0 @@
-#!/bin/sh
-
-./CLprover -l $STAREXEC_WALLCLOCK_LIMIT -ftptp -estl $1 
