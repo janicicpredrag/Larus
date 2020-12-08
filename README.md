@@ -14,7 +14,7 @@ This software is distributed under the licence GPLv3.
 Larus is written in the C++ programming language. 
 To build it, just type `make` in the root folder. 
 
-### Depedencies
+### Dependencies
 
 Larus can use the following external tools:
  - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip)
