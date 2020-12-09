@@ -15,7 +15,7 @@ today=`date '+%Y_%m_%d__%H_%M_%S'`;
 filename="results/Larus-results-$today.out"
 summary="results/Larus-summary-$today.out"
 PS3='Please enter your choice of benches: '
-options=("Euclid" "Euclid sorted" "Tarski" "Coherent logic benches" "Col trans hard" "Col trans very hard" "Col trans very very hard" "Col trans 10" "Col trans 100" "Col trans all" "Crafted hard" "Coq files")
+options=("Euclid" "Tarski" "Coherent logic benches" "Col trans 10" "Col trans 100" "Col trans all" "Crafted hard" "Coq files")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -23,11 +23,6 @@ do
             echo "$opt selected."
 	    benches="tptp-problems/euclid-native-eq/*.p"
 	    break
-            ;;
-	"Euclid sorted")
-            echo "$opt selected."
-            benches="tptp-problems/sorted-euclid-native-eq/*.p"
-            break
             ;;
        "Tarski")
             echo "$opt selected."
@@ -38,21 +33,6 @@ do
             echo "$opt selected"
     	    benches="tptp-problems/coherent-logic-benches/*.p"
 	    break
-            ;;
-        "Col trans hard")
-            echo "$opt selected"
-            benches="tptp-problems/col-trans-hard/col-trans-hard-*.p"
-            break
-            ;;
-       "Col trans very hard")
-            echo "$opt selected"
-            benches="tptp-problems/col-trans-very-hard/col-trans-hard-*.p"
-            break
-            ;;
-       "Col trans very very hard")
-            echo "$opt selected"
-            benches="tptp-problems/col-trans-very-very-hard/col-trans-hard-*.p"
-            break
             ;;
         "Col trans 10")
             echo "$opt selected"
@@ -397,20 +377,6 @@ do
  ((i++))
   echo -n "Number of theorems proved until now:" | tee -a $summary
   echo $proved 
-#  if [ "$prover" = "zenon" ]; then
-#      grep FOUND < $filename | wc -l | tee -a $summary
-#  else if [ "$prover" = "geo" ]; then
-#	   grep "END-OF-PROOF" <  $filename | wc -l | tee -a $summary
-#  else if [ "$prover" = "leancop" ]; then
-#	   grep "End of proof" <  $filename | wc -l | tee -a $summary
-#  else if [ "$prover" = "nanocop" ]; then
-#	   grep "End of proof" <  $filename | wc -l | tee -a $summary	   
-#  else
-#	   grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
-#       fi
-#     fi
-#       fi
-#       fi
 done
 echo "------------------------------------------------------"
 echo "Summary:"
@@ -425,22 +391,4 @@ echo "Number of benches" $i | tee -a $summary
 echo "Number of theorems proved:" $proved | tee -a $summary
 
 
-#if [ "$prover" = "zenon" ]; then
-#    grep FOUND < $filename | wc -l | tee -a $summary
-#else if [ "$prover" = "geo" ]; then
-#	echo "here"
-#	grep "END-OF-PROOF" < $filename | wc -l | tee -a $summary
-#else if [ "$prover" = "leancop" ]; then
-#	echo "here"
-#	grep "End of proof" < $filename | wc -l | tee -a $summary
-#else
-#	grep "SZS status Theorem" < $filename | wc -l | tee -a $summary
-#	echo "Contradictory axioms:"
-#	grep "SZS status Contradictory" < $filename | wc -l | tee -a $summary
-#	echo "Counter sat:"
-#	grep "SZS status Counter" < $filename | wc -l | tee -a $summary
-#	echo "Number of theorems checked by Coq:" | tee -a $summary
-#	grep Correct < $filename | wc -l | tee -a $summary
-#    fi
-#fi
-#fi
+

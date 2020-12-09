@@ -16,6 +16,7 @@ def number_solved_in_less_than(data, prover_name, bench_name, maxtime):
 def number_of_benches(data, list_of_provers, bench_name):
     l=[len([row for row in data if prover_name in row['prover'].strip() and bench_name in row['file']]) for prover_name in list_of_provers]
     if min(l) != max(l):
+        print(l)
         print("Warning not same number of benches for all provers !")
         return(max(l))
     else:
@@ -125,7 +126,7 @@ with open('data.csv') as csvfile:
     data= list( row for row in reader)
 with open('data-clprover-variants.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
-    data_clprover= list( row for row in reader)
+    data_larus= list( row for row in reader)
     big_list= [("vampire","green","dashed"),
                ("eprover","darkred",(0, (3, 1, 1, 1, 1, 1))),
                ("iprover","darkgreen",(0,(3,5,1,5))),
@@ -162,4 +163,4 @@ with open('data-clprover-variants.csv') as csvfile:
     generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
     generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
     generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
-    generate_graph(data_clprover,"cl-prover-variants.pdf", variants, "euclid", "Euclid benches with different parameters for Larus", maxtime)
+    generate_graph(data_larus,"larus-variants.pdf", variants, "euclid", "Euclid benches with different parameters for Larus", maxtime)
