@@ -255,7 +255,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& p
         system("rm sat-proof.txt 2>/dev/null");
         // if (!ret) // do not attempt to read some old proof representation
         //    cout << "The old file sat-proof.txt has been deleted." << endl;
-        const string sCall = "timeout " + to_string(mParams.time_limit) + " ./ursa < prove.urs -q -c -l12 -sclasp";
+        const string sCall = "timeout " + to_string(mParams.time_limit) + " ursa < prove.urs -q -c -l12 -sclasp";
         if (system(sCall.c_str()))  // Find a proof
             return false;
         return (proof.DecodeProof(formula, "sat-proof.txt"));
