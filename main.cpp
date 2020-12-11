@@ -183,12 +183,19 @@ int main(int argc, char **argv) {
                  !strcmp(argv[i] + 1, "noexcludedmiddle")) {
         params.mbNoExcludedMiddle = true;
       } else if (argv[i][0] == '-' && argv[i][1] == 'h') {
+        if (strlen(argv[i] + 2) == 0) {
+          params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
+        } else {
+          params.vampire_time_limit = atoi(argv[i] + 2);
+          if (params.vampire_time_limit <= 0)
+            params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
+        }
         // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp
         // --output_axiom_names on"
         //                params.msHammerInvoke = argv[i+1];
         // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
         params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
-        params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
+
       } else if (argv[i][0] == '-' && argv[i][1] == 'e') {
         if (!strcmp(argv[i] + 2, "stl"))
           params.eEngine = eSTL_ProvingEngine;
@@ -272,9 +279,10 @@ int main(int argc, char **argv) {
     cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"
          << endl
          << endl;
-    cout << "   -h <invoke>          the way a FOL prover is invoked for "
+    cout << "   -h<time>             use a FOL prover for filtering out needed "
          << endl;
-    cout << "                        filtering out needed axioms" << endl
+    cout << "                        axioms (<time> is optional, default: 18)"
+         << endl
          << endl;
     cout << "   -v<prover>           for generating and verifying the proof by "
          << endl;
