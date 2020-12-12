@@ -1182,7 +1182,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         /* unless some axioms introduces >4 witnesses */
         sbMatchExiQuantifiers +=
             appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom] + nL + 1),
-                  original_constants + ((nProofStep + 2) << 3) + nL);
+                  original_constants + ((nProofStep + 2) << 3) + 1 + nL);
       }
       /* The MP proof step is correct if it was derived by using some axiom  */
       if (nProofStep != 0)
