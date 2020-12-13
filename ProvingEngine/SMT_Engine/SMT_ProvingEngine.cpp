@@ -398,7 +398,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
   }
 
   set<string> decl = DECLARATIONS;
-  string smt_proofout_filename = tmpnam(NULL); // "smt-proof.txt"; //
+  string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
   if (system(NULL)) {
 
     if (formula.GetSize() >
@@ -940,7 +940,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                              appeq(app("nFrom", nProofStep, 0), 99) + ")";
         for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
           unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-
           string sb =
               appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
           /*string sb1, sb2, sb3;
@@ -1144,9 +1143,19 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           sbMatchConclusion +=
               appeq(app("nArg", nProofStep, nInd),
                     nAxiomArgument[nAxiom][nGoalIndex * mnMaxArity + nInd]);
+
+        if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0 &&
+            nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] <=
+                nAxiomUniVars[nAxiom])
+          sbMatchConclusion +=
+              smt_less(app("nArg", nProofStep, nInd),
+                       original_constants + ((nProofStep + 2) << 3));
         sbMatchConclusion +=
             smt_less(app("nArg", nProofStep, nInd),
-                     original_constants + ((nProofStep + 2) << 3) + 1);
+                     original_constants + ((nProofStep + 3) << 3));
+        // sbMatchConclusion +=
+        //  smt_less(app("nArg", nProofStep, nInd),
+        //         original_constants + ((nProofStep + 2) << 3) + 1);
       }
 
       string sb;
@@ -1164,8 +1173,15 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             sb += appeq(app("nArg", nProofStep, mnMaxArity + nInd),
                         nAxiomArgument[nAxiom]
                                       [(nGoalIndex + 1) * mnMaxArity + nInd]);
+
+          if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0) {
+            if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] <=
+                nAxiomUniVars[nAxiom])
+              sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
+                             original_constants + ((nProofStep + 2) << 3));
+          }
           sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-                         original_constants + ((nProofStep + 2) << 3) + 1);
+                         original_constants + ((nProofStep + 3) << 3));
         };
         sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
       } else
