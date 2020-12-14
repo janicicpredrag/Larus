@@ -273,8 +273,9 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
   size_t numberOfCases = theorem.GetGoal().GetSize();
   size_t numberOfConjInCases = theorem.GetGoal().GetElement(0).GetSize();
   // assert(numberOfCases <= 2 && numberOfConjInCases <= 2);
-  if (numberOfCases == 1 &&
-      numberOfConjInCases > 1) { // if there are more conjuncts in the goal
+  if (numberOfCases == 1 && numberOfConjInCases > 1 &&
+      theorem.GetNumOfExistVars() ==
+          0) { // if there are more conjuncts in the goal
     for (size_t i = 0; i < numberOfConjInCases; i++) {
       Theory T1 = T;
       ProvingEngine *engine;

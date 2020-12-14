@@ -63,7 +63,7 @@ otherwise:
 
    -noexcludedmiddle    do not use excluded middle axiom (R | ~R)
 
-   -h <invoke>          the way a FOL prover is invoked for filtering out needed axioms
+   -h<time>             use a FOL prover for filtering out needed axioms (<time> is optional, default: 18)
 
    -v<prover>           for generating and verifying the proof by an interactive theorem prover;
                         the only supported ITP is Coq.

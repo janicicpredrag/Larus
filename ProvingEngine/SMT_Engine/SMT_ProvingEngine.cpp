@@ -398,7 +398,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
   }
 
   set<string> decl = DECLARATIONS;
-  string smt_proofout_filename = tmpnam(NULL); // "smt-proof.txt"; //
+  string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
   if (system(NULL)) {
 
     if (formula.GetSize() >
@@ -940,7 +940,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                              appeq(app("nFrom", nProofStep, 0), 99) + ")";
         for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
           unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-
           string sb =
               appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
           /*string sb1, sb2, sb3;
@@ -1144,9 +1143,16 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           sbMatchConclusion +=
               appeq(app("nArg", nProofStep, nInd),
                     nAxiomArgument[nAxiom][nGoalIndex * mnMaxArity + nInd]);
-        sbMatchConclusion +=
-            smt_less(app("nArg", nProofStep, nInd),
-                     original_constants + ((nProofStep + 2) << 3) + 1);
+
+        /*  if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0 &&
+              nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] <=
+                  nAxiomUniVars[nAxiom])
+            sbMatchConclusion +=
+                smt_less(app("nArg", nProofStep, nInd),
+                         original_constants + ((nProofStep + 0) << 3) + 1);*/
+        // sbMatchConclusion +=
+        //    smt_less(app("nArg", nProofStep, nInd),
+        //           original_constants + ((nProofStep + 3) << 3));
       }
 
       string sb;
@@ -1164,8 +1170,17 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             sb += appeq(app("nArg", nProofStep, mnMaxArity + nInd),
                         nAxiomArgument[nAxiom]
                                       [(nGoalIndex + 1) * mnMaxArity + nInd]);
-          sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-                         original_constants + ((nProofStep + 2) << 3) + 1);
+
+          /*     if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0
+             &&
+                   nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] <=
+                       nAxiomUniVars[nAxiom]) {
+                 sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
+                                original_constants + ((nProofStep + 0) << 3) +
+             1);
+               }*/
+          // sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
+          //               original_constants + ((nProofStep + 3) << 3));
         };
         sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
       } else
@@ -1182,17 +1197,25 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         /* unless some axioms introduces >4 witnesses */
         sbMatchExiQuantifiers +=
             appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom] + nL + 1),
-                  original_constants + ((nProofStep + 2) << 3) + nL);
+                  original_constants + ((nProofStep + 0) << 3) + nL + 1);
       }
+
+      string sbCorrectInst = "";
+      for (unsigned nInd = 0; nInd < nAxiomUniVars[nAxiom]; nInd++) {
+        sbCorrectInst +=
+            smt_less(app("nInst", nProofStep, nInd + 1),
+                     original_constants + ((nProofStep + 0) << 3) + 1);
+      }
+
       /* The MP proof step is correct if it was derived by using some axiom  */
       if (nProofStep != 0)
-        sbMPStep += "\n      (and " + sbMatchPremises + " " +
+        sbMPStep += "\n      (and " + sbMatchPremises + " " + sbCorrectInst +
                     sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                     appeq(app("nNesting", nProofStep),
                           app("nNesting", nProofStep - 1)) +
                     ")";
       else
-        sbMPStep += "\n      (and " + sbMatchPremises + " " +
+        sbMPStep += "\n      (and " + sbMatchPremises + " " + sbCorrectInst +
                     sbMatchConclusion + " " + sbMatchExiQuantifiers + " " +
                     appeq(app("nNesting", nProofStep), 1) + ")";
     }
@@ -1257,7 +1280,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             mpT->mConstants.size() + mpT->mConstantsPermissible.size();
         sbMatchConclusion +=
             smt_less(app("nArg", nProofStep, nInd),
-                     original_constants + ((nProofStep + 2) << 3));
+                     original_constants + ((nProofStep + 0) << 3) + 1);
       }
       sbMatchConclusion += "(not " + app("bCases", nProofStep) + ")";
       /* The MP proof step is correct if it was derived by using some axiom  */
