@@ -594,24 +594,41 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
                 "            "
              << endl;
 
+  map<string, unsigned> CONSTANTS;
+  for (vector<string>::const_iterator it = mpT->mConstants.begin();
+       it != mpT->mConstants.end(); it++)
+    CONSTANTS[*it] = enumerator++;
+
   ursaFile << "nP[nFinalStep][0] = " + URSA_NUM_PREFIX +
                   ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ";"
            << endl;
-  for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++)
-    ursaFile << "nA[nFinalStep][" << i
-             << "] = " + URSA_NUM_PREFIX +
-                    ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + ";"
-             << endl;
+  for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
+    if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) !=
+        CONSTANTS.end())
+      ursaFile << "nA[nFinalStep][" << i
+               << "] = " + URSA_NUM_PREFIX +
+                      ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) +
+                      ";"
+               << endl;
+    else
+      ursaFile << "nA[nFinalStep][" << i << "] = 999;"
+               << endl; // Existential vars are not to be matched
+  }
   if (formula.GetSize() > 1) {
     ursaFile << "nP[nFinalStep][1] = " + URSA_NUM_PREFIX +
                     ToUpper(formula.GetElement(1).GetElement(0).GetName()) + ";"
              << endl;
     for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++)
-      ursaFile << "nA[nFinalStep][nMaxArg+" << i
-               << "] = " + URSA_NUM_PREFIX +
-                      ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
-                      ";"
-               << endl;
+      if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) !=
+          CONSTANTS.end())
+        ursaFile << "nA[nFinalStep][nMaxArg+" << i
+                 << "] = " + URSA_NUM_PREFIX +
+                        ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
+                        ";"
+                 << endl;
+      else
+        ursaFile << "nA[nFinalStep][nMaxArg+" << i << "] = 999;"
+                 << endl; // Existential vars are not to be matched
   }
   ursaFile << endl;
 
@@ -865,7 +882,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "
            << endl;
   ursaFile << "       bPrevStepGoal &&= "
-              "(nA[nProofStep-1][nInd]==nA[nFinalStep][nInd]); "
+              "(nA[nFinalStep][nInd]==999 || "
+              "nA[nProofStep-1][nInd]==nA[nFinalStep][nInd]); "
            << endl;
   ursaFile << "   bPrevStepGoal2 = (nProofStep>0)  && "
               "(nP[nProofStep-1][0]==nP[nFinalStep][1]) && "
@@ -874,7 +892,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "
            << endl;
   ursaFile << "       bPrevStepGoal2 &&= "
-              "(nA[nProofStep-1][nInd]==nA[nFinalStep][nMaxArg+nInd]); "
+              "(nA[nFinalStep][nMaxArg+nInd]==999 || "
+              "nA[nProofStep-1][nInd]==nA[nFinalStep][nMaxArg+nInd]); "
            << endl;
   ursaFile << "   bPrevStepGoal ||= (bPrevStepGoal2 && bCases[nFinalStep]); "
            << endl;
@@ -911,9 +930,9 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
            << endl;
   ursaFile << "   for (nInd = 0; nInd < nArity[nP[nFinalStep][0]]; nInd++) "
            << endl;
-  ursaFile
-      << "      bGoalReached &&= (nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "
-      << endl;
+  ursaFile << "      bGoalReached &&= (nA[nFinalStep][nInd]==999 || "
+              "nA[nProofStep][nInd]==nA[nFinalStep][nInd]); "
+           << endl;
   ursaFile << endl;
   ursaFile << "   bGoalReached2 = (nProofStep>0)  && "
               "(nP[nProofStep][0]==nP[nFinalStep][1]); "
@@ -921,7 +940,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "   for (nInd = 0; nInd < nArity[nP[nFinalStep][1]]; nInd++) "
            << endl;
   ursaFile << "       bGoalReached2 &&= "
-              "(nA[nProofStep][nInd]==nA[nFinalStep][nMaxArg+nInd]); "
+              "(nA[nFinalStep][nMaxArg+nInd]==999 || "
+              "nA[nProofStep][nInd]==nA[nFinalStep][nMaxArg+nInd]); "
            << endl;
   ursaFile << "   bGoalReached ||= (bGoalReached2 && bCases[nFinalStep]); "
            << endl;
