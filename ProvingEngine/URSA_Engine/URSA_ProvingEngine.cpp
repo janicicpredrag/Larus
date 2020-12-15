@@ -728,15 +728,16 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "                                 "
               "nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] == 0));"
            << endl;
-  ursaFile
-      << "          bMatchConclusion &&= "
-         "(nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] == 0 || "
-         "nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] > nAxiomUniVars[nAxiom] "
-         "|| (nA[nProofStep][nInd] < "
-      << noc << "+((nProofStep+2)<<3))); " << endl;
-  ursaFile << "          bMatchConclusion &&= "
-              "(nA[nProofStep][nInd] < "
-           << noc << "+((nProofStep+3)<<3)); " << endl;
+  // ursaFile
+  //  << "          bMatchConclusion &&= "
+  //         "(nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] == 0 || "
+  //         "nBinding[nAxiom][nGoalIndex*nMaxArg+nInd] > nAxiomUniVars[nAxiom]
+  //         "
+  //         "|| (nA[nProofStep][nInd] < "
+  //      << noc << "+((nProofStep+2)<<3))); " << endl;
+  //  ursaFile << "          bMatchConclusion &&= "
+  //              "(nA[nProofStep][nInd] < "
+  //           << noc << "+((nProofStep+3)<<3)); " << endl;
   ursaFile << "       } " << endl;
 
   ursaFile << "       b = bAxiomBranching[nAxiom] && "
@@ -760,15 +761,15 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
               "nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] == 0));"
            << endl;
 
-  ursaFile << "          b &&= "
-              "(nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] == 0 ||"
-              "nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] > "
-              "nAxiomUniVars[nAxiom]"
-              "|| (nA[nProofStep][nMaxArg+nInd] < "
-           << noc << "+((nProofStep+2)<<3))); " << endl;
-  ursaFile << "          b &&= "
-              "(nA[nProofStep][nMaxArg+nInd] < "
-           << noc << "+((nProofStep+3)<<3)); " << endl;
+  // ursaFile << "          b &&= "
+  //             "(nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] == 0 ||"
+  //           "nBinding[nAxiom][(nGoalIndex+1)*nMaxArg+nInd] > "
+  //         "nAxiomUniVars[nAxiom]"
+  //       "|| (nA[nProofStep][nMaxArg+nInd] < "
+  //           << noc << "+((nProofStep+2)<<3))); " << endl;
+  //  ursaFile << "          b &&= "
+  //              "(nA[nProofStep][nMaxArg+nInd] < "
+  //           << noc << "+((nProofStep+3)<<3)); " << endl;
   ursaFile << "       } " << endl;
   ursaFile << "       bMatchConclusion &&= ((!bAxiomBranching[nAxiom] && "
               "!bCases[nProofStep]) || (bCases[nProofStep] && b)); "
@@ -779,20 +780,29 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
            << endl;
   ursaFile << "       bMatchExiQuantifiers = true; " << endl;
   ursaFile << "       for (nL=0; nL<nAxiomExiVars[nAxiom]; nL++) { " << endl;
-  ursaFile << "           /* The id of a new constant is ((nProofStep+1)<<3) + "
+  ursaFile << "           /* The id of a new constant is ((nProofStep)<<3) + "
               "nL, ie. 8*nProofStep+nL - so they don't overlap, "
            << endl;
   ursaFile << "              unless some axioms introduces >7 witnesses */ "
            << endl;
   ursaFile << "           bMatchExiQuantifiers &&= "
               "nInst[nProofStep][nAxiomUniVars[nAxiom]+nL+1] == "
-           << noc << "+((nProofStep+2)<<3)+1+nL; /* fresh constants*/ " << endl;
+           << noc << "+((nProofStep)<<3)+1+nL; /* fresh constants*/ " << endl;
   ursaFile << "       } " << endl;
   ursaFile << endl;
   ursaFile << "       /* The MP proof step is correct if it was derived by "
               "using some axiom  */ "
            << endl;
+
+  ursaFile << "       bCorrectInst = true; " << endl;
+  ursaFile << "       for (nInd = 0; nInd < nAxiomUniVars[nAxiom]; nInd++) { "
+           << endl;
+  ursaFile << "         bCorrectInst &&= (nInst[nProofStep][nInd+1] < " << noc
+           << " + ((nProofStep<<3)+1));" << endl;
+  ursaFile << "       }" << endl;
+
   ursaFile << "       bMPStep ||= (bMatchPremises && bMatchConclusion && "
+              "bCorrectInst && "
               "bMatchExiQuantifiers && "
            << endl;
   ursaFile << "                         ((nNesting[nProofStep] == "
