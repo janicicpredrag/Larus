@@ -685,8 +685,8 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           else
             UnivVar =
                 mpT->mCLaxioms[nAxiom - eNumberOfStepKinds].first.GetUnivVar(i);
-          if (sConstants.find(inst[i]) == sConstants.end() &&
-              numOfExistVars == 0)
+          if (sConstants.find(inst[i]) == sConstants.end() /* &&
+              numOfExistVars == 0*/)
             inst[i] = 0; // eliminate spurious constants
           instantiation.push_back(
               pair<string, string>(UnivVar, sConstants[inst[i]]));

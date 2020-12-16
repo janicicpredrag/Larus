@@ -398,7 +398,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
   }
 
   set<string> decl = DECLARATIONS;
-  string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
+  string smt_proofout_filename = tmpnam(NULL); // "smt-proof.txt"; //
   if (system(NULL)) {
 
     if (formula.GetSize() >
@@ -711,8 +711,8 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
     sbPrevStepGoal = "(or " + sbPrevStepGoal +
                      appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + "true") +
                      ")";
-    unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
     if (formula.GetSize() > 1) {
+      unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
       sbPrevStepGoal2 =
           "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1));
       for (unsigned nInd = 0; nInd < ArityFinal1; nInd++)
@@ -1192,19 +1192,18 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       sbMatchExiQuantifiers = "";
       for (unsigned nL = 0; nL < nAxiomExiVars[nAxiom]; nL++) {
         /* The id of a new constant is (nProofStep + 2 << 3) + nL, ie.
-         * 8*(nProofStep+2)+nL
-         * - so they don't overlap, */
-        /* unless some axioms introduces >4 witnesses */
+         * 8*(nProofStep+2)+nL - so they don't overlap, */
+        /* unless some axioms introduce >8 witnesses */
         sbMatchExiQuantifiers +=
             appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom] + nL + 1),
-                  original_constants + ((nProofStep + 0) << 3) + nL + 1);
+                  original_constants + (nProofStep << 3) + nL + 1);
       }
 
       string sbCorrectInst = "";
       for (unsigned nInd = 0; nInd < nAxiomUniVars[nAxiom]; nInd++) {
         sbCorrectInst +=
             smt_less(app("nInst", nProofStep, nInd + 1),
-                     original_constants + ((nProofStep + 0) << 3) + 1);
+                     original_constants + ((nProofStep + 0) << 3) + 0);
       }
 
       /* The MP proof step is correct if it was derived by using some axiom  */
