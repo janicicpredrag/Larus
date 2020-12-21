@@ -274,34 +274,37 @@ string SMT_ProvingEngine::smt_prefix(string arg1, string arg2) {
 
 void SMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
   mnAxiomsCount++;
-  nAxiomUniVars[mnAxiomsCount] = axiom.GetNumOfUnivVars();
-  nAxiomExiVars[mnAxiomsCount] = axiom.GetNumOfExistVars();
-  nAxiomPremises[mnAxiomsCount] = axiom.GetPremises().GetSize();
-  bAxiomBranching[mnAxiomsCount] =
+  if (mnAxiomsCount >= AXIOMS.size())
+    AXIOMS.resize(eNumberOfStepKinds + (AXIOMS.size() + 1) * 2);
+
+  AXIOMS[mnAxiomsCount].nAxiomUniVars = axiom.GetNumOfUnivVars();
+  AXIOMS[mnAxiomsCount].nAxiomExiVars = axiom.GetNumOfExistVars();
+  AXIOMS[mnAxiomsCount].nAxiomPremises = axiom.GetPremises().GetSize();
+  AXIOMS[mnAxiomsCount].bAxiomBranching =
       ((axiom.GetGoal().GetSize() > 1) ? true : false);
 
   size_t noPremises = axiom.GetPremises().GetSize();
   for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-    nPredicate[mnAxiomsCount][j] =
+    AXIOMS[mnAxiomsCount].nPredicate[j] =
         PREDICATE[URSA_NUM_PREFIX +
                   ToUpper(axiom.GetPremises().GetElement(j).GetName())];
     for (size_t i = 0; i < axiom.GetPremises().GetElement(j).GetArity(); i++)
       if ((int)axiom.UnivVarOrdinalNumber(
               axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
-        nBinding[mnAxiomsCount][j * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
                 axiom.GetPremises().GetElement(j).GetArg(i)) +
             1;
       else {
-        nBinding[mnAxiomsCount][j * mnMaxArity + i] = 0;
-        nAxiomArgument[mnAxiomsCount][j * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] = 0;
+        AXIOMS[mnAxiomsCount].nAxiomArgument[j * mnMaxArity + i] =
             URSA_NUM_PREFIX +
             ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
       }
   }
   if (axiom.GetGoal().GetSize() >
       0) { // disjunctions in the goal can have only one disjunct
-    nPredicate[mnAxiomsCount][noPremises] =
+    AXIOMS[mnAxiomsCount].nPredicate[noPremises] =
         PREDICATE[URSA_NUM_PREFIX +
                   ToUpper(
                       axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
@@ -309,27 +312,27 @@ void SMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
          i < axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
               axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-        nBinding[mnAxiomsCount][noPremises * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
                 axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
             1;
       else if ((int)axiom.ExistVarOrdinalNumber(
                    axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-        nBinding[mnAxiomsCount][noPremises * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
             axiom.GetNumOfUnivVars() +
             axiom.ExistVarOrdinalNumber(
                 axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
             1;
       else {
-        nBinding[mnAxiomsCount][noPremises * mnMaxArity + i] = 0;
-        nAxiomArgument[mnAxiomsCount][noPremises * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] = 0;
+        AXIOMS[mnAxiomsCount].nAxiomArgument[noPremises * mnMaxArity + i] =
             URSA_NUM_PREFIX +
             ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
       }
     }
   }
   if (axiom.GetGoal().GetSize() > 1) {
-    nPredicate[mnAxiomsCount][noPremises + 1] =
+    AXIOMS[mnAxiomsCount].nPredicate[noPremises + 1] =
         PREDICATE[URSA_NUM_PREFIX +
                   ToUpper(
                       axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
@@ -337,20 +340,21 @@ void SMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
          i < axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
               axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-        nBinding[mnAxiomsCount][(noPremises + 1) * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
                 axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
             1;
       else if ((int)axiom.ExistVarOrdinalNumber(
                    axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-        nBinding[mnAxiomsCount][(noPremises + 1) * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
             axiom.GetNumOfUnivVars() +
             axiom.ExistVarOrdinalNumber(
                 axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
             1;
       else {
-        nBinding[mnAxiomsCount][(noPremises + 1) * mnMaxArity + i] = 0;
-        nAxiomArgument[mnAxiomsCount][(noPremises + 1) * mnMaxArity + i] =
+        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] = 0;
+        AXIOMS[mnAxiomsCount]
+            .nAxiomArgument[(noPremises + 1) * mnMaxArity + i] =
             URSA_NUM_PREFIX +
             ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
       }
@@ -498,6 +502,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
     }
   }
 
+  AXIOMS.clear();
   PREDICATE.clear();
   ARITY.clear();
   CONSTANTS.clear();
@@ -918,7 +923,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
              mnAxiomsCount /*&& nProofStep + 1!= mnPremisesCount+nProofLen*/;
          nAxiom++) {
       if (mpT->mConstants.size() + mpT->mConstantsPermissible.size() == 0)
-        if (nAxiomUniVars[nAxiom] > 0 && nProofStep == 0)
+        if (AXIOMS[nAxiom].nAxiomUniVars > 0 && nProofStep == 0)
           continue;
       if (mParams.mbInlineAxioms) {
         const CLFormula &cf = mpT->mCLaxioms[nAxiom - eNumberOfStepKinds].first;
@@ -927,21 +932,22 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       }
 
       sbMatchPremises = appeq(app("nAxiomApplied", nProofStep), nAxiom);
-      sbMatchPremises +=
-          appeq(app("nNumberOfPremises", nProofStep), nAxiomPremises[nAxiom]);
+      sbMatchPremises += appeq(app("nNumberOfPremises", nProofStep),
+                               AXIOMS[nAxiom].nAxiomPremises);
 
       for (unsigned nPremisesCounter = 0;
-           nPremisesCounter < nAxiomPremises[nAxiom]; nPremisesCounter++) {
+           nPremisesCounter < AXIOMS[nAxiom].nAxiomPremises;
+           nPremisesCounter++) {
         string sbMatchOnePremise = "(or false ";
 
-        sbMatchOnePremise += "(and " +
-                             appeq(URSA_NUM_PREFIX + "true",
-                                   nPredicate[nAxiom][nPremisesCounter]) +
-                             appeq(app("nFrom", nProofStep, 0), 99) + ")";
+        sbMatchOnePremise +=
+            "(and " + appeq(URSA_NUM_PREFIX + "true",
+                            AXIOMS[nAxiom].nPredicate[nPremisesCounter]) +
+            appeq(app("nFrom", nProofStep, 0), 99) + ")";
         for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
-          unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
-          string sb =
-              appeq(app("nP", n_from, 0), nPredicate[nAxiom][nPremisesCounter]);
+          unsigned ar = ARITY[AXIOMS[nAxiom].nPredicate[nPremisesCounter]];
+          string sb = appeq(app("nP", n_from, 0),
+                            AXIOMS[nAxiom].nPredicate[nPremisesCounter]);
           /*string sb1, sb2, sb3;
           for (unsigned nInd = 0; nInd < ar; nInd++) {
               if (nBinding[nAxiom][nPremisesCounter*mnMaxArity+nInd] != 0)
@@ -987,15 +993,18 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           }*/
 
           for (unsigned nInd = 0; nInd < ar; nInd++) {
-            if (nBinding[nAxiom][nPremisesCounter * mnMaxArity + nInd] != 0)
+            if (AXIOMS[nAxiom].nBinding[nPremisesCounter * mnMaxArity + nInd] !=
+                0)
               sb += appeq(
                   app("nArg", n_from, nInd),
                   app("nInst", nProofStep,
-                      nBinding[nAxiom][nPremisesCounter * mnMaxArity + nInd]));
+                      AXIOMS[nAxiom]
+                          .nBinding[nPremisesCounter * mnMaxArity + nInd]));
             else
-              sb += appeq(app("nArg", n_from, nInd),
-                          nAxiomArgument[nAxiom]
-                                        [nPremisesCounter * mnMaxArity + nInd]);
+              sb += appeq(
+                  app("nArg", n_from, nInd),
+                  AXIOMS[nAxiom]
+                      .nAxiomArgument[nPremisesCounter * mnMaxArity + nInd]);
           }
           sbMatchOnePremise +=
               string(" (and ") +
@@ -1012,51 +1021,60 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               if (cf.IsSimpleImplication()) {
 
                 // we check for the premise fact B, and there is an axiom A=>B
-                if (nPredicate[nSimpleAxiom][1] !=
-                    nPredicate[nAxiom][nPremisesCounter])
+                if (AXIOMS[nSimpleAxiom].nPredicate[1] !=
+                    AXIOMS[nAxiom].nPredicate[nPremisesCounter])
                   continue;
-                string sbi =
-                    appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
-                unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][0]];
+                string sbi = appeq(app("nP", n_from, 0),
+                                   AXIOMS[nSimpleAxiom].nPredicate[0]);
+                unsigned ar1 = ARITY[AXIOMS[nSimpleAxiom].nPredicate[0]];
                 for (unsigned nInd = 0; nInd < ar1; nInd++) { // match A
-                  if (nBinding[nSimpleAxiom][nInd] != 0)
+                  if (AXIOMS[nSimpleAxiom].nBinding[nInd] != 0)
                     sbi +=
                         appeq(app("nArg", n_from, nInd),
                               app("nInstSimpleAx", nProofStep, nPremisesCounter,
-                                  nBinding[nSimpleAxiom][nInd]));
+                                  AXIOMS[nSimpleAxiom].nBinding[nInd]));
                   else
                     sbi += appeq(app("nArg", n_from, nInd),
-                                 nAxiomArgument[nSimpleAxiom][nInd]);
+                                 AXIOMS[nSimpleAxiom].nAxiomArgument[nInd]);
                 }
                 for (unsigned nInd = 0; nInd < ar; nInd++) { // match B
-                  if (nBinding[nSimpleAxiom][1 * mnMaxArity + nInd] != 0) {
-                    if (nBinding[nAxiom]
-                                [nPremisesCounter * mnMaxArity + nInd] != 0)
+                  if (AXIOMS[nSimpleAxiom].nBinding[1 * mnMaxArity + nInd] !=
+                      0) {
+                    if (AXIOMS[nAxiom].nBinding[nPremisesCounter * mnMaxArity +
+                                                nInd] != 0)
                       sbi += appeq(
                           app("nInstSimpleAx", nProofStep, nPremisesCounter,
-                              nBinding[nSimpleAxiom][1 * mnMaxArity + nInd]),
+                              AXIOMS[nSimpleAxiom]
+                                  .nBinding[1 * mnMaxArity + nInd]),
                           app("nInst", nProofStep,
-                              nBinding[nAxiom]
-                                      [nPremisesCounter * mnMaxArity + nInd]));
+                              AXIOMS[nAxiom]
+                                  .nBinding[nPremisesCounter * mnMaxArity +
+                                            nInd]));
                     else
                       sbi += appeq(
                           app("nInstSimpleAx", nProofStep, nPremisesCounter,
-                              nBinding[nSimpleAxiom][1 * mnMaxArity + nInd]),
-                          nAxiomArgument[nAxiom]
-                                        [nPremisesCounter * mnMaxArity + nInd]);
+                              AXIOMS[nSimpleAxiom]
+                                  .nBinding[1 * mnMaxArity + nInd]),
+                          AXIOMS[nAxiom]
+                              .nAxiomArgument[nPremisesCounter * mnMaxArity +
+                                              nInd]);
                   } else {
-                    if (nBinding[nAxiom]
-                                [nPremisesCounter * mnMaxArity + nInd] != 0)
+                    if (AXIOMS[nAxiom].nBinding[nPremisesCounter * mnMaxArity +
+                                                nInd] != 0)
                       sbi += appeq(
-                          nAxiomArgument[nSimpleAxiom][1 * mnMaxArity + nInd],
+                          AXIOMS[nSimpleAxiom]
+                              .nAxiomArgument[1 * mnMaxArity + nInd],
                           app("nInst", nProofStep,
-                              nBinding[nAxiom]
-                                      [nPremisesCounter * mnMaxArity + nInd]));
+                              AXIOMS[nAxiom]
+                                  .nBinding[nPremisesCounter * mnMaxArity +
+                                            nInd]));
                     else
                       sbi += appeq(
-                          nAxiomArgument[nSimpleAxiom][1 * mnMaxArity + nInd],
-                          nAxiomArgument[nAxiom]
-                                        [nPremisesCounter * mnMaxArity + nInd]);
+                          AXIOMS[nSimpleAxiom]
+                              .nAxiomArgument[1 * mnMaxArity + nInd],
+                          AXIOMS[nAxiom]
+                              .nAxiomArgument[nPremisesCounter * mnMaxArity +
+                                              nInd]);
                   }
                 }
                 sbMatchOnePremise +=
@@ -1078,40 +1096,42 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             const CLFormula &cf =
                 mpT->mCLaxioms[nUnivAxiom - eNumberOfStepKinds].first;
             if (cf.IsSimpleUnivFormula()) {
-              if (nPredicate[nAxiom][nPremisesCounter] !=
-                  nPredicate[nUnivAxiom][0])
+              if (AXIOMS[nAxiom].nPredicate[nPremisesCounter] !=
+                  AXIOMS[nUnivAxiom].nPredicate[0])
                 continue;
               string sb;
-              unsigned ar = ARITY[nPredicate[nAxiom][nPremisesCounter]];
+              unsigned ar = ARITY[AXIOMS[nAxiom].nPredicate[nPremisesCounter]];
               for (unsigned nInd = 0; nInd < ar; nInd++) {
-                if (nBinding[nUnivAxiom][nInd] != 0) {
-                  if (nBinding[nAxiom][nPremisesCounter * mnMaxArity + nInd] !=
-                      0)
-                    sb += appeq(
-                        app("nInstUnivAx", nProofStep, nPremisesCounter,
-                            nBinding[nUnivAxiom][nInd]),
-                        app("nInst", nProofStep,
-                            nBinding[nAxiom]
-                                    [nPremisesCounter * mnMaxArity + nInd]));
+                if (AXIOMS[nUnivAxiom].nBinding[nInd] != 0) {
+                  if (AXIOMS[nAxiom]
+                          .nBinding[nPremisesCounter * mnMaxArity + nInd] != 0)
+                    sb +=
+                        appeq(app("nInstUnivAx", nProofStep, nPremisesCounter,
+                                  AXIOMS[nUnivAxiom].nBinding[nInd]),
+                              app("nInst", nProofStep,
+                                  AXIOMS[nAxiom]
+                                      .nBinding[nPremisesCounter * mnMaxArity +
+                                                nInd]));
                   else
-                    sb += appeq(
-                        app("nInstUnivAx", nProofStep, nPremisesCounter,
-                            nBinding[nUnivAxiom][nInd]),
-                        nAxiomArgument[nAxiom]
-                                      [nPremisesCounter * mnMaxArity + nInd]);
+                    sb += appeq(app("nInstUnivAx", nProofStep, nPremisesCounter,
+                                    AXIOMS[nUnivAxiom].nBinding[nInd]),
+                                AXIOMS[nAxiom].nAxiomArgument[nPremisesCounter *
+                                                                  mnMaxArity +
+                                                              nInd]);
                 } else {
-                  if (nBinding[nAxiom][nPremisesCounter * mnMaxArity + nInd] !=
-                      0)
-                    sb += appeq(
-                        nAxiomArgument[nUnivAxiom][nInd],
-                        app("nInst", nProofStep,
-                            nBinding[nAxiom]
-                                    [nPremisesCounter * mnMaxArity + nInd]));
+                  if (AXIOMS[nAxiom]
+                          .nBinding[nPremisesCounter * mnMaxArity + nInd] != 0)
+                    sb +=
+                        appeq(AXIOMS[nUnivAxiom].nAxiomArgument[nInd],
+                              app("nInst", nProofStep,
+                                  AXIOMS[nAxiom]
+                                      .nBinding[nPremisesCounter * mnMaxArity +
+                                                nInd]));
                   else
-                    sb += appeq(
-                        nAxiomArgument[nUnivAxiom][nInd],
-                        nAxiomArgument[nAxiom]
-                                      [nPremisesCounter * mnMaxArity + nInd]);
+                    sb += appeq(AXIOMS[nUnivAxiom].nAxiomArgument[nInd],
+                                AXIOMS[nAxiom].nAxiomArgument[nPremisesCounter *
+                                                                  mnMaxArity +
+                                                              nInd]);
                 }
               }
               sbMatchOnePremise +=
@@ -1129,20 +1149,20 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           mpT->mConstants.size() + mpT->mConstantsPermissible.size();
 
       /* Matching disjuncts in conclusions (one or two) */
-      unsigned nGoalIndex = nAxiomPremises[nAxiom];
-      sbMatchConclusion =
-          appeq(app("nP", nProofStep, 0), nPredicate[nAxiom][nGoalIndex]);
-      for (unsigned nInd = 0; nInd < ARITY[nPredicate[nAxiom][nGoalIndex]];
-           nInd++) {
-        if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0)
-          sbMatchConclusion +=
-              appeq(app("nArg", nProofStep, nInd),
-                    app("nInst", nProofStep,
-                        nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd]));
+      unsigned nGoalIndex = AXIOMS[nAxiom].nAxiomPremises;
+      sbMatchConclusion = appeq(app("nP", nProofStep, 0),
+                                AXIOMS[nAxiom].nPredicate[nGoalIndex]);
+      for (unsigned nInd = 0;
+           nInd < ARITY[AXIOMS[nAxiom].nPredicate[nGoalIndex]]; nInd++) {
+        if (AXIOMS[nAxiom].nBinding[nGoalIndex * mnMaxArity + nInd] != 0)
+          sbMatchConclusion += appeq(
+              app("nArg", nProofStep, nInd),
+              app("nInst", nProofStep,
+                  AXIOMS[nAxiom].nBinding[nGoalIndex * mnMaxArity + nInd]));
         else
-          sbMatchConclusion +=
-              appeq(app("nArg", nProofStep, nInd),
-                    nAxiomArgument[nAxiom][nGoalIndex * mnMaxArity + nInd]);
+          sbMatchConclusion += appeq(
+              app("nArg", nProofStep, nInd),
+              AXIOMS[nAxiom].nAxiomArgument[nGoalIndex * mnMaxArity + nInd]);
 
         /*  if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0 &&
               nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] <=
@@ -1156,20 +1176,23 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       }
 
       string sb;
-      if (bAxiomBranching[nAxiom]) {
-        sb =
-            appeq(app("nP", nProofStep, 1), nPredicate[nAxiom][nGoalIndex + 1]);
+      if (AXIOMS[nAxiom].bAxiomBranching) {
+        sb = appeq(app("nP", nProofStep, 1),
+                   AXIOMS[nAxiom].nPredicate[nGoalIndex + 1]);
         for (unsigned nInd = 0;
-             nInd < ARITY[nPredicate[nAxiom][nGoalIndex + 1]]; nInd++) {
-          if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0)
+             nInd < ARITY[AXIOMS[nAxiom].nPredicate[nGoalIndex + 1]]; nInd++) {
+          if (AXIOMS[nAxiom].nBinding[(nGoalIndex + 1) * mnMaxArity + nInd] !=
+              0)
+            sb +=
+                appeq(app("nArg", nProofStep, mnMaxArity + nInd),
+                      app("nInst", nProofStep,
+                          AXIOMS[nAxiom]
+                              .nBinding[(nGoalIndex + 1) * mnMaxArity + nInd]));
+          else
             sb += appeq(
                 app("nArg", nProofStep, mnMaxArity + nInd),
-                app("nInst", nProofStep,
-                    nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd]));
-          else
-            sb += appeq(app("nArg", nProofStep, mnMaxArity + nInd),
-                        nAxiomArgument[nAxiom]
-                                      [(nGoalIndex + 1) * mnMaxArity + nInd]);
+                AXIOMS[nAxiom]
+                    .nAxiomArgument[(nGoalIndex + 1) * mnMaxArity + nInd]);
 
           /*     if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0
              &&
@@ -1190,17 +1213,17 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
        * quantifiers */
 
       sbMatchExiQuantifiers = "";
-      for (unsigned nL = 0; nL < nAxiomExiVars[nAxiom]; nL++) {
+      for (unsigned nL = 0; nL < AXIOMS[nAxiom].nAxiomExiVars; nL++) {
         /* The id of a new constant is (nProofStep + 2 << 3) + nL, ie.
          * 8*(nProofStep+2)+nL - so they don't overlap, */
         /* unless some axioms introduce >8 witnesses */
-        sbMatchExiQuantifiers +=
-            appeq(app("nInst", nProofStep, nAxiomUniVars[nAxiom] + nL + 1),
-                  original_constants + (nProofStep << 3) + nL + 1);
+        sbMatchExiQuantifiers += appeq(
+            app("nInst", nProofStep, AXIOMS[nAxiom].nAxiomUniVars + nL + 1),
+            original_constants + (nProofStep << 3) + nL + 1);
       }
 
       string sbCorrectInst = "";
-      for (unsigned nInd = 0; nInd < nAxiomUniVars[nAxiom]; nInd++) {
+      for (unsigned nInd = 0; nInd < AXIOMS[nAxiom].nAxiomUniVars; nInd++) {
         sbCorrectInst +=
             smt_less(app("nInst", nProofStep, nInd + 1),
                      original_constants + ((nProofStep + 0) << 3) + 0);
@@ -1375,24 +1398,24 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         if (cf.IsSimpleUnivFormula()) {
           string disj;
           for (size_t i = 0; i < formula.GetSize(); i++) {
-            string sb =
-                appeq(app("nP", nFinalStep, i), nPredicate[nUnivAxiom][0]);
-            unsigned ar = ARITY[nPredicate[nUnivAxiom][0]];
+            string sb = appeq(app("nP", nFinalStep, i),
+                              AXIOMS[nUnivAxiom].nPredicate[0]);
+            unsigned ar = ARITY[AXIOMS[nUnivAxiom].nPredicate[0]];
             for (unsigned nInd = 0; nInd < ar; nInd++) {
-              if (nBinding[nUnivAxiom][nInd] != 0)
-                sb += appeq(
-                    app("nInstQED", nProofStep, nBinding[nUnivAxiom][nInd]),
-                    app("nArg", nFinalStep, i * mnMaxArity + nInd));
+              if (AXIOMS[nUnivAxiom].nBinding[nInd] != 0)
+                sb += appeq(app("nInstQED", nProofStep,
+                                AXIOMS[nUnivAxiom].nBinding[nInd]),
+                            app("nArg", nFinalStep, i * mnMaxArity + nInd));
               else
-                sb += appeq(nAxiomArgument[nUnivAxiom][nInd],
+                sb += appeq(AXIOMS[nUnivAxiom].nAxiomArgument[nInd],
                             app("nArg", nFinalStep, i * mnMaxArity + nInd));
             }
             if (sb != "")
               disj += "(and " + sb + ")";
           }
           sbTrivGoalReachedInlined += disj;
-          sbTrivGoalReachedInlined +=
-              appeq(URSA_NUM_PREFIX + "false", nPredicate[nUnivAxiom][0]);
+          sbTrivGoalReachedInlined += appeq(URSA_NUM_PREFIX + "false",
+                                            AXIOMS[nUnivAxiom].nPredicate[0]);
         }
       }
       // Support for simple implication axioms
@@ -1406,19 +1429,19 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             for (size_t i = 0; i < formula.GetSize(); i++) {
               string sb = "\n; checking simple axiom for goal " +
                           itos(nSimpleAxiom) + "\n";
-              sb +=
-                  appeq(app("nP", nFinalStep, i), nPredicate[nSimpleAxiom][1]);
-              unsigned ar1 = ARITY[nPredicate[nSimpleAxiom][1]];
+              sb += appeq(app("nP", nFinalStep, i),
+                          AXIOMS[nSimpleAxiom].nPredicate[1]);
+              unsigned ar1 = ARITY[AXIOMS[nSimpleAxiom].nPredicate[1]];
               for (unsigned nInd = 0; nInd < ar1; nInd++) { // match B
-                if (nBinding[nSimpleAxiom][1 * mnMaxArity + nInd] != 0)
-                  sb +=
-                      appeq(app("nArg", nFinalStep, i * mnMaxArity + nInd),
-                            app("nInstSimpleAx", nProofStep,
-                                nBinding[nSimpleAxiom][1 * mnMaxArity + nInd]));
+                if (AXIOMS[nSimpleAxiom].nBinding[1 * mnMaxArity + nInd] != 0)
+                  sb += appeq(app("nArg", nFinalStep, i * mnMaxArity + nInd),
+                              app("nInstSimpleAx", nProofStep,
+                                  AXIOMS[nSimpleAxiom]
+                                      .nBinding[1 * mnMaxArity + nInd]));
                 else
                   sb += appeq(app("nArg", nFinalStep, i * mnMaxArity + nInd),
-                              nAxiomArgument[nSimpleAxiom]
-                                            [1 * mnMaxArity + nInd]);
+                              AXIOMS[nSimpleAxiom]
+                                  .nAxiomArgument[1 * mnMaxArity + nInd]);
               }
               // sb = "(or (and " + sb + ")" + appeq(URSA_NUM_PREFIX+"false",
               // nPredicate[nSimpleAxiom][1]) + ")";
@@ -1428,26 +1451,27 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               for (unsigned n_from = nProofStep - 1; n_from < nProofStep;
                    n_from++) {
                 string allfrom1;
-                allfrom1 +=
-                    appeq(app("nP", n_from, 0), nPredicate[nSimpleAxiom][0]);
+                allfrom1 += appeq(app("nP", n_from, 0),
+                                  AXIOMS[nSimpleAxiom].nPredicate[0]);
                 allfrom1 += app("bSameProofBranch", n_from, nProofStep);
                 allfrom1 += "(not " + app("bCases", n_from) + ")";
-                unsigned ar = ARITY[nPredicate[nSimpleAxiom][0]];
+                unsigned ar = ARITY[AXIOMS[nSimpleAxiom].nPredicate[0]];
                 for (unsigned nInd = 0; nInd < ar; nInd++) { // match A
-                  if (nBinding[nSimpleAxiom][nInd] != 0)
+                  if (AXIOMS[nSimpleAxiom].nBinding[nInd] != 0)
                     allfrom1 += appeq(app("nArg", n_from, nInd),
                                       app("nInstSimpleAx", nProofStep,
-                                          nBinding[nSimpleAxiom][nInd]));
+                                          AXIOMS[nSimpleAxiom].nBinding[nInd]));
                   else
-                    allfrom1 += appeq(app("nArg", n_from, nInd),
-                                      nAxiomArgument[nSimpleAxiom][nInd]);
+                    allfrom1 +=
+                        appeq(app("nArg", n_from, nInd),
+                              AXIOMS[nSimpleAxiom].nAxiomArgument[nInd]);
                 }
                 allfrom += "(and " + allfrom1 + ")";
               }
-              sb +=
-                  "(or false " + allfrom +
-                  appeq(URSA_NUM_PREFIX + "true", nPredicate[nSimpleAxiom][0]) +
-                  ")";
+              sb += "(or false " + allfrom +
+                    appeq(URSA_NUM_PREFIX + "true",
+                          AXIOMS[nSimpleAxiom].nPredicate[0]) +
+                    ")";
               sb += "\n; checking simple axiom END \n";
               disj += "(and " + sb + ")";
             }
@@ -2134,10 +2158,10 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile,
         numberOfUnivVars = ARITY[predicate1] + 1;
         numberOfExiVars = 0;
       } else {
-        noPremises = nAxiomPremises[axiom];
-        branching = bAxiomBranching[axiom];
-        numberOfUnivVars = nAxiomUniVars[axiom];
-        numberOfExiVars = nAxiomExiVars[axiom];
+        noPremises = AXIOMS[axiom].nAxiomPremises;
+        branching = AXIOMS[axiom].bAxiomBranching;
+        numberOfUnivVars = AXIOMS[axiom].nAxiomUniVars;
+        numberOfExiVars = AXIOMS[axiom].nAxiomExiVars;
       }
 
       for (unsigned i = 0; i < noPremises; i++) {
