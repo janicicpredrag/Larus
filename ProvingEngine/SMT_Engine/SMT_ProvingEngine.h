@@ -17,7 +17,7 @@ typedef struct {
   unsigned nAxiomPremises;  /* number of premises         */
   unsigned bAxiomBranching; /* axiom is branching or not */
   unsigned nPredicate[MAX_PREMISES];
-  unsigned nBinding[MAX_PREMISES * MAX_ARITY];
+  unsigned nBinding[MAX_PREMISES * MAX_ARITY]; /* equals 0 for constants */
   string nAxiomArgument[MAX_PREMISES * MAX_ARITY];
 } CLAxiomStruct;
 

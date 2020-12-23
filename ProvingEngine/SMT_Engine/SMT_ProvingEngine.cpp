@@ -402,7 +402,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
   }
 
   set<string> decl = DECLARATIONS;
-  string smt_proofout_filename = tmpnam(NULL); // "smt-proof.txt"; //
+  string smt_proofout_filename = "smt-proof.txt"; // tmpnam(NULL); //
   if (system(NULL)) {
 
     if (formula.GetSize() >
