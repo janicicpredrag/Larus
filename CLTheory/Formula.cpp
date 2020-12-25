@@ -643,7 +643,7 @@ bool CLFormula::IsSimpleUnivFormula() const {
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string s, CLFormula &cl, string &name,
+bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
                        string &ordinal, Fact &justification, fofType &type) {
   size_t pos1, pos2;
   string ss = SkipChar(s, ' ');

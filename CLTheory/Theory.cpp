@@ -833,7 +833,8 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
     if (f.GetElement(i).GetSize() != 1)
       allsingleconjuncts = false;
   }
-  assert(f.GetSize() == 1 || allsingleconjuncts);
+  assert(f.GetSize() == 1 || RHS.GetSize() == 1 || allsingleconjuncts);
+  allsingleconjuncts = true;
 
   fout.Clear();
 
@@ -865,6 +866,25 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
       }
     }
     fout.Add(cf);
+    return changed;
+
+  } else if (RHS.GetSize() == 1) {
+    for (size_t j = 0; j < f.GetSize(); j++) {
+      if (f.GetElement(j).GetSize() != 1)
+        fout.Add(f.GetElement(j));
+      else {
+        DNFFormula fout1;
+        const Fact &fact = f.GetElement(j).GetElement(0);
+        bool b = Rewrite(LHS, RHS, fact, fout1);
+        if (!b)
+          fout.Add(f.GetElement(j));
+        else {
+          for (size_t k = 0; k < fout1.GetSize(); k++)
+            fout.Add(fout1.GetElement(k));
+          changed = true;
+        }
+      }
+    }
     return changed;
   }
 
