@@ -9,7 +9,7 @@
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
 #include "common.h"
 
-extern bool ReadTPTPStatement(const string s, CLFormula &cl, string &axname,
+extern bool ReadTPTPStatement(const string &s, CLFormula &cl, string &axname,
                               string &ordinal, Fact &justification,
                               fofType &type);
 ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
