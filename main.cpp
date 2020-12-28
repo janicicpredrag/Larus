@@ -190,12 +190,17 @@ int main(int argc, char **argv) {
           if (params.vampire_time_limit <= 0)
             params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
         }
-        // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp
-        // --output_axiom_names on"
-        //                params.msHammerInvoke = argv[i+1];
-        // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
-        params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
-
+        params.msHammerInvoke =
+            "vampire --mode casc --proof tptp --output_axiom_names on";
+      } else if (argv[i][0] == '-' && argv[i][1] == 'a') {
+        if (strlen(argv[i] + 2) == 0)
+          params.msHammerInvoke =
+              "vampire --proof tptp --output_axiom_names on";
+        else
+          // for instance: -h"vampire --proof tptp --output_axiom_names on"
+          // for instance: -h"eprover --auto -p"
+          // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
+          params.msHammerInvoke = (argv[i] + 2);
       } else if (argv[i][0] == '-' && argv[i][1] == 'e') {
         if (!strcmp(argv[i] + 2, "stl"))
           params.eEngine = eSTL_ProvingEngine;
@@ -217,10 +222,10 @@ int main(int argc, char **argv) {
         }
       } else if (argv[i][0] != '-') {
         inputFilename.assign(argv[i], strlen(argv[i]));
-      }
+      } else
+        wrongInput = true;
     }
-  } else
-    wrongInput = true;
+  }
 
   if (inputFilename == "")
     wrongInput = true;
@@ -284,6 +289,20 @@ int main(int argc, char **argv) {
     cout << "                        axioms (<time> is optional, default: 18)"
          << endl
          << endl;
+
+    cout << "   -a<invoke>           the way the external prover is invoked "
+         << endl
+         << "                        as a hammer to filter out the needed "
+            "axioms; "
+         << endl
+         << "                        only relevant if -h is used; (default: "
+         << endl
+         << "                        'vampire --mode casc --proof tptp "
+            "--output_axiom_names "
+            "on')"
+         << endl
+         << endl;
+
     cout << "   -v<prover>           for generating and verifying the proof by "
          << endl;
     cout << "                        an interactive theorem prover (coq); "

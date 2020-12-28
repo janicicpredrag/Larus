@@ -466,7 +466,7 @@ VampireReturnValue
 FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
                       const CLFormula &theorem, const string &hammer_invoke,
                       unsigned time_limit) {
-  cout << "--- Vampire filtering: filtering out input axioms (input: "
+  cout << "--- Hammer filtering: filtering out input axioms (input: "
        << axioms.size() << ")" << endl;
   // export to TPTP
   string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
@@ -522,11 +522,11 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
       else
         it++;
     }
-    cout << "       Vampire filtering (success): output size: " << axioms.size()
+    cout << "       Hammer filtering (success): output size: " << axioms.size()
          << endl;
     return eVampireUnsat;
   }
-  cout << "       Vampire filtering (failure): output size: " << axioms.size()
+  cout << "       Hammer filtering (failure): output size: " << axioms.size()
        << endl;
   return eVampireUnknown;
 }
