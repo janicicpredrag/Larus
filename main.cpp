@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
       } else if (argv[i][0] == '-' && argv[i][1] == 'a') {
         if (strlen(argv[i] + 2) == 0)
           params.msHammerInvoke =
-              "vampire --proof tptp --output_axiom_names on";
+              "vampire --mode casc --proof tptp --output_axiom_names on";
         else
           // for instance: -h"vampire --proof tptp --output_axiom_names on"
           // for instance: -h"eprover --auto -p"
