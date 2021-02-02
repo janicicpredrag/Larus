@@ -5,6 +5,7 @@
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
+#include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
 #include "common.h"
@@ -282,7 +283,8 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       if (params.eEngine == eSTL_ProvingEngine)
         engine = new STL_ProvingEngine(&T1, params);
       else if (params.eEngine == eSQL_ProvingEngine)
-        assert(false); // not implemented yet
+        // not implemented yet
+        engine = new SQL_ProvingEngine(&T1, params);
       else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T1, params);
       else if (params.eEngine == eSMTLIA_ProvingEngine ||

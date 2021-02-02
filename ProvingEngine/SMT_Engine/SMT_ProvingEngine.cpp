@@ -1163,16 +1163,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           sbMatchConclusion += appeq(
               app("nArg", nProofStep, nInd),
               AXIOMS[nAxiom].nAxiomArgument[nGoalIndex * mnMaxArity + nInd]);
-
-        /*  if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0 &&
-              nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] <=
-                  nAxiomUniVars[nAxiom])
-            sbMatchConclusion +=
-                smt_less(app("nArg", nProofStep, nInd),
-                         original_constants + ((nProofStep + 0) << 3) + 1);*/
-        // sbMatchConclusion +=
-        //    smt_less(app("nArg", nProofStep, nInd),
-        //           original_constants + ((nProofStep + 3) << 3));
       }
 
       string sb;
@@ -1193,17 +1183,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                 app("nArg", nProofStep, mnMaxArity + nInd),
                 AXIOMS[nAxiom]
                     .nAxiomArgument[(nGoalIndex + 1) * mnMaxArity + nInd]);
-
-          /*     if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0
-             &&
-                   nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] <=
-                       nAxiomUniVars[nAxiom]) {
-                 sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-                                original_constants + ((nProofStep + 0) << 3) +
-             1);
-               }*/
-          // sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-          //               original_constants + ((nProofStep + 3) << 3));
         };
         sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
       } else

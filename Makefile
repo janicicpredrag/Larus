@@ -51,6 +51,8 @@ SOURCES       = main.cpp \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProofExport/ProofExport2Coq.cpp \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
@@ -63,6 +65,8 @@ OBJECTS       = main.o \
 		SMT_ProvingEngine.o \
 		STL_ProvingEngine.o \
 		STL_FactsDatabase.o \
+		SQL_ProvingEngine.o \
+		SQL_FactsDatabase.o \
 		ProofExport2Coq.o \
 		ProofExport2Isabelle.o \
 		ProofExport2LaTeX.o \
@@ -74,6 +78,8 @@ DIST          = 		CLTheory/Formula.h \
 		ProvingEngine/ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
 		ProofExport/ProofExport.h \
@@ -84,12 +90,10 @@ DIST          = 		CLTheory/Formula.h \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
-		Axioms/TarskiAxioms.cpp \
-		Axioms/BezemAxioms.cpp \
-		Axioms/EuclidElements.cpp \
-		Axioms/EuclidStatementsDepends.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProofExport/ProofExport2Coq.cpp \
@@ -118,8 +122,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/SMT_Engine/SMT_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h common.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp Axioms/TarskiAxioms.cpp Axioms/BezemAxioms.cpp Axioms/EuclidElements.cpp Axioms/EuclidStatementsDepends.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp import.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/SMT_Engine/SMT_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h common.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp Axioms/TarskiAxioms.cpp Axioms/BezemAxioms.cpp Axioms/EuclidElements.cpp Axioms/EuclidStatementsDepends.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp import.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -184,18 +188,6 @@ CLProof.o: CLProof/CLProof.cpp CLProof/CLProof.h \
 		CLTheory/Formula.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CLProof.o CLProof/CLProof.cpp
 
-TarskiAxioms.o: Axioms/TarskiAxioms.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TarskiAxioms.o Axioms/TarskiAxioms.cpp
-
-BezemAxioms.o: Axioms/BezemAxioms.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BezemAxioms.o Axioms/BezemAxioms.cpp
-
-EuclidElements.o: Axioms/EuclidElements.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EuclidElements.o Axioms/EuclidElements.cpp
-
-EuclidStatementsDepends.o: Axioms/EuclidStatementsDepends.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EuclidStatementsDepends.o Axioms/EuclidStatementsDepends.cpp
-
 URSA_ProvingEngine.o: ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp CLTheory/Theory.h \
 		CLTheory/Formula.h \
 		CLProof/CLProof.h \
@@ -222,6 +214,24 @@ STL_FactsDatabase.o: ProvingEngine/STL_Engine/STL_FactsDatabase.cpp CLProof/CLPr
 		CLTheory/Theory.h \
 		ProvingEngine/FactsDatabase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o STL_FactsDatabase.o ProvingEngine/STL_Engine/STL_FactsDatabase.cpp
+
+SQL_ProvingEngine.o: ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
+		CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		ProvingEngine/ProvingEngine.h \
+		CLTheory/Theory.h \
+		common.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		ProvingEngine/FactsDatabase.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_ProvingEngine.o ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp
+
+SQL_FactsDatabase.o: ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		CLTheory/Theory.h \
+		ProvingEngine/FactsDatabase.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_FactsDatabase.o ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp
+
 
 SMT_ProvingEngine.o: ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp CLTheory/Theory.h \
 		CLTheory/Formula.h \
