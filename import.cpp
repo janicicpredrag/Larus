@@ -2,6 +2,7 @@
 #include "CLTheory/Theory.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2Coq.h"
+#include "ProofExport/ProofExport2GCLC.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
@@ -430,7 +431,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     if (params.eEngine != eSTL_ProvingEngine)
       proof.CL2toCL();
 
-    ProofExport2LaTeX ex;
+    ProofExport2LaTeX ex(fileName);
     string sFileName("proofs/PROOF" + fileName + ".tex");
     ex.ToFile(T, proof, sFileName, params);
 
@@ -457,6 +458,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         cout << "Correct!" << endl;
       else
         cout << "Wrong!" << endl;
+    }
+
+    if (params.mbGCLC) {
+      ProofExport2GCLC exisa;
+      string sFileName3("proofs/PROOF" + fileName + "_illustration.gcl");
+      exisa.ToFile(T, proof, sFileName3, params);
+      cout << "Generating illustration ... " << endl << flush;
     }
   }
   return proved;

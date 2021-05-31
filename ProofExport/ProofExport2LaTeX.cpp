@@ -133,7 +133,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     mSymbolsTaken.insert(*it);
 
   outfile << "\\documentclass{article}" << endl;
-  outfile << "\\usepackage{argoclp}" << endl << endl;
+  outfile << "\\usepackage{argoclp}" << endl;
+  outfile << "\\usepackage{tikz}" << endl << endl;
   outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
   outfile << "\\begin{document}" << endl << endl;
 
@@ -246,6 +247,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
 void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
   outfile << endl << "\\vspace{5pt}" << endl << "\\noindent" << endl << endl;
+  outfile << "\\input{PROOF" + mFileName + "_illustration.tkz}" << endl << endl;
   outfile << "\\end{document}" << endl;
 }
 

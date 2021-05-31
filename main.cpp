@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
   params.mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
+  params.mbGCLC = DEFAULT_GCLC;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   params.msHammerInvoke = DEFAULT_HAMMER;
@@ -113,6 +114,7 @@ int main(int argc, char **argv) {
   string inputFilename;
   if (argc >= 2) {
     for (int i = 1; i < argc; i++) {
+
       if (argv[i][0] == '-' && argv[i][1] == 'f') {
         if (!strcmp(argv[i] + 2, "tptp"))
           params.input_format = eTPTP;
@@ -120,8 +122,9 @@ int main(int argc, char **argv) {
           wrongInput = true;
           break;
         }
-      }
-      if (argv[i][0] == '-' && argv[i][1] == 'v') {
+      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclc")) {
+        params.mbGCLC = true;
+      } else if (argv[i][0] == '-' && argv[i][1] == 'v') {
         if (!strcmp(argv[i] + 2, "coq"))
           params.mbCoq = true;
         else if (!strcmp(argv[i] + 2, "isa"))
@@ -309,6 +312,11 @@ int main(int argc, char **argv) {
          << endl;
     cout << "                        examples: -vcoq; default: no" << endl
          << endl;
+
+    cout << "   -gclc                for generating illustration of the proof."
+         << endl;
+
+    cout << endl;
 
     return 0;
   }

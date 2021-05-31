@@ -5,7 +5,7 @@
 
 class ProofExport2LaTeX : public ProofExport {
 public:
-  ProofExport2LaTeX() {}
+  ProofExport2LaTeX(string &filename) { mFileName = filename; }
 
 private:
   void OutputFact(ofstream &outfile, const Fact &f);
@@ -30,6 +30,7 @@ private:
   string beautify(string w);
   map<string, string> mWitnesses;
   set<string> mSymbolsTaken;
+  string mFileName;
 };
 
 #endif // PROOFEXPORT2LATEX_H

@@ -1244,8 +1244,8 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 1)) +
               appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 2 + XX)) +
               ")" + "(and " +
-              appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 2 + XX)) +
-              appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 1)) + "))";
+              appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 2 + XX)) +
+              appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 1)) + "))";
           sbMatchOnePremise += string(" (and ") +
                                appeq(app("nFrom", nProofStep, 0), n_from) + sb +
                                app("bSameProofBranch", n_from, nProofStep) +
@@ -1427,7 +1427,11 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
 
               string allfrom;
               // QED step is always based only on the previous step
+              // (this is for efficiency of inlining, but is a source of
+              // incompleteness (for some special cases)!!!)
               for (unsigned n_from = nProofStep - 1; n_from < nProofStep;
+                   // for (unsigned n_from = nProofStep - 1; n_from <
+                   // nProofStep;
                    n_from++) {
                 string allfrom1;
                 allfrom1 += appeq(app("nP", n_from, 0),
