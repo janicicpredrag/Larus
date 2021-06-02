@@ -7,6 +7,12 @@ using namespace std;
 
 // ---------------------------------------------------------------------------------
 
+ProofExport2GCLC::ProofExport2GCLC() {}
+
+ProofExport2GCLC::~ProofExport2GCLC() {}
+
+// ---------------------------------------------------------------------------------
+
 void ProofExport2GCLC::modifyWitnessName(string w) {
   string s;
   s = "w";

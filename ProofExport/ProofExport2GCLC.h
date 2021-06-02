@@ -5,28 +5,26 @@
 
 class ProofExport2GCLC : public ProofExport {
 public:
-  ProofExport2GCLC() {}
+  ProofExport2GCLC();
+  virtual ~ProofExport2GCLC();
 
 private:
-  void OutputFact(ofstream &outfile, const Fact &f) override {}
-  void OutputImplication(ofstream &outfile) override {}
-  void OutputAnd(ofstream &outfile) override {}
-  void OutputOr(ofstream &outfile) override {}
+  void OutputFact(ofstream &outfile, const Fact &f) {}
+  void OutputImplication(ofstream &outfile) {}
+  void OutputAnd(ofstream &outfile) {}
+  void OutputOr(ofstream &outfile) {}
   void OutputCLFormula(ofstream &outfile, const CLFormula &cl,
-                       const string &name) override {}
-
+                       const string &name) {}
   void OutputPrologue(ofstream &outfile, Theory &T, const CLProof &p,
-                      proverParams &params) override;
-  void OutputProof(ofstream &outfile, const CLProof &p,
-                   unsigned level) override;
-  void OutputEpilogue(ofstream &outfile) override;
-  void OutputProofEnd(ofstream &outfile, const CaseSplit *cs,
-                      unsigned level) override;
+                      proverParams &params);
+  void OutputProof(ofstream &outfile, const CLProof &p, unsigned level);
+  void OutputEpilogue(ofstream &outfile);
+  void OutputProofEnd(ofstream &outfile, const CaseSplit *cs, unsigned level);
   void OutputProofEnd(ofstream &outfile, const ByAssumption *ba,
-                      unsigned level) override {}
-  void OutputProofEnd(ofstream &outfile, const EFQ *efq, unsigned) override {}
+                      unsigned level) {}
+  void OutputProofEnd(ofstream &outfile, const EFQ *efq, unsigned) {}
   void OutputProofEnd(ofstream &outfile, const ByNegIntro *bni,
-                      unsigned level) override {}
+                      unsigned level) {}
 
   void modifyWitnessName(string w);
   string beautify(string w);
