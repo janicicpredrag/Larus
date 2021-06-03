@@ -37,6 +37,7 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
                                       const CLProof &p,
                                       proverParams & /*params*/) {
   outfile << "% ----- Proof illustration -----" << endl;
+  outfile << "linethickness -3" << endl;
   outfile << "include " << p.GetTheoremName() << ".gcl" << endl;
   outfile << "include " << p.GetTheoremName() << "_exists.gcl" << endl;
 
@@ -68,7 +69,8 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
   premisesExistTPTP.open(p.GetTheoremName() + "_exists.p");
   if (!premisesExistTPTP)
     return;
-  premisesExistTPTP << "fof(" << p.GetTheoremName() << ", conjecture, ( ? [";
+  premisesExistTPTP << "fof(" << p.GetTheoremName()
+                    << "_exists, conjecture, ( ? [";
 
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
     premisesExistTPTP << p.GetTheorem().GetUnivVar(i);
@@ -93,7 +95,7 @@ void ProofExport2GCLC::OutputEpilogue(ofstream &outfile) {
   outfile << "call " << mFunctionParams.str() << endl;
   outfile << "%-----------------------------" << endl << endl;
   if (mAnimation) {
-    outfile << "animation_frames " << mProofSteps * 2 + 1 << " 1" << endl;
+    outfile << "animation_frames " << mProofSteps * 2 + 3 << " 1" << endl;
     outfile << "point A0 0 0 " << endl;
     outfile << "point A1 0 0 " << mProofSteps * 2 + 2 << " 0  " << endl;
     outfile << "distance dA A0 A1 " << endl;
@@ -105,6 +107,7 @@ void ProofExport2GCLC::OutputEpilogue(ofstream &outfile) {
 
 void ProofExport2GCLC::OutputProof(ofstream &outfile, const CLProof &p,
                                    unsigned level) {
+  set<string> axioms_used;
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
     if (p.GetMP(i).axiomName == "trivial" ||
         p.GetMP(i).axiomName.find("NegElim") != std::string::npos ||
@@ -120,7 +123,10 @@ void ProofExport2GCLC::OutputProof(ofstream &outfile, const CLProof &p,
     for (size_t j = 0; j != new_witnesses.size(); j++)
       modifyWitnessName(new_witnesses[j].second);
 
-    outfile << "include " << p.GetMP(i).axiomName << ".gcl" << endl;
+    if (axioms_used.find(p.GetMP(i).axiomName) == axioms_used.end()) {
+      outfile << "include " << p.GetMP(i).axiomName << ".gcl" << endl;
+      axioms_used.insert(p.GetMP(i).axiomName);
+    }
 
     mProofSteps++;
     for (unsigned int k = 0; k < 1 + mAnimation; k++) {
