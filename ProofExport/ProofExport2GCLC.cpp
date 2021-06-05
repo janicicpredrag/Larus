@@ -37,7 +37,7 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
                                       const CLProof &p,
                                       proverParams & /*params*/) {
   outfile << "% ----- Proof illustration -----" << endl;
-  outfile << "linethickness -3" << endl;
+  outfile << "double" << endl;
   outfile << "include " << p.GetTheoremName() << ".gcl" << endl;
   outfile << "include " << p.GetTheoremName() << "_exists.gcl" << endl;
 
@@ -95,9 +95,9 @@ void ProofExport2GCLC::OutputEpilogue(ofstream &outfile) {
   outfile << "call " << mFunctionParams.str() << endl;
   outfile << "%-----------------------------" << endl << endl;
   if (mAnimation) {
-    outfile << "animation_frames " << mProofSteps * 2 + 3 << " 1" << endl;
+    outfile << "animation_frames " << mProofSteps * 2 + 1 << " 1" << endl;
     outfile << "point A0 0 0 " << endl;
-    outfile << "point A1 0 0 " << mProofSteps * 2 + 2 << " 0  " << endl;
+    outfile << "point A1 1 0 " << mProofSteps * 2 + 1 << " 0  " << endl;
     outfile << "distance dA A0 A1 " << endl;
     outfile << "hide_layers_from dA " << endl << endl;
   }
