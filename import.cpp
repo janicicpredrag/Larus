@@ -3,6 +3,7 @@
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2Coq.h"
 #include "ProofExport/ProofExport2GCLC.h"
+#include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
@@ -461,7 +462,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     }
 
     if (params.mbGCLC) {
-      ProofExport2GCLC exisa;
+      ProofExport2GCLC_predicates exisa;
       string sFileName3("proofs/PROOF" + fileName + "_illustration.gcl");
       exisa.ToFile(T, proof, sFileName3, params);
       cout << "Generating illustration ... " << endl << flush;

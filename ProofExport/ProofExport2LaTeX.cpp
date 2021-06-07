@@ -247,7 +247,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 
 void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
   outfile << endl << "\\vspace{5pt}" << endl << "\\noindent" << endl << endl;
-  outfile << "\\input{PROOF" + mFileName + "_illustration.tkz}" << endl << endl;
+  outfile << "\% \\input{PROOF" + mFileName + "_illustration.tkz}" << endl
+          << endl;
   outfile << "\\end{document}" << endl;
 }
 

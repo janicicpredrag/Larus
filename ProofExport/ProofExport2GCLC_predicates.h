@@ -1,12 +1,12 @@
-#ifndef ProofExport2GCLC_H
-#define ProofExport2GCLC_H
+#ifndef ProofExport2GCLC_predicates_H
+#define ProofExport2GCLC_predicates_H
 
 #include "ProofExport.h"
 
-class ProofExport2GCLC : public ProofExport {
+class ProofExport2GCLC_predicates : public ProofExport {
 public:
-  ProofExport2GCLC();
-  virtual ~ProofExport2GCLC();
+  ProofExport2GCLC_predicates();
+  virtual ~ProofExport2GCLC_predicates();
 
 private:
   void OutputFact(ofstream &outfile, const Fact &f) {}
@@ -35,6 +35,8 @@ private:
 
   unsigned int mProofSteps;
   bool mAnimation;
+
+  map<string, CLFormula> mAxioms;
 };
 
-#endif // ProofExport2GCLC_H
+#endif // ProofExport2GCLC_predicates_H
