@@ -16,12 +16,19 @@ To build it, just type `make` in the root folder.
 
 ### Dependencies
 
-Larus can use the following external tools:
- - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip)
+Larus can use the following external tools : 
+ - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip) 
  - Z3 (https://github.com/Z3Prover/z3)
  - Vampire (https://vprover.github.io/)
  - Coq (https://coq.inria.fr/)
+
+Larus assumes these tools are in the PATH.
+URSA is used when the option `-eursa` is activated.
+Z3 is used when the options `-esmtbv -esmtlia` are activated.
+Vampire is used when the option `-h` is activated.
+Coq is used when the option `-vcoq`is activated.
  
+
 ## Input
  
 Accepted input format is the standard TPTP FOF format, **restricted to formulas which are in coherent logic form**.
