@@ -75,6 +75,81 @@ otherwise:
    -v<prover>           for generating and verifying the proof by an interactive theorem prover;
                         the only supported ITP is Coq.
                         example: -vcoq; default: no
+ 
+ 
+## Example
+ 
+ The command:
+ `./larus -esmtbv -vcoq -m18 benchmarks/tptp-problems/euclid-native-eq/008_proposition_03.p`
+ use Z3 smt solver to find a proof starting by looking for a proof of length 18, then the proof is checked by Coq. 
+ 
+ ``` 
+ --------------------------------------------------------------------
+--- Reading axioms and conjecture : 
+--- Theorem to be proved: 
+       File name:    benchmarks/tptp-problems/euclid-native-eq/008_proposition_03.p
+       Theorem name: proposition_03
+       Conjecture:   (! [A,B,C,D,E,F] : (? [X] : ((lt(C,D,A,B) & cong(E,F,A,B)) => ((betS(E,X,F) & cong(E,X,C,D))))))
+--- Input axioms : 
+          Axiom 0: lemma_congruencesymmetric: (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))
+          Axiom 1: lemma_lessthancongruence: (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))
+          Axiom 2: deflessthan: (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS(C,X,D) & cong(C,X,A,B))))))
+          Axiom 3: deflessthan2: (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))
+--- Normalization to CL2 : input size: 4
+          Input Axiom: (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))
+          Input Axiom: (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))
+          Input Axiom: (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS(C,X,D) & cong(C,X,A,B))))))
+                    0. (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((betS(C,X,D)))))
+                    1. (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(C,X,A,B)))))
+                    2. (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS_cong_2(C,X,D,A,B))))))
+          Input Axiom: (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))
+          Definitions : 
+          betS_cong_2(C,X,D,A,B) -> ((betS(C,X,D) & cong(C,X,A,B)))
+          betS_cong_0(E,X,F,C,D) -> ((betS(E,X,F) & cong(E,X,C,D)))
+--- Adding axioms for excluded middle and negation elimination.
+       Checking validity without excluded middle: size: 7
+          Axiom 0: lemma_congruencesymmetric: (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))
+          Axiom 1: lemma_lessthancongruence: (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))
+          Axiom 2: deflessthan: (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS_cong_2(C,X,D,A,B))))))
+          Axiom 3: deflessthanAuxConjDisj1: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(C,X,A,B)))))
+          Axiom 4: deflessthanAuxConjDisj0: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((betS(C,X,D)))))
+          Axiom 5: deflessthan2: (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))
+          Axiom 6: proposition_03AuxGoal0: (! [E,X,F,C,D] : ((betS(E,X,F) & cong(E,X,C,D)) => ((betS_cong_0(E,X,F,C,D)))))
+       After check of excluded middle axioms: output size: 7
+          Axiom 0: lemma_congruencesymmetric: (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))
+          Axiom 1: lemma_lessthancongruence: (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))
+          Axiom 2: deflessthan: (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS_cong_2(C,X,D,A,B))))))
+          Axiom 3: deflessthanAuxConjDisj1: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(C,X,A,B)))))
+          Axiom 4: deflessthanAuxConjDisj0: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((betS(C,X,D)))))
+          Axiom 5: deflessthan2: (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))
+          Axiom 6: proposition_03AuxGoal0: (! [E,X,F,C,D] : ((betS(E,X,F) & cong(E,X,C,D)) => ((betS_cong_0(E,X,F,C,D)))))
+--- Saturating for inlining. 
+       Derived lemma (0): (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(A,B,C,X)))))
+       After saturation: output size: 8
+          Univ axioms - to be inlined: 
+          Simple implication axioms - to be inlined: 
+             Axiom 0: lemma_congruencesymmetric: (! [A,B,C,D] : ((cong(B,C,A,D)) => ((cong(A,D,B,C)))))
+             Axiom 3: deflessthanAuxConjDisj1: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(C,X,A,B)))))
+             Axiom 4: deflessthanAuxConjDisj0: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((betS(C,X,D)))))
+             Axiom 7: deflessthanAuxConjDisj1sat0: (! [C,X,D,A,B] : ((betS_cong_2(C,X,D,A,B)) => ((cong(A,B,C,X)))))
+          To be used explicitly in MP steps: 
+             Axiom 1: lemma_lessthancongruence: (! [A,B,C,D,E,F] : ((lt(A,B,C,D) & cong(C,D,E,F)) => ((lt(A,B,E,F)))))
+             Axiom 2: deflessthan: (! [A,B,C,D] : (? [X] : ((lt(A,B,C,D)) => ((betS_cong_2(C,X,D,A,B))))))
+             Axiom 5: deflessthan2: (! [A,B,C,D,X] : ((betS(C,X,D) & cong(C,X,A,B)) => ((lt(A,B,C,D)))))
+             Axiom 6: proposition_03AuxGoal0: (! [E,X,F,C,D] : ((betS(E,X,F) & cong(E,X,C,D)) => ((betS_cong_0(E,X,F,C,D)))))
+--- Support for case splits turned OFF. 
+--------------------------------------------------------------------
+--- Instantiating the goal.
+Looking for a proof of length: 18 (found), 
+Best found proof: of the length 18
+
+The proof found size (without assumptions): 5
+
+Done! (simplified proof length without assumptions: 4)
+Verifying Coq proof ... Correct!
+Elapsed time: 0.188085
+% SZS status Theorem 
+ ```
 
 ## Checking proofs using Coq
 
