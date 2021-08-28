@@ -216,4 +216,7 @@ Note that the simplification at the end may eliminate the described proof
 step if it is redundant.
 
 
-
+## Benchmarks
+ 
+ Scripts for running benches is file `benchmarks/run_benches.sh` and benchmarks are available  in the directory
+ `benchmarks/tptp-problems/`.
