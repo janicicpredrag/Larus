@@ -2,9 +2,12 @@
 #include "CLTheory/Theory.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2Coq.h"
+#include "ProofExport/ProofExport2GCLC.h"
+#include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
+#include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
 #include "common.h"
@@ -282,7 +285,8 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       if (params.eEngine == eSTL_ProvingEngine)
         engine = new STL_ProvingEngine(&T1, params);
       else if (params.eEngine == eSQL_ProvingEngine)
-        assert(false); // not implemented yet
+        // not implemented yet
+        engine = new SQL_ProvingEngine(&T1, params);
       else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T1, params);
       else if (params.eEngine == eSMTLIA_ProvingEngine ||
@@ -428,7 +432,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     if (params.eEngine != eSTL_ProvingEngine)
       proof.CL2toCL();
 
-    ProofExport2LaTeX ex;
+    ProofExport2LaTeX ex(fileName);
     string sFileName("proofs/PROOF" + fileName + ".tex");
     ex.ToFile(T, proof, sFileName, params);
 
@@ -456,6 +460,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       else
         cout << "Wrong!" << endl;
     }
+
+    if (params.mbGCLC) {
+      ProofExport2GCLC_predicates exisa;
+      string sFileName3("proofs/PROOF" + fileName + "_illustration.gcl");
+      exisa.ToFile(T, proof, sFileName3, params);
+      cout << "Generating illustration ... " << endl << flush;
+    }
   }
   return proved;
 }
@@ -466,7 +477,7 @@ VampireReturnValue
 FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
                       const CLFormula &theorem, const string &hammer_invoke,
                       unsigned time_limit) {
-  cout << "--- Vampire filtering: filtering out input axioms (input: "
+  cout << "--- Hammer filtering: filtering out input axioms (input: "
        << axioms.size() << ")" << endl;
   // export to TPTP
   string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
@@ -522,11 +533,11 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
       else
         it++;
     }
-    cout << "       Vampire filtering (success): output size: " << axioms.size()
+    cout << "       Hammer filtering (success): output size: " << axioms.size()
          << endl;
     return eVampireUnsat;
   }
-  cout << "       Vampire filtering (failure): output size: " << axioms.size()
+  cout << "       Hammer filtering (failure): output size: " << axioms.size()
        << endl;
   return eVampireUnknown;
 }

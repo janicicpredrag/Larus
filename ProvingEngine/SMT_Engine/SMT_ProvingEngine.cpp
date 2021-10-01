@@ -1163,16 +1163,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           sbMatchConclusion += appeq(
               app("nArg", nProofStep, nInd),
               AXIOMS[nAxiom].nAxiomArgument[nGoalIndex * mnMaxArity + nInd]);
-
-        /*  if (nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] != 0 &&
-              nBinding[nAxiom][nGoalIndex * mnMaxArity + nInd] <=
-                  nAxiomUniVars[nAxiom])
-            sbMatchConclusion +=
-                smt_less(app("nArg", nProofStep, nInd),
-                         original_constants + ((nProofStep + 0) << 3) + 1);*/
-        // sbMatchConclusion +=
-        //    smt_less(app("nArg", nProofStep, nInd),
-        //           original_constants + ((nProofStep + 3) << 3));
       }
 
       string sb;
@@ -1193,17 +1183,6 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                 app("nArg", nProofStep, mnMaxArity + nInd),
                 AXIOMS[nAxiom]
                     .nAxiomArgument[(nGoalIndex + 1) * mnMaxArity + nInd]);
-
-          /*     if (nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] != 0
-             &&
-                   nBinding[nAxiom][(nGoalIndex + 1) * mnMaxArity + nInd] <=
-                       nAxiomUniVars[nAxiom]) {
-                 sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-                                original_constants + ((nProofStep + 0) << 3) +
-             1);
-               }*/
-          // sb += smt_less(app("nArg", nProofStep, mnMaxArity + nInd),
-          //               original_constants + ((nProofStep + 3) << 3));
         };
         sbMatchConclusion += app("bCases", nProofStep) + " " + sb + " ";
       } else
@@ -1265,8 +1244,8 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 1)) +
               appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 2 + XX)) +
               ")" + "(and " +
-              appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 2 + XX)) +
-              appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 1)) + "))";
+              appeq(app("nArg", n_from, 0), app("nInst", nProofStep, 2 + XX)) +
+              appeq(app("nArg", n_from, 1), app("nInst", nProofStep, 1)) + "))";
           sbMatchOnePremise += string(" (and ") +
                                appeq(app("nFrom", nProofStep, 0), n_from) + sb +
                                app("bSameProofBranch", n_from, nProofStep) +
@@ -1448,7 +1427,11 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
 
               string allfrom;
               // QED step is always based only on the previous step
+              // (this is for efficiency of inlining, but is a source of
+              // incompleteness (for some special cases)!!!)
               for (unsigned n_from = nProofStep - 1; n_from < nProofStep;
+                   // for (unsigned n_from = nProofStep - 1; n_from <
+                   // nProofStep;
                    n_from++) {
                 string allfrom1;
                 allfrom1 += appeq(app("nP", n_from, 0),

@@ -1,6 +1,6 @@
-#include "STL_ProvingEngine.h"
+#include "SQL_ProvingEngine.h"
 #include "CLProof/CLProof.h"
-#include "STL_FactsDatabase.h"
+#include "SQL_FactsDatabase.h"
 #include <set>
 #include <string>
 
@@ -8,8 +8,8 @@
 
 // ---------------------------------------------------------------------------------------
 
-STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams &params) {
-  mpDB = new STLFactsDatabase(T);
+SQL_ProvingEngine::SQL_ProvingEngine(Theory *T, proverParams &params) {
+  mpDB = new SQLFactsDatabase(T);
   mpT = T;
   mParams = params;
   mName = "STL";
@@ -17,15 +17,15 @@ STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams &params) {
 
 // ---------------------------------------------------------------------------------------
 
-STL_ProvingEngine::~STL_ProvingEngine() { delete mpDB; }
+SQL_ProvingEngine::~SQL_ProvingEngine() { delete mpDB; }
 
 // ---------------------------------------------------------------------------------------
 
-void STL_ProvingEngine::AddPremise(const Fact &f) { mpDB->AddFact(f); }
+void SQL_ProvingEngine::AddPremise(const Fact &f) { mpDB->AddFact(f); }
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
+bool SQL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                                           CLProof &proof) {
   CLProofEnd *pe;
   bool success;
@@ -128,19 +128,6 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
         return true;
       }
     }
-
-    /*if (false && !success)
-    {
-        if (ApplyExcludedMiddle(mp))
-        {
-            vector<pair<string,string>> instantiation;
-            #ifdef DEBUG_OUTPUT
-            cout << "Excluded middle, no premises: " << mp << ")" << endl;
-            #endif
-            proof.AddMPstep(from, mp, "excluded midle", instantiation);
-            success = true;
-        }
-    }*/
 
     size_t l = 5;
     while (!success && l < 100) {
@@ -308,18 +295,18 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyEFQ() {
-  for (set<Fact>::iterator it = mpDB->GetDatabase()->begin();
-       it != mpDB->GetDatabase()->end(); ++it) {
-    if (it->GetName() == "false")
-      return true;
-  }
+bool SQL_ProvingEngine::ApplyEFQ() {
+  //  for (set<Fact>::iterator it = mpDB->GetDatabase()->begin();
+  //       it != mpDB->GetDatabase()->end(); ++it) {
+  //    if (it->GetName() == "false")
+  //      return true;
+  //  }
   return false;
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyByAssumption(const DNFFormula &f,
+bool SQL_ProvingEngine::ApplyByAssumption(const DNFFormula &f,
                                           ConjunctionFormula &fin) {
   vector<Fact> AuxFacts;
   if (mpDB->HoldsDisjunction(f, fin, AuxFacts)) {
@@ -333,7 +320,7 @@ bool STL_ProvingEngine::ApplyByAssumption(const DNFFormula &f,
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyExcludedMiddle(DNFFormula &mp) {
+bool SQL_ProvingEngine::ApplyExcludedMiddle(DNFFormula &mp) {
   if (GetDatabase()->ApplyExcludedMiddle(mp)) {
     GetDatabase()->AddCases(mp);
     return true;
@@ -343,7 +330,7 @@ bool STL_ProvingEngine::ApplyExcludedMiddle(DNFFormula &mp) {
 
 // ---------------------------------------------------------------------------------------
 
-bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
+bool SQL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
   *pcs = new CaseSplit;
   size_t old_size_cases = mpDB->GetDatabaseCases()->size();
   if (old_size_cases == 0)

@@ -1,18 +1,18 @@
-#ifndef STLPROVINGENGINE_H
-#define STLPROVINGENGINE_H
+#ifndef SQLPROVINGENGINE_H
+#define SQLPROVINGENGINE_H
 
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
 #include "ProvingEngine/ProvingEngine.h"
-#include "ProvingEngine/STL_Engine/STL_FactsDatabase.h"
+#include "ProvingEngine/SQL_Engine/SQL_FactsDatabase.h"
 #include "common.h"
 
 using namespace std;
 
-class STL_ProvingEngine : public ProvingEngine {
+class SQL_ProvingEngine : public ProvingEngine {
 public:
-  STL_ProvingEngine(Theory *T, proverParams &params);
-  virtual ~STL_ProvingEngine();
+  SQL_ProvingEngine(Theory *T, proverParams &params);
+  virtual ~SQL_ProvingEngine();
 
   void AddPremise(const Fact &f);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
@@ -22,7 +22,7 @@ public:
     mParams.time_limit = timeLimit;
     mpDB->SetStartTimeAndLimit(startTime, timeLimit);
   }
-  virtual PROVING_ENGINE GetKind() { return eSTL_ProvingEngine; }
+  virtual PROVING_ENGINE GetKind() { return eSQL_ProvingEngine; }
 
   bool ApplyAxiom(const CLFormula &ax, ConjunctionFormula &fin, DNFFormula &mp,
                   vector<pair<string, string>> &instantiation) {
@@ -35,7 +35,7 @@ public:
   FactsDatabase *GetDatabase() { return mpDB; }
 
 private:
-  STLFactsDatabase *mpDB;
+  SQLFactsDatabase *mpDB;
 };
 
-#endif // STLPROVINGENGINE_H
+#endif // SQLPROVINGENGINE_H

@@ -79,6 +79,7 @@ const bool DEFAULT_NO_NEG_ELIM = false;
 const bool DEFAULT_NO_EXCLUDED_MIDDLE = false;
 const bool DEFAULT_COQ = false;
 const bool DEFAULT_ISA = false;
+const bool DEFAULT_GCLC = false;
 const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_EXACT_LENGTH = false;
 const bool DEFAULT_SIMP = true;
@@ -110,6 +111,7 @@ typedef struct proverParams {
   bool mbNativeEQsub;
   bool mbCoq;
   bool mbIsa;
+  bool mbGCLC;
   bool mbSimp;
   bool mbNeedsCaseSplits;
   string msHammerInvoke;

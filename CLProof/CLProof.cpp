@@ -140,6 +140,24 @@ void CLProof::MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f) {
 
 // ---------------------------------------------------------------------------------
 
+bool CLProof::IsContradiction() const {
+  CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+  if (pe) {
+    for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+      if (!pe->GetSubproof(i).IsContradiction())
+        return false;
+    }
+    return true;
+  } else {
+    EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
+    if (efq)
+      return true;
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------------
+
 void CLProof::Simplify() {
   set<Fact> relevant;
   CLProof::Simplify(relevant);

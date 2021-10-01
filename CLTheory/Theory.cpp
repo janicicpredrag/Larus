@@ -833,7 +833,7 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
     if (f.GetElement(i).GetSize() != 1)
       allsingleconjuncts = false;
   }
-  assert(f.GetSize() == 1 || RHS.GetSize() == 1 || allsingleconjuncts);
+  //  assert(f.GetSize() == 1 || RHS.GetSize() == 1 || allsingleconjuncts);
   allsingleconjuncts = true;
 
   fout.Clear();

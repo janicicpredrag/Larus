@@ -72,6 +72,10 @@ otherwise:
 
    -h<time>             use a FOL prover for filtering out needed axioms (<time> is optional, default: 18)
 
+   -a<invoke>           the way the external prover is invoked as a hammer to filter out the needed 
+                        axioms; only relevant if -h is used; (default: 
+                        'vampire --mode casc --proof tptp --output_axiom_names on'
+
    -v<prover>           for generating and verifying the proof by an interactive theorem prover;
                         the only supported ITP is Coq.
                         example: -vcoq; default: no

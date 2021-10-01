@@ -51,9 +51,13 @@ SOURCES       = main.cpp \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProofExport/ProofExport2Coq.cpp \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
+		ProofExport/ProofExport2GCLC.cpp \
+		ProofExport/ProofExport2GCLC_predicates.cpp \
 		import.cpp 
 OBJECTS       = main.o \
 		Formula.o \
@@ -63,9 +67,13 @@ OBJECTS       = main.o \
 		SMT_ProvingEngine.o \
 		STL_ProvingEngine.o \
 		STL_FactsDatabase.o \
+		SQL_ProvingEngine.o \
+		SQL_FactsDatabase.o \
 		ProofExport2Coq.o \
 		ProofExport2Isabelle.o \
 		ProofExport2LaTeX.o \
+		ProofExport2GCLC.o \
+        ProofExport2GCLC_predicates.o \
 		import.o
 DIST          = 		CLTheory/Formula.h \
 		CLTheory/Theory.h \
@@ -74,27 +82,31 @@ DIST          = 		CLTheory/Formula.h \
 		ProvingEngine/ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
 		ProofExport/ProofExport.h \
 		ProofExport/ProofExport2Coq.h \
 		ProofExport/ProofExport2Isabelle.h \
 		ProofExport/ProofExport2LaTeX.h \
+		ProofExport/ProofExport2GCLC.h \
+		ProofExport/ProofExport2GCLC_predicates.h \
 		common.h main.cpp \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
-		Axioms/TarskiAxioms.cpp \
-		Axioms/BezemAxioms.cpp \
-		Axioms/EuclidElements.cpp \
-		Axioms/EuclidStatementsDepends.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
+		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProofExport/ProofExport2Coq.cpp \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
+		ProofExport/ProofExport2GCLC.cpp \
+		ProofExport/ProofExport2GCLC_predicates.cpp \
 		import.cpp
 QMAKE_TARGET  = larus
 DESTDIR       = 
@@ -118,8 +130,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/SMT_Engine/SMT_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h common.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp Axioms/TarskiAxioms.cpp Axioms/BezemAxioms.cpp Axioms/EuclidElements.cpp Axioms/EuclidStatementsDepends.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp import.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/SMT_Engine/SMT_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp Axioms/TarskiAxioms.cpp Axioms/BezemAxioms.cpp Axioms/EuclidElements.cpp Axioms/EuclidStatementsDepends.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp import.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -184,18 +196,6 @@ CLProof.o: CLProof/CLProof.cpp CLProof/CLProof.h \
 		CLTheory/Formula.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CLProof.o CLProof/CLProof.cpp
 
-TarskiAxioms.o: Axioms/TarskiAxioms.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TarskiAxioms.o Axioms/TarskiAxioms.cpp
-
-BezemAxioms.o: Axioms/BezemAxioms.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BezemAxioms.o Axioms/BezemAxioms.cpp
-
-EuclidElements.o: Axioms/EuclidElements.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EuclidElements.o Axioms/EuclidElements.cpp
-
-EuclidStatementsDepends.o: Axioms/EuclidStatementsDepends.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EuclidStatementsDepends.o Axioms/EuclidStatementsDepends.cpp
-
 URSA_ProvingEngine.o: ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp CLTheory/Theory.h \
 		CLTheory/Formula.h \
 		CLProof/CLProof.h \
@@ -222,6 +222,24 @@ STL_FactsDatabase.o: ProvingEngine/STL_Engine/STL_FactsDatabase.cpp CLProof/CLPr
 		CLTheory/Theory.h \
 		ProvingEngine/FactsDatabase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o STL_FactsDatabase.o ProvingEngine/STL_Engine/STL_FactsDatabase.cpp
+
+SQL_ProvingEngine.o: ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
+		CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		ProvingEngine/ProvingEngine.h \
+		CLTheory/Theory.h \
+		common.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		ProvingEngine/FactsDatabase.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_ProvingEngine.o ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp
+
+SQL_FactsDatabase.o: ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
+		CLTheory/Theory.h \
+		ProvingEngine/FactsDatabase.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_FactsDatabase.o ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp
+
 
 SMT_ProvingEngine.o: ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp CLTheory/Theory.h \
 		CLTheory/Formula.h \
@@ -254,20 +272,37 @@ ProofExport2LaTeX.o: ProofExport/ProofExport2LaTeX.cpp CLTheory/Formula.h \
 		CLTheory/Theory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProofExport2LaTeX.o ProofExport/ProofExport2LaTeX.cpp
 
+ProofExport2GCLC.o: ProofExport/ProofExport2GCLC.cpp CLTheory/Formula.h \
+		CLProof/CLProof.h \
+		ProofExport/ProofExport2GCLC.h \
+		ProofExport/ProofExport.h \
+		CLTheory/Theory.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProofExport2GCLC.o ProofExport/ProofExport2GCLC.cpp
+
+ProofExport2GCLC_predicates.o: ProofExport/ProofExport2GCLC_predicates.cpp CLTheory/Formula.h \
+		CLProof/CLProof.h \
+		ProofExport/ProofExport2GCLC_predicates.h \
+		ProofExport/ProofExport.h \
+		common.h \
+		CLTheory/Theory.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProofExport2GCLC_predicates.o ProofExport/ProofExport2GCLC_predicates.cpp
+
 import.o: import.cpp CLTheory/Theory.h \
+		common.h \
 		CLTheory/Formula.h \
-		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		CLProof/CLProof.h \
 		ProvingEngine/ProvingEngine.h \
-		common.h \
-		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/FactsDatabase.h \
+		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
+		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
 		ProofExport/ProofExport.h \
 		ProofExport/ProofExport2LaTeX.h \
 		ProofExport/ProofExport2Coq.h \
-		ProofExport/ProofExport2Isabelle.h
+		ProofExport/ProofExport2Isabelle.h \
+		ProofExport/ProofExport2GCLC.h \
+		ProofExport/ProofExport2GCLC_predicates.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o import.o import.cpp
 
 ####### Install

@@ -99,6 +99,7 @@ int main(int argc, char **argv) {
   params.mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
+  params.mbGCLC = DEFAULT_GCLC;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   params.msHammerInvoke = DEFAULT_HAMMER;
@@ -113,6 +114,7 @@ int main(int argc, char **argv) {
   string inputFilename;
   if (argc >= 2) {
     for (int i = 1; i < argc; i++) {
+
       if (argv[i][0] == '-' && argv[i][1] == 'f') {
         if (!strcmp(argv[i] + 2, "tptp"))
           params.input_format = eTPTP;
@@ -120,8 +122,9 @@ int main(int argc, char **argv) {
           wrongInput = true;
           break;
         }
-      }
-      if (argv[i][0] == '-' && argv[i][1] == 'v') {
+      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclc")) {
+        params.mbGCLC = true;
+      } else if (argv[i][0] == '-' && argv[i][1] == 'v') {
         if (!strcmp(argv[i] + 2, "coq"))
           params.mbCoq = true;
         else if (!strcmp(argv[i] + 2, "isa"))
@@ -190,12 +193,17 @@ int main(int argc, char **argv) {
           if (params.vampire_time_limit <= 0)
             params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
         }
-        // for instance (WITH SPACE!): -h " ../vampire/vampire4.2.2 --proof tptp
-        // --output_axiom_names on"
-        //                params.msHammerInvoke = argv[i+1];
-        // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
-        params.msHammerInvoke = "vampire --proof tptp --output_axiom_names on";
-
+        params.msHammerInvoke =
+            "vampire --mode casc --proof tptp --output_axiom_names on";
+      } else if (argv[i][0] == '-' && argv[i][1] == 'a') {
+        if (strlen(argv[i] + 2) == 0)
+          params.msHammerInvoke =
+              "vampire --mode casc --proof tptp --output_axiom_names on";
+        else
+          // for instance: -h"vampire --proof tptp --output_axiom_names on"
+          // for instance: -h"eprover --auto -p"
+          // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
+          params.msHammerInvoke = (argv[i] + 2);
       } else if (argv[i][0] == '-' && argv[i][1] == 'e') {
         if (!strcmp(argv[i] + 2, "stl"))
           params.eEngine = eSTL_ProvingEngine;
@@ -217,10 +225,10 @@ int main(int argc, char **argv) {
         }
       } else if (argv[i][0] != '-') {
         inputFilename.assign(argv[i], strlen(argv[i]));
-      }
+      } else
+        wrongInput = true;
     }
-  } else
-    wrongInput = true;
+  }
 
   if (inputFilename == "")
     wrongInput = true;
@@ -284,12 +292,31 @@ int main(int argc, char **argv) {
     cout << "                        axioms (<time> is optional, default: 18)"
          << endl
          << endl;
+
+    cout << "   -a<invoke>           the way the external prover is invoked "
+         << endl
+         << "                        as a hammer to filter out the needed "
+            "axioms; "
+         << endl
+         << "                        only relevant if -h is used; (default: "
+         << endl
+         << "                        'vampire --mode casc --proof tptp "
+            "--output_axiom_names "
+            "on')"
+         << endl
+         << endl;
+
     cout << "   -v<prover>           for generating and verifying the proof by "
          << endl;
     cout << "                        an interactive theorem prover (coq); "
          << endl;
     cout << "                        examples: -vcoq; default: no" << endl
          << endl;
+
+    cout << "   -gclc                for generating illustration of the proof."
+         << endl;
+
+    cout << endl;
 
     return 0;
   }

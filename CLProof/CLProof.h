@@ -47,6 +47,7 @@ public:
 
   void Simplify();
   void Simplify(set<Fact> &relevant);
+  bool IsContradiction() const;
 
   size_t NumOfAssumptions() const;
   const Fact &GetAssumption(size_t i) const;
