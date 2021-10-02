@@ -88,21 +88,27 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     vector<pair<CLFormula, string>> output;
     theorem.NormalizeGoal(theoremName, to_string(0), output, T.mDefinitions);
 
+    if (output.size() > 0) {
+      theorem = output[output.size() - 1].first;
+      cout << "          "
+           << "New conjecture: " << theorem << endl;
+    }
+
+    if (output.size() > 1) {
+      cout << "          Additional axioms: " << endl;
+      for (size_t j = 0; j < output.size() - 1; j++) {
+        T.AddAxiom(output[j].first, output[j].second);
+        T.UpdateSignature(output[j].first);
+        cout << "                    " << j << ". " << output[j].first << endl;
+      }
+    }
+
     if (T.mDefinitions.size() > 0) {
       cout << "          Definitions : " << endl;
       for (unsigned i = 0; i < T.mDefinitions.size(); i++)
         cout << "          " << T.mDefinitions[i].first << " -> "
              << T.mDefinitions[i].second << endl;
     }
-
-    if (output.size() > 1) {
-      for (size_t j = 0; j < output.size() - 1; j++) {
-        T.AddAxiom(output[j].first, output[j].second);
-        T.UpdateSignature(output[j].first);
-      }
-    }
-    if (output.size() > 0)
-      theorem = output[output.size() - 1].first;
   }
 
   vampire_succeeded = true;

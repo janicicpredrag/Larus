@@ -426,7 +426,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 
       DECLARATIONS = decl;
       string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
-      string smt_model_filename = tmpnam(NULL);        // "smt-model.txt"; //
+      string smt_model_filename = tmpnam(NULL);        // "smt-model.txt";    //
 
       EncodeProof(formula, l, smt_proofencoded_filename);
       const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
@@ -1429,7 +1429,8 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               // QED step is always based only on the previous step
               // (this is for efficiency of inlining, but is a source of
               // incompleteness (for some special cases)!!!)
-              for (unsigned n_from = nProofStep - 1; n_from < nProofStep;
+              // for (unsigned n_from = nProofStep - 1; n_from < nProofStep;
+              for (unsigned n_from = 0; n_from < nProofStep;
                    // for (unsigned n_from = nProofStep - 1; n_from <
                    // nProofStep;
                    n_from++) {
@@ -1979,27 +1980,30 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile,
       proofTxt << setw(4) << right << nesting << setw(4) << right
                << eQEDbyCases;
       proofTxt << "   /*** Nesting: " << nesting
-               << "; Step kind: QED by cases; ***/" << endl;
+               << "; Step kind:" << eQEDbyCases << " = QED by cases; ***/"
+               << endl;
       if (nesting == 1)
         break;
     } else if (axiom == eQEDbyAssumption) {
       proofTxt << setw(4) << right << nesting << setw(4) << right
                << eQEDbyAssumption;
       proofTxt << "   /*** Nesting: " << nesting
-               << "; Step kind: QED by assumption; ***/" << endl;
+               << "; Step kind:" << eQEDbyAssumption
+               << " = QED by assumption; ***/" << endl;
       if (nesting == 1)
         break;
     } else if (axiom == eQEDbyEFQ) {
       proofTxt << setw(4) << right << nesting << setw(4) << right << eQEDbyEFQ;
-      proofTxt << "   /*** Nesting: " << nesting
-               << "; Step kind: QED by EFQ; ***/" << endl;
+      proofTxt << "   /*** Nesting: " << nesting << "; Step kind:" << eQEDbyEFQ
+               << " = QED by EFQ; ***/" << endl;
       if (nesting == 1)
         break;
     } else if (axiom == eQEDbyNegIntro) {
       proofTxt << setw(4) << right << nesting << setw(4) << right
                << eQEDbyNegIntro;
       proofTxt << "   /*** Nesting: " << nesting
-               << "; Step kind: QED by NegIntro; ***/" << endl;
+               << "; Step kind:" << eQEDbyNegIntro << " = QED by NegIntro; ***/"
+               << endl;
       if (nesting == 1)
         break;
     } else if (axiom == eEQReflex) {

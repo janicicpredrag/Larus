@@ -193,12 +193,12 @@ int main(int argc, char **argv) {
           if (params.vampire_time_limit <= 0)
             params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
         }
-        params.msHammerInvoke =
-            "vampire --mode casc --proof tptp --output_axiom_names on";
+        params.msHammerInvoke = "vampire --cores 4 --mode casc --proof tptp "
+                                "--output_axiom_names on";
       } else if (argv[i][0] == '-' && argv[i][1] == 'a') {
         if (strlen(argv[i] + 2) == 0)
-          params.msHammerInvoke =
-              "vampire --mode casc --proof tptp --output_axiom_names on";
+          params.msHammerInvoke = "vampire --cores 4 --mode casc --proof tptp "
+                                  "--output_axiom_names on";
         else
           // for instance: -h"vampire --proof tptp --output_axiom_names on"
           // for instance: -h"eprover --auto -p"

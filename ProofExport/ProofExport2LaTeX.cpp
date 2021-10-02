@@ -202,7 +202,10 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   ConjunctionFormula cf = p.GetTheorem().GetPremises();
 
   if (p.GetTheorem().GetNumOfUnivVars() > 0) {
-    outfile << "\\noindent Consider arbitrary ";
+    outfile << "\\noindent Consider";
+    if (p.GetTheorem().GetNumOfUnivVars() == 1)
+      outfile << " an";
+    outfile << " arbitrary ";
     for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
       outfile << "$" << inst.find(p.GetTheorem().GetUnivVar(i))->second << "$";
       if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
