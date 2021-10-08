@@ -2,6 +2,7 @@ import csv
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import defaultdict
 
 from matplotlib import rc
 #rc('font',**{'family':'sans-serif','sans-serif':['Computer Modern Roman']})
@@ -47,11 +48,27 @@ def generate_tabular(list_of_provers, bench_names, maxtime):
         print("\\end{document}")
         sys.stdout = original_stdout
 
+
+def index_null(l,elt):
+    try:
+        return(l.index(elt))
+    except ValueError:
+        return(0)
+
 def generate_graph(data,filename, list_of_provers_colors, bench_directory, bench_display_name, maxtime):
-    for (prover_name,color_name,l_style) in list_of_provers_colors:
-        plt.plot(range(1,maxtime), number_solved_in_less_than(data, prover_name, bench_directory, maxtime), color=color_name,linestyle=l_style, label = prover_name.capitalize())
+    used_positions = defaultdict(list)
     nbbenches=number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)
-    plt.plot([1,maxtime],[nbbenches,nbbenches],color='gray', linestyle='solid', linewidth=0.5)
+    for (i,(prover_name,color_name,l_style)) in enumerate(list_of_provers_colors):
+        dt=number_solved_in_less_than(data, prover_name, bench_directory, maxtime)
+        used_positions[dt[-1]*100//nbbenches //8].append(i)
+        print(used_positions)
+        shift = index_null(used_positions[dt[-1]*100//nbbenches//8],i)*11
+        if shift < 50:
+            plt.text(maxtime+shift,dt[-1],str(i), verticalalignment='center')
+        else:
+            plt.text(maxtime+50,dt[-1],"...", verticalalignment='center')
+        plt.plot(range(1,maxtime), dt, color=color_name,linestyle=l_style, label = str(i)+": "+prover_name.capitalize())
+        plt.plot([1,maxtime],[nbbenches,nbbenches],color='gray', linestyle='solid', linewidth=0.5)
     plt.text(maxtime,nbbenches*1.01,'number of benches = '+str(nbbenches), horizontalalignment='right')
     plt.ylim(1,1.05* nbbenches)
     plt.xlim(1,maxtime) 
@@ -160,10 +177,10 @@ with open('data-clprover-variants.csv') as csvfile:
                ("Larusbase","red","solid"),
                ]
     maxtime=100
-    generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list_no_coq, maxtime)
-    generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
+    #generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list_no_coq, maxtime)
+    #generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
     generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+    #generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
     generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
     generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
     generate_graph(data_larus,"larus-variants.pdf", variants, "euclid", "Euclid benches with different parameters for Larus", maxtime)
