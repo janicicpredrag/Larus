@@ -1,6 +1,9 @@
 #include "ProofExport2GCLC_predicates.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Formula.h"
+#include <ostream>
+#include <fstream>
+#include <iostream>
 #include <sstream>
 
 using namespace std;
@@ -190,7 +193,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     }
 
     mProofSteps++;
-    for (unsigned int k = 0; k < 1 + mAnimation; k++) {
+    for (unsigned int k = 0; k < 1 + (unsigned)mAnimation; k++) {
       mIndividualOutputFile << "layer " << 2 * mProofSteps + k - 1 << endl;
       mIndividualOutputFile << "color " << 200 * (mAnimation - k) << " 0 0 "
                             << endl;

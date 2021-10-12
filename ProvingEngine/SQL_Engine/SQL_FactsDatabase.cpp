@@ -66,8 +66,8 @@ bool SQLFactsDatabase::ApplyExcludedMiddle(DNFFormula &fout) {
 // ---------------------------------------------------------------------------------------------------------------------------
 
 bool SQLFactsDatabase::ApplyAxiom(
-    const CLFormula &cl, ConjunctionFormula &fin, DNFFormula &fout,
-    vector<pair<string, string>> &orderedInstantiation) {
+    const CLFormula &/*cl*/, ConjunctionFormula &/*fin*/, DNFFormula &/*fout*/,
+    vector<pair<string, string>> &/*orderedInstantiation*/) {
   //  map<string, string> instantiation;
 
   return false;
@@ -75,23 +75,23 @@ bool SQLFactsDatabase::ApplyAxiom(
 
 // ---------------------------------------------------------------------------------------
 
-bool SQLFactsDatabase::FindFact(const Fact &f) {
+bool SQLFactsDatabase::FindFact(const Fact &/*f*/) {
   return false;
   // return (mDatabase.find(Canonize(f)) != mDatabase.end());
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool SQLFactsDatabase::HoldsDisjunction(const DNFFormula &dnf,
-                                        ConjunctionFormula &fin,
-                                        vector<Fact> &AuxFacts) {
+bool SQLFactsDatabase::HoldsDisjunction(const DNFFormula &/*dnf*/,
+                                        ConjunctionFormula &/*fin*/,
+                                        vector<Fact> &/*AuxFacts*/) {
   // check if the disjunction dnf holds in the database
   return false;
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool SQLFactsDatabase::Equal(string a, string b, vector<Fact> &AuxFacts) const {
+bool SQLFactsDatabase::Equal(string /*a*/, string /*b*/, vector<Fact> &/*AuxFacts*/) const {
   // chechs whether two facts are equal modulo equality
   // for instance eq(a,b) and eq(b,a) are equal
 

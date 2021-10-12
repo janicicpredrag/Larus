@@ -33,7 +33,7 @@ string ProofExport2GCLC::beautify(string w) {
 
 //-----------------------------------------------------------------------------------
 
-void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
+void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &/*T*/,
                                       const CLProof &p,
                                       proverParams & /*params*/) {
   outfile << "% ----- Proof illustration -----" << endl;
@@ -129,7 +129,7 @@ void ProofExport2GCLC::OutputProof(ofstream &outfile, const CLProof &p,
     }
 
     mProofSteps++;
-    for (unsigned int k = 0; k < 1 + mAnimation; k++) {
+    for (unsigned int k = 0; k < 1 + (unsigned)mAnimation; k++) {
       mIndividualOutputFile << "layer " << 2 * mProofSteps + k - 1 << endl;
       mIndividualOutputFile << "color " << 200 * (mAnimation - k) << " 0 0 "
                             << endl;

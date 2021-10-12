@@ -3,6 +3,8 @@
 #define NATIVE_EQ 1
 #define NATIVE_NEG 1
 
+#include <vector>
+#include <ostream>
 #include "common.h"
 
 using namespace std;
@@ -144,6 +146,12 @@ public:
   CLFormula(const ConjunctionFormula &a, const DNFFormula &b) {
     mA = a;
     mB = b;
+  }
+  CLFormula(const CLFormula &cf) {
+    mA = cf.mA;
+    mB = cf.mB;
+    mUniversalVars = cf.mUniversalVars;
+    mExistentialVars = cf.mExistentialVars;
   }
   CLFormula &operator=(const CLFormula &cf) {
     mA = cf.mA;

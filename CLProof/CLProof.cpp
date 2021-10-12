@@ -9,7 +9,7 @@ using namespace std;
 
 // ---------------------------------------------------------------------------------
 
-CLProof::CLProof() { mpProofEnd = NULL; }
+CLProof::CLProof() { mpProofEnd = nullptr; }
 
 // ---------------------------------------------------------------------------------
 
@@ -25,6 +25,24 @@ CLProof::CLProof(const CLProof &proof) {
   else
     assert(false);
   *mpProofEnd = *proof.GetProofEnd();
+}
+
+// ---------------------------------------------------------------------------------
+
+CLProof& CLProof::operator=(const CLProof &proof) {
+    if (mpProofEnd)
+      delete mpProofEnd;
+    *this = proof;
+    if (dynamic_cast<const ByAssumption *>(proof.GetProofEnd()))
+      mpProofEnd = new ByAssumption(proof.GetProofEnd()->GetConjunctionFormula());
+    else if (dynamic_cast<const EFQ *>(proof.GetProofEnd()))
+      mpProofEnd = new EFQ();
+    else if (dynamic_cast<const CaseSplit *>(proof.GetProofEnd()))
+      mpProofEnd =
+          new CaseSplit(*(dynamic_cast<const CaseSplit *>(proof.GetProofEnd())));
+    //else
+    //*mpProofEnd = *proof.GetProofEnd();
+    assert(false);
 }
 
 // ---------------------------------------------------------------------------------

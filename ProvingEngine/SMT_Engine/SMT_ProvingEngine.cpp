@@ -1,3 +1,4 @@
+#include <string>
 #include "SMT_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
 #include "CLProof/CLProof.h"

@@ -1,6 +1,9 @@
 #ifndef CLPROOF_H
 #define CLPROOF_H
 
+#include <vector>
+#include <set>
+#include <map>
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
 
@@ -26,6 +29,7 @@ class CLProof {
 public:
   CLProof();
   CLProof(const CLProof &proof);
+  CLProof& operator=(const CLProof &proof);
   ~CLProof();
   void Clear();
   void SetTheory(Theory *pT);

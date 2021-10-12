@@ -1,6 +1,7 @@
 #include "ProofExport2LaTeX.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Formula.h"
+#include <string>
 
 // ---------------------------------------------------------------------------------
 
