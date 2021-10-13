@@ -14,17 +14,8 @@ CLProof::CLProof() { mpProofEnd = nullptr; }
 // ---------------------------------------------------------------------------------
 
 CLProof::CLProof(const CLProof &proof) {
+  mpProofEnd = nullptr;
   *this = proof;
-  if (dynamic_cast<const ByAssumption *>(proof.GetProofEnd()))
-    mpProofEnd = new ByAssumption(proof.GetProofEnd()->GetConjunctionFormula());
-  else if (dynamic_cast<const EFQ *>(proof.GetProofEnd()))
-    mpProofEnd = new EFQ();
-  else if (dynamic_cast<const CaseSplit *>(proof.GetProofEnd()))
-    mpProofEnd =
-        new CaseSplit(*(dynamic_cast<const CaseSplit *>(proof.GetProofEnd())));
-  else
-    assert(false);
-  *mpProofEnd = *proof.GetProofEnd();
 }
 
 // ---------------------------------------------------------------------------------
@@ -32,7 +23,6 @@ CLProof::CLProof(const CLProof &proof) {
 CLProof& CLProof::operator=(const CLProof &proof) {
     if (mpProofEnd)
       delete mpProofEnd;
-    *this = proof;
     if (dynamic_cast<const ByAssumption *>(proof.GetProofEnd()))
       mpProofEnd = new ByAssumption(proof.GetProofEnd()->GetConjunctionFormula());
     else if (dynamic_cast<const EFQ *>(proof.GetProofEnd()))
@@ -40,9 +30,20 @@ CLProof& CLProof::operator=(const CLProof &proof) {
     else if (dynamic_cast<const CaseSplit *>(proof.GetProofEnd()))
       mpProofEnd =
           new CaseSplit(*(dynamic_cast<const CaseSplit *>(proof.GetProofEnd())));
-    //else
-    //*mpProofEnd = *proof.GetProofEnd();
-    assert(false);
+    else
+        assert(false);
+    *mpProofEnd = *proof.GetProofEnd();
+
+    mpT = proof.mpT;
+    mGoal = proof.mGoal;
+    mAssumptions = proof.mAssumptions;
+    mCLAssumptions = proof.mCLAssumptions;
+    mMPs = proof.mMPs;
+    mTheorem = proof.mTheorem;
+    mTheoremName = proof.mTheoremName;
+    mInstantiation = proof.mInstantiation;
+    mByRefutation = proof.mByRefutation;
+    return *this;
 }
 
 // ---------------------------------------------------------------------------------
