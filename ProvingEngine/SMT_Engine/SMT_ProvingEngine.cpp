@@ -1324,7 +1324,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           "(and "
           "(not " +
           app("bCases", nProofStep) + ") " + app("bCases", nProofStep - 1) +
-          smt_less(app("nNesting", nProofStep - 1), MAX_NESTING + 1) +
+          smt_less(app("nNesting", nProofStep - 1), mParams.max_nesting_depth + 1) +
           appeq(app("nAxiomApplied", nProofStep), eFirstCase) +
           appeq(app("nNesting", nProofStep),
                 smt_prod(app("nNesting", nProofStep - 1), 2)) +
@@ -1583,7 +1583,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
     if (mParams.mbNeedsCaseSplits)
       sbProofStepCorrect +=
           appeq(app("bOddNesting", nProofStep),
-                smt_odd(app("nNesting", nProofStep), MAX_NESTING));
+                smt_odd(app("nNesting", nProofStep), mParams.max_nesting_depth));
 
     for (unsigned nProofStep1 = 0; nProofStep1 < nProofStep; nProofStep1++) {
       // a kind of memoization:
