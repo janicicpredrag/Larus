@@ -60,13 +60,10 @@ def generate_graph(data,filename, list_of_provers_colors, bench_directory, bench
     nbbenches=number_of_benches(data, map(lambda x:x[0],list_of_provers_colors), bench_directory)
     for (i,(prover_name,color_name,l_style)) in enumerate(list_of_provers_colors):
         dt=number_solved_in_less_than(data, prover_name, bench_directory, maxtime)
-        used_positions[dt[-1]*100//nbbenches //8].append(i)
+        used_positions[dt[-1]*100//nbbenches //6].append(i)
         print(used_positions)
-        shift = index_null(used_positions[dt[-1]*100//nbbenches//8],i)*11
-        if shift < 50:
-            plt.text(maxtime+shift,dt[-1],str(i), verticalalignment='center')
-        else:
-            plt.text(maxtime+50,dt[-1],"...", verticalalignment='center')
+        shift = index_null(used_positions[dt[-1]*100//nbbenches//6],i)*11
+        plt.text(maxtime+shift,dt[-1],str(i), verticalalignment='center')
         plt.plot(range(1,maxtime), dt, color=color_name,linestyle=l_style, label = str(i)+": "+prover_name.capitalize())
         plt.plot([1,maxtime],[nbbenches,nbbenches],color='gray', linestyle='solid', linewidth=0.5)
     plt.text(maxtime,nbbenches*1.01,'number of benches = '+str(nbbenches), horizontalalignment='right')
@@ -129,8 +126,12 @@ def generate_graph_size_vs_time(data,filename,provers,maxtime):
     i=0
     for prover_name,color,l_style in provers:
         i=i+1
-        
-        plt.plot(x, pourcentage_proved_vs_size(data,prover_name,intervals),  color=color, linestyle=l_style, label=prover_name.capitalize() )
+        graph=pourcentage_proved_vs_size(data,prover_name,intervals)
+        plt.plot(x, graph,  color=color, linestyle=l_style, label=str(i)+": "+prover_name.capitalize() )
+        if (i%2==0 and i!=2):
+            plt.text(2.1 ,graph[2],str(i), verticalalignment='center')
+        else: 
+            plt.text(2 ,graph[2],str(i), verticalalignment='center')
  #      plt.plot(x+i*bar_width-shifting, pourcentage_proved_vs_size(data,prover_name,intervals), width=bar_width, color=color, label=prover_name.capitalize() )
     plt.ylabel('percentage proved') 
     plt.xlabel('size intervals') 
@@ -177,10 +178,10 @@ with open('data-clprover-variants.csv') as csvfile:
                ("Larusbase","red","solid"),
                ]
     maxtime=100
-    #generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list_no_coq, maxtime)
-    #generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
+    generate_graph_size_vs_time(data,"percentage_vs_size.pdf", big_list_no_coq, maxtime)
+    generate_tabular(big_list, ["coherent", "euclid", "col-trans", "crafted-hard"], maxtime)
     generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-    #generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
+    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
     generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
     generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
     generate_graph(data_larus,"larus-variants.pdf", variants, "euclid", "Euclid benches with different parameters for Larus", maxtime)
