@@ -1354,7 +1354,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
     else
       sbSecondCaseStep =
           "(and " +
-          sbMatchBranchingForSecondCase + /* app("bGoal", nProofStep-1) +*/
+          sbMatchBranchingForSecondCase +  app("bGoal", nProofStep-1) +
           appeq(app("nAxiomApplied", nProofStep), eSecondCase) + "(not " +
           app("bCases", nProofStep) + ")" +
           appeq(app("nNesting", nProofStep),
