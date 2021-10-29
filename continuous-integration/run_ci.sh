@@ -17,6 +17,7 @@ ORANGE='\033[0;33m'
 red=0
 green=0
 orange=0
+touch $filename
 if [ -z "$1" ]; then
     echo ""
 else
@@ -41,7 +42,7 @@ test_success () {
     else
         echo -e "${RED} Error ${NC}"
         ((red++))
-        cat < $1 >> $filename
+        cat < $1 >> continuous-integration/$filename
     fi
 }
 test_success_zenon () {
@@ -49,7 +50,7 @@ test_success_zenon () {
         echo -e "${GREEN} Ok ${NC}"
     else
         echo -e "${RED} Error ${NC}"
-        cat < $1 >> $filename
+        cat < $1 >> continuous-integration/$filename
     fi
 }
 test_success_eprover () {
@@ -60,7 +61,7 @@ test_success_eprover () {
         echo -e "${GREEN} Ok ${NC}"
         else
         echo -e "${RED} Error ${NC}"
-        cat < $1 >> $filename
+        cat < $1 >> continuous-integration/$filename
         fi
     fi
 }
