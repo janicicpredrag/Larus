@@ -858,7 +858,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
     ursaFile << "                    && bCases[nProofStep-1] " << endl;
     ursaFile << "                    && !bCases[nProofStep] " << endl;
     // harmonize possible values for nesting TODO
-    ursaFile << "                    && (nNesting[nProofStep-1] < nMaxNesting) "
+    ursaFile << "                    && (nNesting[nProofStep-1] <= nMaxNesting) "
              << endl;
     ursaFile << "                    && (nNesting[nProofStep] == "
                 "(nNesting[nProofStep-1]<<1)) "
@@ -1088,7 +1088,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "      /* Memoization */ " << endl;
   ursaFile << "      bsb = (nNesting[nProofStep] == nNesting[nProofStep1]); "
            << endl;
-  ursaFile << "      for (nI = 1; nI <= nMaxDepth; nI++) " << endl;
+  ursaFile << "      for (nI = 1; nI <= nMaxNesting+1; nI++) " << endl;
   ursaFile << "         bsb ||= "
               "((nNesting[nProofStep]>>nI)==nNesting[nProofStep1]); "
            << endl;
