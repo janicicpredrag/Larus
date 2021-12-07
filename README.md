@@ -48,7 +48,7 @@ otherwise:
 
    -f<format>           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
 
-   -s                   for search for a single proof; example:-s; default: no, search for a shortest proof
+   -s                   for search for a shortest proof; example:-s; default: no, search for a shortest proof
 
    -d                   for disabling proof simplification; default is false
 
