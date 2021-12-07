@@ -48,7 +48,7 @@ otherwise:
 
    -f<format>           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
 
-   -s                   for search for a single proof; example:-s; default: no, search for a shortest proof
+   -s                   for search for a shortest proof; example:-s; default: no, search for a shortest proof
 
    -d                   for disabling proof simplification; default is false
 
@@ -86,7 +86,7 @@ otherwise:
  Running the following command in the Larus directory:
  `./larus -esmtbv -vcoq -m18 benchmarks/tptp-problems/euclid-native-eq/008_proposition_03.p`
  uses Z3 smt solver to find a proof starting by looking for a proof of length 18, then the proof is checked by Coq.
- The proofs are writen in the `proofs` subdirectory.
+ The proofs are written in the `proofs` subdirectory (that is supposed to exist).
  
  ``` 
  --------------------------------------------------------------------
