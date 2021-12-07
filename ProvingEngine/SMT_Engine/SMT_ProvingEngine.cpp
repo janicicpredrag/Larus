@@ -448,7 +448,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
     }
 
     if (mParams.shortest_proof && best) {
-      l = best / 2 + 1;
+//      l = best / 2 + 1;
       r = best;
       best_start = best;
       ret = proof.DecodeProof(formula, smt_proofout_filename);
@@ -462,6 +462,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       r = proof.Size() - proof.NumOfAssumptions();
       best = r;
       best_start = best;
+      l = best / 2 + 1;
 
       if (l <= r && l != best)
         cout << "Looking for a proof of length: " << flush;
@@ -486,7 +487,8 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
         if (!ReadModel(smt_model_filename,
                        smt_proofout_filename)) { // Find a model
           l = s + 1;
-          cout << ", ";
+         // cout << ", ";
+          cout << " ";
         } else {
           cout << " (found), ";
           best = s;
