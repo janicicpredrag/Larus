@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
         params.time_limit = atoi(argv[i] + 2);
         if (params.time_limit <= 0)
           params.time_limit = DEFAULT_TIME_LIMIT;
-      } else if (argv[i][0] == '-' && argv[i][1] == 'n') {
+      } else if (argv[i][0] == '-' && argv[i][1] == 'n' && argv[i][2] != 'o') {
         if (strlen(argv[i] + 2) == 0) {
           wrongInput = true;
           break;
