@@ -33,7 +33,7 @@ string ProofExport2GCLC::beautify(string w) {
 
 //-----------------------------------------------------------------------------------
 
-void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &/*T*/,
+void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
                                       const CLProof &p,
                                       proverParams & /*params*/) {
   outfile << "% ----- Proof illustration -----" << endl;
@@ -44,6 +44,10 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &/*T*/,
   map<string, string> inst = p.GetInstantiation();
   mFunctionParams << p.GetTheoremName() << " { ";
   mFunctionParamsExists << p.GetTheoremName() << "_exists { ";
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+     mFunctionParams << T.mConstants[i] << " ";
+     mFunctionParamsExists << T.mConstants[i] << " ";
+  }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
     mFunctionParams << inst.find(p.GetTheorem().GetUnivVar(i))->second << " ";
     mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
@@ -71,6 +75,12 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &/*T*/,
     return;
   premisesExistTPTP << "fof(" << p.GetTheoremName()
                     << "_exists, conjecture, ( ? [";
+
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+    premisesExistTPTP << T.mConstants[i];
+    if (i + 1 < T.mConstants.size())
+      premisesExistTPTP << ",";
+  }
 
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
     premisesExistTPTP << p.GetTheorem().GetUnivVar(i);

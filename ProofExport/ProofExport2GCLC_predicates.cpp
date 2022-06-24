@@ -45,32 +45,18 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "include predicates.gcl" << endl;
   outfile << "% ----- Proof illustration -----" << endl;
   outfile << "double" << endl;
-  // outfile << "include " << p.GetTheoremName() << ".gcl" << endl;
   outfile << "include " << p.GetTheoremName() << "_exists.gcl" << endl;
 
   map<string, string> inst = p.GetInstantiation();
-  mFunctionParams << p.GetTheoremName() << " { ";
   mFunctionParamsExists << p.GetTheoremName() << "_exists { ";
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+    mFunctionParamsExists << T.mConstants[i] << " ";
+  }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-    mFunctionParams << inst.find(p.GetTheorem().GetUnivVar(i))->second << " ";
     mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
                           << " ";
   }
-  for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
-    mFunctionParams << "w";
-    if (i != 0)
-      mFunctionParams << i;
-    mFunctionParams << " ";
-    mFunctionParamsExists << " ";
-  }
-  mFunctionParams << " } ";
   mFunctionParamsExists << " } ";
-
-  mIndividualOutputFile.open("proofs/" + p.GetTheoremName() + ".gcl");
-  if (!mIndividualOutputFile)
-    return;
-  mIndividualOutputFile << "procedure " << mFunctionParams.str() << " { "
-                        << endl;
 
   ofstream premisesExistTPTP;
   premisesExistTPTP.open(p.GetTheoremName() + "_exists.p");
@@ -79,6 +65,11 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
   premisesExistTPTP << "fof(" << p.GetTheoremName()
                     << "_exists, conjecture, ( ? [";
 
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+    premisesExistTPTP << T.mConstants[i];
+    if (i + 1 < T.mConstants.size())
+      premisesExistTPTP << ",";
+  }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
     premisesExistTPTP << p.GetTheorem().GetUnivVar(i);
     if (i + 1 < p.GetTheorem().GetNumOfUnivVars())
@@ -157,12 +148,17 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       const Fact &f = ax.GetPremises().GetElement(j);
       outfile << "call draw_" << f.GetName() << " { ";
       for (size_t k = 0; k < f.GetArity(); k++) {
-        for (size_t l = 0; l != instantiation.size(); l++) {
+        bool found_var = false;
+        for (size_t l = 0; l != instantiation.size() && !found_var; l++) {
           if (instantiation[l].first == f.GetArg(k)) {
             string const_name = instantiation[l].second;
             const_name = beautify(const_name);
             outfile << const_name << " ";
+            found_var = true;
           }
+        }
+        if (!found_var) { // this is a symbol of a constant
+            outfile << f.GetArg(k) << " ";
         }
       }
       outfile << " 0 }" << endl;
