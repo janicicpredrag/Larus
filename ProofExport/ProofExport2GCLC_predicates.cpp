@@ -53,7 +53,14 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
     mFunctionParamsExists << T.mConstants[i] << " ";
   }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-    mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
+      string const_symb = inst.find(p.GetTheorem().GetUnivVar(i))->second;
+      bool found = false;
+      for (unsigned i = 0; i < T.mConstants.size() && !found; i++) {
+        if (const_symb == T.mConstants[i])
+            found = true;
+      }
+      if (!found)
+        mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
                           << " ";
   }
   mFunctionParamsExists << " } ";
@@ -128,6 +135,11 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       outfile << endl << "include " << p.GetMP(i).axiomName << ".gcl" << endl;
       axioms_used.insert(p.GetMP(i).axiomName);
     }
+
+    CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
+    outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
+            << " " << endl;
+    outfile << "layer " << 2 * mProofSteps << endl;
     outfile << "call " << p.GetMP(i).axiomName << " { ";
     for (size_t j = 0; j != instantiation.size(); j++) {
       string const_name = instantiation[j].second;
@@ -138,12 +150,8 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     for (size_t j = 0; j != new_witnesses.size(); j++) {
       outfile << "mark_t " << beautify(new_witnesses[j].second) << endl;
     }
-
     outfile << endl;
-    CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
-    outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
-            << " " << endl;
-    outfile << "layer " << 2 * mProofSteps << endl;
+
     for (size_t j = 0; j < ax.GetPremises().GetSize(); j++) {
       const Fact &f = ax.GetPremises().GetElement(j);
       outfile << "call draw_" << f.GetName() << " { ";

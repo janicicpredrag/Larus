@@ -49,9 +49,17 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
      mFunctionParamsExists << T.mConstants[i] << " ";
   }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-    mFunctionParams << inst.find(p.GetTheorem().GetUnivVar(i))->second << " ";
-    mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
-                          << " ";
+     string const_symb = inst.find(p.GetTheorem().GetUnivVar(i))->second;
+     bool found = false;
+     for (unsigned i = 0; i < T.mConstants.size() && !found; i++) {
+       if (const_symb == T.mConstants[i])
+         found = true;
+     }
+     if (!found) {
+       mFunctionParams << inst.find(p.GetTheorem().GetUnivVar(i))->second << " ";
+       mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
+                             << " ";
+     }
   }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
     mFunctionParams << "w";
