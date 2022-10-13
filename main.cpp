@@ -100,6 +100,7 @@ int main(int argc, char **argv) {
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
   params.mbGCLC = DEFAULT_GCLC;
+  params.mbLambdaPi = DEFAULT_LAMBDAPI;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   params.msHammerInvoke = DEFAULT_HAMMER;
@@ -129,6 +130,8 @@ int main(int argc, char **argv) {
           params.mbCoq = true;
         else if (!strcmp(argv[i] + 2, "isa"))
           params.mbIsa = true;
+        else if (!strcmp(argv[i] + 2, "lpi"))
+          params.mbLambdaPi = true;
         else {
           wrongInput = true;
           break;
