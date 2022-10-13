@@ -4,6 +4,212 @@
 #include "common.h"
 #include "../SMTOut.h"
 
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint()
+{
+  mO = eNull;
+  mLeft = nullptr;
+  mRight = nullptr;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(unsigned n)
+{
+  mO = eNum;
+  mNum = n;
+  mLeft = nullptr;
+  mRight = nullptr;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(bool b)
+{
+  mO = eBool;
+  mB = b;
+  mLeft = nullptr;
+  mRight = nullptr;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(string str)
+{
+  mO = eVar;
+  mS = str;
+  mLeft = nullptr;
+  mRight = nullptr;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(const Constraint& c)
+{
+  mO = c.mO;
+  mB = c.mB;
+  mS = c.mS;
+  mNum = c.mNum;
+  if (mO == eNum || mO == eVar || mO == eBool || mO == eNull) {
+    mLeft = nullptr; mRight = nullptr;
+  }
+  else {
+    mLeft = new Constraint(*(c.mLeft));
+    mRight = new Constraint(*(c.mRight));
+  }
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(op o, const Constraint* l, const Constraint* r)
+{
+  mO = o;
+  mLeft = new Constraint(*l);
+  mRight = new Constraint(*r);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::~Constraint()
+{
+  if (mLeft != nullptr)
+    delete mLeft;
+  if (mRight != nullptr)
+    delete mRight;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator= (const Constraint& c)
+{
+  if (this == &c)
+     return *this;
+  if (mLeft != nullptr)
+    delete mLeft;
+  if (mRight != nullptr)
+    delete mRight;
+  mO = c.mO;
+  mS = c.mS;
+  mB = c.mB;
+  mNum = c.mNum;
+  if (mO == eNum || mO == eVar || mO == eBool || mO == eNull) {
+    mLeft = nullptr; mRight = nullptr;
+  }
+  else
+  {
+    mLeft = new Constraint(*(c.mLeft));
+    mRight = new Constraint(*(c.mRight));
+  }
+  return *this;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator+ (const Constraint& c)
+{
+  return Constraint(eAdd, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator* (const Constraint& c)
+{
+  return Constraint(eMul, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator== (const Constraint& c)
+{
+  return Constraint(eEq, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator!= (const Constraint& c)
+{
+  return Constraint(eNeq, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator> (const Constraint& c)
+{
+  return Constraint(eGreater, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator>= (const Constraint& c)
+{
+  return Constraint(eGreaterEq, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator< (const Constraint& c)
+{
+  return Constraint(eLess, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator& (const Constraint& c)
+{
+  if (mO == eNull)
+    return (c.mO == eNull) ? Constraint((bool)true) : c;
+  else
+    return (c.mO == eNull) ? *this : Constraint(eAnd, this, &c);
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator&= (const Constraint& c)
+{
+  if (c.mO == eNull)
+    return *this;
+  else {
+    Constraint c0 = *this;
+    *this = (mO == eNull) ? c : Constraint(eAnd, &c0, &c);
+    return *this;
+  }
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator| (const Constraint& c)
+{
+  if (mO == eNull)
+    return (c.mO == eNull) ? Constraint((bool)false) : c;
+  else
+    return (c.mO == eNull) ? c : Constraint(eOr, this, &c);
+}
+
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator|= (const Constraint& c)
+{
+  if (c.mO == eNull)
+    return *this;
+  else {
+    Constraint c0 = *this;
+    *this = (mO == eNull) ? c : Constraint(eOr, &c0, &c);
+    return *this;
+  }
+}
+
+// ---------------------------------------------------------------------------------------
+
+Constraint Constraint::operator<< (const string& s)
+{
+  Constraint cs = Constraint(s);
+  return Constraint(eComment, this, &cs);
+}
+
+// ---------------------------------------------------------------------------------------
+
 string Constraint::toString() const
 {
     switch (mO) {
@@ -34,11 +240,14 @@ string Constraint::toString() const
     }
 }
 
+// ---------------------------------------------------------------------------------------
+
 string Constraint::toSMT() const
 {
     return toSMT_(eNull);
 }
 
+// ---------------------------------------------------------------------------------------
 
 string Constraint::toSMT_(enum OPERATOR op) const
 {
@@ -93,4 +302,5 @@ string Constraint::toSMT_(enum OPERATOR op) const
     }
 }
 
+// ---------------------------------------------------------------------------------------
 
