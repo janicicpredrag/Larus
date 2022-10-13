@@ -53,6 +53,14 @@ bool stoi(string s, int &i) {
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+bool stou(string s, unsigned &i) {
+  char *p;
+  i = strtol(s.c_str(), &p, 10);
+  return (strlen(p) == 0);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 string dirnameOf(const string &fname) {
   size_t pos = fname.find_last_of("\\/");
   return (string::npos == pos) ? "" : fname.substr(0, pos);
@@ -219,6 +227,8 @@ int main(int argc, char **argv) {
           params.eEngine = eSMTUFLIA_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "smtufbv"))
           params.eEngine = eSMTUFBV_ProvingEngine;
+        else if (!strcmp(argv[i] + 2, "gsmtbv"))
+          params.eEngine = eGenericSMTBV_ProvingEngine;
         else {
           wrongInput = true;
           break;

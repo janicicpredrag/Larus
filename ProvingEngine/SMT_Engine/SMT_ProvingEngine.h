@@ -8,9 +8,6 @@
 
 using namespace std;
 
-#define MAX_PREMISES 200
-#define MAX_ARITY 200
-
 typedef struct {
   unsigned nAxiomUniVars;   /* number of univ quantifiers */
   unsigned nAxiomExiVars;   /* number of exi quantifiers */

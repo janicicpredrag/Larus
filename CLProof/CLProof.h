@@ -80,6 +80,8 @@ public:
   const map<string, string> GetInstantiation() const { return mInstantiation; }
   const CLFormula &GetGoal() const { return mGoal; }
 
+  void PrettyPrint() const;
+
 private:
   Theory *mpT;
   CLFormula mGoal;
@@ -120,7 +122,9 @@ public:
     assert(i < mCases.size());
     return mSubproofs[i];
   }
-  void AddSubproof(CLProof &proof) { mSubproofs.push_back(proof); }
+  void AddSubproof(const CLProof &proof) {
+    mSubproofs.push_back(proof);
+  }
   void SimplifySubproof(set<Fact> &relevant, size_t i) {
     assert(i < mCases.size());
     mSubproofs[i].Simplify(relevant);

@@ -334,11 +334,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         proofTrace.push_back(dummy);
         return true;
       }
-      if (nAxiom == eQEDbyNegIntro) {
+      /* if (nAxiom == eQEDbyNegIntro) {
         SetProofEnd(pni);
         proofTrace.push_back(dummy);
         return true;
-      }
+      }*/
 
       ss >> nBranching >> nPredicate;
       for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
@@ -929,6 +929,34 @@ bool CLProof::CL2toCL() {
   }
 
   return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void CLProof::PrettyPrint() const
+{
+    for(unsigned int i=0; i < mAssumptions.size(); i++) {
+        cout << i << ". As: " << mAssumptions[i] << endl;
+    }
+    for(unsigned int i=0; i < mMPs.size(); i++) {
+        cout << i << ". Mp: " << mMPs[i].conclusion << endl;
+    }
+
+    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+    if (pe) {
+      for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+        pe->GetSubproof(i).PrettyPrint();
+      }
+    } else {
+      ByAssumption *ba = dynamic_cast<ByAssumption *>(mpProofEnd);
+      if (ba) {
+        cout << "BAss: " << ba->GetConjunctionFormula() << endl;
+      } else {
+        EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
+        if (efq)
+           cout << "EFQ: " << endl;
+      }
+    }
 }
 
 // ---------------------------------------------------------------------------------------

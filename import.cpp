@@ -10,6 +10,7 @@
 #include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
+#include "ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h"
 #include "common.h"
 
 extern bool ReadTPTPStatement(const string &s, CLFormula &cl, string &axname,
@@ -300,6 +301,10 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
                params.eEngine == eSMTUFLIA_ProvingEngine ||
                params.eEngine == eSMTUFBV_ProvingEngine)
         engine = new SMT_ProvingEngine(&T1, params);
+
+      else if (params.eEngine == eGenericSMTBV_ProvingEngine)
+        engine = new NewSMTProvingEngine(&T1, params);
+
       else // default
         engine = new STL_ProvingEngine(&T1, params);
 
@@ -331,6 +336,8 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
              params.eEngine == eSMTUFLIA_ProvingEngine ||
              params.eEngine == eSMTUFBV_ProvingEngine)
       engine = new SMT_ProvingEngine(&T, params);
+    else if (params.eEngine == eGenericSMTBV_ProvingEngine)
+      engine = new NewSMTProvingEngine(&T, params);
     else // default
       engine = new STL_ProvingEngine(&T, params);
     ReturnValue r = ProveTheorem(params, T, *engine, theorem, theoremName,
@@ -422,7 +429,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         theoremFileName.substr(found + 1) + engine.mName + isminproof;
     fileName = SkipChar(fileName, '.');
     fileName = SkipChar(fileName, '-');
-
     cout << endl
          << "The proof found size (without assumptions): "
          << proof.Size() - proof.NumOfAssumptions() << endl

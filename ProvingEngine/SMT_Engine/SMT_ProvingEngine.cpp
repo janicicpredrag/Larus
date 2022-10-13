@@ -428,7 +428,6 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       DECLARATIONS = decl;
       string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
       string smt_model_filename = tmpnam(NULL);        // "smt-model.txt";    //
-
       EncodeProof(formula, l, smt_proofencoded_filename);
       const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
                            smt_proofencoded_filename + " > " +
@@ -1508,7 +1507,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                    " " + app("bGoal", nProofStep) +
                    appeq(app("nAxiomApplied", nProofStep), eQEDbyEFQ) +
                    "(not " + sbQEDbyAssumptionStep + "))");
-
+/*
     string sbQEDbyNegIntroStep =
         (nProofStep == mnPremisesCount
              ? " false "
@@ -1528,6 +1527,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         smt_ite(appeq(app("nAxiomApplied", nProofStep), eNegIntro), 1, 0);
     snNegIntroCheckNeg +=
         smt_ite(appeq(app("nAxiomApplied", nProofStep), eQEDbyNegIntro), 1, 0);
+*/
 
     bool bPrevStepQED = (nProofStep == 0 || nProofStep < mnPremisesCount);
     string sbPrevStepQED =
@@ -2001,15 +2001,18 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile,
                << " = QED by EFQ; ***/" << endl;
       if (nesting == 1)
         break;
-    } else if (axiom == eQEDbyNegIntro) {
-      proofTxt << setw(4) << right << nesting << setw(4) << right
-               << eQEDbyNegIntro;
-      proofTxt << "   /*** Nesting: " << nesting
-               << "; Step kind:" << eQEDbyNegIntro << " = QED by NegIntro; ***/"
-               << endl;
-      if (nesting == 1)
-        break;
-    } else if (axiom == eEQReflex) {
+    }
+//      else if (axiom == eQEDbyNegIntro) {
+//      proofTxt << setw(4) << right << nesting << setw(4) << right
+//               << eQEDbyNegIntro;
+//      proofTxt << "   /*** Nesting: " << nesting
+//               << "; Step kind:" << eQEDbyNegIntro << " = QED by NegIntro; ***/"
+//               << endl;
+//      if (nesting == 1)
+//        break;
+//    }
+
+      else if (axiom == eEQReflex) {
       proofTxt << setw(4) << right << nesting << setw(4) << right << axiom
                << setw(4) << right << "0" << setw(5) << right << predicate1;
       for (unsigned i = 0; i < ARITY[predicate1]; i++)

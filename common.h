@@ -26,6 +26,7 @@ enum PROVING_ENGINE {
   eSMTBV_ProvingEngine,
   eSMTUFLIA_ProvingEngine,
   eSMTUFBV_ProvingEngine,
+  eGenericSMTBV_ProvingEngine,
   eNumberOfProvingEngines
 };
 
@@ -56,7 +57,8 @@ enum StepKind {
   eQEDbyCases,
   eQEDbyAssumption,
   eQEDbyEFQ,
-  eQEDbyNegIntro,
+  // eQEDbyNegIntro,
+  eMP,
   eNumberOfStepKinds
 };
 
@@ -93,6 +95,7 @@ const unsigned SATURATION_TIME_LIMIT = 5;
 const string EQ_NATIVE_NAME = "eqnative";
 const string PREFIX_NEGATED = "nnn";
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
+const string NUM_PREFIX = "n"; // DO NOT CHANGE!
 
 typedef struct proverParams {
   INPUT_FORMAT input_format;
@@ -120,6 +123,7 @@ typedef struct proverParams {
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
 bool stoi(string s, int &i);
+bool stou(string s, unsigned &i);
 string SkipChar(const string &str, char c);
 string ToUpper(const string &str);
 string dirnameOf(const string &fname);

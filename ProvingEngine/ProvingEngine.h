@@ -5,6 +5,10 @@
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
 
+#define MAX_PREMISES 20
+#define MAX_ARITY 10
+#define MAX_VARSINAXIOMS 10
+
 
 using namespace std;
 
