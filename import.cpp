@@ -6,6 +6,7 @@
 #include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
+#include "ProofExport/ProofExport2LambdaPi.h"
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
 #include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
@@ -468,11 +469,18 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     }
 
     if (params.mbGCLC) {
-      ProofExport2GCLC_predicates exisa;
+      ProofExport2GCLC_predicates exgclc;
       string sFileName3("proofs/PROOF" + fileName + "_illustration.gcl");
-      exisa.ToFile(T, proof, sFileName3, params);
+      exgclc.ToFile(T, proof, sFileName3, params);
       cout << "Generating illustration ... " << endl << flush;
     }
+
+    if (params.mbLambdaPi) {
+      ProofExport2LambdaPi exlambdapi;
+      string sFileName3("proofs/PROOF" + fileName + ".lp");
+      exlambdapi.ToFile(T, proof, sFileName3, params);
+    }
+
   }
   return proved;
 }
