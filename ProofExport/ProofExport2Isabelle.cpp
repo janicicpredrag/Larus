@@ -63,7 +63,7 @@ void ProofExport2Isabelle::OutputAnd(ofstream &outfile) {
 void ProofExport2Isabelle::OutputOr(ofstream &outfile) { outfile << "\\<or> "; }
 
 // ---------------------------------------------------------------------------------
-string repeat2(int n, string s) {
+string repeat3(int n, string s) {
   ostringstream os;
   for (int i = 0; i < n; i++)
     os << s;
@@ -82,7 +82,7 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
        it != T.mSignature.end(); ++it)
     outfile << "consts " << get<0>(*it) << " :: \""
-            << repeat2(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl;
+            << repeat3(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl;
   outfile << endl;
   for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
     outfile << "axiomatization where " << endl;

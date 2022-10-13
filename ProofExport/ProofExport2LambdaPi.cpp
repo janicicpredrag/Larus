@@ -86,7 +86,7 @@ void ProofExport2LambdaPi::OutputFact(ofstream &outfile, const Fact &f) {
 }
 // ---------------------------------------------------------------------------------
 
-void ProofExport2::OutputImplication(ofstream &outfile) {
+void ProofExport2LambdaPi::OutputImplication(ofstream &outfile) {
   outfile << " ⇒ ";
 }
 
@@ -99,7 +99,7 @@ void ProofExport2LambdaPi::OutputAnd(ofstream &outfile) { outfile << " ∧ "; }
 void ProofExport2LambdaPi::OutputOr(ofstream &outfile) { outfile << " ∨ "; }
 
 // ---------------------------------------------------------------------------------
-string repeat(int n, string s) {
+string repeat2(int n, string s) {
   ostringstream os;
   for (int i = 0; i < n; i++)
     os << s;
@@ -129,7 +129,7 @@ void ProofExport2LambdaPi::OutputPrologue(ofstream &outfile, Theory &T,
     if (name != "false" && name != "true" && name.find(PREFIX_NEGATED) != 0 &&
         name.find("eqnative") != 0)
       outfile << "constant symbol " << get<0>(*it) << " : "
-              << repeat(get<1>(*it), "MyT → ") << "Prop;" << endl;
+              << repeat2(get<1>(*it), "MyT → ") << "Prop;" << endl;
   }
   for (vector<string>::iterator it = T.mInitialConstants.begin();
        it != T.mInitialConstants.end(); ++it)
@@ -219,7 +219,7 @@ void ProofExport2LambdaPi::OutputEpilogue(ofstream &outfile) {
   outfile << "end;" << endl;
 }
 
-string Indent(unsigned level) { return (string(3 * level, ' ')); }
+string Indent3(unsigned level) { return (string(3 * level, ' ')); }
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LambdaPi::OutputProof(ofstream &outfile, const CLProof &p,
@@ -228,8 +228,8 @@ void ProofExport2LambdaPi::OutputProof(ofstream &outfile, const CLProof &p,
     vector<pair<string, string>> new_witnesses = p.GetMP(i).new_witnesses;
 
     if (new_witnesses.size() > 0)
-      outfile << Indent(level) << "let Tf:=fresh in" << endl;
-    outfile << Indent(level) << "have (";
+      outfile << Indent3(level) << "let Tf:=fresh in" << endl;
+    outfile << Indent3(level) << "have (";
     if (new_witnesses.size() > 0) {
       outfile << "Tf:exists";
       for (size_t j = 0; j != new_witnesses.size(); j++)
@@ -314,7 +314,7 @@ void ProofExport2LambdaPi::OutputProof(ofstream &outfile, const CLProof &p,
 
 void ProofExport2LambdaPi::OutputProofEnd(ofstream &outfile, const CaseSplit *cs,
                                      unsigned level) {
-  outfile << Indent(level) << "by cases on (";
+  outfile << Indent3(level) << "by cases on (";
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
     outfile << " ( ";
     OutputDNF(outfile, cs->GetCases()[i]);
@@ -324,9 +324,9 @@ void ProofExport2LambdaPi::OutputProofEnd(ofstream &outfile, const CaseSplit *cs
   }
   outfile << ")." << endl;
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
-    outfile << Indent(level) << "- {" << endl;
+    outfile << Indent3(level) << "- {" << endl;
     OutputProof(outfile, cs->GetSubproof(i), level + 1);
-    outfile << Indent(level) << "  }" << endl;
+    outfile << Indent3(level) << "  }" << endl;
   }
   // outfile << "' have ?thesis by auto" << endl;
 }
@@ -338,29 +338,29 @@ void ProofExport2LambdaPi::OutputProofEnd(ofstream &outfile,
                                      unsigned level) {
   //  outfile << "from ";
   //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
-  outfile << Indent(level) << "conclude." << endl;
+  outfile << Indent3(level) << "conclude." << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LambdaPi::OutputProofEnd(ofstream &outfile, const EFQ * /*efq*/,
                                      unsigned level) {
-  outfile << Indent(level) << "contradict. " << endl;
+  outfile << Indent3(level) << "contradict. " << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LambdaPi::OutputProofEnd(ofstream &outfile, const ByNegIntro *bni,
                                      unsigned level) {
-  outfile << Indent(level) << "assert (~ ";
+  outfile << Indent3(level) << "assert (~ ";
   OutputFact(outfile, bni->GetAssumption());
   outfile << ")." << endl;
-  outfile << Indent(level + 1) << "{" << endl;
-  outfile << Indent(level + 1) << "intro." << endl;
+  outfile << Indent3(level + 1) << "{" << endl;
+  outfile << Indent3(level + 1) << "intro." << endl;
   OutputProof(outfile, bni->GetSubproof(), level + 1);
   // outfile << Indent(level+1) << "contradict." << endl;
-  outfile << Indent(level + 1) << "}" << endl;
-  outfile << Indent(level) << "conclude." << endl;
+  outfile << Indent3(level + 1) << "}" << endl;
+  outfile << Indent3(level) << "conclude." << endl;
 }
 
 // ---------------------------------------------------------------------------------
