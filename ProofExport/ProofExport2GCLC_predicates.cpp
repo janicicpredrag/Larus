@@ -45,32 +45,25 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "include predicates.gcl" << endl;
   outfile << "% ----- Proof illustration -----" << endl;
   outfile << "double" << endl;
-  // outfile << "include " << p.GetTheoremName() << ".gcl" << endl;
   outfile << "include " << p.GetTheoremName() << "_exists.gcl" << endl;
 
   map<string, string> inst = p.GetInstantiation();
-  mFunctionParams << p.GetTheoremName() << " { ";
   mFunctionParamsExists << p.GetTheoremName() << "_exists { ";
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+    mFunctionParamsExists << T.mConstants[i] << " ";
+  }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-    mFunctionParams << inst.find(p.GetTheorem().GetUnivVar(i))->second << " ";
-    mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
+      string const_symb = inst.find(p.GetTheorem().GetUnivVar(i))->second;
+      bool found = false;
+      for (unsigned i = 0; i < T.mConstants.size() && !found; i++) {
+        if (const_symb == T.mConstants[i])
+            found = true;
+      }
+      if (!found)
+        mFunctionParamsExists << inst.find(p.GetTheorem().GetUnivVar(i))->second
                           << " ";
   }
-  for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
-    mFunctionParams << "w";
-    if (i != 0)
-      mFunctionParams << i;
-    mFunctionParams << " ";
-    mFunctionParamsExists << " ";
-  }
-  mFunctionParams << " } ";
   mFunctionParamsExists << " } ";
-
-  mIndividualOutputFile.open("proofs/" + p.GetTheoremName() + ".gcl");
-  if (!mIndividualOutputFile)
-    return;
-  mIndividualOutputFile << "procedure " << mFunctionParams.str() << " { "
-                        << endl;
 
   ofstream premisesExistTPTP;
   premisesExistTPTP.open(p.GetTheoremName() + "_exists.p");
@@ -79,6 +72,11 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
   premisesExistTPTP << "fof(" << p.GetTheoremName()
                     << "_exists, conjecture, ( ? [";
 
+  for (unsigned i = 0; i < T.mConstants.size(); i++) {
+    premisesExistTPTP << T.mConstants[i];
+    if (i + 1 < T.mConstants.size())
+      premisesExistTPTP << ",";
+  }
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
     premisesExistTPTP << p.GetTheorem().GetUnivVar(i);
     if (i + 1 < p.GetTheorem().GetNumOfUnivVars())
@@ -137,6 +135,11 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       outfile << endl << "include " << p.GetMP(i).axiomName << ".gcl" << endl;
       axioms_used.insert(p.GetMP(i).axiomName);
     }
+
+    CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
+    outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
+            << " " << endl;
+    outfile << "layer " << 2 * mProofSteps << endl;
     outfile << "call " << p.GetMP(i).axiomName << " { ";
     for (size_t j = 0; j != instantiation.size(); j++) {
       string const_name = instantiation[j].second;
@@ -147,22 +150,23 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     for (size_t j = 0; j != new_witnesses.size(); j++) {
       outfile << "mark_t " << beautify(new_witnesses[j].second) << endl;
     }
-
     outfile << endl;
-    CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
-    outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
-            << " " << endl;
-    outfile << "layer " << 2 * mProofSteps << endl;
+
     for (size_t j = 0; j < ax.GetPremises().GetSize(); j++) {
       const Fact &f = ax.GetPremises().GetElement(j);
       outfile << "call draw_" << f.GetName() << " { ";
       for (size_t k = 0; k < f.GetArity(); k++) {
-        for (size_t l = 0; l != instantiation.size(); l++) {
+        bool found_var = false;
+        for (size_t l = 0; l != instantiation.size() && !found_var; l++) {
           if (instantiation[l].first == f.GetArg(k)) {
             string const_name = instantiation[l].second;
             const_name = beautify(const_name);
             outfile << const_name << " ";
+            found_var = true;
           }
+        }
+        if (!found_var) { // this is a symbol of a constant
+            outfile << f.GetArg(k) << " ";
         }
       }
       outfile << " 0 }" << endl;
