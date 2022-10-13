@@ -32,13 +32,13 @@ void ProofExport2LambdaPi::OutputCLFormula(ofstream &outfile, const CLFormula &c
                                       const string & /*name*/) {
   // outfile << "Theorem " << name << " : ";
   if (cl.GetNumOfUnivVars() > 0) {
-    outfile << "forall ";
+    // outfile << "forall ";
     for (size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
       outfile << cl.GetUnivVar(i);
       if (i < size - 1)
         outfile << " ";
     }
-    outfile << " : MyT, ";
+    outfile << " : π(";
   }
 
   for (size_t i = 0; i < cl.GetPremises().GetSize(); i++) {
@@ -56,7 +56,7 @@ void ProofExport2LambdaPi::OutputCLFormula(ofstream &outfile, const CLFormula &c
     outfile << " : MyT, ";
   }
   OutputDNF(outfile, cl.GetGoal());
-  outfile << ".";
+  outfile << ");";
   outfile << endl;
 }
 
@@ -140,7 +140,7 @@ void ProofExport2LambdaPi::OutputPrologue(ofstream &outfile, Theory &T,
     std::string name = get<1>(T.OriginalAxiom(i));
     std::size_t found = name.find("sat");
     if (found == std::string::npos) {
-      outfile << "constant symbol " << name << " : ";
+      outfile << "constant symbol " << name << " ";
       OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
     }
   }
@@ -168,16 +168,16 @@ void ProofExport2LambdaPi::OutputPrologue(ofstream &outfile, Theory &T,
 
   for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
     outfile << "opaque symbol ";
-    outfile << T.mDerivedLemmas[i].name << " : ";
+    outfile << T.mDerivedLemmas[i].name << " ";
     if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
-      outfile << "forall ";
+      outfile << " ";
       for (size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size();
            j < size; j++) {
         outfile << " " << T.mDerivedLemmas[i].mUniversalVars[j];
         if (j + 1 < T.mDerivedLemmas[i].mUniversalVars.size())
           outfile << " ";
         else
-          outfile << ", ";
+          outfile << " ";
       }
       outfile << " ";
     }
@@ -185,7 +185,7 @@ void ProofExport2LambdaPi::OutputPrologue(ofstream &outfile, Theory &T,
     if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
       OutputImplication(outfile);
     OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
-    outfile << "." << endl;
+    outfile << " ≔ " << endl;
     outfile << "begin" << endl;
     outfile << "inline_lemma_solver." << endl;
     outfile << "end;" << endl << endl;
@@ -194,9 +194,9 @@ void ProofExport2LambdaPi::OutputPrologue(ofstream &outfile, Theory &T,
   }
 
   outfile << endl;
-  outfile << "opaque symbol " << p.GetTheoremName() << " : ";
+  outfile << "opaque symbol " << p.GetTheoremName() << " ";
   OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
-  outfile << "begin" << endl;
+  outfile << "≔ " << endl << "begin" << endl;
   if (p.GetTheorem().GetNumOfUnivVars() !=0)
   {
     outfile << "assume ";
