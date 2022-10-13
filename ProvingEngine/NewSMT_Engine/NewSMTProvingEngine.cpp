@@ -799,32 +799,6 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
               << endl;
     string sPreabmle;
 
-    sPreabmle += "; **************************** Predicates "
-                 "******************************* \n";
-
-    unsigned enumerator = 0;
-    for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-      sPreabmle += "(assert (= n" + ToUpper(mpT->mSignature[i].first) + " " +
-                   itos(mSMT_theory, enumerator) + "))\n";
-      ARITY[enumerator] = mpT->mSignature[i].second;
-      PREDICATE[NUM_PREFIX + ToUpper(mpT->mSignature[i].first)] =
-          enumerator++;
-      if (mpT->mSignature[i].second > mnMaxArity)
-        mnMaxArity = mpT->mSignature[i].second;
-    }
-
-    sPreabmle += "\n";
-    sPreabmle += "; **************************** Axioms "
-                 "******************************* \n";
-    mnAxiomsCount = eNumberOfStepKinds - 1;
-    mnMaxVarInAxioms = 0;
-    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
-         it != mpT->mCLaxioms.end(); it++) {
-      EncodeAxiom(it->first);
-      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
-      if (num > mnMaxVarInAxioms)
-          mnMaxVarInAxioms = num;
-    }
     sPreabmle += "\n";
     for (unsigned i=0; i < mnPremisesCount + nProofLen; i++) {
       smtFile << "(declare-const nStepKind_l_" + itos(i) + "_r_ " + mSMT_type + " )" << endl;
@@ -871,7 +845,53 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
                      | ((Nesting(i) >= Nesting(j) *16u) & (Nesting(i) < Nesting(j) *16u + 16u));
           smtFile << "(assert (= bSameBranch_l_" + itos(i) + "_r__l_" + itos(j) + "_r_ " + c.toSMT() + " ))" << endl;
       }
+    }
 
+    sPreabmle += "; ************************* Predicate symbols "
+                 "************************** \n";
+    unsigned enumerator = 0;
+    for (size_t i = 0; i < mpT->mSignature.size(); i++) {
+      sPreabmle += "(assert (= n" + ToUpper(mpT->mSignature[i].first) + " " +
+                   itos(mSMT_theory, enumerator) + "))\n";
+      ARITY[enumerator] = mpT->mSignature[i].second;
+      PREDICATE[NUM_PREFIX + ToUpper(mpT->mSignature[i].first)] =
+          enumerator++;
+      if (mpT->mSignature[i].second > mnMaxArity)
+        mnMaxArity = mpT->mSignature[i].second;
+    }
+
+    enumerator = 0;
+    sPreabmle += "\n; ***************************** Constants "
+                 "******************************* \n";
+    for (vector<string>::const_iterator it = mpT->mConstants.begin();
+         it != mpT->mConstants.end(); it++) {
+      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
+      CONSTANTS[*it] = enumerator++;
+    }
+    for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
+         it != mpT->mConstantsPermissible.end(); it++) {
+      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
+      CONSTANTS[*it] = enumerator++;
+    }
+
+    sPreabmle += "\n";
+    sPreabmle += "; ****************************** Axioms "
+                  "********************************* \n";
+    mnAxiomsCount = eNumberOfStepKinds - 1;
+    mnMaxVarInAxioms = 0;
+
+    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
+         it != mpT->mCLaxioms.end(); it++) {
+      stringstream ss;
+      ss << "; " << it->first << endl;
+      sPreabmle += ss.str();
+      EncodeAxiom(it->first);
+      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
+      if (num > mnMaxVarInAxioms)
+          mnMaxVarInAxioms = num;
+    }
+
+    for (unsigned i=0; i < mnPremisesCount + nProofLen; i++) {
       Constraint cc, cg[2][2];
       for (unsigned ind0=0; ind0<2; ind0++)
         for (unsigned ind1=0; ind1<2; ind1++) {
@@ -889,29 +909,13 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       smtFile << "(assert (= bIsGoal_l_" + itos(i) + "_r_ " + cc.toSMT() + " ))" << endl;
     }
 
-    enumerator = 0;
-    sPreabmle += "; **************************** Constants "
-                 "******************************* \n";
-    for (vector<string>::const_iterator it = mpT->mConstants.begin();
-         it != mpT->mConstants.end(); it++) {
-      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
-      CONSTANTS[*it] = enumerator++;
-    }
-    for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
-         it != mpT->mConstantsPermissible.end(); it++) {
-      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
-      CONSTANTS[*it] = enumerator++;
-    }
     sPreabmle += "\n";
-    sPreabmle += "; **************************** Premises "
-                 "******************************* \n";
+    sPreabmle += "; ***************************** Premises "
+                 "****************************** \n";
     sPreabmle += "\n";
-    sPreabmle += "; **************************** Theorem "
-                 "******************************* \n";
-    sPreabmle += "; *************************************************************** \n\n";
-
+    sPreabmle += "; ****************************** Goal "
+                 "********************************* \n";
     unsigned nFinalStep = mnPremisesCount + nProofLen - 1;
-    sPreabmle += "; *** Goal *** \n ";
     sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
     sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("bCases", nFinalStep), formula.GetSize() > 1 ? "true" : "false") + ")\n";
     sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nContentsPredicate", nFinalStep, 0),
@@ -966,7 +970,6 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   smtFile << (mConstraint & CorrectnessCondition()).toSMT() << endl << ")" << endl;
   smtFile << "(check-sat)" << endl;
   smtFile << "(get-model)" << endl;
-  // cout << enc.Correctness().toString() << endl<< endl;
   smtFile.close();
 }
 
