@@ -110,6 +110,7 @@ typedef struct proverParams {
   bool mbCoq;
   bool mbIsa;
   bool mbGCLC;
+  bool mbLambdaPi;
   bool mbSimp;
   bool mbNeedsCaseSplits;
   string msHammerInvoke;
