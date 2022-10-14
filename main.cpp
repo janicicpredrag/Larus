@@ -45,6 +45,15 @@ string itos(PROVING_ENGINE T, unsigned int i) {
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+string itohexs(unsigned int u)
+{
+  std::stringstream stream;
+  stream << setw(3) << std::setfill('0') << std::hex << u;
+  return stream.str();
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
 bool stoi(string s, int &i) {
   char *p;
   i = strtol(s.c_str(), &p, 10);

@@ -122,6 +122,7 @@ typedef struct proverParams {
 
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
+string itohexs(unsigned int i);
 bool stoi(string s, int &i);
 bool stou(string s, unsigned &i);
 string SkipChar(const string &str, char c);

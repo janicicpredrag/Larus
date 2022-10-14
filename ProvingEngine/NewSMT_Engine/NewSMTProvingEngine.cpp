@@ -1,6 +1,5 @@
 #include <string>
 #include <cstring>
-#include <iostream>
 #include "NewSMTProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
 #include "../SMTOut.h"
@@ -147,7 +146,7 @@ Constraint NewSMTProvingEngine::IsMPstep(unsigned s)
 {
     Constraint c;
     for(unsigned k = 0; k < mpT->mCLaxioms.size(); k++)
-       c |= IsMPstepByAxiom(s,k);
+      c |= IsMPstepByAxiom(s,k);
     return c;
 }
 
@@ -217,9 +216,9 @@ Constraint NewSMTProvingEngine::MatchPremiseToStep(unsigned s, unsigned k, unsig
       c = True();
     else {
       c = (From(s,i) == ss)
-       & (Cases(ss) == False())
-       & (SameBranch(ss,s))
-       & (ContentsPredicate(ss,0) == GetAxiom(k).GetPremises().GetElement(i).GetName());
+        & (Cases(ss) == False())
+        & (SameBranch(ss,s))
+        & (ContentsPredicate(ss,0) == GetAxiom(k).GetPremises().GetElement(i).GetName());
       for(unsigned j=0; j < GetAxiom(k).GetPremises().GetElement(i).GetArity(); j++) {
         if (BindingAxiomPremises(k, i, j) != 0)
           c &= (ContentsArgument(ss,0,j) == Instantiation(s,BindingAxiomPremises(k, i, j)-1));
@@ -747,11 +746,10 @@ void NewSMTProvingEngine::EncodeAxiom(CLFormula &axiom) {
 void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
                                             unsigned nProofLen,
                                             string prove_smt_filename) {
-    ofstream smtFile;
-    smtFile.open(prove_smt_filename);
+    mSMTfile.open(prove_smt_filename);
     // smtFile << "(set-option :print-success false)" << endl;
-    smtFile << "(set-option :produce-models true)" << endl;
-    smtFile << "(set-logic " + mName + ")" << endl << endl;
+    mSMTfile << "(set-option :produce-models true)" << endl;
+    mSMTfile << "(set-logic " + mName + ")" << endl << endl;
 
     mnMaxArity = 0;
     for (size_t i = 0; i < mpT->mSignature.size(); i++) {
@@ -759,37 +757,37 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         mnMaxArity = mpT->mSignature[i].second;
     }
 
-    smtFile << "(declare-const neAssumption " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neNegIntro " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neFirstCase " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neSecondCase " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neEQSub " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neEQReflex " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neEQSymm " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neNegElim " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neExcludedMiddle " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neQEDbyCases " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neQEDbyAssumption " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neQEDbyEFQ " + mSMT_type + " )" << endl;
-//    smtFile << "(declare-const neQEDbyNegIntro " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neMP " + mSMT_type + " )" << endl;
-    smtFile << "(declare-const neNumberOfStepKind " + mSMT_type + " )" << endl;
+    DeclareVarBasicType("neAssumption");
+    DeclareVarBasicType("neNegIntro");
+    DeclareVarBasicType("neFirstCase");
+    DeclareVarBasicType("neSecondCase");
+    DeclareVarBasicType("neEQSub");
+    DeclareVarBasicType("neEQReflex");
+    DeclareVarBasicType("neEQSymm");
+    DeclareVarBasicType("neNegElim");
+    DeclareVarBasicType("neExcludedMiddle");
+    DeclareVarBasicType("neQEDbyCases");
+    DeclareVarBasicType("neQEDbyAssumption");
+    DeclareVarBasicType("neQEDbyEFQ");
+    //DeclareVarBasicType("neQEDbyNegIntro");
+    DeclareVarBasicType("neMP");
+    DeclareVarBasicType("neNumberOfStepKind");
 
-    smtFile << "(assert (= neAssumption       #x000))" << endl;
-    smtFile << "(assert (= neNegIntro         #x001))" << endl;
-    smtFile << "(assert (= neFirstCase        #x002))" << endl;
-    smtFile << "(assert (= neSecondCase       #x003))" << endl;
-    smtFile << "(assert (= neEQSub            #x004))" << endl;
-    smtFile << "(assert (= neEQReflex         #x005))" << endl;
-    smtFile << "(assert (= neEQSymm           #x006))" << endl;
-    smtFile << "(assert (= neNegElim          #x007))" << endl;
-    smtFile << "(assert (= neExcludedMiddle   #x008))" << endl;
-    smtFile << "(assert (= neQEDbyCases       #x009))" << endl;
-    smtFile << "(assert (= neQEDbyAssumption  #x00a))" << endl;
-    smtFile << "(assert (= neQEDbyEFQ         #x00b))" << endl;
-//    smtFile << "(assert (= neQEDbyNegIntro    #x00c))" << endl;
-    smtFile << "(assert (= neMP               #x00c))" << endl;
-    smtFile << "(assert (= neNumberOfStepKind #x00d))" << endl << endl;
+    AssertVarBasicType("neAssumption",       0x000);
+    AssertVarBasicType("neNegIntro",         0x001);
+    AssertVarBasicType("neFirstCase",        0x002);
+    AssertVarBasicType("neSecondCase",       0x003);
+    AssertVarBasicType("neEQSub",            0x004);
+    AssertVarBasicType("neEQReflex",         0x005);
+    AssertVarBasicType("neEQSymm",           0x006);
+    AssertVarBasicType("neNegElim",          0x007);
+    AssertVarBasicType("neExcludedMiddle",   0x008);
+    AssertVarBasicType("neQEDbyCases",       0x009);
+    AssertVarBasicType("neQEDbyAssumption",  0x00a);
+    AssertVarBasicType("neQEDbyEFQ",         0x00b);
+  //Assert("neQEDbyNegIntro",               0x000);
+    AssertVarBasicType("neMP",               0x00c);
+    AssertVarBasicType("neNumberOfStepKind", 0x00d);
 
     mnMaxPremises = 0;
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
@@ -797,17 +795,13 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       if (it->first.GetPremises().GetSize() > mnMaxPremises)
         mnMaxPremises = it->first.GetPremises().GetSize();
     for (size_t i = 0; i < mpT->mSignature.size(); i++)
-      smtFile << "(declare-const n" + ToUpper(mpT->mSignature[i].first) + " " +
-                     mSMT_type + " )"
-              << endl;
+      DeclareVarBasicType(NUM_PREFIX + ToUpper(mpT->mSignature[i].first));
     for (vector<string>::const_iterator it = mpT->mConstants.begin();
          it != mpT->mConstants.end(); it++)
-      smtFile << "(declare-const n" + ToUpper(*it) + " " + mSMT_type + " )"
-              << endl;
+      DeclareVarBasicType(NUM_PREFIX + ToUpper(*it));
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
          it != mpT->mConstantsPermissible.end(); it++)
-      smtFile << "(declare-const n" + ToUpper(*it) + " " + mSMT_type + " )"
-              << endl;
+      DeclareVarBasicType(NUM_PREFIX + ToUpper(*it));
 
 
     mnMaxVarInAxioms = 0;
@@ -819,78 +813,73 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     }
 
     unsigned nFinalStep = mnPremisesCount + nProofLen - 1;
-    string sPreabmle;
-    sPreabmle += "\n";
     for (unsigned i=0; i <= nFinalStep; i++) {
-      smtFile << "(declare-const " + StepKind(i).toSMT() + " " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const " + AxiomApplied(i).toSMT() + " " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const " + Nesting(i).toSMT() + " " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const " + OddNesting(i).toSMT() + " " + "Bool" + " )" << endl;
+      DeclareVarBasicType(StepKind(i).toSMT());
+      DeclareVarBasicType(AxiomApplied(i).toSMT());
+      DeclareVarBasicType(Nesting(i).toSMT());
+      DeclareVarBoolean(OddNesting(i).toSMT());
       for (unsigned j=i+1; j <= nFinalStep; j++) {
-        smtFile << "(declare-const " + SameBranch(i,j).toSMT() + " " + "Bool" + " )" << endl;
+        DeclareVarBoolean(SameBranch(i,j).toSMT());
       }
-      smtFile << "(declare-const " + ContentsPredicate(i,0).toSMT() + " " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const " + ContentsPredicate(i,1).toSMT() + " " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const " + Cases(i).toSMT() + " " + "Bool" + " )" << endl;
-      smtFile << "(declare-const " + IsGoal(i).toSMT() + " " + "Bool" + " )" << endl;
+      DeclareVarBasicType(ContentsPredicate(i,0).toSMT());
+      DeclareVarBasicType(ContentsPredicate(i,1).toSMT());
+      DeclareVarBoolean(Cases(i).toSMT());
+      DeclareVarBoolean(IsGoal(i).toSMT());
 
       for (unsigned k=0; k < mnMaxArity; k++) {
-        smtFile << "(declare-const " + ContentsArgument(i,0,k).toSMT() + " " + mSMT_type + " )" << endl;
-        smtFile << "(declare-const " + ContentsArgument(i,1,k).toSMT() + " " + mSMT_type + " )" << endl;
+        DeclareVarBasicType(ContentsArgument(i,0,k).toSMT());
+        DeclareVarBasicType(ContentsArgument(i,1,k).toSMT());
       }
       for (unsigned k=0; k < mnMaxVarInAxioms; k++) {
-        smtFile << "(declare-const " + Instantiation(i,k).toSMT() + " " + mSMT_type + " )" << endl;
+        DeclareVarBasicType(Instantiation(i,k).toSMT());
       }
       for (unsigned j=0; j < mnMaxPremises; j++) {
-        smtFile << "(declare-const " + From(i,j).toSMT() + " " + mSMT_type + " )" << endl;
+        DeclareVarBasicType(From(i,j).toSMT());
       }
     }
 
     // These constraints are generated once, since they are used in many conditions:
     for (unsigned i=0; i <= nFinalStep; i++) {
       Constraint c =
-                   (Nesting(i) == 1u) // fix me, make this more beatiful
-                 | (Nesting(i) == 3u)
-                 | (Nesting(i) == 7u)
-                 | (Nesting(i) == 9u)
-                 | (Nesting(i) == 11u);
-      smtFile << "(assert (= bOddNesting_l_" + itos(i) + "_r_" + c.toSMT() + " ))" << endl;
+          (Nesting(i) == 1u) // fix me, make this more beatiful
+        | (Nesting(i) == 3u)
+        | (Nesting(i) == 7u)
+        | (Nesting(i) == 9u)
+        | (Nesting(i) == 11u);
+      AssertVar(OddNesting(i), c);
 
       for (unsigned j=i+1; j <= nFinalStep; j++) {
         Constraint c =
-                       (Nesting(i) == Nesting(j))
-                     | ((Nesting(i) >= Nesting(j) * 2u) & (Nesting(i) < Nesting(j) * 2u + 2u))
-                     | ((Nesting(i) >= Nesting(j) * 4u) & (Nesting(i) < Nesting(j) * 4u + 4u))
-                     | ((Nesting(i) >= Nesting(j) * 8u) & (Nesting(i) < Nesting(j) * 8u + 8u))
-                     | ((Nesting(i) >= Nesting(j) *16u) & (Nesting(i) < Nesting(j) *16u + 16u));
-          smtFile << "(assert (= bSameBranch_l_" + itos(i) + "_r__l_" + itos(j) + "_r_ " + c.toSMT() + " ))" << endl;
+            (Nesting(i) == Nesting(j))
+          | ((Nesting(i) >= Nesting(j) * 2u) & (Nesting(i) < Nesting(j) * 2u + 2u))
+          | ((Nesting(i) >= Nesting(j) * 4u) & (Nesting(i) < Nesting(j) * 4u + 4u))
+          | ((Nesting(i) >= Nesting(j) * 8u) & (Nesting(i) < Nesting(j) * 8u + 8u))
+          | ((Nesting(i) >= Nesting(j) *16u) & (Nesting(i) < Nesting(j) *16u + 16u));
+          AssertVar(SameBranch(i,j), c);
       }
     }
 
-    sPreabmle += "; ************************* Predicate symbols "
-                 "************************** \n";
+    AddComment("************************* Predicate symbols **************************");
     unsigned enumerator = 0;
     for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-      sPreabmle += "(assert (= n" + ToUpper(mpT->mSignature[i].first) + " " +
-                   itos(mSMT_theory, enumerator) + "))\n";
+      AssertVar(NUM_PREFIX + ToUpper(mpT->mSignature[i].first),
+                         itos(mSMT_theory, enumerator));
       ARITY[enumerator] = mpT->mSignature[i].second;
-      PREDICATE[NUM_PREFIX + ToUpper(mpT->mSignature[i].first)] =
-          enumerator++;
+      PREDICATE[NUM_PREFIX + ToUpper(mpT->mSignature[i].first)] = enumerator++;
       if (mpT->mSignature[i].second > mnMaxArity)
         mnMaxArity = mpT->mSignature[i].second;
     }
 
     enumerator = 0;
-    sPreabmle += "\n; ***************************** Constants "
-                 "******************************* \n";
+    AddComment("***************************** Constants *******************************");
     for (vector<string>::const_iterator it = mpT->mConstants.begin();
          it != mpT->mConstants.end(); it++) {
-      sPreabmle += "(assert " + (Constraint(ToUpper(*it)) == enumerator).toSMT() + ")\n";
+      AssertVarBasicType(NUM_PREFIX + ToUpper(*it), enumerator);
       CONSTANTS[*it] = enumerator++;
     }
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
          it != mpT->mConstantsPermissible.end(); it++) {
-      sPreabmle += "(assert " + (Constraint(ToUpper(*it)) == enumerator).toSMT() + ")\n";
+      AssertVarBasicType(NUM_PREFIX + ToUpper(*it), enumerator);
       CONSTANTS[*it] = enumerator++;
     }
 
@@ -898,8 +887,7 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
           && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        sPreabmle += "(declare-const n" +
-          ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+        DeclareVarBasicType(NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
         exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
       }
     }
@@ -908,27 +896,20 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
           exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
                 exi_vars.end()) {
-          sPreabmle += "(declare-const n" +
-                       ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
-                       " " + mSMT_type + ") \n";
+          DeclareVarBasicType(NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
           exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
         }
-
-//        sPreabmle += "(assert " +
-//          mSMTout.appeq(mSMTout.app("nContentsArgument", nFinalStep, 1, i),
-//          NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
       }
     }
 
-    sPreabmle += "\n";
-    sPreabmle += "; ****************************** Axioms "
-                  "********************************* \n";
+    AddComment("");
+    AddComment("****************************** Axioms *********************************");
     mnAxiomsCount = eNumberOfStepKinds - 1;
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
          it != mpT->mCLaxioms.end(); it++) {
       stringstream ss;
       ss << "; " << it->first << endl;
-      sPreabmle += ss.str();
+      AddComment(ss.str());
       EncodeAxiom(it->first);
     }
 
@@ -947,51 +928,47 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         cc =  ((Cases(i) == False()) & (cg[0][0] | cg[0][1])) |
                (Cases(i) & cg[0][0] & cg[1][1]);
       }
-      smtFile << "(assert (= bIsGoal_l_" + itos(i) + "_r_ " + cc.toSMT() + " ))" << endl;
+      AssertVar(IsGoal(i), cc);
     }
 
-    sPreabmle += "\n";
-    sPreabmle += "; ***************************** Premises "
-                 "****************************** \n";
-    sPreabmle += "\n";
-    sPreabmle += "; ****************************** Goal "
-                 "********************************* \n";
+    AddComment("");
+    AddComment("***************************** Premises ******************************");
+    AddComment("");
+    AddComment("****************************** Goal *********************************");
 
 //    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
-    sPreabmle += "(assert " + (Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False())).toSMT() + ")\n";
-    sPreabmle += "(assert " + (ContentsPredicate(nFinalStep, 0) ==
-                  Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetName()))).toSMT() + ") \n";
+    AssertVar(Cases(nFinalStep), formula.GetSize() > 1 ? True() : False());
+    AssertVar(ContentsPredicate(nFinalStep, 0),
+                  Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetName())));
 
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
-        sPreabmle += "(assert " + (ContentsArgument(nFinalStep, 0, i) ==
-                    Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)))).toSMT() + ") \n";
+        AssertVar(ContentsArgument(nFinalStep, 0, i),
+                    Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))));
       else
-        sPreabmle += "(assert " + (ContentsArgument(nFinalStep, 0, i) ==
-                     Constraint(formula.GetElement(0).GetElement(0).GetArg(i))).toSMT() + ") \n";
+        AssertVar(ContentsArgument(nFinalStep, 0, i),
+                     Constraint(formula.GetElement(0).GetElement(0).GetArg(i)));
     }
 
-    sPreabmle += "\n";
-    smtFile << endl << sPreabmle << endl;
+    AddComment("");
 
   if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
       mSMT_theory == eSMTUFBV_ProvingEngine) {
-    smtFile << "(get-value (" << endl;
+    mSMTfile << "(get-value (" << endl;
     for (set<string>::iterator it = GETVALUE.begin(); it != GETVALUE.end(); it++)
       if (it->find("bSameProofBranch") == string::npos &&
           it->find("bGoal") == string::npos &&
           it->find("bOddNesting") == string::npos &&
           it->find("bStepQED") == string::npos &&
           it->find("sbaMPStep") == string::npos)
-        smtFile << *it << endl;
-    smtFile << "))" << endl;
+        mSMTfile << *it << endl;
+    mSMTfile << "))" << endl;
   }
 
-  smtFile << endl << "(assert " << endl;
-  smtFile << (mConstraint & CorrectnessCondition()).toSMT() << endl << ")" << endl;
-  smtFile << "(check-sat)" << endl;
-  smtFile << "(get-model)" << endl;
-  smtFile.close();
+  AssertVarBoolean(mConstraint & CorrectnessCondition());
+  mSMTfile << "(check-sat)" << endl;
+  mSMTfile << "(get-model)" << endl;
+  mSMTfile.close();
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1300,6 +1277,62 @@ bool NewSMTProvingEngine::ReconstructSubproof(const DNFFormula &formula,
        }
     }
     return true;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::DeclareVarBasicType(const string& VarName)
+{
+  mSMTfile << "(declare-const " + VarName + " " + mSMT_type + " )" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AssertVarBasicType(const string& VarName, unsigned u)
+{
+  mSMTfile << "(assert (= " + VarName + " #x" + itohexs(u) + "))" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::DeclareVarBoolean(const string& VarName)
+{
+  mSMTfile << "(declare-const " + VarName + " " + "Bool" + " )" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AssertVarBoolean(const Constraint& c)
+{
+  mSMTfile << "(assert " + c.toSMT() + ")" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AssertVarBoolean(const string& VarName)
+{
+  mSMTfile << "(assert " + VarName + ")" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AssertVar(const string& VarName, const string& Val)
+{
+  mSMTfile << "(assert (= " + VarName + " " + Val + "))" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AssertVar(const Constraint& c1, const Constraint& c2)
+{
+  mSMTfile << "(assert (= " + c1.toSMT() + " " + c2.toSMT() + "))" << endl;
+}
+
+// ----------------------------------------------------------
+
+void NewSMTProvingEngine::AddComment(const string& comment)
+{
+  mSMTfile << "; " + comment << endl;
 }
 
 // ----------------------------------------------------------

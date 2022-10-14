@@ -9,6 +9,7 @@
 #include "ProvingEngine/SMTOut.h"
 #include "Constraint.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -52,6 +53,16 @@ private:
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace, bool bNegIntro);
+
+  //void DeclareVarBasicType(const Constraint& VarName);
+  void DeclareVarBasicType(const string& VarName);
+  void AssertVarBasicType(const string& VarName, unsigned u);
+  void DeclareVarBoolean(const string& VarName);
+  void AssertVarBoolean(const string& VarName);
+  void AssertVarBoolean(const Constraint& c);
+  void AssertVar(const string& VarName, const string& Val);
+  void AssertVar(const Constraint& c1, const Constraint& c2);
+  void AddComment(const string& comment);
 
   Constraint CorrectnessCondition();
   Constraint CorrectProofStep(unsigned s);
@@ -133,6 +144,8 @@ private:
   unsigned mProofLength;
   Constraint mConstraint;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
+
+  ofstream mSMTfile;
 };
 
 
