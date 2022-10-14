@@ -81,7 +81,7 @@ private:
   static Constraint StepKind(unsigned s);
   static Constraint From(unsigned s, unsigned i);
   static Constraint AxiomApplied(unsigned s);
-  static Constraint Instatiation(unsigned s, unsigned var);
+  static Constraint Instantiation(unsigned s, unsigned var);
   static Constraint Cases(unsigned s);
   static Constraint Nesting(unsigned s);
   static Constraint NestingSameBranch(unsigned s1, unsigned s2);
@@ -111,7 +111,7 @@ private:
 
   PROVING_ENGINE mSMT_theory;
   string mSMT_type;
-  SMTOut mSMTout;
+  //SMTOut mSMTout;
 
   unsigned mnAxiomsCount;
   unsigned mnMaxArity;

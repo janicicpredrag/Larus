@@ -36,7 +36,7 @@ NewSMTProvingEngine::NewSMTProvingEngine(Theory *pT, proverParams &params) {
   mSMT_theory = eSMTBV_ProvingEngine;
   mName = "QF_BV";
 
-  mSMTout.SetTheory(mSMT_theory);
+  //mSMTout.SetTheory(mSMT_theory);
   for(auto it = pT->mSignature.begin(); it < pT->mSignature.end(); it++)
       if (mnMaxArity < it->second)
           mnMaxArity = it->second;
@@ -81,7 +81,7 @@ Constraint NewSMTProvingEngine::CorrectnessCondition()
     for(unsigned L = mnPremisesCount + 1; L <= mnPremisesCount + mProofLength; L++) {
       // For each possible proof length L up to mProofLength
       Constraint cOneL;
-      cOneL = (Nesting(L - 1) == 1u)
+      cOneL &= (Nesting(L - 1) == 1u)
             << "   6: Nesting(L-1) = 1";
 
       cOneL &= IsQEDStep(L - 1)
@@ -173,7 +173,7 @@ Constraint NewSMTProvingEngine::MatchConclusion(unsigned s, unsigned k)
     c = (ContentsPredicate(s,0) == GetAxiom(k).GetGoal().GetElement(0).GetElement(0).GetName());
     for(unsigned j=0; j < GetAxiom(k).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
       if (BindingAxiomGoal(k, 0, j) != 0)
-        c &= (ContentsArgument(s,0,j) == Instatiation(s,BindingAxiomGoal(k, 0, j)-1));
+        c &= (ContentsArgument(s,0,j) == Instantiation(s,BindingAxiomGoal(k, 0, j)-1));
       else // it is a constant
         c &= (ContentsArgument(s,0,j) == CONSTANTS[GetAxiom(k).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
     }
@@ -181,7 +181,7 @@ Constraint NewSMTProvingEngine::MatchConclusion(unsigned s, unsigned k)
         c &= (ContentsPredicate(s,1) == GetAxiom(k).GetGoal().GetElement(1).GetElement(0).GetName());
         for(unsigned j=0; j < GetAxiom(k).GetGoal().GetElement(1).GetElement(0).GetArity(); j++)
           if (BindingAxiomGoal(k, 1, j) != 0)
-            c &= (ContentsArgument(s,1,j) == Instatiation(s,BindingAxiomGoal(k, 1, j)-1));
+            c &= (ContentsArgument(s,1,j) == Instantiation(s,BindingAxiomGoal(k, 1, j)-1));
           else // it is a constant
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(k).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
@@ -213,15 +213,19 @@ Constraint NewSMTProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned k, u
 Constraint NewSMTProvingEngine::MatchPremiseToStep(unsigned s, unsigned k, unsigned i, unsigned ss)
 {
     Constraint c;
-    c =  (From(s,i) == ss)
-      & (Cases(ss) == False())
-      & (SameBranch(ss,s))
-      & (ContentsPredicate(ss,0) == GetAxiom(k).GetPremises().GetElement(i).GetName());
-    for(unsigned j=0; j < GetAxiom(k).GetPremises().GetElement(i).GetArity(); j++) {
-      if (BindingAxiomPremises(k, i, j) != 0)
-        c &= (ContentsArgument(ss,0,j) == Instatiation(s,BindingAxiomPremises(k, i, j)-1));
-      else // it is a constant
-        c &= (ContentsArgument(ss,0,j) == CONSTANTS[GetAxiom(k).GetPremises().GetElement(i).GetArg(j)]);
+    if (GetAxiom(k).GetPremises().GetElement(i).GetName() == "true")
+      c = True();
+    else {
+      c = (From(s,i) == ss)
+       & (Cases(ss) == False())
+       & (SameBranch(ss,s))
+       & (ContentsPredicate(ss,0) == GetAxiom(k).GetPremises().GetElement(i).GetName());
+      for(unsigned j=0; j < GetAxiom(k).GetPremises().GetElement(i).GetArity(); j++) {
+        if (BindingAxiomPremises(k, i, j) != 0)
+          c &= (ContentsArgument(ss,0,j) == Instantiation(s,BindingAxiomPremises(k, i, j)-1));
+        else // it is a constant
+         c &= (ContentsArgument(ss,0,j) == CONSTANTS[GetAxiom(k).GetPremises().GetElement(i).GetArg(j)]);
+      }
     }
     return c;
 }
@@ -309,13 +313,20 @@ Constraint NewSMTProvingEngine::IsQEDbyCases(unsigned s)
 
 Constraint NewSMTProvingEngine::IsQEDbyAssumption(unsigned s)
 {
-    Constraint c =
-      (s == 0) ?
-        (False())
-      : (StepKind (s) == QEDbyAssumption())
-      & (IsGoal(s - 1))
-      & (IsGoal(s))
-      & (Nesting(s) == Nesting(s - 1));
+    Constraint c;
+    if (s == 0) {
+      if (mGoal.GetElement(0).GetElement(0).GetName() == "true") // special case: goal = "true"
+        c = ((StepKind (s) == QEDbyAssumption())
+           & (Nesting(s) == 1u));
+      else
+        c = False();
+    }
+    else {
+      c = (StepKind (s) == QEDbyAssumption())
+        & (IsGoal(s - 1))
+        & (IsGoal(s))
+        & (Nesting(s) == Nesting(s - 1));
+    }
     return c << "Is it QED by assumption: ";
 }
 
@@ -357,7 +368,7 @@ Constraint NewSMTProvingEngine::AxiomApplied(unsigned s)
 {
     return Constraint("AxiomApplied_l_" + itos(s) + "_r_");
 }
-Constraint NewSMTProvingEngine::Instatiation(unsigned s, unsigned var)
+Constraint NewSMTProvingEngine::Instantiation(unsigned s, unsigned var)
 {
     return Constraint("Instantiation_l_" + itos(s) + "_r__l_" + itos(var) + "_r_");
 }
@@ -797,37 +808,46 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
          it != mpT->mConstantsPermissible.end(); it++)
       smtFile << "(declare-const n" + ToUpper(*it) + " " + mSMT_type + " )"
               << endl;
-    string sPreabmle;
 
+
+    mnMaxVarInAxioms = 0;
+    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
+         it != mpT->mCLaxioms.end(); it++) {
+      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
+      if (num > mnMaxVarInAxioms)
+          mnMaxVarInAxioms = num;
+    }
+
+    unsigned nFinalStep = mnPremisesCount + nProofLen - 1;
+    string sPreabmle;
     sPreabmle += "\n";
-    for (unsigned i=0; i < mnPremisesCount + nProofLen; i++) {
-      smtFile << "(declare-const nStepKind_l_" + itos(i) + "_r_ " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const nAxiomApplied_l_" + itos(i) + "_r_ " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const nNesting_l_" + itos(i) + "_r_ " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const bOddNesting_l_" + itos(i) + "_r_ " + "Bool" + " )" << endl;
-      for (unsigned j=i+1; j < mnPremisesCount + nProofLen; j++) {
-        smtFile << "(declare-const bSameBranch_l_" + itos(i) + "_r__l_" + itos(j) + "_r_ " + "Bool" + " )" << endl;
+    for (unsigned i=0; i <= nFinalStep; i++) {
+      smtFile << "(declare-const " + StepKind(i).toSMT() + " " + mSMT_type + " )" << endl;
+      smtFile << "(declare-const " + AxiomApplied(i).toSMT() + " " + mSMT_type + " )" << endl;
+      smtFile << "(declare-const " + Nesting(i).toSMT() + " " + mSMT_type + " )" << endl;
+      smtFile << "(declare-const " + OddNesting(i).toSMT() + " " + "Bool" + " )" << endl;
+      for (unsigned j=i+1; j <= nFinalStep; j++) {
+        smtFile << "(declare-const " + SameBranch(i,j).toSMT() + " " + "Bool" + " )" << endl;
       }
-      smtFile << "(declare-const nContentsPredicate_l_" + itos(i) + "_r__l_0_r_ " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const nContentsPredicate_l_" + itos(i) + "_r__l_1_r_ " + mSMT_type + " )" << endl;
-      smtFile << "(declare-const bCases_l_" + itos(i) + "_r_ " + "Bool" + " )" << endl;
-      smtFile << "(declare-const bIsGoal_l_" + itos(i) + "_r_ " + "Bool" + " )" << endl;
+      smtFile << "(declare-const " + ContentsPredicate(i,0).toSMT() + " " + mSMT_type + " )" << endl;
+      smtFile << "(declare-const " + ContentsPredicate(i,1).toSMT() + " " + mSMT_type + " )" << endl;
+      smtFile << "(declare-const " + Cases(i).toSMT() + " " + "Bool" + " )" << endl;
+      smtFile << "(declare-const " + IsGoal(i).toSMT() + " " + "Bool" + " )" << endl;
 
       for (unsigned k=0; k < mnMaxArity; k++) {
-        smtFile << "(declare-const nContentsArgument_l_" + itos(i) + "_r__l_" + itos(0) + "_r__l_" + itos(k) + "_r_ " + mSMT_type + " )" << endl;
-        smtFile << "(declare-const nContentsArgument_l_" + itos(i) + "_r__l_" + itos(1) + "_r__l_" + itos(k) + "_r_ " + mSMT_type + " )" << endl;
+        smtFile << "(declare-const " + ContentsArgument(i,0,k).toSMT() + " " + mSMT_type + " )" << endl;
+        smtFile << "(declare-const " + ContentsArgument(i,1,k).toSMT() + " " + mSMT_type + " )" << endl;
       }
       for (unsigned k=0; k < mnMaxVarInAxioms; k++) {
-        smtFile << "(declare-const nInstantiation_l_" + itos(i) + "_r__l_" + itos(k) + "_r_ " + mSMT_type + " )" << endl;
+        smtFile << "(declare-const " + Instantiation(i,k).toSMT() + " " + mSMT_type + " )" << endl;
       }
       for (unsigned j=0; j < mnMaxPremises; j++) {
-        smtFile << "(declare-const nFrom_l_" + itos(i) + "_r__l_" + itos(j) + "_r_ " + mSMT_type + " )" << endl;
+        smtFile << "(declare-const " + From(i,j).toSMT() + " " + mSMT_type + " )" << endl;
       }
     }
-    smtFile << "(declare-const nProofSize " + mSMT_type + " )" << endl;
 
     // These constraints are generated once, since they are used in many conditions:
-    for (unsigned i=0; i < mnPremisesCount + nProofLen; i++) {
+    for (unsigned i=0; i <= nFinalStep; i++) {
       Constraint c =
                    (Nesting(i) == 1u) // fix me, make this more beatiful
                  | (Nesting(i) == 3u)
@@ -836,7 +856,7 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
                  | (Nesting(i) == 11u);
       smtFile << "(assert (= bOddNesting_l_" + itos(i) + "_r_" + c.toSMT() + " ))" << endl;
 
-      for (unsigned j=i+1; j < mnPremisesCount + nProofLen; j++) {
+      for (unsigned j=i+1; j <= nFinalStep; j++) {
         Constraint c =
                        (Nesting(i) == Nesting(j))
                      | ((Nesting(i) >= Nesting(j) * 2u) & (Nesting(i) < Nesting(j) * 2u + 2u))
@@ -865,39 +885,60 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
                  "******************************* \n";
     for (vector<string>::const_iterator it = mpT->mConstants.begin();
          it != mpT->mConstants.end(); it++) {
-      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
+      sPreabmle += "(assert " + (Constraint(ToUpper(*it)) == enumerator).toSMT() + ")\n";
       CONSTANTS[*it] = enumerator++;
     }
     for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
          it != mpT->mConstantsPermissible.end(); it++) {
-      sPreabmle += "(assert " + mSMTout.appeq(NUM_PREFIX + ToUpper(*it), enumerator) + ")\n";
+      sPreabmle += "(assert " + (Constraint(ToUpper(*it)) == enumerator).toSMT() + ")\n";
       CONSTANTS[*it] = enumerator++;
+    }
+
+    set<string> exi_vars;
+    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
+      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+        sPreabmle += "(declare-const n" +
+          ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
+        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      }
+    }
+    if (formula.GetSize() > 1) {
+      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
+        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
+                exi_vars.end()) {
+          sPreabmle += "(declare-const n" +
+                       ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
+                       " " + mSMT_type + ") \n";
+          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+        }
+
+//        sPreabmle += "(assert " +
+//          mSMTout.appeq(mSMTout.app("nContentsArgument", nFinalStep, 1, i),
+//          NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
+      }
     }
 
     sPreabmle += "\n";
     sPreabmle += "; ****************************** Axioms "
                   "********************************* \n";
     mnAxiomsCount = eNumberOfStepKinds - 1;
-    mnMaxVarInAxioms = 0;
-
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
          it != mpT->mCLaxioms.end(); it++) {
       stringstream ss;
       ss << "; " << it->first << endl;
       sPreabmle += ss.str();
       EncodeAxiom(it->first);
-      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
-      if (num > mnMaxVarInAxioms)
-          mnMaxVarInAxioms = num;
     }
 
-    for (unsigned i=0; i < mnPremisesCount + nProofLen; i++) {
+    for (unsigned i=0; i <= nFinalStep; i++) {
       Constraint cc, cg[2][2];
       for (unsigned ind0=0; ind0<2; ind0++)
         for (unsigned ind1=0; ind1<2; ind1++) {
-          cg[ind0][ind1] = (ContentsPredicate(i,ind0) == ContentsPredicate(mnPremisesCount + mProofLength-1,ind1));
+          cg[ind0][ind1] = (ContentsPredicate(i,ind0) == ContentsPredicate(nFinalStep,ind1));
           for(unsigned int j = 0; j < mGoal.GetElement(ind1).GetElement(0).GetArity(); j++)
-            cg[ind0][ind1] &= (ContentsArgument(i,ind0,j) == ContentsArgument(mnPremisesCount + mProofLength-1,ind1,j));
+            cg[ind0][ind1] &= (ContentsArgument(i,ind0,j) == ContentsArgument(nFinalStep,ind1,j));
         }
       if (mGoal.GetSize() == 1) {
         cc =  ((Cases(i) == False()) & cg[0][0]);
@@ -915,41 +956,21 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     sPreabmle += "\n";
     sPreabmle += "; ****************************** Goal "
                  "********************************* \n";
-    unsigned nFinalStep = mnPremisesCount + nProofLen - 1;
-    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
-    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("bCases", nFinalStep), formula.GetSize() > 1 ? "true" : "false") + ")\n";
-    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nContentsPredicate", nFinalStep, 0),
-                  NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetName())) + ") \n";
 
-    set<string> exi_vars;
+//    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
+    sPreabmle += "(assert " + (Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False())).toSMT() + ")\n";
+    sPreabmle += "(assert " + (ContentsPredicate(nFinalStep, 0) ==
+                  Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetName()))).toSMT() + ") \n";
+
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        sPreabmle += "(declare-const n" +
-          ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) + " " + mSMT_type + ") \n";
-        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
-      }
-      sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nContentsArgument", nFinalStep, 0, i),
-         NUM_PREFIX + ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) + ") \n";
+      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
+        sPreabmle += "(assert " + (ContentsArgument(nFinalStep, 0, i) ==
+                    Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)))).toSMT() + ") \n";
+      else
+        sPreabmle += "(assert " + (ContentsArgument(nFinalStep, 0, i) ==
+                     Constraint(formula.GetElement(0).GetElement(0).GetArg(i))).toSMT() + ") \n";
     }
-    if (formula.GetSize() > 1) {
-      sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nContentsPredicate", nFinalStep, 1),
-                   NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetName())) + ") \n";
-      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
-          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
-                exi_vars.end()) {
-          sPreabmle += "(declare-const n" +
-                       ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
-                       " " + mSMT_type + ") \n";
-          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
-        }
 
-        sPreabmle += "(assert " +
-          mSMTout.appeq(mSMTout.app("nContentsArgument", nFinalStep, 1, i),
-          NUM_PREFIX + ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) + ") \n";
-      }
-    }
     sPreabmle += "\n";
     smtFile << endl << sPreabmle << endl;
 
