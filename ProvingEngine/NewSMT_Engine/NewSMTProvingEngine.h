@@ -47,7 +47,6 @@ public:
 
 private:
   void EncodeProofToSMT(const DNFFormula &formula, unsigned nProofLen, string prove_smt_filename);
-  void EncodeAxiom(CLFormula &axiom);
   bool ReadModel(const string &sModelFile);
   bool StoreValueFromModel(string& strVarName, string& strVal);
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
@@ -124,14 +123,12 @@ private:
   string mSMT_type;
   //SMTOut mSMTout;
 
-  unsigned mnAxiomsCount;
   unsigned mnMaxArity;
-  unsigned mnMaxPremises;
-  unsigned mnMaxVarInAxioms;
+  unsigned mnMaxNumberOfPremisesInAxioms;
+  unsigned mnMaxNumberOfVarsInAxioms;
   unsigned mBindingAx[100][100][20];
   unsigned mBindingAxGoal[100][2][20];
 
-  vector<CLAxiomStruct_Gen> AXIOMS;
   map<string, unsigned> PREDICATE;
   map<unsigned, unsigned> ARITY;
   map<string, unsigned> CONSTANTS;
@@ -140,7 +137,7 @@ private:
   map<int, string> msConstants;
 
   DNFFormula mGoal;
-  unsigned mnPremisesCount;
+  unsigned mnNumberOfAssumptions;
   unsigned mProofLength;
   Constraint mConstraint;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];

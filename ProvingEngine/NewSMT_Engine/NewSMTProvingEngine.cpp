@@ -16,7 +16,7 @@ NewSMTProvingEngine::NewSMTProvingEngine(Theory *pT, proverParams &params) {
 
   mpT = pT;
   mParams = params;
-  mnPremisesCount = 0;
+  mnNumberOfAssumptions = 0;
   mSMT_theory = mParams.eEngine;
   if (mSMT_theory == eSMTLIA_ProvingEngine)
     mName = "QF_LIA";
@@ -55,29 +55,29 @@ Constraint NewSMTProvingEngine::CorrectnessCondition()
 {
     Constraint c;
     // 1. Each proof step s is one of the defined step kinds
-    for(unsigned s = mnPremisesCount; s < mnPremisesCount + mProofLength; s++)
+    for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++)
       c &= CorrectProofStep(s);
 
-    for(unsigned s = mnPremisesCount + 1; s < mnPremisesCount + mProofLength; s++)
+    for(unsigned s = mnNumberOfAssumptions + 1; s < mnNumberOfAssumptions + mProofLength; s++)
       c &= ((IsQEDStep(s - 1) == False()) | (Nesting(s - 1) != Nesting(s)))
            << "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
 
-    for(unsigned s = mnPremisesCount + 1; s < mnPremisesCount + mProofLength; s++)
+    for(unsigned s = mnNumberOfAssumptions + 1; s < mnNumberOfAssumptions + mProofLength; s++)
       c &= ((Cases(s - 1) == False()) | (StepKind(s) == FirstCase()))
            << "3: If Cases(s-1) is true, then StepKind(s) = FirstCase ";
 
-    for(unsigned s = mnPremisesCount + 1; s < mnPremisesCount + mProofLength; s++)
+    for(unsigned s = mnNumberOfAssumptions + 1; s < mnNumberOfAssumptions + mProofLength; s++)
       c &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s - 1)) |
            (StepKind(s) == SecondCase()))
            << "4: If step s-1 is one of the QED steps and Nesting(s-1) is even, then StepKind(s) = SecondCase";
 
-    for(unsigned s = mnPremisesCount + 1; s < mnPremisesCount + mProofLength; s++)
+    for(unsigned s = mnNumberOfAssumptions + 1; s < mnNumberOfAssumptions + mProofLength; s++)
       c &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s-1) == False()) |
            (StepKind(s) == QEDbyCases()))
            << "5: If step s-1 is one of the QED steps and Nesting(s-1) is odd, then StepKind(s) = QEDbyCases";
 
     Constraint cAllL;
-    for(unsigned L = mnPremisesCount + 1; L <= mnPremisesCount + mProofLength; L++) {
+    for(unsigned L = mnNumberOfAssumptions + 1; L <= mnNumberOfAssumptions + mProofLength; L++) {
       // For each possible proof length L up to mProofLength
       Constraint cOneL;
       cOneL &= (Nesting(L - 1) == 1u)
@@ -87,13 +87,13 @@ Constraint NewSMTProvingEngine::CorrectnessCondition()
             << "   7: The step L-1 is one of the QED steps";
 
       Constraint cc;
-      cc &= ContentsPredicate(L - 1, 0) == ContentsPredicate(mnPremisesCount + mProofLength - 1, 0);
-      cc &= ContentsPredicate(L - 1, 1) == ContentsPredicate(mnPremisesCount + mProofLength - 1, 1);
+      cc &= ContentsPredicate(L - 1, 0) == ContentsPredicate(mnNumberOfAssumptions + mProofLength - 1, 0);
+      cc &= ContentsPredicate(L - 1, 1) == ContentsPredicate(mnNumberOfAssumptions + mProofLength - 1, 1);
       for(unsigned j=0; j < mGoal.GetElement(0).GetElement(0).GetArity(); j++) {
-        cc &= (ContentsArgument(L - 1, 0, j) == ContentsArgument(mnPremisesCount + mProofLength - 1, 0, j));
-        cc &= (ContentsArgument(L - 1, 1, j) == ContentsArgument(mnPremisesCount + mProofLength - 1, 1, j));
+        cc &= (ContentsArgument(L - 1, 0, j) == ContentsArgument(mnNumberOfAssumptions + mProofLength - 1, 0, j));
+        cc &= (ContentsArgument(L - 1, 1, j) == ContentsArgument(mnNumberOfAssumptions + mProofLength - 1, 1, j));
       }
-      if (mnPremisesCount + mProofLength >= 2)
+      if (mnNumberOfAssumptions + mProofLength >= 2)
         cc = (cc << "   8: Contents(L-1) = Contents(MaxL-1)");
       cOneL &= cc;
       cAllL |= cOneL;
@@ -122,9 +122,9 @@ Constraint NewSMTProvingEngine::CorrectProofStep(unsigned s)
 Constraint NewSMTProvingEngine::IsAssumption(unsigned s)
 {
     Constraint c(False());
-    for(unsigned i=0; i < mnPremisesCount; i++)
+    for(unsigned i=0; i < mnNumberOfAssumptions; i++)
       c |= IsAssumptionStep(s, i);
-    if (mnPremisesCount > 0)
+    if (mnNumberOfAssumptions > 0)
       c = (c << "Is Assumption step: ");
     return c;
 }
@@ -526,15 +526,15 @@ void NewSMTProvingEngine::AddPremise(const Fact &f) {
   mpT->AddSymbol(f.GetName(), f.GetArity());
 
   Constraint c;
-  c = (StepKind(mnPremisesCount) == Assumption())
-    & (Nesting(mnPremisesCount) == 1u)
-    & (Cases(mnPremisesCount) == False())
-    & (AxiomApplied(mnPremisesCount) == Assumption())
-    & (ContentsPredicate(mnPremisesCount,0) == ToUpper(f.GetName()));
+  c = (StepKind(mnNumberOfAssumptions) == Assumption())
+    & (Nesting(mnNumberOfAssumptions) == 1u)
+    & (Cases(mnNumberOfAssumptions) == False())
+    & (AxiomApplied(mnNumberOfAssumptions) == Assumption())
+    & (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
   for (size_t i = 0; i < f.GetArity(); i++)
-    c &= (ContentsArgument(mnPremisesCount,0,i) == ToUpper(f.GetArg(i)));
-  mConstraint &= c << "Assumption " + itos(mnPremisesCount);
-  mnPremisesCount++;
+    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
+  mConstraint &= c << "Assumption " + itos(mnNumberOfAssumptions);
+  mnNumberOfAssumptions++;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -638,107 +638,14 @@ bool NewSMTProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& 
     }
   }
 
-  AXIOMS.clear();
   PREDICATE.clear();
   ARITY.clear();
   CONSTANTS.clear();
 
   mnMaxArity = 0;
-  mnMaxPremises = 0;
-  mnAxiomsCount = 0;
-  mnPremisesCount = 0;
+  mnMaxNumberOfPremisesInAxioms = 0;
+  mnNumberOfAssumptions = 0;
   return ret;
-}
-
-// ---------------------------------------------------------------------------------------
-
-void NewSMTProvingEngine::EncodeAxiom(CLFormula &axiom) {
-  mnAxiomsCount++;
-  if (mnAxiomsCount >= AXIOMS.size())
-    AXIOMS.resize(eNumberOfStepKinds + (AXIOMS.size() + 1) * 2);
-
-  AXIOMS[mnAxiomsCount].nAxiomUniVars = axiom.GetNumOfUnivVars();
-  AXIOMS[mnAxiomsCount].nAxiomExiVars = axiom.GetNumOfExistVars();
-  AXIOMS[mnAxiomsCount].nAxiomPremises = axiom.GetPremises().GetSize();
-  AXIOMS[mnAxiomsCount].bAxiomBranching =
-      ((axiom.GetGoal().GetSize() > 1) ? true : false);
-
-  size_t noPremises = axiom.GetPremises().GetSize();
-  for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
-    AXIOMS[mnAxiomsCount].nPredicate[j] =
-        PREDICATE[NUM_PREFIX +
-                  ToUpper(axiom.GetPremises().GetElement(j).GetName())];
-    for (size_t i = 0; i < axiom.GetPremises().GetElement(j).GetArity(); i++)
-      if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
-        AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] =
-            axiom.UnivVarOrdinalNumber(
-                axiom.GetPremises().GetElement(j).GetArg(i)) +
-            1;
-      else {
-        AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] = 0;
-        AXIOMS[mnAxiomsCount].nAxiomArgument[j * mnMaxArity + i] =
-            NUM_PREFIX +
-            ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
-      }
-  }
-  if (axiom.GetGoal().GetSize() > 0) { // disjunctions in the goal can have only one disjunct
-    AXIOMS[mnAxiomsCount].nPredicate[noPremises] =
-        PREDICATE[NUM_PREFIX +
-                  ToUpper(
-                      axiom.GetGoal().GetElement(0).GetElement(0).GetName())];
-    for (size_t i = 0;
-         i < axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
-      if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
-            axiom.UnivVarOrdinalNumber(
-                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
-            1;
-      else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
-        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
-            axiom.GetNumOfUnivVars() +
-            axiom.ExistVarOrdinalNumber(
-                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
-            1;
-      else {
-        AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] = 0;
-        AXIOMS[mnAxiomsCount].nAxiomArgument[noPremises * mnMaxArity + i] =
-            NUM_PREFIX +
-            ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
-      }
-    }
-  }
-  if (axiom.GetGoal().GetSize() > 1) {
-    AXIOMS[mnAxiomsCount].nPredicate[noPremises + 1] =
-        PREDICATE[NUM_PREFIX +
-                  ToUpper(
-                      axiom.GetGoal().GetElement(1).GetElement(0).GetName())];
-    for (size_t i = 0;
-         i < axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
-      if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
-            axiom.UnivVarOrdinalNumber(
-                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
-            1;
-      else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
-        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
-            axiom.GetNumOfUnivVars() +
-            axiom.ExistVarOrdinalNumber(
-                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
-            1;
-      else {
-        AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] = 0;
-        AXIOMS[mnAxiomsCount]
-            .nAxiomArgument[(noPremises + 1) * mnMaxArity + i] =
-            NUM_PREFIX +
-            ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
-      }
-    }
-  }
 }
 
 // ---------------------------------------------------------------------------------------
@@ -789,11 +696,11 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AssertVarBasicType("neMP",               0x00c);
     AssertVarBasicType("neNumberOfStepKind", 0x00d);
 
-    mnMaxPremises = 0;
+    mnMaxNumberOfPremisesInAxioms = 0;
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
          it != mpT->mCLaxioms.end(); it++)
-      if (it->first.GetPremises().GetSize() > mnMaxPremises)
-        mnMaxPremises = it->first.GetPremises().GetSize();
+      if (it->first.GetPremises().GetSize() > mnMaxNumberOfPremisesInAxioms)
+        mnMaxNumberOfPremisesInAxioms = it->first.GetPremises().GetSize();
     for (size_t i = 0; i < mpT->mSignature.size(); i++)
       DeclareVarBasicType(NUM_PREFIX + ToUpper(mpT->mSignature[i].first));
     for (vector<string>::const_iterator it = mpT->mConstants.begin();
@@ -804,15 +711,15 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       DeclareVarBasicType(NUM_PREFIX + ToUpper(*it));
 
 
-    mnMaxVarInAxioms = 0;
+    mnMaxNumberOfVarsInAxioms = 0;
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
          it != mpT->mCLaxioms.end(); it++) {
       unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
-      if (num > mnMaxVarInAxioms)
-          mnMaxVarInAxioms = num;
+      if (num > mnMaxNumberOfVarsInAxioms)
+          mnMaxNumberOfVarsInAxioms = num;
     }
 
-    unsigned nFinalStep = mnPremisesCount + nProofLen - 1;
+    unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i).toSMT());
       DeclareVarBasicType(AxiomApplied(i).toSMT());
@@ -830,10 +737,10 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         DeclareVarBasicType(ContentsArgument(i,0,k).toSMT());
         DeclareVarBasicType(ContentsArgument(i,1,k).toSMT());
       }
-      for (unsigned k=0; k < mnMaxVarInAxioms; k++) {
+      for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
         DeclareVarBasicType(Instantiation(i,k).toSMT());
       }
-      for (unsigned j=0; j < mnMaxPremises; j++) {
+      for (unsigned j=0; j < mnMaxNumberOfPremisesInAxioms; j++) {
         DeclareVarBasicType(From(i,j).toSMT());
       }
     }
@@ -904,13 +811,11 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
     AddComment("");
     AddComment("****************************** Axioms *********************************");
-    mnAxiomsCount = eNumberOfStepKinds - 1;
     for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
          it != mpT->mCLaxioms.end(); it++) {
       stringstream ss;
       ss << "; " << it->first << endl;
       AddComment(ss.str());
-      EncodeAxiom(it->first);
     }
 
     for (unsigned i=0; i <= nFinalStep; i++) {
@@ -990,7 +895,9 @@ bool NewSMTProvingEngine::ReadModel(const string &sModelFile)  {
     cout << "Error in the model file!" << endl;
     return false;
   }
-  if (str.substr(0,strlen("(model")) != "(model")
+
+  if (str.substr(0,strlen("(model")) != "(model" &&
+          str.substr(0,strlen("(")) != "(")
     return false;
       // {if (!(mSMT_theory == eSMTUFLIA_ProvingEngine ||
       //       mSMT_theory == eSMTUFBV_ProvingEngine))
