@@ -102,12 +102,14 @@ const DNFFormula &CLProof::GetCLAssumption(size_t i) const {
 
 void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
                         string name,
-                        vector<pair<string, string>> &instantiation,
-                        vector<pair<string, string>> &new_witnesses) {
+                        const vector<unsigned> &fromStep,
+                        const vector<pair<string, string>> &instantiation,
+                        const vector<pair<string, string>> &new_witnesses) {
   MP_Step m;
   m.from = from;
   m.conclusion = mp;
   m.axiomName = name;
+  m.fromSteps = fromStep;
   m.instantiation = instantiation;
   m.new_witnesses = new_witnesses;
   mMPs.push_back(m);
@@ -471,7 +473,6 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
          sPredicates[nPredicate]+"_eq_sub_"+itos(nJ), instantiation,
          new_witnesses);
          }*/
-
       else if (nAxiom == eEQReflex) {
 
         Fact f;
@@ -497,6 +498,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
             inst[i] = 0;
         }
 
+        vector<unsigned> fromSteps;
         vector<pair<string, string>> instantiation;
         vector<pair<string, string>> new_witnesses;
         for (size_t i = 0; i < numOfVars; i++) {
@@ -504,7 +506,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           instantiation.push_back(
               pair<string, string>(UnivVar, sConstants[inst[i]]));
         }
-        AddMPstep(cfPremises, d, "eq_refl", instantiation, new_witnesses);
+        AddMPstep(cfPremises, d, "eq_refl", fromSteps, instantiation, new_witnesses);
       }
 
       else if (nAxiom == eEQSymm) {
@@ -542,6 +544,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         for (size_t i = 0; i < numOfVars; i++)
           ss2 >> inst[i];
 
+        vector<unsigned> fromSteps;
         vector<pair<string, string>> instantiation;
         vector<pair<string, string>> new_witnesses;
         for (size_t i = 0; i < numOfUnivVars; i++) {
@@ -549,7 +552,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
           instantiation.push_back(
               pair<string, string>(UnivVar, sConstants[inst[i]]));
         }
-        AddMPstep(cfPremises, d, "eq_sym", instantiation, new_witnesses);
+        AddMPstep(cfPremises, d, "eq_sym", fromSteps, instantiation, new_witnesses);
       }
 
       else if (nAxiom == eNegElim) {
@@ -589,6 +592,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         for (size_t i = 0; i < numOfVars; i++)
           ss2 >> inst[i];
 
+        vector<unsigned> fromSteps;
         vector<pair<string, string>> instantiation;
         vector<pair<string, string>> new_witnesses;
         for (size_t i = 0; i < numOfUnivVars; i++) {
@@ -597,7 +601,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
               pair<string, string>(UnivVar, sConstants[inst[i]]));
         }
         AddMPstep(cfPremises, d, proofTrace[nFrom0].GetName() + "_neg_elim",
-                  instantiation, new_witnesses);
+                  fromSteps, instantiation, new_witnesses);
       } else if (nAxiom == eExcludedMiddle) {
         Fact f;
         f.SetName(string(sPredicates[nPredicate]));
@@ -641,6 +645,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
             inst[i] = 0;
         }
 
+        vector<unsigned> fromSteps;
         vector<pair<string, string>> instantiation;
         vector<pair<string, string>> new_witnesses;
         for (size_t i = 0; i < numOfVars; i++) {
@@ -651,7 +656,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         ConjunctionFormula cfPremises;
         AddMPstep(cfPremises, d,
                   sPredicates[nPredicate - 1] + "_excluded_middle",
-                  instantiation, new_witnesses);
+                  fromSteps,instantiation, new_witnesses);
       } else if (nAxiom == eEQSub || nAxiom >= eNumberOfStepKinds) {
 
         int nPredicate1, nArgs1[100];
@@ -687,10 +692,14 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
                     .GetName() == "true")
           noPremises = 0;
         size_t numOfVars = numOfUnivVars + numOfExistVars;
+        vector<unsigned> fromSteps;
+
         for (unsigned int i = 0; i < noPremises; i++) {
           ss1 >> nFrom;
-          if (nFrom != -1 && nFrom != 99 && nFrom != 98)
+          if (nFrom != -1 && nFrom != 99 && nFrom != 98) {
             cfPremises.Add(proofTrace[nFrom]);
+            fromSteps.push_back(nFrom);
+          }
           else
 
               if (nFrom == 98) {
@@ -798,7 +807,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         else
           axiomName = mpT->mCLaxioms[nAxiom - eNumberOfStepKinds].second;
 
-        AddMPstep(cfPremises, d, axiomName, instantiation, new_witnesses);
+        AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses);
         if (bNegIntro && mpT->GetSymbolArity(sPredicates[nPredicate]) == 0 &&
             !nBranching) { // false reached
           SetProofEnd(NULL);

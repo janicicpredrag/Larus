@@ -19,6 +19,7 @@ typedef struct {
   vector<DNFFormula> CLfrom;
   DNFFormula conclusion;
   string axiomName;
+  vector<unsigned> fromSteps;
   vector<pair<string, string>> instantiation;
   vector<pair<string, string>> new_witnesses;
 } MP_Step;
@@ -45,8 +46,10 @@ public:
   unsigned Size() const;
   void AddAssumption(const Fact &f);
   void AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
-                 string name, vector<pair<string, string>> &instantiation,
-                 vector<pair<string, string>> &new_witnesses);
+                 string name,
+                 const vector<unsigned> &fromStep,
+                 const vector<pair<string, string>> &instantiation,
+                 const vector<pair<string, string>> &new_witnesses);
   void SetProofEnd(CLProofEnd *p);
 
   void Simplify();

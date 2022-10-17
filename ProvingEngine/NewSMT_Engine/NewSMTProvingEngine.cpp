@@ -381,7 +381,10 @@ Constraint NewSMTProvingEngine::Nesting(unsigned s)
 }
 Constraint NewSMTProvingEngine::SameBranch(unsigned s1, unsigned s2)
 {
-    return Constraint("SameBranch_l_" + itos(s1) + "_r__l_" + itos(s2)+ "_r_");
+    if (s1 > s2)
+      return Constraint("SameBranch_l_" + itos(s1) + "_r__l_" + itos(s2)+ "_r_");
+    else
+      return Constraint("SameBranch_l_" + itos(s2) + "_r__l_" + itos(s1)+ "_r_");
 }
 Constraint NewSMTProvingEngine::OddNesting(unsigned s)
 {
@@ -750,19 +753,30 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       Constraint c =
           (Nesting(i) == 1u) // fix me, make this more beatiful
         | (Nesting(i) == 3u)
+        | (Nesting(i) == 5u)
         | (Nesting(i) == 7u)
         | (Nesting(i) == 9u)
-        | (Nesting(i) == 11u);
-      AssertVar(OddNesting(i), c);
+        | (Nesting(i) == 11u)
+        | (Nesting(i) == 13u)
+        | (Nesting(i) == 15u)
+        | (Nesting(i) == 17u)
+        | (Nesting(i) == 19u)
+        | (Nesting(i) == 21u)
+        | (Nesting(i) == 23u)
+        | (Nesting(i) == 25u)
+        | (Nesting(i) == 27u)
+        | (Nesting(i) == 29u)
+        | (Nesting(i) == 31u);
+    AssertVar(OddNesting(i), c);
 
       for (unsigned j=i+1; j <= nFinalStep; j++) {
         Constraint c =
-            (Nesting(i) == Nesting(j))
-          | ((Nesting(i) >= Nesting(j) * 2u) & (Nesting(i) < Nesting(j) * 2u + 2u))
-          | ((Nesting(i) >= Nesting(j) * 4u) & (Nesting(i) < Nesting(j) * 4u + 4u))
-          | ((Nesting(i) >= Nesting(j) * 8u) & (Nesting(i) < Nesting(j) * 8u + 8u))
-          | ((Nesting(i) >= Nesting(j) *16u) & (Nesting(i) < Nesting(j) *16u + 16u));
-          AssertVar(SameBranch(i,j), c);
+            (Nesting(j) == Nesting(i))
+          | ((Nesting(j) >= Nesting(i) * 2u) & (Nesting(j) < Nesting(i) * 2u + 2u))
+          | ((Nesting(j) >= Nesting(i) * 4u) & (Nesting(j) < Nesting(i) * 4u + 4u))
+          | ((Nesting(j) >= Nesting(i) * 8u) & (Nesting(j) < Nesting(i) * 8u + 8u))
+          | ((Nesting(j) >= Nesting(i) *16u) & (Nesting(j) < Nesting(i) *16u + 16u));
+        AssertVar(SameBranch(i,j), c);
       }
     }
 
@@ -843,16 +857,17 @@ void NewSMTProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
 //    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
     AssertVar(Cases(nFinalStep), formula.GetSize() > 1 ? True() : False());
-    AssertVar(ContentsPredicate(nFinalStep, 0),
-                  Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetName())));
-
-    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end())
-        AssertVar(ContentsArgument(nFinalStep, 0, i),
-                    Constraint(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))));
-      else
-        AssertVar(ContentsArgument(nFinalStep, 0, i),
-                     Constraint(formula.GetElement(0).GetElement(0).GetArg(i)));
+    for(unsigned i = 0; i < formula.GetSize(); i++) {
+      AssertVar(ContentsPredicate(nFinalStep, i),
+                Constraint(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
+      for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
+        if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) == CONSTANTS.end())
+          AssertVar(ContentsArgument(nFinalStep, i, j),
+                    Constraint(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
+        else
+          AssertVar(ContentsArgument(nFinalStep, i, j),
+                    Constraint(formula.GetElement(i).GetElement(0).GetArg(j)));
+      }
     }
 
     AddComment("");
@@ -1075,6 +1090,7 @@ bool NewSMTProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           if (!ReconstructSubproof(formula, subproof, step, proofTrace, false))
             return false;
           pcs->AddSubproof(subproof);
+
         } else if (nStepKind == eMP) {
           if (nBranching) {
             nPredicate1 = meProof[step].ContentsPredicate[1];
@@ -1085,6 +1101,7 @@ bool NewSMTProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             }
           }
           ConjunctionFormula cfPremises;
+          vector <unsigned> fromSteps;
           unsigned noPremises = mpT->mCLaxioms[nAxiom].first.GetPremises().GetSize();
           if (noPremises == 1 &&
               mpT->mCLaxioms[nAxiom].first.GetPremises().GetElement(1).GetName() == "true")
@@ -1092,8 +1109,10 @@ bool NewSMTProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           size_t numOfVars = numOfUnivVars + numOfExistVars;
           for (unsigned int i = 0; i < noPremises; i++) {
             unsigned nFrom = meProof[step].From[i];
-            if (nFrom != -1 && nFrom != 99 && nFrom != 98)
+            if (nFrom != -1 && nFrom != 99 && nFrom != 98) {
               cfPremises.Add(proofTrace[nFrom]);
+              fromSteps.push_back(nFrom);
+            }
             else
               if (nFrom == 98) {
                 Fact univAxFact = mpT->mCLaxioms[nAxiom].first.GetPremises().GetElement(i);
@@ -1175,7 +1194,7 @@ bool NewSMTProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             }
           }
           string axiomName = mpT->mCLaxioms[nAxiom].second;
-          proof.AddMPstep(cfPremises, d, axiomName, instantiation, new_witnesses);
+          proof.AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses);
           if (bNegIntro && mpT->GetSymbolArity(msPredicates[nPredicate]) == 0 &&
               !nBranching) { // false reached
             proof.SetProofEnd(NULL);

@@ -293,6 +293,19 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
         outfile << " " << beautify(inst[j].second);
       outfile << ")";
     }
+
+    /* maybe this is useful for some prove assistants */
+    unsigned numPremises = p.GetMP(i).fromSteps.size();
+    if (numPremises > 0) {
+      outfile << " (* from steps: ";
+      for(unsigned f=0; f<numPremises; f++) {
+        outfile << p.GetMP(i).fromSteps[f];
+        if (f+1 < numPremises)
+          outfile << ", ";
+      }
+      outfile << " *)";
+    }
+
     if (new_witnesses.size() > 0) {
       outfile << "; destruct Tf as [";
       for (size_t j = 0; j != new_witnesses.size(); j++) {
