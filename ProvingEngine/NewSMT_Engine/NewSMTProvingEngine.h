@@ -53,14 +53,9 @@ private:
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace, bool bNegIntro);
 
-  //void DeclareVarBasicType(const Constraint& VarName);
-  void DeclareVarBasicType(const string& VarName);
-  void AssertVarBasicType(const string& VarName, unsigned u);
+  void DeclareVarBasicType(const Constraint& VarName);
   void DeclareVarBoolean(const string& VarName);
-  void AssertVarBoolean(const string& VarName);
-  void AssertVarBoolean(const Constraint& c);
-  void AssertVar(const string& VarName, const string& Val);
-  void AssertVar(const Constraint& c1, const Constraint& c2);
+  void Assert(const Constraint& c);
   void AddComment(const string& comment);
 
   Constraint CorrectnessCondition();
@@ -70,11 +65,12 @@ private:
   Constraint IsAssumptionStep(unsigned s, unsigned i);
 
   Constraint IsMPstep(unsigned s);
-  Constraint IsMPstepByAxiom(unsigned s, unsigned k);
-  Constraint MatchConclusion(unsigned s, unsigned k);
-  Constraint MatchAllPremises(unsigned s, unsigned k);
-  Constraint MatchPremiseToSomeStep(unsigned s, unsigned k, unsigned i);
-  Constraint MatchPremiseToStep(unsigned s, unsigned k, unsigned i, unsigned ss);
+  Constraint IsMPstepByAxiom(unsigned s, unsigned ax);
+  Constraint MatchConclusion(unsigned s, unsigned ax);
+  Constraint MatchAllPremises(unsigned s, unsigned ax);
+  Constraint MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i);
+  Constraint MatchPremiseToStep(unsigned s, unsigned ax, unsigned i, unsigned ss);
+  Constraint MatchPremiseInline(unsigned s, unsigned ax, unsigned i);
   Constraint SameContents(unsigned step1, unsigned part1, unsigned step2, unsigned part2);
   static Constraint SameBranch(unsigned s, unsigned ss);
   static Constraint OddNesting(unsigned s);
@@ -88,10 +84,12 @@ private:
   Constraint IsGoal(unsigned s);
   static Constraint IsQEDStep(unsigned s);
   // ----------------------------------------------------------
+  static Constraint ProofSize();
   static Constraint StepKind(unsigned s);
   static Constraint From(unsigned s, unsigned i);
   static Constraint AxiomApplied(unsigned s);
   static Constraint Instantiation(unsigned s, unsigned var);
+  static Constraint InstantiationInline(unsigned s, unsigned i, unsigned var);
   static Constraint Cases(unsigned s);
   static Constraint Nesting(unsigned s);
   static Constraint NestingSameBranch(unsigned s1, unsigned s2);
@@ -106,11 +104,11 @@ private:
   static Constraint QEDbyAssumption();
   static Constraint QEDbyEFQ();
   // ----------------------------------------------------------
-  static Constraint Bot();
-  static Constraint Top();
+  static Constraint Top(); // object level "true"
+  static Constraint Bot(); // object level "false"
   // ----------------------------------------------------------
-  static Constraint True();
-  static Constraint False();
+  static Constraint True();  // SMT level "true"
+  static Constraint False(); // SMT level "false"
   // ----------------------------------------------------------
   const CLFormula& GetAxiom(unsigned k);
   void ComputeBindingForAxioms();

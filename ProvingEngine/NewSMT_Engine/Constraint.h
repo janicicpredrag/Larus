@@ -13,7 +13,8 @@ public:
     Constraint();
     Constraint(unsigned n);
     Constraint(bool b);
-    Constraint(string str);
+    Constraint(const string& str);
+    Constraint(const char* str);
     Constraint(const Constraint& c);
     Constraint(op o, const Constraint* l, const Constraint* r);
     ~Constraint();

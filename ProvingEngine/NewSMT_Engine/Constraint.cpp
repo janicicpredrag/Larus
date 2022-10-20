@@ -35,13 +35,29 @@ Constraint::Constraint(bool b)
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(string str)
+Constraint::Constraint(const string& str)
 {
   mO = eVar;
-  mS = str;
+  if (str == "true")
+    mS = "top";
+  else if (str == "false")
+    mS = "bot";
+  else
+    mS = str;
   mLeft = nullptr;
   mRight = nullptr;
 }
+
+// ---------------------------------------------------------------------------------------
+
+Constraint::Constraint(const char* str)
+{
+  mO = eVar;
+  mS = string(str);
+  mLeft = nullptr;
+  mRight = nullptr;
+}
+
 
 // ---------------------------------------------------------------------------------------
 
@@ -217,7 +233,7 @@ string Constraint::toString() const
         return "";
     case eVar:
         // fixme, too specific
-        return mS.substr(0,5) == "Cases" ? "b" + mS : URSA_NUM_PREFIX + mS;
+        return mS.substr(0,5) == "Cases" ? "b" + mS : mS;
     case eNum:
         return itos(mNum);
     case eBool:
@@ -266,7 +282,7 @@ string Constraint::toSMT_(enum OPERATOR op) const
             mS.substr(0,strlen("IsGoal")) == "IsGoal")
             return " b" + mS + " ";
         else
-            return URSA_NUM_PREFIX + mS;
+            return mS;
     case eBool:
         return (mB == true ? "true " : "false ");
     case eNum:
@@ -295,7 +311,7 @@ string Constraint::toSMT_(enum OPERATOR op) const
     case eGreaterEq: return "(bvuge " + mLeft->toSMT_(eGreaterEq) + " " + mRight->toSMT_(eGreaterEq) + ")";
     case eLess: return "(bvult " + mLeft->toSMT_(eLess) + " " + mRight->toSMT_(eLess) + ")";
 
-    case eComment: return "\n; --------- " + mRight->mS + "\n" + mLeft->toSMT_(eNull) + "\n" ;
+    case eComment: return "\n; ------ " + mRight->mS + "\n" + mLeft->toSMT_(eNull) + "\n" ;
 
     default:
         assert(false);

@@ -95,7 +95,6 @@ const unsigned SATURATION_TIME_LIMIT = 5;
 const string EQ_NATIVE_NAME = "eqnative";
 const string PREFIX_NEGATED = "nnn";
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
-const string NUM_PREFIX = "n"; // DO NOT CHANGE!
 
 typedef struct proverParams {
   INPUT_FORMAT input_format;
