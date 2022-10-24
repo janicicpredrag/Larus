@@ -34,7 +34,8 @@ string itos(unsigned int i) {
 
 string itos(PROVING_ENGINE T, unsigned int i) {
   stringstream ss;
-  if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine) {
+  if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine ||
+      T == eOldSMTBV_ProvingEngine || T == eOldSMTUFBV_ProvingEngine) {
     ss << setfill('0') << setw(3) << right << hex << i;
     return "#x" + ss.str();
   } else {
@@ -227,6 +228,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i] + 2, "sql"))
           params.eEngine = eSQL_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "ursa"))
+
           params.eEngine = eURSA_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "smtlia"))
           params.eEngine = eSMTLIA_ProvingEngine;
@@ -236,8 +238,16 @@ int main(int argc, char **argv) {
           params.eEngine = eSMTUFLIA_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "smtufbv"))
           params.eEngine = eSMTUFBV_ProvingEngine;
-        else if (!strcmp(argv[i] + 2, "gsmtbv"))
-          params.eEngine = eGenericSMTBV_ProvingEngine;
+
+        else if (!strcmp(argv[i] + 2, "oldsmtlia"))
+          params.eEngine = eOldSMTLIA_ProvingEngine;
+        else if (!strcmp(argv[i] + 2, "oldsmtbv"))
+          params.eEngine = eOldSMTBV_ProvingEngine;
+        else if (!strcmp(argv[i] + 2, "oldsmtuflia"))
+          params.eEngine = eOldSMTUFLIA_ProvingEngine;
+        else if (!strcmp(argv[i] + 2, "oldsmtufbv"))
+          params.eEngine = eOldSMTUFBV_ProvingEngine;
+
         else {
           wrongInput = true;
           break;
@@ -257,84 +267,43 @@ int main(int argc, char **argv) {
     cout << "-e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof ";
     cout << "length> -vcoq filename \n";
     cout << endl;
-    cout << "   -l<time limit>       for time limit; example: -l10; " << endl;
-    cout << "                        default: 10s" << endl << endl;
-    cout << "   -f<format>           for input format; example -ftptp; "
-         << endl;
-    cout << "                        default: tptp" << endl << endl;
-    cout << "   -s                   for search for a single proof; example:"
-            "-s;"
-         << endl;
-    cout << "                        default: no, search for a shortest proof"
-         << endl
-         << endl;
-    cout << "   -d                   for disabling proof simplification; "
-         << endl;
-    cout << "                        default is false" << endl << endl;
-    cout << "   -i                   without inlining simple axioms; " << endl;
-    cout << "                        default is true" << endl << endl;
-    cout << "   -x                   find a proof of lenght equal to the given "
-         << endl;
-    cout << "                        length; default it false = length <= n"
-         << endl
-         << endl;
-    cout << "   -e<engine>           for proving engine (stl, sql, ursa, "
-         << endl;
-    cout << "                        smtlia, smtbv, smtuflia, smtufbv); "
-         << endl;
-    cout << "                        examples: -eursa; default: stl" << endl
-         << endl;
-    cout << "   -n<max nesting>      for maximal proof depth in which a fact "
-         << endl;
-    cout << "                        can be used; example: -n3; default: 2"
-         << endl
-         << endl;
-    cout << "   -m<starting length>  for the size of the proof search to start "
-         << endl;
-    cout << "                        with (support for smt engines only); "
-         << endl;
-    cout << "                        example: -m4; default: 2" << endl << endl;
-    cout << "   -p<max proof length> for maximal proof length (for engines "
-         << endl;
-    cout << "                        ursa/smt); example: -p64; default: 32"
-         << endl
-         << endl;
-    cout << "   -nonegelim           do not use negation elimination axiom (R "
-            "& ~R => false)"
-         << endl
-         << endl;
-    cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"
-         << endl
-         << endl;
-    cout << "   -h<time>             use a FOL prover for filtering out needed "
-         << endl;
-    cout << "                        axioms (<time> is optional, default: 18)"
-         << endl
-         << endl;
 
-    cout << "   -a<invoke>           the way the external prover is invoked "
-         << endl
-         << "                        as a hammer to filter out the needed "
-            "axioms; "
-         << endl
-         << "                        only relevant if -h is used; (default: "
-         << endl
+    cout << "   -l<time limit>       for time limit; example: -l10; "             << endl;
+    cout << "                        default: 10s"                                << endl << endl;
+    cout << "   -f<format>           for input format; example -ftptp; "          << endl;
+    cout << "                        default: tptp"                               << endl << endl;
+    cout << "   -s                   for search for a single proof; example: -s;" << endl;
+    cout << "                        default: no, search for a shortest proof"    << endl << endl;
+    cout << "   -d                   for disabling proof simplification; "        << endl;
+    cout << "                        default is false"                            << endl << endl;
+    cout << "   -i                   without inlining simple axioms; "            << endl;
+    cout << "                        default is true"                             << endl << endl;
+    cout << "   -x                   find a proof of lenght equal to the given "  << endl;
+    cout << "                        length; default it false = length <= n"      << endl << endl;
+    cout << "   -e<engine>           for proving engine (stl, sql, ursa, "        << endl;
+    cout << "                        smtlia, smtbv, smtuflia, smtufbv); "         << endl;
+    cout << "                        examples: -eursa; default: stl"              << endl << endl;
+    cout << "   -n<max nesting>      for maximal proof depth in which a fact "    << endl;
+    cout << "                        can be used; example: -n3; default: 2"       << endl << endl;
+    cout << "   -m<starting length>  for the size of the proof search to start "  << endl;
+    cout << "                        with (support for smt engines only); "       << endl;
+    cout << "                        example: -m4; default: 2"                    << endl << endl;
+    cout << "   -p<max proof length> for maximal proof length (for engines "      << endl;
+    cout << "                        ursa/smt); example: -p64; default: 32"       << endl << endl;
+    cout << "   -nonegelim           do not use negation elimination axiom (R & ~R => false)"
+         << endl << endl;
+    cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"   << endl << endl;
+    cout << "   -h<time>             use a FOL prover for filtering out needed "  << endl;
+    cout << "                        axioms (<time> is optional, default: 18)"    << endl << endl;
+    cout << "   -a<invoke>           the way the external prover is invoked "     << endl
+         << "                        as a hammer to filter out the needed axioms; " << endl
+         << "                        only relevant if -h is used; (default: "     << endl
          << "                        'vampire --mode casc --proof tptp "
-            "--output_axiom_names "
-            "on')"
-         << endl
-         << endl;
-
-    cout << "   -v<prover>           for generating and verifying the proof by "
-         << endl;
-    cout << "                        an interactive theorem prover (coq); "
-         << endl;
-    cout << "                        examples: -vcoq; default: no" << endl
-         << endl;
-
-    cout << "   -gclc                for generating illustration of the proof."
-         << endl;
-
+            "--output_axiom_names on')"                                           << endl << endl;
+    cout << "   -v<prover>           for generating and verifying the proof by "  << endl;
+    cout << "                        an interactive theorem prover (coq); "       << endl;
+    cout << "                        examples: -vcoq; default: no"                << endl << endl;
+    cout << "   -gclc                for generating illustration of the proof."   << endl;
     cout << endl;
 
     return 0;

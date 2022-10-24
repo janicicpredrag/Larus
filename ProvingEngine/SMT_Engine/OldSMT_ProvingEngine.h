@@ -1,5 +1,5 @@
-#ifndef EQPROVINGENGINE_H
-#define EQPROVINGENGINE_H
+#ifndef OLDSMTPROVINGENGINE_H
+#define OLDSMTPROVINGENGINE_H
 
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
@@ -18,9 +18,9 @@ typedef struct {
   string nAxiomArgument[MAX_PREMISES * MAX_ARITY];
 } CLAxiomStruct;
 
-class SMT_ProvingEngine : public ProvingEngine {
+class OldSMT_ProvingEngine : public ProvingEngine {
 public:
-  SMT_ProvingEngine(Theory *pT, proverParams &params);
+  OldSMT_ProvingEngine(Theory *pT, proverParams &params);
 
   void AddPremise(const Fact &f);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
@@ -92,4 +92,4 @@ private:
   string mSMT_type;
 };
 
-#endif // EQPROVINGENGINE_H
+#endif // OLDSMTPROVINGENGINE_H

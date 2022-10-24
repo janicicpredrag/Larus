@@ -1,5 +1,5 @@
 #include <string>
-#include "SMT_ProvingEngine.h"
+#include "OldSMT_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
@@ -9,19 +9,19 @@
 
 // ---------------------------------------------------------------------------------------
 
-SMT_ProvingEngine::SMT_ProvingEngine(Theory *pT, proverParams &params) {
+OldSMT_ProvingEngine::OldSMT_ProvingEngine(Theory *pT, proverParams &params) {
   mpT = pT;
   mParams = params;
   mnPremisesCount = 0;
   mSMT_theory = mParams.eEngine;
 
-  if (mSMT_theory == eSMTLIA_ProvingEngine)
+  if (mSMT_theory == eOldSMTLIA_ProvingEngine)
     mName = "QF_LIA";
-  else if (mSMT_theory == eSMTUFLIA_ProvingEngine)
+  else if (mSMT_theory == eOldSMTUFLIA_ProvingEngine)
     mName = "QF_UFLIA";
-  else if (mSMT_theory == eSMTBV_ProvingEngine)
+  else if (mSMT_theory == eOldSMTBV_ProvingEngine)
     mName = "QF_BV";
-  else if (mSMT_theory == eSMTUFBV_ProvingEngine)
+  else if (mSMT_theory == eOldSMTUFBV_ProvingEngine)
     mName = "QF_UFBV";
   else
     mName = "UNKNOWN";
@@ -30,7 +30,7 @@ SMT_ProvingEngine::SMT_ProvingEngine(Theory *pT, proverParams &params) {
 
 // ---------------------------------------------------------------------------------------
 
-void SMT_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
+void OldSMT_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
                                              unsigned timeLimit) {
   mStartTime = startTime;
   mParams.time_limit = timeLimit;
@@ -38,7 +38,7 @@ void SMT_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::app(string s, unsigned arg1) {
+string OldSMT_ProvingEngine::app(string s, unsigned arg1) {
   string ss;
   if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
       mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -54,7 +54,7 @@ string SMT_ProvingEngine::app(string s, unsigned arg1) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::appack(string s, unsigned arg1) {
+string OldSMT_ProvingEngine::appack(string s, unsigned arg1) {
   string ss;
   // use ackermanization
   ss = s + "_l_" + itos(arg1) + "_r_";
@@ -65,7 +65,7 @@ string SMT_ProvingEngine::appack(string s, unsigned arg1) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2) {
+string OldSMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2) {
   string ss;
   if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
       mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -82,7 +82,7 @@ string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2,
+string OldSMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2,
                               unsigned arg3) {
   string ss;
   if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
@@ -100,7 +100,7 @@ string SMT_ProvingEngine::app(string s, unsigned arg1, unsigned arg2,
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2,
+string OldSMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2,
                                  unsigned arg3) {
   // use ackermanization
   string ss = s + "_l_" + itos(arg1) + "_r__l_" + itos(arg2) + "_r__l_" +
@@ -112,7 +112,7 @@ string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2,
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2) {
+string OldSMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2) {
   // use ackermanization
   string ss = s + "_l_" + itos(arg1) + "_r__l_" + itos(arg2) + "_r_";
   if (DECLARATIONS.find(ss) == DECLARATIONS.end())
@@ -122,21 +122,23 @@ string SMT_ProvingEngine::appack(string s, unsigned arg1, unsigned arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::appeq(string arg1, string arg2) {
+string OldSMT_ProvingEngine::appeq(string arg1, string arg2) {
   return "(= " + arg1 + " " + arg2 + ")";
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::appeq(string arg1, int arg2) {
+string OldSMT_ProvingEngine::appeq(string arg1, int arg2) {
   return appeq(arg1, itos(mSMT_theory, arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_sum(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_sum(string arg1, string arg2) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvadd " + arg1 + " " + arg2 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(+ " + arg1 + " " + arg2 + ")";
@@ -144,9 +146,11 @@ string SMT_ProvingEngine::smt_sum(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_sum(string arg1) {
+string OldSMT_ProvingEngine::smt_sum(string arg1) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvadd " + arg1 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(+ " + arg1 + ")";
@@ -154,9 +158,11 @@ string SMT_ProvingEngine::smt_sum(string arg1) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_sub(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_sub(string arg1, string arg2) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvsub " + arg1 + " " + arg2 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(- " + arg1 + " " + arg2 + ")";
@@ -164,7 +170,7 @@ string SMT_ProvingEngine::smt_sub(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_sum(string arg1, int arg2) {
+string OldSMT_ProvingEngine::smt_sum(string arg1, int arg2) {
   if (arg2 < 0)
     return smt_sub(arg1, itos(mSMT_theory, arg2));
   else
@@ -173,9 +179,11 @@ string SMT_ProvingEngine::smt_sum(string arg1, int arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_prod(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_prod(string arg1, string arg2) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvmul " + arg1 + " " + arg2 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(* " + arg1 + " " + arg2 + ")";
@@ -183,15 +191,17 @@ string SMT_ProvingEngine::smt_prod(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_prod(string arg1, int arg2) {
+string OldSMT_ProvingEngine::smt_prod(string arg1, int arg2) {
   return smt_prod(arg1, itos(mSMT_theory, arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_geq(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_geq(string arg1, string arg2) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvuge " + arg1 + " " + arg2 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(>= " + arg1 + " " + arg2 + ")";
@@ -199,15 +209,17 @@ string SMT_ProvingEngine::smt_geq(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_geq(string arg1, int arg2) {
+string OldSMT_ProvingEngine::smt_geq(string arg1, int arg2) {
   return smt_geq(arg1, itos(mSMT_theory, arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_less(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_less(string arg1, string arg2) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return "(bvult " + arg1 + " " + arg2 + ")";
   else // (mSMT_theory == eSMTLIA_ProvingEngine)
     return "(< " + arg1 + " " + arg2 + ")";
@@ -215,22 +227,24 @@ string SMT_ProvingEngine::smt_less(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_less(string arg1, int arg2) {
+string OldSMT_ProvingEngine::smt_less(string arg1, int arg2) {
   return smt_less(arg1, itos(mSMT_theory, arg2));
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_ite(string arg1, int arg2, int arg3) {
+string OldSMT_ProvingEngine::smt_ite(string arg1, int arg2, int arg3) {
   return "(ite " + arg1 + " " + itos(mSMT_theory, arg2) + " " +
          itos(mSMT_theory, arg3) + ")";
 }
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_odd(string arg1, unsigned max) {
+string OldSMT_ProvingEngine::smt_odd(string arg1, unsigned max) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return appeq("(bvand " + arg1 + " " + itos(mSMT_theory, 1) + ")", 1);
   else { // (mSMT_theory == eSMTLIA_ProvingEngine)
     string s;
@@ -243,9 +257,11 @@ string SMT_ProvingEngine::smt_odd(string arg1, unsigned max) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_even(string arg1, unsigned max) {
+string OldSMT_ProvingEngine::smt_even(string arg1, unsigned max) {
   if (mSMT_theory == eSMTBV_ProvingEngine ||
-      mSMT_theory == eSMTUFBV_ProvingEngine)
+      mSMT_theory == eSMTUFBV_ProvingEngine ||
+      mSMT_theory == eOldSMTBV_ProvingEngine ||
+      mSMT_theory == eOldSMTUFBV_ProvingEngine)
     return appeq("(bvand " + arg1 + " " + itos(mSMT_theory, 1) + ")", 0);
   else { // (mSMT_theory == eSMTLIA_ProvingEngine)
     string s;
@@ -258,11 +274,13 @@ string SMT_ProvingEngine::smt_even(string arg1, unsigned max) {
 
 // ---------------------------------------------------------------------------------------
 
-string SMT_ProvingEngine::smt_prefix(string arg1, string arg2) {
+string OldSMT_ProvingEngine::smt_prefix(string arg1, string arg2) {
   string s = appeq(arg2, arg1);
   for (unsigned nI = 1, nJ = 2; nI <= mParams.max_nesting_depth; nI++, nJ *= 2)
     if (mSMT_theory == eSMTBV_ProvingEngine ||
-        mSMT_theory == eSMTUFBV_ProvingEngine)
+        mSMT_theory == eSMTUFBV_ProvingEngine ||
+        mSMT_theory == eOldSMTBV_ProvingEngine ||
+        mSMT_theory == eOldSMTUFBV_ProvingEngine)
       s += appeq("(bvlshr " + arg2 + " " + itos(mSMT_theory, nI) + ")", arg1);
     else // (mSMT_theory == eSMTLIA_ProvingEngine)
       s += "(and " + smt_geq(arg2, smt_prod(arg1, nJ)) +
@@ -273,7 +291,7 @@ string SMT_ProvingEngine::smt_prefix(string arg1, string arg2) {
 
 // ---------------------------------------------------------------------------------------
 
-void SMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
+void OldSMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
   mnAxiomsCount++;
   if (mnAxiomsCount >= AXIOMS.size())
     AXIOMS.resize(eNumberOfStepKinds + (AXIOMS.size() + 1) * 2);
@@ -365,7 +383,7 @@ void SMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
 
 // ---------------------------------------------------------------------------------------
 
-void SMT_ProvingEngine::AddPremise(const Fact &f) {
+void OldSMT_ProvingEngine::AddPremise(const Fact &f) {
   mpT->AddSymbol(f.GetName(), f.GetArity());
 
   mURSAstringPremises +=
@@ -384,21 +402,20 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
                            appeq(app("nArg", mnPremisesCount, i),
                                  URSA_NUM_PREFIX + ToUpper(f.GetArg(i))) +
                            ")\n";
-
   mnPremisesCount++;
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
+bool OldSMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                                           CLProof &proof) {
   bool ret = false;
 
-  if (mSMT_theory == eSMTLIA_ProvingEngine ||
-      mSMT_theory == eSMTUFLIA_ProvingEngine) {
+  if (mSMT_theory == eOldSMTLIA_ProvingEngine ||
+      mSMT_theory == eOldSMTUFLIA_ProvingEngine) {
     mSMT_type = "Int";
-  } else if (mSMT_theory == eSMTBV_ProvingEngine ||
-             mSMT_theory == eSMTUFBV_ProvingEngine) {
+  } else if (mSMT_theory == eOldSMTBV_ProvingEngine ||
+             mSMT_theory == eOldSMTUFBV_ProvingEngine) {
     mSMT_type = "(_ BitVec 12)";
   }
 
@@ -426,8 +443,8 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
         break;
 
       DECLARATIONS = decl;
-      string smt_proofencoded_filename = tmpnam(NULL); // "prove.smt"; //
-      string smt_model_filename = tmpnam(NULL);        // "smt-model.txt";    //
+      string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
+      string smt_model_filename = tmpnam(NULL);           // "smt-model.txt";    //
       EncodeProof(formula, l, smt_proofencoded_filename);
       const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
                            smt_proofencoded_filename + " > " +
@@ -524,7 +541,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 
 // ---------------------------------------------------------------------------------------
 
-void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
+void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                                     unsigned nProofLen,
                                     string prove_smt_filename) {
   ofstream smtFile;
@@ -1782,7 +1799,7 @@ void SMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
 
 // ---------------------------------------------------------------------------------------
 
-bool SMT_ProvingEngine::ReadModel(const string &sModelFile,
+bool OldSMT_ProvingEngine::ReadModel(const string &sModelFile,
                                   const string &sEncodedProofFile) {
   map<string, unsigned> nmodel;
   map<string, bool> bmodel;

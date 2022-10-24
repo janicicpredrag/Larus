@@ -26,7 +26,10 @@ enum PROVING_ENGINE {
   eSMTBV_ProvingEngine,
   eSMTUFLIA_ProvingEngine,
   eSMTUFBV_ProvingEngine,
-  eGenericSMTBV_ProvingEngine,
+  eOldSMTLIA_ProvingEngine,
+  eOldSMTBV_ProvingEngine,
+  eOldSMTUFLIA_ProvingEngine,
+  eOldSMTUFBV_ProvingEngine,
   eNumberOfProvingEngines
 };
 

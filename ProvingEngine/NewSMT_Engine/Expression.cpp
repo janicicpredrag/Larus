@@ -258,18 +258,19 @@ string Expression::toString() const
 
 // ---------------------------------------------------------------------------------------
 
-string Expression::toSMT() const
+string Expression::toSMT(PROVING_ENGINE th) const
 {
-    return toSMT_(eNull);
+    return toSMT_(th, eNull);
 }
 
 // ---------------------------------------------------------------------------------------
 
-string Expression::toSMT_(enum OPERATOR op) const
+string Expression::toSMT_(PROVING_ENGINE th, enum OPERATOR op) const
 {
     stringstream stream;
     SMTOut s;
-    s.SetTheory(eSMTBV_ProvingEngine);
+    string sOp;
+    s.SetTheory(th);
 
     switch (mO) {
     case eNull:
@@ -286,32 +287,53 @@ string Expression::toSMT_(enum OPERATOR op) const
     case eBool:
         return (mB == true ? "true " : "false ");
     case eNum:
-        stream << setw(3) << std::setfill('0') << std::hex << mNum;
-        return "#x"+stream.str();
-
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine) {
+          stream << setw(3) << std::setfill('0') << std::hex << mNum;
+          return "#x"+stream.str();
+        }
+        else
+          return itos(mNum);
     case eAnd: return
                 (op == eAnd) ?
-                  mLeft->toSMT_(eAnd) + mRight->toSMT_(eAnd)
-                : "(and " + mLeft->toSMT_(eAnd) + " " + mRight->toSMT_(eAnd) + ")";
+                  mLeft->toSMT_(th, eAnd) + mRight->toSMT_(th, eAnd)
+                : "(and " + mLeft->toSMT_(th, eAnd) + " " + mRight->toSMT_(th, eAnd) + ")";
     case eOr: return
                 (op == eOr) ?
-                  mLeft->toSMT_(eOr) + " " + mRight->toSMT_(eOr)
-                : "(or " + mLeft->toSMT_(eOr) + " " + mRight->toSMT_(eOr) + ")";
+                  mLeft->toSMT_(th, eOr) + " " + mRight->toSMT_(th, eOr)
+                : "(or " + mLeft->toSMT_(th, eOr) + " " + mRight->toSMT_(th, eOr) + ")";
     case eAdd: return
                 (op == eAdd) ?
-                  mLeft->toSMT_(eAdd) + " " + mRight->toSMT_(eAdd)
-                : s.smt_sum(mLeft->toSMT_(eAdd), mRight->toSMT_(eAdd));
+                  mLeft->toSMT_(th, eAdd) + " " + mRight->toSMT_(th, eAdd)
+                : s.smt_sum(mLeft->toSMT_(th, eAdd), mRight->toSMT_(th, eAdd));
     case eMul: return
                 (op == eMul) ?
-                  mLeft->toSMT_(eMul) + " " + mRight->toSMT_(eMul)
-                : s.smt_prod(mLeft->toSMT_(eMul), mRight->toSMT_(eMul));
-    case eEq: return "(= " + mLeft->toSMT_(eEq) + " " + mRight->toSMT_(eEq) + ")";
-    case eNeq: return "(not (= " + mLeft->toSMT_(eNeq) + " " + mRight->toSMT_(eNeq) + "))";
-    case eGreater:  return "(bvugt " + mLeft->toSMT_(eGreater) + " " + mRight->toSMT_(eGreater) + ")";
-    case eGreaterEq: return "(bvuge " + mLeft->toSMT_(eGreaterEq) + " " + mRight->toSMT_(eGreaterEq) + ")";
-    case eLess: return "(bvult " + mLeft->toSMT_(eLess) + " " + mRight->toSMT_(eLess) + ")";
+                  mLeft->toSMT_(th, eMul) + " " + mRight->toSMT_(th, eMul)
+                : s.smt_prod(mLeft->toSMT_(th, eMul), mRight->toSMT_(th, eMul));
+    case eEq: return "(= " + mLeft->toSMT_(th, eEq) + " " + mRight->toSMT_(th, eEq) + ")";
+    case eNeq: return "(not (= " + mLeft->toSMT_(th, eNeq) + " " + mRight->toSMT_(th, eNeq) + "))";
 
-    case eComment: return "\n; ------ " + mRight->mS + "\n" + mLeft->toSMT_(eNull) + "\n" ;
+    case eGreater:
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
+          sOp = "bvugt";
+        else
+          sOp = ">";
+        return "(" + sOp + " " + mLeft->toSMT_(th, eGreater) + " " + mRight->toSMT_(th, eGreater) + ")";
+
+    case eGreaterEq:
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
+          sOp = "bvuge";
+        else
+          sOp = ">=";
+        return "(" + sOp + " " + mLeft->toSMT_(th, eGreaterEq) + " " + mRight->toSMT_(th, eGreaterEq) + ")";
+
+    case eLess:
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
+          sOp = "bvult";
+        else
+          sOp = "<";
+        return "(" + sOp + " " + mLeft->toSMT_(th, eLess) + " " + mRight->toSMT_(th, eLess) + ")";
+
+    case eComment: return "\n; ------ " + mRight->mS + "\n" + mLeft->toSMT_(th, eNull) + "\n" ;
 
     default:
         assert(false);

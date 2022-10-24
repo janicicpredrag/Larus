@@ -1,5 +1,5 @@
-#ifndef NEWSMTPROVINGENGINE_H
-#define NEWSMTPROVINGENGINE_H
+#ifndef SMTPROVINGENGINE_H
+#define SMTPROVINGENGINE_H
 
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
@@ -36,10 +36,10 @@ typedef struct {
 } CLAxiomStruct_Gen;
 
 
-class NewSMTProvingEngine : public ProvingEngine {
+class SMT_ProvingEngine : public ProvingEngine {
 
 public:
-  NewSMTProvingEngine(Theory *pT, proverParams &params);
+  SMT_ProvingEngine(Theory *pT, proverParams &params);
   void AddPremise(const Fact &f);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
   virtual void SetStartTimeAndLimit(const clock_t &startTime, unsigned timeLimit);
@@ -53,8 +53,8 @@ private:
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace);
 
-  void DeclareVarBasicType(const Expression& VarName);
-  void DeclareVarBoolean(const string& VarName);
+  void DeclareVarBasicType(const Expression& Var);
+  void DeclareVarBoolean(const Expression& Var);
   void Assert(const Expression& c);
   void AddComment(const string& comment);
 
@@ -121,7 +121,6 @@ private:
 
   PROVING_ENGINE mSMT_theory;
   string mSMT_type;
-  //SMTOut mSMTout;
 
   unsigned mnMaxArity;
   unsigned mnMaxNumberOfPremisesInAxioms;
@@ -147,4 +146,4 @@ private:
 };
 
 
-#endif // NEWSMTPROVINGENGINE_H
+#endif // SMTPROVINGENGINE_H

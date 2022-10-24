@@ -6,11 +6,11 @@
 #include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
-#include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
+#include "ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h"
 #include "ProvingEngine/SQL_Engine/SQL_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
-#include "ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h"
+#include "ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h"
 #include "common.h"
 
 extern bool ReadTPTPStatement(const string &s, CLFormula &cl, string &axname,
@@ -198,7 +198,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         T.printAxioms();
       } else if (!(params.eEngine == eSTL_ProvingEngine ||
                    params.eEngine == eURSA_ProvingEngine ||
-                   params.eEngine == eGenericSMTBV_ProvingEngine)) {
+                   params.eEngine == eSMTBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "--- Using native EqSub support; current set of axioms: "
@@ -206,9 +206,10 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         T.printAxioms();
       }
     } else {
-      if (!(params.eEngine == eSTL_ProvingEngine ||
-            params.eEngine == eURSA_ProvingEngine ||
-            params.eEngine == eGenericSMTBV_ProvingEngine)) {
+      if (params.eEngine == eOldSMTBV_ProvingEngine ||
+          params.eEngine == eOldSMTLIA_ProvingEngine ||
+          params.eEngine == eOldSMTUFBV_ProvingEngine ||
+          params.eEngine == eOldSMTUFLIA_ProvingEngine) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "--- Using native EqSub support; current set of axioms: "
@@ -298,14 +299,18 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
         engine = new SQL_ProvingEngine(&T1, params);
       else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T1, params);
+
+      else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
+               params.eEngine == eOldSMTBV_ProvingEngine ||
+               params.eEngine == eOldSMTUFLIA_ProvingEngine ||
+               params.eEngine == eOldSMTUFBV_ProvingEngine)
+        engine = new OldSMT_ProvingEngine(&T1, params);
+
       else if (params.eEngine == eSMTLIA_ProvingEngine ||
                params.eEngine == eSMTBV_ProvingEngine ||
                params.eEngine == eSMTUFLIA_ProvingEngine ||
                params.eEngine == eSMTUFBV_ProvingEngine)
         engine = new SMT_ProvingEngine(&T1, params);
-
-      else if (params.eEngine == eGenericSMTBV_ProvingEngine)
-        engine = new NewSMTProvingEngine(&T1, params);
 
       else // default
         engine = new STL_ProvingEngine(&T1, params);
@@ -333,13 +338,18 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       assert(false); // not implemented yet
     else if (params.eEngine == eURSA_ProvingEngine)
       engine = new URSA_ProvingEngine(&T, params);
+
+    else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
+             params.eEngine == eOldSMTBV_ProvingEngine ||
+             params.eEngine == eOldSMTUFLIA_ProvingEngine ||
+             params.eEngine == eOldSMTUFBV_ProvingEngine)
+      engine = new OldSMT_ProvingEngine(&T, params);
+
     else if (params.eEngine == eSMTLIA_ProvingEngine ||
              params.eEngine == eSMTBV_ProvingEngine ||
-             params.eEngine == eSMTUFLIA_ProvingEngine ||
+             params.eEngine == eSMTUFLIA_ProvingEngine  ||
              params.eEngine == eSMTUFBV_ProvingEngine)
       engine = new SMT_ProvingEngine(&T, params);
-    else if (params.eEngine == eGenericSMTBV_ProvingEngine)
-      engine = new NewSMTProvingEngine(&T, params);
     else // default
       engine = new STL_ProvingEngine(&T, params);
     ReturnValue r = ProveTheorem(params, T, *engine, theorem, theoremName,

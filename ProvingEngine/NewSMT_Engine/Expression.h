@@ -1,6 +1,7 @@
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
 
+#include "common.h"
 #include <string>
 
 using namespace std;
@@ -36,10 +37,10 @@ public:
     Expression operator<< (const string& s);
 
     string toString() const;
-    string toSMT() const;
+    string toSMT(PROVING_ENGINE th) const;
 
 private:
-    string toSMT_(enum OPERATOR) const;
+    string toSMT_(PROVING_ENGINE th, enum OPERATOR) const;
 
     op mO;
     string mS;
@@ -48,5 +49,5 @@ private:
     Expression *mLeft, *mRight;
 };
 
-#endif // CONSTRAINT_H
+#endif // EXPRESSION_H
 

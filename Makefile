@@ -56,11 +56,11 @@ SOURCES       = main.cpp \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
-		ProvingEngine/NewSMT_Engine/Constraint.cpp \
-		ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.cpp \
+		ProvingEngine/NewSMT_Engine/Expression.cpp \
+		ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/SMTOut.cpp \
+		ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
-		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
 		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
@@ -75,11 +75,11 @@ OBJECTS       = main.o \
 		Formula.o \
 		Theory.o \
 		CLProof.o \
-		Constraint.o \
-		NewSMTProvingEngine.o \
-		SMTOut.o \
-		URSA_ProvingEngine.o \
+		Expression.o \
 		SMT_ProvingEngine.o \
+		SMTOut.o \
+		OldSMT_ProvingEngine.o \
+		URSA_ProvingEngine.o \
 		STL_ProvingEngine.o \
 		STL_FactsDatabase.o \
 		SQL_ProvingEngine.o \
@@ -168,12 +168,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CLTheory/Theory.h \
 		CLProof/CLProof.h \
 		ProvingEngine/FactsDatabase.h \
-		ProvingEngine/NewSMT_Engine/Constraint.h \
-		ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h \
+		ProvingEngine/NewSMT_Engine/Expression.h \
+		ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h \
 		ProvingEngine/ProvingEngine.h \
 		ProvingEngine/SMTOut.h \
+		ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
-		ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
@@ -188,11 +188,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
-		ProvingEngine/NewSMT_Engine/Constraint.cpp \
-		ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.cpp \
+		ProvingEngine/NewSMT_Engine/Expression.cpp \
+		ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/SMTOut.cpp \
+		ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
-		ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
 		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
@@ -380,8 +380,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Constraint.h ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/SMT_Engine/SMT_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Constraint.cpp ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp import.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Expression.h ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp import.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -450,26 +450,36 @@ CLProof.o: CLProof/CLProof.cpp CLProof/CLProof.h \
 		CLTheory/Theory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CLProof.o CLProof/CLProof.cpp
 
-Constraint.o: ProvingEngine/NewSMT_Engine/Constraint.cpp ProvingEngine/NewSMT_Engine/Constraint.h \
+Expression.o: ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/Expression.h \
 		common.h \
 		ProvingEngine/SMTOut.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Constraint.o ProvingEngine/NewSMT_Engine/Constraint.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Expression.o ProvingEngine/NewSMT_Engine/Expression.cpp
 
-NewSMTProvingEngine.o: ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.cpp ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h \
+SMT_ProvingEngine.o: ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h \
 		CLProof/CLProof.h \
 		CLTheory/Formula.h \
 		common.h \
 		CLTheory/Theory.h \
 		ProvingEngine/ProvingEngine.h \
-		ProvingEngine/NewSMT_Engine/Constraint.h \
+		ProvingEngine/NewSMT_Engine/Expression.h \
 		ProvingEngine/SMTOut.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/FactsDatabase.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o NewSMTProvingEngine.o ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SMT_ProvingEngine.o ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp
 
 SMTOut.o: ProvingEngine/SMTOut.cpp ProvingEngine/SMTOut.h \
 		common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SMTOut.o ProvingEngine/SMTOut.cpp
+
+OldSMT_ProvingEngine.o: ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h \
+		CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		common.h \
+		CLTheory/Theory.h \
+		ProvingEngine/ProvingEngine.h \
+		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
+		ProvingEngine/FactsDatabase.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OldSMT_ProvingEngine.o ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp
 
 URSA_ProvingEngine.o: ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		common.h \
@@ -480,16 +490,6 @@ URSA_ProvingEngine.o: ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEn
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/FactsDatabase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o URSA_ProvingEngine.o ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp
-
-SMT_ProvingEngine.o: ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
-		CLProof/CLProof.h \
-		CLTheory/Formula.h \
-		common.h \
-		CLTheory/Theory.h \
-		ProvingEngine/ProvingEngine.h \
-		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
-		ProvingEngine/FactsDatabase.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SMT_ProvingEngine.o ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp
 
 STL_ProvingEngine.o: ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		CLProof/CLProof.h \
@@ -577,7 +577,7 @@ import.o: import.cpp CLTheory/Formula.h \
 		ProofExport/ProofExport2GCLC_predicates.h \
 		ProofExport/ProofExport2Isabelle.h \
 		ProofExport/ProofExport2LaTeX.h \
-		ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
+		ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h \
 		ProvingEngine/ProvingEngine.h \
 		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
 		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
@@ -585,8 +585,8 @@ import.o: import.cpp CLTheory/Formula.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
-		ProvingEngine/NewSMT_Engine/NewSMTProvingEngine.h \
-		ProvingEngine/NewSMT_Engine/Constraint.h \
+		ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h \
+		ProvingEngine/NewSMT_Engine/Expression.h \
 		ProvingEngine/SMTOut.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o import.o import.cpp
 
