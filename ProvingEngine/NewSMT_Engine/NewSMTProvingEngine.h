@@ -51,7 +51,7 @@ private:
   bool StoreValueFromModel(string& strVarName, string& strVal);
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
-                           unsigned& start_step, vector<Fact> &proofTrace, bool bNegIntro);
+                           unsigned& start_step, vector<Fact> &proofTrace);
 
   void DeclareVarBasicType(const Constraint& VarName);
   void DeclareVarBoolean(const string& VarName);
@@ -65,6 +65,7 @@ private:
   Constraint IsAssumptionStep(unsigned s, unsigned i);
 
   Constraint IsMPstep(unsigned s);
+  Constraint IsEqSubStep(unsigned s);
   Constraint IsMPstepByAxiom(unsigned s, unsigned ax);
   Constraint MatchConclusion(unsigned s, unsigned ax);
   Constraint MatchAllPremises(unsigned s, unsigned ax);
@@ -98,6 +99,7 @@ private:
   // ----------------------------------------------------------
   static Constraint Assumption();
   static Constraint MP();
+  static Constraint EqSub();
   static Constraint FirstCase();
   static Constraint SecondCase();
   static Constraint QEDbyCases();
@@ -138,6 +140,7 @@ private:
   unsigned mnNumberOfAssumptions;
   unsigned mProofLength;
   Constraint mConstraint;
+  vector<Fact> mPremises;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
 
   ofstream mSMTfile;

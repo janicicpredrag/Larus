@@ -197,7 +197,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
              << endl;
         T.printAxioms();
       } else if (!(params.eEngine == eSTL_ProvingEngine ||
-                   params.eEngine == eURSA_ProvingEngine)) {
+                   params.eEngine == eURSA_ProvingEngine ||
+                   params.eEngine == eGenericSMTBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "--- Using native EqSub support; current set of axioms: "
@@ -206,7 +207,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       }
     } else {
       if (!(params.eEngine == eSTL_ProvingEngine ||
-            params.eEngine == eURSA_ProvingEngine)) {
+            params.eEngine == eURSA_ProvingEngine ||
+            params.eEngine == eGenericSMTBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "--- Using native EqSub support; current set of axioms: "
