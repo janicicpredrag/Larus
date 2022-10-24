@@ -189,7 +189,7 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
       /* mnMaxNumberOfVarsInAxioms*(nProofStep+1)+i, so they */
       /* don't overlap, unless some axioms introduce >8 witnesses */
       c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
-            mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size()+i+1);
+            mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
     }
     return c << "----- ----- Is axiom " + itos(ax) + " applied: ";
 }
@@ -822,6 +822,25 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         mnMaxArity = mpT->mSignature[i].second;
     }
 
+    set<string> exi_vars;
+    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
+      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
+        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      }
+    }
+    if (formula.GetSize() > 1) {
+      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
+        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
+                exi_vars.end()) {
+          DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
+          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+        }
+      }
+    }
+
     DeclareVarBasicType(Assumption());
     DeclareVarBasicType(FirstCase());
     DeclareVarBasicType(SecondCase());
@@ -883,9 +902,11 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       }
 //      unsigned maxI = mnMaxArity > mnMaxNumberOfVarsInAxioms ? mnMaxArity : mnMaxNumberOfVarsInAxioms; // = because of EqSub
 //      maxI = mnMaxArity > 2 ? mnMaxArity : 2; // = because of EqSub
-      for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
+      // exi_vars.size() added because of instantiation of existential variables in the conjecture
+      for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms + exi_vars.size(); k++) {
         DeclareVarBasicType(Instantiation(i,k));
       }
+
 //      for (unsigned k=0; k <= mnMaxNumberOfPremisesInAxioms; k++) {// = because of EqSub
       for (unsigned k=0; k < mnMaxNumberOfPremisesInAxioms; k++) {
         for (unsigned j=0; j < mnMaxNumberOfVarsInAxioms; j++) {
@@ -928,24 +949,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       CONSTANTS[*it] = enumerator++;
     }
 
-    set<string> exi_vars;
-    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
-        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
-      }
-    }
-    if (formula.GetSize() > 1) {
-      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
-          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
-                exi_vars.end()) {
-          DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
-          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
-        }
-      }
-    }
 
     AddComment("");
     AddComment("****************************** Axioms *********************************");
@@ -1026,24 +1029,27 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       AddComment("");
   }
 
-
-  for (unsigned i=0; i <= nFinalStep; i++) {
-    Expression cc, cg[2][2];
-    for (unsigned ind0=0; ind0<2; ind0++)
+  for (unsigned i=0; i < nFinalStep; i++) {
+    Expression cc, cg[2];
       for (unsigned ind1=0; ind1<2; ind1++) {
-        cg[ind0][ind1] = (ContentsPredicate(i,ind0) == ContentsPredicate(nFinalStep,ind1));
+        cg[ind1] = (ContentsPredicate(i,0) == ContentsPredicate(nFinalStep,ind1));
         for(unsigned int j = 0; j < mGoal.GetElement(ind1).GetElement(0).GetArity(); j++)
-          cg[ind0][ind1] &= (ContentsArgument(i,ind0,j) == ContentsArgument(nFinalStep,ind1,j));
+          if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j)) ==
+             exi_vars.end())
+            cg[ind1] &= (ContentsArgument(i,0,j) == ContentsArgument(nFinalStep,ind1,j));
+          else {
+            cg[ind1] &= (ContentsArgument(i,0,j) == Instantiation(i,j));
+          }
       }
     if (mGoal.GetSize() == 1) {
-      cc =  ((Cases(i) == False()) & cg[0][0]);
+      cc = ((Cases(i) == False()) & cg[0]);
     }
     else {
-      cc = ((Cases(i) == False()) & (cg[0][0] | cg[0][1])) |
-            (Cases(i) & cg[0][0] & cg[1][1]);
+      cc = ((Cases(i) == False()) & (cg[0] | cg[1]));
     }
     Assert(IsGoal(i) == cc);
   }
+  Assert(IsGoal(nFinalStep) == True());
 
   AddComment("");
   AddComment("");

@@ -63,8 +63,6 @@ SOURCES       = main.cpp \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
-		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
-		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProofExport/ProofExport2Coq.cpp \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
@@ -82,8 +80,6 @@ OBJECTS       = main.o \
 		URSA_ProvingEngine.o \
 		STL_ProvingEngine.o \
 		STL_FactsDatabase.o \
-		SQL_ProvingEngine.o \
-		SQL_FactsDatabase.o \
 		ProofExport2Coq.o \
 		ProofExport2Isabelle.o \
 		ProofExport2LaTeX.o \
@@ -176,8 +172,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
-		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
-		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
 		ProofExport/ProofExport.h \
 		ProofExport/ProofExport2Coq.h \
 		ProofExport/ProofExport2Isabelle.h \
@@ -195,8 +189,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
-		ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp \
-		ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp \
 		ProofExport/ProofExport2Coq.cpp \
 		ProofExport/ProofExport2Isabelle.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
@@ -380,8 +372,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Expression.h ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_ProvingEngine.h ProvingEngine/SQL_Engine/SQL_FactsDatabase.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp import.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Expression.h ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp import.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -509,24 +501,6 @@ STL_FactsDatabase.o: ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProvingEngin
 		CLProof/CLProof.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o STL_FactsDatabase.o ProvingEngine/STL_Engine/STL_FactsDatabase.cpp
 
-SQL_ProvingEngine.o: ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
-		CLProof/CLProof.h \
-		CLTheory/Formula.h \
-		common.h \
-		CLTheory/Theory.h \
-		ProvingEngine/ProvingEngine.h \
-		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
-		ProvingEngine/FactsDatabase.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_ProvingEngine.o ProvingEngine/SQL_Engine/SQL_ProvingEngine.cpp
-
-SQL_FactsDatabase.o: ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
-		CLTheory/Formula.h \
-		common.h \
-		CLTheory/Theory.h \
-		ProvingEngine/FactsDatabase.h \
-		CLProof/CLProof.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SQL_FactsDatabase.o ProvingEngine/SQL_Engine/SQL_FactsDatabase.cpp
-
 ProofExport2Coq.o: ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Coq.h \
 		ProofExport/ProofExport.h \
 		common.h \
@@ -579,11 +553,9 @@ import.o: import.cpp CLTheory/Formula.h \
 		ProofExport/ProofExport2LaTeX.h \
 		ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h \
 		ProvingEngine/ProvingEngine.h \
-		ProvingEngine/SQL_Engine/SQL_ProvingEngine.h \
-		ProvingEngine/SQL_Engine/SQL_FactsDatabase.h \
-		ProvingEngine/FactsDatabase.h \
 		ProvingEngine/STL_Engine/STL_ProvingEngine.h \
 		ProvingEngine/STL_Engine/STL_FactsDatabase.h \
+		ProvingEngine/FactsDatabase.h \
 		ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
 		ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h \
 		ProvingEngine/NewSMT_Engine/Expression.h \
