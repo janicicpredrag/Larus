@@ -43,15 +43,16 @@ void SMT_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
 
 Expression SMT_ProvingEngine::CorrectnessConstraint()
 {
-    Expression c, cProofEnding;
-    c &= (CorrectProofStep(mnNumberOfAssumptions))
+    Expression c;
+    // Local constraints
+    for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
+      c &= (CorrectProofStep(s))
          << "1. Each proof step s is one of the defined step kinds";
+    }
 
+    // Global structure constraints
     for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
       Expression cc;
-      cc &= (CorrectProofStep(s))
-            << "1. Each proof step s is one of the defined step kinds";
-
       cc &= ((IsQEDStep(s - 1) == False()) | (Nesting(s - 1) != Nesting(s)))
             << "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
 
@@ -70,7 +71,8 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
            << "Constraints for the step " + itos(s) + " hold only if " + itos(s) + " is before the proof end:";
     }
 
-    // Proof size is one of values less or equal to the given maximal length
+    Expression cProofEnding;
+    // Proof size constraints: proof size is one of values less or equal to the given maximal length
     for(unsigned L = mnNumberOfAssumptions+1; L <= mnNumberOfAssumptions + mProofLength; L++) {
       Expression cOneL;
       cOneL &= (ProofSize() == L)
@@ -88,6 +90,23 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
       cProofEnding |= cOneL << "";
     }
     c &= cProofEnding;
+
+    // Normalization constraints: proof is normalized, according to several criteria
+    for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
+      Expression cPreviousStepIsUsed = False();
+      for(unsigned i = 0; i < mnMaxNumberOfPremisesInAxioms; i++) {
+        cPreviousStepIsUsed |= (From(s,i) == (s - 1));
+      }
+      Expression cProofIsNormalized;
+      cProofIsNormalized &=  (((cPreviousStepIsUsed
+                           & (Nesting(s-1) == Nesting(s))
+                           & (StepKind(s-1) == MP())
+                           & (StepKind(s) == MP())) == False())
+                           | (AxiomApplied(s-1) < AxiomApplied(s)))
+                           << "   9: Normalization condition for step " + itos(s);
+      c &= cProofIsNormalized;
+    }
+
     return c << "\n ; ********************* Proof correctness constraint ******************";
 }
 
