@@ -5,9 +5,9 @@
 #include "CLTheory/Theory.h"
 #include "CLTheory/Formula.h"
 #include "ProvingEngine/ProvingEngine.h"
-#include "Constraint.h"
+#include "Expression.h"
 #include "ProvingEngine/SMTOut.h"
-#include "Constraint.h"
+#include "Expression.h"
 #include <string>
 #include <iostream>
 
@@ -53,64 +53,64 @@ private:
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace);
 
-  void DeclareVarBasicType(const Constraint& VarName);
+  void DeclareVarBasicType(const Expression& VarName);
   void DeclareVarBoolean(const string& VarName);
-  void Assert(const Constraint& c);
+  void Assert(const Expression& c);
   void AddComment(const string& comment);
 
-  Constraint CorrectnessCondition();
-  Constraint CorrectProofStep(unsigned s);
+  Expression CorrectnessConstraint();
+  Expression CorrectProofStep(unsigned s);
 
-  Constraint IsAssumption(unsigned s);
-  Constraint IsAssumptionStep(unsigned s, unsigned i);
+  Expression IsAssumption(unsigned s);
+  Expression IsAssumptionStep(unsigned s, unsigned i);
 
-  Constraint IsMPstep(unsigned s);
-  Constraint IsEqSubStep(unsigned s);
-  Constraint IsMPstepByAxiom(unsigned s, unsigned ax);
-  Constraint MatchConclusion(unsigned s, unsigned ax);
-  Constraint MatchAllPremises(unsigned s, unsigned ax);
-  Constraint MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i);
-  Constraint MatchPremiseToStep(unsigned s, unsigned ax, unsigned i, unsigned ss);
-  Constraint MatchPremiseInline(unsigned s, unsigned ax, unsigned i);
-  Constraint SameContents(unsigned step1, unsigned part1, unsigned step2, unsigned part2);
-  static Constraint SameBranch(unsigned s, unsigned ss);
-  static Constraint OddNesting(unsigned s);
+  Expression IsMPstep(unsigned s);
+  Expression IsEqSubStep(unsigned s);
+  Expression IsMPstepByAxiom(unsigned s, unsigned ax);
+  Expression MatchConclusion(unsigned s, unsigned ax);
+  Expression MatchAllPremises(unsigned s, unsigned ax);
+  Expression MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i);
+  Expression MatchPremiseToStep(unsigned s, unsigned ax, unsigned i, unsigned ss);
+  Expression MatchPremiseInline(unsigned s, unsigned ax, unsigned i);
+  Expression SameContents(unsigned step1, unsigned part1, unsigned step2, unsigned part2);
+  static Expression SameBranch(unsigned s, unsigned ss);
+  static Expression OddNesting(unsigned s);
 
-  Constraint IsFirstCase(unsigned s);
-  Constraint IsSecondCase(unsigned s);
-  Constraint IsQEDbyCases(unsigned s);
-  Constraint IsQEDbyAssumption(unsigned s);
-  Constraint IsQEDbyEFQ(unsigned s);
+  Expression IsFirstCase(unsigned s);
+  Expression IsSecondCase(unsigned s);
+  Expression IsQEDbyCases(unsigned s);
+  Expression IsQEDbyAssumption(unsigned s);
+  Expression IsQEDbyEFQ(unsigned s);
   // ----------------------------------------------------------
-  Constraint IsGoal(unsigned s);
-  static Constraint IsQEDStep(unsigned s);
+  Expression IsGoal(unsigned s);
+  static Expression IsQEDStep(unsigned s);
   // ----------------------------------------------------------
-  static Constraint ProofSize();
-  static Constraint StepKind(unsigned s);
-  static Constraint From(unsigned s, unsigned i);
-  static Constraint AxiomApplied(unsigned s);
-  static Constraint Instantiation(unsigned s, unsigned var);
-  static Constraint InstantiationInline(unsigned s, unsigned i, unsigned var);
-  static Constraint Cases(unsigned s);
-  static Constraint Nesting(unsigned s);
-  static Constraint NestingSameBranch(unsigned s1, unsigned s2);
-  static Constraint ContentsPredicate(unsigned s, unsigned part);
-  static Constraint ContentsArgument(unsigned s, unsigned part, unsigned arg);
+  static Expression ProofSize();
+  static Expression StepKind(unsigned s);
+  static Expression From(unsigned s, unsigned i);
+  static Expression AxiomApplied(unsigned s);
+  static Expression Instantiation(unsigned s, unsigned var);
+  static Expression InstantiationInline(unsigned s, unsigned i, unsigned var);
+  static Expression Cases(unsigned s);
+  static Expression Nesting(unsigned s);
+  static Expression NestingSameBranch(unsigned s1, unsigned s2);
+  static Expression ContentsPredicate(unsigned s, unsigned part);
+  static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
   // ----------------------------------------------------------
-  static Constraint Assumption();
-  static Constraint MP();
-  static Constraint EqSub();
-  static Constraint FirstCase();
-  static Constraint SecondCase();
-  static Constraint QEDbyCases();
-  static Constraint QEDbyAssumption();
-  static Constraint QEDbyEFQ();
+  static Expression Assumption();
+  static Expression MP();
+  static Expression EqSub();
+  static Expression FirstCase();
+  static Expression SecondCase();
+  static Expression QEDbyCases();
+  static Expression QEDbyAssumption();
+  static Expression QEDbyEFQ();
   // ----------------------------------------------------------
-  static Constraint Top(); // object level "true"
-  static Constraint Bot(); // object level "false"
+  static Expression Top(); // object level "true"
+  static Expression Bot(); // object level "false"
   // ----------------------------------------------------------
-  static Constraint True();  // SMT level "true"
-  static Constraint False(); // SMT level "false"
+  static Expression True();  // SMT level "true"
+  static Expression False(); // SMT level "false"
   // ----------------------------------------------------------
   const CLFormula& GetAxiom(unsigned k);
   void ComputeBindingForAxioms();
@@ -139,7 +139,7 @@ private:
   DNFFormula mGoal;
   unsigned mnNumberOfAssumptions;
   unsigned mProofLength;
-  Constraint mConstraint;
+  Expression mProofPremises;
   vector<Fact> mPremises;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
 

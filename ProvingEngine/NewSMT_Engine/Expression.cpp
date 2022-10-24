@@ -1,12 +1,12 @@
 #include <assert.h>
 #include <iostream>
-#include "Constraint.h"
+#include "Expression.h"
 #include "common.h"
 #include "../SMTOut.h"
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint()
+Expression::Expression()
 {
   mO = eNull;
   mLeft = nullptr;
@@ -15,7 +15,7 @@ Constraint::Constraint()
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(unsigned n)
+Expression::Expression(unsigned n)
 {
   mO = eNum;
   mNum = n;
@@ -25,7 +25,7 @@ Constraint::Constraint(unsigned n)
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(bool b)
+Expression::Expression(bool b)
 {
   mO = eBool;
   mB = b;
@@ -35,7 +35,7 @@ Constraint::Constraint(bool b)
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(const string& str)
+Expression::Expression(const string& str)
 {
   mO = eVar;
   if (str == "true")
@@ -50,7 +50,7 @@ Constraint::Constraint(const string& str)
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(const char* str)
+Expression::Expression(const char* str)
 {
   mO = eVar;
   mS = string(str);
@@ -61,7 +61,7 @@ Constraint::Constraint(const char* str)
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(const Constraint& c)
+Expression::Expression(const Expression& c)
 {
   mO = c.mO;
   mB = c.mB;
@@ -71,23 +71,23 @@ Constraint::Constraint(const Constraint& c)
     mLeft = nullptr; mRight = nullptr;
   }
   else {
-    mLeft = new Constraint(*(c.mLeft));
-    mRight = new Constraint(*(c.mRight));
+    mLeft = new Expression(*(c.mLeft));
+    mRight = new Expression(*(c.mRight));
   }
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::Constraint(op o, const Constraint* l, const Constraint* r)
+Expression::Expression(op o, const Expression* l, const Expression* r)
 {
   mO = o;
-  mLeft = new Constraint(*l);
-  mRight = new Constraint(*r);
+  mLeft = new Expression(*l);
+  mRight = new Expression(*r);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint::~Constraint()
+Expression::~Expression()
 {
   if (mLeft != nullptr)
     delete mLeft;
@@ -97,7 +97,7 @@ Constraint::~Constraint()
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator= (const Constraint& c)
+Expression Expression::operator= (const Expression& c)
 {
   if (this == &c)
      return *this;
@@ -114,119 +114,119 @@ Constraint Constraint::operator= (const Constraint& c)
   }
   else
   {
-    mLeft = new Constraint(*(c.mLeft));
-    mRight = new Constraint(*(c.mRight));
+    mLeft = new Expression(*(c.mLeft));
+    mRight = new Expression(*(c.mRight));
   }
   return *this;
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator+ (const Constraint& c)
+Expression Expression::operator+ (const Expression& c)
 {
-  return Constraint(eAdd, this, &c);
+  return Expression(eAdd, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator* (const Constraint& c)
+Expression Expression::operator* (const Expression& c)
 {
-  return Constraint(eMul, this, &c);
+  return Expression(eMul, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator== (const Constraint& c)
+Expression Expression::operator== (const Expression& c)
 {
-  return Constraint(eEq, this, &c);
+  return Expression(eEq, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator!= (const Constraint& c)
+Expression Expression::operator!= (const Expression& c)
 {
-  return Constraint(eNeq, this, &c);
+  return Expression(eNeq, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator> (const Constraint& c)
+Expression Expression::operator> (const Expression& c)
 {
-  return Constraint(eGreater, this, &c);
+  return Expression(eGreater, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator>= (const Constraint& c)
+Expression Expression::operator>= (const Expression& c)
 {
-  return Constraint(eGreaterEq, this, &c);
+  return Expression(eGreaterEq, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator< (const Constraint& c)
+Expression Expression::operator< (const Expression& c)
 {
-  return Constraint(eLess, this, &c);
+  return Expression(eLess, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator& (const Constraint& c)
+Expression Expression::operator& (const Expression& c)
 {
   if (mO == eNull)
-    return (c.mO == eNull) ? Constraint((bool)true) : c;
+    return (c.mO == eNull) ? Expression((bool)true) : c;
   else
-    return (c.mO == eNull) ? *this : Constraint(eAnd, this, &c);
+    return (c.mO == eNull) ? *this : Expression(eAnd, this, &c);
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator&= (const Constraint& c)
+Expression Expression::operator&= (const Expression& c)
 {
   if (c.mO == eNull)
     return *this;
   else {
-    Constraint c0 = *this;
-    *this = (mO == eNull) ? c : Constraint(eAnd, &c0, &c);
+    Expression c0 = *this;
+    *this = (mO == eNull) ? c : Expression(eAnd, &c0, &c);
     return *this;
   }
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator| (const Constraint& c)
+Expression Expression::operator| (const Expression& c)
 {
   if (mO == eNull)
-    return (c.mO == eNull) ? Constraint((bool)false) : c;
+    return (c.mO == eNull) ? Expression((bool)false) : c;
   else
-    return (c.mO == eNull) ? c : Constraint(eOr, this, &c);
+    return (c.mO == eNull) ? c : Expression(eOr, this, &c);
 }
 
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator|= (const Constraint& c)
+Expression Expression::operator|= (const Expression& c)
 {
   if (c.mO == eNull)
     return *this;
   else {
-    Constraint c0 = *this;
-    *this = (mO == eNull) ? c : Constraint(eOr, &c0, &c);
+    Expression c0 = *this;
+    *this = (mO == eNull) ? c : Expression(eOr, &c0, &c);
     return *this;
   }
 }
 
 // ---------------------------------------------------------------------------------------
 
-Constraint Constraint::operator<< (const string& s)
+Expression Expression::operator<< (const string& s)
 {
-  Constraint cs = Constraint(s);
-  return Constraint(eComment, this, &cs);
+  Expression cs = Expression(s);
+  return Expression(eComment, this, &cs);
 }
 
 // ---------------------------------------------------------------------------------------
 
-string Constraint::toString() const
+string Expression::toString() const
 {
     switch (mO) {
     case eNull:
@@ -258,14 +258,14 @@ string Constraint::toString() const
 
 // ---------------------------------------------------------------------------------------
 
-string Constraint::toSMT() const
+string Expression::toSMT() const
 {
     return toSMT_(eNull);
 }
 
 // ---------------------------------------------------------------------------------------
 
-string Constraint::toSMT_(enum OPERATOR op) const
+string Expression::toSMT_(enum OPERATOR op) const
 {
     stringstream stream;
     SMTOut s;
