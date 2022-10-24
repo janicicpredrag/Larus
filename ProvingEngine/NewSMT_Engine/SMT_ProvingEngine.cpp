@@ -826,7 +826,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
       if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
           && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
+     //   DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
         exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
       }
     }
@@ -835,7 +835,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
           exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
                 exi_vars.end()) {
-          DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
+     //     DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
           exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
         }
       }
@@ -974,10 +974,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       Assert(ContentsPredicate(nFinalStep, i) ==
              Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
       for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
-        if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) == CONSTANTS.end())
-          Assert(ContentsArgument(nFinalStep, i, j) ==
+        if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
+/*          Assert(ContentsArgument(nFinalStep, i, j) ==
                  Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
-        else
+        else*/
           Assert(ContentsArgument(nFinalStep, i, j) ==
                  Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
       }
