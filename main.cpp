@@ -115,8 +115,11 @@ int main(int argc, char **argv) {
   string inputFilename;
   if (argc >= 2) {
     for (int i = 1; i < argc; i++) {
-
-      if (argv[i][0] == '-' && argv[i][1] == 'f') {
+      if (argv[i][0] == '-' && argv[i][1] == 'V') {
+        printf("Larus Version 1.0.0\n");
+        return 0;
+      }
+      else if (argv[i][0] == '-' && argv[i][1] == 'f') {
         if (!strcmp(argv[i] + 2, "tptp"))
           params.input_format = eTPTP;
         else {
@@ -158,8 +161,7 @@ int main(int argc, char **argv) {
         params.shortest_proof = true;
       } else if (argv[i][0] == '-' && argv[i][1] == 'i') { // inline axioms
         params.mbInlineAxioms = false;
-      } else if (argv[i][0] == '-' &&
-                 argv[i][1] == 'd') { // disable simplification of proofs
+      } else if (argv[i][0] == '-' && argv[i][1] == 'd') { // disable simplification of proofs
         params.mbSimp = false;
       } else if (argv[i][0] == '-' && argv[i][1] == 'm') {
         if (strlen(argv[i] + 2) == 0) {
