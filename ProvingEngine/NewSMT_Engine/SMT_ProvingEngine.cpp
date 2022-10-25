@@ -822,24 +822,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         mnMaxArity = mpT->mSignature[i].second;
     }
 
-    set<string> exi_vars;
-    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-     //   DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
-        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
-      }
-    }
-    if (formula.GetSize() > 1) {
-      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
-          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
-                exi_vars.end()) {
-     //     DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
-          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
-        }
-      }
-    }
 
     DeclareVarBasicType(Assumption());
     DeclareVarBasicType(FirstCase());
@@ -902,8 +884,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       }
 //      unsigned maxI = mnMaxArity > mnMaxNumberOfVarsInAxioms ? mnMaxArity : mnMaxNumberOfVarsInAxioms; // = because of EqSub
 //      maxI = mnMaxArity > 2 ? mnMaxArity : 2; // = because of EqSub
-      // exi_vars.size() added because of instantiation of existential variables in the conjecture
-      for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms + exi_vars.size(); k++) {
+      for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
         DeclareVarBasicType(Instantiation(i,k));
       }
 
@@ -969,15 +950,33 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AddComment("");
     AddComment("****************************** Goal *********************************");
 //    sPreabmle += "(assert " + mSMTout.appeq(mSMTout.app("nNesting", nFinalStep), 1) + ")\n";
+    set<string> exi_vars;
+    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
+      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)));
+        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      }
+    }
+    if (formula.GetSize() > 1) {
+      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
+        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
+                exi_vars.end()) {
+          DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)));
+          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+        }
+      }
+    }
     Assert(Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False()));
     for(unsigned i = 0; i < formula.GetSize(); i++) {
       Assert(ContentsPredicate(nFinalStep, i) ==
              Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
       for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
         if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
-/*          Assert(ContentsArgument(nFinalStep, i, j) ==
+          Assert(ContentsArgument(nFinalStep, i, j) ==
                  Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
-        else*/
+        else
           Assert(ContentsArgument(nFinalStep, i, j) ==
                  Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
       }
@@ -1037,9 +1036,9 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
           if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j)) ==
              exi_vars.end())
             cg[ind1] &= (ContentsArgument(i,0,j) == ContentsArgument(nFinalStep,ind1,j));
-          else {
+          /*else {
             cg[ind1] &= (ContentsArgument(i,0,j) == Instantiation(i,j));
-          }
+          }*/
       }
     if (mGoal.GetSize() == 1) {
       cc = ((Cases(i) == False()) & cg[0]);
