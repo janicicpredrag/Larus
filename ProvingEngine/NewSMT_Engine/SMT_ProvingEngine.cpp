@@ -995,7 +995,15 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     }
     AddComment("");
   } else {
-      for (unsigned i=0; i <= nFinalStep; i++) {
+      for (unsigned i=0; i < mnNumberOfAssumptions; i++) {
+        Assert(Nesting(i) == 1u);
+        Assert(OddNesting(i) == True());
+        for (unsigned j=i+1; j <= nFinalStep; j++) {
+          Assert(SameBranch(i,j) == True());
+        }
+      }
+
+      for (unsigned i = mnNumberOfAssumptions; i <= nFinalStep; i++) {
         Expression c =
             (Nesting(i) == 1u) // fix me, make this more beatiful
           | (Nesting(i) == 3u)
