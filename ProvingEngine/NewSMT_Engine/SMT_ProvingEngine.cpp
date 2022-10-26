@@ -524,10 +524,6 @@ Expression SMT_ProvingEngine::MP()
 {
     return string("eMP");
 }
-Expression SMT_ProvingEngine::EqSub()
-{
-    return string("eEqSub");
-}
 Expression SMT_ProvingEngine::FirstCase()
 {
     return string("eFirstCase");
@@ -878,7 +874,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     DeclareVarBasicType(Assumption());
     DeclareVarBasicType(FirstCase());
     DeclareVarBasicType(SecondCase());
-    DeclareVarBasicType(EqSub());
     DeclareVarBasicType(QEDbyCases());
     DeclareVarBasicType(QEDbyAssumption());
     DeclareVarBasicType(QEDbyEFQ());
@@ -886,7 +881,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     Assert(Assumption()      == 0x000u);
     Assert(FirstCase()       == 0x002u);
     Assert(SecondCase()      == 0x003u);
-    Assert(EqSub()           == 0x004u);
     Assert(QEDbyCases()      == 0x009u);
     Assert(QEDbyAssumption() == 0x00au);
     Assert(QEDbyEFQ()        == 0x00bu);
@@ -1425,56 +1419,6 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           }
           string axiomName = mpT->mCLaxioms[nAxiom].second;
           proof.AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses);
-
-       } else if (nStepKind == eEQSub) {
-           ConjunctionFormula cfPremises;
-           vector <unsigned> fromSteps;
-           unsigned noPremises = mpT->GetSymbolArity(msPredicates[nPredicate])+1;
-           numOfUnivVars = 2*mpT->GetSymbolArity(msPredicates[nPredicate]);
-           size_t numOfVars = numOfUnivVars;
-           for (unsigned int i = 0; i < noPremises-1; i++) {
-             unsigned nFrom = meProof[step].From[i];
-             if (nFrom != step) {
-               cfPremises.Add(proofTrace[nFrom]);
-               fromSteps.push_back(nFrom);
-             }
-             else { // case for a premise "x=x"
-               cfPremises.Add(dummy);
-             }
-           }
-           unsigned nFrom = meProof[step].From[mnMaxArity]; // last premise involves predicate
-           cfPremises.Add(proofTrace[nFrom]);
-           fromSteps.push_back(nFrom);
-
-           int inst[numOfVars];
-           for (size_t i = 0; i < numOfVars; i++) {
-             inst[i] = meProof[step].Instantiation[i];
-           }
-           vector<pair<string, string>> instantiation;
-           for (size_t i = 0; i < numOfUnivVars; i++) {
-             string UnivVar = string("x") + itos(i);
-             if (msConstants.find(inst[i]) == msConstants.end())
-             inst[i] = 0; // eliminate spurious constants
-             instantiation.push_back(
-             pair<string, string>(UnivVar, msConstants[inst[i]]));
-           }
-
-           Fact f;
-           f.SetName(string(msPredicates[nPredicate]));
-           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
-             if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end())
-               meProof[step].ContentsArgument[0][i] = 0; // eliminate spurious constants, also for inst[]
-           f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
-         }
-
-         DNFFormula d;
-         ConjunctionFormula cfconc1;
-         cfconc1.Add(f);
-         d.Add(cfconc1);
-         proofTrace.push_back(f); // this is not used if the axiom is branching
-
-         vector<pair<string,string>> new_witnesses;
-         proof.AddMPstep(cfPremises, d, "eq sub", fromSteps, instantiation, new_witnesses);
        }
   }
   return true;

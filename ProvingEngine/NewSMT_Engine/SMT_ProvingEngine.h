@@ -141,8 +141,6 @@ private:
   vector<Fact> mPremises;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
 
-  // string msProofPremises;
-
   ofstream mSMTfile;
 };
 
