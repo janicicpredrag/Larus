@@ -57,6 +57,7 @@ private:
   void DeclareVarBoolean(const Expression& Var);
   void Assert(const Expression& c);
   void AddComment(const string& comment);
+  Expression EncodeHint(const tHint &hint, unsigned index);
 
   Expression CorrectnessConstraint();
   Expression CorrectProofStep(unsigned s);
@@ -65,7 +66,6 @@ private:
   Expression IsAssumptionStep(unsigned s, unsigned i);
 
   Expression IsMPstep(unsigned s);
-  Expression IsEqSubStep(unsigned s);
   Expression IsMPstepByAxiom(unsigned s, unsigned ax);
   Expression MatchConclusion(unsigned s, unsigned ax);
   Expression MatchAllPremises(unsigned s, unsigned ax);
@@ -129,7 +129,6 @@ private:
   unsigned mBindingAxGoal[100][2][20];
 
   map<string, unsigned> PREDICATE;
-  map<unsigned, unsigned> ARITY;
   map<string, unsigned> CONSTANTS;
   set<string> GETVALUE;
   vector<string> msPredicates;
@@ -141,6 +140,8 @@ private:
   Expression mProofPremises;
   vector<Fact> mPremises;
   EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
+
+  // string msProofPremises;
 
   ofstream mSMTfile;
 };

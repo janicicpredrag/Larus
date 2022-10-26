@@ -5,6 +5,8 @@
 #include <string.h>
 #include <string>
 
+using namespace std;
+
 bool USING_ORIGINAL_SIGNATURE_EQ;
 bool USING_ORIGINAL_SIGNATURE_NEG;
 
@@ -19,86 +21,6 @@ extern ReturnValue SetUpEngineAndProveConjecture(proverParams &params,
                                                  string &theoremName,
                                                  const string &theoremFileName,
                                                  vector<tHint> &hints);
-
-using namespace std;
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-string itos(unsigned int i) {
-  stringstream ss;
-  ss << i;
-  return ss.str();
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-string itos(PROVING_ENGINE T, unsigned int i) {
-  stringstream ss;
-  if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine ||
-      T == eOldSMTBV_ProvingEngine || T == eOldSMTUFBV_ProvingEngine) {
-    ss << setfill('0') << setw(3) << right << hex << i;
-    return "#x" + ss.str();
-  } else {
-    ss << i;
-    return ss.str();
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-string itohexs(unsigned int u)
-{
-  std::stringstream stream;
-  stream << setw(3) << std::setfill('0') << std::hex << u;
-  return stream.str();
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-bool stoi(string s, int &i) {
-  char *p;
-  i = strtol(s.c_str(), &p, 10);
-  return (strlen(p) == 0);
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-bool stou(string s, unsigned &i) {
-  char *p;
-  i = strtol(s.c_str(), &p, 10);
-  return (strlen(p) == 0);
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-string dirnameOf(const string &fname) {
-  size_t pos = fname.find_last_of("\\/");
-  return (string::npos == pos) ? "" : fname.substr(0, pos);
-}
-
-// ---------------------------------------------------------------------------------------
-
-string SkipChar(const string &str, char c) {
-  string out;
-  size_t slen = str.size();
-  for (size_t i = 0; i < slen; i++) {
-    if (str[i] != c)
-      out += str[i];
-  }
-  return out;
-}
-
-// ---------------------------------------------------------------------------------------
-
-string ToUpper(const string &str) {
-  return str;
-  /*
-  string res;
-  res.resize(str.size());
-  for (size_t i=0; i<str.size(); i++)
-       res[i] = toupper(str[i]);
-  return res;*/
-}
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -130,9 +52,9 @@ int main(int argc, char **argv) {
   bool wrongInput = false;
 
   string inputFilename;
-  if (argc >= 2) {
     for (int i = 1; i < argc; i++) {
 
+      // choosing input format
       if (argv[i][0] == '-' && argv[i][1] == 'f') {
         if (!strcmp(argv[i] + 2, "tptp"))
           params.input_format = eTPTP;
@@ -140,8 +62,12 @@ int main(int argc, char **argv) {
           wrongInput = true;
           break;
         }
+
+      // choosing exporting illustrations
       } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclc")) {
         params.mbGCLC = true;
+
+      // choosing exporting to proof assistants
       } else if (argv[i][0] == '-' && argv[i][1] == 'v') {
         if (!strcmp(argv[i] + 2, "coq"))
           params.mbCoq = true;
@@ -151,6 +77,8 @@ int main(int argc, char **argv) {
           wrongInput = true;
           break;
         }
+
+      // choosing time limit
       } else if (argv[i][0] == '-' && argv[i][1] == 'l') {
         if (strlen(argv[i] + 2) == 0) {
           wrongInput = true;
@@ -159,6 +87,8 @@ int main(int argc, char **argv) {
         params.time_limit = atoi(argv[i] + 2);
         if (params.time_limit <= 0)
           params.time_limit = DEFAULT_TIME_LIMIT;
+
+      // choosing maximal depth (for case splits)
       } else if (argv[i][0] == '-' && argv[i][1] == 'n' && argv[i][2] != 'o') {
         if (strlen(argv[i] + 2) == 0) {
           wrongInput = true;
@@ -169,13 +99,21 @@ int main(int argc, char **argv) {
           params.max_nesting_depth = d;
         else
           params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+
+      // setting flag for finding shortest proofs
       } else if (argv[i][0] == '-' && argv[i][1] == 's') { // shortest proof
         params.shortest_proof = true;
+
+      // setting flag for inlining
       } else if (argv[i][0] == '-' && argv[i][1] == 'i') { // inline axioms
         params.mbInlineAxioms = false;
+
+      // setting flag for disabling of simplification of generated proofs
       } else if (argv[i][0] == '-' &&
                  argv[i][1] == 'd') { // disable simplification of proofs
         params.mbSimp = false;
+
+      // setting staring proof length for search
       } else if (argv[i][0] == '-' && argv[i][1] == 'm') {
         if (strlen(argv[i] + 2) == 0) {
           wrongInput = true;
@@ -186,6 +124,8 @@ int main(int argc, char **argv) {
           params.starting_proof_length = d;
         else
           params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+
+      // setting maximal proof length for search
       } else if (argv[i][0] == '-' && argv[i][1] == 'x') {
         params.exact_length = true;
       } else if (argv[i][0] == '-' && argv[i][1] == 'p') {
@@ -198,11 +138,17 @@ int main(int argc, char **argv) {
           params.max_proof_length = d;
         else
           params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
+
+      // setting flag for disabling negation elimination
       } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "nonegelim")) {
         params.mbNoNegElim = true;
+
+      // setting flag for disabling excluded middle
       } else if (argv[i][0] == '-' &&
                  !strcmp(argv[i] + 1, "noexcludedmiddle")) {
         params.mbNoExcludedMiddle = true;
+
+      // setting time limit for vampire hammer
       } else if (argv[i][0] == '-' && argv[i][1] == 'h') {
         if (strlen(argv[i] + 2) == 0) {
           params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
@@ -222,14 +168,16 @@ int main(int argc, char **argv) {
           // for instance: -h"eprover --auto -p"
           // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
           params.msHammerInvoke = (argv[i] + 2);
+
+      // choosing proving engine
       } else if (argv[i][0] == '-' && argv[i][1] == 'e') {
         if (!strcmp(argv[i] + 2, "stl"))
           params.eEngine = eSTL_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "sql"))
           params.eEngine = eSQL_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "ursa"))
-
           params.eEngine = eURSA_ProvingEngine;
+
         else if (!strcmp(argv[i] + 2, "smtlia"))
           params.eEngine = eSMTLIA_ProvingEngine;
         else if (!strcmp(argv[i] + 2, "smtbv"))
@@ -257,7 +205,6 @@ int main(int argc, char **argv) {
       } else
         wrongInput = true;
     }
-  }
 
   if (inputFilename == "")
     wrongInput = true;
@@ -305,7 +252,6 @@ int main(int argc, char **argv) {
     cout << "                        examples: -vcoq; default: no"                << endl << endl;
     cout << "   -gclc                for generating illustration of the proof."   << endl;
     cout << endl;
-
     return 0;
   }
 
@@ -316,14 +262,12 @@ int main(int argc, char **argv) {
   vector<tHint> hints;
   ReturnValue rv;
 
-  if ((rv = ReadTPTPConjecture(inputFilename, params, T, theorem, theoremName,
-                               hints)) == eOK)
+  if ((rv = ReadTPTPConjecture(inputFilename, params,
+                               T, theorem, theoremName, hints)) == eOK)
     if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK)
       rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName,
                                          inputFilename, hints);
-
   clock_t current = clock();
-
   float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
   cout << "Elapsed time: " << elapsed_secs << endl;
 
