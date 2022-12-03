@@ -125,8 +125,8 @@ private:
   unsigned mnMaxArity;
   unsigned mnMaxNumberOfPremisesInAxioms;
   unsigned mnMaxNumberOfVarsInAxioms;
-  unsigned mBindingAx[100][100][20];
-  unsigned mBindingAxGoal[100][2][20];
+  unsigned mBindingAx[MAX_AXIOMS][MAX_PREMISES][MAX_ARITY];
+  unsigned mBindingAxGoal[MAX_AXIOMS][2][MAX_ARITY];
 
   map<string, unsigned> PREDICATE;
   map<string, unsigned> CONSTANTS;

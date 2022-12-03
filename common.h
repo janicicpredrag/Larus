@@ -16,6 +16,11 @@
 
 using namespace std;
 
+#define MAX_AXIOMS 1000
+#define MAX_PREMISES 20
+#define MAX_ARITY 10
+#define MAX_VARSINAXIOMS 10
+
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
 
 enum PROVING_ENGINE {
