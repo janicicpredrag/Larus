@@ -281,7 +281,7 @@ string Expression::toSMT_(PROVING_ENGINE th, enum OPERATOR op) const
             mS.substr(0,strlen("SameBranch")) == "SameBranch" ||
             mS.substr(0,strlen("OddNesting")) == "OddNesting" ||
             mS.substr(0,strlen("IsGoal")) == "IsGoal")
-            return " b" + mS + " ";
+            return "  b" + mS + " ";
         else
             return mS;
     case eBool:
@@ -296,42 +296,40 @@ string Expression::toSMT_(PROVING_ENGINE th, enum OPERATOR op) const
     case eAnd: return
                 (op == eAnd) ?
                   mLeft->toSMT_(th, eAnd) + mRight->toSMT_(th, eAnd)
-                : "(and " + mLeft->toSMT_(th, eAnd) + " " + mRight->toSMT_(th, eAnd) + ")";
+                : "(and \n" + mLeft->toSMT_(th, eAnd) + " " + mRight->toSMT_(th, eAnd) + ")";
     case eOr: return
                 (op == eOr) ?
                   mLeft->toSMT_(th, eOr) + " " + mRight->toSMT_(th, eOr)
-                : "(or " + mLeft->toSMT_(th, eOr) + " " + mRight->toSMT_(th, eOr) + ")";
+                : "(or \n" + mLeft->toSMT_(th, eOr) + " " + mRight->toSMT_(th, eOr) + ")";
     case eAdd: return
                 (op == eAdd) ?
                   mLeft->toSMT_(th, eAdd) + " " + mRight->toSMT_(th, eAdd)
                 : s.smt_sum(mLeft->toSMT_(th, eAdd), mRight->toSMT_(th, eAdd));
     case eMul: return
-                (op == eMul) ?
-                  mLeft->toSMT_(th, eMul) + " " + mRight->toSMT_(th, eMul)
-                : s.smt_prod(mLeft->toSMT_(th, eMul), mRight->toSMT_(th, eMul));
-    case eEq: return "(= " + mLeft->toSMT_(th, eEq) + " " + mRight->toSMT_(th, eEq) + ")";
-    case eNeq: return "(not (= " + mLeft->toSMT_(th, eNeq) + " " + mRight->toSMT_(th, eNeq) + "))";
+                s.smt_prod(mLeft->toSMT_(th, eMul), mRight->toSMT_(th, eMul));
+    case eEq: return "  (= " + mLeft->toSMT_(th, eEq) + " " + mRight->toSMT_(th, eEq) + ") \n";
+    case eNeq: return "  (not (= " + mLeft->toSMT_(th, eNeq) + " " + mRight->toSMT_(th, eNeq) + ")) \n";
 
     case eGreater:
         if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
           sOp = "bvugt";
         else
           sOp = ">";
-        return "(" + sOp + " " + mLeft->toSMT_(th, eGreater) + " " + mRight->toSMT_(th, eGreater) + ")";
+        return "  (" + sOp + " " + mLeft->toSMT_(th, eGreater) + " " + mRight->toSMT_(th, eGreater) + ") \n";
 
     case eGreaterEq:
         if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
           sOp = "bvuge";
         else
           sOp = ">=";
-        return "(" + sOp + " " + mLeft->toSMT_(th, eGreaterEq) + " " + mRight->toSMT_(th, eGreaterEq) + ")";
+        return "  (" + sOp + " " + mLeft->toSMT_(th, eGreaterEq) + " " + mRight->toSMT_(th, eGreaterEq) + ") \n";
 
     case eLess:
         if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
           sOp = "bvult";
         else
           sOp = "<";
-        return "(" + sOp + " " + mLeft->toSMT_(th, eLess) + " " + mRight->toSMT_(th, eLess) + ")";
+        return "(" + sOp + " " + mLeft->toSMT_(th, eLess) + " " + mRight->toSMT_(th, eLess) + ") \n";
 
     case eComment: return "\n; ------ " + mRight->mS + "\n" + mLeft->toSMT_(th, eNull) + "\n" ;
 
@@ -341,4 +339,3 @@ string Expression::toSMT_(PROVING_ENGINE th, enum OPERATOR op) const
 }
 
 // ---------------------------------------------------------------------------------------
-

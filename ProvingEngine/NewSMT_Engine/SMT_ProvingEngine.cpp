@@ -98,7 +98,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
         cPreviousStepIsUsed |= (From(s,i) == (s - 1));
       }
       Expression cProofIsNormalized;
-      cProofIsNormalized &=  (((cPreviousStepIsUsed
+      cProofIsNormalized &=  ((((cPreviousStepIsUsed == False())
                            & (Nesting(s-1) == Nesting(s))
                            & (StepKind(s-1) == MP())
                            & (StepKind(s) == MP())) == False())
@@ -229,8 +229,10 @@ Expression SMT_ProvingEngine::MatchAllPremises(unsigned s, unsigned ax)
 Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i)
 {
     Expression c = False();
-    for(unsigned ss=0; ss < s; ss++)
-      c |= MatchPremiseToStep(s, ax, i, ss);
+    for(unsigned ss=0; ss < s; ss++) {
+      c |= MatchPremiseToStep(s, ax, i, ss)
+           << "Match premise " + itos(i) + " to step " + itos(ss);
+    }
     if (mParams.mbInlineAxioms)
       c |= MatchPremiseInline(s, ax, i)
         << "Match premise " + itos(i) + " inline";
@@ -276,10 +278,12 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
           GetAxiom(axInl).GetGoal().GetSize() == 1 &&
           GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName()
           == GetAxiom(ax).GetPremises().GetElement(i).GetName()) {
-        Expression c;
+        Expression cOneOfInlinePremises;
+        cOneOfInlinePremises = False();
         if (GetAxiom(axInl).GetPremises().GetElement(0).GetName() != "true") {
           // Match the premise in the inline axiom:
           for (unsigned ss = 0; ss < s; ss++) {
+            Expression c;
             c = (From(s,i) == ss)
               & (Cases(ss) == False())
               & (SameBranch(ss,s))
@@ -292,11 +296,14 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
                 c &= (ContentsArgument(ss,0,j) == CONSTANTS[GetAxiom(axInl).GetPremises().GetElement(0).GetArg(j)]);
               }
             }
+            cOneOfInlinePremises |= c;
           }
         } else {
-          c = (From(s,i) == s); // special case, where there is no "from"
+          cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
         }
         // Match the goal in the inline axiom:
+        Expression c;
+        c = cOneOfInlinePremises;
         for(unsigned j=0; j < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
           if (BindingAxiomGoal(axInl, 0, j) != 0) {
             c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1) == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
@@ -308,7 +315,7 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
         cOneOfInlineAxioms |= c;
       }
    }
-   return cOneOfInlineAxioms & (StepKind(s) == MP());
+   return cOneOfInlineAxioms;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -776,13 +783,13 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         break;
 
       string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
-      string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
+      string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
       mProofLength = l;
+      cout << l << flush;
       EncodeProofToSMT(formula, l, smt_proofencoded_filename);
       const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
                            smt_proofencoded_filename + " > " +
                            smt_model_filename;
-      cout << l << flush;
       /*int rv =*/system(sCall.c_str());
       if (!ReadModel(smt_model_filename)) {
         l += 12;
@@ -795,8 +802,6 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     }
 
     if (mParams.shortest_proof && best) {
-      r = best;
-      best_start = best;
       ret = ReconstructProof(formula, proof);
       cout << endl << "Simplifying the proof (size without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << flush;
