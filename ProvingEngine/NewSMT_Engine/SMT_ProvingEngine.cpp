@@ -782,7 +782,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       if (remainingTime <= 0)
         break;
 
-      string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
+      string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
       string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
       mProofLength = l;
       cout << l << flush;
