@@ -42,7 +42,7 @@ otherwise:
 
 ## Usage 
 
-`CLprover -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -vcoq filename `
+`larus -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -vcoq filename `
 
    -l<time limit>       for time limit; example: -l10; default: 10s
 
@@ -86,7 +86,7 @@ otherwise:
  Running the following command in the Larus directory:
  `./larus -esmtbv -vcoq -m18 benchmarks/tptp-problems/euclid-native-eq/008_proposition_03.p`
  uses Z3 smt solver to find a proof starting by looking for a proof of length 18, then the proof is checked by Coq.
- The proofs are written in the `proofs` subdirectory (that is supposed to exist).
+ The proofs are written in the `proofs` subdirectory (that is supposed to exist prior to invoking the prover).
  
  ``` 
  --------------------------------------------------------------------
