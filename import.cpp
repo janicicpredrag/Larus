@@ -465,9 +465,9 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       string s = "coqc -R proofs src -q  " + sFileName3;
       int rv = system(s.c_str());
       if (!rv)
-        cout << "Correct!" << endl;
+        cout << "CoqCorrect!" << endl;
       else
-        cout << "Wrong!" << endl;
+        cout << "CoqWrong!" << endl;
     }
     if (params.mbIsa) {
       ProofExport2Isabelle exisa;
@@ -477,9 +477,9 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       string s = "./isabelle  process -T " + sFileName3;
       int rv = system(s.c_str());
       if (!rv)
-        cout << "Correct!" << endl;
+        cout << "IsabelleCorrect!" << endl;
       else
-        cout << "Wrong!" << endl;
+        cout << "IsabelleWrong!" << endl;
     }
     if (params.mbMizar) {
       ProofExport2Mizar exMizar;
@@ -491,9 +491,9 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       s = "verifier -l " + sFileName3;
       rv = system(s.c_str());
       if (!rv)
-        cout << "Correct!" << endl;
+        cout << "MizarCorrect!" << endl;
       else
-        cout << "Wrong!" << endl;
+        cout << "MizarWrong!" << endl;
     }
 
     if (params.mbGCLC) {
