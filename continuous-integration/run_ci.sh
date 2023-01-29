@@ -15,8 +15,8 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 red=0
-green=0
-orange=0
+coqoc=0
+mizarok=0
 touch $filename
 if [ -z "$1" ]; then
     echo ""
@@ -34,11 +34,13 @@ test_success () {
     if grep "status Theorem" $1 > /dev/null; then
         if grep CoqCorrect $1 > /dev/null; then
          echo -e "${GREEN} Coq Ok ${NC}"
+         ((coqok++))
         else 
          echo -e "${ORANGE} Coq Fails ${NC}"
         fi
         if grep MizarCorrect $1 > /dev/null; then
          echo -e "${GREEN} Mizar Ok ${NC}"
+         ((mizarok++))
         else 
          echo -e "${ORANGE} Mizar fails ${NC}"
         fi
@@ -73,24 +75,24 @@ cd ..
 for file in $benches
 do
     echo No: $i; echo "Trying file $file ..."
-    if [ $clprov = "1" ]; then
-	printf "URSA:  "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -eursa -ftptp -vmizar -vcoq "$file" > resursa.txt 
-	test_success resursa.txt
-	printf "STL:   "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -estl -ftptp -vmizar -vcoq "$file" > resstl.txt
-	test_success resstl.txt
-	printf "oldSMTBV: "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -eoldsmtbv -ftptp -vmizar -vcoq "$file" > resoldsmtbv.txt
-	test_success resoldsmtbv.txt
-    printf "oldSMTBV -i: "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -eoldsmtbv -i -ftptp -vmizar -vcoq "$file" > resoldsmtbvi.txt
-	test_success resoldsmtbvi.txt
-    printf "SMTBV: "
-	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbv.txt
-	test_success ressmtbv.txt
+    # if [ $clprov = "1" ]; then
+	# printf "URSA:  "
+	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -eursa -ftptp -vmizar -vcoq "$file" > resursa.txt 
+	# test_success resursa.txt
+	# printf "STL:   "
+	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -estl -ftptp -vmizar -vcoq "$file" > resstl.txt
+	# test_success resstl.txt
+	# printf "oldSMTBV: "
+	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -eoldsmtbv -ftptp -vmizar -vcoq "$file" > resoldsmtbv.txt
+	# test_success resoldsmtbv.txt
+    # printf "oldSMTBV -i: "
+	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -eoldsmtbv -i -ftptp -vmizar -vcoq "$file" > resoldsmtbvi.txt
+	# test_success resoldsmtbvi.txt
+    # printf "SMTBV: "
+	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbv.txt
+	# test_success ressmtbv.txt
     printf "SMTBV -i: "
-    tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -i -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbvi.txt
+    tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -i -d -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbvi.txt
     test_success ressmtbvi.txt
 
 #	printf "SMTLIA:"
@@ -102,7 +104,7 @@ do
 #	printf "SMTUFLIA:"
 #	tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -esmtuflia -ftptp -vcoq "$file" > ressmtuflia.txt
 #	test_success ressmtuflia.txt
-    fi
+    #fi
     if [ $compare = "1" ]; then
         echo "Other prover results:"
         echo "Zenon:"
@@ -119,8 +121,8 @@ do
 done
 echo ""
 echo "Summary:"
-echo "Coq correct:" $green
-echo "Coq fails:" $orange
+echo "Coq correct:" $coqok
+echo "Mizar correct:" $mizarok
 echo "Errors" $red
 echo ""
 echo "Output of errors have been written to $filename"
