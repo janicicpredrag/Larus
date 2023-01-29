@@ -263,7 +263,7 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
 
 void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
                                           const CaseSplit *cs, unsigned level) {
-    outfile << Indent(level) << "then per cases;" << endl;
+    outfile << Indent(level) << " per cases by H" << nProofStep-1 << ";" << endl;
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
         OutputProof(outfile, cs->GetSubproof(i), level + 1);
     }
