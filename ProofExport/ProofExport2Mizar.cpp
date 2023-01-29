@@ -70,6 +70,10 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "contradiction";
     return;
   }
+  if (f.GetName() == "true") {
+    outfile << "not contradiction";
+    return;
+  }
 
   if (f.GetName() == EQ_NATIVE_NAME) {
     outfile << decorateConstant(f.GetArg(0)) << " = " << decorateConstant(f.GetArg(1));
@@ -82,7 +86,7 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)
     outfile << "not " << f.GetName().substr(3,f.GetName().size());
   else
-    outfile << f.GetName();
+    outfile << strip_(f.GetName());
 
   outfile << "[";
   for (size_t i = 0; i < f.GetArity(); i++) {
@@ -125,14 +129,16 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "begin" << endl << endl;
 
   outfile << "scheme SMyT { ";
+  bool no_predicate=true;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
     it != T.mSignature.end(); ++it) {
     if (get<0>(*it) == "false" || get<0>(*it) == "true")
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
        continue;
+    no_predicate=false;
     uint arity = get<1>(*it);
-    outfile << get<0>(*it) << "[";
+    outfile << strip_(get<0>(*it)) << "[";
     for(unsigned int i = 0; i+1 < arity; i++) {
         outfile << "object,";
     }
@@ -143,7 +149,7 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
     if (it+1 != T.mSignature.end())
        outfile << ", ";
   }
-  if (T.mInitialConstants.size() != 0)
+  if (!no_predicate && T.mInitialConstants.size() != 0)
       outfile << ", ";
   for (vector<string>::iterator it = T.mInitialConstants.begin();
       it < T.mInitialConstants.end(); it++) {
@@ -179,6 +185,7 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
     }
     outfile << Indent(0) << "be object;" << endl;
   }
+  nProofStep=0;
 }
 
 // ---------------------------------------------------------------------------------
@@ -207,29 +214,30 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
 //  }
 
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
-    const vector<DNFFormula> &conj = p.GetMP(i).CLfrom;
+    //const vector<DNFFormula> &conj = p.GetMP(i).CLfrom;
     vector<pair<string, string>> new_witnesses = p.GetMP(i).new_witnesses;
 
     outfile << Indent(level);
     if (new_witnesses.size() > 0) {
-      outfile << Indent(level) << "consider " << endl;
+      outfile << Indent(level) << "consider ";
       for (size_t j = 0; j != new_witnesses.size(); j++) {
-        outfile << " " << new_witnesses[j].second;
+        outfile  << new_witnesses[j].second << " being object ";
         if (j+1 != new_witnesses.size())
           outfile << ", ";
       }
-      outfile << "such that ";
+      outfile << " such that ";
     }
     outfile << "H" << nProofStep++ << ": ";
     OutputDNF(outfile, p.GetMP(i).conclusion);
 
     bool builtin = false;
-    if (p.GetMP(i).axiomName == "rExcludedMiddle" ||
-        p.GetMP(i).axiomName == "eq_refl" ||
+    if (p.GetMP(i).axiomName == "eq_refl" ||
         p.GetMP(i).axiomName == "eq_sym" ||
-        p.GetMP(i).axiomName == "nnnfNegElim" ||
-        p.GetMP(i).axiomName == "nnnpNegElim" ||
-        p.GetMP(i).axiomName.find("EqSub") != string::npos) {
+        p.GetMP(i).axiomName == "trivial" ||
+        p.GetMP(i).axiomName.find("ExcludedMiddle") != string::npos ||
+        p.GetMP(i).axiomName.find("EqSub") != string::npos ||
+        p.GetMP(i).axiomName.find("NegElim") != string::npos)
+         {
       builtin = true;
     }
 
@@ -268,7 +276,11 @@ void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
 void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
                                           const ByAssumption *ba,
                                           unsigned level) {
-  outfile << Indent(level) << "hence thesis";
+  if  (ba->GetConjunctionFormula().GetSize() == 1 && 
+       ba->GetConjunctionFormula().GetElement(0).GetName() == "true")
+    outfile << Indent(level) << "thus thesis";
+  else
+    outfile << Indent(level) << "thus thesis by H" << nProofStep -1;
   //OutputConjFormula(outfile, ba->GetConjunctionFormula());
   outfile << ";" << endl << Indent(level) << "end;" << endl;
   nProofStep++;
