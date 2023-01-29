@@ -779,17 +779,25 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     while (l <= mParams.max_proof_length) {
       time_t current_time = time(NULL);
       double remainingTime = mParams.time_limit - difftime(current_time, start_time);
+      cout << "Remaining time: " << remainingTime << endl;
       if (remainingTime <= 0)
         break;
 
       string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
       string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
       mProofLength = l;
-      cout << l << flush;
+      cout << l << " encoding..." << flush;
       EncodeProofToSMT(formula, l, smt_proofencoded_filename);
+      cout << "problem encoded !" << flush;
+      current_time = time(NULL);
+      remainingTime = mParams.time_limit - difftime(current_time, start_time);
+      cout << "Remaining time: " << remainingTime << endl;
+      if (remainingTime <= 0)
+        break;
       const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
                            smt_proofencoded_filename + " > " +
                            smt_model_filename;
+      cout << "Calling solver..." << flush;
       /*int rv =*/system(sCall.c_str());
       if (!ReadModel(smt_model_filename)) {
         l += 12;
@@ -831,12 +839,13 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
                              smt_model_filename;
         // cout << "Trying proof length " << s << ";" << flush;
         cout << s << flush;
+        cout << "System call: " << sCall << endl;
         /*int rv =*/system(sCall.c_str());
         if (!ReadModel(smt_model_filename)) {
           l = s + 1;
-          cout << " ";
+          cout << " (not found), " << flush;
         } else {
-          cout << " (found), ";
+          cout << " (found), " << flush;
           best = s;
           r = s - 1;
         }
