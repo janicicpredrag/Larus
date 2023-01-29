@@ -191,20 +191,20 @@ void ProofExport2Mizar::OutputEpilogue(ofstream &outfile) {
 
 void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
                                        unsigned level) {
-  if (p.NumOfAssumptions() > 0) {
-    outfile << Indent(level);
-    if (level == 0)
-       outfile << "assume ";
-    else
-       outfile << "suppose ";
-    outfile << "H" << nProofStep++ << ": ";
+ // if (p.NumOfAssumptions() > 0) {
     for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
-      OutputFact(outfile, p.GetAssumption(i));
-      if (i+1 != size)
-         outfile << " & ";
+        outfile << Indent(level);
+        if (level == 0)
+           outfile << "assume ";
+        else
+           outfile << "suppose ";
+        outfile << "H" << nProofStep++ << ": ";
+        OutputFact(outfile, p.GetAssumption(i));
+        //if (i+1 != size)
+         //   outfile << " & ";
+        outfile << ";" << endl;
     }
-    outfile << ";" << endl;
-  }
+//  }
 
   for (size_t i = 0, size = p.NumOfMPs(); i < size; i++) {
     const vector<DNFFormula> &conj = p.GetMP(i).CLfrom;
