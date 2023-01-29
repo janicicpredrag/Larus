@@ -276,8 +276,8 @@ void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
 void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
                                           const ByAssumption *ba,
                                           unsigned level) {
-  if  (ba->GetConjunctionFormula().GetSize() == 1 && 
-       ba->GetConjunctionFormula().GetElement(0).GetName() == "true")
+  if  ((ba->GetConjunctionFormula().GetSize() == 1 && 
+       ba->GetConjunctionFormula().GetElement(0).GetName() == "true") || nProofStep == 0)
     outfile << Indent(level) << "thus thesis";
   else
     outfile << Indent(level) << "thus thesis by H" << nProofStep -1;
