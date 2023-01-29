@@ -37,11 +37,10 @@ void ProofExport2Mizar::OutputCLFormula(ofstream &outfile,
     outfile << "for ";
     for (size_t i = 0, size = cl.GetNumOfUnivVars(); i < size; i++) {
       outfile << cl.GetUnivVar(i);
-      if (i < size - 1)
+      if (i + 1 < size)
          outfile << ", ";
-
-      outfile << " being object";
     }
+    outfile << " being object ";
     outfile << " holds ";
   }
 
@@ -132,11 +131,14 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
        continue;
+    uint arity = get<1>(*it);
     outfile << get<0>(*it) << "[";
-    for(unsigned int i = 0; i+1 < get<1>(*it); i++) {
+    for(unsigned int i = 0; i+1 < arity; i++) {
         outfile << "object,";
     }
-    outfile << "object]";
+    if (arity > 0)
+      outfile << "object";
+    outfile << "]";
     ++it;
     if (it+1 != T.mSignature.end())
        outfile << ", ";
@@ -199,7 +201,7 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
     for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
       OutputFact(outfile, p.GetAssumption(i));
       if (i+1 != size)
-         outfile << ", ";
+         outfile << " & ";
     }
     outfile << ";" << endl;
   }
@@ -224,6 +226,8 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
     bool builtin = false;
     if (p.GetMP(i).axiomName == "rExcludedMiddle" ||
         p.GetMP(i).axiomName == "eq_refl" ||
+        p.GetMP(i).axiomName == "nnnfNegElim" ||
+        p.GetMP(i).axiomName == "nnnpNegElim" ||
         p.GetMP(i).axiomName.find("EqSub") != string::npos) {
       builtin = true;
     }
