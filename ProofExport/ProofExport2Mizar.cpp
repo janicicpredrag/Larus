@@ -206,9 +206,10 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
         else
            outfile << "suppose ";
         outfile << "H" << nProofStep++ << ": ";
-        OutputFact(outfile, p.GetAssumption(i));
-        //if (i+1 != size)
-         //   outfile << " & ";
+        if ( p.NumOfCLAssumptions() >0)
+          OutputDNF(outfile, p.GetCLAssumption(i) );
+        else
+          OutputFact(outfile, p.GetAssumption(i) );
         outfile << ";" << endl;
     }
 //  }
@@ -264,6 +265,7 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
 void ProofExport2Mizar::OutputProofEnd(ofstream &outfile,
                                           const CaseSplit *cs, unsigned level) {
     outfile << Indent(level) << " per cases by H" << nProofStep-1 << ";" << endl;
+
     for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
         OutputProof(outfile, cs->GetSubproof(i), level + 1);
     }
