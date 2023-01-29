@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
   params.mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
+  params.mbMizar = DEFAULT_MIZAR;
   params.mbGCLC = DEFAULT_GCLC;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
@@ -71,6 +72,8 @@ int main(int argc, char **argv) {
       } else if (argv[i][0] == '-' && argv[i][1] == 'v') {
         if (!strcmp(argv[i] + 2, "coq"))
           params.mbCoq = true;
+        else if (!strcmp(argv[i] + 2, "mizar"))
+          params.mbMizar = true;
         else if (!strcmp(argv[i] + 2, "isa"))
           params.mbIsa = true;
         else {
@@ -248,7 +251,7 @@ int main(int argc, char **argv) {
          << "                        'vampire --mode casc --proof tptp "
             "--output_axiom_names on')"                                           << endl << endl;
     cout << "   -v<prover>           for generating and verifying the proof by "  << endl;
-    cout << "                        an interactive theorem prover (coq); "       << endl;
+    cout << "                        an interactive theorem prover (coq, mizar); "       << endl;
     cout << "                        examples: -vcoq; default: no"                << endl << endl;
     cout << "   -gclc                for generating illustration of the proof."   << endl;
     cout << endl;

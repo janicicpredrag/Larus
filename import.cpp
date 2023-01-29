@@ -2,6 +2,7 @@
 #include "CLTheory/Theory.h"
 #include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2Coq.h"
+#include "ProofExport/ProofExport2Mizar.h"
 #include "ProofExport/ProofExport2GCLC.h"
 #include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
@@ -475,6 +476,20 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       cout << "Verifying Isabelle proof ... " << flush;
       string s = "./isabelle  process -T " + sFileName3;
       int rv = system(s.c_str());
+      if (!rv)
+        cout << "Correct!" << endl;
+      else
+        cout << "Wrong!" << endl;
+    }
+    if (params.mbMizar) {
+      ProofExport2Mizar exMizar;
+      string sFileName3("proofs/PROOF" + fileName + ".miz");
+      exMizar.ToFile(T, proof, sFileName3, params);
+      cout << "Verifying Mizar proof ... " << flush;
+      string s = "accom " + sFileName3;
+      int rv = system(s.c_str());
+      s = "verifier -l " + sFileName3;
+      rv = system(s.c_str());
       if (!rv)
         cout << "Correct!" << endl;
       else
