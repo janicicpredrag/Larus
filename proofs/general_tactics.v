@@ -91,7 +91,7 @@ Ltac contradiction_on t := apply (negElimGen t);strong_spliter;eauto with Sym.
 Tactic Notation "by" "cases" "on" constr(t) :=
 (let H := hyp_of_type t in destruct H;spliter).
 
-Hint Resolve not_eq_sym : Sym.
+#[global] Hint Resolve not_eq_sym : Sym.
 
 Ltac inline_lemma_solver := intros;eauto 3 with Sym || (strong_spliter; eauto 4 with Sym || congruence).
 
