@@ -226,6 +226,7 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
     bool builtin = false;
     if (p.GetMP(i).axiomName == "rExcludedMiddle" ||
         p.GetMP(i).axiomName == "eq_refl" ||
+        p.GetMP(i).axiomName == "eq_sym" ||
         p.GetMP(i).axiomName == "nnnfNegElim" ||
         p.GetMP(i).axiomName == "nnnpNegElim" ||
         p.GetMP(i).axiomName.find("EqSub") != string::npos) {
