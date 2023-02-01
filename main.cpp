@@ -212,6 +212,13 @@ int main(int argc, char **argv) {
   if (inputFilename == "")
     wrongInput = true;
 
+  if (params.mbMizar && params.mbInlineAxioms) {
+    cout << "Verification of proof by Mizar cannot ";
+    cout << "be used along with inlining of axioms.";
+    cout << endl;
+    return 0;
+  }
+
   if (wrongInput) {
     cout << "Usage: larus -l<time limit> -f<format> -s ";
     cout << "-e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof ";

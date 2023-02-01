@@ -758,6 +758,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
 
 bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof) {
   bool ret = false;
+  bool bTimeOut = false;
   mGoal = formula;
   ComputeBindingForAxioms();
 
@@ -770,90 +771,72 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(),
                      formula.GetElement(1).GetElement(0).GetArity());
 
-    time_t start_time = time(NULL);
     unsigned l, r, s, best = 0, best_start = 0;
     l = mParams.starting_proof_length;
-    cout << "Looking for a proof of length: " << flush;
-    while (l <= mParams.max_proof_length) {
-      time_t current_time = time(NULL);
-      double remainingTime = mParams.time_limit - difftime(current_time, start_time);
-      cout << "Remaining time: " << remainingTime << endl;
-      if (remainingTime <= 0)
-        break;
-
-      string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
-      string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
-      mProofLength = l;
-      cout << l << " encoding..." << flush;
-      EncodeProofToSMT(formula, l, smt_proofencoded_filename);
-      cout << "problem encoded !" << flush;
-      current_time = time(NULL);
-      remainingTime = mParams.time_limit - difftime(current_time, start_time);
-      cout << "Remaining time: " << remainingTime << endl;
-      if (remainingTime <= 0)
-        break;
-      const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
-                           smt_proofencoded_filename + " > " +
-                           smt_model_filename;
-      cout << "Calling solver..." << flush;
-      /*int rv =*/system(sCall.c_str());
-      if (!ReadModel(smt_model_filename)) {
-        l += 12;
-        cout << ", " << flush;
-      } else {
-        cout << " (found), " << flush;
-        best = l;
-        break;
+    while (l <= mParams.max_proof_length && best == 0) {
+      switch (OneProvingAttempt(formula, l)) {
+        case eTimeLimitExceeded:
+          bTimeOut = true;
+          break;
+        case eConjectureNotProved:
+          l += 12;
+          break;
+        case eConjectureProved:
+          best = l;
+          break;
+        default: break;
       }
     }
 
-    if (mParams.shortest_proof && best) {
+    if (!bTimeOut && mParams.shortest_proof && best) {
+      time_t start_time = time(NULL);
+      cout << "  --proof reconstruction..." << flush;
       ret = ReconstructProof(formula, proof);
-      cout << endl << "Simplifying the proof (size without assumptions: "
+      assert(ret);
+      cout << endl << "  --simplifying the proof (size without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << flush;
       proof.Simplify();
-      cout << endl << "Done! (new proof length without assumptions: "
-           << proof.Size() - proof.NumOfAssumptions() << ")" << endl;
+      cout << endl << "  --new proof length without assumptions: "
+           << proof.Size() - proof.NumOfAssumptions() << endl;
+
+      time_t current_time = time(NULL);
+      mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
+      cout << "  --(remaining time: " << mParams.time_limit << "s); " << endl << flush;
+
       r = proof.Size() - proof.NumOfAssumptions();
       best = r;
       best_start = best;
       l = best / 2 + 1;
-
-      if (l <= r && l != best)
-        cout << "Looking for a proof of length: " << flush;
-      while (l <= r && l != best) {
-        time_t current_time = time(NULL);
-        double remainingTime = mParams.time_limit - difftime(current_time, start_time);
-        if (remainingTime <= 0)
-          break;
-
+      bTimeOut = false;
+      while (!bTimeOut && l <= r && l != best) {
         s = (l + r) / 2;
-        string smt_proofencoded_filename = tmpnam(NULL);
-        string smt_model_filename = tmpnam(NULL);
-        mProofLength = l;
-        EncodeProofToSMT(formula, l, smt_proofencoded_filename);
-        const string sCall = "timeout " + to_string(remainingTime) + " z3  " +
-                             smt_proofencoded_filename + " > " +
-                             smt_model_filename;
-        // cout << "Trying proof length " << s << ";" << flush;
-        cout << s << flush;
-        cout << "System call: " << sCall << endl;
-        /*int rv =*/system(sCall.c_str());
-        if (!ReadModel(smt_model_filename)) {
-          l = s + 1;
-          cout << " (not found), " << flush;
-        } else {
-          cout << " (found), " << flush;
-          best = s;
-          r = s - 1;
+
+        switch (OneProvingAttempt(formula, l)) {
+          case eTimeLimitExceeded:
+            bTimeOut = true;
+            break;
+          case eConjectureNotProved:
+            l = s + 1;
+            break;
+          case eConjectureProved:
+            best = s;
+            r = s - 1;
+            break;
+          default: break;
         }
       }
     }
+
     cout << endl;
     if (best > 0 && best != best_start) {
-      cout << "Best found proof: of the length " << best << endl;
+      time_t start_time = time(NULL);
+      cout << "  --proof reconstruction..." << flush;
       ret = ReconstructProof(formula, proof);
       assert(ret);
+      time_t current_time = time(NULL);
+      mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
+      cout << "(remaining time: " << mParams.time_limit << "s); " << endl << flush;
+      cout << "Length of the shortest proof found: " << best << endl;
     }
   }
 
@@ -864,6 +847,48 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
   mnMaxNumberOfPremisesInAxioms = 0;
   mnNumberOfAssumptions = 0;
   return ret;
+}
+
+// ---------------------------------------------------------------------------------------
+
+ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsigned length)
+{
+    time_t start_time = time(NULL);
+    cout << endl << "Looking for a proof of length: " << length << " " << flush;
+    time_t current_time = time(NULL);
+    mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
+    cout << "(remaining time: " << mParams.time_limit << "s); " << endl << flush;
+    if (mParams.time_limit <= 0)
+      return eTimeLimitExceeded;
+
+    string smt_proofencoded_filename = "constraints_for_proof.smt"; //tmpnam(NULL); //
+    string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
+    mProofLength = length;
+    cout << "  --proof encoding..." << flush;
+    start_time = time(NULL);
+    EncodeProofToSMT(formula, length, smt_proofencoded_filename);
+    current_time = time(NULL);
+    mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
+    cout << "(remaining time: " << mParams.time_limit << "s); " << endl << flush;
+    if (mParams.time_limit <= 0)
+      return eTimeLimitExceeded;
+    const string sCall = "timeout " + to_string(mParams.time_limit) + " z3  " +
+                         smt_proofencoded_filename + " > " +
+                         smt_model_filename;
+    cout << "  --invoking solver..." << flush;
+    start_time = time(NULL);
+    /*int rv =*/system(sCall.c_str());
+    current_time = time(NULL);
+    mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
+    cout << "(remaining time: " << mParams.time_limit << "s); " << flush;
+    if (!ReadModel(smt_model_filename)) {
+
+      cout << " proof not found " << endl << flush;
+      return eConjectureNotProved;
+    } else {
+      cout << " proof FOUND! " << endl << flush;
+      return eConjectureProved;
+    }
 }
 
 // ---------------------------------------------------------------------------------------

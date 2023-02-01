@@ -46,6 +46,7 @@ public:
   virtual PROVING_ENGINE GetKind() { return mSMT_theory; }
 
 private:
+  ReturnValue OneProvingAttempt(const DNFFormula& formula, unsigned length);
   void EncodeProofToSMT(const DNFFormula &formula, unsigned nProofLen, string prove_smt_filename);
   bool ReadModel(const string &sModelFile);
   bool StoreValueFromModel(string& strVarName, string& strVal);
