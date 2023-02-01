@@ -1,8 +1,6 @@
 #include <string>
 #include <cstring>
 #include "SMT_ProvingEngine.h"
-#include "../STL_Engine/STL_FactsDatabase.h"
-#include "../SMTOut.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
 #include "common.h"
@@ -783,7 +781,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       if (remainingTime <= 0)
         break;
 
-      string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
+      string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
       string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
       mProofLength = l;
       cout << l << " encoding..." << flush;
