@@ -776,7 +776,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
 
     unsigned l, r, s, best = 0, best_start = 0;
     l = mParams.starting_proof_length;
-    while (l <= mParams.max_proof_length && best == 0) {
+    while (!bTimeOut && l <= mParams.max_proof_length && best == 0) {
       switch (OneProvingAttempt(formula, l)) {
         case eTimeLimitExceeded:
           bTimeOut = true;
@@ -856,10 +856,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
 
 ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsigned length)
 {
-    time_t start_time = time(NULL);
     cout << endl << "Looking for a proof of length: " << length << " " << flush;
-    time_t current_time = time(NULL);
-    mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
     cout << "(remaining time: " << mParams.time_limit << "s); " << endl << flush;
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
@@ -868,9 +865,9 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
-    start_time = time(NULL);
+    time_t start_time = time(NULL);
     EncodeProofToSMT(formula, length, smt_proofencoded_filename);
-    current_time = time(NULL);
+    time_t current_time = time(NULL);
     mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
     cout << "(remaining time: " << mParams.time_limit << "s); " << endl << flush;
     if (mParams.time_limit <= 0)
