@@ -1,5 +1,4 @@
 #include "ProvingEngine/STL_Engine/STL_FactsDatabase.h"
-#include "CLProof/CLProof.h"
 #include <assert.h>
 #include <sstream>
 
@@ -7,25 +6,28 @@ using namespace std;
 
 // ---------------------------------------------------------------------------------------
 
-void STLFactsDatabase::AddFact(const Fact &f) {
+bool STLFactsDatabase::AddFact(const Fact &f) {
   if (!FindFact(Canonize(f))) {
     mDatabase.insert(Canonize(f));
     cout << "Added fact " << Canonize(f) << endl;
+    return true;
   }
+  else
+    return false;
 }
 
 // ---------------------------------------------------------------------------------------
 
-void STLFactsDatabase::AddCases(const DNFFormula &f) {
-
+bool STLFactsDatabase::AddCases(const DNFFormula &f) {
   if (f.GetSize() == 1) {
-    for (vector<Fact>::const_iterator jt =
-             f.GetDNF()->begin()->GetConjunction().begin();
-         jt != f.GetDNF()->begin()->GetConjunction().end(); ++jt) {
-      AddFact(*jt);
+    const vector<Fact> v = f.GetDNF()->begin()->GetConjunction();
+    for (unsigned i = 0; i < v.size(); i++) {
+      AddFact(v[i]);
     }
-  } else
+  } else {
     mDatabaseCases.push_back(pair<DNFFormula, unsigned>(f, 0));
+  }
+  return true;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -506,6 +508,8 @@ bool STLFactsDatabase::Equal(string a, string b, vector<Fact> &AuxFacts) const {
 // ---------------------------------------------------------------------------------------
 
 Fact STLFactsDatabase::Canonize(const Fact &f) const {
+  return f;
+/* Custom cannonization for specific theories can be defined; no general cannonization
   Fact ff = f;
   if (ff.GetName() == "neq") {
     if (ff.GetArg(1) < ff.GetArg(0)) {
@@ -550,8 +554,7 @@ Fact STLFactsDatabase::Canonize(const Fact &f) const {
       }
     }
   }
-
-  return ff;
+  return ff;*/
 }
 
 // ---------------------------------------------------------------------------------------

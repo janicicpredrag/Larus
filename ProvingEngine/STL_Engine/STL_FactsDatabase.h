@@ -17,8 +17,8 @@ class STLFactsDatabase : public FactsDatabase
 {
 public:
     STLFactsDatabase(Theory* T) : FactsDatabase(T) {}
-    void AddFact(const Fact& f);
-    void AddCases(const DNFFormula& f);
+    bool AddFact(const Fact& f);
+    bool AddCases(const DNFFormula& f);
 
     bool ApplyAxiom(const CLFormula& cl,  ConjunctionFormula& fin, DNFFormula& fout, vector< pair<string,string> >& orderedInstantiation);
     bool ApplyExcludedMiddle(DNFFormula& fout);

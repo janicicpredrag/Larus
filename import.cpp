@@ -194,7 +194,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       if (vampire_succeeded) {
         params.mbNativeEQsub = false; // do not use native EqSub support
         cout << "       (Not using native EqSub support)" << endl;
-
       } else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
                  params.eEngine == eOldSMTBV_ProvingEngine ||
                  params.eEngine == eOldSMTUFLIA_ProvingEngine ||

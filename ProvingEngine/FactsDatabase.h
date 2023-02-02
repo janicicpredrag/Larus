@@ -14,8 +14,8 @@ public:
   FactsDatabase(Theory *T) { mpT = T; }
   virtual ~FactsDatabase() {}
 
-  virtual void AddFact(const Fact &f) = 0;
-  virtual void AddCases(const DNFFormula &f) = 0;
+  virtual bool AddFact(const Fact &f) = 0;
+  virtual bool AddCases(const DNFFormula &f) = 0;
 
   virtual bool
   ApplyAxiom(const CLFormula &cl, ConjunctionFormula &fin, DNFFormula &fout,

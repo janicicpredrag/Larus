@@ -29,8 +29,19 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                                           CLProof &proof) {
   CLProofEnd *pe;
   bool success;
+  time_t start_time = time(NULL);
+  time_t current_time;
 
   do {
+    current_time = time(NULL);
+    float time_spent = difftime(current_time, start_time);
+    if (mParams.time_limit <= time_spent) {
+#ifdef DEBUG_OUTPUT
+      cout << "Time limit exceeded " << endl;
+#endif
+      return false;
+    }
+/*
     clock_t current = clock();
     double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
     if (elapsed_secs > mParams.time_limit) {
@@ -38,8 +49,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       cout << "Time limit exceeded " << endl;
 #endif
       return false;
-    }
-
+    }*/
     success = false;
 
     if (ApplyEFQ()) {
@@ -84,8 +94,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
           cout << "Non-branching, non-exi " << mp << " from: " << from
                << "(ax: " << it->second << ")" << endl;
 #endif
-          GetDatabase()->AddCases(mp);
           success = true;
+          GetDatabase()->AddCases(mp);
           --it;
           break;
         }
@@ -111,9 +121,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
             cout << "Branching, non-exi: " << mp << " from: " << from
                  << "(ax: " << it->second << ")" << endl;
 #endif
-            GetDatabase()->AddCases(mp);
-
             success = true;
+            GetDatabase()->AddCases(mp);
             --it;
             break;
           }
@@ -146,6 +155,16 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 
     size_t l = 5;
     while (!success && l < 100) {
+
+       current_time = time(NULL);
+       time_spent = difftime(current_time, start_time);
+       if (mParams.time_limit <= time_spent) {
+    #ifdef DEBUG_OUTPUT
+         cout << "Time limit exceeded " << endl;
+    #endif
+         return false;
+       }
+
       clock_t current = clock();
       double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
       if (elapsed_secs > mParams.time_limit) {
@@ -182,8 +201,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
               cout << "Non-branching, exi, with premises: " << mp
                    << " from: " << from << "(ax: " << it->second << ")" << endl;
 #endif
-              GetDatabase()->AddCases(mp);
               success = true;
+              GetDatabase()->AddCases(mp);
               --it;
               break;
             }
@@ -219,8 +238,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
               cout << "Branching, exi, with premises: " << mp
                    << " from: " << from << "(ax: " << it->second << ")" << endl;
 #endif
-              GetDatabase()->AddCases(mp);
               success = true;
+              GetDatabase()->AddCases(mp);
               --it;
               break;
             }
@@ -256,8 +275,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
               cout << "Univ var, Exi, no premises: " << mp << " from: " << from
                    << "(ax: " << it->second << ")" << endl;
 #endif
-              GetDatabase()->AddCases(mp);
               success = true;
+              GetDatabase()->AddCases(mp);
               --it;
               break;
             }
@@ -299,8 +318,8 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
               cout << "No univ var, Exi, no premises: " << mp
                    << " from: " << from << "(ax: " << it->second << ")" << endl;
 #endif
-              GetDatabase()->AddCases(mp);
               success = true;
+              GetDatabase()->AddCases(mp);
               --it;
               break;
             }
