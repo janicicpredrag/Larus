@@ -41,15 +41,6 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 #endif
       return false;
     }
-/*
-    clock_t current = clock();
-    double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-    if (elapsed_secs > mParams.time_limit) {
-#ifdef DEBUG_OUTPUT
-      cout << "Time limit exceeded " << endl;
-#endif
-      return false;
-    }*/
     success = false;
 
     if (ApplyEFQ()) {
@@ -164,13 +155,6 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
     #endif
          return false;
        }
-
-      clock_t current = clock();
-      double elapsed_secs = double(current - mStartTime) / CLOCKS_PER_SEC;
-      if (elapsed_secs > mParams.time_limit) {
-        // cout << "Time limit exceeded " << endl;
-        return false;
-      }
 
       if (!success && mpT->NumberOfConstantsWaiting() < l)
         for (vector<pair<CLFormula, string>>::iterator it =
