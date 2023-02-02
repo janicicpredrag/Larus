@@ -178,11 +178,12 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     T.AddAxiomNEqSymm();
     T.AddEqExcludedMiddleAxiom();
     T.AddEqNegElimAxioms();
+    T.printAxioms();
 
     params.mbNativeEQsub = true;
+    cout << "--- Adding substitution axioms: " << endl;
     Theory T1 = T;
     T.AddEqSubAxioms(); // no built in support
-    T.printAxioms();
 
     if (params.msHammerInvoke != "" && vampire_succeeded) {
       USING_ORIGINAL_SIGNATURE_EQ = false;
@@ -192,31 +193,27 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
                                  params.vampire_time_limit) == eVampireUnsat);
       if (vampire_succeeded) {
         params.mbNativeEQsub = false; // do not use native EqSub support
-        cout << "       (Not using native EqSub support); current set of "
-                "axioms: "
-             << endl;
-        T.printAxioms();
-      } else if (!(params.eEngine == eSTL_ProvingEngine ||
-                   params.eEngine == eURSA_ProvingEngine ||
-                   params.eEngine == eSMTBV_ProvingEngine)) {
+        cout << "       (Not using native EqSub support)" << endl;
+
+      } else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
+                 params.eEngine == eOldSMTBV_ProvingEngine ||
+                 params.eEngine == eOldSMTUFLIA_ProvingEngine ||
+                 params.eEngine == eOldSMTUFBV_ProvingEngine) {
         T = T1;
         params.mbNativeEQsub = true;
-        cout << "--- Using native EqSub support; current set of axioms: "
-             << endl;
-        T.printAxioms();
+        cout << "       (Using native EqSub support)" << endl;
       }
     } else {
-      if (params.eEngine == eOldSMTBV_ProvingEngine ||
-          params.eEngine == eOldSMTLIA_ProvingEngine ||
-          params.eEngine == eOldSMTUFBV_ProvingEngine ||
-          params.eEngine == eOldSMTUFLIA_ProvingEngine) {
+      if (params.eEngine == eOldSMTLIA_ProvingEngine ||
+          params.eEngine == eOldSMTBV_ProvingEngine ||
+          params.eEngine == eOldSMTUFLIA_ProvingEngine ||
+          params.eEngine == eOldSMTUFBV_ProvingEngine) {
         T = T1;
         params.mbNativeEQsub = true;
-        cout << "--- Using native EqSub support; current set of axioms: "
-             << endl;
-        T.printAxioms();
+        cout << "      (Using native EqSub support)" << endl;
       }
     }
+    T.printAxioms();
   }
 
   // ************ Filtering by reachability ************
@@ -258,12 +255,13 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   }
 
   // ************ Use or not support for case splits ************
-  params.mbNeedsCaseSplits = false;
-  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-       it != T.mCLaxioms.end(); it++) {
-    if (it->first.GetGoal().GetSize() > 1) {
-      params.mbNeedsCaseSplits = true;
-      break;
+  if (params.mbNeedsCaseSplits) {
+    for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+         it != T.mCLaxioms.end(); it++) {
+      if (it->first.GetGoal().GetSize() > 1) {
+        params.mbNeedsCaseSplits = true;
+        break;
+      }
     }
   }
   if (params.mbNeedsCaseSplits)

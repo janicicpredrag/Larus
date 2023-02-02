@@ -102,6 +102,8 @@ int main(int argc, char **argv) {
           params.max_nesting_depth = d;
         else
           params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+        if (d == 0)
+            params.mbNeedsCaseSplits = false;
 
       // setting flag for finding shortest proofs
       } else if (argv[i][0] == '-' && argv[i][1] == 's') { // shortest proof

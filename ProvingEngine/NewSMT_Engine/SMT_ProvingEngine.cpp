@@ -271,14 +271,19 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
     // An axiom q(x,y) => r(x,y) can be used, while p(x,b) => q(b,x) is inlined
     Expression cOneOfInlineAxioms = False();
     for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
-      if (GetAxiom(axInl).GetPremises().GetSize() == 1 &&
-          GetAxiom(axInl).GetNumOfExistVars() == 0 &&
+      if (GetAxiom(axInl).GetNumOfExistVars() == 0 &&
           GetAxiom(axInl).GetGoal().GetSize() == 1 &&
           GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName()
-          == GetAxiom(ax).GetPremises().GetElement(i).GetName()) {
+          == GetAxiom(ax).GetPremises().GetElement(i).GetName() &&
+          GetAxiom(axInl).GetPremises().GetSize() <= 1)
+      {
         Expression cOneOfInlinePremises;
         cOneOfInlinePremises = False();
-        if (GetAxiom(axInl).GetPremises().GetElement(0).GetName() != "true") {
+        if ((GetAxiom(axInl).GetPremises().GetSize() == 1 &&
+            GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "true") ||
+            GetAxiom(axInl).GetPremises().GetSize() == 0) {
+               cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
+        } else {
           // Match the premise in the inline axiom:
           for (unsigned ss = 0; ss < s; ss++) {
             Expression c;
@@ -296,8 +301,6 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
             }
             cOneOfInlinePremises |= c;
           }
-        } else {
-          cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
         }
         // Match the goal in the inline axiom:
         Expression c;
