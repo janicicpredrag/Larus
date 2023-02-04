@@ -160,6 +160,8 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++)
       c |= IsMPstepByAxiom(s,ax);
+    if (mParams.mbNativeEQsub)
+      c |= IsMPbyEqSub(s);
     return c;
 }
 
@@ -317,6 +319,57 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
       }
    }
    return cOneOfInlineAxioms;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::IsMPbyEqSub(unsigned s)
+{
+    // Special case MP: use the generic, implicit eq sub axiom:
+    // 0  1      n
+    // B,A1,...,An: eq(B,Ai) & P(A1,..B.,An) => P(A1,...Ai...,An)
+    Expression byEqSub = (StepKind(s) == MP())
+                       & (AxiomApplied(s) == (unsigned)(mpT->mCLaxioms.size()))  // means it is eEQSub
+                       & (Cases(s) == False())
+                       & (s>0 ? Nesting(s) == Nesting(s-1) : Nesting(s) == 1u);
+
+    Expression OneOfArgumentSub = False();
+    for (unsigned XX = 0; XX < mnMaxArity; XX++) {
+      Expression MatchFirstPremise = False();
+      for (unsigned n_from = 0; n_from < s; n_from++) {
+        Expression c = (From(s,0) == n_from)
+                     & (ContentsPredicate(n_from,0) == EQ_NATIVE_NAME)
+                     & (SameBranch(s,n_from))
+                     & (Cases(n_from) == False())
+                     & (
+                        ( (ContentsArgument(n_from,0,0) == Instantiation(s,0))
+                        & (ContentsArgument(n_from,0,1) == Instantiation(s,1+XX)))
+                       |
+                        ( (ContentsArgument(n_from,0,1) == Instantiation(s,0))
+                        & (ContentsArgument(n_from,0,0) == Instantiation(s,1+XX)))
+                       );
+        MatchFirstPremise |= c;
+      }
+
+      Expression MatchSecondPremise = False();
+      for (unsigned n_from = 0; n_from < s; n_from++) {
+        Expression c = (From(s,1) == n_from)
+                     & (ContentsPredicate(n_from, 0) == ContentsPredicate(s, 0))
+                     & (SameBranch(s,n_from))
+                     & (ContentsArgument(n_from, 0, XX) == Instantiation(s,XX+1))
+                     & (ContentsArgument(s, 0, XX) == Instantiation(s,0))
+                     & (Cases(n_from) == False());
+        for (unsigned i = 0; i < mnMaxArity; i++)
+          if (i != XX) {
+            c &= ContentsArgument(n_from, 0, i) == Instantiation(s, 1+i);
+            c &= ContentsArgument(s, 0, i) == Instantiation(s, 1+i);
+          }
+        MatchSecondPremise |= c;
+      }
+      OneOfArgumentSub |= (MatchFirstPremise & MatchSecondPremise);
+    }
+    byEqSub &= OneOfArgumentSub;
+    return byEqSub << "----- ----- Is axiom EqSub applied: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -861,8 +914,8 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
-    string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
+    string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
+    string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
     time_t start_time = time(NULL);
@@ -928,6 +981,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
          it != mpT->mCLaxioms.end(); it++)
       if (it->first.GetPremises().GetSize() > mnMaxNumberOfPremisesInAxioms)
         mnMaxNumberOfPremisesInAxioms = it->first.GetPremises().GetSize();
+
     for (size_t i = 0; i < mpT->mSignature.size(); i++)
       DeclareVarBasicType(ToUpper(mpT->mSignature[i].first));
 
@@ -944,6 +998,15 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
       if (num > mnMaxNumberOfVarsInAxioms)
           mnMaxNumberOfVarsInAxioms = num;
+    }
+
+    if (mParams.mbNativeEQsub) {
+        if (mnMaxNumberOfPremisesInAxioms < 2) {
+          mnMaxNumberOfPremisesInAxioms = 2;
+        }
+        if (mnMaxNumberOfVarsInAxioms < mnMaxArity+1) {
+          mnMaxNumberOfVarsInAxioms = mnMaxArity+1;
+        }
     }
 
     unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
@@ -988,8 +1051,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       if (mpT->mSignature[i].second > mnMaxArity)
         mnMaxArity = mpT->mSignature[i].second;
     }
-    // ARITY[enumerator] = 2;
-    // PREDICATE[ToUpper(string(EQ_NATIVE_NAME))] = enumerator++;
 
     enumerator = 0;
     AddComment("");
@@ -1295,11 +1356,20 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
         nAxiom = meProof[step].AxiomApplied;
         nPredicate = meProof[step].ContentsPredicate[0];
         nBranching = meProof[step].Cases;
+
+        bool bIsEqSub = (nAxiom == mpT->mCLaxioms.size());
+
         size_t numOfUnivVars = 0;
         size_t numOfExistVars = 0;
         if (nStepKind == eMP) {
-          numOfUnivVars = mpT->mCLaxioms[nAxiom].first.GetNumOfUnivVars();
-          numOfExistVars = mpT->mCLaxioms[nAxiom].first.GetNumOfExistVars();
+          if (bIsEqSub)  {
+            numOfUnivVars = mpT->GetSymbolArity(msPredicates[nPredicate]) + 1;
+            numOfExistVars = 0;
+          }
+          else {
+            numOfUnivVars = mpT->mCLaxioms[nAxiom].first.GetNumOfUnivVars();
+            numOfExistVars = mpT->mCLaxioms[nAxiom].first.GetNumOfExistVars();
+          }
         }
         for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
           if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
@@ -1361,6 +1431,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           return true;
 
         } else  if (nStepKind == eMP) {
+
           if (nBranching) {
             nPredicate1 = meProof[step].ContentsPredicate[1];
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]); i++) {
@@ -1371,7 +1442,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           }
           ConjunctionFormula cfPremises;
           vector <unsigned> fromSteps;
-          unsigned noPremises = mpT->mCLaxioms[nAxiom].first.GetPremises().GetSize();
+          unsigned noPremises = bIsEqSub ? 2 : mpT->mCLaxioms[nAxiom].first.GetPremises().GetSize();
           if (noPremises == 1 &&
               mpT->mCLaxioms[nAxiom].first.GetPremises().GetElement(1).GetName() == "true")
             noPremises = 0;
@@ -1390,7 +1461,9 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           vector<pair<string, string>> instantiation;
           vector<pair<string, string>> new_witnesses;
           for (size_t i = 0; i < numOfUnivVars; i++) {
-            string UnivVar = mpT->mCLaxioms[nAxiom].first.GetUnivVar(i);
+            string UnivVar = bIsEqSub
+                    ? "X" + itos(i)
+                    : mpT->mCLaxioms[nAxiom].first.GetUnivVar(i);
             if (msConstants.find(inst[i]) == msConstants.end())
               inst[i] = 0; // eliminate spurious constants
             instantiation.push_back(

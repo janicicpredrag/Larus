@@ -1,6 +1,5 @@
 #include <string>
 #include "OldSMT_ProvingEngine.h"
-#include "../STL_Engine/STL_FactsDatabase.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"
 #include "common.h"

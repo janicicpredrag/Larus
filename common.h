@@ -78,7 +78,7 @@ enum VampireReturnValue {
 };
 
 const INPUT_FORMAT DEFAULT_INPUT_FORMAT = eTPTP;
-const PROVING_ENGINE DEFAULT_ENGINE = eSTL_ProvingEngine;
+const PROVING_ENGINE DEFAULT_ENGINE = eSMTBV_ProvingEngine;
 const float DEFAULT_TIME_LIMIT = 10;
 const unsigned DEFAULT_MAX_NESTING_DEPTH = 2;
 const unsigned DEFAULT_STARTING_PROOF_LENGTH = 1;

@@ -68,6 +68,7 @@ private:
 
   Expression IsMPstep(unsigned s);
   Expression IsMPstepByAxiom(unsigned s, unsigned ax);
+  Expression IsMPbyEqSub(unsigned s);
   Expression MatchConclusion(unsigned s, unsigned ax);
   Expression MatchAllPremises(unsigned s, unsigned ax);
   Expression MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i);

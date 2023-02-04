@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
     cout << "                        length; default it false = length <= n"      << endl << endl;
     cout << "   -e<engine>           for proving engine (stl, sql, ursa, "        << endl;
     cout << "                        smtlia, smtbv, smtuflia, smtufbv); "         << endl;
-    cout << "                        examples: -eursa; default: stl"              << endl << endl;
+    cout << "                        examples: -eursa; default: smtbv"              << endl << endl;
     cout << "   -n<max nesting>      for maximal proof depth in which a fact "    << endl;
     cout << "                        can be used; example: -n3; default: 2"       << endl << endl;
     cout << "   -m<starting length>  for the size of the proof search to start "  << endl;
