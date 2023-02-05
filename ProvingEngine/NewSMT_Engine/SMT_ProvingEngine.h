@@ -13,14 +13,14 @@
 
 using namespace std;
 
-typedef struct {
+typedef struct EncodedProofStep {
     unsigned StepKind;
     unsigned ContentsPredicate[2];
-    unsigned ContentsArgument[MAX_PREMISES][MAX_ARITY];
+    vector<vector<unsigned>> ContentsArgument;
     unsigned Nesting;
     unsigned isGoal;
     unsigned AxiomApplied;
-    unsigned From[MAX_PREMISES];
+    vector<unsigned> From;
     unsigned Instantiation[200];
     unsigned Cases;
 } EncodedProofStep;
@@ -141,7 +141,7 @@ private:
   unsigned mProofLength;
   Expression mProofPremises;
   vector<Fact> mPremises;
-  EncodedProofStep meProof[DEFAULT_MAX_PROOF_LENGTH];
+  vector<EncodedProofStep> meProof;
 
   ofstream mSMTfile;
 };

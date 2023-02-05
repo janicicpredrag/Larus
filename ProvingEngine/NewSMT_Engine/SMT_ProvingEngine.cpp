@@ -914,8 +914,8 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
-    string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
+    string smt_proofencoded_filename =  tmpnam(NULL); // "constraints_for_proof.smt"; //
+    string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
     time_t start_time = time(NULL);
@@ -1011,6 +1011,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
     unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
     DeclareVarBasicType(ProofSize());
+    //for(unsigned i = mnNumberOfAssumptions; i <= mnNumberOfAssumptions + mProofLength; i++) {
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i));
       DeclareVarBasicType(AxiomApplied(i));
@@ -1295,11 +1296,17 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     stou(strVal, nVal);
   }
 
+  meProof.resize(mnNumberOfAssumptions + mProofLength);
+
   if (strVarName == "StepKind") {
     meProof[index[0]].StepKind = nVal;
   } else if (strVarName == "ContentsPredicate") {
     meProof[index[0]].ContentsPredicate[index[1]] = nVal;
   } else if (strVarName == "ContentsArgument") {
+    if (meProof[index[0]].ContentsArgument.size() < index[1]+1)
+       meProof[index[0]].ContentsArgument.resize(index[1]+1);
+    if (meProof[index[0]].ContentsArgument[index[1]].size() < index[2]+1)
+      meProof[index[0]].ContentsArgument[index[1]].resize(index[2]+1);
     meProof[index[0]].ContentsArgument[index[1]][index[2]] = nVal;
   } else if (strVarName == "Nesting") {
     meProof[index[0]].Nesting = nVal;
@@ -1308,6 +1315,8 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
   } else if (strVarName == "AxiomApplied") {
     meProof[index[0]].AxiomApplied = nVal;
   } else if (strVarName == "From") {
+    if (meProof[index[0]].From.size() < index[1]+1)
+        meProof[index[0]].From.resize(index[1]+1);
     meProof[index[0]].From[index[1]] = nVal;
   } else if (strVarName == "Instantiation") {
     meProof[index[0]].Instantiation[index[1]] = nVal;
@@ -1374,7 +1383,8 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
         for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
           if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
               && numOfExistVars == 0) // eliminate spurious constants, also for inst[]
-            meProof[step].ContentsArgument[i][i] = 0;
+         //   meProof[step].ContentsArgument[i][i] = 0;
+              meProof[step].ContentsArgument[0][i] = 0;
         }
 
         if (nStepKind == eAssumption) {
