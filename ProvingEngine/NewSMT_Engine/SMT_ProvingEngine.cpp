@@ -761,10 +761,10 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
     from = mnNumberOfAssumptions; to = mnNumberOfAssumptions + mProofLength - 1;
   }
 
-  Expression oneStep, oneOfSteps = False();
+  Expression oneOfSteps = False();
   for(unsigned proofStep = from; proofStep <= to; proofStep++) {
-
-    oneStep &= (Expression(proofStep) < ProofSize());
+    Expression oneStep;
+    oneStep = (Expression(proofStep) < ProofSize());
     if (hintFormula.GetGoal().GetSize() == 1)
       oneStep &= (Cases(proofStep) == False());
     else
@@ -775,9 +775,9 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
       if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
         continue;
       if (stoi(justification.GetArg(i),arg)) // if it is a number, it is one of the intro vars
-        oneStep &= (Instantiation(proofStep, i+1) == justification.GetArg(i));
+        oneStep &= (Instantiation(proofStep,i) == (unsigned)arg);
       else // otherwise, we bind it to a new variable
-        oneStep &= (Instantiation(proofStep, i+1) == string("nHintVarInst" + hintName + justification.GetArg(i)));
+        oneStep &= (Instantiation(proofStep, i) == string("nHintVarInst" + hintName + justification.GetArg(i)));
       }
     } else {
       oneStep &= (IsQEDStep(proofStep) == False()); /* ? */
@@ -914,8 +914,8 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string smt_proofencoded_filename =  tmpnam(NULL); // "constraints_for_proof.smt"; //
-    string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
+    string smt_proofencoded_filename =  "constraints_for_proof.smt"; // tmpnam(NULL); //
+    string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
     time_t start_time = time(NULL);
