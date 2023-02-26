@@ -1170,9 +1170,15 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
           Expression c = False();
           unsigned power2 = 1;
           for (unsigned k = 0; k <= mParams.max_nesting_depth; k++) {
-            // c |= ((Nesting(j) >= Nesting(i)*power2) & (Nesting(j) < (Nesting(i) * power2) + power2));
-            //  power2 *= 2;
-            c |= ((Nesting(j) >> k) == Nesting(i));
+            if (mSMT_theory == eSMTBV_ProvingEngine ||
+                mSMT_theory == eSMTUFBV_ProvingEngine) {
+               c |= ((Nesting(j) >> k) == Nesting(i));
+            }
+            else {
+              c |= ((Nesting(j) >= Nesting(i)*power2) & (Nesting(j) < (Nesting(i) * power2) + power2));
+              power2 *= 2;
+            }
+
           }
           Assert(SameBranch(i,j) == c);
         }

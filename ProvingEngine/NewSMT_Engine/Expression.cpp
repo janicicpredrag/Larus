@@ -327,11 +327,7 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
           return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eRightShift) + " " + print_to_SMT(node->mRight, th, eRightShift) + ") \n";
         }
         else {
-          string sArg = print_to_SMT(node->mRight, th, eRightShift);
-          b = stou(sArg,m);
-          assert(b);
-          sArg = itos(pow(2, m));
-          return s.smt_prod(sArg, print_to_SMT(node->mLeft, th, eMul));
+            assert(false);
         }
 
     case eComment: return "\n; ------ " + print_to_SMT(node->mRight, th, eNull) + "\n" + print_to_SMT(node->mLeft, th, eNull) + "\n" ;
