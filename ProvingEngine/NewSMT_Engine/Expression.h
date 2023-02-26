@@ -7,7 +7,7 @@
 
 using namespace std;
 
-typedef enum OPERATOR { eNull, eVar, eNum, eBool, eAnd, eOr, eAdd, eMul, eDiv, eEq, eNeq, eGreater, eGreaterEq, eLess, eComment } op;
+typedef enum OPERATOR { eNull, eVar, eNum, eBool, eAnd, eOr, eAdd, eMul, eDiv, eEq, eNeq, eGreater, eGreaterEq, eLess, eRightShift, eComment } op;
 
 
 class Expression
@@ -57,13 +57,14 @@ public:
     Expression operator> (const Expression& c);
     Expression operator>= (const Expression& c);
     Expression operator< (const Expression& c);
+    Expression operator>> (const Expression& c);
 
     Expression operator& (const Expression& c);
     void operator&= (const Expression& c);
     Expression operator| (const Expression& c);
     void operator|= (const Expression& c);
 
-    Expression operator<< (const string& s);
+    Expression operator% (const string& s);
 
     string toString() const;
     string toSMT(PROVING_ENGINE th) const;

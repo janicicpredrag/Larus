@@ -1,8 +1,10 @@
 #include <assert.h>
 #include <iostream>
+#include<cmath>
 #include "Expression.h"
 #include "common.h"
 #include "../SMTOut.h"
+
 
 // ---------------------------------------------------------------------------------------
 
@@ -121,6 +123,13 @@ Expression Expression::operator< (const Expression& c)
 
 // ---------------------------------------------------------------------------------------
 
+Expression Expression::operator>> (const Expression& c)
+{
+    return Expression(eRightShift, *this, c);
+}
+
+// ---------------------------------------------------------------------------------------
+
 Expression Expression::operator& (const Expression& c)
 {
   if (mNode->mO == eNull)
@@ -182,7 +191,7 @@ void Expression::operator|= (const Expression& c)
 
 // ---------------------------------------------------------------------------------------
 
-Expression Expression::operator<< (const string& s)
+Expression Expression::operator% (const string& s)
 {
   return Expression(eComment, *this, Expression(s));
 }
@@ -233,7 +242,7 @@ string Expression::toString(shared_ptr<ExpressionNode> node)
     case eGreater: return toString(node->mLeft)   + " > "  + toString(node->mRight);
     case eGreaterEq: return toString(node->mLeft) + " >= " + toString(node->mRight);
     case eLess: return toString(node->mLeft)      + " < "  + toString(node->mRight);
-
+    case eRightShift: return toString(node->mLeft) + " >> "  + toString(node->mRight);
     case eComment: return "\n%---------" + toString(node->mRight) + "\n" + toString(node->mLeft);
 
     default:
@@ -247,7 +256,9 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
 {
     stringstream stream;
     SMTOut s;
-    string sOp;
+    string sOp, sArg;
+    unsigned m;
+    bool b;
     s.SetTheory(th);
 
     switch (node->mO) {
@@ -274,20 +285,21 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
     case eAnd: return
                 (op == eAnd) ?
                   print_to_SMT(node->mLeft, th, eAnd) + print_to_SMT(node->mRight, th, eAnd)
-                : "(and \n" + print_to_SMT(node->mLeft, th, eAnd) + " " + print_to_SMT(node->mRight, th, eAnd) + ")";
+                : "(and \n" + print_to_SMT(node->mLeft, th, eAnd) + "" + print_to_SMT(node->mRight, th, eAnd) + ")";
     case eOr: return
                 (op == eOr) ?
                   print_to_SMT(node->mLeft, th, eOr) + " " + print_to_SMT(node->mRight, th, eOr)
-                : "(or \n" + print_to_SMT(node->mLeft, th, eOr) + " " + print_to_SMT(node->mRight, th, eOr) + ")";
+                : "(or \n" + print_to_SMT(node->mLeft, th, eOr) + "" + print_to_SMT(node->mRight, th, eOr) + ")";
     case eAdd: return
                 (op == eAdd) ?
                    print_to_SMT(node->mLeft, th, eAdd) + " " + print_to_SMT(node->mRight, th, eAdd)
                 : s.smt_sum(print_to_SMT(node->mLeft, th, eAdd), print_to_SMT(node->mRight, th, eAdd));
     case eMul: return
                 s.smt_prod(print_to_SMT(node->mLeft, th, eMul), print_to_SMT(node->mRight, th, eMul));
-    case eEq: return "  (= " + print_to_SMT(node->mLeft, th, eEq) + " " + print_to_SMT(node->mRight, th, eEq) + ") \n";
-    case eNeq: return "  (not (= " + print_to_SMT(node->mLeft, th, eNeq) + " " + print_to_SMT(node->mRight, th, eNeq) + ")) \n";
-
+    case eEq: return "  (= " + print_to_SMT(node->mLeft, th, eEq) + " " + print_to_SMT(node->mRight, th, eEq) + ")"
+                + (op == eNull ? "" : "\n");
+    case eNeq: return "  (not (= " + print_to_SMT(node->mLeft, th, eNeq) + " " + print_to_SMT(node->mRight, th, eNeq) + ")) "
+                + (op == eNull ? "" : "\n");
     case eGreater:
         if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine)
           sOp = "bvugt";
@@ -308,6 +320,19 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
         else
           sOp = "<";
         return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eLess) + " " + print_to_SMT(node->mRight, th, eLess) + ") \n";
+
+    case eRightShift:
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine) {
+          sOp = "bvlshr";
+          return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eRightShift) + " " + print_to_SMT(node->mRight, th, eRightShift) + ") \n";
+        }
+        else {
+          string sArg = print_to_SMT(node->mRight, th, eRightShift);
+          b = stou(sArg,m);
+          assert(b);
+          sArg = itos(pow(2, m));
+          return s.smt_prod(sArg, print_to_SMT(node->mLeft, th, eMul));
+        }
 
     case eComment: return "\n; ------ " + print_to_SMT(node->mRight, th, eNull) + "\n" + print_to_SMT(node->mLeft, th, eNull) + "\n" ;
 

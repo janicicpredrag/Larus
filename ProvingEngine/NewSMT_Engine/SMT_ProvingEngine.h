@@ -6,7 +6,6 @@
 #include "CLTheory/Formula.h"
 #include "ProvingEngine/ProvingEngine.h"
 #include "Expression.h"
-#include "ProvingEngine/SMTOut.h"
 #include "Expression.h"
 #include <string>
 #include <iostream>

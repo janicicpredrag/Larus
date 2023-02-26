@@ -45,28 +45,31 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
     // Local constraints
     for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
       c &= (CorrectProofStep(s))
-         << "1. Each proof step s is one of the defined step kinds";
+         % "1. Each proof step s is one of the defined step kinds";
     }
 
     // Global structure constraints
     for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
       Expression cc;
+      cc = ((Nesting(s) != 0u))
+            % "0: This condition is missing in the JAR paper; it is needed because of the way nesting is handled";
+
       cc &= ((IsQEDStep(s - 1) == False()) | (Nesting(s - 1) != Nesting(s)))
-            << "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
+            % "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
 
       cc &= ((Cases(s - 1) == False()) | (StepKind(s) == FirstCase()))
-            << "3: If Cases(s-1) is true, then StepKind(s) = FirstCase ";
+            % "3: If Cases(s-1) is true, then StepKind(s) = FirstCase ";
 
       cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s - 1)) |
             (StepKind(s) == SecondCase()))
-            << "4: If step s-1 is one of the QED steps and Nesting(s-1) is even, then StepKind(s) = SecondCase";
+            % "4: If step s-1 is one of the QED steps and Nesting(s-1) is even, then StepKind(s) = SecondCase";
 
       cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s-1) == False()) |
             (StepKind(s) == QEDbyCases()))
-            << "5: If step s-1 is one of the QED steps and Nesting(s-1) is odd, then StepKind(s) = QEDbyCases";
+            % "5: If step s-1 is one of the QED steps and Nesting(s-1) is odd, then StepKind(s) = QEDbyCases";
 
       c &= ((Expression(s) >= ProofSize()) | cc) // This constraint is missing in the JAR paper on Larus!
-           << "Constraints for the step " + itos(s) + " hold only if " + itos(s) + " is before the proof end:";
+           % ("Constraints for the step " + itos(s) + " hold only if " + itos(s) + " is before the proof end:");
     }
 
     Expression cProofEnding;
@@ -74,18 +77,18 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
     for(unsigned L = mnNumberOfAssumptions+1; L <= mnNumberOfAssumptions + mProofLength; L++) {
       Expression cOneL;
       cOneL &= (ProofSize() == L)
-            << "If proof size is " + itos(L) + ":";
+            % ("If proof size is " + itos(L) + ":");
 
       cOneL &= (Nesting(L - 1) == 1u)
-            << "   6: Nesting(L-1) = 1";
+            % "   6: Nesting(L-1) = 1";
 
       cOneL &= IsQEDStep(L - 1)
-            << "   7: The step L-1 is one of the QED steps";
+            % "   7: The step L-1 is one of the QED steps";
 
       cOneL &= IsGoal(L - 1)
-            << "   8: Contents(L-1) = Contents(MaxL-1)";
+            % "   8: Contents(L-1) = Contents(MaxL-1)";
 
-      cProofEnding |= cOneL << "";
+      cProofEnding |= cOneL % "";
     }
     c &= cProofEnding;
 
@@ -101,10 +104,10 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
                            & (StepKind(s-1) == MP())
                            & (StepKind(s) == MP())) == False())
                            | (AxiomApplied(s-1) < AxiomApplied(s)))
-                           << "   9: Normalization condition for step " + itos(s);
+                           % ("   9: Normalization condition for step " + itos(s));
       c &= cProofIsNormalized;
     }
-    return c << "\n ; ********************* Proof correctness constraint ******************";
+    return c % "\n ; ********************* Proof correctness constraint ******************";
 }
 
 // ----------------------------------------------------------
@@ -120,14 +123,14 @@ Expression SMT_ProvingEngine::CorrectProofStep(unsigned s)
         | IsQEDbyCases(s)
         | IsQEDbyAssumption(s)
         | IsQEDbyEFQ(s))
-        << "----- Is step " + itos(s) + " correct ";
+        % ("----- Is step " + itos(s) + " correct ");
     else // no need for case splits (no branching axioms)
       return
         ( //IsAssumption(s) | // Assumptions are constrained by AddPremise
           IsMPstep(s)
         | IsQEDbyAssumption(s)
         | IsQEDbyEFQ(s))
-        << "----- Is step " + itos(s) + " correct ";
+        % ("----- Is step " + itos(s) + " correct ");
 }
 
 // ---------------------------------------------------------------------------------------
@@ -138,7 +141,7 @@ Expression SMT_ProvingEngine::IsAssumption(unsigned s)
     for(unsigned i=0; i < mnNumberOfAssumptions; i++)
       c |= IsAssumptionStep(s, i);
     if (mnNumberOfAssumptions > 0)
-      c = (c << "Is Assumption step: ");
+      c = (c % "Is Assumption step: ");
     return c;
 }
 
@@ -179,7 +182,7 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
 
     /* Constants involved are only those already introduced */
     for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
-      c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms * s + (unsigned)(mpT->mConstants).size());
+      c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
     }
     for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
       /* The id of a new constant is */
@@ -188,7 +191,7 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
       c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
             mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
     }
-    return c << "----- ----- Is axiom " + itos(ax) + " applied: ";
+    return c % ("----- ----- Is axiom " + itos(ax) + " applied: ");
 }
 
 // ---------------------------------------------------------------------------------------
@@ -231,11 +234,11 @@ Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, un
     Expression c = False();
     for(unsigned ss=0; ss < s; ss++) {
       c |= MatchPremiseToStep(s, ax, i, ss)
-           << "Match premise " + itos(i) + " to step " + itos(ss);
+           % ("Match premise " + itos(i) + " to step " + itos(ss));
     }
     if (mParams.mbInlineAxioms)
       c |= MatchPremiseInline(s, ax, i)
-        << "Match premise " + itos(i) + " inline";
+        % ("Match premise " + itos(i) + " inline");
     return c;
 }
 
@@ -281,9 +284,9 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
       {
         Expression cOneOfInlinePremises;
         cOneOfInlinePremises = False();
-        if ((GetAxiom(axInl).GetPremises().GetSize() == 1 &&
-            GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "true") ||
-            GetAxiom(axInl).GetPremises().GetSize() == 0) {
+        if (GetAxiom(axInl).GetGoal().GetSize() == 1 &&
+            (GetAxiom(axInl).GetPremises().GetSize() == 0 ||
+             GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "true")) {
                cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
         } else {
           // Match the premise in the inline axiom:
@@ -309,10 +312,11 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
         c = cOneOfInlinePremises;
         for(unsigned j=0; j < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
           if (BindingAxiomGoal(axInl, 0, j) != 0) {
-            c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1) == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
+            c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1) == InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1));
           }
           else { // it is a constant
-            c &= (ContentsArgument(s,0,j) == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
+            c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
+                  /*ContentsArgument(s,0,j)*/ == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
           }
         }
         cOneOfInlineAxioms |= c;
@@ -369,7 +373,7 @@ Expression SMT_ProvingEngine::IsMPbyEqSub(unsigned s)
       OneOfArgumentSub |= (MatchFirstPremise & MatchSecondPremise);
     }
     byEqSub &= OneOfArgumentSub;
-    return byEqSub << "----- ----- Is axiom EqSub applied: ";
+    return byEqSub % "----- ----- Is axiom EqSub applied: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -409,7 +413,7 @@ Expression SMT_ProvingEngine::IsFirstCase(unsigned s)
          & (Cases(s) == False())
          & (Nesting(s) == Nesting(s - 1) * 2u)
          & (SameContents(s,0,s - 1,0));
-    return c << "----- ----- Is it first case: ";
+    return c % "----- ----- Is it first case: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -434,7 +438,7 @@ Expression SMT_ProvingEngine::IsSecondCase(unsigned s)
           & (OddNesting(s))
           & (Nesting(s) == Nesting(s-1) + 1u);
     }
-    return c << "----- ----- Is it second case: ";
+    return c % "----- ----- Is it second case: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -449,7 +453,7 @@ Expression SMT_ProvingEngine::IsQEDbyCases(unsigned s)
       & (IsGoal(s))
       & (OddNesting(s - 1))
       & (Nesting(s) * 2u + 1u == Nesting(s-1));
-    return c << "----- ----- Is it QED by cases: ";
+    return c % "----- ----- Is it QED by cases: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -481,7 +485,7 @@ Expression SMT_ProvingEngine::IsQEDbyAssumption(unsigned s)
         & (IsGoal(s))
         & (Nesting(s) == Nesting(s - 1));
     }
-    return c << "----- ----- Is it QED by assumption: ";
+    return c % "----- ----- Is it QED by assumption: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -504,7 +508,7 @@ Expression SMT_ProvingEngine::IsQEDbyEFQ(unsigned s)
       & (IsGoal(s))
       & (Nesting(s) == Nesting(s-1));
     }
-    return c << "----- ----- Is it QED by EFQ: ";
+    return c % "----- ----- Is it QED by EFQ: ";
 }
 
 // ---------------------------------------------------------------------------------------
@@ -708,7 +712,7 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
     & (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
   for (size_t i = 0; i < f.GetArity(); i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
-  mProofPremises &= c << "Assumption " + itos(mnNumberOfAssumptions) + ":";
+  mProofPremises &= c % ("Assumption " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
 }
 
@@ -775,7 +779,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
       if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
         continue;
       if (stoi(justification.GetArg(i),arg)) // if it is a number, it is one of the intro vars
-        oneStep &= (Instantiation(proofStep,i) == (unsigned)arg);
+        oneStep &= (Instantiation(proofStep, i) == (unsigned)arg);
       else // otherwise, we bind it to a new variable
         oneStep &= (Instantiation(proofStep, i) == string("nHintVarInst" + hintName + justification.GetArg(i)));
       }
@@ -807,7 +811,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   stringstream ss;
   ss << "; Hint " << index << ":" << endl << "; " << hintFormula << "; proof step: " << ordinal <<
         "; justification: " << justification << endl << "; Encoded hint:";
-  return Hints << ss.str();
+  return Hints % ss.str();
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1165,9 +1169,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         for (unsigned j=i+1; j <= nFinalStep; j++) {
           Expression c = False();
           unsigned power2 = 1;
-          for (unsigned k = 0; k < mParams.max_nesting_depth; k++) {
-           c |= ((Nesting(j) >= Nesting(i)*power2) & (Nesting(j) < (Nesting(i) * power2) + power2));
-             power2 *= 2;
+          for (unsigned k = 0; k <= mParams.max_nesting_depth; k++) {
+            // c |= ((Nesting(j) >= Nesting(i)*power2) & (Nesting(j) < (Nesting(i) * power2) + power2));
+            //  power2 *= 2;
+            c |= ((Nesting(j) >> k) == Nesting(i));
           }
           Assert(SameBranch(i,j) == c);
         }
@@ -1310,7 +1315,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     meProof[index[0]].ContentsArgument[index[1]][index[2]] = nVal;
   } else if (strVarName == "Nesting") {
     meProof[index[0]].Nesting = nVal;
-  } else if (strVarName == "bisGoal") {
+  } else if (strVarName == "bIsGoal") {
     meProof[index[0]].isGoal = bVal;
   } else if (strVarName == "AxiomApplied") {
     meProof[index[0]].AxiomApplied = nVal;
