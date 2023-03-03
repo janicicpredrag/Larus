@@ -257,8 +257,6 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
     stringstream stream;
     SMTOut s;
     string sOp, sArg;
-    unsigned m;
-    bool b;
     s.SetTheory(th);
 
     switch (node->mO) {
@@ -327,7 +325,7 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
           return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eRightShift) + " " + print_to_SMT(node->mRight, th, eRightShift) + ") \n";
         }
         else {
-            assert(false);
+          assert(false);
         }
 
     case eComment: return "\n; ------ " + print_to_SMT(node->mRight, th, eNull) + "\n" + print_to_SMT(node->mLeft, th, eNull) + "\n" ;

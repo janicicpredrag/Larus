@@ -918,8 +918,8 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string smt_proofencoded_filename =  "constraints_for_proof.smt"; // tmpnam(NULL); //
-    string smt_model_filename = "smt_model_for_proof.txt";          // tmpnam(NULL); //
+    string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
+    string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
     time_t start_time = time(NULL);

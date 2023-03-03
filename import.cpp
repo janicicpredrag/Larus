@@ -489,12 +489,19 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         cout << "MizarWrong!" << endl;
     }
 
-    if (params.mbGCLC) {
-      ProofExport2GCLC_predicates exisa;
-      string sFileName3("proofs/PROOF" + fileName + "_illustration.gcl");
+    if (params.mbGCLCaxioms) {
+      ProofExport2GCLC exisa;
+      string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
       exisa.ToFile(T, proof, sFileName3, params);
       cout << "Generating illustration ... " << endl << flush;
     }
+    if (params.mbGCLCpredicates) {
+      ProofExport2GCLC_predicates exisa;
+      string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
+      exisa.ToFile(T, proof, sFileName3, params);
+      cout << "Generating illustration ... " << endl << flush;
+    }
+
   }
   return proved;
 }

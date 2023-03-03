@@ -40,7 +40,8 @@ int main(int argc, char **argv) {
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
   params.mbMizar = DEFAULT_MIZAR;
-  params.mbGCLC = DEFAULT_GCLC;
+  params.mbGCLCaxioms = DEFAULT_GCLC;
+  params.mbGCLCpredicates = DEFAULT_GCLC;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   params.msHammerInvoke = DEFAULT_HAMMER;
@@ -65,11 +66,13 @@ int main(int argc, char **argv) {
         }
 
       // choosing exporting illustrations
-      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclc")) {
-        params.mbGCLC = true;
-
+      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclca")) {
+        params.mbGCLCaxioms = true;
+      } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclcp")) {
+        params.mbGCLCpredicates = true;
+      }
       // choosing exporting to proof assistants
-      } else if (argv[i][0] == '-' && argv[i][1] == 'v') {
+       else if (argv[i][0] == '-' && argv[i][1] == 'v') {
         if (!strcmp(argv[i] + 2, "coq"))
           params.mbCoq = true;
         else if (!strcmp(argv[i] + 2, "mizar"))
@@ -260,9 +263,12 @@ int main(int argc, char **argv) {
          << "                        'vampire --mode casc --proof tptp "
             "--output_axiom_names on')"                                           << endl << endl;
     cout << "   -v<prover>           for generating and verifying the proof by "  << endl;
-    cout << "                        an interactive theorem prover (coq, mizar); "       << endl;
+    cout << "                        an interactive theorem prover (coq, mizar); "<< endl;
     cout << "                        examples: -vcoq; default: no"                << endl << endl;
-    cout << "   -gclc                for generating illustration of the proof."   << endl;
+    cout << "   -gclca               for generating a GCLC illustration of the "  << endl;
+    cout << "                        proof based on illustrations of axioms."     << endl << endl;
+    cout << "   -gclcp               for generating a GCLC illustration of the"   << endl;
+    cout << "                        proof based on illustrations of predicates." << endl;
     cout << endl;
     return 0;
   }

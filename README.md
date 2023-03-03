@@ -76,10 +76,15 @@ otherwise:
                         axioms; only relevant if -h is used; (default: 
                         'vampire --mode casc --proof tptp --output_axiom_names on'
 
-   -v<prover>           for generating and verifying the proof by an interactive theorem prover;
-                        the only supported ITP is Coq.
-                        example: -vcoq; default: no
+   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
+                        example: -vcoq; default: none
  
+   -gclca               for generating a GCLC illustration of the proof based on illustrations of axioms.      
+                        default is false
+
+   -gclcp               for generating a GCLC illustration of the proof based on illustrations of predicates.
+                        default is false
+
  
 ## Example
  
