@@ -114,6 +114,7 @@ private:
   static Expression False(); // SMT level "false"
   // ----------------------------------------------------------
   const CLFormula& GetAxiom(unsigned k);
+  bool IsSimpleAxiom(unsigned k);
   void ComputeBindingForAxioms();
   void ComputeBinding(const CLFormula &f, unsigned k);
   unsigned BindingAxiomPremises(unsigned ax, unsigned premise, unsigned arg);

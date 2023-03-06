@@ -162,6 +162,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++)
+//      if (!mParams.mbInlineAxioms || !IsSimpleAxiom(ax) || s==mnNumberOfAssumptions)
       c |= IsMPstepByAxiom(s,ax);
     if (mParams.mbNativeEQsub)
       c |= IsMPbyEqSub(s);
@@ -172,8 +173,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 
 Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
 {
-    Expression c =
-         (StepKind(s) == MP())
+    Expression c = (StepKind(s) == MP())
        & (AxiomApplied(s) == ax)
        & (Cases(s) == (GetAxiom(ax).GetGoal().GetSize() > 1))
        & (s>0 ? Nesting(s) == Nesting(s-1) : Nesting(s) == 1u)
@@ -214,6 +214,12 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           else // it is a constant
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
+
+    // canonization
+    // c &= (ContentsPredicate(s,0) != 0u |
+    //       (ContentsArgument(s,0,1) >= ContentsArgument(s,0,0) &
+    //        ContentsArgument(s,0,2) >= ContentsArgument(s,0,1)));
+
     return c;
 }
 
@@ -233,12 +239,12 @@ Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, un
 {
     Expression c = False();
     for(unsigned ss=0; ss < s; ss++) {
-      c |= MatchPremiseToStep(s, ax, i, ss)
-           % ("Match premise " + itos(i) + " to step " + itos(ss));
+      c |= (MatchPremiseToStep(s, ax, i, ss)
+           % ("Match premise " + itos(i) + " to step " + itos(ss)));
     }
     if (mParams.mbInlineAxioms)
-      c |= MatchPremiseInline(s, ax, i)
-        % ("Match premise " + itos(i) + " inline");
+      c |= (MatchPremiseInline(s, ax, i)
+           % ("Match premise " + itos(i) + " inline"));
     return c;
 }
 
@@ -276,17 +282,14 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
     // An axiom q(x,y) => r(x,y) can be used, while p(x,b) => q(b,x) is inlined
     Expression cOneOfInlineAxioms = False();
     for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
-      if (GetAxiom(axInl).GetNumOfExistVars() == 0 &&
-          GetAxiom(axInl).GetGoal().GetSize() == 1 &&
+      if (IsSimpleAxiom(axInl) &&
           GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName()
-          == GetAxiom(ax).GetPremises().GetElement(i).GetName() &&
-          GetAxiom(axInl).GetPremises().GetSize() <= 1)
+          == GetAxiom(ax).GetPremises().GetElement(i).GetName())
       {
-        Expression cOneOfInlinePremises;
+        Expression cOneOfInlinePremises = False();
         cOneOfInlinePremises = False();
-        if (GetAxiom(axInl).GetGoal().GetSize() == 1 &&
-            (GetAxiom(axInl).GetPremises().GetSize() == 0 ||
-             GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "true")) {
+        if (GetAxiom(axInl).GetPremises().GetSize() == 0 ||
+            GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "true") {
                cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
         } else {
           // Match the premise in the inline axiom:
@@ -308,18 +311,26 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
           }
         }
         // Match the goal in the inline axiom:
-        Expression c;
-        c = cOneOfInlinePremises;
+        Expression c = cOneOfInlinePremises;
         for(unsigned j=0; j < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
           if (BindingAxiomGoal(axInl, 0, j) != 0) {
-            c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1) == InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1));
+            if (BindingAxiomPremises(ax, i, j) != 0)
+              c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+                    == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
+            else
+              c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+                      == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)]);
           }
           else { // it is a constant
-            c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
-                  /*ContentsArgument(s,0,j)*/ == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
+            if (BindingAxiomPremises(ax, i, j) != 0)
+              c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
+                    /*ContentsArgument(s,0,j)*/ == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
+            else
+              c &= (CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)]
+                    == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)] ? True() : False());
           }
         }
-        cOneOfInlineAxioms |= c;
+        cOneOfInlineAxioms |= (c % ("Inline axiom " + itos(axInl) + ":"));
       }
    }
    return cOneOfInlineAxioms;
@@ -641,6 +652,15 @@ const CLFormula& SMT_ProvingEngine::GetAxiom(unsigned k)
 
 // ----------------------------------------------------------
 
+bool SMT_ProvingEngine::IsSimpleAxiom(unsigned ax)
+{
+    return (GetAxiom(ax).GetNumOfExistVars() == 0)
+           && (GetAxiom(ax).GetGoal().GetSize() == 1)
+           && (GetAxiom(ax).GetPremises().GetSize() <= 1);
+}
+
+// ----------------------------------------------------------
+
 void SMT_ProvingEngine::ComputeBindingForAxioms()
 {
     for (unsigned k = 0; k < mpT->NumberOfAxioms(); k++)
@@ -918,7 +938,7 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string smt_proofencoded_filename = tmpnam(NULL); // "constraints_for_proof.smt"; //
+    string smt_proofencoded_filename = "constraints_for_proof.smt"; // tmpnam(NULL); //
     string smt_model_filename = tmpnam(NULL); // "smt_model_for_proof.txt";          //
     mProofLength = length;
     cout << "  --proof encoding..." << flush;
@@ -1548,7 +1568,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
               cfPremises.SetElement(ii, univAxFact);
             }
           }
-          string axiomName = mpT->mCLaxioms[nAxiom].second;
+          string axiomName = bIsEqSub ? "EqSub" : mpT->mCLaxioms[nAxiom].second;
           proof.AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses);
        }
   }
