@@ -204,6 +204,9 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i] + 2, "oldsmtufbv"))
           params.eEngine = eOldSMTUFBV_ProvingEngine;
 
+        else if (!strcmp(argv[i] + 2, "minizinc"))
+          params.eEngine = eMiniZinc;
+
         else {
           wrongInput = true;
           break;
@@ -243,8 +246,8 @@ int main(int argc, char **argv) {
     cout << "   -x                   find a proof of lenght equal to the given "  << endl;
     cout << "                        length; default it false = length <= n"      << endl << endl;
     cout << "   -e<engine>           for proving engine (stl, sql, ursa, "        << endl;
-    cout << "                        smtlia, smtbv, smtuflia, smtufbv); "         << endl;
-    cout << "                        examples: -eursa; default: smtbv"              << endl << endl;
+    cout << "                        smtlia, smtbv, smtuflia, smtufbv, minizinc);"<< endl;
+    cout << "                        examples: -eursa; default: smtbv"            << endl << endl;
     cout << "   -n<max nesting>      for maximal proof depth in which a fact "    << endl;
     cout << "                        can be used; example: -n3; default: 2"       << endl << endl;
     cout << "   -m<starting length>  for the size of the proof search to start "  << endl;

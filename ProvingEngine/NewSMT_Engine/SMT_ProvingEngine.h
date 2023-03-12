@@ -53,10 +53,11 @@ private:
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace);
 
-  void DeclareVarBasicType(const Expression& Var);
+  void DeclareVarBasicType(const Expression& Var, unsigned UpperLimit);
   void DeclareVarBoolean(const Expression& Var);
   void Assert(const Expression& c);
   void AddComment(const string& comment);
+
   Expression EncodeHint(const tHint &hint, unsigned index);
 
   Expression CorrectnessConstraint();

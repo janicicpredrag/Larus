@@ -299,7 +299,8 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       else if (params.eEngine == eSMTLIA_ProvingEngine ||
                params.eEngine == eSMTBV_ProvingEngine ||
                params.eEngine == eSMTUFLIA_ProvingEngine ||
-               params.eEngine == eSMTUFBV_ProvingEngine)
+               params.eEngine == eSMTUFBV_ProvingEngine ||
+               params.eEngine == eMiniZinc)
         engine = new SMT_ProvingEngine(&T1, params);
 
       else // default
@@ -338,7 +339,8 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
     else if (params.eEngine == eSMTLIA_ProvingEngine ||
              params.eEngine == eSMTBV_ProvingEngine ||
              params.eEngine == eSMTUFLIA_ProvingEngine  ||
-             params.eEngine == eSMTUFBV_ProvingEngine)
+             params.eEngine == eSMTUFBV_ProvingEngine ||
+             params.eEngine == eMiniZinc)
       engine = new SMT_ProvingEngine(&T, params);
     else // default
       engine = new STL_ProvingEngine(&T, params);

@@ -198,11 +198,17 @@ Expression Expression::operator% (const string& s)
 
 // ---------------------------------------------------------------------------------------
 
+bool Expression::isAssignment() const
+{
+    return (mNode->mO == eEq && (mNode->mLeft)->mO == eVar && (mNode->mRight)->mO == eNum);
+}
+
+// ---------------------------------------------------------------------------------------
+
 string Expression::toString() const
 {
     return toString(mNode);
 }
-
 
 // ---------------------------------------------------------------------------------------
 
@@ -216,6 +222,20 @@ string Expression::toSMT(PROVING_ENGINE th) const
 string Expression::toSMT_(PROVING_ENGINE th, enum OPERATOR op) const
 {
     return print_to_SMT(mNode, th, op);
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Expression::toMiniZinc(PROVING_ENGINE th) const
+{
+    return toMiniZinc_(th, eNull);
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Expression::toMiniZinc_(PROVING_ENGINE th, enum OPERATOR op) const
+{
+    return print_to_MiniZinc(mNode, th, op);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -329,6 +349,62 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
         }
 
     case eComment: return "\n; ------ " + print_to_SMT(node->mRight, th, eNull) + "\n" + print_to_SMT(node->mLeft, th, eNull) + "\n" ;
+
+    default:
+        assert(false);
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Expression::print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op)
+{
+    stringstream stream;
+    SMTOut s;
+    string sOp, sArg;
+    s.SetTheory(th);
+
+    switch (node->mO) {
+    case eNull:
+        return "";
+    case eVar:
+        // fixme, too specific
+        if (node->mS.substr(0,strlen("Cases")) == "Cases" ||
+            node->mS.substr(0,strlen("SameBranch")) == "SameBranch" ||
+            node->mS.substr(0,strlen("OddNesting")) == "OddNesting" ||
+            node->mS.substr(0,strlen("IsGoal")) == "IsGoal")
+            return "  b" + node->mS + " ";
+        else
+            return node->mS;
+    case eBool:
+        return (node->mB == true ? "true " : "false ");
+    case eNum:
+        return itos(node->mNum);
+    case eAnd: return
+                "(\n" + print_to_MiniZinc(node->mLeft, th, eAnd) + " /\\ " + print_to_MiniZinc(node->mRight, th, eAnd) + ")";
+    case eOr: return
+                "(\n" + print_to_MiniZinc(node->mLeft, th, eOr) + "\\/" + print_to_MiniZinc(node->mRight, th, eOr) + ")";
+    case eAdd: return
+                print_to_MiniZinc(node->mLeft, th, eAdd) + "+" + print_to_MiniZinc(node->mRight, th, eAdd);
+    case eMul: return
+                print_to_MiniZinc(node->mLeft, th, eMul) + "*" + print_to_MiniZinc(node->mRight, th, eMul);
+    case eEq: return "" + print_to_MiniZinc(node->mLeft, th, eEq) + " = " + print_to_MiniZinc(node->mRight, th, eEq) + ""
+                + (op == eNull ? "" : "\n");
+    case eNeq: return "  (" + print_to_MiniZinc(node->mLeft, th, eNeq) + " != " + print_to_MiniZinc(node->mRight, th, eNeq) + ") "
+                + (op == eNull ? "" : "\n");
+    case eGreater:
+        return "  (" + print_to_MiniZinc(node->mLeft, th, eGreater) + " > " + print_to_MiniZinc(node->mRight, th, eGreater) + ") \n";
+    case eGreaterEq:
+        return "  (" + print_to_MiniZinc(node->mLeft, th, eGreaterEq) + " >= " + print_to_MiniZinc(node->mRight, th, eGreaterEq) + ") \n";
+    case eLess:
+        return "(" + print_to_MiniZinc(node->mLeft, th, eLess) + " < " + print_to_MiniZinc(node->mRight, th, eLess) + ") \n";
+
+    case eRightShift:
+        {
+          assert(false);
+        }
+
+    case eComment: return "\n% ------ " + print_to_MiniZinc(node->mRight, th, eNull) + "\n" + print_to_MiniZinc(node->mLeft, th, eNull) + "\n" ;
 
     default:
         assert(false);

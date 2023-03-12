@@ -35,6 +35,7 @@ enum PROVING_ENGINE {
   eOldSMTBV_ProvingEngine,
   eOldSMTUFLIA_ProvingEngine,
   eOldSMTUFBV_ProvingEngine,
+  eMiniZinc,
   eNumberOfProvingEngines
 };
 

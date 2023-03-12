@@ -36,6 +36,7 @@ class Expression
     shared_ptr<ExpressionNode> mNode;
     static string toString(shared_ptr<ExpressionNode> node);
     static string print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op);
+    static string print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op);
 
 
 public:
@@ -66,12 +67,15 @@ public:
 
     Expression operator% (const string& s);
 
+    bool isAssignment() const;
+
     string toString() const;
     string toSMT(PROVING_ENGINE th) const;
+    string toMiniZinc(PROVING_ENGINE th) const;
 
 private:
     string toSMT_(PROVING_ENGINE th, enum OPERATOR) const;
-
+    string toMiniZinc_(PROVING_ENGINE th, enum OPERATOR op) const;
 };
 
 #endif // EXPRESSION_H
