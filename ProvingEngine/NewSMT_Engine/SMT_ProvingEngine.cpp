@@ -1443,12 +1443,15 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             numOfExistVars = mpT->mCLaxioms[nAxiom].first.GetNumOfExistVars();
           }
         }
-        for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
-          if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
-              && numOfExistVars == 0) // eliminate spurious constants, also for inst[]
-         //   meProof[step].ContentsArgument[i][i] = 0;
-              meProof[step].ContentsArgument[0][i] = 0;
-        }
+
+        if (nStepKind != eQEDbyCases &&
+            nStepKind != eQEDbyAssumption &&
+            nStepKind != eQEDbyEFQ)
+          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
+                && numOfExistVars == 0) // eliminate spurious constants, also for inst[]
+                meProof[step].ContentsArgument[0][i] = 0;
+          }
 
         if (nStepKind == eAssumption) {
           Fact f;
