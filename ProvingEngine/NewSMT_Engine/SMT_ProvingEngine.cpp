@@ -892,7 +892,6 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       bTimeOut = false;
       while (!bTimeOut && l <= r && l != best) {
         s = (l + r) / 2;
-
         switch (OneProvingAttempt(formula, l)) {
           case eTimeLimitExceeded:
             bTimeOut = true;
@@ -968,8 +967,11 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     mParams.time_limit = mParams.time_limit - difftime(current_time, start_time);
     cout << "(remaining time: " << mParams.time_limit << "s); " << flush;
     if (!ReadModel(smt_model_filename)) {
-
       cout << " proof not found " << endl << flush;
+      if (mParams.time_limit <= 0) {
+        cout << endl << "Time limit reached." << endl << flush;
+        return eTimeLimitExceeded;
+      }
       return eConjectureNotProved;
     } else {
       cout << " proof FOUND! " << endl << flush;
@@ -1051,7 +1053,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i), eNumberOfStepKinds);
       DeclareVarBasicType(AxiomApplied(i), mpT->mCLaxioms.size());
-      DeclareVarBasicType(Nesting(i), 1 << mParams.max_nesting_depth);
+      DeclareVarBasicType(Nesting(i), 1 << (mParams.max_nesting_depth+1));
       DeclareVarBoolean(OddNesting(i));
       for (unsigned j=i+1; j <= nFinalStep; j++) {
         DeclareVarBoolean(SameBranch(i,j));
@@ -1194,10 +1196,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
       for (unsigned i = mnNumberOfAssumptions; i <= nFinalStep; i++) {
         Expression c = False();
-        unsigned power2 = 1;
-        for (unsigned j = 0; j < mParams.max_nesting_depth; j++)
-          power2 *= 2;
-        for (unsigned j = 1; j < power2; j += 2) {
+        for (unsigned j = 1; j < (1 << (mParams.max_nesting_depth+1)); j += 2) {
           c |= (Nesting(i) == j);
         }
         Assert(OddNesting(i) == c);

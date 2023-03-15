@@ -26,12 +26,12 @@ Larus can use the following external tools :
  - Mizar (http://mizar.org/)
 
 Larus assumes these tools are in the PATH.
-URSA is used when the option `-eursa` is activated.
-Z3 is used when the options `-esmtbv -esmtlia` are activated.
-MiniZinc with or-tools is used when the option `-eminizinc` is activated.
-Vampire is used when the option `-h` is activated.
-Coq is used when the option `-vcoq`is activated.
-Mizar is used when the option `-vmizar`is activated.
+URSA is invoked when the option `-eursa` is used.
+Z3 is invoked when the options `-esmtbv -esmtlia` are used.
+MiniZinc with or-tools is invoked when the option `-eminizinc` is used.
+Vampire is invoked when the option `-h` is used.
+Coq is invoked when the option `-vcoq`is used.
+Mizar is invoked when the option `-vmizar`is used.
  
 
 ## Input
