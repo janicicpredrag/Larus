@@ -19,14 +19,19 @@ To build it, just type `make` in the root folder.
 Larus can use the following external tools : 
  - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip) 
  - Z3 (https://github.com/Z3Prover/z3)
+ - MiniZinc (https://www.minizinc.org/)
+ - OR-Tools https://developers.google.com/optimization
  - Vampire (https://vprover.github.io/)
  - Coq (https://coq.inria.fr/)
+ - Mizar (http://mizar.org/)
 
 Larus assumes these tools are in the PATH.
 URSA is used when the option `-eursa` is activated.
 Z3 is used when the options `-esmtbv -esmtlia` are activated.
+MiniZinc with or-tools is used when the option `-eminizinc` is activated.
 Vampire is used when the option `-h` is activated.
 Coq is used when the option `-vcoq`is activated.
+Mizar is used when the option `-vmizar`is activated.
  
 
 ## Input
@@ -57,7 +62,7 @@ otherwise:
    -x                   find a proof of length equal to the given length; default it false = length <= n
 
    -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
-                        when using minizinc, the default minizinc is used;
+                        when using minizinc, the solver or-tools is used;
                         examples: -eursa; default: smtbv
 
    -n<max nesting>      for maximal proof depth in which a fact can be used; example: -n3; default: 2

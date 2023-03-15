@@ -26,6 +26,7 @@ SMT_ProvingEngine::SMT_ProvingEngine(Theory *pT, proverParams &params) {
   else
     mName = "UNKNOWN";
 
+  mnMaxArity = 0;
   for(auto it = pT->mSignature.begin(); it < pT->mSignature.end(); it++)
     if (mnMaxArity < it->second)
       mnMaxArity = it->second;
@@ -956,11 +957,10 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     if (mParams.time_limit <= 0)
       return eTimeLimitExceeded;
 
-    string sSolver = (mSMT_theory == eMiniZinc) ? "minizinc" : "z3";
+    string sSolver = (mSMT_theory == eMiniZinc) ? "minizinc --solver or-tools" : "z3";
     const string sCall = "timeout " + to_string(mParams.time_limit) + " " + sSolver + " " +
                          smt_proofencoded_filename + " > " +
-                         smt_model_filename + " 2>/dev/null";
-
+                         smt_model_filename + " 2> /dev/null";
     cout << "  --invoking solver..." << flush;
     start_time = time(NULL);
     /*int rv =*/system(sCall.c_str());
@@ -1051,7 +1051,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i), eNumberOfStepKinds);
       DeclareVarBasicType(AxiomApplied(i), mpT->mCLaxioms.size());
-      DeclareVarBasicType(Nesting(i), mParams.max_nesting_depth);
+      DeclareVarBasicType(Nesting(i), 1 << mParams.max_nesting_depth);
       DeclareVarBoolean(OddNesting(i));
       for (unsigned j=i+1; j <= nFinalStep; j++) {
         DeclareVarBoolean(SameBranch(i,j));
@@ -1319,15 +1319,13 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile)  {
     }
   } else { // MiniZinc
     while (getline(smtmodel, strLine)) {
-    if (strLine.find("------") != string::npos)
-       return true;
-    if (strLine.find(" = ") == string::npos)
-         return false;
+      if (strLine.find("------") != string::npos)
+        return true;
+      if (strLine.find(" = ") == string::npos)
+        return false;
       strVarName = strLine.substr(0, strLine.find(" = "));
-      strVal = strLine.substr(strLine.find(" = ")+3, strVal.size()-strLine.find(" = ")-3);
-
+      strVal = strLine.substr(strLine.find(" = ")+3, strLine.size()-strLine.find(" = ")-4);
       // cout << "Value: " << strVarName << "=" << strVal << endl;
-
       StoreValueFromModel(strVarName, strVal);
     }
   }
@@ -1349,7 +1347,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     s = s.substr(s.find("_r_") + strlen("_r_"), s.size());
   }
 
-  if (strVarName[0] == 'b') { // boolean
+  if (strVarName[0] == 'b' && strVarName != "bot") { // boolean
     bVal = (strVal == "true");
   }
   else if (mSMT_theory == eSMTBV_ProvingEngine ||
