@@ -165,7 +165,6 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++)
-//      if (!mParams.mbInlineAxioms || !IsSimpleAxiom(ax) || s==mnNumberOfAssumptions)
       c |= IsMPstepByAxiom(s,ax);
     if (mParams.mbNativeEQsub)
       c |= IsMPbyEqSub(s);
@@ -245,7 +244,9 @@ Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, un
       c |= (MatchPremiseToStep(s, ax, i, ss)
            % ("Match premise " + itos(i) + " to step " + itos(ss)));
     }
-    if (mParams.mbInlineAxioms)
+    // do not use inlining for premises of simple axioms
+    // (but simple axioms have to be used not only by inlining)
+    if (mParams.mbInlineAxioms && !IsSimpleAxiom(ax))
       c |= (MatchPremiseInline(s, ax, i)
            % ("Match premise " + itos(i) + " inline"));
     return c;
