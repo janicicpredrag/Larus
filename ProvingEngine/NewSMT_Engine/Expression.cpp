@@ -263,6 +263,7 @@ string Expression::toString(shared_ptr<ExpressionNode> node)
     case eGreaterEq: return toString(node->mLeft) + " >= " + toString(node->mRight);
     case eLess: return toString(node->mLeft)      + " < "  + toString(node->mRight);
     case eRightShift: return toString(node->mLeft) + " >> "  + toString(node->mRight);
+    case eBVAnd: return toString(node->mLeft) + " & "  + toString(node->mRight);
     case eComment: return "\n%---------" + toString(node->mRight) + "\n" + toString(node->mLeft);
 
     default:
@@ -343,8 +344,15 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
         if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine) {
           sOp = "bvlshr";
           return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eRightShift) + " " + print_to_SMT(node->mRight, th, eRightShift) + ") \n";
+        } else {
+          assert(false);
         }
-        else {
+
+    case eBVAnd:
+        if (th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine) {
+          sOp = "bvand";
+          return "(" + sOp + " " + print_to_SMT(node->mLeft, th, eBVAnd) + " " + print_to_SMT(node->mRight, th, eBVAnd) + ") \n";
+        } else {
           assert(false);
         }
 

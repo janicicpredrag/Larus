@@ -51,28 +51,30 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
          % "1. Each proof step s is one of the defined step kinds";
     }
 
-    // Global structure constraints
-    for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
-      Expression cc;
-      cc = ((Nesting(s) != 0u))
-            % "0: This condition is missing in the JAR paper; it is needed because of the way nesting is handled";
+    if (mParams.mbNeedsCaseSplits) {
+      // Global structure constraints
+      for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
+        Expression cc;
+        cc = ((Nesting(s) != 0u))
+              % "0: This condition is missing in the JAR paper; it is needed because of the way nesting is handled";
 
-      cc &= ((IsQEDStep(s - 1) == False()) | (Nesting(s - 1) != Nesting(s)))
-            % "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
+        cc &= ((IsQEDStep(s - 1) == False()) | (Nesting(s - 1) != Nesting(s)))
+              % "2: If step s-1 is one of the QED steps, then Nesting (s-1) != Nesting (s):";
 
-      cc &= ((Cases(s - 1) == False()) | (StepKind(s) == FirstCase()))
-            % "3: If Cases(s-1) is true, then StepKind(s) = FirstCase ";
+        cc &= ((Cases(s - 1) == False()) | (StepKind(s) == FirstCase()))
+              % "3: If Cases(s-1) is true, then StepKind(s) = FirstCase ";
 
-      cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s - 1)) |
-            (StepKind(s) == SecondCase()))
-            % "4: If step s-1 is one of the QED steps and Nesting(s-1) is even, then StepKind(s) = SecondCase";
+        cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s - 1)) |
+              (StepKind(s) == SecondCase()))
+              % "4: If step s-1 is one of the QED steps and Nesting(s-1) is even, then StepKind(s) = SecondCase";
 
-      cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s-1) == False()) |
-            (StepKind(s) == QEDbyCases()))
-            % "5: If step s-1 is one of the QED steps and Nesting(s-1) is odd, then StepKind(s) = QEDbyCases";
+        cc &= ((IsQEDStep(s - 1) == False()) | (OddNesting(s-1) == False()) |
+              (StepKind(s) == QEDbyCases()))
+              % "5: If step s-1 is one of the QED steps and Nesting(s-1) is odd, then StepKind(s) = QEDbyCases";
 
-      c &= ((Expression(s) >= ProofSize()) | cc) // This constraint is missing in the JAR paper on Larus!
-           % ("Constraints for the step " + itos(s) + " hold only if " + itos(s) + " is before the proof end:");
+        c &= ((Expression(s) >= ProofSize()) | cc) // This constraint is missing in the JAR paper on Larus!
+             % ("Constraints for the step " + itos(s) + " hold only if " + itos(s) + " is before the proof end:");
+      }
     }
 
     Expression cProofEnding;
@@ -240,15 +242,19 @@ Expression SMT_ProvingEngine::MatchAllPremises(unsigned s, unsigned ax)
 Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i)
 {
     Expression c = False();
-    for(unsigned ss=0; ss < s; ss++) {
-      c |= (MatchPremiseToStep(s, ax, i, ss)
-           % ("Match premise " + itos(i) + " to step " + itos(ss)));
+    if (GetAxiom(ax).GetPremises().GetElement(i).GetName() == "true") {
+      c = (From(s,i) == s); // special case, where there is no "from"
+    } else {
+      for(unsigned ss=0; ss < s; ss++) {
+        c |= (MatchPremiseToStep(s, ax, i, ss)
+             % ("Match premise " + itos(i) + " to step " + itos(ss)));
+      }
+      // do not use inlining for premises of simple axioms
+      // (but simple axioms have to be used not only by inlining)
+      if (mParams.mbInlineAxioms && !IsSimpleAxiom(ax))
+        c |= (MatchPremiseInline(s, ax, i)
+             % ("Match premise " + itos(i) + " inline"));
     }
-    // do not use inlining for premises of simple axioms
-    // (but simple axioms have to be used not only by inlining)
-    if (mParams.mbInlineAxioms && !IsSimpleAxiom(ax))
-      c |= (MatchPremiseInline(s, ax, i)
-           % ("Match premise " + itos(i) + " inline"));
     return c;
 }
 
@@ -257,20 +263,15 @@ Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, un
 Expression SMT_ProvingEngine::MatchPremiseToStep(unsigned s, unsigned ax, unsigned i, unsigned ss)
 {
     Expression c;
-    if (GetAxiom(ax).GetPremises().GetElement(i).GetName() == "true") {
-      c = (From(s,i) == s); // special case, where there is no "from"
-    }
-    else {
-      c = (From(s,i) == ss)
-        & (Cases(ss) == False())
-        & (SameBranch(ss,s))
-        & (ContentsPredicate(ss,0) == GetAxiom(ax).GetPremises().GetElement(i).GetName());
-      for(unsigned j=0; j < GetAxiom(ax).GetPremises().GetElement(i).GetArity(); j++) {
-        if (BindingAxiomPremises(ax, i, j) != 0)
-          c &= (ContentsArgument(ss,0,j) == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
-        else // it is a constant
-         c &= (ContentsArgument(ss,0,j) == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)]);
-      }
+    c = (From(s,i) == ss)
+      & (Cases(ss) == False())
+      & (SameBranch(ss,s))
+      & (ContentsPredicate(ss,0) == GetAxiom(ax).GetPremises().GetElement(i).GetName());
+    for(unsigned j=0; j < GetAxiom(ax).GetPremises().GetElement(i).GetArity(); j++) {
+      if (BindingAxiomPremises(ax, i, j) != 0)
+        c &= (ContentsArgument(ss,0,j) == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
+      else // it is a constant
+        c &= (ContentsArgument(ss,0,j) == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)]);
     }
     return c;
 }
@@ -1197,8 +1198,13 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
       for (unsigned i = mnNumberOfAssumptions; i <= nFinalStep; i++) {
         Expression c = False();
-        for (unsigned j = 1; j < (1 << (mParams.max_nesting_depth+1)); j += 2) {
-          c |= (Nesting(i) == j);
+        if (mSMT_theory == eSMTBV_ProvingEngine ||
+            mSMT_theory == eSMTUFBV_ProvingEngine) {
+           c = (Expression(eBVAnd,Nesting(i),1u) == 1u);
+        } else {
+          for (unsigned j = 1; j < (1 << (mParams.max_nesting_depth+1)); j += 2) {
+            c |= (Nesting(i) == j);
+          }
         }
         Assert(OddNesting(i) == c);
       }

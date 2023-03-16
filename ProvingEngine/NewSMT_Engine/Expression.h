@@ -7,7 +7,7 @@
 
 using namespace std;
 
-typedef enum OPERATOR { eNull, eVar, eNum, eBool, eAnd, eOr, eAdd, eMul, eDiv, eEq, eNeq, eGreater, eGreaterEq, eLess, eRightShift, eComment } op;
+typedef enum OPERATOR { eNull, eVar, eNum, eBool, eAnd, eOr, eAdd, eMul, eDiv, eEq, eNeq, eGreater, eGreaterEq, eLess, eRightShift, eBVAnd, eComment } op;
 
 
 class Expression
