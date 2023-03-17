@@ -1209,6 +1209,9 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         Assert(OddNesting(i) == c);
       }
       for (unsigned i = mnNumberOfAssumptions; i <= nFinalStep; i++) {
+
+        Assert(Nesting(i) < (unsigned)(1 << (mParams.max_nesting_depth+1)));
+
         for (unsigned j=i+1; j <= nFinalStep; j++) {
           Expression c = False();
           unsigned power2 = 1;
@@ -1221,7 +1224,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
               c |= ((Nesting(j) >= Nesting(i)*power2) & (Nesting(j) < (Nesting(i) * power2) + power2));
               power2 *= 2;
             }
-
           }
           Assert(SameBranch(i,j) == c);
         }
