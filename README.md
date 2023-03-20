@@ -182,7 +182,7 @@ The option `-vcoq` generates a `.v` file in the proofs directory and compiles it
 
 Issue the following command in your Isabelle bin folder, e.g:
 
-~/Isabelle2022/bin/isabelle mkroot LarusSession
+`~/Isabelle2022/bin/isabelle mkroot LarusSession`
 
 Then, in the newly created folder LarusSession, update the file ROOT so its contents is:
 
@@ -202,7 +202,7 @@ In each particular invocation of larus, the absolute path to your Isabelle bin f
 `./larus myexample -visa "~/Isabelle2022/bin/"`
 
 If this folder is not given, then larus does not verify the generated proof (nor it generates the file `larus.thy`). 
-In both cases (whether or not the folder is given), but is the option "-visa" is used, larus will generate a file with Isabelle proof of your theorem, in the folder "proof" (which is assumed to exist), under the name that contains the name of the input file. 
+In both cases (whether or not the folder is given), but is the option `-visa` is used, larus will generate a file with Isabelle proof of your theorem, in the subfolder `proof` (which is assumed to exist), under the name that contains the name of the input file. 
 
 ## Hints 
 
