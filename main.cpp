@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
   params.mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
   params.mbCoq = DEFAULT_COQ;
   params.mbIsa = DEFAULT_ISA;
+  params.sIsaLarusFolder = "";
   params.mbMizar = DEFAULT_MIZAR;
   params.mbGCLCaxioms = DEFAULT_GCLC;
   params.mbGCLCpredicates = DEFAULT_GCLC;
@@ -78,8 +79,15 @@ int main(int argc, char **argv) {
           params.mbCoq = true;
         else if (!strcmp(argv[i] + 2, "mizar"))
           params.mbMizar = true;
-        else if (!strcmp(argv[i] + 2, "isa"))
+        else if (!strcmp(argv[i] + 2, "isa")) {
           params.mbIsa = true;
+          if (argv[i+1][0] != '-') {
+              params.sIsaLarusFolder = argv[i+1];
+              i++;
+
+              cout << "ISA FOLDER = " << params.sIsaLarusFolder;
+          }
+        }
         else {
           wrongInput = true;
           break;

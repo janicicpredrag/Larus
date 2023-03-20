@@ -121,6 +121,7 @@ typedef struct proverParams {
   bool mbNativeEQsub;
   bool mbCoq;
   bool mbIsa;
+  string sIsaLarusFolder;
   bool mbMizar;
   bool mbGCLCaxioms;
   bool mbGCLCpredicates;

@@ -469,18 +469,19 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       string sFileName3("proofs/PROOF" + fileName + ".thy");
       exisa.ToFile(T, proof, sFileName3, params);
 
-      string sIsaLarusFolder = "~/Desktop/MyStuff/Research/Isabelle/Isabelle2022/bin/";
-      string sFileName4(sIsaLarusFolder + "LarusSession/larus.thy");
-      string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
-      system(sCopyFile.c_str());
+      if (!params.sIsaLarusFolder.empty()) {
+        string sFileName4(params.sIsaLarusFolder + "LarusSession/larus.thy");
+        string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
+        system(sCopyFile.c_str());
 
-      cout << "Verifying Isabelle proof ... " << flush;
-      string s = sIsaLarusFolder  + "isabelle build -D " + sIsaLarusFolder + "LarusSession";
-      int rv = system(s.c_str());
-      if (!rv)
-        cout << "IsabelleCorrect!" << endl << endl;
-      else
-        cout << "IsabelleWrong!" << endl << endl;
+        cout << "Verifying Isabelle proof ... " << flush;
+        string s = params.sIsaLarusFolder  + "isabelle build -D " + params.sIsaLarusFolder + "LarusSession";
+        int rv = system(s.c_str());
+        if (!rv)
+          cout << "IsabelleCorrect!" << endl << endl;
+        else
+          cout << "IsabelleWrong!" << endl << endl;
+      }
     }
     if (params.mbMizar) {
       ProofExport2Mizar exMizar;
