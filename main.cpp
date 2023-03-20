@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -276,21 +277,25 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  clock_t startTime = clock();
+  struct timeval start, end;
   Theory T;
   CLFormula theorem;
   string theoremName;
   vector<tHint> hints;
   ReturnValue rv;
 
+  gettimeofday(&start, NULL);
   if ((rv = ReadTPTPConjecture(inputFilename, params,
                                T, theorem, theoremName, hints)) == eOK)
     if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK)
       rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName,
                                          inputFilename, hints);
-  clock_t current = clock();
-  float elapsed_secs = ((float)(current - startTime)) / CLOCKS_PER_SEC;
-  cout << "Elapsed time: " << elapsed_secs << endl;
+  gettimeofday(&end, NULL);
+
+  double elapsed_secs;
+  elapsed_secs = (end.tv_sec - start.tv_sec) * 1e6;
+  elapsed_secs = (elapsed_secs + (end.tv_usec - start.tv_usec)) * 1e-6;
+  cout << endl << "Elapsed time: " << fixed << setprecision(2) << elapsed_secs  << " s" << endl;
 
   if (rv == eConjectureNotProved && elapsed_secs >= params.time_limit)
     rv = eTimeLimitExceeded;
