@@ -24,14 +24,16 @@ Larus can use the following external tools :
  - Vampire (https://vprover.github.io/)
  - Coq (https://coq.inria.fr/)
  - Mizar (http://mizar.org/)
+ - Isabelle (https://isabelle.in.tum.de/)
 
 Larus assumes these tools are in the PATH.
-URSA is invoked when the option `-eursa` is used.
+URSA is invoed when the option `-eursa` is used.
 Z3 is invoked when the options `-esmtbv -esmtlia` are used.
 MiniZinc with or-tools is invoked when the option `-eminizinc` is used.
 Vampire is invoked when the option `-h` is used.
 Coq is invoked when the option `-vcoq`is used.
 Mizar is invoked when the option `-vmizar`is used.
+Isabelle is invoked when the option `-visa`is used.
  
 
 ## Input
