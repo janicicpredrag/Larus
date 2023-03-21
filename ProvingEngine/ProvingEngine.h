@@ -16,7 +16,7 @@ public:
     virtual ~ProvingEngine() {}
     virtual void AddPremise(const Fact& f) = 0;
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
-    virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit) = 0;
+    virtual void SetTimeLimit(unsigned timeLimit) = 0;
 
     virtual void SetMaxNestingDepth(unsigned max_nesting_depth) { mParams.max_nesting_depth = max_nesting_depth; }
 
@@ -35,8 +35,6 @@ public:
 protected:
     Theory* mpT;
     proverParams mParams;
-    clock_t mStartTime;
-
     const vector<tHint>* mpHints;
 };
 

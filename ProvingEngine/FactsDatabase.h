@@ -24,13 +24,13 @@ public:
 
   virtual bool HoldsDisjunction(const DNFFormula &dnf, ConjunctionFormula &fin,
                                 vector<Fact> &AuxFacts) = 0;
-  void SetStartTimeAndLimit(const clock_t &startTime, unsigned timeLimit) {
-    mStartTime = startTime;
+  void SetTimeLimit(unsigned timeLimit) {
+    mTimer.start();
     mTimeLimit = timeLimit;
   }
 
 protected:
-  clock_t mStartTime;
+  Timer mTimer;
   unsigned mTimeLimit;
   Theory *mpT;
 

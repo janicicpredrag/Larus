@@ -16,7 +16,7 @@ public:
 
     void AddPremise(const Fact& f);
     bool ProveFromPremises(const DNFFormula& formula, CLProof& proof);
-    virtual void SetStartTimeAndLimit(const clock_t& startTime, unsigned timeLimit);
+    virtual void SetTimeLimit(unsigned timeLimit);
     virtual PROVING_ENGINE GetKind() { return eURSA_ProvingEngine; }
 
 private:

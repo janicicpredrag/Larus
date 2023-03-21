@@ -41,7 +41,7 @@ public:
   SMT_ProvingEngine(Theory *pT, proverParams &params);
   void AddPremise(const Fact &f);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
-  virtual void SetStartTimeAndLimit(const clock_t &startTime, unsigned timeLimit);
+  virtual void SetTimeLimit(unsigned timeLimit);
   virtual PROVING_ENGINE GetKind() { return mSMT_theory; }
 
 private:

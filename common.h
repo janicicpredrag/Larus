@@ -13,6 +13,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -109,7 +110,7 @@ const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
 typedef struct proverParams {
   INPUT_FORMAT input_format;
   PROVING_ENGINE eEngine;
-  float time_limit;
+  double time_limit;
   unsigned max_nesting_depth;
   unsigned starting_proof_length;
   unsigned max_proof_length;
@@ -145,5 +146,22 @@ string ToUpper(const string &str);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;
+
+class Timer {
+  struct timeval mStartTime;
+public:
+  void start() {
+    gettimeofday(&mStartTime, NULL);
+  }
+  double elapsed() {
+    struct timeval end;
+    double elapsed_secs;
+    gettimeofday(&end, NULL);
+    elapsed_secs = (end.tv_sec - mStartTime.tv_sec) * 1e6;
+    elapsed_secs = (elapsed_secs + (end.tv_usec - mStartTime.tv_usec)) * 1e-6;
+    return elapsed_secs;
+  }
+};
+
 
 #endif // COMMON_H

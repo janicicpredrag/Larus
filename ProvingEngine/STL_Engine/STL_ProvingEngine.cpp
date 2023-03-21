@@ -13,6 +13,7 @@ STL_ProvingEngine::STL_ProvingEngine(Theory *T, proverParams &params) {
   mpT = T;
   mParams = params;
   mName = "STL";
+  mTimer.start();
 }
 
 // ---------------------------------------------------------------------------------------
@@ -29,13 +30,9 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                                           CLProof &proof) {
   CLProofEnd *pe;
   bool success;
-  time_t start_time = time(NULL);
-  time_t current_time;
 
   do {
-    current_time = time(NULL);
-    float time_spent = difftime(current_time, start_time);
-    if (mParams.time_limit <= time_spent) {
+    if (mTimer.elapsed() >= mParams.time_limit) {
 #ifdef DEBUG_OUTPUT
       cout << "Time limit exceeded " << endl;
 #endif
@@ -146,12 +143,9 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 
     size_t l = 5;
     while (!success && l < 100) {
-
-       current_time = time(NULL);
-       time_spent = difftime(current_time, start_time);
-       if (mParams.time_limit <= time_spent) {
+       if (mTimer.elapsed() >= mParams.time_limit) {
     #ifdef DEBUG_OUTPUT
-         cout << "Time limit exceeded " << endl;
+    //     cout << "Time limit exceeded " << endl;
     #endif
          return false;
        }

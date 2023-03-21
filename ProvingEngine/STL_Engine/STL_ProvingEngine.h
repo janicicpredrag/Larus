@@ -16,11 +16,9 @@ public:
 
   void AddPremise(const Fact &f);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
-  virtual void SetStartTimeAndLimit(const clock_t &startTime,
-                                    unsigned timeLimit) {
-    mStartTime = startTime;
+  virtual void SetTimeLimit(unsigned timeLimit) {
     mParams.time_limit = timeLimit;
-    mpDB->SetStartTimeAndLimit(startTime, timeLimit);
+    mpDB->SetTimeLimit(timeLimit);
   }
   virtual PROVING_ENGINE GetKind() { return eSTL_ProvingEngine; }
 
@@ -36,6 +34,7 @@ public:
 
 private:
   STLFactsDatabase *mpDB;
+  Timer mTimer;
 };
 
 #endif // STLPROVINGENGINE_H

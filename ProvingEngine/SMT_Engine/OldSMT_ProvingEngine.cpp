@@ -29,9 +29,7 @@ OldSMT_ProvingEngine::OldSMT_ProvingEngine(Theory *pT, proverParams &params) {
 
 // ---------------------------------------------------------------------------------------
 
-void OldSMT_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
-                                             unsigned timeLimit) {
-  mStartTime = startTime;
+void OldSMT_ProvingEngine::SetTimeLimit(unsigned timeLimit) {
   mParams.time_limit = timeLimit;
 }
 
@@ -430,14 +428,13 @@ bool OldSMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(),
                      formula.GetElement(1).GetElement(0).GetArity());
 
-    time_t start_time = time(NULL);
+    Timer t;
+    t.start();
     unsigned l, r, s, best = 0, best_start = 0;
     l = mParams.starting_proof_length;
     cout << "Looking for a proof of length: " << flush;
     while (l <= mParams.max_proof_length) {
-      time_t current_time = time(NULL);
-      double remainingTime =
-          mParams.time_limit - difftime(current_time, start_time);
+      double remainingTime = mParams.time_limit - t.elapsed();
       if (remainingTime <= 0)
         break;
 
@@ -482,9 +479,7 @@ bool OldSMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       if (l <= r && l != best)
         cout << "Looking for a proof of length: " << flush;
       while (l <= r && l != best) {
-        time_t current_time = time(NULL);
-        double remainingTime =
-            mParams.time_limit - difftime(current_time, start_time);
+        double remainingTime = mParams.time_limit - t.elapsed();
         if (remainingTime <= 0)
           break;
 

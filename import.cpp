@@ -419,7 +419,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
   DNFFormula fout;
   T.InstantiateGoal(theorem, instantiation, fout, false);
-  engine.SetStartTimeAndLimit(clock(), params.time_limit);
+  engine.SetTimeLimit(params.time_limit);
   engine.SetMaxNestingDepth(params.max_nesting_depth);
   engine.SetHints(&hints);
 

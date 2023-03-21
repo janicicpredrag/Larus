@@ -245,8 +245,7 @@ bool STLFactsDatabase::NextInstantiationOfUnivVars(
     } else {
       bool simple_check;
       do {
-        clock_t currentTime = clock();
-        double elapsed_secs = double(currentTime - mStartTime) / CLOCKS_PER_SEC;
+        double elapsed_secs = mTimer.elapsed();
         if (elapsed_secs > mTimeLimit)
           return false;
 

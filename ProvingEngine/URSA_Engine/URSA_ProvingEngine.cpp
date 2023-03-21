@@ -16,9 +16,7 @@ URSA_ProvingEngine::URSA_ProvingEngine(Theory *pT, proverParams &params) {
 
 // ---------------------------------------------------------------------------------------
 
-void URSA_ProvingEngine::SetStartTimeAndLimit(const clock_t &startTime,
-                                              unsigned timeLimit) {
-  mStartTime = startTime;
+void URSA_ProvingEngine::SetTimeLimit(unsigned timeLimit) {
   mParams.time_limit = timeLimit;
 }
 
@@ -341,6 +339,8 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                                            CLProof &proof) {
   if (system(NULL)) {
 
+    Timer t;
+    t.start();
     if (formula.GetSize() >
         0) // disjunctions in the goal can have only one disjunct
       mpT->AddSymbol(formula.GetElement(0).GetElement(0).GetName(),
@@ -360,15 +360,12 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
         return false;
       return (proof.DecodeProof(formula, "sat-proof.txt"));
     } else {
-      time_t start_time = time(NULL);
       if (mParams.starting_proof_length > mParams.max_proof_length)
         mParams.max_proof_length = mParams.starting_proof_length;
       cout << "Looking for a proof of length: " << flush;
       while (mParams.starting_proof_length <= mParams.max_proof_length) {
         cout << mParams.starting_proof_length << flush;
-        time_t current_time = time(NULL);
-        double remainingTime =
-            mParams.time_limit - difftime(current_time, start_time);
+        double remainingTime = mParams.time_limit - t.elapsed();
         if (remainingTime <= 0)
           break;
         EncodeProof(formula);
