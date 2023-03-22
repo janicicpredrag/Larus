@@ -796,6 +796,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
       oneStep &= (Cases(proofStep) == False());
     else
       oneStep &= (Cases(proofStep) == True());
+    oneStep &= (StepKind(proofStep) == MP());
     if (AxiomUsed != -1) {
       oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
     for (size_t i = 0; i < justification.GetArity(); i++) {

@@ -4,7 +4,9 @@
 
 static string Indent(unsigned level) { return (string(2 * (level+1), ' ')); }
 
-ProofExport2Isabelle::ProofExport2Isabelle() {}
+ProofExport2Isabelle::ProofExport2Isabelle() {
+  mbNeedGen = false;
+}
 
 // ----------------------------------------------------------------------------------
 
@@ -101,39 +103,67 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "theory larus" << endl;
   outfile << "imports Main" << endl << endl;
   outfile << "begin" << endl << endl;
-
   outfile << "typedecl \"MyT\"" << endl;
+
+  outfile << "locale larus = " << endl;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
        it != T.mSignature.end(); ++it) {
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
-       continue;
-    outfile << "consts " << get<0>(*it) << " :: \""
+      continue;
+    if (get<0>(*it) == "false" || get<0>(*it) == "true")
+      continue;
+    outfile << "  fixes " << get<0>(*it) << " :: \""
             << repeat2(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl;
   }
   for (vector<string>::iterator it = T.mInitialConstants.begin();
-      it < T.mInitialConstants.end(); it++) {
-    outfile << "consts " << *it << " :: \"MyT\"" << endl;
+    it < T.mInitialConstants.end(); it++) {
+    outfile << "  fixes " << *it << " :: \"MyT\"" << endl;
   }
 
-  outfile << endl;
   for (size_t i = 0, size = T.mCLOriginalAxioms.size(); i < size; i++) {
-    outfile << "axiomatization where " << endl;
+    outfile << "  assumes ";
     outfile << get<1>(T.mCLOriginalAxioms[i]) << ": \"";
-    OutputCLFormula(outfile, get<0>(T.Axiom(i)), get<1>(T.Axiom(i)));
+    OutputCLFormula(outfile, get<0>(T.mCLOriginalAxioms[i]), get<1>(T.mCLOriginalAxioms[i]));
     outfile << "\"" << endl;
   }
   outfile << endl;
+
+  outfile << "begin" << endl << endl;
 
   outfile << "lemma " << p.GetTheoremName() << ": \"";
   OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
   outfile << "\"" << endl;
   outfile << "proof - " << endl;
+
+  if (p.GetTheorem().GetNumOfUnivVars() > 0) {
+    mbNeedGen = true;
+    map<string, string> inst = p.GetInstantiation();
+    T.InstantiateGoal(p.GetTheorem(), inst, mInstantiatedGoal, false);
+
+    outfile << "{" << endl;
+    if (p.GetTheorem().GetNumOfUnivVars() > 0) {
+        outfile << Indent(0) << "fix ";
+      for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
+        outfile << inst.find(p.GetTheorem().GetUnivVar(i))->second;
+        if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
+          outfile << ", ";
+      }
+      outfile << endl;
+    }
+  }
+
+
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputEpilogue(ofstream &outfile) {
-  outfile << endl << "qed" << endl << endl;
+  if (mbNeedGen) {
+    outfile << "}" << endl;
+    outfile << "then show ?thesis by blast" << endl;
+  }
+  outfile << "qed" << endl << endl;
+  outfile << "end" << endl;
   outfile << "end" << endl;
 }
 
@@ -205,20 +235,18 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
 
 void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const CaseSplit *cs, unsigned level) {
-  outfile << Indent(level) << "then show ?thesis" << endl;
+  outfile << Indent(level);
+  if (mbNeedGen)
+    outfile << "from this have \"" << mInstantiatedGoal << "\"" << endl;
+  else
+    outfile << "from this show ?thesis" << endl;
+
   outfile << Indent(level) << "proof" << endl;
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
     OutputProof(outfile, cs->GetSubproof(i), level + 1);
     if (i != size-1)
       outfile << Indent(level) << "next" << endl;
   }
-/*  outfile << Indent(level) << "from note2 and note3 and '";
-  for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
-    OutputDNF(outfile, cs->GetCases()[i]);
-    if (i + 1 < cs->GetNumOfCases())
-      outfile << " \\<or> ";
-  }*/
-//  outfile << Indent(level) << "' have ?thesis by auto" << endl;
   outfile << Indent(level) << "qed" << endl;
 }
 
@@ -228,12 +256,11 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const ByAssumption* /* ba */,
                                           unsigned level) {
   outfile << Indent(level);
-  outfile << "from this show ?thesis by blast" << endl;
-//  outfile << "from ";
-//  outfile << "this ";
-//  outfile << "`";
+  if (mbNeedGen)
+    outfile << "from this have \"" << mInstantiatedGoal << "\" by blast" << endl;
+  else
+    outfile << "from this show ?thesis by blast" << endl;
 //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
-//  outfile << "`";
 }
 
 // ---------------------------------------------------------------------------------
@@ -242,8 +269,11 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const EFQ * /*efq*/,
                                           unsigned level) {
   outfile << Indent(level);
+  if (mbNeedGen)
+    outfile << "from this show \"" << mInstantiatedGoal << "\" by blast" << endl;
+  else
+    outfile << "from this show ?thesis by blast" << endl;
   //outfile << "from this have False by auto" << endl;
-  outfile << "from this show ?thesis by blast" << endl;
 }
 
 // ---------------------------------------------------------------------------------
