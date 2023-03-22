@@ -961,7 +961,12 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
                          smt_model_filename + " 2> /dev/null";
     cout << "  --invoking solver..." << flush;
     t.start();
-    /*int rv =*/system(sCall.c_str());
+    int rv = system(sCall.c_str());
+    if (WEXITSTATUS(rv) == 127) { // Salwa Gonzalez added this check
+      cout << endl << "z3/CSP solver not found in the PATH!" << endl << flush;
+      return eConjectureNotProved;
+    }
+
     mParams.time_limit = mParams.time_limit - t.elapsed();
     cout << "(remaining time: " << fixed << setprecision(2) << mParams.time_limit << "s); " << flush;
     if (!ReadModel(smt_model_filename)) {
