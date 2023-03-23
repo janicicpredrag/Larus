@@ -9,7 +9,7 @@ using namespace std;
 bool STLFactsDatabase::AddFact(const Fact &f) {
   if (!FindFact(Canonize(f))) {
     mDatabase.insert(Canonize(f));
-    cout << "Added fact " << Canonize(f) << endl;
+    // cout << "Added fact " << Canonize(f) << endl;
     return true;
   }
   else

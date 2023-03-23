@@ -106,7 +106,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
                            & (Nesting(s-1) == Nesting(s))
                            & (StepKind(s-1) == MP())
                            & (StepKind(s) == MP())) == False())
-                           | (AxiomApplied(s-1) < AxiomApplied(s)))
+                           | (AxiomApplied(s) >= AxiomApplied(s-1)))
                            % ("   9: Normalization condition for step " + itos(s));
       c &= cProofIsNormalized;
     }
@@ -789,7 +789,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   }
 
   Expression oneOfSteps = False();
-  for(unsigned proofStep = from; proofStep <= to; proofStep++) {
+  for(unsigned proofStep = from; proofStep < to; proofStep++) {
     Expression oneStep;
     oneStep = (Expression(proofStep) < ProofSize());
     if (hintFormula.GetGoal().GetSize() == 1)
@@ -967,7 +967,6 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       cout << endl << "z3/CSP solver not found in the PATH!" << endl << flush;
       return eConjectureNotProved;
     }
-
     mParams.time_limit = mParams.time_limit - t.elapsed();
     cout << "(remaining time: " << fixed << setprecision(2) << mParams.time_limit << "s); " << flush;
     if (!ReadModel(smt_model_filename)) {
