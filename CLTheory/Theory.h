@@ -96,7 +96,6 @@ public:
 
   vector<pair<CLFormula, string>> mCLaxioms;
   vector<pair<CLFormula, string>> mCLOriginalAxioms;
-  // set<string> mConstants;
   vector<string> mConstants;
   vector<string> mInitialConstants;
   set<string> mConstantsPermissible;

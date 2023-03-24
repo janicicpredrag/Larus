@@ -744,6 +744,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
       if (type == eAxiom) {
         T.AddAxiom(cl, statementName);
         T.UpdateSignature(cl);
+
       } else if (type == eConjecture) {
         theorem = cl;
         theoremName = statementName;
@@ -752,8 +753,47 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
         cout << "       File name:    " << inputFile << endl;
         cout << "       Theorem name: " << theoremName << endl;
         cout << "       Conjecture:   " << theorem << endl;
+
       } else if (type == eHint) {
         hint = cl;
+
+        Fact hintFact = cl.GetGoal().GetElement(0).GetElement(0);
+        if (hintFact.GetName() != "_") {
+          bool bPredicateSymbolExists = false;
+          for(unsigned i = 0; i<T.mSignature.size() && !bPredicateSymbolExists; i++) {
+            if (hintFact.GetName() == T.mSignature[i].first) {
+              bPredicateSymbolExists = true;
+              if (hintFact.GetArity()
+                  != T.mSignature[i].second) {
+                cout << "Hint ill formed (wrong arity of predicate symbol)" << endl;
+                return eErrorReadingAxioms;
+              }
+            }
+          }
+          if (!bPredicateSymbolExists) {
+            cout << "Wrong hint (given predicate symbol does not exist)" << endl;
+            return eErrorReadingAxioms;
+          }
+        }
+        if (justification.GetName() != "_") {
+          bool bAxiomExists = false;
+          for(unsigned i = 0; i<T.mCLaxioms.size() && !bAxiomExists; i++) {
+            if (justification.GetName() ==
+                    T.mCLaxioms[i].second) {
+              bAxiomExists = true;
+              if (justification.GetArity()
+                  != T.mCLaxioms[i].first.GetNumOfUnivVars()+
+                     T.mCLaxioms[i].first.GetNumOfExistVars()) {
+                cout << "Hint justification ill formed (wrong number of variables)" << endl;
+                return eErrorReadingAxioms;
+              }
+            }
+          }
+          if (!bAxiomExists) {
+            cout << "Wrong hint (given axiom does not exist)" << endl;
+            return eErrorReadingAxioms;
+          }
+        }
         hints.push_back(tuple<CLFormula, string, string, Fact>(
             hint, statementName, ordinal, justification));
         cout << "Hint: name: " << statementName << "; hint formula: " << hint
