@@ -188,8 +188,8 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
     }
     for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
       /* The id of a new constant is */
-      /* mnMaxNumberOfVarsInAxioms*(nProofStep+1)+i, so they */
-      /* don't overlap, unless some axioms introduce >8 witnesses */
+      /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
+      /* so they don't overlap */
       c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
             mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
     }
@@ -789,7 +789,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   }
 
   Expression oneOfSteps = False();
-  for(unsigned proofStep = from; proofStep < to; proofStep++) {
+  for(unsigned proofStep = from; proofStep <= to; proofStep++) {
     Expression oneStep;
     oneStep = (Expression(proofStep) < ProofSize());
     if (hintFormula.GetGoal().GetSize() == 1)
