@@ -22,15 +22,6 @@ void ProofExport2Isabelle::OutputCLFormula(ofstream &outfile,
     }
     outfile << ". ";
   }
-
-  for (size_t i = 0; i < cl.GetPremises().GetSize(); i++) {
-    OutputFact(outfile, cl.GetPremises().GetElement(i));
-    outfile << " ";
-    if (i + 1 < cl.GetPremises().GetSize())
-      outfile << " \\<longrightarrow> ";
-  }
-  if (cl.GetPremises().GetSize() != 0)
-    OutputImplication(outfile);
   if (cl.GetNumOfExistVars() > 0) {
     outfile << "\\<exists> ";
     for (size_t i = 0, size = cl.GetNumOfExistVars(); i < size; i++) {
@@ -40,7 +31,21 @@ void ProofExport2Isabelle::OutputCLFormula(ofstream &outfile,
     }
     outfile << ". ";
   }
+
+  if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars() > 0)
+    outfile << " ( ";
+  for (size_t i = 0; i < cl.GetPremises().GetSize(); i++) {
+    OutputFact(outfile, cl.GetPremises().GetElement(i));
+    outfile << " ";
+    if (i + 1 < cl.GetPremises().GetSize())
+      outfile << " \\<longrightarrow> ";
+  }
+  if (cl.GetPremises().GetSize() != 0)
+    OutputImplication(outfile);
   OutputDNF(outfile, cl.GetGoal());
+  if (cl.GetNumOfUnivVars() > 0 || cl.GetNumOfExistVars() > 0)
+    outfile << " ) ";
+
 }
 
 // ---------------------------------------------------------------------------------
@@ -75,18 +80,20 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputImplication(ofstream &outfile) {
-  outfile << "\\<longrightarrow> ";
+  outfile << " \\<longrightarrow> ";
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputAnd(ofstream &outfile) {
-  outfile << "\\<and>";
+  outfile << " \\<and> ";
 }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Isabelle::OutputOr(ofstream &outfile) { outfile << "\\<or> "; }
+void ProofExport2Isabelle::OutputOr(ofstream &outfile) {
+    outfile << " \\<or> ";
+}
 
 // ---------------------------------------------------------------------------------
 string repeat2(int n, string s) {
@@ -135,30 +142,38 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\"" << endl;
   outfile << "proof - " << endl;
 
-  if (p.GetTheorem().GetNumOfUnivVars() > 0) {
-    mbNeedGen = true;
-    map<string, string> inst = p.GetInstantiation();
-    T.InstantiateGoal(p.GetTheorem(), inst, mInstantiatedGoal, false);
+  mbNeedGen = false;
+  mbHasImplication = false;
 
+  if (p.GetTheorem().GetPremises().GetSize() > 0) {
+    mbHasImplication = true;
+  }
+
+  if (p.GetTheorem().GetNumOfUnivVars() > 0) {
+      mbNeedGen = true;
+  }
+
+  map<string, string> inst = p.GetInstantiation();
+  T.InstantiateGoal(p.GetTheorem(), inst, mInstantiatedGoal, false);
+
+  if (mbHasImplication || mbNeedGen) {
     outfile << "{" << endl;
-    if (p.GetTheorem().GetNumOfUnivVars() > 0) {
-        outfile << Indent(0) << "fix ";
+    if (mbNeedGen) {
+      outfile << Indent(0) << "fix ";
       for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
         outfile << inst.find(p.GetTheorem().GetUnivVar(i))->second;
         if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
-          outfile << ", ";
+          outfile << " ";
       }
       outfile << endl;
     }
   }
-
-
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputEpilogue(ofstream &outfile) {
-  if (mbNeedGen) {
+  if (mbHasImplication || mbNeedGen) {
     outfile << "}" << endl;
     outfile << "then show ?thesis by blast" << endl;
   }
@@ -178,7 +193,7 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
   }
   for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
     outfile << "\"";
-    OutputFact(outfile, p.GetAssumption(i));
+    OutputDNF(outfile, p.GetCLAssumption(i));
     outfile << "\" ";
   }
   outfile << endl;
@@ -191,7 +206,7 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
       outfile << "from ";
       for (size_t j = 0; j < conj.size(); j++) {
         outfile << "`";
-           OutputFact(outfile, conj[j].GetElement(0).GetElement(0));
+        OutputConjFormula(outfile, conj[j].GetElement(0));
         outfile << "`";
         if (j + 1 < conj.size())
           outfile << " and ";
@@ -235,11 +250,15 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
 
 void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const CaseSplit *cs, unsigned level) {
-  outfile << Indent(level);
-  if (mbNeedGen)
-    outfile << "from this have \"" << mInstantiatedGoal << "\"" << endl;
+  outfile << Indent(level) << "then have ";
+  if (mbNeedGen) {
+    outfile << " \"";
+    OutputDNF(outfile, mInstantiatedGoal);
+    outfile << "\" ";
+  }
   else
-    outfile << "from this show ?thesis" << endl;
+    outfile << "?thesis";
+  outfile << endl;
 
   outfile << Indent(level) << "proof" << endl;
   for (size_t i = 0, size = cs->GetNumOfCases(); i < size; i++) {
@@ -248,6 +267,19 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
       outfile << Indent(level) << "next" << endl;
   }
   outfile << Indent(level) << "qed" << endl;
+  if (level > 0 || !mbNeedGen)
+    outfile << Indent(level) << "from this show ";
+  else
+    outfile << Indent(level) << "from this have ";
+  if (mbNeedGen) {
+    outfile << " \"";
+    OutputDNF(outfile, mInstantiatedGoal);
+    outfile << "\" ";
+  }
+  else {
+    outfile << "?thesis ";
+  }
+  outfile << "by blast" << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -255,12 +287,29 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
 void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const ByAssumption* /* ba */,
                                           unsigned level) {
-  outfile << Indent(level);
-  if (mbNeedGen)
-    outfile << "from this have \"" << mInstantiatedGoal << "\" by blast" << endl;
+
+  for (unsigned i = 0; i < mInstantiatedGoal.GetSize(); i++) {
+    if (mInstantiatedGoal.GetElement(i).GetSize() == 1 &&
+        mInstantiatedGoal.GetElement(i).GetElement(0).GetName() == "true") {
+      outfile << Indent(level) << "show ?thesis by blast" << endl;
+      return;
+    }
+  }
+
+  if ((mbNeedGen || mbHasImplication) && (level == 0))
+    outfile << Indent(level) << "from this have ";
   else
-    outfile << "from this show ?thesis by blast" << endl;
-//  OutputConjFormula(outfile, ba->GetConjunctionFormula());
+    outfile << Indent(level) << "from this show ";
+
+  if (mbNeedGen) {
+    outfile << " \"";
+    OutputDNF(outfile, mInstantiatedGoal);
+    outfile << "\" ";
+  }
+  else
+    outfile << "?thesis ";
+  outfile << "by blast" << endl;
+  //  OutputConjFormula(outfile, ba->GetConjunctionFormula());
 }
 
 // ---------------------------------------------------------------------------------
@@ -269,8 +318,20 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           const EFQ * /*efq*/,
                                           unsigned level) {
   outfile << Indent(level);
-  if (mbNeedGen)
-    outfile << "from this show \"" << mInstantiatedGoal << "\" by blast" << endl;
+  if (mbHasImplication || mbNeedGen) {
+    if (level > 0 && mbNeedGen) {
+      outfile << "from this show \"";
+      OutputDNF(outfile, mInstantiatedGoal);
+    }
+    else {
+      outfile << "from this have \"";
+      if (mbNeedGen)
+        OutputDNF(outfile, mInstantiatedGoal);
+      else
+        outfile << "?thesis";
+    }
+    outfile << "\" by blast" << endl;
+  }
   else
     outfile << "from this show ?thesis by blast" << endl;
   //outfile << "from this have False by auto" << endl;
