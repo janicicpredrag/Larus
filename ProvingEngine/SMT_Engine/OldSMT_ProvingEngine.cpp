@@ -467,7 +467,7 @@ bool OldSMT_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
       cout << endl
            << "Simplifying the proof (size without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << flush;
-      proof.Simplify();
+      proof.SimplifyByFormulae();
       cout << endl
            << "Done! (new proof length without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << endl;

@@ -157,43 +157,6 @@ void CLProof::SetProofEnd(CLProofEnd *p)
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Relevant(const set<unsigned> &relevant, unsigned s)
-{
-  return (relevant.find(s) != relevant.end());
-}
-
-// ---------------------------------------------------------------------------------
-
-bool CLProof::Relevant(const set<Fact> &relevant, const Fact &f)
-{
-  return (relevant.find(f) != relevant.end());
-}
-
-// ---------------------------------------------------------------------------------
-
-bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f)
-{
-  for (size_t i = 0; i < f.GetSize(); i++) {
-    if (Relevant(relevant, f.GetElement(i)))
-      return true;
-  }
-  return false;
-}
-
-// ---------------------------------------------------------------------------------
-
-void CLProof::MakeRelevant(set<unsigned> &relevant, unsigned s) {
-  relevant.insert(s);
-}
-
-// ---------------------------------------------------------------------------------
-
-void CLProof::AddToAllSteps(set<unsigned> &allSteps, unsigned s) {
-  allSteps.insert(s);
-}
-
-// ---------------------------------------------------------------------------------
-
 bool CLProof::IsContradiction() const
 {
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
@@ -213,7 +176,27 @@ bool CLProof::IsContradiction() const
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::Simplify()
+bool CLProof::Relevant(const set<unsigned> &relevant, unsigned s)
+{
+  return (relevant.find(s) != relevant.end());
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::MakeRelevant(set<unsigned> &relevant, unsigned s) {
+  relevant.insert(s);
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::AddToAllSteps(set<unsigned> &allSteps, unsigned s) {
+  allSteps.insert(s);
+}
+
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::SimplifyByProofSteps()
 {
   set<unsigned> relevant;
   set<unsigned> allSteps;
@@ -321,6 +304,112 @@ void CLProof::DecreaseFromInfoFromStep(unsigned s)
         pe->GetSubproof(i).DecreaseFromInfoFromStep(s);
       }
     }
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::SimplifyByFormulae() {
+  set<Fact> relevant;
+  CLProof::SimplifyByFormulae(relevant);
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
+  CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+  if (pe) {
+    for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+      pe->SimplifySubproof(relevant, i);
+      /* for(size_t i=0; i<pe->mCases.GetSize(); i++)
+           for(size_t k=0; k < pe->mCases.GetElement(i).GetSize(); k++)
+               MakeRelevant(relevant,pe->mCases.GetElement(i).GetElement(k));*/
+      MakeRelevant(relevant, pe->GetCases()[i].GetElement(0));
+    }
+  } else {
+    ByAssumption *ba = dynamic_cast<ByAssumption *>(mpProofEnd);
+    if (ba) {
+      MakeRelevant(relevant, ba->GetConjunctionFormula());
+    } else {
+      EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
+      if (efq)
+        MakeRelevant(relevant, Fact("false"));
+    }
+  }
+  if (mMPs.size() > 0) { // last step is always relevant
+    ConjunctionFormula cf = (mMPs[mMPs.size() - 1]).from;
+    DNFFormula dnf = (mMPs[mMPs.size() - 1]).conclusion;
+    MakeRelevant(relevant, dnf.GetElement(0));
+  }
+
+  // Simplify the sequence of modus ponenses
+  size_t size = mMPs.size();
+  for (int i = size; i > 0; i--) {
+    // std::cout << endl << " MP  : " << i << endl;
+    ConjunctionFormula cf = mMPs[i - 1].from;
+    DNFFormula dnf = mMPs[i - 1].conclusion;
+    /*if (dnf.GetSize()==1) {
+        if (Relevant(relevant, dnf.GetElement(0)))
+            MakeRelevant(relevant, cf);
+        else
+            mMP.erase(mMP.begin()+i-1);
+    }*/
+
+    bool bRelevant = false;
+    for (size_t j = 0; j < dnf.GetSize() && !bRelevant; j++) {
+      // std::cout << "Testing Relevant : " << cf << endl;
+      if (Relevant(relevant, dnf.GetElement(j))) {
+        MakeRelevant(relevant, cf);
+        bRelevant = true;
+        // std::cout << " Relevant : " << cf << endl;
+      }
+    }
+    if (!bRelevant)
+      mMPs.erase(mMPs.begin() + i - 1);
+  }
+
+  for (int i = size; i > 0; i--) {
+    DNFFormula dnf = mMPs[i - 1].conclusion;
+    if (dnf.GetSize() == 1 && dnf.GetElement(0).GetSize() == 1) {
+      for (int j = i - 1; j > 0; j--) {
+        DNFFormula dnf2 = mMPs[j - 1].conclusion;
+        if (dnf2.GetSize() == 1 && dnf2.GetElement(0).GetSize() == 1 &&
+            dnf.GetElement(0).GetElement(0) ==
+                dnf2.GetElement(0).GetElement(0)) {
+          mMPs.erase(mMPs.begin() + i - 1);
+          break;
+        }
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------
+
+bool CLProof::Relevant(const set<Fact> &relevant, const Fact &f) {
+  return (relevant.find(f) != relevant.end());
+}
+
+// ---------------------------------------------------------------------------------
+
+bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f) {
+  for (size_t i = 0; i < f.GetSize(); i++) {
+    if (Relevant(relevant, f.GetElement(i)))
+      return true;
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::MakeRelevant(set<Fact> &relevant, const Fact &f) {
+  relevant.insert(f);
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f) {
+  for (size_t i = 0; i < f.GetSize(); i++)
+    MakeRelevant(relevant, f.GetElement(i));
 }
 
 // ---------------------------------------------------------------------------------------

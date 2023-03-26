@@ -879,7 +879,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       assert(ret);
       cout << endl << "  --simplifying the proof (size without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << flush;
-      proof.Simplify();
+      proof.SimplifyByProofSteps();
       cout << endl << "  --new proof length without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << endl;
 

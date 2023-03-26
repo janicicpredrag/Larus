@@ -54,7 +54,14 @@ public:
                  int step = -1);
   void SetProofEnd(CLProofEnd *p);
 
-  void Simplify();
+  void SimplifyByFormulae();
+  void SimplifyByFormulae(set<Fact> &relevant);
+  bool Relevant(const set<Fact> &relevant, const Fact &f);
+  bool Relevant(const set<Fact> &relevant, const ConjunctionFormula &f);
+  void MakeRelevant(set<Fact> &relevant, const Fact &f);
+  void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
+
+  void SimplifyByProofSteps();
   void RedirectRepeatedSteps();
   void AnnotateRelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant);
   void EliminateIrrelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant);
@@ -62,6 +69,7 @@ public:
   void DecreaseFromInfoFromStep(unsigned s);
   void MakeRelevant(set<unsigned> &relevant, unsigned s);
   bool Relevant(const set<unsigned> &relevant, unsigned s);
+  void AddToAllSteps(set<unsigned> &allSteps, unsigned s);
 
   bool IsContradiction() const;
 
@@ -73,12 +81,6 @@ public:
   int NumOfMPs() const;
   MP_Step GetMP(size_t i) const;
   const CLProofEnd *GetProofEnd() const { return mpProofEnd; }
-
-  bool Relevant(const set<Fact> &relevant, const Fact &f);
-  bool Relevant(const set<Fact> &relevant, const ConjunctionFormula &f);
-  void MakeRelevant(set<Fact> &relevant, const Fact &f);
-  void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
-  void AddToAllSteps(set<unsigned> &allSteps, unsigned s);
 
   bool DecodeProof(const DNFFormula &formula, const string &sEncodedProofFile);
   bool DecodeSubproof(const DNFFormula &formula,
@@ -138,10 +140,10 @@ public:
   void AddSubproof(const CLProof &proof) {
     mSubproofs.push_back(proof);
   }
-//  void SimplifySubproof(set<unsigned> &relevant, size_t i) {
-//    assert(i < mCases.size());
-//    mSubproofs[i].EliminateIrrelevantSteps(relevant);
-//  }
+  void SimplifySubproof(set<Fact> &relevant, size_t i) {
+    assert(i < mCases.size());
+    mSubproofs[i].SimplifyByFormulae(relevant);
+  }
 
   void SetCases(const vector<DNFFormula> &dnf) { mCases = dnf; }
   void SetCase(size_t i, const DNFFormula &dnf) { mCases[i] = dnf; }

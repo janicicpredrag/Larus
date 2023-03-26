@@ -437,9 +437,19 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
          << "The proof found size (without assumptions): "
          << proof.Size() - proof.NumOfAssumptions() << endl
          << flush;
-    if ((engine.GetKind() == eSTL_ProvingEngine || !params.shortest_proof) &&
-        params.mbSimp) {
-      proof.Simplify();
+    if (params.mbSimp) {
+      if (engine.GetKind() == eSTL_ProvingEngine)
+        proof.SimplifyByFormulae();
+      else if (!params.shortest_proof) {
+        if (engine.GetKind() == eSMTBV_ProvingEngine ||
+            engine.GetKind() == eSMTUFBV_ProvingEngine ||
+            engine.GetKind() == eSMTLIA_ProvingEngine ||
+            engine.GetKind() == eSMTUFLIA_ProvingEngine ||
+            engine.GetKind() == eMiniZinc)
+          proof.SimplifyByProofSteps();
+        else
+          proof.SimplifyByFormulae();
+      }
       cout << endl
            << "Done! (simplified proof length without assumptions: "
            << proof.Size() - proof.NumOfAssumptions() << ")" << endl;
