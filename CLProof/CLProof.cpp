@@ -64,36 +64,51 @@ void CLProof::Clear() {
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::SetTheory(Theory *pT) { mpT = pT; }
+void CLProof::SetTheory(Theory *pT)
+{
+  mpT = pT;
+}
 
 // ---------------------------------------------------------------------------------
 
-unsigned CLProof::Size() const {
+unsigned CLProof::Size() const
+{
   return mAssumptions.size() + mMPs.size() + mpProofEnd->Size();
 }
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::AddAssumption(const Fact &f) { mAssumptions.push_back(f); }
+void CLProof::AddAssumption(const Fact &f)
+{
+  mAssumptions.push_back(f);
+}
 
 // ---------------------------------------------------------------------------------
 
-size_t CLProof::NumOfAssumptions() const { return mAssumptions.size(); }
+size_t CLProof::NumOfAssumptions() const
+{
+  return mAssumptions.size();
+}
 
 // ---------------------------------------------------------------------------------
 
-const Fact &CLProof::GetAssumption(size_t i) const {
+const Fact &CLProof::GetAssumption(size_t i) const
+{
   assert(i < mAssumptions.size());
   return mAssumptions[i];
 }
 
 // ---------------------------------------------------------------------------------
 
-size_t CLProof::NumOfCLAssumptions() const { return mCLAssumptions.size(); }
+size_t CLProof::NumOfCLAssumptions() const
+{
+  return mCLAssumptions.size();
+}
 
 // ---------------------------------------------------------------------------------
 
-const DNFFormula &CLProof::GetCLAssumption(size_t i) const {
+const DNFFormula &CLProof::GetCLAssumption(size_t i) const
+{
   assert(i < mCLAssumptions.size());
   return mCLAssumptions[i];
 }
@@ -104,7 +119,9 @@ void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
                         string name,
                         const vector<unsigned> &fromStep,
                         const vector<pair<string, string>> &instantiation,
-                        const vector<pair<string, string>> &new_witnesses) {
+                        const vector<pair<string, string>> &new_witnesses,
+                        int step)
+{
   MP_Step m;
   m.from = from;
   m.conclusion = mp;
@@ -112,33 +129,50 @@ void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
   m.fromSteps = fromStep;
   m.instantiation = instantiation;
   m.new_witnesses = new_witnesses;
+  m.step = step;
   mMPs.push_back(m);
 }
 
 // ---------------------------------------------------------------------------------
 
-MP_Step CLProof::GetMP(size_t i) const {
+MP_Step CLProof::GetMP(size_t i) const
+{
   assert(i < mMPs.size());
   return mMPs[i];
 }
 
 // ---------------------------------------------------------------------------------
 
-int CLProof::NumOfMPs() const { return mMPs.size(); }
+int CLProof::NumOfMPs() const
+{
+  return mMPs.size();
+}
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::SetProofEnd(CLProofEnd *p) { mpProofEnd = p; }
+void CLProof::SetProofEnd(CLProofEnd *p)
+{
+  mpProofEnd = p;
+}
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Relevant(const set<Fact> &relevant, const Fact &f) {
+bool CLProof::Relevant(const set<unsigned> &relevant, unsigned s)
+{
+  return (relevant.find(s) != relevant.end());
+}
+
+// ---------------------------------------------------------------------------------
+
+bool CLProof::Relevant(const set<Fact> &relevant, const Fact &f)
+{
   return (relevant.find(f) != relevant.end());
 }
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f) {
+bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f)
+{
   for (size_t i = 0; i < f.GetSize(); i++) {
     if (Relevant(relevant, f.GetElement(i)))
       return true;
@@ -148,20 +182,20 @@ bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f) {
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::MakeRelevant(set<Fact> &relevant, const Fact &f) {
-  relevant.insert(f);
+void CLProof::MakeRelevant(set<unsigned> &relevant, unsigned s) {
+  relevant.insert(s);
 }
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f) {
-  for (size_t i = 0; i < f.GetSize(); i++)
-    MakeRelevant(relevant, f.GetElement(i));
+void CLProof::AddToAllSteps(set<unsigned> &allSteps, unsigned s) {
+  allSteps.insert(s);
 }
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::IsContradiction() const {
+bool CLProof::IsContradiction() const
+{
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
   if (pe) {
     for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
@@ -179,79 +213,114 @@ bool CLProof::IsContradiction() const {
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::Simplify() {
-  set<Fact> relevant;
-  CLProof::Simplify(relevant);
+void CLProof::Simplify()
+{
+  set<unsigned> relevant;
+  set<unsigned> allSteps;
+  RedirectRepeatedSteps();
+  AnnotateRelevantSteps(allSteps,relevant);
+  EliminateIrrelevantSteps(allSteps,relevant);
 }
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::Simplify(set<Fact> &relevant) {
-  CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
-  if (pe) {
-    for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
-      pe->SimplifySubproof(relevant, i);
-      /* for(size_t i=0; i<pe->mCases.GetSize(); i++)
-           for(size_t k=0; k < pe->mCases.GetElement(i).GetSize(); k++)
-               MakeRelevant(relevant,pe->mCases.GetElement(i).GetElement(k));*/
-      MakeRelevant(relevant, pe->GetCases()[i].GetElement(0));
-    }
-  } else {
-    ByAssumption *ba = dynamic_cast<ByAssumption *>(mpProofEnd);
-    if (ba) {
-      MakeRelevant(relevant, ba->GetConjunctionFormula());
-    } else {
-      EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
-      if (efq)
-        MakeRelevant(relevant, Fact("false"));
-    }
-  }
-  if (mMPs.size() > 0) { // last step is always relevant
-    ConjunctionFormula cf = (mMPs[mMPs.size() - 1]).from;
-    DNFFormula dnf = (mMPs[mMPs.size() - 1]).conclusion;
-    MakeRelevant(relevant, dnf.GetElement(0));
-  }
-
-  // Simplify the sequence of modus ponenses
-  size_t size = mMPs.size();
-  for (int i = size; i > 0; i--) {
-    // std::cout << endl << " MP  : " << i << endl;
-    ConjunctionFormula cf = mMPs[i - 1].from;
-    DNFFormula dnf = mMPs[i - 1].conclusion;
-    /*if (dnf.GetSize()==1) {
-        if (Relevant(relevant, dnf.GetElement(0)))
-            MakeRelevant(relevant, cf);
-        else
-            mMP.erase(mMP.begin()+i-1);
-    }*/
-
-    bool bRelevant = false;
-    for (size_t j = 0; j < dnf.GetSize() && !bRelevant; j++) {
-      // std::cout << "Testing Relevant : " << cf << endl;
-      if (Relevant(relevant, dnf.GetElement(j))) {
-        MakeRelevant(relevant, cf);
-        bRelevant = true;
-        // std::cout << " Relevant : " << cf << endl;
-      }
-    }
-    if (!bRelevant)
-      mMPs.erase(mMPs.begin() + i - 1);
-  }
-
-  for (int i = size; i > 0; i--) {
+void CLProof::RedirectRepeatedSteps()
+{
+  // delete repeated facts within one sequence of MPs
+  for (int i = mMPs.size(); i > 0; i--) {
     DNFFormula dnf = mMPs[i - 1].conclusion;
     if (dnf.GetSize() == 1 && dnf.GetElement(0).GetSize() == 1) {
       for (int j = i - 1; j > 0; j--) {
         DNFFormula dnf2 = mMPs[j - 1].conclusion;
         if (dnf2.GetSize() == 1 && dnf2.GetElement(0).GetSize() == 1 &&
-            dnf.GetElement(0).GetElement(0) ==
-                dnf2.GetElement(0).GetElement(0)) {
-          mMPs.erase(mMPs.begin() + i - 1);
+            dnf.GetElement(0).GetElement(0) == dnf2.GetElement(0).GetElement(0)) {
+          ReplaceFromInfo(mMPs[i - 1].step, mMPs[j - 1].step);
           break;
         }
       }
     }
   }
+}
+
+// ---------------------------------------------------------------------------------------
+
+void CLProof::ReplaceFromInfo(unsigned s1, unsigned s2)
+{
+    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+    if (pe) {
+      for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+        pe->GetSubproof(i).ReplaceFromInfo(s1, s2);
+      }
+    }
+    for (size_t i = 0, size = mMPs.size(); i<size; i++) {
+      for (unsigned k = 0; k < mMPs[i].fromSteps.size(); k++) {
+         if (mMPs[i].fromSteps[k] == s1)
+             mMPs[i].fromSteps[k] = s2;
+      }
+    }
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::AnnotateRelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant)
+{
+  CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+  if (pe) {
+    for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+      pe->GetSubproof(i).AnnotateRelevantSteps(allSteps,relevant);
+    }
+  }
+
+  if (mMPs.size() > 0) { // the last step is always relevant
+    MakeRelevant(relevant, mMPs[mMPs.size() - 1].step);
+    size_t size = mMPs.size();
+    for (int i = size-1; i >= 0; i--) {
+      AddToAllSteps(allSteps, mMPs[i].step);
+      if (Relevant(relevant, mMPs[i].step)) {
+        for (unsigned j = 0; j < mMPs[i].fromSteps.size(); j++) {
+          MakeRelevant(relevant, mMPs[i].fromSteps[j]);
+        }
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::EliminateIrrelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant)
+{
+    unsigned deleted = 0;
+    for (set<unsigned>::iterator it = allSteps.begin(); it != allSteps.end(); it++) {
+      if (!Relevant(relevant, *it)) {
+        DecreaseFromInfoFromStep(*it - deleted);
+        deleted++;
+      }
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+
+void CLProof::DecreaseFromInfoFromStep(unsigned s)
+{
+    for (size_t j = 0, size = mMPs.size(); j < size; ) {
+      if (mMPs[j].step == (int)s) {
+        mMPs.erase(mMPs.begin() + j);
+      } else {
+        if (mMPs[j].step > (int)s)
+          mMPs[j].step--;
+        for (size_t k = 0; k < mMPs[j].fromSteps.size(); k++) {
+          if (mMPs[j].fromSteps[k] > s)
+            mMPs[j].fromSteps[k]--;
+        }
+        j++;
+      }
+    }
+    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+    if (pe) {
+      for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+        pe->GetSubproof(i).DecreaseFromInfoFromStep(s);
+      }
+    }
 }
 
 // ---------------------------------------------------------------------------------------
@@ -945,10 +1014,14 @@ bool CLProof::CL2toCL() {
 void CLProof::PrettyPrint() const
 {
     for(unsigned int i=0; i < mAssumptions.size(); i++) {
-        cout << i << ". As: " << mAssumptions[i] << endl;
+        cout << "   " << i << ". As: " << mAssumptions[i] << endl;
     }
     for(unsigned int i=0; i < mMPs.size(); i++) {
-        cout << i << ". Mp: " << mMPs[i].conclusion << endl;
+        cout << "[" << mMPs[i].step << "] " << i << ". Mp: " << mMPs[i].conclusion << " from: ";
+        for(unsigned int j=0; j < mMPs[i].fromSteps.size(); j++) {
+            cout << mMPs[i].fromSteps[j] << ";";
+        }
+        cout << endl;
     }
 
     CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);

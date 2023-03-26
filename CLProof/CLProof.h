@@ -22,6 +22,7 @@ typedef struct {
   vector<unsigned> fromSteps;
   vector<pair<string, string>> instantiation;
   vector<pair<string, string>> new_witnesses;
+  int step;
 } MP_Step;
 
 // ----------------------------------------------------------------------------
@@ -49,11 +50,19 @@ public:
                  string name,
                  const vector<unsigned> &fromStep,
                  const vector<pair<string, string>> &instantiation,
-                 const vector<pair<string, string>> &new_witnesses);
+                 const vector<pair<string, string>> &new_witnesses,
+                 int step = -1);
   void SetProofEnd(CLProofEnd *p);
 
   void Simplify();
-  void Simplify(set<Fact> &relevant);
+  void RedirectRepeatedSteps();
+  void AnnotateRelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant);
+  void EliminateIrrelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant);
+  void ReplaceFromInfo(unsigned s1, unsigned s2);
+  void DecreaseFromInfoFromStep(unsigned s);
+  void MakeRelevant(set<unsigned> &relevant, unsigned s);
+  bool Relevant(const set<unsigned> &relevant, unsigned s);
+
   bool IsContradiction() const;
 
   size_t NumOfAssumptions() const;
@@ -69,6 +78,7 @@ public:
   bool Relevant(const set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeRelevant(set<Fact> &relevant, const Fact &f);
   void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
+  void AddToAllSteps(set<unsigned> &allSteps, unsigned s);
 
   bool DecodeProof(const DNFFormula &formula, const string &sEncodedProofFile);
   bool DecodeSubproof(const DNFFormula &formula,
@@ -128,10 +138,11 @@ public:
   void AddSubproof(const CLProof &proof) {
     mSubproofs.push_back(proof);
   }
-  void SimplifySubproof(set<Fact> &relevant, size_t i) {
-    assert(i < mCases.size());
-    mSubproofs[i].Simplify(relevant);
-  }
+//  void SimplifySubproof(set<unsigned> &relevant, size_t i) {
+//    assert(i < mCases.size());
+//    mSubproofs[i].EliminateIrrelevantSteps(relevant);
+//  }
+
   void SetCases(const vector<DNFFormula> &dnf) { mCases = dnf; }
   void SetCase(size_t i, const DNFFormula &dnf) { mCases[i] = dnf; }
   const DNFFormula &GetCase(size_t i) { return mCases[i]; }

@@ -256,8 +256,9 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
     OutputDNF(outfile, mInstantiatedGoal);
     outfile << "\" ";
   }
-  else
+  else {
     outfile << "?thesis";
+  }
   outfile << endl;
 
   outfile << Indent(level) << "proof" << endl;

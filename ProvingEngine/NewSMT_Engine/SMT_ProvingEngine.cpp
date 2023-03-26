@@ -1613,7 +1613,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             }
           }
           string axiomName = bIsEqSub ? "EqSub" : mpT->mCLaxioms[nAxiom].second;
-          proof.AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses);
+          proof.AddMPstep(cfPremises, d, axiomName, fromSteps, instantiation, new_witnesses, step);
        }
   }
   return true;
