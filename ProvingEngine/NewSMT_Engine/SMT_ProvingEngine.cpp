@@ -792,10 +792,10 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   for(unsigned proofStep = from; proofStep <= to; proofStep++) {
     Expression oneStep;
     oneStep = (Expression(proofStep) < ProofSize());
-    if (hintFormula.GetGoal().GetSize() == 1)
-      oneStep &= (Cases(proofStep) == False());
-    else
-      oneStep &= (Cases(proofStep) == True());
+//    if (hintFormula.GetGoal().GetSize() == 1)
+//      oneStep &= (Cases(proofStep) == False());
+//    else
+//      oneStep &= (Cases(proofStep) == True());
     oneStep &= (StepKind(proofStep) == MP());
     if (AxiomUsed != -1) {
       oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
