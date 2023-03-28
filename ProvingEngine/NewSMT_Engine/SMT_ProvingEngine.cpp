@@ -249,7 +249,7 @@ Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, un
       }
       // do not use inlining for premises of simple axioms
       // (but simple axioms have to be used not only by inlining)
-      if (mParams.mbInlineAxioms && !IsSimpleAxiom(ax))
+      if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula())
         c |= (MatchPremiseInline(s, ax, i)
              % ("Match premise " + itos(i) + " inline"));
     }
@@ -285,7 +285,7 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
     // An axiom q(x,y) => r(x,y) can be used, while p(x,b) => q(b,x) is inlined
     Expression cOneOfInlineAxioms = False();
     for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
-      if (IsSimpleAxiom(axInl) &&
+      if (GetAxiom(axInl).IsSimpleFormula() &&
           GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName()
           == GetAxiom(ax).GetPremises().GetElement(i).GetName())
       {
@@ -655,15 +655,6 @@ const CLFormula& SMT_ProvingEngine::GetAxiom(unsigned k)
 
 // ----------------------------------------------------------
 
-bool SMT_ProvingEngine::IsSimpleAxiom(unsigned ax)
-{
-    return (GetAxiom(ax).GetNumOfExistVars() == 0)
-           && (GetAxiom(ax).GetGoal().GetSize() == 1)
-           && (GetAxiom(ax).GetPremises().GetSize() <= 1);
-}
-
-// ----------------------------------------------------------
-
 void SMT_ProvingEngine::ComputeBindingForAxioms()
 {
     for (unsigned k = 0; k < mpT->NumberOfAxioms(); k++)
@@ -977,7 +968,7 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       }
       return eConjectureNotProved;
     } else {
-      cout << " proof FOUND! " << endl << flush;
+      cout << " proof FOUND! " << flush;
       return eConjectureProved;
     }
 }
@@ -1203,7 +1194,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
             mSMT_theory == eSMTUFBV_ProvingEngine) {
            c = (Expression(eBVAnd,Nesting(i),1u) == 1u);
         } else {
-          for (unsigned j = 1; j < (1 << (mParams.max_nesting_depth+1)); j += 2) {
+          for (unsigned j = 1; j < (unsigned)(1 << (mParams.max_nesting_depth+1)); j += 2) {
             c |= (Nesting(i) == j);
           }
         }

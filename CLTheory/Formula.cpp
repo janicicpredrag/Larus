@@ -605,7 +605,10 @@ bool CLFormula::IsSimpleImplication() const {
       GetGoal().GetElement(0).GetElement(0).GetName() == "false")
     return false;
 
-  if (numPremises == 1 && numDisj == 1 && GetNumOfExistVars() == 0)
+  if (numPremises == 1 &&
+      numDisj == 1 &&
+      GetGoal().GetElement(0).GetSize() == 1 &&
+      GetNumOfExistVars() == 0)
     return true;
 
   return false;
@@ -625,19 +628,27 @@ bool CLFormula::IsSimpleUnivFormula() const {
   if (GetGoal().GetElement(0).GetElement(0).GetName() == "false")
     return false;
 
-  /*    for (size_t i = 0; i<GetGoal().GetElement(0).GetElement(0).GetArity();
-     i++) {
-          bool notVar = true;
-          for (size_t j = 0; j<GetNumOfUnivVars() && notVar; j++) {
-              if (GetGoal().GetElement(0).GetElement(0).GetArg(i) ==
-     GetUnivVar(j))
-                  notVar = false;
-          }
-          if (notVar)
-              return false;
-      }*/
-
   return true;
+}
+
+// ----------------------------------------------------------
+
+bool CLFormula::IsSimpleFormula() const
+{
+    return IsSimpleImplication() || IsSimpleUnivFormula();
+/*
+    return (GetNumOfExistVars() == 0)
+           && (GetGoal().GetSize() == 1)
+           && (GetPremises().GetSize() <= 1);*/
+}
+
+// ----------------------------------------------------------
+
+bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
+{
+    return (GetNumOfExistVars() == 0)
+           && (GetGoal().GetSize() == 1)
+           && (GetPremises().GetSize() <= 1);
 }
 
 // ---------------------------------------------------------------------------------------

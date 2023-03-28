@@ -470,9 +470,10 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       string s = "coqc -R proofs src -q  " + sFileName3;
       int rv = system(s.c_str());
       if (!rv)
-        cout << "CoqCorrect!" << endl;
+        cout << "CoqCorrect!";
       else
-        cout << "CoqWrong!" << endl;
+        cout << "CoqWrong!";
+      cout << endl << endl;
     }
     if (params.mbIsa) {
       ProofExport2Isabelle exisa;
@@ -488,9 +489,10 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         string s = params.sIsaLarusFolder  + "isabelle build -D " + params.sIsaLarusFolder + "LarusSession";
         int rv = system(s.c_str());
         if (!rv)
-          cout << "IsabelleCorrect!" << endl << endl;
+          cout << "IsabelleCorrect!";
         else
-          cout << "IsabelleWrong!" << endl << endl;
+          cout << "IsabelleWrong!";
+        cout << endl << endl;
       }
     }
     if (params.mbMizar) {

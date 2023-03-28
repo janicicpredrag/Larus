@@ -38,7 +38,7 @@ void ProofExport2Isabelle::OutputCLFormula(ofstream &outfile,
     OutputFact(outfile, cl.GetPremises().GetElement(i));
     outfile << " ";
     if (i + 1 < cl.GetPremises().GetSize())
-      outfile << " \\<longrightarrow> ";
+      outfile << " \\<and> ";
   }
   if (cl.GetPremises().GetSize() != 0)
     OutputImplication(outfile);
@@ -106,7 +106,7 @@ string repeat2(int n, string s) {
 
 void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
                                           const CLProof &p,
-                                          proverParams & /* params */) {
+                                          proverParams& params) {
   outfile << "theory larus" << endl;
   outfile << "imports Main" << endl << endl;
   outfile << "begin" << endl << endl;
@@ -135,7 +135,43 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   }
   outfile << endl;
 
+  if (params.mbInlineAxioms) {
+  for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
+    outfile << "  assumes ";
+    outfile << T.mDerivedLemmas[i].name << ": \"";
+      if (T.mDerivedLemmas[i].mUniversalVars.size() > 0) {
+        outfile << "\\<forall> ";
+        for (size_t j = 0, size = T.mDerivedLemmas[i].mUniversalVars.size(); j < size; j++) {
+          outfile << T.mDerivedLemmas[i].mUniversalVars[j] << " ";
+        }
+        outfile << ". (";
+      }
+      OutputDNF(outfile, T.mDerivedLemmas[i].lhs);
+      if (T.mDerivedLemmas[i].lhs.GetSize() != 0)
+        OutputImplication(outfile);
+      OutputDNF(outfile, T.mDerivedLemmas[i].rhs);
+      if (T.mDerivedLemmas[i].mUniversalVars.size() > 0)
+        outfile << ")";
+      outfile << "\"" << endl;
+    }
+    outfile << endl;
+  }
+
   outfile << "begin" << endl << endl;
+
+  mSimpleaxioms = "";
+  if (params.mbInlineAxioms) {
+    for (size_t i = 0, size = T.mCLOriginalAxioms.size(); i < size; i++) {
+      if (get<0>(T.mCLOriginalAxioms[i]).IsSimpleFormulaWithoutDisjunction())
+        mSimpleaxioms += get<1>(T.mCLOriginalAxioms[i]) + " ";
+    }
+    for (size_t i = 0; i < T.mDerivedLemmas.size(); i++) {
+      mSimpleaxioms += T.mDerivedLemmas[i].name + " ";
+    }
+    if (!mSimpleaxioms.empty()) {
+      outfile << "lemmas simpleaxioms = " << mSimpleaxioms << endl << endl;
+    }
+  }
 
   outfile << "lemma " << p.GetTheoremName() << ": \"";
   OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
@@ -237,10 +273,20 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
         p.GetMP(i).axiomName.find("NegElim") != string::npos) {
       builtin = true;
     }
-    if (builtin)
-      outfile << " by auto";
-    else
-      outfile << "using " << p.GetMP(i).axiomName << " by blast";
+    if (builtin) {
+        if (!mSimpleaxioms.empty()) {
+           outfile << "using ";
+           outfile << "simpleaxioms";
+        }
+        outfile << " by blast";
+    }
+    else {
+      outfile << "using " << p.GetMP(i).axiomName << " ";
+      if (!mSimpleaxioms.empty()) {
+        outfile << "simpleaxioms";
+      }
+      outfile << " by blast";
+    }
     outfile << endl;
   }
   OutputProofEndGeneric(outfile, p.GetProofEnd(), level);

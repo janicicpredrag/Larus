@@ -211,6 +211,8 @@ public:
   bool UsesNativeEq() const;
   bool IsSimpleImplication() const;
   bool IsSimpleUnivFormula() const;
+  bool IsSimpleFormula() const;
+  bool IsSimpleFormulaWithoutDisjunction() const;
 
   void Clear() {
     mA.Clear();
