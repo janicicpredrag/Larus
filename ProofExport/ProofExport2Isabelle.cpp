@@ -107,7 +107,7 @@ string repeat2(int n, string s) {
 void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
                                           const CLProof &p,
                                           proverParams& params) {
-  outfile << "theory larus" << endl;
+  outfile << "theory Larus" << endl;
   outfile << "imports Main" << endl << endl;
   outfile << "begin" << endl << endl;
   outfile << "typedecl \"MyT\"" << endl;

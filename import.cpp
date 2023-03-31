@@ -66,19 +66,19 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   //  ************ Early filtering ************
   //  is to be used only in situations when we don't have dependencies, but a
   //  global set of axioms
-  vampire_succeeded = false;
+  vampire_succeeded = true;
   if (vampire_succeeded && params.msHammerInvoke != "") {
     // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    // cout << "       After initial filtering : output size: " <<
-    // T.mCLaxioms.size() << endl;
     USING_ORIGINAL_SIGNATURE_EQ = true;
     USING_ORIGINAL_SIGNATURE_NEG = true;
     if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                               params.vampire_time_limit) == eVampireUnsat)
       vampire_succeeded = true;
-    T.printAxioms();
     USING_ORIGINAL_SIGNATURE_EQ = false;
     USING_ORIGINAL_SIGNATURE_NEG = false;
+    cout << "       After initial filtering : output size: " <<
+    T.mCLaxioms.size() << endl;
+    T.printAxioms();
   }
 
   // ************  CL -> CL2 normalization  ************
@@ -124,6 +124,22 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     USING_ORIGINAL_SIGNATURE_EQ = false;
     USING_ORIGINAL_SIGNATURE_NEG = false;
   }
+
+  /*
+  // This does not bring benefits:
+  // ************ Yet another round of hammering 1 ************
+  if (params.msHammerInvoke != "" && vampire_succeeded) {
+    cout << "Yet another round of hammering" << endl;
+    USING_ORIGINAL_SIGNATURE_EQ = true;
+    USING_ORIGINAL_SIGNATURE_NEG = true;
+    vampire_succeeded =
+        (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                                 params.vampire_time_limit) == eVampireUnsat);
+    T.printAxioms();
+    USING_ORIGINAL_SIGNATURE_EQ = false;
+    USING_ORIGINAL_SIGNATURE_NEG = false;
+  } */
+
 
   // ************ Use or not "excluded middle" and "neg elim" ************
   if (!params.mbNoNegElim)
@@ -210,6 +226,22 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     }
     T.printAxioms();
   }
+
+  /*
+  // This does not bring benefits
+  // ************ Yet another round of hammering 2 ************
+  if (params.msHammerInvoke != "" && vampire_succeeded) {
+    cout << "Yet another round of hammering" << endl;
+    // USING_ORIGINAL_SIGNATURE_EQ = false;
+    // USING_ORIGINAL_SIGNATURE_NEG = false;
+    vampire_succeeded =
+        (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                                 params.vampire_time_limit) == eVampireUnsat);
+      if (vampire_succeeded) {
+      }
+    T.printAxioms();
+  } */
+
 
   // ************ Filtering by reachability ************
   // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
@@ -481,7 +513,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       exisa.ToFile(T, proof, sFileName3, params);
 
       if (!params.sIsaLarusFolder.empty()) {
-        string sFileName4(params.sIsaLarusFolder + "LarusSession/larus.thy");
+        string sFileName4(params.sIsaLarusFolder + "LarusSession/Larus.thy");
         string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
         system(sCopyFile.c_str());
 
