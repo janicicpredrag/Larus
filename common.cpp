@@ -70,6 +70,26 @@ string SkipChar(const string &str, char c) {
 
 // ---------------------------------------------------------------------------------------
 
+bool isIdentifier(const string &str) {
+  if (!isalpha(str[0]))
+    return false;
+  size_t strlen = str.length();
+  for (size_t i = 1; i < strlen; i++) {
+    if (str[i] != '_' && !isdigit(str[i]) && !isalpha(str[i]))
+      return false;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool isHintArgument(const string &str) {
+  int i;
+  return (isIdentifier(str) || stoi(str,i) || str == "_");
+}
+
+// ---------------------------------------------------------------------------------------
+
 string ToUpper(const string &str) {
   return str;
   /*

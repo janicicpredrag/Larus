@@ -142,6 +142,8 @@ string SkipChar(const string &str, char c);
 string ToUpper(const string &str);
 string dirnameOf(const string &fname);
 string SkipChar(const string &str, char c);
+bool isIdentifier(const string &str);
+bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;

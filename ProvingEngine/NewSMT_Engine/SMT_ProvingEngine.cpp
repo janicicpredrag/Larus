@@ -739,7 +739,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   string ordinal = get<2>(hint);
   Fact justification = get<3>(hint);
   Expression Hints;
-  int arg, i, AxiomUsed = -1;
+  int i, AxiomUsed = -1;
 
   if (justification.GetName() != "_") {
     string arg0 = stoi(justification.GetArg(0), i)
@@ -790,16 +790,18 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
     oneStep &= (StepKind(proofStep) == MP());
     if (AxiomUsed != -1) {
       oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
-    for (size_t i = 0; i < justification.GetArity(); i++) {
-      if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
-        continue;
-      if (stoi(justification.GetArg(i),arg)) // if it is a number, it is one of the intro vars
-        oneStep &= (Instantiation(proofStep, i) == (unsigned)arg);
-      else // otherwise, we bind it to a new variable
-        oneStep &= (Instantiation(proofStep, i) == string("nHintVarInst" + hintName + justification.GetArg(i)));
+      for (size_t i = 0; i < justification.GetArity(); i++) {
+        int ii;
+        if (justification.GetArg(i) != "?" && justification.GetArg(i) != "_") {
+          if (stoi(justification.GetArg(i),ii))
+            oneStep &= (Instantiation(proofStep, i) == (unsigned)ii);
+          else
+            oneStep &= (Instantiation(proofStep, i) == justification.GetArg(i));
+        }
       }
-    } else {
-      oneStep &= (IsQEDStep(proofStep) == False()); /* ? */
+      // else {
+      //  oneStep &= (IsQEDStep(proofStep) == False()); /* ? */
+      // }
     }
 
     if (hintFormula.GetGoal().GetElement(0).GetElement(0).GetName() != "_") {
@@ -809,12 +811,13 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
         Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
         oneStep &= (ContentsPredicate(proofStep,j) == ToUpper(f.GetName()));
         for (size_t i = 0; i < f.GetArity(); i++) {
-          if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
-            continue;
-          if (stoi(f.GetArg(i), arg)) // if it is a number, it is one of the intro vars
-            oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)arg);
-          else // otherwise, we bind it to a new variable
-            oneStep &= (ContentsArgument(proofStep,j,i) == string("nHintVar" + hintName + ToUpper(f.GetArg(i))));
+          int ii;
+          if (f.GetArg(i) != "?" && f.GetArg(i) != "_") {
+            if (stoi(justification.GetArg(i),ii))
+              oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)ii);
+            else
+              oneStep &= (ContentsArgument(proofStep,j,i) == f.GetArg(i));
+          }
         }
       }
     }
@@ -1124,6 +1127,30 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AddComment("************************** Premises encoded ***************************");
     if (mnNumberOfAssumptions > 0)
       Assert(mProofPremises);
+
+    AddComment("************************** Hints variables ***************************");
+    set<string> hintVars;
+    for (size_t i = 0; i < mpHints->size(); i++) {
+        tHint hint = mpHints->at(i);
+        Fact hintFact = get<0>(hint).GetGoal().GetElement(0).GetElement(0);
+        string ordinal = get<2>(hint);
+        Fact justification = get<3>(hint);
+
+        for(unsigned i = 0; i<hintFact.GetArity(); i++) {
+          if (isIdentifier(hintFact.GetArg(i)) && hintVars.find(hintFact.GetArg(i)) == hintVars.end()) {
+            DeclareVarBasicType(hintFact.GetArg(i), 1000);
+            hintVars.insert(hintFact.GetArg(i));
+          }
+        }
+        if (isIdentifier(ordinal))
+          DeclareVarBasicType(ordinal, 1000);
+        for(unsigned i = 0; i<justification.GetArity(); i++) {
+          if (isIdentifier(justification.GetArg(i)) && hintVars.find(justification.GetArg(i)) == hintVars.end()) {
+            DeclareVarBasicType(justification.GetArg(i), 1000);
+            hintVars.insert(justification.GetArg(i));
+          }
+        }
+    }
 
     AddComment("");
     AddComment("******************************* Hints ********************************");

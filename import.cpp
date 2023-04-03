@@ -801,14 +801,14 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
       } else if (type == eHint) {
         hint = cl;
 
+        // hintFact can be only a ground fact over the signature
         Fact hintFact = cl.GetGoal().GetElement(0).GetElement(0);
         if (hintFact.GetName() != "_") {
           bool bPredicateSymbolExists = false;
           for(unsigned i = 0; i<T.mSignature.size() && !bPredicateSymbolExists; i++) {
             if (hintFact.GetName() == T.mSignature[i].first) {
               bPredicateSymbolExists = true;
-              if (hintFact.GetArity()
-                  != T.mSignature[i].second) {
+              if (hintFact.GetArity() != T.mSignature[i].second) {
                 cout << "Hint ill formed (wrong arity of predicate symbol)" << endl;
                 return eErrorReadingAxioms;
               }
@@ -818,12 +818,19 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             cout << "Wrong hint (given predicate symbol does not exist)" << endl;
             return eErrorReadingAxioms;
           }
+          for(unsigned i = 0; i<hintFact.GetArity(); i++) {
+            if (!isHintArgument(hintFact.GetArg(i))) {
+              cout << "Hint fact has bad arguments" << endl;
+              return eErrorReadingAxioms;
+            }
+          }
         }
+
+        // justification can be only be an axiom with instantiation of its variables
         if (justification.GetName() != "_") {
           bool bAxiomExists = false;
           for(unsigned i = 0; i<T.mCLaxioms.size() && !bAxiomExists; i++) {
-            if (justification.GetName() ==
-                    T.mCLaxioms[i].second) {
+            if (justification.GetName() == T.mCLaxioms[i].second) {
               bAxiomExists = true;
               if (justification.GetArity()
                   != T.mCLaxioms[i].first.GetNumOfUnivVars()+
@@ -837,7 +844,20 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             cout << "Wrong hint (given axiom does not exist)" << endl;
             return eErrorReadingAxioms;
           }
+          for(unsigned i = 0; i<justification.GetArity(); i++) {
+            if (!isHintArgument(justification.GetArg(i))) {
+              cout << "Hint justification has bad arguments" << endl;
+              return eErrorReadingAxioms;
+            }
+          }
         }
+
+        // Hint ordinal must be '_' or a natural number or a variable
+        if (!isHintArgument(ordinal)) {
+          cout << "Hint ordinal must be '_' or a natural number or a variable" << endl;
+          return eErrorReadingAxioms;
+        }
+
         hints.push_back(tuple<CLFormula, string, string, Fact>(
             hint, statementName, ordinal, justification));
         cout << "Hint: name: " << statementName << "; hint formula: " << hint
