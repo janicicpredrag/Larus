@@ -742,24 +742,25 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   int i, AxiomUsed = -1;
 
   if (justification.GetName() != "_") {
-    string arg0 = stoi(justification.GetArg(0), i)
-               ? itos(i)
-               : justification.GetArg(0) + hintName;
-    string arg1 = stoi(justification.GetArg(1), i)
-               ? itos(i)
-               : justification.GetArg(1) + hintName;
+    Expression arg0 = stoi(justification.GetArg(0), i)
+               ? Expression((unsigned)i)
+               : Expression(justification.GetArg(0));
+    Expression arg1 = stoi(justification.GetArg(1), i)
+               ? Expression((unsigned)i)
+               : Expression(justification.GetArg(1));
 
     if (justification.GetName() == "leq" && justification.GetArity() == 2) {
-      Hints &= Expression(arg1) >= Expression(arg0);
-    }
-    if (justification.GetName() == "less" && justification.GetArity() == 2) {
-      Hints &= Expression(arg0) < Expression(arg1);
-    }
-    for (size_t i = 0; i < mpT->mCLaxioms.size(); i++)
-      if (mpT->mCLaxioms[i].second == justification.GetName()) {
-        AxiomUsed = i;
-        break;
+      Hints &= (arg1 >= arg0);
+    } else if (justification.GetName() == "less" && justification.GetArity() == 2) {
+      Hints &= (arg0 < arg1);
+    } else {
+      for (size_t i = 0; i < mpT->mCLaxioms.size(); i++) {
+        if (mpT->mCLaxioms[i].second == justification.GetName()) {
+          AxiomUsed = i;
+          break;
+        }
       }
+    }
   }
 
   assert(hintFormula.GetNumOfUnivVars() == 0 &&
@@ -769,7 +770,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
     return Hints;
   if (hintFormula.GetGoal().GetElement(0).GetSize() > 1)
     return Hints;
-  stringstream s;
+  //stringstream s;
 
   int proofStep;
   unsigned from, to;
@@ -824,7 +825,9 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
     oneOfSteps |= oneStep;
   }
 
-  Hints &= oneOfSteps;
+  if (justification.GetName() != "leq" && justification.GetName() != "less")
+    Hints &= oneOfSteps;
+
   stringstream ss;
   ss << "; Hint " << index << ":" << endl << "; " << hintFormula << "; proof step: " << ordinal <<
         "; justification: " << justification << endl << "; Encoded hint:";

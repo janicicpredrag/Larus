@@ -840,8 +840,12 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
               }
             }
           }
-          if (!bAxiomExists) {
-            cout << "Wrong hint (given axiom does not exist)" << endl;
+          if (!bAxiomExists &&
+                  justification.GetName() != "eq_excluded_middle" &&
+                  justification.GetName() != "eq_neg_elim" &&
+                  justification.GetName() != "leq" &&
+                  justification.GetName() != "less") {
+              cout << "Wrong hint (given axiom does not exist)" << endl;
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<justification.GetArity(); i++) {
