@@ -809,18 +809,18 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             if (hintFact.GetName() == T.mSignature[i].first) {
               bPredicateSymbolExists = true;
               if (hintFact.GetArity() != T.mSignature[i].second) {
-                cout << "Hint ill formed (wrong arity of predicate symbol)" << endl;
+                cout << "Wrong hint fact: " << hintFact << " is ill-formed (wrong arity of predicate symbol)" << endl;
                 return eErrorReadingAxioms;
               }
             }
           }
           if (!bPredicateSymbolExists) {
-            cout << "Wrong hint (given predicate symbol does not exist)" << endl;
+            cout << "Wrong hint fact: " << hintFact << " (given predicate symbol does not exist)" << endl;
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<hintFact.GetArity(); i++) {
             if (!isHintArgument(hintFact.GetArg(i))) {
-              cout << "Hint fact has bad arguments" << endl;
+              cout << "Wrong hint fact: " << hintFact << " has bad arguments" << endl;
               return eErrorReadingAxioms;
             }
           }
@@ -835,7 +835,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
               if (justification.GetArity()
                   != T.mCLaxioms[i].first.GetNumOfUnivVars()+
                      T.mCLaxioms[i].first.GetNumOfExistVars()) {
-                cout << "Hint justification ill formed (wrong number of variables)" << endl;
+                cout << "Wrong hint justification: " << justification << " is ill-formed (wrong number of variables)" << endl;
                 return eErrorReadingAxioms;
               }
             }
@@ -845,12 +845,12 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
                   justification.GetName() != "eq_neg_elim" &&
                   justification.GetName() != "leq" &&
                   justification.GetName() != "less") {
-              cout << "Wrong hint (given axiom does not exist)" << endl;
+              cout << "Wrong hint justification: " << justification << " (given axiom does not exist)" << endl;
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<justification.GetArity(); i++) {
             if (!isHintArgument(justification.GetArg(i))) {
-              cout << "Hint justification has bad arguments" << endl;
+              cout << "Wrong hint justification: " << justification << " has bad arguments" << endl;
               return eErrorReadingAxioms;
             }
           }
@@ -858,7 +858,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
 
         // Hint ordinal must be '_' or a natural number or a variable
         if (!isHintArgument(ordinal)) {
-          cout << "Hint ordinal must be '_' or a natural number or a variable" << endl;
+          cout << "Hint " << hintFact << " ordinal must be '_' or a natural number or a variable" << endl;
           return eErrorReadingAxioms;
         }
 
