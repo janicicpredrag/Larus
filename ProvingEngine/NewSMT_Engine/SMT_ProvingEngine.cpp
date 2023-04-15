@@ -814,7 +814,7 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
         for (size_t i = 0; i < f.GetArity(); i++) {
           int ii;
           if (f.GetArg(i) != "?" && f.GetArg(i) != "_") {
-            if (stoi(justification.GetArg(i),ii))
+            if (stoi(f.GetArg(i),ii))
               oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)ii);
             else
               oneStep &= (ContentsArgument(proofStep,j,i) == f.GetArg(i));

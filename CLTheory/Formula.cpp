@@ -311,6 +311,115 @@ bool CLFormula::UsesNativeEq() const {
 // ---------------------------------------------------------------------------------------
 
 bool CLFormula::Read(const string &s) {
+  if (!ReadWithoutCheckingBoundness(s))
+    return false;
+
+  const DNFFormula& B = GetGoal();
+  const ConjunctionFormula& A = GetPremises();
+
+  // Check if all variables in the premises are bound
+  for(unsigned i = 0; i < A.GetSize(); i++) {
+    for(unsigned j = 0; j < A.GetElement(i).GetArity(); j++) {
+      string arg = A.GetElement(i).GetArg(j);
+      bool foundArg = false;
+      for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+        if (arg == GetUnivVar(l)) {
+          foundArg = true;
+        }
+      }
+      if (!foundArg) {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "A variable " << arg << " in the premises is not bound! " << endl;
+#endif
+        return false;
+      }
+    }
+  }
+
+  // Check if all variables in the goal are bound
+  for(unsigned i = 0; i < B.GetSize(); i++) {
+    for(unsigned j = 0; j < B.GetElement(i).GetSize(); j++) {
+      for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity(); k++) {
+        string arg = B.GetElement(i).GetElement(j).GetArg(k);
+        bool foundArg = false;
+        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+          if (arg == GetUnivVar(l)) {
+            foundArg = true;
+          }
+        }
+        for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
+          if (arg == GetExistVar(l)) {
+            foundArg = true;
+          }
+        }
+        if (!foundArg) {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "A variable " << arg << " in the goal is not bound! " << endl;
+#endif
+          return false;
+        }
+      }
+    }
+  }
+
+  // Check if all universally quantified variables are used
+  for (unsigned l = 0; l < GetNumOfUnivVars(); l++) {
+    string var = GetUnivVar(l);
+    bool foundVar = false;
+    for(unsigned i = 0; i < A.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < A.GetElement(i).GetArity()  && !foundVar; j++) {
+        if (var == A.GetElement(i).GetArg(j)) {
+          foundVar = true;
+        }
+      }
+    }
+    for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
+        for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
+          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
+            foundVar = true;
+          }
+        }
+      }
+    }
+    if (!foundVar) {
+#ifdef DEBUG_PARSER
+    cout << "Ill formed CL formula: " << s << endl;
+    cout << "A universally quantified variable " << var << " is not used! " << endl;
+#endif
+      return false;
+    }
+  }
+
+  // Check if all existentially quantified variables are used
+  for (unsigned l = 0; l < GetNumOfExistVars(); l++) {
+    string var = GetExistVar(l);
+    bool foundVar = false;
+    for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
+        for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
+          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
+            foundVar = true;
+          }
+        }
+      }
+    }
+    if (!foundVar) {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "An existentially quantified variable " << var << " is not used! " << endl;
+#endif
+      return false;
+    }
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::ReadWithoutCheckingBoundness(const string &s) {
   string s0 = SkipChar(s, ' ');
   s0 = SkipChar(s0, '\n');
   s0 = SkipChar(s0, '\r');
@@ -741,7 +850,7 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
       return false;
     }
 
-    if (!cl.Read(s[0]))
+    if (!cl.ReadWithoutCheckingBoundness(s[0]))
       return false;
     if (!(cl.GetGoal().GetSize()==1 && cl.GetGoal().GetElement(0).GetSize()==1)) {
       cout << "Error: hint formula can be only fact." << endl;
