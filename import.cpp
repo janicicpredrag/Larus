@@ -40,6 +40,9 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
                       unsigned time_limit);
 bool FilterOurNeededAxiomsByReachability(
     vector<pair<CLFormula, string>> &axioms, const CLFormula &theorem);
+VampireReturnValue SatStatus(const vector<pair<CLFormula, string>> &axioms,
+                             const vector<Fact>& premises, const string &hammer_invoke,
+                             unsigned time_limit);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -390,172 +393,205 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints) {
+  string fileName;
   if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
       (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
     T.MakeNewConstant();
   T.StoreInitialConstants();
+  vector<Fact> InstantiatedPremises;
 
   map<string, string> instantiation;
   for (size_t i = 0, size = theorem.GetNumOfUnivVars(); i < size; i++) {
     string constantName = T.MakeNewConstant();
     instantiation[theorem.GetUnivVar(i)] = constantName;
   }
+  DNFFormula goalInstantiated;
+  T.InstantiateGoal(theorem, instantiation, goalInstantiated, false);
 
-  CLProof proof;
-  proof.SetTheory(&T);
-  cout << "--- Instantiating the goal." << endl;
-  for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++) {
-    Fact premiseFactInstantiated;
-    T.InstantiateFact(theorem, theorem.GetPremises().GetElement(i),
-                      instantiation, premiseFactInstantiated, true);
-    engine.AddPremise(premiseFactInstantiated);
-    proof.AddAssumption(premiseFactInstantiated);
-  }
-  proof.SetTheorem(theorem, theoremName, instantiation);
-  proof.SetByRefutation(false);
+  vector<vector<Fact>> ExistingAbducts;
+  ReturnValue proved = eConjectureNotProved;
 
-  if (false && theorem.GetGoal().GetSize() == 1 &&
-      theorem.GetGoal().GetElement(0).GetSize() == 1 &&
-      theorem.GetNumOfExistVars() ==
-          0) { // Try proving by refutation if the goal is ~Something
-    Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
-    unsigned len = string(PREFIX_NEGATED).size();
-    if (f.GetName().substr(0, len) == PREFIX_NEGATED &&
-        f.GetName().find('_') == string::npos) {
-      f.SetName(f.GetName().substr(len, f.GetName().size() - len));
+  // Proving loops only if abducts are sought; otherwise, it runs only once
+  do {
+    for(unsigned i = 0; i < params.number_of_abducts; i++) {
+      engine.AddAbduct();
+    }
+
+    CLProof proof;
+    proof.SetTheory(&T);
+    cout << "--- Instantiating the goal." << endl;
+    for (size_t i = 0, size = theorem.GetPremises().GetSize(); i < size; i++) {
       Fact premiseFactInstantiated;
-      T.AddSymbol(f.GetName(), f.GetArity());
-      T.InstantiateFact(theorem, f, instantiation, premiseFactInstantiated,
-                        true);
+      T.InstantiateFact(theorem, theorem.GetPremises().GetElement(i),
+                      instantiation, premiseFactInstantiated, true);
       engine.AddPremise(premiseFactInstantiated);
       proof.AddAssumption(premiseFactInstantiated);
 
-      Fact b;
-      b.SetName("false");
-      ConjunctionFormula conj;
-      conj.Add(b);
-      ConjunctionFormula A = theorem.GetPremises();
-      DNFFormula B = theorem.GetGoal();
-      A.Add(f);
-      B.Clear();
-      B.Add(conj);
-      CLFormula thm(A, B);
-      for (size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
-        thm.AddUnivVar(theorem.GetUnivVar(i));
-      for (size_t i = 0; i < theorem.GetNumOfExistVars(); i++)
-        thm.AddExistVar(theorem.GetExistVar(i));
-      theorem = thm;
-      proof.SetByRefutation(true);
+      InstantiatedPremises.push_back(premiseFactInstantiated);
     }
-  }
+    proof.SetTheorem(theorem, theoremName, instantiation);
+    proof.SetByRefutation(false);
 
-  DNFFormula fout;
-  T.InstantiateGoal(theorem, instantiation, fout, false);
-  engine.SetTimeLimit(params.time_limit);
-  engine.SetMaxNestingDepth(params.max_nesting_depth);
-  engine.SetHints(&hints);
+    /*
+    if (false && theorem.GetGoal().GetSize() == 1 &&
+        theorem.GetGoal().GetElement(0).GetSize() == 1 &&
+        theorem.GetNumOfExistVars() ==
+            0) { // Try proving by refutation if the goal is ~Something
+      Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
+      unsigned len = string(PREFIX_NEGATED).size();
+      if (f.GetName().substr(0, len) == PREFIX_NEGATED &&
+          f.GetName().find('_') == string::npos) {
+        f.SetName(f.GetName().substr(len, f.GetName().size() - len));
+        Fact premiseFactInstantiated;
+        T.AddSymbol(f.GetName(), f.GetArity());
+        T.InstantiateFact(theorem, f, instantiation, premiseFactInstantiated,
+                          true);
+        engine.AddPremise(premiseFactInstantiated);
+        proof.AddAssumption(premiseFactInstantiated);
 
-  ReturnValue proved = eConjectureNotProved;
-  if (engine.ProveFromPremises(fout, proof)) {
-    proved = eConjectureProved;
-    std::size_t found = theoremFileName.find_last_of("/\\");
-    // string path = theoremFileName.substr(0,found);
-    string isminproof = params.shortest_proof ? "min" : "";
-    string fileName =
-        theoremFileName.substr(found + 1) + engine.mName + isminproof;
-    fileName = SkipChar(fileName, '.');
-    fileName = SkipChar(fileName, '-');
-    cout << endl
-         << "The proof found size (without assumptions): "
-         << proof.Size() - proof.NumOfAssumptions() << endl
-         << flush;
-    if (params.mbSimp) {
-      if (engine.GetKind() == eSTL_ProvingEngine)
-        proof.SimplifyByFormulae();
-      else if (!params.shortest_proof) {
-        if (engine.GetKind() == eSMTBV_ProvingEngine ||
-            engine.GetKind() == eSMTUFBV_ProvingEngine ||
-            engine.GetKind() == eSMTLIA_ProvingEngine ||
-            engine.GetKind() == eSMTUFLIA_ProvingEngine ||
-            engine.GetKind() == eMiniZinc)
-          proof.SimplifyByProofSteps();
-        else
-          proof.SimplifyByFormulae();
+        Fact b;
+        b.SetName("false");
+        ConjunctionFormula conj;
+        conj.Add(b);
+        ConjunctionFormula A = theorem.GetPremises();
+        DNFFormula B = theorem.GetGoal();
+        A.Add(f);
+        B.Clear();
+        B.Add(conj);
+        CLFormula thm(A, B);
+        for (size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
+          thm.AddUnivVar(theorem.GetUnivVar(i));
+        for (size_t i = 0; i < theorem.GetNumOfExistVars(); i++)
+          thm.AddExistVar(theorem.GetExistVar(i));
+        theorem = thm;
+        proof.SetByRefutation(true);
       }
+    } */
+
+    engine.SetMaxNestingDepth(params.max_nesting_depth);
+    engine.SetHints(&hints);
+    engine.SetTimeLimit(params.time_limit);
+
+    proved = eConjectureNotProved;
+    if (engine.ProveFromPremises(goalInstantiated, proof, ExistingAbducts)) {
+      proved = eConjectureProved;
+      std::size_t found = theoremFileName.find_last_of("/\\");
+      // string path = theoremFileName.substr(0,found);
+      string isminproof = params.shortest_proof ? "min" : "";
+      string fileName =
+          theoremFileName.substr(found + 1) + engine.mName + isminproof;
+      fileName = SkipChar(fileName, '.');
+      fileName = SkipChar(fileName, '-');
       cout << endl
-           << "Done! (simplified proof length without assumptions: "
-           << proof.Size() - proof.NumOfAssumptions() << ")" << endl;
-    }
+          << "The proof found size (without assumptions): "
+           << proof.Size() - proof.NumOfAssumptions() << endl
+           << flush;
+      if (params.mbSimp) {
+        if (engine.GetKind() == eSTL_ProvingEngine)
+          proof.SimplifyByFormulae();
+        else if (!params.shortest_proof) {
+          if (engine.GetKind() == eSMTBV_ProvingEngine ||
+              engine.GetKind() == eSMTUFBV_ProvingEngine ||
+              engine.GetKind() == eSMTLIA_ProvingEngine ||
+              engine.GetKind() == eSMTUFLIA_ProvingEngine ||
+              engine.GetKind() == eMiniZinc)
+              proof.SimplifyByProofSteps();
+          else
+            proof.SimplifyByFormulae();
+        }
+        cout << endl
+             << "Done! (simplified proof length without assumptions: "
+             << proof.Size() - proof.NumOfAssumptions() << ")" << endl;
+      }
 
-    if (params.eEngine != eSTL_ProvingEngine)
-      proof.CL2toCL();
+      if (params.number_of_abducts > 0) {
+        cout << endl << "Using abducts: " << endl;
+        cout << ExistingAbducts.size() << ". set:" << endl;
+        unsigned int lastAbductSet = ExistingAbducts.size()-1;
+        for(unsigned j = 0; j < params.number_of_abducts; j++) {
+          cout << "  " << j+1 << ". " << ExistingAbducts[lastAbductSet][j] << endl;
+          InstantiatedPremises.push_back(ExistingAbducts[lastAbductSet][j]);
+        }
+        if (SatStatus(T.mCLaxioms, InstantiatedPremises,
+                      DEFAULT_HAMMER, DEFAULT_VAMPIRE_TIME_LIMIT) == eVampireUnsat) {
+          cout << "Abducts inconsistent!" << endl;
+        }
+        else
+          cout << "Abducts CONSISTENT!" << endl;
+        for(unsigned j = 0; j < params.number_of_abducts; j++) {
+          InstantiatedPremises.pop_back();
+        }
+        cout << "--------------------- " << endl << endl;
+      }
 
-    ProofExport2LaTeX ex(fileName);
-    string sFileName("proofs/PROOF" + fileName + ".tex");
-    ex.ToFile(T, proof, sFileName, params);
+      if (params.eEngine != eSTL_ProvingEngine)
+        proof.CL2toCL();
 
-    if (params.mbCoq) {
-      ProofExport2Coq excoq;
-      string sFileName3("proofs/PROOF" + fileName + ".v");
-      excoq.ToFile(T, proof, sFileName3, params);
-      cout << "Verifying Coq proof ... " << flush;
-      string s = "coqc -R proofs src -q  " + sFileName3;
-      int rv = system(s.c_str());
-      if (!rv)
-        cout << "CoqCorrect!";
-      else
-        cout << "CoqWrong!";
-      cout << endl << endl;
-    }
-    if (params.mbIsa) {
-      ProofExport2Isabelle exisa;
-      string sFileName3("proofs/PROOF" + fileName + ".thy");
-      exisa.ToFile(T, proof, sFileName3, params);
+      ProofExport2LaTeX ex(fileName);
+      string sFileName("proofs/PROOF" + fileName + ".tex");
+      ex.ToFile(T, proof, sFileName, params);
 
-      if (!params.sIsaLarusFolder.empty()) {
-        string sFileName4(params.sIsaLarusFolder + "LarusSession/Larus.thy");
-        string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
-        system(sCopyFile.c_str());
-
-        cout << "Verifying Isabelle proof ... " << flush;
-        string s = params.sIsaLarusFolder  + "isabelle build -D " + params.sIsaLarusFolder + "LarusSession";
+      if (params.mbCoq) {
+        ProofExport2Coq excoq;
+        string sFileName3("proofs/PROOF" + fileName + ".v");
+        excoq.ToFile(T, proof, sFileName3, params);
+        cout << "Verifying Coq proof ... " << flush;
+        string s = "coqc -R proofs src -q  " + sFileName3;
         int rv = system(s.c_str());
         if (!rv)
-          cout << "IsabelleCorrect!";
+          cout << "CoqCorrect!";
         else
-          cout << "IsabelleWrong!";
+          cout << "CoqWrong!";
         cout << endl << endl;
       }
-    }
-    if (params.mbMizar) {
-      ProofExport2Mizar exMizar;
-      string sFileName3("proofs/PROOF" + fileName + ".miz");
-      exMizar.ToFile(T, proof, sFileName3, params);
-      cout << "Verifying Mizar proof ... " << flush;
-      string s = "accom " + sFileName3;
-      int rv = system(s.c_str());
-      s = "verifier -l " + sFileName3;
-      rv = system(s.c_str());
-      if (!rv)
-        cout << "MizarCorrect!" << endl;
-      else
-        cout << "MizarWrong!" << endl;
-    }
+      if (params.mbIsa) {
+        ProofExport2Isabelle exisa;
+        string sFileName3("proofs/PROOF" + fileName + ".thy");
+        exisa.ToFile(T, proof, sFileName3, params);
+        if (!params.sIsaLarusFolder.empty()) {
+          string sFileName4(params.sIsaLarusFolder + "LarusSession/Larus.thy");
+          string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
+          system(sCopyFile.c_str());
+          cout << "Verifying Isabelle proof ... " << flush;
+          string s = params.sIsaLarusFolder  + "isabelle build -D " + params.sIsaLarusFolder + "LarusSession";
+          int rv = system(s.c_str());
+          if (!rv)
+            cout << "IsabelleCorrect!";
+          else
+            cout << "IsabelleWrong!";
+          cout << endl << endl;
+        }
+      }
+      if (params.mbMizar) {
+        ProofExport2Mizar exMizar;
+        string sFileName3("proofs/PROOF" + fileName + ".miz");
+        exMizar.ToFile(T, proof, sFileName3, params);
+        cout << "Verifying Mizar proof ... " << flush;
+        string s = "accom " + sFileName3;
+        int rv = system(s.c_str());
+        s = "verifier -l " + sFileName3;
+        rv = system(s.c_str());
+        if (!rv)
+          cout << "MizarCorrect!" << endl;
+        else
+          cout << "MizarWrong!" << endl;
+      }
 
-    if (params.mbGCLCaxioms) {
-      ProofExport2GCLC exisa;
-      string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
-      exisa.ToFile(T, proof, sFileName3, params);
-      cout << "Generating illustration ... " << endl << flush;
+      if (params.mbGCLCaxioms) {
+        ProofExport2GCLC exisa;
+        string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
+        exisa.ToFile(T, proof, sFileName3, params);
+        cout << "Generating illustration ... " << endl << flush;
+      }
+      if (params.mbGCLCpredicates) {
+        ProofExport2GCLC_predicates exisa;
+        string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
+        exisa.ToFile(T, proof, sFileName3, params);
+        cout << "Generating illustration ... " << endl << flush;
+      }
     }
-    if (params.mbGCLCpredicates) {
-      ProofExport2GCLC_predicates exisa;
-      string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
-      exisa.ToFile(T, proof, sFileName3, params);
-      cout << "Generating illustration ... " << endl << flush;
-    }
+  } while (proved == eConjectureProved && params.number_of_abducts > 0);
 
-  }
   return proved;
 }
 
@@ -627,6 +663,41 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   }
   cout << "       Hammer filtering (failure): output size: " << axioms.size()
        << endl;
+  return eVampireUnknown;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
+                             const vector<Fact>& premises, const string &hammer_invoke,
+                             unsigned time_limit) {
+  string for_FOL_prover = "tptpfile.txt";// tmpnam(NULL); //
+  ofstream TPTPfile;
+  TPTPfile.open(for_FOL_prover);
+  for (vector<pair<CLFormula, string>>::const_iterator it = axioms.begin(); it != axioms.end(); it++)
+    TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")." << endl;
+  for (vector<Fact>::const_iterator it = premises.begin(); it != premises.end(); it++)
+    TPTPfile << "fof(premise, axiom, " << *it << ")." << endl;
+  TPTPfile.close();
+
+  string vampire_solution = tmpnam(NULL); // "vampire.txt";//
+  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke +
+                       " " + for_FOL_prover + " > " + vampire_solution;
+  int rv = system(sCall.c_str());
+  if (!rv) {
+    ifstream input_file(vampire_solution);
+    if (input_file.good()) {
+      string ss;
+      while (getline(input_file, ss)) {
+        if (ss.find("Satisfiable") != std::string::npos) {
+          input_file.close();
+          return eVampireSat;
+        }
+      }
+      input_file.close();
+      return eVampireUnsat;
+    }
+  }
   return eVampireUnknown;
 }
 

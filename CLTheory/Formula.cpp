@@ -327,7 +327,7 @@ bool CLFormula::Read(const string &s) {
           foundArg = true;
         }
       }
-      if (!foundArg) {
+      if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
 #ifdef DEBUG_PARSER
   cout << "Ill formed CL formula: " << s << endl;
   cout << "A variable " << arg << " in the premises is not bound! " << endl;
@@ -353,7 +353,7 @@ bool CLFormula::Read(const string &s) {
             foundArg = true;
           }
         }
-        if (!foundArg) {
+        if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
 #ifdef DEBUG_PARSER
   cout << "Ill formed CL formula: " << s << endl;
   cout << "A variable " << arg << " in the goal is not bound! " << endl;

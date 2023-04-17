@@ -15,6 +15,11 @@ public:
     ProvingEngine() {}
     virtual ~ProvingEngine() {}
     virtual void AddPremise(const Fact& f) = 0;
+    virtual void AddAbduct() {}
+    // By default, proving engines do not produce abducts
+    virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof, vector<vector<Fact>>& /*abduct*/) {
+      return ProveFromPremises(formula, proof);
+    }
     virtual bool ProveFromPremises(const DNFFormula& formula, CLProof& proof) = 0;
     virtual void SetTimeLimit(unsigned timeLimit) = 0;
 

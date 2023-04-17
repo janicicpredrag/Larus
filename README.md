@@ -87,6 +87,9 @@ otherwise:
    -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
                         example: -vcoq; default: none
  
+   -b<number of abducts>number of abducts; default: 0
+                        (support for abducts is not implemented for stl/sql/ursa proving engines)
+ 
    -gclca               for generating a GCLC illustration of the proof based on illustrations of axioms.      
                         default is false
 

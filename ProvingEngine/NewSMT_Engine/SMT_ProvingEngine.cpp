@@ -40,6 +40,19 @@ void SMT_ProvingEngine::SetTimeLimit(unsigned timeLimit) {
 
 // ---------------------------------------------------------------------------------------
 
+void SMT_ProvingEngine::Clear() {
+  PREDICATE.clear();
+  CONSTANTS.clear();
+
+  mnMaxArity = 0;
+  mnMaxNumberOfPremisesInAxioms = 0;
+  mnNumberOfAssumptions = 0;
+  mProofPremises = True();
+  mBlockingAbducts = True();
+}
+
+// ---------------------------------------------------------------------------------------
+
 Expression SMT_ProvingEngine::CorrectnessConstraint()
 {
     Expression c;
@@ -733,6 +746,18 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
 
 // ---------------------------------------------------------------------------------------
 
+void SMT_ProvingEngine::AddAbduct() {
+  Expression c;
+  c = (StepKind(mnNumberOfAssumptions) == Assumption())
+    & (Nesting(mnNumberOfAssumptions) == 1u)
+    & (Cases(mnNumberOfAssumptions) == False())
+    & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
+  mProofPremises &= c % ("Abduct" + itos(mnNumberOfAssumptions) + ":");
+  mnNumberOfAssumptions++;
+}
+
+// ---------------------------------------------------------------------------------------
+
 Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   CLFormula hintFormula = get<0>(hint);
   string hintName = get<1>(hint);
@@ -836,6 +861,36 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
 
 // ---------------------------------------------------------------------------------------
 
+bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof, vector<vector<Fact>>& abducts) {
+  mBlockingAbducts = True();
+  if (mParams.number_of_abducts > 0) {
+    for (unsigned i = 0; i < abducts.size(); i++) {
+      Expression blocking;
+      for (unsigned j = 0; j < abducts[i].size(); j++) {
+        Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == abducts[i][j].GetName());
+        for(unsigned int k = 0; k < abducts[i][j].GetArity(); k++)
+          c &= (ContentsArgument(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0, k) == abducts[i][j].GetArg(k));
+        blocking |= (c == False());
+      }
+      mBlockingAbducts &= blocking;
+    }
+  }
+
+  bool b = ProveFromPremises(formula, proof);
+
+  if (b && mParams.number_of_abducts > 0) {
+    vector<Fact> a;
+    for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
+      a.push_back(proof.GetAssumption(i));
+    }
+    abducts.push_back(a);
+    return true;
+  }
+  return b;
+}
+
+// ---------------------------------------------------------------------------------------
+
 bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& proof) {
   Timer t;
   bool ret = false;
@@ -918,12 +973,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     }
   }
 
-  PREDICATE.clear();
-  CONSTANTS.clear();
-
-  mnMaxArity = 0;
-  mnMaxNumberOfPremisesInAxioms = 0;
-  mnNumberOfAssumptions = 0;
+  Clear();
   return ret;
 }
 
@@ -1120,7 +1170,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
     AddComment("");
     AddComment("***************************** Premises ********************************");
-    for(unsigned i=0; i < mnNumberOfAssumptions; i++) {
+    for(unsigned i=0; i < mnNumberOfAssumptions - mParams.number_of_abducts; i++) {
       stringstream ss;
       ss << i << ". " << mPremises[i];
       AddComment(ss.str());
@@ -1276,6 +1326,11 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
   AddComment("********************* Proof correctness constraint ******************");
   Assert(CorrectnessConstraint());
+
+  if (mParams.number_of_abducts > 0) {
+    AddComment("************************ Bloking given abducts **********************");
+    Assert(mBlockingAbducts);
+  }
 
 /*  if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
       mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -1488,7 +1543,11 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           f.SetName(msPredicates[nPredicate]);
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++)
             f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+
+          if (step < mParams.number_of_abducts)
+            proof.AddAssumption(f); // store only abducts
           // proof.AddAssumption(f); // already added while reading theorem
+
           proofTrace.push_back(f);
 
         } else if (nStepKind == eFirstCase) {
@@ -1536,7 +1595,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           proofTrace.push_back(dummy);
           return true;
 
-        } else  if (nStepKind == eMP) {
+        } else if (nStepKind == eMP) {
 
           if (nBranching) {
             nPredicate1 = meProof[step].ContentsPredicate[1];

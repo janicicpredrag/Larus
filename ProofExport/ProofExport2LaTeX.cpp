@@ -218,8 +218,10 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     if (p.GetTheorem().GetNumOfUnivVars() > 0)
       outfile << " such that: ";
     else
-      outfile << "\\noindent The assumptions are: ";
+      outfile << "\\noindent The assumptions are: " << endl;
+    outfile << "\\begin{itemize} " << endl << endl;
     for (unsigned i = 0; i < cf.GetSize(); i++) {
+      outfile << "\\item ";
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
       outfile << " $";
       OutputFact(outfile, factout);
@@ -227,7 +229,9 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
         outfile << "$. ";
       else
         outfile << "$, ";
+      outfile << endl;
     }
+    outfile << "\\end{itemize} "  << endl;
   } else if (p.GetTheorem().GetNumOfUnivVars() > 0)
     outfile << ". ";
 
@@ -245,6 +249,17 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   OutputDNF(outfile, fout);
   outfile << "$." << endl;
   outfile << "\\vspace{5pt}" << endl << endl;
+
+  if (p.NumOfAssumptions() - cf.GetSize() > 0) {
+    outfile << "Abducts found: " << endl << endl;
+    outfile << "\\begin{itemize} "  << endl;
+    for (size_t i = cf.GetSize(); i < p.NumOfAssumptions(); i++) {
+      outfile << "\\item $";
+      OutputFact(outfile, p.GetAssumption(i));
+      outfile << "$" << endl;
+    }
+    outfile << "\\end{itemize} " << endl << endl;
+  }
 }
 
 // ---------------------------------------------------------------------------------
