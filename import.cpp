@@ -413,10 +413,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
   // Proving loops only if abducts are sought; otherwise, it runs only once
   do {
-    for(unsigned i = 0; i < params.number_of_abducts; i++) {
-      engine.AddAbduct();
-    }
-
     CLProof proof;
     proof.SetTheory(&T);
     cout << "--- Instantiating the goal." << endl;
@@ -425,12 +421,14 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       T.InstantiateFact(theorem, theorem.GetPremises().GetElement(i),
                       instantiation, premiseFactInstantiated, true);
       engine.AddPremise(premiseFactInstantiated);
-      proof.AddAssumption(premiseFactInstantiated);
-
       InstantiatedPremises.push_back(premiseFactInstantiated);
     }
     proof.SetTheorem(theorem, theoremName, instantiation);
     proof.SetByRefutation(false);
+
+    for(unsigned i = 0; i < params.number_of_abducts; i++) {
+      engine.AddAbduct();
+    }
 
     /*
     if (false && theorem.GetGoal().GetSize() == 1 &&
@@ -671,7 +669,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
 VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
                              const vector<Fact>& premises, const string &hammer_invoke,
                              unsigned time_limit) {
-  string for_FOL_prover = "tptpfile.txt";// tmpnam(NULL); //
+  string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
   ofstream TPTPfile;
   TPTPfile.open(for_FOL_prover);
   for (vector<pair<CLFormula, string>>::const_iterator it = axioms.begin(); it != axioms.end(); it++)

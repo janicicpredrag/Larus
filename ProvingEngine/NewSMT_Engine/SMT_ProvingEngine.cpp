@@ -44,6 +44,7 @@ void SMT_ProvingEngine::Clear() {
   PREDICATE.clear();
   CONSTANTS.clear();
 
+  mPremises.clear();
   mnMaxArity = 0;
   mnMaxNumberOfPremisesInAxioms = 0;
   mnNumberOfAssumptions = 0;
@@ -743,7 +744,6 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
   mnNumberOfAssumptions++;
 }
 
-
 // ---------------------------------------------------------------------------------------
 
 void SMT_ProvingEngine::AddAbduct() {
@@ -867,9 +867,10 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     for (unsigned i = 0; i < abducts.size(); i++) {
       Expression blocking;
       for (unsigned j = 0; j < abducts[i].size(); j++) {
-        Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == abducts[i][j].GetName());
-        for(unsigned int k = 0; k < abducts[i][j].GetArity(); k++)
-          c &= (ContentsArgument(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0, k) == abducts[i][j].GetArg(k));
+        Fact af = abducts[i][j];
+        Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == af.GetName());
+        for(unsigned int k = 0; k < af.GetArity(); k++)
+          c &= (ContentsArgument(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0, k) == af.GetArg(k));
         blocking |= (c == False());
       }
       mBlockingAbducts &= blocking;
@@ -880,12 +881,13 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
 
   if (b && mParams.number_of_abducts > 0) {
     vector<Fact> a;
-    for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
+    for(unsigned i = mPremises.size(); i < mPremises.size() + mParams.number_of_abducts; i++) {
       a.push_back(proof.GetAssumption(i));
     }
     abducts.push_back(a);
-    return true;
   }
+
+  Clear();
   return b;
 }
 
@@ -972,8 +974,6 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       cout << "Length of the shortest proof found: " << best << endl;
     }
   }
-
-  Clear();
   return ret;
 }
 
@@ -1544,10 +1544,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++)
             f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
 
-          if (step < mParams.number_of_abducts)
-            proof.AddAssumption(f); // store only abducts
-          // proof.AddAssumption(f); // already added while reading theorem
-
+          proof.AddAssumption(f); // store both assumptions and abducts
           proofTrace.push_back(f);
 
         } else if (nStepKind == eFirstCase) {
