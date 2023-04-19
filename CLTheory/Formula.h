@@ -175,6 +175,7 @@ public:
   const ConjunctionFormula &GetPremises() const { return mA; }
   const DNFFormula &GetGoal() const { return mB; }
   bool Read(const string &s);
+  bool ReadWithoutCheckingBoundness(const string &s);
   bool ReadImplication(const string &v, ConjunctionFormula &A, DNFFormula &B);
   bool MatchingBrackets(const string &v) const;
 

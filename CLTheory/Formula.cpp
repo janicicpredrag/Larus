@@ -311,6 +311,115 @@ bool CLFormula::UsesNativeEq() const {
 // ---------------------------------------------------------------------------------------
 
 bool CLFormula::Read(const string &s) {
+  if (!ReadWithoutCheckingBoundness(s))
+    return false;
+
+  const DNFFormula& B = GetGoal();
+  const ConjunctionFormula& A = GetPremises();
+
+  // Check if all variables in the premises are bound
+  for(unsigned i = 0; i < A.GetSize(); i++) {
+    for(unsigned j = 0; j < A.GetElement(i).GetArity(); j++) {
+      string arg = A.GetElement(i).GetArg(j);
+      bool foundArg = false;
+      for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+        if (arg == GetUnivVar(l)) {
+          foundArg = true;
+        }
+      }
+      if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "A variable " << arg << " in the premises is not bound! " << endl;
+#endif
+        return false;
+      }
+    }
+  }
+
+  // Check if all variables in the goal are bound
+  for(unsigned i = 0; i < B.GetSize(); i++) {
+    for(unsigned j = 0; j < B.GetElement(i).GetSize(); j++) {
+      for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity(); k++) {
+        string arg = B.GetElement(i).GetElement(j).GetArg(k);
+        bool foundArg = false;
+        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+          if (arg == GetUnivVar(l)) {
+            foundArg = true;
+          }
+        }
+        for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
+          if (arg == GetExistVar(l)) {
+            foundArg = true;
+          }
+        }
+        if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "A variable " << arg << " in the goal is not bound! " << endl;
+#endif
+          return false;
+        }
+      }
+    }
+  }
+
+  // Check if all universally quantified variables are used
+  for (unsigned l = 0; l < GetNumOfUnivVars(); l++) {
+    string var = GetUnivVar(l);
+    bool foundVar = false;
+    for(unsigned i = 0; i < A.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < A.GetElement(i).GetArity()  && !foundVar; j++) {
+        if (var == A.GetElement(i).GetArg(j)) {
+          foundVar = true;
+        }
+      }
+    }
+    for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
+        for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
+          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
+            foundVar = true;
+          }
+        }
+      }
+    }
+    if (!foundVar) {
+#ifdef DEBUG_PARSER
+    cout << "Ill formed CL formula: " << s << endl;
+    cout << "A universally quantified variable " << var << " is not used! " << endl;
+#endif
+      return false;
+    }
+  }
+
+  // Check if all existentially quantified variables are used
+  for (unsigned l = 0; l < GetNumOfExistVars(); l++) {
+    string var = GetExistVar(l);
+    bool foundVar = false;
+    for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
+      for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
+        for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
+          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
+            foundVar = true;
+          }
+        }
+      }
+    }
+    if (!foundVar) {
+#ifdef DEBUG_PARSER
+  cout << "Ill formed CL formula: " << s << endl;
+  cout << "An existentially quantified variable " << var << " is not used! " << endl;
+#endif
+      return false;
+    }
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::ReadWithoutCheckingBoundness(const string &s) {
   string s0 = SkipChar(s, ' ');
   s0 = SkipChar(s0, '\n');
   s0 = SkipChar(s0, '\r');
@@ -662,43 +771,43 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   justification.Clear();
 
   if (ss.substr(0, 4) != "fof(") {
-#ifdef DEBUG_PARSER
-    cout << "Only fof formulas are supported." << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input " << s << ": only fof formulas are supported." << endl;
+// #endif
     return false;
   }
   pos1 = ss.find(',');
   if (pos1 == string::npos) {
-#ifdef DEBUG_PARSER
-    cout << "Error: fof() should have three arguments (while hints should have five)." << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": fof() should have three arguments (while hints should have five)." << endl;
+// #endif
     return false;
   }
   name = ss.substr(4, pos1 - 4);
   pos2 = ss.find(',', pos1 + 1);
   if (pos2 == string::npos) {
-#ifdef DEBUG_PARSER
-    cout << "Error: fof() should have three arguments (while hints should have five)." << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": fof() should have three arguments (while hints should have five)." << endl;
+// #endif
     return false;
   }
   string s1 = ss.substr(pos1 + 1, pos2 - pos1 - 1);
   if (type == eAxiom && s1 != string("axiom")) {
-#ifdef DEBUG_PARSER
-    cout << "Error: 'axiom' expected, found : " << s1 << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": 'axiom' expected, found : " << s1 << endl;
+// #endif
     return false;
   }
   if (type == eConjecture && s1 != string("conjecture")) {
-#ifdef DEBUG_PARSER
-    cout << "Error: conjecture expected, found : " << s1 << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": conjecture expected, found : " << s1 << endl;
+// #endif
     return false;
   }
   if (type == eHint && s1 != string("hint")) {
-#ifdef DEBUG_PARSER
-    cout << "Error: 'hint' expected, found : " << s1 << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": 'hint' expected, found : " << s1 << endl;
+// #endif
     return false;
   }
   if (s1 == string("axiom"))
@@ -708,9 +817,9 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   else if (s1 == string("hint"))
     type = eHint;
    else {
-#ifdef DEBUG_PARSER
-    cout << "Error: unknown entry type, found: " << s1 << endl;
-#endif
+// #ifdef DEBUG_PARSER
+    cout << "Input error " << s << ": unknown entry type, found: " << s1 << endl;
+// #endif
     return false;
   }
 
@@ -729,7 +838,7 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
           (ss[i] == ')' && BracketsOpen == 1 && i==ss.size()-1)) {
         ord++;
         if (ord > 2) {
-          cout << "Error: hint should have five arguments." << endl;
+          cout << "Input error " << s << " : hint should have five arguments." << endl;
           return false;
         }
       }
@@ -737,19 +846,19 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
         s[ord] += ss[i];
     }
     if (ord != 2) {
-      cout << "Error: hint should have five arguments." << endl;
+      cout << "Input error " << s << ": hint should have five arguments." << endl;
       return false;
     }
 
-    if (!cl.Read(s[0]))
+    if (!cl.ReadWithoutCheckingBoundness(s[0]))
       return false;
     if (!(cl.GetGoal().GetSize()==1 && cl.GetGoal().GetElement(0).GetSize()==1)) {
-      cout << "Error: hint formula can be only fact." << endl;
+      cout << "Input error " << s << ": hint formula can be only fact." << endl;
       return false;
     }
     ordinal = s[1];
     if (!justification.Read(s[2])) {
-      cout << "Error: hint justification (fifth argument) cannot be read." << endl;
+      cout << "Input error " << s << ": hint justification (fifth argument) cannot be read." << endl;
       return false;
     }
     return true;
@@ -761,8 +870,8 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
     // cout << endl;
       return true;
     } else {
-      cout << "Ax: " << name << cl;
-      cout << "CL hint read fail! " << endl << endl;
+      cout << "Input error: axiom: " << name << " : " << cl;
+      cout << " gives ill-formed CL formula! " << endl << endl;
       return false;
     }
   }

@@ -18,8 +18,8 @@
 using namespace std;
 
 #define MAX_AXIOMS 1000
-#define MAX_PREMISES 20
-#define MAX_ARITY 10
+#define MAX_PREMISES 40
+#define MAX_ARITY 15
 #define MAX_VARSINAXIOMS 10
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
@@ -97,9 +97,10 @@ const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_EXACT_LENGTH = false;
 const bool DEFAULT_SIMP = true;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
-const string DEFAULT_HAMMER = "";
+const string DEFAULT_HAMMER = "vampire --cores 4 --mode casc --proof tptp --output_axiom_names on";
 const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
 const bool DEFAULT_INLINE_AXIOMS = true;
+const unsigned DEFAULT_NUMBER_OF_ABDUCTS = 0;
 
 const unsigned SATURATION_TIME_LIMIT = 5;
 
@@ -131,6 +132,7 @@ typedef struct proverParams {
   string msHammerInvoke;
   unsigned vampire_time_limit;
   bool mbInlineAxioms;
+  unsigned number_of_abducts;
 } proverParams;
 
 string itos(unsigned int i);

@@ -40,11 +40,14 @@ class SMT_ProvingEngine : public ProvingEngine {
 public:
   SMT_ProvingEngine(Theory *pT, proverParams &params);
   void AddPremise(const Fact &f);
+  void AddAbduct();
+  bool ProveFromPremises(const DNFFormula &formula, CLProof &proof, vector<vector<Fact>>& abducts);
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
   virtual void SetTimeLimit(unsigned timeLimit);
   virtual PROVING_ENGINE GetKind() { return mSMT_theory; }
 
 private:
+  void Clear();
   ReturnValue OneProvingAttempt(const DNFFormula& formula, unsigned length);
   void EncodeProofToSMT(const DNFFormula &formula, unsigned nProofLen, string prove_smt_filename);
   bool ReadModel(const string &sModelFile);
@@ -142,6 +145,8 @@ private:
   Expression mProofPremises;
   vector<Fact> mPremises;
   vector<EncodedProofStep> meProof;
+
+  Expression mBlockingAbducts;
 
   ofstream mSMTfile;
 };
