@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   params.msHammerInvoke = DEFAULT_HAMMER;
+  params.msHammerInvokeForAbducts = DEFAULT_HAMMER_FOR_ABDUCTS;
   params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
   params.exact_length = DEFAULT_EXACT_LENGTH;
   params.number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
@@ -257,6 +258,15 @@ int main(int argc, char **argv) {
   if (params.mbMizar && params.mbInlineAxioms) {
     cout << "Verification of proof by Mizar cannot ";
     cout << "be used along with inlining of axioms.";
+    cout << endl << endl;
+    return 0;
+  }
+
+  if (params.msHammerInvoke != "" && params.number_of_abducts > 0) {
+    cout << "Filtering by an external FOL prover cannot be used";
+    cout << "along with adbuction (because it is expected that";
+    cout << "the conjecture is not provable without abducts ";
+    cout << "to be constructed.";
     cout << endl << endl;
     return 0;
   }

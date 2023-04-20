@@ -131,6 +131,7 @@ typedef struct proverParams {
   bool mbSimp;
   bool mbNeedsCaseSplits;
   string msHammerInvoke;
+  string msHammerInvokeForAbducts;
   unsigned vampire_time_limit;
   bool mbInlineAxioms;
   unsigned number_of_abducts;

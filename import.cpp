@@ -62,6 +62,14 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   T.printAxioms();
   T.mCLOriginalAxioms = T.mCLaxioms;
 
+  if (params.number_of_abducts > 0) { // use this filtering only if filtering a la hammer is forbidden
+  // ************ Filtering by reachability ************
+    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+    cout << "       After filtering by reachability: output size: " <<
+    T.mCLaxioms.size() << endl;
+    T.printAxioms();
+  }
+
   // ************ Filtering can be used in different stages ************
   // if this variable is set to "true", futher vampire filtering is performed.
   bool vampire_succeeded = false;
@@ -511,7 +519,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           InstantiatedPremises.push_back(ExistingAbducts[lastAbductSet][j]);
         }
         if (SatStatus(T.mCLaxioms, InstantiatedPremises,
-                      DEFAULT_HAMMER, DEFAULT_VAMPIRE_TIME_LIMIT) == eVampireUnsat) {
+                      params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT) == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
         }
         else
