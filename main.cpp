@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
       params.mbSimp = false;
     }
 
-    // setting staring proof length for search
+    // setting starting proof length for search
     else if (argv[i][0] == '-' && argv[i][1] == 'm') {
       if (strlen(argv[i] + 2) == 0) {
         wrongInput = true;
@@ -160,6 +160,19 @@ int main(int argc, char **argv) {
         params.starting_proof_length = d;
       else
         params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+    }
+
+    // setting length step
+    else if (argv[i][0] == '-' && argv[i][1] == 'k') {
+      if (strlen(argv[i] + 2) == 0) {
+        wrongInput = true;
+        break;
+      }
+      int step = atoi(argv[i] + 2);
+      if (step >= 0)
+        params.step = step;
+      else
+        params.step = DEFAULT_STEP;
     }
 
     // setting maximal proof length for search

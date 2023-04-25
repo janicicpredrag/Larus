@@ -232,9 +232,9 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
     }
 
     // canonization
-    // c &= (ContentsPredicate(s,0) != 0u |
-    //       (ContentsArgument(s,0,1) >= ContentsArgument(s,0,0) &
-    //        ContentsArgument(s,0,2) >= ContentsArgument(s,0,1)));
+    //c &= (ContentsPredicate(s,0) != 0u |
+    //     (ContentsArgument(s,0,1) >= ContentsArgument(s,0,0) &
+    //	  ContentsArgument(s,0,2) >= ContentsArgument(s,0,1)));
 
     return c;
 }
@@ -909,15 +909,16 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(),
                      formula.GetElement(1).GetElement(0).GetArity());
 
-    unsigned l, r, s, best = 0, best_start = 0;
+    unsigned l, r, s, step, best = 0, best_start = 0;
     l = mParams.starting_proof_length;
+    step = mParams.step;
     while (!bTimeOut && l <= mParams.max_proof_length && best == 0) {
       switch (OneProvingAttempt(formula, l)) {
         case eTimeLimitExceeded:
           bTimeOut = true;
           break;
         case eConjectureNotProved:
-          l += 12;
+          l += step;
           break;
         case eConjectureProved:
           best = l;
