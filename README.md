@@ -73,6 +73,8 @@ otherwise:
                         example: -m4; default: 2
 
    -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32
+   
+   -k<increment>        for the step between subsequent proof lengths; example: -k2; default: 12
 
    -nonegelim           do not use negation elimination axiom (R & ~R => false)
 
