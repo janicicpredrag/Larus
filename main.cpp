@@ -34,6 +34,7 @@ int main(int argc, char **argv) {
   params.max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
   params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
   params.max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
+  params.step = DEFAULT_STEP;
   params.shortest_proof = DEFAULT_SHORTEST_PROOF;
   params.mbNativeEQ = DEFAULT_NATIVE_EQ;
   params.mbNativeEQsub = DEFAULT_NATIVE_EQ_SUB;
@@ -149,7 +150,7 @@ int main(int argc, char **argv) {
       params.mbSimp = false;
     }
 
-    // setting staring proof length for search
+    // setting starting proof length for search
     else if (argv[i][0] == '-' && argv[i][1] == 'm') {
       if (strlen(argv[i] + 2) == 0) {
         wrongInput = true;
@@ -160,6 +161,19 @@ int main(int argc, char **argv) {
         params.starting_proof_length = d;
       else
         params.starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+    }
+
+    // setting length step
+    else if (argv[i][0] == '-' && argv[i][1] == 'k') {
+      if (strlen(argv[i] + 2) == 0) {
+        wrongInput = true;
+        break;
+      }
+      int step = atoi(argv[i] + 2);
+      if (step >= 1)
+        params.step = step;
+      else
+        params.step = DEFAULT_STEP;
     }
 
     // setting maximal proof length for search
@@ -376,6 +390,8 @@ void printHelp() {
   cout << "   -m<starting length>  for the size of the proof search to start "  << endl;
   cout << "                        with (support for smt engines only); "       << endl;
   cout << "                        example: -m4; default: 2"                    << endl << endl;
+  cout << "   -k<increment>        for the step between subsequent proof "      << endl;
+  cout << "                        lengths; example: -k2; default: 12 "         << endl << endl; 
   cout << "   -p<max proof length> for maximal proof length (for engines "      << endl;
   cout << "                        ursa/smt); example: -p64; default: 32"       << endl << endl;
   cout << "   -nonegelim           do not use negation elimination axiom (R & ~R => false)"
