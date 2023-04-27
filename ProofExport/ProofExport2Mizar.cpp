@@ -151,12 +151,12 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
        }
   }
   if (!no_predicate && T.mInitialConstants.size() != 0)
-      outfile << ",2 ";
+      outfile << ", ";
   for (vector<string>::iterator it = T.mInitialConstants.begin();
       it < T.mInitialConstants.end(); it++) {
     outfile << *it << "()->object";
     if (it+1 != T.mInitialConstants.end())
-    outfile << ",3 ";
+    outfile << ", ";
   }
   outfile << " }:" << endl;
   outfile << "  ";
