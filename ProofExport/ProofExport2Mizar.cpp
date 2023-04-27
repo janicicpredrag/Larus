@@ -143,15 +143,20 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
     outfile << "]";
     ++it;
     if (it+1 != T.mSignature.end())
-       outfile << ", ";
+       {
+         if (get<0>(*(it+1)).find(PREFIX_NEGATED) != string::npos)
+        outfile << " ";
+    else 
+        outfile << ", ";
+       }
   }
   if (!no_predicate && T.mInitialConstants.size() != 0)
-      outfile << ", ";
+      outfile << ",2 ";
   for (vector<string>::iterator it = T.mInitialConstants.begin();
       it < T.mInitialConstants.end(); it++) {
     outfile << *it << "()->object";
     if (it+1 != T.mInitialConstants.end())
-    outfile << ", ";
+    outfile << ",3 ";
   }
   outfile << " }:" << endl;
   outfile << "  ";
@@ -222,12 +227,16 @@ void ProofExport2Mizar::OutputProof(ofstream &outfile, const CLProof &p,
     OutputDNF(outfile, p.GetMP(i).conclusion);
 
     bool builtin = false;
-    if (p.GetMP(i).axiomName == "eq_refl" ||
-        p.GetMP(i).axiomName == "eq_sym" ||
+    if (
         p.GetMP(i).axiomName == "trivial" ||
-        p.GetMP(i).axiomName.find("ExcludedMiddle") != string::npos ||
-        p.GetMP(i).axiomName.find("EqSub") != string::npos ||
-        p.GetMP(i).axiomName.find("NegElim") != string::npos) {
+        p.GetMP(i).axiomName.find("eq_excluded_middle") != string::npos ||
+        p.GetMP(i).axiomName.find("ExcludedMiddle") != string::npos || 
+        p.GetMP(i).axiomName.find("not_eq_sym") != string::npos ||
+        p.GetMP(i).axiomName.find("eq_neg_elim") != string::npos ||
+        p.GetMP(i).axiomName.find("NegElim") != string::npos ||
+        p.GetMP(i).axiomName.find("eq_refl") != string::npos ||
+        p.GetMP(i).axiomName.find("eq_sym") != string::npos ||
+        p.GetMP(i).axiomName.find("EqSub") != string::npos ) {
       builtin = true;
     }
 
