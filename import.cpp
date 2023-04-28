@@ -519,12 +519,16 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           cout << "  " << j+1 << ". " << ExistingAbducts[lastAbductSet][j] << endl;
           InstantiatedPremises.push_back(ExistingAbducts[lastAbductSet][j]);
         }
-        if (SatStatus(T.mCLaxioms, InstantiatedPremises,
-                      params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT) == eVampireUnsat) {
+        VampireReturnValue vret = SatStatus(T.mCLaxioms, InstantiatedPremises,
+                              params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT);
+        if (vret == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
         }
-        else
+        else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
+        }
+        else
+          cout << "Abducts unknown consistency" << endl;
         for(unsigned j = 0; j < params.number_of_abducts; j++) {
           InstantiatedPremises.pop_back();
         }
@@ -701,8 +705,16 @@ VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
           return eVampireSat;
         }
       }
+      input_file.clear();
+      input_file.seekg(0);
+      while (getline(input_file, ss)) {
+        if (ss.find("Refutation") != std::string::npos) {
+          input_file.close();
+          return eVampireUnsat;
+        }
+      }
       input_file.close();
-      return eVampireUnsat;
+      return eVampireUnknown;
     }
   }
   return eVampireUnknown;
