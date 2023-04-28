@@ -255,7 +255,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
     outfile << "\\begin{itemize} "  << endl;
     for (size_t i = cf.GetSize(); i < p.NumOfAssumptions(); i++) {
       outfile << "\\item $";
-      OutputFact(outfile, p.GetAssumption(i));
+      OutputDNF(outfile, p.GetCLAssumption(i));
       outfile << "$" << endl;
     }
     outfile << "\\end{itemize} " << endl << endl;

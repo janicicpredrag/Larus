@@ -511,12 +511,16 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
              << proof.Size() - proof.NumOfAssumptions() << ")" << endl;
       }
 
+      if (params.eEngine != eSTL_ProvingEngine)
+        proof.CL2toCL();
+
       if (params.number_of_abducts > 0) {
         cout << endl << "Using abducts: " << endl;
         cout << ExistingAbducts.size() << ". set:" << endl;
         unsigned int lastAbductSet = ExistingAbducts.size()-1;
         for(unsigned j = 0; j < params.number_of_abducts; j++) {
-          cout << "  " << j+1 << ". " << ExistingAbducts[lastAbductSet][j] << endl;
+          // cout << "  " << j+1 << ". " << ExistingAbducts[lastAbductSet][j] << endl;
+          cout << "  " << j+1 << ". " << proof.GetCLAssumption(proof.NumOfAssumptions()-params.number_of_abducts+j) << endl;
           InstantiatedPremises.push_back(ExistingAbducts[lastAbductSet][j]);
         }
         VampireReturnValue vret = SatStatus(T.mCLaxioms, InstantiatedPremises,
@@ -535,14 +539,11 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         cout << "--------------------- " << endl << endl;
       }
 
-      if (params.eEngine != eSTL_ProvingEngine)
-        proof.CL2toCL();
-
       ProofExport2LaTeX ex(fileName);
       string sFileName("proofs/PROOF" + fileName + ".tex");
       ex.ToFile(T, proof, sFileName, params);
 
-      if (params.mbCoq) {
+      if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
         string sFileName3("proofs/PROOF" + fileName + ".v");
         excoq.ToFile(T, proof, sFileName3, params);
@@ -555,7 +556,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           cout << "CoqWrong!";
         cout << endl << endl;
       }
-      if (params.mbIsa) {
+      if (params.mbIsa && params.number_of_abducts == 0) {
         ProofExport2Isabelle exisa;
         string sFileName3("proofs/PROOF" + fileName + ".thy");
         exisa.ToFile(T, proof, sFileName3, params);
@@ -573,7 +574,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           cout << endl << endl;
         }
       }
-      if (params.mbMizar) {
+      if (params.mbMizar && params.number_of_abducts == 0) {
         ProofExport2Mizar exMizar;
         string sFileName3("proofs/PROOF" + fileName + ".miz");
         exMizar.ToFile(T, proof, sFileName3, params);

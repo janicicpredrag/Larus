@@ -102,6 +102,11 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
       cOneL &= IsQEDStep(L - 1)
             % "   7: The step L-1 is one of the QED steps";
 
+      if (mParams.number_of_abducts > 0) {
+        cOneL &= ((StepKind(L - 1) == QEDbyEFQ()) == False())
+              % "   7a: If looking for abducts the final QED is not QEDbyEFQ";
+      }
+
       cOneL &= IsGoal(L - 1)
             % "   8: Contents(L-1) = Contents(MaxL-1)";
 
