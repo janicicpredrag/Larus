@@ -755,6 +755,9 @@ void SMT_ProvingEngine::AddAbduct() {
   c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignature.size());
   for (size_t i = 0; i < mnMaxArity; i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
+  c &= (IsGoal(mnNumberOfAssumptions) == False()); // the goal itself cannot be abduct
+  c &= ((ContentsPredicate(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
+
 
   mProofPremises &= c % ("Abduct " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
