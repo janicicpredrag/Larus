@@ -752,6 +752,7 @@ void SMT_ProvingEngine::AddAbduct() {
     & (Nesting(mnNumberOfAssumptions) == 1u)
     & (Cases(mnNumberOfAssumptions) == False())
     & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
+  c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignature.size());
   for (size_t i = 0; i < mnMaxArity; i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
 

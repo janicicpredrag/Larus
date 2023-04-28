@@ -62,13 +62,14 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   T.printAxioms();
   T.mCLOriginalAxioms = T.mCLaxioms;
 
+  /*
   if (params.number_of_abducts > 0) { // use this filtering only if filtering a la hammer is forbidden
   // ************ Filtering by reachability ************
     FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
     cout << "       After filtering by reachability: output size: " <<
     T.mCLaxioms.size() << endl;
     T.printAxioms();
-  }
+  }*/
 
   // ************ Filtering can be used in different stages ************
   // if this variable is set to "true", futher vampire filtering is performed.
