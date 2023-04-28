@@ -45,7 +45,7 @@ void SMT_ProvingEngine::Clear() {
   CONSTANTS.clear();
 
   mPremises.clear();
-  mnMaxArity = 0;
+  // mnMaxArity = 0;
   mnMaxNumberOfPremisesInAxioms = 0;
   mnNumberOfAssumptions = 0;
   mProofPremises = True();
@@ -752,7 +752,10 @@ void SMT_ProvingEngine::AddAbduct() {
     & (Nesting(mnNumberOfAssumptions) == 1u)
     & (Cases(mnNumberOfAssumptions) == False())
     & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
-  mProofPremises &= c % ("Abduct" + itos(mnNumberOfAssumptions) + ":");
+  for (size_t i = 0; i < mnMaxArity; i++)
+    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
+
+  mProofPremises &= c % ("Abduct " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
 }
 
