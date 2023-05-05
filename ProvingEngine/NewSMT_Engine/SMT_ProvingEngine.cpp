@@ -183,8 +183,14 @@ Expression SMT_ProvingEngine::IsAssumptionStep(unsigned s, unsigned i)
 Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
-    for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++)
-      c |= IsMPstepByAxiom(s,ax);
+    for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
+      if ((mParams.mbInlineAxioms && GetAxiom(ax).IsSimpleFormula())) {
+        c |= (IsMPstepByAxiom(s,ax) & IsQEDStep(s+1));
+      }
+      else {
+        c |= IsMPstepByAxiom(s,ax);
+      }
+    }
     if (mParams.mbNativeEQsub)
       c |= IsMPbyEqSub(s);
     return c;
