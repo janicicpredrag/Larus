@@ -184,11 +184,11 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
-      if ((mParams.mbInlineAxioms && GetAxiom(ax).IsSimpleFormula())) {
-        c |= (IsMPstepByAxiom(s,ax) & IsQEDStep(s+1));
-      }
-      else {
+      if (!mParams.mbInlineAxioms ||
+          !(GetAxiom(ax).IsSimpleFormula() && s+1 < mnNumberOfAssumptions + mProofLength)) {
         c |= IsMPstepByAxiom(s,ax);
+      } else {
+        c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1) == False()));
       }
     }
     if (mParams.mbNativeEQsub)
