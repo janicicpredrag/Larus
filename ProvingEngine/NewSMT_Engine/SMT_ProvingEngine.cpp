@@ -185,11 +185,12 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
-      if (!mParams.mbInlineAxioms ||
-          !(GetAxiom(ax).IsSimpleFormula() && s+1 < mnNumberOfAssumptions + mProofLength)) {
+      if (!mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
-      } else {
-        c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1) == False()));
+      } else if (!GetAxiom(ax).IsSimpleFormula()) {
+         c |= IsMPstepByAxiom(s,ax);
+      } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
+        c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1)));
       }
     }
     if (mParams.mbNativeEQsub)
@@ -762,8 +763,7 @@ void SMT_ProvingEngine::AddAbduct() {
   Expression c;
   c = (StepKind(mnNumberOfAssumptions) == Assumption())
     & (Nesting(mnNumberOfAssumptions) == 1u)
-    & (Cases(mnNumberOfAssumptions) == False())
-    & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
+    & (Cases(mnNumberOfAssumptions) == False());
   c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignature.size());
   for (size_t i = 0; i < mnMaxArity; i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
@@ -1348,7 +1348,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   Assert(CorrectnessConstraint());
 
   if (mParams.number_of_abducts > 0) {
-    AddComment("************************ Bloking given abducts **********************");
+    AddComment("********************** Blocking earlier abducts **********************");
     Assert(mBlockingAbducts);
   }
 
