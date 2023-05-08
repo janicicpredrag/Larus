@@ -186,7 +186,9 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
       if (!mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
-      } else if (GetAxiom(ax).IsSimpleFormula() && s+1 < mnNumberOfAssumptions + mProofLength) {
+      } else if (!GetAxiom(ax).IsSimpleFormula()) {
+         c |= IsMPstepByAxiom(s,ax);
+      } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
         c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1)));
       }
     }
