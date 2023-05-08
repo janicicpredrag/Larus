@@ -184,7 +184,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
-      if (!mParams.mbInlineAxioms) {
+       if (!mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
          c |= IsMPstepByAxiom(s,ax);
@@ -827,10 +827,6 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   for(unsigned proofStep = from; proofStep <= to; proofStep++) {
     Expression oneStep;
     oneStep = (Expression(proofStep) < ProofSize());
-//    if (hintFormula.GetGoal().GetSize() == 1)
-//      oneStep &= (Cases(proofStep) == False());
-//    else
-//      oneStep &= (Cases(proofStep) == True());
     oneStep &= (StepKind(proofStep) == MP());
     if (AxiomUsed != -1) {
       oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
@@ -843,9 +839,6 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
             oneStep &= (Instantiation(proofStep, i) == justification.GetArg(i));
         }
       }
-      // else {
-      //  oneStep &= (IsQEDStep(proofStep) == False()); /* ? */
-      // }
     }
 
     if (hintFormula.GetGoal().GetElement(0).GetElement(0).GetName() != "_") {
@@ -1345,6 +1338,25 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
   AddComment("********************* Proof correctness constraint ******************");
   Assert(CorrectnessConstraint());
+
+
+  AddComment("*************** Abducts must be used within the proof ***************");
+  for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
+    Expression bAbductUsed = False();
+    for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
+      Expression b = False();
+      for (unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
+        for (unsigned k = 0; k < mnMaxNumberOfPremisesInAxioms; k++) {
+          b |= ((StepKind(s) == MP()) &
+               (From(s,k) == (mnNumberOfAssumptions-mParams.number_of_abducts+i)) &
+               (AxiomApplied(s) == ax) &
+               (GetAxiom(ax).GetPremises().GetSize() > k));
+        }
+      }
+      bAbductUsed |= (b & (ProofSize() > s));
+    }
+    Assert(bAbductUsed);
+  }
 
   if (mParams.number_of_abducts > 0) {
     AddComment("********************** Blocking earlier abducts **********************");
