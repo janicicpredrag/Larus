@@ -244,9 +244,10 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
     }
 
     // canonization
-    //c &= (ContentsPredicate(s,0) != 0u |
-    //     (ContentsArgument(s,0,1) >= ContentsArgument(s,0,0) &
-    //	  ContentsArgument(s,0,2) >= ContentsArgument(s,0,1)));
+    // c &= ((ContentsPredicate(s,0) != Expression("col")) |
+    //      ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
+    //       (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))
+    //     % "Canonization condition: ";
 
     return c;
 }
@@ -1340,7 +1341,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   Assert(CorrectnessConstraint());
 
 
-  AddComment("*************** Abducts must be used within the proof ***************");
   for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
     Expression bAbductUsed = False();
     for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
@@ -1355,11 +1355,12 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       }
       bAbductUsed |= (b & (ProofSize() > s));
     }
+    AddComment("*************** Each abduct must be used within the proof *************");
     Assert(bAbductUsed);
   }
 
   if (mParams.number_of_abducts > 0) {
-    AddComment("********************** Blocking earlier abducts **********************");
+    AddComment("******************** Blocking abducts already found ********************");
     Assert(mBlockingAbducts);
   }
 

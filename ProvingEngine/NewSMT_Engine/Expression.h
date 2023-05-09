@@ -28,6 +28,17 @@ class Expression
             else
               mS = s;
         }
+        ExpressionNode(const char* s) : mO(eVar), mS(s), mLeft(nullptr), mRight(nullptr) {
+            mO = eVar;
+            if (!strcmp(s, "true"))
+              mS = "top";
+            else if (!strcmp(s, "false"))
+              mS = "bot";
+            else {
+              string str(s);
+              mS = str;
+            }
+        }
         ExpressionNode(bool b) : mO(eBool), mB(b), mLeft(nullptr), mRight(nullptr) { }
         ExpressionNode(unsigned num) : mO(eNum), mNum(num), mLeft(nullptr), mRight(nullptr) {  }
         ExpressionNode() : mO(eNull), mLeft(nullptr), mRight(nullptr) {}
