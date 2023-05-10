@@ -381,7 +381,7 @@ string Expression::print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROV
             node->mS.substr(0,strlen("SameBranch")) == "SameBranch" ||
             node->mS.substr(0,strlen("OddNesting")) == "OddNesting" ||
             node->mS.substr(0,strlen("IsGoal")) == "IsGoal")
-            return "  b" + node->mS + " ";
+            return " b" + node->mS + " ";
         else
             return node->mS;
     case eBool:
