@@ -194,6 +194,16 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
     }
     if (mParams.mbNativeEQsub)
       c |= IsMPbyEqSub(s);
+
+    // canonization
+    if (s + 1 < mnNumberOfAssumptions + mProofLength) {
+      c &= ((IsQEDStep(s) | IsQEDStep(s+1)) |
+            (((ContentsPredicate(s,0) != Expression("col")) |
+            ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
+             (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))))
+           % "Canonization condition: ";
+    }
+
     return c;
 }
 
@@ -242,13 +252,6 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           else // it is a constant
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
-
-    // canonization
-    // c &= ((ContentsPredicate(s,0) != Expression("col")) |
-    //      ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
-    //       (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))
-    //     % "Canonization condition: ";
-
     return c;
 }
 
