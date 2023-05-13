@@ -184,7 +184,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
-       if (!mParams.mbInlineAxioms) {
+      if (mpHints->size() > 0 || !mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
          c |= IsMPstepByAxiom(s,ax);
@@ -196,13 +196,14 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
       c |= IsMPbyEqSub(s);
 
     // canonization
+    /*
     if (s + 1 < mnNumberOfAssumptions + mProofLength) {
       c &= ((IsQEDStep(s) | IsQEDStep(s+1)) |
             (((ContentsPredicate(s,0) != Expression("col")) |
             ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
              (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))))
            % "Canonization condition: ";
-    }
+    }*/
 
     return c;
 }
