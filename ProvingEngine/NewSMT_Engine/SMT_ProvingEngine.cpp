@@ -1234,33 +1234,40 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AddComment("******************************* Goal *********************************");
     set<string> exi_vars;
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
-        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      if (formula.GetElement(0).GetElement(0).GetArg(i) != "_") {
+        if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+            && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+          DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
+          exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+        }
       }
     }
     if (formula.GetSize() > 1) {
       for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+        if (formula.GetElement(1).GetElement(0).GetArg(i) != "_") {
+          if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
           exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
                 exi_vars.end()) {
           DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)), 1000);//todo
           exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+          }
         }
       }
     }
     Assert(Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False()));
     for(unsigned i = 0; i < formula.GetSize(); i++) {
-      Assert(ContentsPredicate(nFinalStep, i) ==
-             Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
+      if (formula.GetElement(i).GetElement(0).GetName() != "_")
+        Assert(ContentsPredicate(nFinalStep, i) ==
+               Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
       for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
-        if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
-          Assert(ContentsArgument(nFinalStep, i, j) ==
-                 Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
-        else
-          Assert(ContentsArgument(nFinalStep, i, j) ==
-                 Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
+        if (formula.GetElement(i).GetElement(0).GetArg(i) != "_") {
+          if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
+            Assert(ContentsArgument(nFinalStep, i, j) ==
+                   Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
+          else
+            Assert(ContentsArgument(nFinalStep, i, j) ==
+                   Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
+        }
       }
     }
 
