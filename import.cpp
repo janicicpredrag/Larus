@@ -629,22 +629,32 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   TPTPfile.close();
 
   vector<string> neededAxioms;
-  string vampire_solution = tmpnam(NULL); // "vampire.txt";//
-  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke +
-                       " " + for_FOL_prover + " > " + vampire_solution;
+  string vampire_solution = tmpnam(NULL); // "vampire.txt"; //
+  string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
+  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
+                       " > " + vampire_solution;
+  // cout << sCall.c_str() << endl;
   int rv = system(sCall.c_str());
-  if (!rv) {
+
+  if (rv == 0 || rv == 512) {
+    bool bProver9 = hammer_invoke_.find("prover9") != std::string::npos;
     for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
          it != axioms.end(); it++) {
       ifstream input_file(vampire_solution);
       if (input_file.good()) {
         string ss;
+        bool bProofStarted = !bProver9;
         while (getline(input_file, ss)) {
-          if (ss.find("Satisfiable") != std::string::npos) {
+          if (ss.find("Satisfiable") != std::string::npos ||    // for vampire
+              ss.find("SEARCH FAILED") != std::string::npos) {  // for prover9
             cout << "       Not valid! " << endl;
             return eVampireSat;
           }
-          if (ss != "" && ss.at(0) != '%' &&
+
+          if (bProver9 && (ss.find("=============== PROOF") != std::string::npos)) // for prover9
+              bProofStarted = true;
+
+          if (ss != "" && ss.at(0) != '%' && bProofStarted &&
               ss.find(it->second + ")") != std::string::npos)
             neededAxioms.push_back(it->second);
         }

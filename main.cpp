@@ -201,7 +201,7 @@ int main(int argc, char **argv) {
       params.mbNoExcludedMiddle = true;
     }
 
-    // setting time limit for vampire hammer
+    // setting time limit for hammer
     else if (argv[i][0] == '-' && argv[i][1] == 'h') {
       if (strlen(argv[i] + 2) == 0) {
         params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
@@ -210,19 +210,26 @@ int main(int argc, char **argv) {
         if (params.vampire_time_limit <= 0)
           params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
       }
-      params.msHammerInvoke = "vampire --cores 4 --mode casc --proof tptp "
-                                "--output_axiom_names on";
+      params.msHammerInvoke = DEFAULT_HAMMER;
+    }
+
+    // setting FOL prover as a hammer
+    else if (argv[i][0] == '-' && argv[i][1] == 'r') {
+      if (strlen(argv[i] + 2) == 0) {
+        params.msHammerInvoke = DEFAULT_HAMMER;
+      } else {
+        // for instance: -r"vampire --proof tptp --output_axiom_names on # "
+        // for instance: -r"eprover --auto -p # "
+        // for instance: -r"tptp_to_ladr < # | prover9 2> /dev/null "
+        params.msHammerInvoke = (argv[i] + 2);
+      }
     }
 
     else if (argv[i][0] == '-' && argv[i][1] == 'a') {
         if (strlen(argv[i] + 2) == 0)
-          params.msHammerInvoke = "vampire --cores 4 --mode casc --proof tptp "
-                                  "--output_axiom_names on";
+          params.msHammerInvokeForAbducts = DEFAULT_HAMMER_FOR_ABDUCTS;
         else
-          // for instance: -h"vampire --proof tptp --output_axiom_names on"
-          // for instance: -h"eprover --auto -p"
-          // cout << "ARGUMENT: " << params.msHammerInvoke << endl;
-          params.msHammerInvoke = (argv[i] + 2);
+          params.msHammerInvokeForAbducts = (argv[i] + 2);
     }
 
     // choosing proving engine
@@ -397,13 +404,19 @@ void printHelp() {
   cout << "   -nonegelim           do not use negation elimination axiom (R & ~R => false)"
        << endl << endl;
   cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"   << endl << endl;
-  cout << "   -h<time>             use a FOL prover for filtering out needed "  << endl;
-  cout << "                        axioms (<time> is optional, default: 18)"    << endl << endl;
-  cout << "   -a<invoke>           the way the external prover is invoked "     << endl
-       << "                        as a hammer to filter out the needed axioms; " << endl
-       << "                        only relevant if -h is used; (default: "     << endl
-       << "                        'vampire --mode casc --proof tptp "
-          "--output_axiom_names on')"                                           << endl << endl;
+
+  cout << "   -h<time>             use a FOL prover for filtering out needed axioms " << endl;
+  cout << "                       (<time> is optional, default: 18)"          << endl << endl;
+
+  cout << "   -r<invoke>           the way the external FOL prover is invoked as "           << endl;
+  cout << "                        a hammer to filter out the needed "                       << endl;
+  cout << "                        axioms; '#' is to be used in place of an input file name" << endl;
+  cout << "                        example: -r'vampire --mode casc --proof tptp --output_axiom_names on #' " << endl;
+  cout << "                        example: -r'tptp_to_ladr < # | prover9 2> /dev/null' "                    << endl;
+  cout << "                        default:   'vampire --mode casc --proof tptp --output_axiom_names on '# " << endl << endl;
+
+  cout << "   -a<invoke>           the way the external prover is invoked as a hammer for abduction"         << endl << endl;
+
   cout << "   -v<prover>           for generating and verifying the proof by "  << endl;
   cout << "                        an interactive theorem prover "              << endl
        << "                        (coq, mizar, isabelle); "                    << endl;

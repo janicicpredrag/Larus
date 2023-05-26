@@ -17,20 +17,27 @@ To build it, just type `make` in the root folder.
 ### Dependencies
 
 Larus can use the following external tools : 
- - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip) 
- - Z3 (https://github.com/Z3Prover/z3)
- - MiniZinc (https://www.minizinc.org/)
- - OR-Tools https://developers.google.com/optimization
- - Vampire (https://vprover.github.io/)
- - Coq (https://coq.inria.fr/)
- - Mizar (http://mizar.org/)
- - Isabelle (https://isabelle.in.tum.de/)
+-- underlying constraint solvers:
+   - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip) 
+   - Z3 (https://github.com/Z3Prover/z3)
+   - MiniZinc (https://www.minizinc.org/)
+   - OR-Tools https://developers.google.com/optimization
+-- FOL provers for hammering:
+   - Vampire (https://vprover.github.io/)
+   - Prover9 (https://github.com/ai4reason/Prover9)
+-- proof assistants for verification of generated proofs:
+   - Coq (https://coq.inria.fr/)
+   - Mizar (http://mizar.org/)
+   - Isabelle (https://isabelle.in.tum.de/)
 
 Larus assumes these tools are in the PATH.
 URSA is invoed when the option `-eursa` is used.
 Z3 is invoked when the options `-esmtbv -esmtlia` are used.
 MiniZinc with or-tools is invoked when the option `-eminizinc` is used.
+
 Vampire is invoked when the option `-h` is used.
+Prover9 is invoked when the option `-r` is used with appropriate prover invokation string.
+
 Coq is invoked when the option `-vcoq`is used.
 Mizar is invoked when the option `-vmizar`is used.
 Isabelle is invoked when the option `-visa`is used.
@@ -81,10 +88,14 @@ otherwise:
    -noexcludedmiddle    do not use excluded middle axiom (R | ~R)
 
    -h<time>             use a FOL prover for filtering out needed axioms (<time> is optional, default: 18)
+   
+   -r<invoke>           the way the external FOL prover is invoked as a hammer to filter out the needed 
+                        axioms; '#' is to be used in place of an input file name
+                        example: -r"vampire --mode casc --proof tptp --output_axiom_names on # "
+                        example: -r"tptp_to_ladr < # | prover9 2> /dev/null "
+                        default:   "vampire --mode casc --proof tptp --output_axiom_names on # "
 
-   -a<invoke>           the way the external prover is invoked as a hammer to filter out the needed 
-                        axioms; only relevant if -h is used; (default: 
-                        'vampire --mode casc --proof tptp --output_axiom_names on'
+   -a<invoke>           the way the external prover is invoked as a hammer for abduction 
 
    -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
                         example: -vcoq; default: none
