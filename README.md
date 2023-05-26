@@ -63,54 +63,54 @@ otherwise:
 
    `-l<time limit>`       for time limit; example: -l10; default: 10s
 
-   `-f<format>`           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
+   `-f<format>`           for input format (only tptp is supported at the moment); example `-ftptp`; default: `tptp`
 
-   `-s`                   for search for a shortest proof; example:-s; default: no, search for a shortest proof
+   `-s`                   for search for a shortest proof; example: `-s`; default: no, search for a shortest proof
 
-   -d                   for disabling proof simplification; default is false
+   `-d`                   for disabling proof simplification; default is false
 
-   -i                   without inlining simple axioms; default is true
+   `-i`                   without inlining simple axioms; default is true
 
-   -x                   find a proof of length equal to the given length; default it false = length <= n
+   `-x`                   find a proof of length equal to the given length; default is false = length <= n
 
-   -e<engine>           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
-                        when using minizinc, the solver or-tools is used;
-                        examples: -eursa; default: smtbv
+   `-e<engine>`           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
+                          when using minizinc, the solver or-tools is used;
+                          examples: `-eursa`; default: `smtbv`
 
-   -n<max nesting>      for maximal proof depth in which a fact can be used; example: -n3; default: 2
+   `-n<max nesting>`      for maximal proof depth in which a fact can be used; example: `-n3`; default: `2`
 
-   -m<starting length>  for the size of the proof search to start with (support for smt engines only); 
-                        example: -m4; default: 2
+   `-m<starting length>`  for the size of the proof search to start with (support for smt engines only); 
+                          example: `-m4`; default: 2
 
-   -p<max proof length> for maximal proof length (for engines ursa/smt); example: -p64; default: 32
+   `-p<max proof length>` for maximal proof length (for engines ursa/smt); example: `-p64`; default: `32`
    
-   -k<increment>        for the step between subsequent proof lengths; example: -k2; default: 12
+   `-k<increment>`        for the step between subsequent proof lengths; example: `-k2`; default: `12`
 
-   -nonegelim           do not use negation elimination axiom (R & ~R => false)
+   `-nonegelim`           do not use negation elimination axiom (R & ~R => false)
 
-   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)
+   `-noexcludedmiddle`    do not use excluded middle axiom (R | ~R)
 
-   -h<time>             use a FOL prover for filtering out needed axioms (<time> is optional, default: 18)
+   `-h<time>`             use a FOL prover for filtering out needed axioms (`<time>` is optional, default: `18`)
    
-   -r<invoke>           the way the external FOL prover is invoked as a hammer to filter out the needed 
-                        axioms; '#' is to be used in place of an input file name
-                        examples: -r'vampire --mode casc --proof tptp --output_axiom_names on # ';
-                        -r'tptp_to_ladr < # | prover9 2> /dev/null ";
-                        default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
+   `-r<invoke>`           the way the external FOL prover is invoked as a hammer to filter out the needed 
+                          axioms; '#' is to be used in place of an input file name
+                          examples: -r'vampire --mode casc --proof tptp --output_axiom_names on # ';
+                          -r'tptp_to_ladr < # | prover9 2> /dev/null ";
+                          default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
 
-   -a<invoke>           the way the external prover is invoked as a hammer for abduction 
+   `-a<invoke>`           the way the external prover is invoked as a hammer for abduction 
 
-   -v<prover>           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
-                        example: -vcoq; default: none
+   `-v<prover>`           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
+                          example: `-vcoq`; default: none
  
-   -b<number of abducts>number of abducts; default: 0
-                        (support for abducts is not implemented for stl/sql/ursa proving engines)
+   `-b<number of abducts>` number of abducts; default: 0
+                          (support for abducts is not implemented for stl/sql/ursa proving engines)
  
-   -gclca               for generating a GCLC illustration of the proof based on illustrations of axioms.      
-                        default is false
+   `-gclca`               for generating a GCLC illustration of the proof based on illustrations of axioms.      
+                          default is false
 
-   -gclcp               for generating a GCLC illustration of the proof based on illustrations of predicates.
-                        default is false
+   `-gclcp`               for generating a GCLC illustration of the proof based on illustrations of predicates.
+                          default is false
 
  
 ## Example
