@@ -17,15 +17,18 @@ To build it, just type `make` in the root folder.
 ### Dependencies
 
 Larus can use the following external tools : 
--- underlying constraint solvers:
+
+Underlying constraint solvers:
    - URSA (http://www.matf.bg.ac.rs/~janicic/software/ursa.zip) 
    - Z3 (https://github.com/Z3Prover/z3)
    - MiniZinc (https://www.minizinc.org/)
    - OR-Tools https://developers.google.com/optimization
--- FOL provers for hammering:
+   
+FOL provers for hammering:
    - Vampire (https://vprover.github.io/)
    - Prover9 (https://github.com/ai4reason/Prover9)
--- proof assistants for verification of generated proofs:
+   
+Proof assistants for verification of generated proofs:
    - Coq (https://coq.inria.fr/)
    - Mizar (http://mizar.org/)
    - Isabelle (https://isabelle.in.tum.de/)
@@ -91,9 +94,9 @@ otherwise:
    
    -r<invoke>           the way the external FOL prover is invoked as a hammer to filter out the needed 
                         axioms; '#' is to be used in place of an input file name
-                        example: -r"vampire --mode casc --proof tptp --output_axiom_names on # "
-                        example: -r"tptp_to_ladr < # | prover9 2> /dev/null "
-                        default:   "vampire --mode casc --proof tptp --output_axiom_names on # "
+                        example: -r'vampire --mode casc --proof tptp --output_axiom_names on # '
+                        example: -r'tptp_to_ladr < # | prover9 2> /dev/null "
+                        default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
 
    -a<invoke>           the way the external prover is invoked as a hammer for abduction 
 
