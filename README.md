@@ -61,11 +61,11 @@ otherwise:
 
 `larus -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -vcoq filename `
 
-   -l<time limit>       for time limit; example: -l10; default: 10s
+   `-l<time limit>`       for time limit; example: -l10; default: 10s
 
-   -f<format>           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
+   `-f<format>`           for input format (only tptp is supported at the moment); example -ftptp; default: tptp
 
-   -s                   for search for a shortest proof; example:-s; default: no, search for a shortest proof
+   `-s`                   for search for a shortest proof; example:-s; default: no, search for a shortest proof
 
    -d                   for disabling proof simplification; default is false
 
@@ -94,8 +94,8 @@ otherwise:
    
    -r<invoke>           the way the external FOL prover is invoked as a hammer to filter out the needed 
                         axioms; '#' is to be used in place of an input file name
-                        example: -r'vampire --mode casc --proof tptp --output_axiom_names on # '
-                        example: -r'tptp_to_ladr < # | prover9 2> /dev/null "
+                        examples: -r'vampire --mode casc --proof tptp --output_axiom_names on # ';
+                        -r'tptp_to_ladr < # | prover9 2> /dev/null ";
                         default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
 
    -a<invoke>           the way the external prover is invoked as a hammer for abduction 
