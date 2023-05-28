@@ -189,6 +189,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       cout << "       After check of excluded middle axioms: output size: "
            << T.mCLaxioms.size() << endl;
       T.printAxioms();
+      USING_ORIGINAL_SIGNATURE_EQ = false;
     }
 
     // ************ Filtering by reachability ************
@@ -206,12 +207,12 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     T.AddAxiomNEqSymm();
     T.AddEqExcludedMiddleAxiom();
     T.AddEqNegElimAxioms();
-    T.printAxioms();
 
     params.mbNativeEQsub = true;
     cout << "--- Adding substitution axioms: " << endl;
     Theory T1 = T;
     T.AddEqSubAxioms(); // no built in support
+    T.printAxioms();
 
     if (params.msHammerInvoke != "" && vampire_succeeded) {
       USING_ORIGINAL_SIGNATURE_EQ = false;
@@ -616,7 +617,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   cout << "--- Hammer filtering: filtering out input axioms (input: "
        << axioms.size() << ")" << endl;
   // export to TPTP
-  string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
+  string for_FOL_prover = "tptpfile.txt";// tmpnam(NULL); //
   ofstream TPTPfile;
   TPTPfile.open(for_FOL_prover);
   for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
@@ -629,7 +630,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   TPTPfile.close();
 
   vector<string> neededAxioms;
-  string vampire_solution = tmpnam(NULL); // "vampire.txt"; //
+  string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
   string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
   const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
                        " > " + vampire_solution;

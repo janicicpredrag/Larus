@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   params.mbGCLCpredicates = DEFAULT_GCLC;
   params.mbSimp = DEFAULT_SIMP;
   params.mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
-  params.msHammerInvoke = DEFAULT_HAMMER;
+  params.msHammerInvoke = "";
   params.msHammerInvokeForAbducts = DEFAULT_HAMMER_FOR_ABDUCTS;
   params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
   params.exact_length = DEFAULT_EXACT_LENGTH;

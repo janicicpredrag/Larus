@@ -1260,7 +1260,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         Assert(ContentsPredicate(nFinalStep, i) ==
                Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
       for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
-        if (formula.GetElement(i).GetElement(0).GetArg(i) != "_") {
+        if (formula.GetElement(i).GetElement(0).GetArg(j) != "_") {
           if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
             Assert(ContentsArgument(nFinalStep, i, j) ==
                    Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
