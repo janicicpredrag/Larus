@@ -532,11 +532,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
         }
-        else
+        else {
           cout << "Abducts unknown consistency" << endl;
-        for(unsigned j = 0; j < params.number_of_abducts; j++) {
-          InstantiatedPremises.pop_back();
         }
+        //for(unsigned j = 0; j < params.number_of_abducts; j++) {
+        //  InstantiatedPremises.pop_back();
+        //}
+        InstantiatedPremises.clear();
         cout << "--------------------- " << endl << endl;
       }
 
