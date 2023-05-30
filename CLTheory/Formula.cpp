@@ -826,7 +826,7 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   ss = ss.substr(pos2 + 1, ss.size() - pos2 - 2);
   // cout << "text: " << name << " : " << ss << endl;
   if (type == eHint) {
-    string s[3];
+    string arg[3];
     int BracketsOpen = 0;
     int ord = 0;
     for (size_t i = 0; i < ss.size(); i++) {
@@ -843,21 +843,21 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
         }
       }
       else
-        s[ord] += ss[i];
+        arg[ord] += ss[i];
     }
     if (ord != 2) {
       cout << "Input error " << s << ": hint should have five arguments." << endl;
       return false;
     }
 
-    if (!cl.ReadWithoutCheckingBoundness(s[0]))
+    if (!cl.ReadWithoutCheckingBoundness(arg[0]))
       return false;
     if (!(cl.GetGoal().GetSize()==1 && cl.GetGoal().GetElement(0).GetSize()==1)) {
       cout << "Input error " << s << ": hint formula can be only fact." << endl;
       return false;
     }
-    ordinal = s[1];
-    if (!justification.Read(s[2])) {
+    ordinal = arg[1];
+    if (!justification.Read(arg[2])) {
       cout << "Input error " << s << ": hint justification (fifth argument) cannot be read." << endl;
       return false;
     }
