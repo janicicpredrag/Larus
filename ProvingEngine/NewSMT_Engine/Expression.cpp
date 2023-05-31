@@ -396,8 +396,13 @@ string Expression::print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROV
                 print_to_MiniZinc(node->mLeft, th, eAdd) + "+" + print_to_MiniZinc(node->mRight, th, eAdd);
     case eMul: return
                 print_to_MiniZinc(node->mLeft, th, eMul) + "*" + print_to_MiniZinc(node->mRight, th, eMul);
-    case eEq: return "" + print_to_MiniZinc(node->mLeft, th, eEq) + " = " + print_to_MiniZinc(node->mRight, th, eEq) + ""
-                + (op == eNull ? "" : "\n");
+    case eEq:  if (node->mLeft->mO == eVar || node->mLeft->mO == eNum || node->mLeft->mO == eBool)
+                 return "" + print_to_MiniZinc(node->mLeft, th, eEq) + " = " + print_to_MiniZinc(node->mRight, th, eEq) + ""
+                  + (op == eNull ? "" : "\n");
+               else
+                 return "(" + print_to_MiniZinc(node->mLeft, th, eEq) + ") = " + print_to_MiniZinc(node->mRight, th, eEq) + ""
+                  + (op == eNull ? "" : "\n");
+
     case eNeq: return "  (" + print_to_MiniZinc(node->mLeft, th, eNeq) + " != " + print_to_MiniZinc(node->mRight, th, eNeq) + ") "
                 + (op == eNull ? "" : "\n");
     case eGreater:

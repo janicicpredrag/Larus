@@ -189,6 +189,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       cout << "       After check of excluded middle axioms: output size: "
            << T.mCLaxioms.size() << endl;
       T.printAxioms();
+      USING_ORIGINAL_SIGNATURE_EQ = false;
     }
 
     // ************ Filtering by reachability ************
@@ -206,12 +207,12 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     T.AddAxiomNEqSymm();
     T.AddEqExcludedMiddleAxiom();
     T.AddEqNegElimAxioms();
-    T.printAxioms();
 
     params.mbNativeEQsub = true;
     cout << "--- Adding substitution axioms: " << endl;
     Theory T1 = T;
     T.AddEqSubAxioms(); // no built in support
+    T.printAxioms();
 
     if (params.msHammerInvoke != "" && vampire_succeeded) {
       USING_ORIGINAL_SIGNATURE_EQ = false;
@@ -531,11 +532,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
         }
-        else
+        else {
           cout << "Abducts unknown consistency" << endl;
-        for(unsigned j = 0; j < params.number_of_abducts; j++) {
-          InstantiatedPremises.pop_back();
         }
+        //for(unsigned j = 0; j < params.number_of_abducts; j++) {
+        //  InstantiatedPremises.pop_back();
+        //}
+        InstantiatedPremises.clear();
         cout << "--------------------- " << endl << endl;
       }
 
@@ -616,7 +619,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   cout << "--- Hammer filtering: filtering out input axioms (input: "
        << axioms.size() << ")" << endl;
   // export to TPTP
-  string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
+  string for_FOL_prover = "tptpfile.txt";// tmpnam(NULL); //
   ofstream TPTPfile;
   TPTPfile.open(for_FOL_prover);
   for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
@@ -629,22 +632,32 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   TPTPfile.close();
 
   vector<string> neededAxioms;
-  string vampire_solution = tmpnam(NULL); // "vampire.txt";//
-  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke +
-                       " " + for_FOL_prover + " > " + vampire_solution;
+  string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
+  string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
+  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
+                       " > " + vampire_solution;
+  // cout << sCall.c_str() << endl;
   int rv = system(sCall.c_str());
-  if (!rv) {
+
+  if (rv == 0 || rv == 512) {
+    bool bProver9 = hammer_invoke_.find("prover9") != std::string::npos;
     for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
          it != axioms.end(); it++) {
       ifstream input_file(vampire_solution);
       if (input_file.good()) {
         string ss;
+        bool bProofStarted = !bProver9;
         while (getline(input_file, ss)) {
-          if (ss.find("Satisfiable") != std::string::npos) {
+          if (ss.find("Satisfiable") != std::string::npos ||    // for vampire
+              ss.find("SEARCH FAILED") != std::string::npos) {  // for prover9
             cout << "       Not valid! " << endl;
             return eVampireSat;
           }
-          if (ss != "" && ss.at(0) != '%' &&
+
+          if (bProver9 && (ss.find("=============== PROOF") != std::string::npos)) // for prover9
+              bProofStarted = true;
+
+          if (ss != "" && ss.at(0) != '%' && bProofStarted &&
               ss.find(it->second + ")") != std::string::npos)
             neededAxioms.push_back(it->second);
         }
@@ -683,7 +696,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
 VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
                              const vector<Fact>& premises, const string &hammer_invoke,
                              unsigned time_limit) {
-  string for_FOL_prover = tmpnam(NULL); // "tptpfile.txt";//
+  string for_FOL_prover = "tptpfile_abduct.txt"; // tmpnam(NULL); //
   ofstream TPTPfile;
   TPTPfile.open(for_FOL_prover);
   for (vector<pair<CLFormula, string>>::const_iterator it = axioms.begin(); it != axioms.end(); it++)
@@ -692,9 +705,10 @@ VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
     TPTPfile << "fof(premise, axiom, " << *it << ")." << endl;
   TPTPfile.close();
 
-  string vampire_solution = tmpnam(NULL); // "vampire.txt";//
-  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke +
-                       " " + for_FOL_prover + " > " + vampire_solution;
+  string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
+  string vampire_solution = "vampire_abduct.txt";// tmpnam(NULL); //
+  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
+                       " " + " > " + vampire_solution;
   int rv = system(sCall.c_str());
   if (!rv) {
     ifstream input_file(vampire_solution);

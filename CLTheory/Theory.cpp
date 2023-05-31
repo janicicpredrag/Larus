@@ -30,12 +30,14 @@ void Theory::AddAxiom(CLFormula &axiom, string name) {
 
 void Theory::UpdateSignature(CLFormula &axiom) {
   for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++)
-    AddSymbol(axiom.GetPremises().GetElement(j).GetName(),
-              axiom.GetPremises().GetElement(j).GetArity());
+    if (axiom.GetPremises().GetElement(j).GetName() != "_") // this is empty slot for loosely constrained goals
+      AddSymbol(axiom.GetPremises().GetElement(j).GetName(),
+                axiom.GetPremises().GetElement(j).GetArity());
   for (size_t j = 0; j < axiom.GetGoal().GetSize(); j++)
     for (size_t k = 0; k < axiom.GetGoal().GetElement(j).GetSize(); k++)
-      AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(),
-                axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
+      if (axiom.GetGoal().GetElement(j).GetElement(k).GetName() != "_") // this is empty slot for loosely constrained goals
+        AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(),
+                  axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
 }
 
 // --------------------------------------------------------------
@@ -352,15 +354,19 @@ const pair<CLFormula, string> &Theory::OriginalAxiom(size_t i) const {
 // --------------------------------------------------------------
 
 void Theory::AddConstant(string s) {
-  //    mConstants.insert(s);
-  if (!IsConstant(s))
-    mConstants.push_back(s);
+  if (s != "_") // _ is for unconstrained arguments
+    if (!IsConstant(s))
+      mConstants.push_back(s);
 }
 
 // --------------------------------------------------------------
 
 void Theory::AddSymbol(const string &pp, unsigned arity) {
   string p = pp;
+
+  if (pp == "_")
+      return; // special symbol for underconstrained formulae
+
   if (mOccuringSymbols.find(p) == mOccuringSymbols.end())
     mOccuringSymbols.insert(p);
 /*for (std::set<std::string>::iterator it = mOccuringSymbols.begin();

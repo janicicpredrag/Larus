@@ -102,7 +102,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
       cOneL &= IsQEDStep(L - 1)
             % "   7: The step L-1 is one of the QED steps";
 
-      if (mParams.number_of_abducts > 0) {
+      if (mParams.number_of_abducts > 0 && L > 0) {
         cOneL &= ((StepKind(L - 1) == QEDbyEFQ()) == False())
               % "   7a: If looking for abducts the final QED is not QEDbyEFQ";
       }
@@ -112,6 +112,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
 
       cProofEnding |= cOneL % "";
     }
+
     c &= cProofEnding;
 
     // Normalization constraints: proof is normalized, according to several criteria
@@ -185,7 +186,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
-       if (!mParams.mbInlineAxioms) {
+      if (mpHints->size() > 0 || !mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
          c |= IsMPstepByAxiom(s,ax);
@@ -195,6 +196,17 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
     }
     if (mParams.mbNativeEQsub)
       c |= IsMPbyEqSub(s);
+
+    // canonization
+    /*
+    if (s + 1 < mnNumberOfAssumptions + mProofLength) {
+      c &= ((IsQEDStep(s) | IsQEDStep(s+1)) |
+            (((ContentsPredicate(s,0) != Expression("col")) |
+            ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
+             (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))))
+           % "Canonization condition: ";
+    }*/
+
     return c;
 }
 
@@ -243,13 +255,6 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           else // it is a constant
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
-
-    // canonization
-    // c &= ((ContentsPredicate(s,0) != Expression("col")) |
-    //      ((ContentsArgument(s,0,1) >= ContentsArgument(s,0,0)) &
-    //       (ContentsArgument(s,0,2) >= ContentsArgument(s,0,1))))
-    //     % "Canonization condition: ";
-
     return c;
 }
 
@@ -524,6 +529,7 @@ Expression SMT_ProvingEngine::IsQEDbyAssumption(unsigned s)
     else {
       c = (StepKind(s) == QEDbyAssumption())
         & (IsGoal(s - 1))
+        & ((StepKind(s - 1) == QEDbyEFQ()) == False())
         & (IsGoal(s))
         & (Nesting(s) == Nesting(s - 1));
     }
@@ -1231,33 +1237,40 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AddComment("******************************* Goal *********************************");
     set<string> exi_vars;
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-          && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-        DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
-        exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      if (formula.GetElement(0).GetElement(0).GetArg(i) != "_") {
+        if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+            && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+          DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
+          exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+        }
       }
     }
     if (formula.GetSize() > 1) {
       for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
+        if (formula.GetElement(1).GetElement(0).GetArg(i) != "_") {
+          if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) == CONSTANTS.end() &&
           exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
                 exi_vars.end()) {
           DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)), 1000);//todo
           exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+          }
         }
       }
     }
     Assert(Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False()));
     for(unsigned i = 0; i < formula.GetSize(); i++) {
-      Assert(ContentsPredicate(nFinalStep, i) ==
-             Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
+      if (formula.GetElement(i).GetElement(0).GetName() != "_")
+        Assert(ContentsPredicate(nFinalStep, i) ==
+               Expression(ToUpper(formula.GetElement(i).GetElement(0).GetName())));
       for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
-        if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
-          Assert(ContentsArgument(nFinalStep, i, j) ==
-                 Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
-        else
-          Assert(ContentsArgument(nFinalStep, i, j) ==
-                 Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
+        if (formula.GetElement(i).GetElement(0).GetArg(j) != "_") {
+          if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
+            Assert(ContentsArgument(nFinalStep, i, j) ==
+                   Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
+          else
+            Assert(ContentsArgument(nFinalStep, i, j) ==
+                   Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
+        }
       }
     }
 
@@ -1341,7 +1354,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   AddComment("********************* Proof correctness constraint ******************");
   Assert(CorrectnessConstraint());
 
-
+/*
   for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
     Expression bAbductUsed = False();
     for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
@@ -1358,7 +1371,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     }
     AddComment("*************** Each abduct must be used within the proof *************");
     Assert(bAbductUsed);
-  }
+  }*/
 
   if (mParams.number_of_abducts > 0) {
     AddComment("******************** Blocking abducts already found ********************");

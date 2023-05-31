@@ -99,3 +99,15 @@ string ToUpper(const string &str) {
        res[i] = toupper(str[i]);
   return res;*/
 }
+
+// ---------------------------------------------------------------------------------------
+
+string replacestring(const string& str, const string& from, const string& to) {
+    string resstr = str;
+    size_t start_pos = resstr.find(from, 0);
+    if (start_pos != string::npos)
+      resstr.replace(start_pos, from.length(), to);
+    return resstr;
+}
+
+// ---------------------------------------------------------------------------------------
