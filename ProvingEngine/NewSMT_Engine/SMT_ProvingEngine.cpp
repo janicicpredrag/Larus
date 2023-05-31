@@ -102,7 +102,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
       cOneL &= IsQEDStep(L - 1)
             % "   7: The step L-1 is one of the QED steps";
 
-      if (mParams.number_of_abducts > 0) {
+      if (mParams.number_of_abducts > 0 && L > 0) {
         cOneL &= ((StepKind(L - 1) == QEDbyEFQ()) == False())
               % "   7a: If looking for abducts the final QED is not QEDbyEFQ";
       }
@@ -112,6 +112,7 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
 
       cProofEnding |= cOneL % "";
     }
+
     c &= cProofEnding;
 
     // Normalization constraints: proof is normalized, according to several criteria
@@ -527,6 +528,7 @@ Expression SMT_ProvingEngine::IsQEDbyAssumption(unsigned s)
     else {
       c = (StepKind(s) == QEDbyAssumption())
         & (IsGoal(s - 1))
+        & ((StepKind(s - 1) == QEDbyEFQ()) == False())
         & (IsGoal(s))
         & (Nesting(s) == Nesting(s - 1));
     }
@@ -1351,7 +1353,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   AddComment("********************* Proof correctness constraint ******************");
   Assert(CorrectnessConstraint());
 
-
+/*
   for(unsigned i = 0; i < mParams.number_of_abducts; i++) {
     Expression bAbductUsed = False();
     for(unsigned s = mnNumberOfAssumptions; s < mnNumberOfAssumptions + mProofLength; s++) {
@@ -1368,7 +1370,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     }
     AddComment("*************** Each abduct must be used within the proof *************");
     Assert(bAbductUsed);
-  }
+  }*/
 
   if (mParams.number_of_abducts > 0) {
     AddComment("******************** Blocking abducts already found ********************");
