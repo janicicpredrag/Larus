@@ -403,6 +403,9 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints) {
+  unsigned int nbInconsistentAbducts = 0;
+  unsigned int nbConsistentAbducts = 0;
+  unsigned int nbUnknownStatusAbducts = 0;
   string fileName;
   if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
       (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
@@ -423,6 +426,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
   // Proving loops only if abducts are sought; otherwise, it runs only once
   do {
+   
     CLProof proof;
     proof.SetTheory(&T);
     cout << "--- Instantiating the goal." << endl;
@@ -528,13 +532,17 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                               params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT);
         if (vret == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
+          nbInconsistentAbducts++;
         }
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
+          nbConsistentAbducts++;
         }
         else {
           cout << "Abducts unknown consistency" << endl;
+          nbUnknownStatusAbducts++;
         }
+        cout << "Number of abducts found so far:" << endl << "Inconsistent : " << nbInconsistentAbducts << " Consistent : " << nbConsistentAbducts << " Unknown Status : " << nbUnknownStatusAbducts << endl;
         //for(unsigned j = 0; j < params.number_of_abducts; j++) {
         //  InstantiatedPremises.pop_back();
         //}
