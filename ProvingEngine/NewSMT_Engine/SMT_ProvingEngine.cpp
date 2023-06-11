@@ -248,6 +248,10 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
       else // it is a constant
         c &= (ContentsArgument(s,0,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
     }
+    for(unsigned j=GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArity(); j < mnMaxArity; j++) {
+      c &= (ContentsArgument(s,0,j) == 999u);
+    }
+
     if (GetAxiom(ax).GetGoal().GetSize() > 1) {
         c &= (ContentsPredicate(s,1) == GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetName());
         for(unsigned j=0; j < GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArity(); j++)
@@ -256,6 +260,10 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           else // it is a constant
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
+    for(unsigned j=GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArity(); j < mnMaxArity; j++) {
+      c &= (ContentsArgument(s,1,j) == 999u);
+    }
+
     return c;
 }
 
@@ -761,6 +769,8 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
     & (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
   for (size_t i = 0; i < f.GetArity(); i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
+  for (size_t i = f.GetArity(); i < mnMaxArity; i++)
+    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == 999u);
   mProofPremises &= c % ("Assumption " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
 }
