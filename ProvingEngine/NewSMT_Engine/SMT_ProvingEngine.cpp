@@ -154,7 +154,8 @@ Expression SMT_ProvingEngine::CorrectProofStep(unsigned s)
         ( //IsAssumption(s) | // Assumptions are constrained by AddPremise
           IsMPstep(s)
         | IsQEDbyAssumption(s)
-        | IsQEDbyEFQ(s))
+       // | IsQEDbyEFQ(s)
+        )
         % ("----- Is step " + itos(s) + " correct ");
 }
 
