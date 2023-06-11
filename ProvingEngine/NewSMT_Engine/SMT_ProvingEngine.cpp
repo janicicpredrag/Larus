@@ -115,20 +115,22 @@ Expression SMT_ProvingEngine::CorrectnessConstraint()
 
     c &= cProofEnding;
 
-    // Normalization constraints: proof is normalized, according to several criteria
-    for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
-      Expression cPreviousStepIsUsed = False();
-      for(unsigned i = 0; i < mnMaxNumberOfPremisesInAxioms; i++) {
-        cPreviousStepIsUsed |= (From(s,i) == (s - 1));
+    if (mpHints->size() == 0) { // avoid conflict with hints if there are hints
+      // Normalization constraints: proof is normalized, according to several criteria
+      for(unsigned s = mnNumberOfAssumptions+1; s < mnNumberOfAssumptions + mProofLength; s++) {
+        Expression cPreviousStepIsUsed = False();
+        for(unsigned i = 0; i < mnMaxNumberOfPremisesInAxioms; i++) {
+          cPreviousStepIsUsed |= (From(s,i) == (s - 1));
+        }
+        Expression cProofIsNormalized;
+        cProofIsNormalized &=  ((((cPreviousStepIsUsed == False())
+                             & (Nesting(s-1) == Nesting(s))
+                             & (StepKind(s-1) == MP())
+                             & (StepKind(s) == MP())) == False())
+                             | (AxiomApplied(s) >= AxiomApplied(s-1)))
+                             % ("   9: Normalization condition for step " + itos(s));
+        c &= cProofIsNormalized;
       }
-      Expression cProofIsNormalized;
-      cProofIsNormalized &=  ((((cPreviousStepIsUsed == False())
-                           & (Nesting(s-1) == Nesting(s))
-                           & (StepKind(s-1) == MP())
-                           & (StepKind(s) == MP())) == False())
-                           | (AxiomApplied(s) >= AxiomApplied(s-1)))
-                           % ("   9: Normalization condition for step " + itos(s));
-      c &= cProofIsNormalized;
     }
     return c;
 }
@@ -1211,8 +1213,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
         for(unsigned i = 0; i<hintFact.GetArity(); i++) {
           if (isIdentifier(hintFact.GetArg(i)) && hintVars.find(hintFact.GetArg(i)) == hintVars.end()) {
-            DeclareVarBasicType(hintFact.GetArg(i), 1000);
-            hintVars.insert(hintFact.GetArg(i));
+            if (CONSTANTS.find(hintFact.GetArg(i)) == CONSTANTS.end())  {
+               DeclareVarBasicType(hintFact.GetArg(i), 1000);
+               hintVars.insert(hintFact.GetArg(i));
+            }
           }
         }
         if (isIdentifier(ordinal))
