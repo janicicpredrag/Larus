@@ -147,14 +147,15 @@ Expression SMT_ProvingEngine::CorrectProofStep(unsigned s)
         | IsSecondCase(s)
         | IsQEDbyCases(s)
         | IsQEDbyAssumption(s)
-        | IsQEDbyEFQ(s))
+        | IsQEDbyEFQ(s)
+          )
         % ("----- Is step " + itos(s) + " correct ");
     else // no need for case splits (no branching axioms)
       return
         ( //IsAssumption(s) | // Assumptions are constrained by AddPremise
           IsMPstep(s)
         | IsQEDbyAssumption(s)
-       // | IsQEDbyEFQ(s)
+        | IsQEDbyEFQ(s)
         )
         % ("----- Is step " + itos(s) + " correct ");
 }
@@ -250,7 +251,7 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
         c &= (ContentsArgument(s,0,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArg(j)]);
     }
     for(unsigned j=GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArity(); j < mnMaxArity; j++) {
-      c &= (ContentsArgument(s,0,j) == 99999u);
+      c &= (ContentsArgument(s,0,j) == 999u);
     }
 
     if (GetAxiom(ax).GetGoal().GetSize() > 1) {
@@ -262,7 +263,7 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
             c &= (ContentsArgument(s,1,j) == CONSTANTS[GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j)]);
     }
     for(unsigned j=GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArity(); j < mnMaxArity; j++) {
-      c &= (ContentsArgument(s,1,j) == 99999u);
+      c &= (ContentsArgument(s,1,j) == 999u);
     }
 
     return c;
@@ -771,7 +772,7 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
   for (size_t i = 0; i < f.GetArity(); i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
   for (size_t i = f.GetArity(); i < mnMaxArity; i++)
-    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == 99999u);
+    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == 999u);
   mProofPremises &= c % ("Assumption " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
 }
