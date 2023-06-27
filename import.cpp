@@ -295,14 +295,13 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   }
 
   // ************ Use or not support for case splits ************
-  if (params.mbNeedsCaseSplits) {
-    for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-         it != T.mCLaxioms.end(); it++) {
+  params.mbNeedsCaseSplits = false;
+  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+    it != T.mCLaxioms.end(); it++) {
       if (it->first.GetGoal().GetSize() > 1) {
         params.mbNeedsCaseSplits = true;
         break;
       }
-    }
   }
   if (params.mbNeedsCaseSplits)
     cout << "--- Support for case splits turned ON. " << endl;

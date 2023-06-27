@@ -183,9 +183,282 @@ Expression SMT_ProvingEngine::IsAssumptionStep(unsigned s, unsigned i)
       & (SameContents(s,0,i,0));
 }
 
+
 // ---------------------------------------------------------------------------------------
 
 Expression SMT_ProvingEngine::IsMPstep(unsigned s)
+{
+    if (mParams.mbInlineAxioms)
+      return IsMPstepOld(s);
+    else
+      return IsMPstepNew(s); // inlining in IsMPstepNewWithInlining still has bugs!
+
+}
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::IsMPstepNew(unsigned s)
+{
+    Expression MPstep =  (StepKind(s) == MP())
+                       & (s>0 ? Nesting(s) == Nesting(s-1) : Nesting(s) == 1u);
+
+    // Gather all "From" constraints (for one proof step, for all axioms jointly)
+    Expression AllPremisesFrom = True();
+    for(unsigned p = 0; p < mnMaxNumberOfPremisesInAxioms; p++) {
+       Expression onePremise = (From(s,p) == s);
+       for(unsigned ss = 0; ss < s; ss++) {
+          Expression cFrom = (From(s,p) == ss) &
+                             (Cases(ss) == False()) &
+                             (SameBranch(s,ss));
+          Expression cFixed = (InstAxPredicate(s,p) == ContentsPredicate(ss,0));
+          for(unsigned a = 0; a < mnMaxArity; a++) {
+            cFixed &= (InstAxArgument(s,p,a) == ContentsArgument(ss,0,a));
+          }
+          onePremise |= (cFrom  & cFixed );
+       }
+       AllPremisesFrom &= onePremise;
+    }
+
+    // Constraints for one proof step, for each axiom separately
+    Expression OneOfAxioms = False();
+    for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
+        bool bUseAxiom = false, bQEDisNext = false;
+        if  (mpHints->size() > 0 || !mParams.mbInlineAxioms || !GetAxiom(ax).IsSimpleFormula()) {
+           bUseAxiom = true;
+        } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
+           bUseAxiom = true;
+           bQEDisNext = true;
+        }
+
+        if (bUseAxiom) {
+          Expression OneAxiom = (AxiomApplied(s) == ax)
+                              & (Cases(s) == (GetAxiom(ax).GetGoal().GetSize() > 1))
+                              & (MatchConclusion(s,ax));
+         for(unsigned p=0; p < GetAxiom(ax).GetPremises().GetSize(); p++) {
+           if (GetAxiom(ax).GetPremises().GetElement(p).GetName() == "true")  {
+              OneAxiom &= (From(s,p) == s); // special case, where there is no "from"
+           }
+           else {
+             Expression cDirect = (From(s,p) != s);
+             cDirect &= (InstAxPredicate(s,p) == GetAxiom(ax).GetPremises().GetElement(p).GetName());
+             for(unsigned a=0; a < GetAxiom(ax).GetPremises().GetElement(p).GetArity(); a++) {
+               if (BindingAxiomPremises(ax, p, a) != 0)
+                 cDirect &= (InstAxArgument(s,p,a) == Instantiation(s,BindingAxiomPremises(ax, p, a)-1));
+               else // it is a constant
+                 cDirect &= (InstAxArgument(s,p,a) == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(p).GetArg(a)]);
+             }
+             OneAxiom &= cDirect;
+           }
+         }
+         /* Constants involved are only those already introduced */
+         for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
+            OneAxiom &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
+         }
+         for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
+           /* The id of a new constant is */
+           /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
+           /* so they don't overlap */
+           OneAxiom &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
+              mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
+          }
+          //  if (mpHints->size() > 0 || !mParams.mbInlineAxioms) {
+          if (bQEDisNext)
+            OneOfAxioms |= ((OneAxiom & IsQEDStep(s+1)) % ("----- ----- Is axiom " + itos(ax) + " applied: "));
+          else
+            OneOfAxioms |= (OneAxiom % ("----- ----- Is axiom " + itos(ax) + " applied: "));
+        }
+    }
+
+    if (mParams.mbNativeEQsub)
+      return ((MPstep & AllPremisesFrom & OneOfAxioms) | IsMPbyEqSub(s));
+    else
+      return (MPstep & AllPremisesFrom & OneOfAxioms);
+}
+
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::IsMPstepNewWithInlining(unsigned s)
+{
+    Expression MPstep =  (StepKind(s) == MP())
+                       & (s>0 ? Nesting(s) == Nesting(s-1) : Nesting(s) == 1u);
+
+    // Gather all "From" constraints (for one proof step, for all axioms jointly)
+    Expression AllPremisesFrom = True();
+    for(unsigned p = 0; p < mnMaxNumberOfPremisesInAxioms; p++) {
+       Expression onePremise;
+       if (s==0 && mParams.mbInlineAxioms)
+         onePremise = (From(s,p) == s) | (PremiseSatisfiedInlineByUniv(0,p));
+       else // special case when there is no premise
+         onePremise = (From(s,p) == s);
+       for(unsigned ss = 0; ss < s; ss++) {
+          Expression cFrom = (From(s,p) == ss) &
+                             (Cases(ss) == False()) &
+                             (SameBranch(s,ss));
+          Expression cFixed = (InstAxPredicate(s,p) == ContentsPredicate(ss,0));
+          for(unsigned a = 0; a < mnMaxArity; a++) {
+            cFixed &= (InstAxArgument(s,p,a) == ContentsArgument(ss,0,a));
+          }
+          onePremise |= (cFrom  & cFixed );
+       }
+       // onePremise |= PremiseSatisfiedInlineByUniv(s, p);
+
+       /*
+       // do not use inlining for premises of simple axioms
+       // (but simple axioms have to be used not only by inlining)
+       if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
+         c |= (MatchPremiseInline(s, ax, i)
+           % ("Match premise " + itos(i) + " inline"));
+       }*/
+       AllPremisesFrom &= onePremise;
+    }
+
+    // Constraints for one proof step, for each axiom separately
+    Expression OneOfAxioms = False();
+    for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
+        bool bUseAxiom = false, bQEDisNext = false;
+        if  (mpHints->size() > 0 || !mParams.mbInlineAxioms || !GetAxiom(ax).IsSimpleFormula()) {
+           bUseAxiom = true;
+        } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
+           bUseAxiom = true;
+           bQEDisNext = true;
+        }
+
+        if (bUseAxiom) {
+          Expression OneAxiom = (AxiomApplied(s) == ax)
+                              & (Cases(s) == (GetAxiom(ax).GetGoal().GetSize() > 1))
+                              & (MatchConclusion(s,ax));
+          /*
+          // do not use inlining for premises of simple axioms
+          // (but simple axioms have to be used not only by inlining)
+          if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
+            c |= (MatchPremiseInline(s, ax, i)
+              % ("Match premise " + itos(i) + " inline"));
+          }*/
+         for(unsigned p=0; p < GetAxiom(ax).GetPremises().GetSize(); p++) {
+           if (GetAxiom(ax).GetPremises().GetElement(p).GetName() == "true")  {
+              OneAxiom &= (From(s,p) == s); // special case, where there is no "from"
+           }
+           else {
+             Expression cDirect = (From(s,p) != s);
+             cDirect &= (InstAxPredicate(s,p) == GetAxiom(ax).GetPremises().GetElement(p).GetName());
+             for(unsigned a=0; a < GetAxiom(ax).GetPremises().GetElement(p).GetArity(); a++) {
+               if (BindingAxiomPremises(ax, p, a) != 0)
+                 cDirect &= (InstAxArgument(s,p,a) == Instantiation(s,BindingAxiomPremises(ax, p, a)-1));
+               else // it is a constant
+                 cDirect &= (InstAxArgument(s,p,a) == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(p).GetArg(a)]);
+             }
+
+             Expression cInline = False();
+             if (mParams.mbInlineAxioms) {
+               cInline |= (PremiseSatisfiedInline(s,p) | PremiseSatisfiedInlineByUniv(s, p));
+             }
+
+             OneAxiom &= (cDirect | cInline);
+           }
+         }
+         /* Constants involved are only those already introduced */
+         for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
+            OneAxiom &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
+         }
+         for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
+           /* The id of a new constant is */
+           /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
+           /* so they don't overlap */
+           OneAxiom &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
+              mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
+          }
+          //  if (mpHints->size() > 0 || !mParams.mbInlineAxioms) {
+          if (bQEDisNext)
+            OneOfAxioms |= ((OneAxiom & IsQEDStep(s+1)) % ("----- ----- Is axiom " + itos(ax) + " applied: "));
+          else
+            OneOfAxioms |= (OneAxiom % ("----- ----- Is axiom " + itos(ax) + " applied: "));
+        }
+    }
+
+    if (mParams.mbNativeEQsub)
+      return ((MPstep & AllPremisesFrom & OneOfAxioms) | IsMPbyEqSub(s));
+    else
+      return (MPstep & AllPremisesFrom & OneOfAxioms);
+}
+
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::PremiseSatisfiedInline(unsigned s, unsigned p)
+{
+    // For instance, the proof could have:
+    // 1. p(a,b)
+    // ...
+    // n. r(b,c)
+    // An axiom q(x,y) => r(x,y) can be used, while p(x,b) => q(b,x) is inlined
+    Expression cOneOfInlineAxioms = False();
+    for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
+      if (!GetAxiom(axInl).IsSimpleImplication())
+        continue;
+
+      Expression cByOneOfSteps = False();
+      // Match the premise in the inline axiom A=>B:
+      for(unsigned ss = 0; ss < s; ss++) {
+        Expression c;
+        c = (From(s,p) == ss);
+        c &= (ContentsPredicate(ss,0) == GetAxiom(axInl).GetPremises().GetElement(0).GetName());
+        for(unsigned a=0; a < GetAxiom(axInl).GetPremises().GetElement(0).GetArity(); a++) {
+          if (BindingAxiomPremises(axInl, 0, a) != 0) {
+            c &= (ContentsArgument(ss,0,a) == InstantiationInline(s,p,BindingAxiomPremises(axInl, 0, a)-1));
+          }
+          else { // it is a constant
+            c &= (ContentsArgument(ss,0,a) == CONSTANTS[GetAxiom(axInl).GetPremises().GetElement(0).GetArg(a)]);
+          }
+        }
+        cByOneOfSteps |= c;
+      }
+
+        // Match the goal in the inline axiom:
+      Expression c = (InstAxPredicate(s, p) == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName());
+      for(unsigned a=0; a < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); a++) {
+        if (BindingAxiomGoal(axInl, 0, a) != 0) {
+          c &= (InstAxArgument(s, p, a)
+                == InstantiationInline(s,p,BindingAxiomGoal(axInl, 0, a)-1));
+        }
+        else { // it is a constant
+          c &= (InstAxArgument(s, p, a)
+               == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(a)]);
+        }
+      }
+      cOneOfInlineAxioms |= ((cByOneOfSteps & c) % ("Inline axiom " + itos(axInl) + " for premise " + itos(p) + ":"));
+    }
+    return cOneOfInlineAxioms;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::PremiseSatisfiedInlineByUniv(unsigned s, unsigned p)
+{
+    Expression cOneOfInlineAxioms = False();
+    for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
+      if (!GetAxiom(axInl).IsSimpleUnivFormula())
+        continue;
+      Expression c = (From(s,p) == s);
+      // Match the goal in the inline axiom:
+      c &= (InstAxPredicate(s, p) == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName());
+      for(unsigned a=0; a < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); a++) {
+        if (BindingAxiomGoal(axInl, 0, a) != 0) {
+          c &= (InstAxArgument(s, p, a) == InstantiationInline(s,p,BindingAxiomGoal(axInl, 0, a)-1));
+        }
+        else { // it is a constant
+           c &= (InstAxArgument(s, p, a)
+                 == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(a)]);
+        }
+      }
+      cOneOfInlineAxioms |= (c % ("Inline axiom " + itos(axInl) + ":"));
+   }
+   return cOneOfInlineAxioms;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Expression SMT_ProvingEngine::IsMPstepOld(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
@@ -632,6 +905,14 @@ Expression SMT_ProvingEngine::ContentsPredicate(unsigned s, unsigned part)
 Expression SMT_ProvingEngine::ContentsArgument(unsigned s, unsigned part, unsigned arg)
 {
     return Expression("ContentsArgument_l_" + itos(s) + "_r__l_" + itos(part) + "_r__l_" + itos(arg)+ "_r_");
+}
+Expression SMT_ProvingEngine::InstAxPredicate(unsigned s, unsigned premise)
+{
+    return Expression("InstAxPredicate_l_" + itos(s) + "_r__l_" + itos(premise) + "_r_");
+}
+Expression SMT_ProvingEngine::InstAxArgument(unsigned s, unsigned premise, unsigned arg)
+{
+    return Expression("InstAxArgumentl_" + itos(s) + "_l_" + itos(premise) + "_r__l_" + itos(arg) + "_r_");
 }
 Expression SMT_ProvingEngine::ProofSize()
 {
@@ -1081,6 +1362,12 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         mnMaxArity = mpT->mSignature[i].second;
     }
 
+    mnMaxNumberOfPremisesInAxioms = 0;
+    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
+         it != mpT->mCLaxioms.end(); it++)
+      if (it->first.GetPremises().GetSize() > mnMaxNumberOfPremisesInAxioms)
+        mnMaxNumberOfPremisesInAxioms = it->first.GetPremises().GetSize();
+
     AddComment("**************************** Declarations *****************************");
     DeclareVarBasicType(Assumption(),      eNumberOfStepKinds);
     DeclareVarBasicType(FirstCase(),       eNumberOfStepKinds);
@@ -1096,12 +1383,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     Assert(QEDbyAssumption() == 0x00au);
     Assert(QEDbyEFQ()        == 0x00bu);
     Assert(MP()              == 0x00cu);
-
-    mnMaxNumberOfPremisesInAxioms = 0;
-    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
-         it != mpT->mCLaxioms.end(); it++)
-      if (it->first.GetPremises().GetSize() > mnMaxNumberOfPremisesInAxioms)
-        mnMaxNumberOfPremisesInAxioms = it->first.GetPremises().GetSize();
 
     for (size_t i = 0; i < mpT->mSignature.size(); i++)
       DeclareVarBasicType(ToUpper(mpT->mSignature[i].first), mpT->mSignature.size());
@@ -1165,6 +1446,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       }
       for (unsigned j=0; j < mnMaxNumberOfPremisesInAxioms; j++) {
         DeclareVarBasicType(From(i,j), nFinalStep);
+        DeclareVarBasicType(InstAxPredicate(i,j), mpT->mSignature.size());
+        for (unsigned a=0; a < mnMaxArity; a++) {
+          DeclareVarBasicType(InstAxArgument(i,j,a), nMaxConstants);
+        }
       }
     }
 

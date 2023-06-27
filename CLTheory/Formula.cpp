@@ -714,6 +714,9 @@ bool CLFormula::IsSimpleImplication() const {
       GetGoal().GetElement(0).GetElement(0).GetName() == "false")
     return false;
 
+  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "true")
+    return false;
+
   if (numPremises == 1 &&
       numDisj == 1 &&
       GetGoal().GetElement(0).GetSize() == 1 &&

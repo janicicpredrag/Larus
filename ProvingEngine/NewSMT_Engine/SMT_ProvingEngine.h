@@ -70,6 +70,11 @@ private:
   Expression IsAssumptionStep(unsigned s, unsigned i);
 
   Expression IsMPstep(unsigned s);
+  Expression IsMPstepOld(unsigned s);
+  Expression IsMPstepNew(unsigned s);
+  Expression IsMPstepNewWithInlining(unsigned s);
+  Expression PremiseSatisfiedInline(unsigned s, unsigned p);
+  Expression PremiseSatisfiedInlineByUniv(unsigned s, unsigned p);
   Expression IsMPstepByAxiom(unsigned s, unsigned ax);
   Expression IsMPbyEqSub(unsigned s);
   Expression MatchConclusion(unsigned s, unsigned ax);
@@ -101,6 +106,8 @@ private:
   static Expression NestingSameBranch(unsigned s1, unsigned s2);
   static Expression ContentsPredicate(unsigned s, unsigned part);
   static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
+  static Expression InstAxPredicate(unsigned s, unsigned premise);
+  static Expression InstAxArgument(unsigned s, unsigned premise, unsigned arg);
   // ----------------------------------------------------------
   static Expression Assumption();
   static Expression MP();
