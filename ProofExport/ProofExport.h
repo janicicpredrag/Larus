@@ -13,8 +13,17 @@ public:
 
     void ToFile(Theory& T, const CLProof& proof, string sFileName, proverParams& params)
     {
-        ofstream outfile;
-        outfile.open (sFileName);
+        std::streambuf * buf;
+	std::ofstream outfile;
+	
+	if (sFileName != "std::cout")
+	{
+	  outfile.open(sFileName);
+	  buf = outfile.rdbuf();
+	} else {
+	  buf = std::cout.rdbuf();
+	}
+	std::ostream out(buf);
         if (!outfile)
         {   
             cout << "Failed to open output file:" << sFileName << endl;
