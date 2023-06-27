@@ -63,6 +63,7 @@ SOURCES       = main.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
 		ProofExport/ProofExport2GCLC.cpp \
 		ProofExport/ProofExport2GCLC_predicates.cpp \
+        ProofExport/ProofExport2Text.cpp \
 		common.cpp \
 		import.cpp 
 OBJECTS       = main.o \
@@ -82,6 +83,7 @@ OBJECTS       = main.o \
 		ProofExport2LaTeX.o \
 		ProofExport2GCLC.o \
 		ProofExport2GCLC_predicates.o \
+        ProofExport2Text.o \
 		common.o \
 		import.o
 DIST          = CLTheory/Formula.h \
@@ -103,6 +105,7 @@ DIST          = CLTheory/Formula.h \
 		ProofExport/ProofExport2LaTeX.h \
 		ProofExport/ProofExport2GCLC.h \
 		ProofExport/ProofExport2GCLC_predicates.h \
+        ProofExport/ProofExport2Text.h \
 		common.h main.cpp \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
@@ -318,6 +321,14 @@ ProofExport2GCLC_predicates.o: ProofExport/ProofExport2GCLC_predicates.cpp Proof
 		CLTheory/Formula.h \
 		CLTheory/Theory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProofExport2GCLC_predicates.o ProofExport/ProofExport2GCLC_predicates.cpp
+
+ProofExport2Text.o: ProofExport/ProofExport2Text.cpp ProofExport/ProofExport2Text.h \
+		ProofExport/ProofExport.h \
+		common.h \
+		CLProof/CLProof.h \
+		CLTheory/Formula.h \
+		CLTheory/Theory.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProofExport2Text.o ProofExport/ProofExport2Text.cpp
 
 common.o: common.cpp common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o common.cpp

@@ -7,6 +7,7 @@
 #include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
+#include "ProofExport/ProofExport2Text.h"
 #include "ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
@@ -405,6 +406,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
   unsigned int nbInconsistentAbducts = 0;
   unsigned int nbConsistentAbducts = 0;
   unsigned int nbUnknownStatusAbducts = 0;
+  unsigned int nbAbducts = 0;
   string fileName;
   if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
       (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
@@ -529,17 +531,21 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         }
         VampireReturnValue vret = SatStatus(T.mCLaxioms, InstantiatedPremises,
                               params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT);
+	
         if (vret == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
           nbInconsistentAbducts++;
+	  nbAbducts++;
         }
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
           nbConsistentAbducts++;
+	  nbAbducts++;
         }
         else {
           cout << "Abducts unknown consistency" << endl;
           nbUnknownStatusAbducts++;
+	  nbAbducts++;
         }
         cout << "Number of abducts found so far:" << endl << "Inconsistent : " << nbInconsistentAbducts << " Consistent : " << nbConsistentAbducts << " Unknown Status : " << nbUnknownStatusAbducts << endl;
         //for(unsigned j = 0; j < params.number_of_abducts; j++) {
@@ -550,9 +556,14 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
 
       ProofExport2LaTeX ex(fileName);
-      string sFileName("proofs/PROOF" + fileName + ".tex");
+      string sFileName("proofs/PROOF" + fileName + to_string(nbAbducts) + ".tex");
       ex.ToFile(T, proof, sFileName, params);
 
+      if (params.show){
+	ProofExport2Text ex(fileName);
+	string sFileName("std::cout");
+	ex.ToFile(T, proof, sFileName, params);
+      }
       if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
         string sFileName3("proofs/PROOF" + fileName + ".v");

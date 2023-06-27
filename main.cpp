@@ -53,6 +53,7 @@ int main(int argc, char **argv) {
   params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
   params.exact_length = DEFAULT_EXACT_LENGTH;
   params.number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
+  params.show = DEFAULT_SHOW;
 
   USING_ORIGINAL_SIGNATURE_EQ = false;
   USING_ORIGINAL_SIGNATURE_NEG = false;
@@ -77,6 +78,11 @@ int main(int argc, char **argv) {
       params.mbGCLCaxioms = true;
     } else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "gclcp")) {
       params.mbGCLCpredicates = true;
+    }
+
+    // choosing to print the proof on the terminal
+    else if (argv[i][0] == '-' && argv[i][1] == 't') {
+      params.show = true;
     }
 
     // choosing exporting to proof assistants
@@ -421,6 +427,7 @@ void printHelp() {
   cout << "                        an interactive theorem prover "              << endl
        << "                        (coq, mizar, isabelle); "                    << endl;
   cout << "                        examples: -vcoq; default: none"              << endl << endl;
+  cout << "   -t                   for showing the proof on the terminal     "  << endl << endl;
   cout << "   -b<number of abducts>number of abducts; default: 0"               << endl;
   cout << "                        (support for abducts is not implemented for" << endl;
   cout << "                        stl/sql/ursa proving engines)"               << endl << endl;
