@@ -186,13 +186,13 @@ Expression SMT_ProvingEngine::IsAssumptionStep(unsigned s, unsigned i)
 
 // ---------------------------------------------------------------------------------------
 
+/*
 Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     if (mParams.mbInlineAxioms)
       return IsMPstepOld(s);
     else
       return IsMPstepNew(s); // inlining in IsMPstepNewWithInlining still has bugs!
-
 }
 
 // ---------------------------------------------------------------------------------------
@@ -250,14 +250,14 @@ Expression SMT_ProvingEngine::IsMPstepNew(unsigned s)
              OneAxiom &= cDirect;
            }
          }
-         /* Constants involved are only those already introduced */
+         // Constants involved are only those already introduced
          for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
             OneAxiom &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
          }
          for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
-           /* The id of a new constant is */
-           /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
-           /* so they don't overlap */
+           // The id of a new constant is
+           // number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i,
+           // so they don't overlap
            OneAxiom &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
               mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
           }
@@ -303,13 +303,13 @@ Expression SMT_ProvingEngine::IsMPstepNewWithInlining(unsigned s)
        }
        // onePremise |= PremiseSatisfiedInlineByUniv(s, p);
 
-       /*
+
        // do not use inlining for premises of simple axioms
        // (but simple axioms have to be used not only by inlining)
-       if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
-         c |= (MatchPremiseInline(s, ax, i)
-           % ("Match premise " + itos(i) + " inline"));
-       }*/
+       //if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
+       //  c |= (MatchPremiseInline(s, ax, i)
+       //    % ("Match premise " + itos(i) + " inline"));
+       //}
        AllPremisesFrom &= onePremise;
     }
 
@@ -328,13 +328,13 @@ Expression SMT_ProvingEngine::IsMPstepNewWithInlining(unsigned s)
           Expression OneAxiom = (AxiomApplied(s) == ax)
                               & (Cases(s) == (GetAxiom(ax).GetGoal().GetSize() > 1))
                               & (MatchConclusion(s,ax));
-          /*
+
           // do not use inlining for premises of simple axioms
           // (but simple axioms have to be used not only by inlining)
-          if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
-            c |= (MatchPremiseInline(s, ax, i)
-              % ("Match premise " + itos(i) + " inline"));
-          }*/
+          // if (mParams.mbInlineAxioms && !GetAxiom(ax).IsSimpleFormula()) {
+          //    c |= (MatchPremiseInline(s, ax, i)
+          //    % ("Match premise " + itos(i) + " inline"));
+          //}
          for(unsigned p=0; p < GetAxiom(ax).GetPremises().GetSize(); p++) {
            if (GetAxiom(ax).GetPremises().GetElement(p).GetName() == "true")  {
               OneAxiom &= (From(s,p) == s); // special case, where there is no "from"
@@ -357,14 +357,14 @@ Expression SMT_ProvingEngine::IsMPstepNewWithInlining(unsigned s)
              OneAxiom &= (cDirect | cInline);
            }
          }
-         /* Constants involved are only those already introduced */
+         // Constants involved are only those already introduced
          for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
             OneAxiom &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
          }
          for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
-           /* The id of a new constant is */
-           /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
-           /* so they don't overlap */
+           // The id of a new constant is
+           // number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i,
+           // so they don't overlap
            OneAxiom &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
               mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
           }
@@ -455,10 +455,11 @@ Expression SMT_ProvingEngine::PremiseSatisfiedInlineByUniv(unsigned s, unsigned 
    }
    return cOneOfInlineAxioms;
 }
+*/
 
 // ---------------------------------------------------------------------------------------
 
-Expression SMT_ProvingEngine::IsMPstepOld(unsigned s)
+Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {

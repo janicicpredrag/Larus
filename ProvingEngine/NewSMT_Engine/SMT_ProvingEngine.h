@@ -70,11 +70,10 @@ private:
   Expression IsAssumptionStep(unsigned s, unsigned i);
 
   Expression IsMPstep(unsigned s);
-  Expression IsMPstepOld(unsigned s);
-  Expression IsMPstepNew(unsigned s);
-  Expression IsMPstepNewWithInlining(unsigned s);
-  Expression PremiseSatisfiedInline(unsigned s, unsigned p);
-  Expression PremiseSatisfiedInlineByUniv(unsigned s, unsigned p);
+//  Expression IsMPstepNew(unsigned s);
+//  Expression IsMPstepNewWithInlining(unsigned s);
+//  Expression PremiseSatisfiedInline(unsigned s, unsigned p);
+//  Expression PremiseSatisfiedInlineByUniv(unsigned s, unsigned p);
   Expression IsMPstepByAxiom(unsigned s, unsigned ax);
   Expression IsMPbyEqSub(unsigned s);
   Expression MatchConclusion(unsigned s, unsigned ax);
