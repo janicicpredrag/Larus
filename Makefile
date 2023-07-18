@@ -63,8 +63,9 @@ SOURCES       = main.cpp \
 		ProofExport/ProofExport2LaTeX.cpp \
 		ProofExport/ProofExport2GCLC.cpp \
 		ProofExport/ProofExport2GCLC_predicates.cpp \
-        ProofExport/ProofExport2Text.cpp \
+		ProofExport/ProofExport2Text.cpp \
 		common.cpp \
+		hammering.cpp \
 		import.cpp 
 OBJECTS       = main.o \
 		Formula.o \
@@ -83,8 +84,9 @@ OBJECTS       = main.o \
 		ProofExport2LaTeX.o \
 		ProofExport2GCLC.o \
 		ProofExport2GCLC_predicates.o \
-        ProofExport2Text.o \
+		ProofExport2Text.o \
 		common.o \
+		hammering.o \
 		import.o
 DIST          = CLTheory/Formula.h \
 		CLTheory/Theory.h \
@@ -105,8 +107,8 @@ DIST          = CLTheory/Formula.h \
 		ProofExport/ProofExport2LaTeX.h \
 		ProofExport/ProofExport2GCLC.h \
 		ProofExport/ProofExport2GCLC_predicates.h \
-        ProofExport/ProofExport2Text.h \
-		common.h main.cpp \
+		ProofExport/ProofExport2Text.h \
+		common.h hammering.h main.cpp \
 		CLTheory/Formula.cpp \
 		CLTheory/Theory.cpp \
 		CLProof/CLProof.cpp \
@@ -124,6 +126,7 @@ DIST          = CLTheory/Formula.h \
 		ProofExport/ProofExport2GCLC.cpp \
 		ProofExport/ProofExport2GCLC_predicates.cpp \
 		common.cpp \
+		hammering.cpp \
 		import.cpp
 QMAKE_TARGET  = larus
 DESTDIR       = 
@@ -145,8 +148,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Expression.h ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2Mizar.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2Mizar.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp common.cpp import.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CLTheory/Formula.h CLTheory/Theory.h CLProof/CLProof.h ProvingEngine/FactsDatabase.h ProvingEngine/NewSMT_Engine/Expression.h ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h ProvingEngine/ProvingEngine.h ProvingEngine/SMTOut.h ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h ProvingEngine/URSA_Engine/URSA_ProvingEngine.h ProvingEngine/STL_Engine/STL_FactsDatabase.h ProvingEngine/STL_Engine/STL_ProvingEngine.h ProofExport/ProofExport.h ProofExport/ProofExport2Coq.h ProofExport/ProofExport2Isabelle.h ProofExport/ProofExport2Mizar.h ProofExport/ProofExport2LaTeX.h ProofExport/ProofExport2GCLC.h ProofExport/ProofExport2GCLC_predicates.h common.h hammering.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CLTheory/Formula.cpp CLTheory/Theory.cpp CLProof/CLProof.cpp ProvingEngine/NewSMT_Engine/Expression.cpp ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp ProvingEngine/SMTOut.cpp ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_ProvingEngine.cpp ProvingEngine/STL_Engine/STL_FactsDatabase.cpp ProofExport/ProofExport2Coq.cpp ProofExport/ProofExport2Isabelle.cpp ProofExport/ProofExport2Mizar.cpp ProofExport/ProofExport2LaTeX.cpp ProofExport/ProofExport2GCLC.cpp ProofExport/ProofExport2GCLC_predicates.cpp common.cpp hammering.cpp import.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -335,6 +338,7 @@ common.o: common.cpp common.h
 
 import.o: import.cpp CLTheory/Formula.h \
 		common.h \
+		hammering.h \
 		CLTheory/Theory.h \
 		ProofExport/ProofExport.h \
 		CLProof/CLProof.h \
@@ -354,6 +358,11 @@ import.o: import.cpp CLTheory/Formula.h \
 		ProvingEngine/NewSMT_Engine/Expression.h \
 		ProvingEngine/SMTOut.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o import.o import.cpp
+
+hammering.o: hammering.cpp hammering.h CLTheory/Formula.h \
+		common.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hammering.o hammering.cpp
+
 
 ####### Install
 

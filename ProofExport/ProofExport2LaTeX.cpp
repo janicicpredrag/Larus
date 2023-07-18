@@ -123,7 +123,7 @@ void ProofExport2LaTeX::OutputOr(ofstream &outfile) { outfile << "\\vee "; }
 
 void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
                                        const CLProof &p,
-                                       proverParams & /*params*/) {
+                                       proverParams & params) {
 
   mSymbolsTaken = T.mOccuringSymbols;
   for (vector<string>::const_iterator it = T.mConstants.begin();
@@ -250,7 +250,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "$." << endl;
   outfile << "\\vspace{5pt}" << endl << endl;
 
-  if (p.NumOfAssumptions() - cf.GetSize() > 0) {
+  //if (p.NumOfAssumptions() - cf.GetSize() > 0) {
+  if (params.number_of_abducts > 0) {
     outfile << "Abducts found: " << endl << endl;
     outfile << "\\begin{itemize} "  << endl;
     for (size_t i = cf.GetSize(); i < p.NumOfAssumptions(); i++) {

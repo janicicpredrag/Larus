@@ -765,12 +765,12 @@ bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
+bool CLFormula::ReadTPTPStatement(const string &s, string &name,
                        string &ordinal, Fact &justification, fofType &type) {
   size_t pos1, pos2;
   string ss = SkipChar(s, ' ');
 
-  cl.Clear();
+  Clear();
   justification.Clear();
 
   if (ss.substr(0, 4) != "fof(") {
@@ -853,9 +853,9 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
       return false;
     }
 
-    if (!cl.ReadWithoutCheckingBoundness(arg[0]))
+    if (!ReadWithoutCheckingBoundness(arg[0]))
       return false;
-    if (!(cl.GetGoal().GetSize()==1 && cl.GetGoal().GetElement(0).GetSize()==1)) {
+    if (!(GetGoal().GetSize()==1 && GetGoal().GetElement(0).GetSize()==1)) {
       cout << "Input error " << s << ": hint formula can be only fact." << endl;
       return false;
     }
@@ -868,12 +868,12 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   } else {
     ordinal = "";
     // justification = "";
-    if (cl.Read(ss)) {
+    if (Read(ss)) {
     // cout << "Ax: " << cl;
     // cout << endl;
       return true;
     } else {
-      cout << "Input error: axiom: " << name << " : " << cl;
+      cout << "Input error: axiom: " << name << " : " << *this;
       cout << " gives ill-formed CL formula! " << endl << endl;
       return false;
     }

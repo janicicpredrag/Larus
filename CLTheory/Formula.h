@@ -172,33 +172,31 @@ public:
             cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/);
   }
   friend ostream &operator<<(ostream &os, const CLFormula &f);
-  const ConjunctionFormula &GetPremises() const { return mA; }
-  const DNFFormula &GetGoal() const { return mB; }
   bool Read(const string &s);
   bool ReadWithoutCheckingBoundness(const string &s);
+  bool ReadTPTPStatement(const string &s, string &name,
+                         string &ordinal, Fact &justification, fofType &type);
+
   bool ReadImplication(const string &v, ConjunctionFormula &A, DNFFormula &B);
   bool MatchingBrackets(const string &v) const;
 
+  const ConjunctionFormula &GetPremises() const { return mA; }
+  const DNFFormula &GetGoal() const { return mB; }
+
   size_t GetNumOfUnivVars() const { return mUniversalVars.size(); }
   const string &GetUnivVar(size_t i) const { return mUniversalVars[i]; }
+  void SetUnivVars(vector<string> &uv) { mUniversalVars = uv; }
+  void AddUnivVar(const string &varName) { mUniversalVars.push_back(varName); }
+  void TakeUnivVars(const CLFormula &cf) { mUniversalVars = cf.mUniversalVars; }
+  int UnivVarOrdinalNumber(string v) const;
+  void ClearUnivVars() { mUniversalVars.clear(); }
+
   size_t GetNumOfExistVars() const { return mExistentialVars.size(); }
   const string &GetExistVar(size_t i) const { return mExistentialVars[i]; }
-  void SetUnivVars(vector<string> &uv) { mUniversalVars = uv; }
   void SetExistVars(vector<string> &ev) { mExistentialVars = ev; }
-  void TakeUnivVars(const CLFormula &cf) { mUniversalVars = cf.mUniversalVars; }
-  void TakeExistVars(const CLFormula &cf) {
-    mExistentialVars = cf.mExistentialVars;
-  }
-
-  void AddUnivVar(const string &varName) { mUniversalVars.push_back(varName); }
-  void AddExistVar(const string &varName) {
-    mExistentialVars.push_back(varName);
-  }
-
-  int UnivVarOrdinalNumber(string v) const;
+  void AddExistVar(const string &varName) { mExistentialVars.push_back(varName); }
+  void TakeExistVars(const CLFormula &cf) { mExistentialVars = cf.mExistentialVars; }
   int ExistVarOrdinalNumber(string v) const;
-
-  void ClearUnivVars() { mUniversalVars.clear(); }
   void ClearExistVars() { mExistentialVars.clear(); }
 
   void Normalize(const string &name, const string &suffix,
