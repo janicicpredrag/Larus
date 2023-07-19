@@ -768,6 +768,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             }
           }
           if (!bAxiomExists &&
+                  justification.GetName().find("ExcludedMiddle") == string::npos &&
                   justification.GetName() != "eq_excluded_middle" &&
                   justification.GetName() != "eq_neg_elim" &&
                   justification.GetName() != "leq" &&

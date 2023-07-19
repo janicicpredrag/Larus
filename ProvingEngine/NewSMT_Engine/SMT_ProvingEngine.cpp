@@ -1101,6 +1101,9 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
       Hints &= (arg0 < arg1);
     } else {
       for (size_t i = 0; i < mpT->mCLaxioms.size(); i++) {
+        // if there is no exact name of the axiom, better ignore it;
+        // there could be derived axioms with name extensions, but
+        // we don't know which one should be used
         if (mpT->mCLaxioms[i].second == justification.GetName()) {
           AxiomUsed = i;
           break;
