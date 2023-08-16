@@ -12,8 +12,6 @@ using namespace std;
 class ProvingEngine;
 class Theory;
 
-bool MatchingBrackets(const string &v);
-
 class DNFFormula;
 
 // ---------------------------------------------------------------------------------------
@@ -44,7 +42,9 @@ public:
   void ClearArgs() { mArgs.clear(); }
   string GetName() const { return mName; }
   void SetName(const string &name) { mName = name; }
-  bool Read(const string &s);
+  //bool Read(const string &s);
+  bool Read();
+  
   void SetArg(size_t i, const string &s) {
     if (mArgs.size() <= i)
       mArgs.resize(i + 1);
@@ -104,7 +104,8 @@ public:
   }
   void Add(const Fact &f) { mConjunction.push_back(f); }
   void SetElement(size_t i, const Fact &f) { mConjunction[i] = f; }
-  bool Read(const string &s);
+  bool Read();
+  
   void Clear() { mConjunction.clear(); }
   static bool less(const ConjunctionFormula &lhs,
                    const ConjunctionFormula &rhs);
@@ -118,6 +119,7 @@ private:
 
 // ---------------------------------------------------------------------------------------
 
+class CLFormula;
 class DNFFormula {
 public:
   DNFFormula() {}
@@ -129,7 +131,9 @@ public:
   }
   void Add(const ConjunctionFormula &cf) { mDNF.push_back(cf); }
   void SetElement(size_t i, const ConjunctionFormula &cf) { mDNF[i] = cf; }
-  bool Read(const string &s);
+  //bool Read(const string &s);
+  bool Read(CLFormula* p = NULL);
+  
   const vector<ConjunctionFormula> *GetDNF() const { return &mDNF; }
   bool Equals(const DNFFormula &f) const;
   void Clear() { mDNF.clear(); }
@@ -172,13 +176,16 @@ public:
             cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/);
   }
   friend ostream &operator<<(ostream &os, const CLFormula &f);
-  bool Read(const string &s);
-  bool ReadWithoutCheckingBoundness(const string &s);
+ // bool Read(const string &s);
+  bool Read();
+
+  bool ReadUnivVars();
+  bool ReadExistVars();
+  bool ReadImplication();
+  bool ReadWithoutCheckingBoundness();
+  
   bool ReadTPTPStatement(const string &s, string &name,
                          string &ordinal, Fact &justification, fofType &type);
-
-  bool ReadImplication(const string &v, ConjunctionFormula &A, DNFFormula &B);
-  bool MatchingBrackets(const string &v) const;
 
   const ConjunctionFormula &GetPremises() const { return mA; }
   const DNFFormula &GetGoal() const { return mB; }
