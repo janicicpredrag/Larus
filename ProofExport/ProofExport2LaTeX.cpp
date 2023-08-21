@@ -79,9 +79,9 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
-  if (f.GetName() == "false")
+  if (f.GetName() == "bot")
     outfile << "\\bot";
-  else if (f.GetName() == "true")
+  else if (f.GetName() == "top")
     outfile << "\\top";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {

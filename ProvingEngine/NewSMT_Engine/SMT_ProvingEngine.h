@@ -58,6 +58,9 @@ private:
 
   void DeclareVarBasicType(const Expression& Var, unsigned UpperLimit);
   void DeclareVarBoolean(const Expression& Var);
+  void DeclarePredicateSymbol(const Expression& N, unsigned Arity);
+  void DeclareSort(const string& s);
+
   void Assert(const Expression& c);
   void AddComment(const string& comment);
 
@@ -103,6 +106,7 @@ private:
   static Expression Cases(unsigned s);
   static Expression Nesting(unsigned s);
   static Expression NestingSameBranch(unsigned s1, unsigned s2);
+  static Expression Contents(unsigned s, unsigned part);
   static Expression ContentsPredicate(unsigned s, unsigned part);
   static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
   static Expression InstAxPredicate(unsigned s, unsigned premise);

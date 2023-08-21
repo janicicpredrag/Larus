@@ -24,8 +24,8 @@ class Theory {
 public:
   Theory() {
     miConstantsCounter = 0;
-    AddSymbol("false", 0);
-    AddSymbol("true", 0);
+    AddSymbol("bot", 0);
+    AddSymbol("top", 0);
     mbUseNativeEq = false;
   }
 

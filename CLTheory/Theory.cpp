@@ -16,8 +16,8 @@ void Theory::Reset() {
   miConstantsCounter = 0;
   mConstants.clear();
   mConstantsPermissible.clear();
-  AddSymbol("false", 0);
-  AddSymbol("true", 0);
+  AddSymbol("bot", 0);
+  AddSymbol("top", 0);
 }
 
 // --------------------------------------------------------------
@@ -87,7 +87,7 @@ void Theory::AddEqNegElimAxioms() {
   conc0.Add(b);
 
   Fact c;
-  c.SetName("false");
+  c.SetName("bot");
   conc1.Add(c);
   conclusion.Add(conc1);
   CLFormula axiom(conc0, conclusion);
@@ -127,7 +127,7 @@ void Theory::AddNegElimAxioms() {
     premises.Add(a);
     a.SetName(mSignature[i + 1].first);
     premises.Add(a);
-    b.SetName("false");
+    b.SetName("bot");
     conc0.Add(b);
     conclusion.Add(conc0);
     CLFormula axiom(premises, conclusion);
@@ -149,8 +149,6 @@ void Theory::AddExcludedMiddleAxioms() {
 
     if (mSignature[i].first == EQ_NATIVE_NAME)
       continue;
-
-    string ass = PREFIX_NEGATED + mSignature[i].first;
 
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
@@ -364,6 +362,9 @@ void Theory::AddConstant(string s) {
 void Theory::AddSymbol(const string &pp, unsigned arity) {
   string p = pp;
 
+  if (p == "true" || p == "$true" || p == "false"|| p == "$false")
+    return;
+
   if (pp == "_")
       return; // special symbol for underconstrained formulae
 
@@ -392,12 +393,9 @@ void Theory::AddSymbol(const string &pp, unsigned arity) {
     }
   }
 
-  if (p == "false") {
-    mSignature.push_back(pair<string, unsigned>("false", 0));
-    mSignature.push_back(pair<string, unsigned>("true", 0));
-  } else if (p == "true") {
-    mSignature.push_back(pair<string, unsigned>("false", 0));
-    mSignature.push_back(pair<string, unsigned>("true", 0));
+  if (p == "bot" || p == "top") {
+    mSignature.push_back(pair<string, unsigned>("bot", 0));
+    mSignature.push_back(pair<string, unsigned>("top", 0));
   } else if (p.size() > 3 && p.substr(0, 3) == PREFIX_NEGATED) {
     mSignature.push_back(
         pair<string, unsigned>(p.substr(3, p.size() - 3), arity));

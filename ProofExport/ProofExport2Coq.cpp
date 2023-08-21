@@ -63,9 +63,9 @@ void ProofExport2Coq::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
-  if (f.GetName().compare("false") == 0) {
+  if (f.GetName().compare("bot") == 0) {
     outfile << "False";
-  } else if (f.GetName().compare("true") == 0) {
+  } else if (f.GetName().compare("top") == 0) {
     outfile << "True";
   } else {
     if (f.GetName() == EQ_NATIVE_NAME) {
@@ -128,7 +128,7 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
   for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
        it != T.mSignature.end(); ++it) {
     string name = get<0>(*it);
-    if (name != "false" && name != "true" && name.find(PREFIX_NEGATED) != 0 &&
+    if (name != "bot" && name != "top" && name.find(PREFIX_NEGATED) != 0 &&
         name.find("eqnative") != 0)
       outfile << "Parameter " << get<0>(*it) << " : "
               << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl;

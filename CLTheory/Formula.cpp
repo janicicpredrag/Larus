@@ -126,6 +126,21 @@ Fact::Fact(const string &s)
   ReadNextToken();
   Read();
 }
+
+// ---------------------------------------------------------------------------------------
+
+string Fact::ToString() const
+{
+  if (GetArity() == 0) {
+     return GetName();
+  }
+  string s = "(" + GetName() + " ";
+  for (unsigned i = 0; i<GetArity(); i++)
+    s += GetArg(i) + " ";
+  s += ") ";
+  return s;
+}
+
 // ------------------------------------------------------
 
 bool Fact::Read() {
@@ -154,12 +169,12 @@ bool Fact::Read() {
 
   mArgs.clear();
   if (NEXTLEXEME == "false" || NEXTLEXEME == "$false") {
-    mName = "false";
+    mName = "bot";
     ReadNextToken();
     return true;
   }
   if (NEXTLEXEME == "true" || NEXTLEXEME == "$true") {
-    mName = "true";
+    mName = "top";
     ReadNextToken();
     return true;
   }
@@ -610,10 +625,10 @@ bool CLFormula::IsSimpleImplication() const {
   size_t numDisj = GetGoal().GetSize();
 
   if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
-      GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+      GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
 
-  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "true")
+  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
     return false;
 
   if (numPremises == 1 &&
@@ -636,7 +651,7 @@ bool CLFormula::IsSimpleUnivFormula() const {
     return false;
   if (GetGoal().GetElement(0).GetSize() != 1)
     return false;
-  if (GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+  if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
 
   return true;
@@ -819,7 +834,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
     if (GetPremises().GetSize() > 0)
       current = GetPremises().GetElement(0);
     else {
-      current.SetName("false");
+      current.SetName("bot");
       current.ClearArgs();
     }
     for (size_t i = 1; i < numPremises; i++) // todo: we should reorder the

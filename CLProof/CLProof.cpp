@@ -332,7 +332,7 @@ void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
     } else {
       EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
       if (efq)
-        MakeRelevant(relevant, Fact("false"));
+        MakeRelevant(relevant, Fact("bot"));
     }
   }
   if (mMPs.size() > 0) { // last step is always relevant
@@ -847,7 +847,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
             mpT->mCLaxioms[nAxiom - eNumberOfStepKinds]
                     .first.GetPremises()
                     .GetElement(1)
-                    .GetName() == "true")
+                    .GetName() == "top")
           noPremises = 0;
         size_t numOfVars = numOfUnivVars + numOfExistVars;
         vector<unsigned> fromSteps;

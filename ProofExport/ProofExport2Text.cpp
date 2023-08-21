@@ -39,9 +39,9 @@ void ProofExport2Text::OutputCLFormula (ofstream &outfile, const CLFormula &cl,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
-  if (f.GetName() == "false")
+  if (f.GetName() == "false" || f.GetName() == "bot")
     cout << "\u22a5";
-  else if (f.GetName() == "true")
+  else if (f.GetName() == "true" || f.GetName() == "top")
     cout << "\u22a4";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
@@ -51,7 +51,7 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
-        cout << "\u00ac " << (f.GetName().substr(ns, string::npos));
+        cout << "\u00ac" << (f.GetName().substr(ns, string::npos));
       else
         cout << f.GetName();
       if (f.GetArity() > 0) {
@@ -73,11 +73,11 @@ void ProofExport2Text::OutputImplication(ofstream& outfile) {
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputAnd(ofstream& outfile) { cout << "\u2227 "; }
+void ProofExport2Text::OutputAnd(ofstream& outfile) { cout << " \u2227 "; }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputOr(ofstream& outfile) { cout << "\u2228 "; }
+void ProofExport2Text::OutputOr(ofstream& outfile) { cout << " \u2228 "; }
 
 // ---------------------------------------------------------------------------------
 
@@ -94,8 +94,10 @@ void ProofExport2Text::OutputPrologue(ofstream& outfile,
        it != T.mConstantsPermissible.end(); it++)
     mSymbolsTaken.insert(*it);
 
-  cout << "Proof of theorem " << p.GetTheoremName()
-          << endl;
+  cout << endl;
+  cout << "==============================================" << endl;
+  cout << "Proof of theorem " << p.GetTheoremName() << ":" << endl;
+  cout << "----------------------------------------------" << endl;
 
   DNFFormula fout;
   Fact factout;
@@ -116,12 +118,11 @@ void ProofExport2Text::OutputPrologue(ofstream& outfile,
 
   if (cf.GetSize() > 0) {
     if (p.GetTheorem().GetNumOfUnivVars() > 0)
-      cout << " such that: ";
+      cout << " such that: " << endl;
     else
       cout << "The assumptions are: " << endl;
-    cout << endl << endl;
     for (unsigned i = 0; i < cf.GetSize(); i++) {
-      cout << "  - ";
+      cout << " " << i << ". ";
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
       OutputFact(outfile,factout);
       if (i + 1 == cf.GetSize())
@@ -130,11 +131,10 @@ void ProofExport2Text::OutputPrologue(ofstream& outfile,
         cout << ", ";
       cout << endl;
     }
-    cout << endl;
   } else if (p.GetTheorem().GetNumOfUnivVars() > 0)
     cout << ". ";
 
-  cout << "It should be proved that ";
+  cout << "The following should be proved: ";
   T.InstantiateGoal(p.GetTheorem(), inst, fout, false);
   
   for (unsigned i = 0; i < p.GetTheorem().GetNumOfExistVars(); i++) {
@@ -145,24 +145,24 @@ void ProofExport2Text::OutputPrologue(ofstream& outfile,
   }
 
   OutputDNF(outfile,fout);
-  cout << "." << endl;
-  cout << endl << endl;
+  cout << ". " << endl;
 
   if (p.NumOfAssumptions() - cf.GetSize() > 0) {
     cout << "Abducts found: " << endl << endl;
     for (size_t i = cf.GetSize(); i < p.NumOfAssumptions(); i++) {
-      cout << "  - ";
+      cout << " " << i << ". ";
       OutputDNF(outfile,p.GetCLAssumption(i));
       cout << endl;
     }
-    cout << endl << endl;
+    cout << endl;
   }
 }
 
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputEpilogue(ofstream& outfile) {
-  cout << endl << endl;
+  cout << "==============================================" << endl;
+  cout << endl;
 }
 
 // ---------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
     }
 
     OutputDNF(outfile,p.GetMP(i).conclusion);
-    cout << "(by MP, ";
+    cout << " (by MP; ";
     if (p.GetMP(i).CLfrom.size() > 0) {
       cout << "from ";
       for (size_t j = 0; j < p.GetMP(i).CLfrom.size(); j++) {
@@ -230,9 +230,7 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
         else
           cout << " ";
       }
-      // cout << ", ";
     }
-
     cout << "using axiom " << p.GetMP(i).axiomName;
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     if (instantiation.size() > new_witnesses.size()) {

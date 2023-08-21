@@ -36,15 +36,15 @@ public:
   }
   Fact(const string &s);
   size_t GetArity() const { return mArgs.size(); }
+  string GetName() const { return mName; }
   string GetArg(size_t i) const {
     return (mArgs.size() > i ? mArgs[i] : "null");
   }
-  void ClearArgs() { mArgs.clear(); }
-  string GetName() const { return mName; }
-  void SetName(const string &name) { mName = name; }
-  //bool Read(const string &s);
   bool Read();
-  
+  void SetName(const string &name) { mName = name; }
+  void ClearArgs() { mArgs.clear(); }
+  string ToString() const;
+
   void SetArg(size_t i, const string &s) {
     if (mArgs.size() <= i)
       mArgs.resize(i + 1);
@@ -237,9 +237,9 @@ private:
 
 // ---------------------------------------------------------------------------------------
 inline ostream &operator<<(ostream &os, const Fact &f) {
-  if (f.GetName() == "false") {
+  if (f.GetName() == "false" || f.GetName() == "bot") {
     os << "$false";
-  } else if (f.GetName() == "true") {
+  } else if (f.GetName() == "true" || f.GetName() == "top") {
     os << "$true";
   } else if (f.GetName() == EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)

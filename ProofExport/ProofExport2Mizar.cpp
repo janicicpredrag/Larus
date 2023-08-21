@@ -65,11 +65,11 @@ void ProofExport2Mizar::OutputCLFormula(ofstream &outfile,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
-  if (f.GetName() == "false") {
+  if (f.GetName() == "bot") {
     outfile << "contradiction";
     return;
   }
-  if (f.GetName() == "true") {
+  if (f.GetName() == "top") {
     outfile << "not contradiction";
     return;
   }
@@ -128,7 +128,7 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
   bool no_predicate=true;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
     it != T.mSignature.end(); ++it) {
-    if (get<0>(*it) == "false" || get<0>(*it) == "true")
+    if (get<0>(*it) == "bot" || get<0>(*it) == "top")
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
        continue;
