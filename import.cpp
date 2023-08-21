@@ -393,9 +393,9 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
   unsigned int nbConsistentAbducts = 0;
   unsigned int nbUnknownStatusAbducts = 0;
   unsigned int nbAbducts = 0;
-  string fileName;
+
   if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
-      (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
+      (theorem.GetNumOfUnivVars() == 0 /*|| theorem.GetPremises().GetSize() == 0*/))
     T.MakeNewConstant();
   T.StoreInitialConstants();
   vector<Fact> InstantiatedPremises;
@@ -405,6 +405,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     string constantName = T.MakeNewConstant();
     instantiation[theorem.GetUnivVar(i)] = constantName;
   }
+
   DNFFormula goalInstantiated;
   T.InstantiateGoal(theorem, instantiation, goalInstantiated, false);
 
