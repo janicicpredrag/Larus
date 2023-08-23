@@ -3,9 +3,7 @@
 
 #define DEBUG_PARSER
 
-
 // ---------------------------------------------------------------------------------------
-
 
 enum TOKEN { eEXCLAM, eQUESTION, eCOLON, eOPENL, eCLOSEL, eEND, eERROR, eNUMBER, eEQ, eNEQ, eNEG, eFALSE, eTRUE, eIMPL, eCONJ, eDISJ, eID, eOPENB, eCOMMA, eCLOSEB, eOPENLIST, eCLOSELIST };
 
@@ -26,6 +24,7 @@ bool onlyClosedBrackets() {
   return true;
 }
 
+// ---------------------------------------------------------------------------------------
 
 void ReadNextToken() {
 #ifdef DEBUG_PARSER
@@ -119,6 +118,82 @@ void ReadNextToken() {
 
 // ---------------------------------------------------------------------------------------
 
+string getFirstID(const string& str, unsigned& i)
+{
+    string id;
+    while (str[i] != '\0' && (isspace(str[i]) || str[i] ==')')) {
+      i++;
+    }
+    while (isalnum(str[i]) || str[i]=='_' || str[i]=='(') {
+      id += str[i];
+      i++;
+    }
+    return id;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool Term::Read()
+{
+    mT = NEXTLEXEME;
+    // mT = "(" + NEXTLEXEME;
+    ReadNextToken();
+
+    if (NEXTTOKEN == eOPENB) {
+      ReadNextToken();
+      while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
+        Term t;
+        if (!t.Read())
+          return false;
+        mT += " " + t.ToString();
+        if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
+          return false;
+        if (NEXTTOKEN == eCLOSEB) {
+          ReadNextToken();
+          break;
+        }
+        ReadNextToken();
+      }
+    }
+    // mT += ")";
+    SetData();
+    return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void Term::SetData()
+{
+   if (!IsCompound()) {
+       mArgs.push_back(mT);
+       return;
+   }
+   string s;
+   unsigned pos = 0;
+   for(;;) {
+     s = getFirstID(mT,pos);
+     if (s == "")
+       return;
+     if (s[0] == '(') {
+       mFunctionSymbols.push_back(s.substr(1));
+     }
+     else {
+       mArgs.push_back(s);
+     }
+
+   }
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Term::ToString() const
+{
+   return mT;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
 Fact::Fact(const string &s)
 {
   TEXTSTREAM = s.c_str();
@@ -178,25 +253,70 @@ bool Fact::Read() {
     ReadNextToken();
     return true;
   }
+
+  TMP_TEXTINDEX = TEXTINDEX;
+  TMP_NEXTTOKEN = NEXTTOKEN;
+  TMP_NEXTLEXEME = NEXTLEXEME;
+
   mName = NEXTLEXEME;
   ReadNextToken();
 
   if (NEXTTOKEN == eOPENB) {
     ReadNextToken();
     while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
-      mArgs.push_back(NEXTLEXEME);
-      ReadNextToken();
+      Term t;
+      t.Read();
+      mArgs.push_back(t);
       if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
-        return false;
+            return false;
       if (NEXTTOKEN == eCLOSEB) {
         ReadNextToken();
-        break;
-      }
-      ReadNextToken();
+        if (NEXTTOKEN == eEQ || NEXTTOKEN == eNEQ)
+          break;
+      } else
+        ReadNextToken();
     }
+    //if (NEXTTOKEN != eEQ && NEXTTOKEN != eNEQ)
     return true;
   }
 
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  mArgs.clear();
+  Term t1;
+  if (!t1.Read()) {
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+    ReadNextToken();
+    mArgs.clear();
+    return true;
+  }
+  mArgs.push_back(t1);
+  if (NEXTTOKEN == eEQ)
+    mName = EQ_NATIVE_NAME;
+  else if (NEXTTOKEN == eNEQ)
+    mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
+  else {
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+    ReadNextToken();
+    mArgs.clear();
+    return true;
+  }
+  ReadNextToken();
+  Term t2;
+  if (!t2.Read())
+    return false;
+  mArgs.push_back(t2);
+
+  return true;
+
+
+/*
   if (NEXTTOKEN == eEQ) {
     mArgs.push_back(mName);
     mName = EQ_NATIVE_NAME;
@@ -217,7 +337,7 @@ bool Fact::Read() {
     mArgs.push_back(NEXTLEXEME);
     ReadNextToken();
     return true;
-  }
+  }*/
   return true;
 }
 
@@ -371,19 +491,21 @@ bool CLFormula::Read() {
   // Check if all variables in the premises are bound
   for(unsigned i = 0; i < A.GetSize(); i++) {
     for(unsigned j = 0; j < A.GetElement(i).GetArity(); j++) {
-      string arg = A.GetElement(i).GetArg(j);
+      Term t = A.GetElement(i).GetArg(j);
       bool foundArg = false;
-      for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
-        if (arg == GetUnivVar(l)) {
-          foundArg = true;
+      for(unsigned a = 0; a < t.NumArgs(); a++) {
+        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+          if (t.GetArg(a) == GetUnivVar(l)) {
+            foundArg = true;
+          }
         }
-      }
-      if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
+        if (!foundArg && 'A' <= t.GetArg(a)[0] && t.GetArg(a)[0] <= 'Z') {
 #ifdef DEBUG_PARSER
   cout << "Ill-formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
-  cout << "A variable " << arg << " in the premises is not bound! " << endl;
+  cout << "A variable " << t.GetArg(a) << " in the premises is not bound! " << endl;
 #endif
-        return false;
+          return false;
+        }
       }
     }
   }
@@ -392,24 +514,26 @@ bool CLFormula::Read() {
   for(unsigned i = 0; i < B.GetSize(); i++) {
     for(unsigned j = 0; j < B.GetElement(i).GetSize(); j++) {
       for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity(); k++) {
-        string arg = B.GetElement(i).GetElement(j).GetArg(k);
+        Term t = B.GetElement(i).GetElement(j).GetArg(k);
         bool foundArg = false;
-        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
-          if (arg == GetUnivVar(l)) {
-            foundArg = true;
+        for(unsigned a = 0; a < t.NumArgs(); a++) {
+          for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+            if (t.GetArg(a) == GetUnivVar(l)) {
+              foundArg = true;
+            }
           }
-        }
-        for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
-          if (arg == GetExistVar(l)) {
-            foundArg = true;
+          for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
+            if (t.GetArg(a) == GetExistVar(l)) {
+              foundArg = true;
+            }
           }
-        }
-        if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
-#ifdef DEBUG_PARSER
-  cout << "Ill formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
-  cout << "A variable " << arg << " in the goal is not bound! " << endl;
-#endif
-          return false;
+          if (!foundArg && 'A' <= t.GetArg(a)[0] && t.GetArg(a)[0] <= 'Z') {
+  #ifdef DEBUG_PARSER
+    cout << "Ill formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
+    cout << "A variable " << t.GetArg(a) << " in the goal is not bound! " << endl;
+  #endif
+            return false;
+          }
         }
       }
     }
@@ -421,16 +545,22 @@ bool CLFormula::Read() {
     bool foundVar = false;
     for(unsigned i = 0; i < A.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < A.GetElement(i).GetArity()  && !foundVar; j++) {
-        if (var == A.GetElement(i).GetArg(j)) {
-          foundVar = true;
+        Term t = A.GetElement(i).GetArg(j);
+        for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+          if (var == t.GetArg(a)) {
+            foundVar = true;
+          }
         }
       }
     }
     for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
         for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
-          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
-            foundVar = true;
+          Term t = B.GetElement(i).GetElement(j).GetArg(k);
+          for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+            if (var == t.GetArg(a)) {
+              foundVar = true;
+            }
           }
         }
       }
@@ -451,8 +581,11 @@ bool CLFormula::Read() {
     for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
         for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
-          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
-            foundVar = true;
+          Term t = B.GetElement(i).GetElement(j).GetArg(k);
+          for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+            if (var == t.GetArg(a)) {
+              foundVar = true;
+            }
           }
         }
       }
@@ -462,7 +595,7 @@ bool CLFormula::Read() {
   cout << "Ill-formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
   cout << "An existentially quantified variable " << var << " is not used! " << endl;
 #endif
-      return false;
+ // TODO     return false;
     }
   }
   return true;
@@ -856,18 +989,18 @@ void CLFormula::Normalize(const string &name, const string &suffix,
       RHS.Add(conj);
       definitions.push_back(pair<Fact, DNFFormula>(current, RHS));
 
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occuring variables
-      {
-        if (UnivVarOrdinalNumber(current.GetArg(j)) != -1 ||
-            ExistVarOrdinalNumber(current.GetArg(j)) != -1) {
-          bool bAlreadyThere = false;
-          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-               k++)
-            if (axiom.mUniversalVars[k] == current.GetArg(j))
-              bAlreadyThere = true;
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occuring variables
+        Term t = current.GetArg(j);
+        for (size_t a = 0; a < t.NumArgs(); a++) { // quantify only occuring variables {
+          if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
+            bool bAlreadyThere = false;
+            for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
+                bAlreadyThere = true;
+            if (!bAlreadyThere)
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
         }
       }
       output.push_back(pair<CLFormula, string>(
@@ -957,17 +1090,19 @@ void CLFormula::Normalize(const string &name, const string &suffix,
         DNFFormula disj;
         disj.Add(conj1);
         CLFormula axiom(conj, disj);
-        for (size_t jj = 0; jj < disjuncts[i].GetArity();
-             jj++) { // quantify only occuring variables
-          if (UnivVarOrdinalNumber(current.GetArg(jj)) != -1 ||
-              ExistVarOrdinalNumber(current.GetArg(jj)) != -1) {
+        for (size_t jj = 0; jj < disjuncts[i].GetArity(); jj++) { // quantify only occuring variables
+          Term t = disjuncts[i].GetArg(jj);
+          for (size_t a = 0; a < t.NumArgs(); a++) { // quantify only occuring variables
+            if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
             bool bAlreadyThere = false;
             for (size_t k = 0;
                  k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-              if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(jj))
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
                 bAlreadyThere = true;
             if (!bAlreadyThere)
-              axiom.mUniversalVars.push_back(disjuncts[i].GetArg(jj));
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
           }
         }
         output.push_back(pair<CLFormula, string>(
@@ -1000,18 +1135,18 @@ void CLFormula::Normalize(const string &name, const string &suffix,
       definitions.push_back(pair<Fact, DNFFormula>(current, disj));
 
       CLFormula axiom(conj, disj);
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occuring variables
-      {
-        if (UnivVarOrdinalNumber(current.GetArg(j)) != -1 ||
-            ExistVarOrdinalNumber(current.GetArg(j)) != -1) {
-          bool bAlreadyThere = false;
-          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-               k++)
-            if (axiom.mUniversalVars[k] == current.GetArg(j))
-              bAlreadyThere = true;
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occuring variables
+        Term t = current.GetArg(j);
+        for (size_t a = 0; a < t.NumArgs(); a++) {
+          if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
+            bool bAlreadyThere = false;
+            for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
+                bAlreadyThere = true;
+            if (!bAlreadyThere)
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
         }
       }
       output.push_back(pair<CLFormula, string>(
@@ -1108,16 +1243,17 @@ void CLFormula::NormalizeGoal(
       DNFFormula disj;
       disj.Add(conj1);
       CLFormula axiom(conj, disj);
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occurring variables
-      {
-        bool bAlreadyThere = false;
-        for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-             k++)
-          if (axiom.mUniversalVars[k] == current.GetArg(j))
-            bAlreadyThere = true;
-        if (!bAlreadyThere)
-          axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
+        for (size_t k = 0; k < axiom.mUniversalVars.size(); k++) {
+          bool bAlreadyThere = false;
+          Term t = current.GetArg(j);
+          for (size_t a = 0; a < t.NumArgs() && !bAlreadyThere; a++) {
+            if (axiom.mUniversalVars[k] == t.GetArg(a))
+              bAlreadyThere = true;
+          if (!bAlreadyThere)
+            axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
+        }
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));

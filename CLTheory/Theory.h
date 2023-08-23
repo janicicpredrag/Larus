@@ -53,7 +53,7 @@ public:
   void AddConstant(string s);
   string MakeNewConstant();
   string GetConstantName(unsigned id) const;
-  bool IsConstant(string s) const;
+  bool IsConstant(Term t) const;
   size_t NumberOfConstantsWaiting();
   bool MakeNextConstantPermissible();
   void StoreInitialConstants();

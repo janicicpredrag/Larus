@@ -42,8 +42,13 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       T.SetUseNativeEq(true);
   if (theorem.UsesNativeEq())
     T.SetUseNativeEq(true);
-  if (T.GetUseNativeEq())
+  if (T.GetUseNativeEq()) {
     params.mbNativeEQ = true;
+    params.mbNativeEQsub = true;
+  }
+
+  if (params.eEngine == eSMTUFBV_ProvingEngine)
+      params.mbNativeEQ = false; // difficult to support it
 
   cout << "--- Input axioms : " << endl;
   T.printAxioms();

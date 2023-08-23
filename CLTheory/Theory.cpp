@@ -472,9 +472,12 @@ string Theory::GetConstantName(unsigned id) const {
 
 // --------------------------------------------------------------
 
-bool Theory::IsConstant(string s) const {
+bool Theory::IsConstant(Term t) const {
   /* return ((mConstants.find(s) != mConstants.end()) ||
       (mConstantsPermissible.find(s) != mConstantsPermissible.end()));*/
+  if (t.IsCompound())
+     return false;
+  string s = t.GetArg(0);
   for (vector<string>::const_iterator it = mConstants.begin();
        it != mConstants.end(); it++)
     if (*it == s)
@@ -544,24 +547,28 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
   fout = f;
   size_t size = f.GetArity();
   for (size_t i = 0; i < size; i++) {
-    if (instantiation.find(f.GetArg(i)) == instantiation.end()) {
-      if (!IsConstant(f.GetArg(i)) && bInstantiateVars) {
-        bool bUnivVar = false;
-        for (size_t j = 0; j < cl.GetNumOfUnivVars() && !bUnivVar; j++) {
-          if (cl.GetUnivVar(j) == f.GetArg(i))
-            bUnivVar = true;
+    Term t = f.GetArg(i);
+    for (size_t a = 0; a < t.NumArgs(); a++) {
+      string v = t.GetArg(a);
+      if (instantiation.find(t.GetArg(a)) == instantiation.end()) {
+        if (!IsConstant(t.GetArg(a)) && bInstantiateVars) {
+          bool bUnivVar = false;
+          for (size_t j = 0; j < cl.GetNumOfUnivVars() && !bUnivVar; j++) {
+            if (cl.GetUnivVar(j) == t.GetArg(a))
+              bUnivVar = true;
+          }
+          string newc;
+          if (bUnivVar) {
+            assert(!mConstantsPermissible.empty());
+            newc = *(mConstantsPermissible.begin());
+          } else
+            newc = MakeNewConstant();
+          instantiation[t.GetArg(a)] = newc;
+          fout.SetArg(i, instantiation[t.GetArg(a)]);
         }
-        string newc;
-        if (bUnivVar) {
-          assert(!mConstantsPermissible.empty());
-          newc = *(mConstantsPermissible.begin());
-        } else
-          newc = MakeNewConstant();
-        instantiation[f.GetArg(i)] = newc;
-        fout.SetArg(i, instantiation[f.GetArg(i)]);
-      }
-    } else
-      fout.SetArg(i, instantiation[f.GetArg(i)]);
+      } else
+        fout.SetArg(i, instantiation[t.GetArg(a)]);
+    }
   }
 }
 
@@ -721,12 +728,14 @@ bool Theory::SaturateEqSub() {
         for (size_t l = 0; l < fact_goal.GetArity(); l++) {
           bool found = false;
           if (!IsConstant(fact_goal.GetArg(l))) {
-            for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found;
-                 ll++)
-              if (fact_goal.GetArg(l) == newUnivAx.GetUnivVar(ll))
-                found = true;
-            if (!found)
-              newUnivAx.AddUnivVar(fact_goal.GetArg(l));
+            Term t = fact_goal.GetArg(l);
+            for (size_t a = 0; a < t.NumArgs() && !found; a++)  {
+              for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found; ll++)
+                if (t.GetArg(a) == newUnivAx.GetUnivVar(ll))
+                  found = true;
+              if (!found)
+                newUnivAx.AddUnivVar(t.GetArg(a));
+            }
           }
         }
         bool found = false;

@@ -15,12 +15,63 @@ class Theory;
 class DNFFormula;
 
 // ---------------------------------------------------------------------------------------
+
+class Term {
+public:
+  Term() {}
+  Term (const Term &t) {
+    mT = t.mT;
+    mFunctionSymbols = t.mFunctionSymbols;
+    mArgs = t.mArgs;
+  }
+  Term (const string &s) {
+    mT = s;
+    SetData();
+  }
+  unsigned NumArgs() {
+    return mArgs.size();
+  }
+  string GetArg(unsigned i) {
+    return mArgs[i];
+  }
+  void SetData();
+  bool Read();
+  string ToString() const;
+  Term &operator=(const Term &t) {
+    mT = t.mT;
+    mFunctionSymbols = t.mFunctionSymbols;
+    mArgs = t.mArgs;
+    return *this;
+  }
+  Term &operator=(const string &s) {
+    mT = s;
+    SetData();
+    return *this;
+  }
+  bool IsCompound() {
+    return (mT.find(" ") != string::npos);
+  }
+  bool operator==(const Term &t) const {
+    return (mT == t.mT);
+  }
+  bool operator!=(const Term &t) const {
+    return (mT != t.mT);
+  }
+private:
+  string mT;
+  vector<string> mFunctionSymbols;
+  vector<string> mArgs;
+};
+
+// ---------------------------------------------------------------------------------------
+
 class Fact {
 public:
   Fact() {}
   Fact(string &n, const vector<string> &a) {
     mName = n;
-    mArgs = a;
+    for(unsigned i = 0; i < a.size(); i++)
+      mArgs[i] = a[i];
   }
   Fact(const Fact &f) {
     mName = f.mName;
@@ -32,18 +83,31 @@ public:
     return *this;
   }
   bool operator==(const Fact &f) const {
-    return (mName == f.mName && mArgs == f.mArgs);
+    if (mName != f.mName)
+      return false;
+    for (unsigned i = 0; i<mArgs.size(); i++) {
+      if (mArgs[i] != f.mArgs[i])
+        return false;
+    }
+    return true;
   }
   Fact(const string &s);
   size_t GetArity() const { return mArgs.size(); }
   string GetName() const { return mName; }
   string GetArg(size_t i) const {
-    return (mArgs.size() > i ? mArgs[i] : "null");
+    assert(mArgs.size() > i);
+    return mArgs[i].ToString();
   }
   bool Read();
   void SetName(const string &name) { mName = name; }
   void ClearArgs() { mArgs.clear(); }
   string ToString() const;
+
+/*  void SetArg(size_t i, const Term &t) {
+    if (mArgs.size() <= i)
+      mArgs.resize(i + 1);
+    mArgs[i] = t;
+  }*/
 
   void SetArg(size_t i, const string &s) {
     if (mArgs.size() <= i)
@@ -79,7 +143,7 @@ public:
 
 private:
   string mName;
-  vector<string> mArgs;
+  vector<Term> mArgs;
 };
 
 // ---------------------------------------------------------------------------------------
@@ -234,6 +298,11 @@ private:
   vector<string> mUniversalVars;
   vector<string> mExistentialVars;
 };
+
+inline ostream &operator<<(ostream &os, const Term &t) {
+   os << t.ToString();
+   return os;
+}
 
 // ---------------------------------------------------------------------------------------
 inline ostream &operator<<(ostream &os, const Fact &f) {
