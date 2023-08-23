@@ -339,7 +339,7 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
             for(unsigned j=0; j < GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArity(); j++) {
               string arg = GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j);
               for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
-                string v = "(" + GetAxiom(ax).GetUnivVar(k) + ")";
+                string v = GetAxiom(ax).GetUnivVar(k);
                 arg = replacestring(arg, v, Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine));
               }
               fc.SetArg(j, arg);

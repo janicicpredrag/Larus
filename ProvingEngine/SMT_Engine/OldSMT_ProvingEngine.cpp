@@ -727,7 +727,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
             appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, nInd));
     sbPrevStepGoal += ")";
     sbPrevStepGoal = "(or " + sbPrevStepGoal +
-                     appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + "true") +
+                     appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + "top") +
                      ")";
     if (formula.GetSize() > 1) {
       unsigned ArityFinal1 = formula.GetElement(1).GetElement(0).GetArity();
@@ -741,7 +741,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       sbPrevStepGoal2 += ")";
       sbPrevStepGoal =
           "(or " + sbPrevStepGoal + sbPrevStepGoal2 +
-          appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + "true") + ")";
+          appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + "top") + ")";
     }
     GoalStepAsserts.push_back(appeq(app("bGoal", nProofStep), sbPrevStepGoal));
   }
@@ -954,7 +954,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         string sbMatchOnePremise = "(or false ";
 
         sbMatchOnePremise +=
-            "(and " + appeq(URSA_NUM_PREFIX + "true",
+            "(and " + appeq(URSA_NUM_PREFIX + "top",
                             AXIOMS[nAxiom].nPredicate[nPremisesCounter]) +
             appeq(app("nFrom", nProofStep, 0), 99) + ")";
         for (unsigned n_from = 0; n_from < nProofStep; n_from++) {
@@ -1374,10 +1374,10 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
           ")";
 
     string sbTrivGoalReached =
-        appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + "true");
+        appeq(app("nP", nFinalStep, 0), URSA_NUM_PREFIX + "top");
     if (formula.GetSize() > 1) {
       sbTrivGoalReached +=
-          appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + "true");
+          appeq(app("nP", nFinalStep, 1), URSA_NUM_PREFIX + "top");
     }
 
     string sbTrivGoalReachedInlined;
@@ -1406,7 +1406,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
               disj += "(and " + sb + ")";
           }
           sbTrivGoalReachedInlined += disj;
-          sbTrivGoalReachedInlined += appeq(URSA_NUM_PREFIX + "false",
+          sbTrivGoalReachedInlined += appeq(URSA_NUM_PREFIX + "bot",
                                             AXIOMS[nUnivAxiom].nPredicate[0]);
         }
       }
@@ -1466,7 +1466,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
                 allfrom += "(and " + allfrom1 + ")";
               }
               sb += "(or false " + allfrom +
-                    appeq(URSA_NUM_PREFIX + "true",
+                    appeq(URSA_NUM_PREFIX + "top",
                           AXIOMS[nSimpleAxiom].nPredicate[0]) +
                     ")";
               sb += "\n; checking simple axiom END \n";
@@ -1512,7 +1512,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         (nProofStep == mnPremisesCount
              ? " false "
              : "(and " + appeq(app("nP", nProofStep - 1, 0),
-                               URSA_NUM_PREFIX + "false") +
+                               URSA_NUM_PREFIX + "bot") +
                    appeq(app("nNesting", nProofStep - 1),
                          app("nNesting", nProofStep)) +
                    " " + app("bGoal", nProofStep) +
