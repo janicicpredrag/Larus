@@ -10,8 +10,8 @@
 int GetPredicateSymbolOrdinal(const Theory& t, string p) {
 
 
-    for (size_t i = 0; i < t.mSignature.size(); i++)
-      if (t.mSignature[i].first == p)
+    for (size_t i = 0; i < t.mSignatureP.size(); i++)
+      if (t.mSignatureP[i].first == p)
         return i;
     return -1;
 }
@@ -79,7 +79,7 @@ SMT_ProvingEngine::SMT_ProvingEngine(Theory *pT, proverParams &params) {
     mName = "UNKNOWN";
 
   mnMaxArity = 0;
-  for(auto it = pT->mSignature.begin(); it < pT->mSignature.end(); it++)
+  for(auto it = pT->mSignatureP.begin(); it < pT->mSignatureP.end(); it++)
     if (mnMaxArity < it->second)
       mnMaxArity = it->second;
 }
@@ -927,7 +927,7 @@ void SMT_ProvingEngine::ComputeBinding(const CLFormula &f, unsigned k) {
 // ---------------------------------------------------------------------------------------
 
 void SMT_ProvingEngine::AddPremise(const Fact &f) {
-  mpT->AddSymbol(f.GetName(), f.GetArity());
+  mpT->AddPredicateSymbol(f.GetName(), f.GetArity());
   mPremises.push_back(f);
 
   Expression c;
@@ -956,7 +956,7 @@ void SMT_ProvingEngine::AddAbduct() {
   c = (StepKind(mnNumberOfAssumptions) == Assumption())
     & (Nesting(mnNumberOfAssumptions) == 1u)
     & (Cases(mnNumberOfAssumptions) == False());
-  c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignature.size());
+  c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignatureP.size());
   for (size_t i = 0; i < mnMaxArity; i++)
     c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
   c &= (IsGoal(mnNumberOfAssumptions) == False()); // the goal itself cannot be abduct
@@ -1110,10 +1110,10 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
   if (system(NULL)) {
 
     if (formula.GetSize() > 0) // disjunctions in the goal can have only one disjunct
-      mpT->AddSymbol(formula.GetElement(0).GetElement(0).GetName(),
+      mpT->AddPredicateSymbol(formula.GetElement(0).GetElement(0).GetName(),
                      formula.GetElement(0).GetElement(0).GetArity());
     if (formula.GetSize() > 1)
-      mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(),
+      mpT->AddPredicateSymbol(formula.GetElement(1).GetElement(0).GetName(),
                      formula.GetElement(1).GetElement(0).GetArity());
 
     unsigned l, r, s, step, best = 0, best_start = 0;
@@ -1252,9 +1252,9 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     }
 
     mnMaxArity = 0;
-    for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-      if (mpT->mSignature[i].second > mnMaxArity)
-        mnMaxArity = mpT->mSignature[i].second;
+    for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
+      if (mpT->mSignatureP[i].second > mnMaxArity)
+        mnMaxArity = mpT->mSignatureP[i].second;
     }
 
     mnMaxNumberOfPremisesInAxioms = 0;
@@ -1290,22 +1290,30 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
            it != mpT->mConstantsPermissible.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
           mSMTfile << "     " << ToUpper(*it) << endl;
+
+      for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
+        mSMTfile << "    (" << ToUpper(mpT->mSignatureF[i].first) << " ";
+        for (size_t j = 0; j < mpT->mSignatureF[i].second; j++)
+          mSMTfile << "(sub" << ToUpper(mpT->mSignatureF[i].first) << "_" << j << " Term)";
+        mSMTfile << ")" << endl;
+      }
+
       mSMTfile << "  )" << endl;
       mSMTfile << ")" << endl;
 
       mSMTfile << "(declare-datatype Atom" << endl;
       mSMTfile << "  (" << endl;
-      for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-        mSMTfile << "    (" << ToUpper(mpT->mSignature[i].first) << " ";
-        for (size_t j = 0; j < mpT->mSignature[i].second; j++)
-          mSMTfile << "(sub" << ToUpper(mpT->mSignature[i].first) << "_" << j << " Term)";
+      for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
+        mSMTfile << "    (" << ToUpper(mpT->mSignatureP[i].first) << " ";
+        for (size_t j = 0; j < mpT->mSignatureP[i].second; j++)
+          mSMTfile << "(sub" << ToUpper(mpT->mSignatureP[i].first) << "_" << j << " Term)";
         mSMTfile << ")" << endl;
       }
       mSMTfile << "  )" << endl;
       mSMTfile << ")" << endl;
     } else {
-      for (size_t i = 0; i < mpT->mSignature.size(); i++)
-        DeclareVarBasicType(ToUpper(mpT->mSignature[i].first), mpT->mSignature.size());
+      for (size_t i = 0; i < mpT->mSignatureP.size(); i++)
+        DeclareVarBasicType(ToUpper(mpT->mSignatureP[i].first), mpT->mSignatureP.size());
 
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
@@ -1347,11 +1355,11 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         DeclarePredicateSymbol(Contents(i,0), 0);
         DeclarePredicateSymbol(Contents(i,1), 0);
         // because the goal can be underspecified so we cannot use UF:
-        // DeclareVarBasicType(ContentsPredicate(i,0), mpT->mSignature.size());
-        // DeclareVarBasicType(ContentsPredicate(i,1), mpT->mSignature.size());
+        // DeclareVarBasicType(ContentsPredicate(i,0), mpT->mSignatureP.size());
+        // DeclareVarBasicType(ContentsPredicate(i,1), mpT->mSignatureP.size());
       } else {
-        DeclareVarBasicType(ContentsPredicate(i,0), mpT->mSignature.size());
-        DeclareVarBasicType(ContentsPredicate(i,1), mpT->mSignature.size());
+        DeclareVarBasicType(ContentsPredicate(i,0), mpT->mSignatureP.size());
+        DeclareVarBasicType(ContentsPredicate(i,1), mpT->mSignatureP.size());
       }
       DeclareVarBoolean(Cases(i));
       DeclareVarBoolean(IsGoal(i));
@@ -1391,7 +1399,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       }
       for (unsigned j=0; j < mnMaxNumberOfPremisesInAxioms; j++) {
         DeclareVarBasicType(From(i,j), nFinalStep);
-        DeclareVarBasicType(InstAxPredicate(i,j), mpT->mSignature.size());
+        DeclareVarBasicType(InstAxPredicate(i,j), mpT->mSignatureP.size());
         for (unsigned a=0; a < mnMaxArity; a++) {
           DeclareVarBasicType(InstAxArgument(i,j,a), nMaxConstants);
         }
@@ -1403,12 +1411,12 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       AddComment("");
       AddComment("************************* Predicate symbols **************************");
       enumerator = 0;
-      for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-        Assert(Expression(ToUpper(mpT->mSignature[i].first)) ==
+      for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
+        Assert(Expression(ToUpper(mpT->mSignatureP[i].first)) ==
                itos(mSMT_theory, enumerator));
-        PREDICATE[ToUpper(mpT->mSignature[i].first)] = enumerator++;
-        if (mpT->mSignature[i].second > mnMaxArity)
-          mnMaxArity = mpT->mSignature[i].second;
+        PREDICATE[ToUpper(mpT->mSignatureP[i].first)] = enumerator++;
+        if (mpT->mSignatureP[i].second > mnMaxArity)
+          mnMaxArity = mpT->mSignatureP[i].second;
       }
     }
 
@@ -1491,8 +1499,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       if (formula.GetElement(0).GetElement(0).GetArg(i) != "_") {
         if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
             && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
-          if (mSMT_theory == eSMTUFBV_ProvingEngine)
-            mSMTfile << "(declare-const " << ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) << " Term)" << endl;
+          if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+            if (formula.GetElement(0).GetElement(0).GetArg(i).find(' ') == string::npos)
+              mSMTfile << "(declare-const " << ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) << " Term)" << endl;
+          }
           else
             DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
           exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
@@ -1518,16 +1528,15 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     Assert(Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False()));
 
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-        // cannot have underspecified goals
         for(unsigned i = 0; i < formula.GetSize(); i++) {
           if (formula.GetElement(i).GetElement(0).GetName() == "_")
-            assert(false);
+            assert(false); // cannot have underspecified goals
           Fact fc;
           fc.SetName(ToUpper(formula.GetElement(i).GetElement(0).GetName()));
           for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
             if (formula.GetElement(i).GetElement(0).GetArg(j) == "_")
-              assert(false);
-            if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(i)) != CONSTANTS.end())
+              assert(false); // cannot have underspecified goals
+            if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(j)) != CONSTANTS.end())
               fc.SetArg(j,ToUpper(formula.GetElement(i).GetElement(0).GetArg(j)));
             else
               fc.SetArg(j,formula.GetElement(i).GetElement(0).GetArg(j));
@@ -1545,7 +1554,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
             if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(j)) != CONSTANTS.end())
               Assert(ContentsArgument(nFinalStep, i, j) ==
                      Expression(ToUpper(formula.GetElement(i).GetElement(0).GetArg(j))));
-            else
+            else // TODO check this - both branches same; formula is instantiated?!
               Assert(ContentsArgument(nFinalStep, i, j) ==
                    Expression(formula.GetElement(i).GetElement(0).GetArg(j)));
           }
@@ -1836,10 +1845,10 @@ bool SMT_ProvingEngine::ReconstructProof(const DNFFormula &formula,
                                          CLProof& proof)
 {
     vector<Fact> proofTrace;
-    msPredicates.resize(mpT->mSignature.size() + 1);
+    msPredicates.resize(mpT->mSignatureP.size() + 1);
     int i = 0;
-    for (size_t j = 0; j < mpT->mSignature.size(); j++)
-      msPredicates[i++] = mpT->mSignature[j].first;
+    for (size_t j = 0; j < mpT->mSignatureP.size(); j++)
+      msPredicates[i++] = mpT->mSignatureP[j].first;
     i = 0;
     for (vector<string>::iterator it = mpT->mConstants.begin();
       it != mpT->mConstants.end(); it++)

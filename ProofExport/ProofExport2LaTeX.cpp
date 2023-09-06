@@ -125,7 +125,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
                                        const CLProof &p,
                                        proverParams & params) {
 
-  mSymbolsTaken = T.mOccuringSymbols;
+  mSymbolsTaken = T.mOccuringPredicateSymbols;
   for (vector<string>::const_iterator it = T.mConstants.begin();
        it != T.mConstants.end(); it++)
     mSymbolsTaken.insert(*it);

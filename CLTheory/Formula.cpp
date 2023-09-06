@@ -135,8 +135,8 @@ string getFirstID(const string& str, unsigned& i)
 
 bool Term::Read()
 {
-    mT = NEXTLEXEME;
-    // mT = "(" + NEXTLEXEME;
+    // mT = NEXTLEXEME;
+    mT = "(" + NEXTLEXEME;
     ReadNextToken();
 
     if (NEXTTOKEN == eOPENB) {
@@ -155,7 +155,7 @@ bool Term::Read()
         ReadNextToken();
       }
     }
-    // mT += ")";
+    mT += ")";
     SetData();
     return true;
 }
@@ -170,17 +170,23 @@ void Term::SetData()
    }
    string s;
    unsigned pos = 0;
+   unsigned arity = 0;
+   string function_symbol;
    for(;;) {
      s = getFirstID(mT,pos);
      if (s == "")
        return;
      if (s[0] == '(') {
-       mFunctionSymbols.push_back(s.substr(1));
+       function_symbol = s.substr(1);
+       arity = 0; // start counting arguments
+       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
      }
      else {
        mArgs.push_back(s);
+       arity++;
+       mFunctionSymbols.pop_back();
+       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
      }
-
    }
 }
 
@@ -188,7 +194,13 @@ void Term::SetData()
 
 string Term::ToString() const
 {
-   return mT;
+  if (IsCompound() || mT[0] != '(')
+     return mT;
+
+  string s = mT;
+  s.erase(0, 1); // skip '('
+  s.pop_back();  // skip ')'
+  return s;
 }
 
 
@@ -715,7 +727,8 @@ bool CLFormula::ReadWithoutCheckingBoundness() {
 
   if (NEXTTOKEN == eOPENB) {
     ReadNextToken();
-    if (ReadWithoutCheckingBoundness() && NEXTTOKEN == eCLOSEB
+    if (ReadWithoutCheckingBoundness()
+            && (NEXTTOKEN == eCLOSEB || NEXTTOKEN == eEND)
             && onlyClosedBrackets()) {
       ReadNextToken();
       return true;

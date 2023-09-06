@@ -113,8 +113,8 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "typedecl \"MyT\"" << endl;
 
   outfile << "locale larus = " << endl;
-  for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
-       it != T.mSignature.end(); ++it) {
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
+       it != T.mSignatureP.end(); ++it) {
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
       continue;
     if (get<0>(*it) == "bot" || get<0>(*it) == "top")

@@ -738,10 +738,10 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
         Fact hintFact = cl.GetGoal().GetElement(0).GetElement(0);
         if (hintFact.GetName() != "_") {
           bool bPredicateSymbolExists = false;
-          for(unsigned i = 0; i<T.mSignature.size() && !bPredicateSymbolExists; i++) {
-            if (hintFact.GetName() == T.mSignature[i].first) {
+          for(unsigned i = 0; i<T.mSignatureP.size() && !bPredicateSymbolExists; i++) {
+            if (hintFact.GetName() == T.mSignatureP[i].first) {
               bPredicateSymbolExists = true;
-              if (hintFact.GetArity() != T.mSignature[i].second) {
+              if (hintFact.GetArity() != T.mSignatureP[i].second) {
                 cout << "Wrong hint fact: " << hintFact << " is ill-formed (wrong arity of predicate symbol)" << endl;
                 return eErrorReadingAxioms;
               }

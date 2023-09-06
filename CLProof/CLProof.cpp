@@ -422,10 +422,10 @@ bool CLProof::DecodeProof(const DNFFormula &formula,
   vector<string> sPredicates;
   map<int, string> sConstants;
 
-  sPredicates.resize(mpT->mSignature.size() + 1);
+  sPredicates.resize(mpT->mSignatureP.size() + 1);
   int i = 0;
-  for (size_t j = 0; j < mpT->mSignature.size(); j++)
-    sPredicates[i++] = mpT->mSignature[j].first;
+  for (size_t j = 0; j < mpT->mSignatureP.size(); j++)
+    sPredicates[i++] = mpT->mSignatureP[j].first;
 
   i = 0;
   for (vector<string>::iterator it = mpT->mConstants.begin();

@@ -126,8 +126,8 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "begin" << endl << endl;
   outfile << "scheme SMyT { ";
   bool no_predicate=true;
-  for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
-    it != T.mSignature.end(); ++it) {
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
+    it != T.mSignatureP.end(); ++it) {
     if (get<0>(*it) == "bot" || get<0>(*it) == "top")
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
@@ -142,7 +142,7 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
       outfile << "object";
     outfile << "]";
     ++it;
-    if (it+1 != T.mSignature.end())
+    if (it+1 != T.mSignatureP.end())
        {
          if (get<0>(*(it+1)).find(PREFIX_NEGATED) != string::npos)
         outfile << " ";

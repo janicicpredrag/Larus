@@ -34,6 +34,15 @@ public:
   string GetArg(unsigned i) {
     return mArgs[i];
   }
+  unsigned NumFunctionSymbols() {
+    return mFunctionSymbols.size();
+  }
+  string GetFunctionSymbol(unsigned i) {
+    return mFunctionSymbols[i].first;
+  }
+  unsigned GetFunctionSymbolArity(unsigned i) {
+    return mFunctionSymbols[i].second;
+  }
   void SetData();
   bool Read();
   string ToString() const;
@@ -48,8 +57,8 @@ public:
     SetData();
     return *this;
   }
-  bool IsCompound() {
-    return (mT.find(" ") != string::npos);
+  bool IsCompound() const {
+    return (mT.find(' ') != string::npos);
   }
   bool operator==(const Term &t) const {
     return (mT == t.mT);
@@ -59,7 +68,7 @@ public:
   }
 private:
   string mT;
-  vector<string> mFunctionSymbols;
+  vector<pair<string,unsigned>> mFunctionSymbols;
   vector<string> mArgs;
 };
 

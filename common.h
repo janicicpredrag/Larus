@@ -154,6 +154,7 @@ bool isIdentifier(const string &str);
 bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 string replacestring(const string& str, const string& from, const string& to);
+void replaceAll( string &s, const string &search, const string &replace );
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;

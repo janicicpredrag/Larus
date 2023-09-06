@@ -16,8 +16,8 @@ void Theory::Reset() {
   miConstantsCounter = 0;
   mConstants.clear();
   mConstantsPermissible.clear();
-  AddSymbol("bot", 0);
-  AddSymbol("top", 0);
+  AddPredicateSymbol("bot", 0);
+  AddPredicateSymbol("top", 0);
 }
 
 // --------------------------------------------------------------
@@ -29,15 +29,30 @@ void Theory::AddAxiom(CLFormula &axiom, string name) {
 // --------------------------------------------------------------
 
 void Theory::UpdateSignature(CLFormula &axiom) {
-  for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++)
+  for (size_t j = 0; j < axiom.GetPremises().GetSize(); j++) {
     if (axiom.GetPremises().GetElement(j).GetName() != "_") // this is empty slot for loosely constrained goals
-      AddSymbol(axiom.GetPremises().GetElement(j).GetName(),
+      AddPredicateSymbol(axiom.GetPremises().GetElement(j).GetName(),
                 axiom.GetPremises().GetElement(j).GetArity());
-  for (size_t j = 0; j < axiom.GetGoal().GetSize(); j++)
-    for (size_t k = 0; k < axiom.GetGoal().GetElement(j).GetSize(); k++)
+    for (size_t i = 0; i < axiom.GetPremises().GetElement(j).GetArity(); i++) {
+      Term t = axiom.GetPremises().GetElement(j).GetArg(i);
+      for (size_t k = 0; k < t.NumFunctionSymbols(); k++) {
+         AddFunctionSymbol(t.GetFunctionSymbol(k), t.GetFunctionSymbolArity(k));
+      }
+    }
+  }
+  for (size_t j = 0; j < axiom.GetGoal().GetSize(); j++) {
+    for (size_t k = 0; k < axiom.GetGoal().GetElement(j).GetSize(); k++) {
       if (axiom.GetGoal().GetElement(j).GetElement(k).GetName() != "_") // this is empty slot for loosely constrained goals
-        AddSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(),
+        AddPredicateSymbol(axiom.GetGoal().GetElement(j).GetElement(k).GetName(),
                   axiom.GetGoal().GetElement(j).GetElement(k).GetArity());
+      for (size_t i = 0; i < axiom.GetGoal().GetElement(j).GetElement(k).GetArity(); i++) {
+        Term t = axiom.GetGoal().GetElement(j).GetElement(k).GetArg(i);
+        for (size_t l = 0; l < t.NumFunctionSymbols(); l++) {
+           AddFunctionSymbol(t.GetFunctionSymbol(l), t.GetFunctionSymbolArity(l));
+        }
+      }
+    }
+  }
 }
 
 // --------------------------------------------------------------
@@ -69,9 +84,9 @@ void Theory::printAxioms(bool separateInlinedAxioms) const {
 // --------------------------------------------------------------
 
 void Theory::AddEqNegElimAxioms() {
-  if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end() ||
-      mOccuringSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
-          mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end() ||
+      mOccuringPredicateSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
+          mOccuringPredicateSymbols.end())
     return;
 
   DNFFormula conclusion;
@@ -100,20 +115,20 @@ void Theory::AddEqNegElimAxioms() {
 
 void Theory::AddNegElimAxioms() {
   // add the axiom  R(...) & nR(...) => false for every predicate symbol
-  for (size_t i = 2; i < mSignature.size(); i += 2) {
+  for (size_t i = 2; i < mSignatureP.size(); i += 2) {
     // skip false
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
 
-    if (mSignature[i].first == EQ_NATIVE_NAME)
+    if (mSignatureP[i].first == EQ_NATIVE_NAME)
       continue;
 
-    if (mOccuringSymbols.find(PREFIX_NEGATED + mSignature[i].first) ==
-            mOccuringSymbols.end() ||
-        mOccuringSymbols.find(mSignature[i].first) == mOccuringSymbols.end())
+    if (mOccuringPredicateSymbols.find(PREFIX_NEGATED + mSignatureP[i].first) ==
+            mOccuringPredicateSymbols.end() ||
+        mOccuringPredicateSymbols.find(mSignatureP[i].first) == mOccuringPredicateSymbols.end())
       continue;
 
-    if (mSignature[i].first.find('_', 0) != string::npos)
+    if (mSignatureP[i].first.find('_', 0) != string::npos)
       continue;
 
     ConjunctionFormula premises;
@@ -121,19 +136,19 @@ void Theory::AddNegElimAxioms() {
     ConjunctionFormula conc0;
     Fact a, b;
     // ugly convention: in the signature R and nR go one after another
-    a.SetName(mSignature[i].first);
-    for (size_t j = 0; j < mSignature[i].second; j++)
+    a.SetName(mSignatureP[i].first);
+    for (size_t j = 0; j < mSignatureP[i].second; j++)
       a.SetArg(j, string(1, 'A' + j));
     premises.Add(a);
-    a.SetName(mSignature[i + 1].first);
+    a.SetName(mSignatureP[i + 1].first);
     premises.Add(a);
     b.SetName("bot");
     conc0.Add(b);
     conclusion.Add(conc0);
     CLFormula axiom(premises, conclusion);
-    for (size_t j = 0; j < mSignature[i].second; j++)
+    for (size_t j = 0; j < mSignatureP[i].second; j++)
       axiom.AddUnivVar(string(1, 'A' + j));
-    string sname(mSignature[i].first);
+    string sname(mSignatureP[i].first);
     sname[0] = tolower(sname[0]);
     AddAxiom(axiom, PREFIX_NEGATED + sname + "NegElim");
   }
@@ -144,20 +159,20 @@ void Theory::AddNegElimAxioms() {
 void Theory::AddExcludedMiddleAxioms() {
   // add the axiom  R(...) | nR(...) for every predicate symbol (skip false |
   // true)
-  for (size_t i = 2; i < mSignature.size(); i += 2) {
+  for (size_t i = 2; i < mSignatureP.size(); i += 2) {
     // skip false
 
-    if (mSignature[i].first == EQ_NATIVE_NAME)
+    if (mSignatureP[i].first == EQ_NATIVE_NAME)
       continue;
 
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
-    if (mOccuringSymbols.find(PREFIX_NEGATED + mSignature[i].first) ==
-            mOccuringSymbols.end() ||
-        mOccuringSymbols.find(mSignature[i].first) == mOccuringSymbols.end())
+    if (mOccuringPredicateSymbols.find(PREFIX_NEGATED + mSignatureP[i].first) ==
+            mOccuringPredicateSymbols.end() ||
+        mOccuringPredicateSymbols.find(mSignatureP[i].first) == mOccuringPredicateSymbols.end())
       continue;
 
-    if (mSignature[i].first.find('_', 0) != string::npos)
+    if (mSignatureP[i].first.find('_', 0) != string::npos)
       continue;
 
     ConjunctionFormula premises;
@@ -165,29 +180,29 @@ void Theory::AddExcludedMiddleAxioms() {
     ConjunctionFormula conc0, conc1;
     Fact a, b;
     // ugly convention: in the signature R and nR go one after another
-    a.SetName(mSignature[i].first);
-    for (size_t j = 0; j < mSignature[i].second; j++)
+    a.SetName(mSignatureP[i].first);
+    for (size_t j = 0; j < mSignatureP[i].second; j++)
       a.SetArg(j, string(1, 'A' + j));
     conc0.Add(a);
-    b.SetName(mSignature[i + 1].first);
-    for (size_t j = 0; j < mSignature[i].second; j++)
+    b.SetName(mSignatureP[i + 1].first);
+    for (size_t j = 0; j < mSignatureP[i].second; j++)
       b.SetArg(j, string(1, 'A' + j));
     conc1.Add(b);
     conclusion.Add(conc0);
     conclusion.Add(conc1);
     CLFormula axiom(premises, conclusion);
-    for (size_t j = 0; j < mSignature[i].second; j++)
+    for (size_t j = 0; j < mSignatureP[i].second; j++)
       axiom.AddUnivVar(string(1, 'A' + j));
-    AddAxiom(axiom, mSignature[i].first + "ExcludedMiddle");
+    AddAxiom(axiom, mSignatureP[i].first + "ExcludedMiddle");
   }
 }
 
 // --------------------------------------------------------------
 
 void Theory::AddEqExcludedMiddleAxiom() {
-  if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end() ||
-      mOccuringSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
-          mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end() ||
+      mOccuringPredicateSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
+          mOccuringPredicateSymbols.end())
     return;
 
   ConjunctionFormula premises;
@@ -214,44 +229,44 @@ void Theory::AddEqExcludedMiddleAxiom() {
 // --------------------------------------------------------------
 
 void Theory::AddEqSubAxioms() {
-  if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end())
     return;
 
   // add the axiom  eq(A,B) & R(..A..) => R(..B..) false for every predicate
   // symbol
-  for (size_t i = 1; i < mSignature.size(); i++) {
+  for (size_t i = 1; i < mSignatureP.size(); i++) {
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
-    if (mSignature[i].first.find('_', 0) != string::npos)
+    if (mSignatureP[i].first.find('_', 0) != string::npos)
       continue;
 
-    if (mSignature[i].first.find(PREFIX_NEGATED, 0) != string::npos)
+    if (mSignatureP[i].first.find(PREFIX_NEGATED, 0) != string::npos)
       continue;
 
-    for (size_t j = 0; j < mSignature[i].second; j++) {
+    for (size_t j = 0; j < mSignatureP[i].second; j++) {
       ConjunctionFormula premises;
       DNFFormula conclusion;
       ConjunctionFormula conc0;
       Fact a, b, c;
-      b.SetName(mSignature[i].first);
-      for (size_t k = 0; k < mSignature[i].second; k++)
+      b.SetName(mSignatureP[i].first);
+      for (size_t k = 0; k < mSignatureP[i].second; k++)
         b.SetArg(k, string(1, 'A' + k));
       premises.Add(b);
       a.SetName(EQ_NATIVE_NAME);
       a.SetArg(0, string(1, 'A' + j));
       a.SetArg(1, "X");
       premises.Add(a);
-      c.SetName(mSignature[i].first);
-      for (size_t k = 0; k < mSignature[i].second; k++)
+      c.SetName(mSignatureP[i].first);
+      for (size_t k = 0; k < mSignatureP[i].second; k++)
         c.SetArg(k, string(1, 'A' + k));
       c.SetArg(j, "X");
       conc0.Add(c);
       conclusion.Add(conc0);
       CLFormula axiom(premises, conclusion);
-      for (size_t k = 0; k < mSignature[i].second; k++)
+      for (size_t k = 0; k < mSignatureP[i].second; k++)
         axiom.AddUnivVar(string(1, 'A' + k));
       axiom.AddUnivVar("X");
-      AddAxiom(axiom, mSignature[i].first + "EqSub" + to_string(j));
+      AddAxiom(axiom, mSignatureP[i].first + "EqSub" + to_string(j));
     }
   }
 }
@@ -259,7 +274,7 @@ void Theory::AddEqSubAxioms() {
 // --------------------------------------------------------------
 
 void Theory::AddAxiomEqSymm() {
-  if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end())
     return;
 
   ConjunctionFormula premises;
@@ -284,8 +299,8 @@ void Theory::AddAxiomEqSymm() {
 // --------------------------------------------------------------
 
 void Theory::AddAxiomNEqSymm() {
-  if (mOccuringSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
-      mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(PREFIX_NEGATED + EQ_NATIVE_NAME) ==
+      mOccuringPredicateSymbols.end())
     return;
 
   ConjunctionFormula premises;
@@ -310,7 +325,7 @@ void Theory::AddAxiomNEqSymm() {
 // --------------------------------------------------------------
 
 void Theory::AddAxiomEqReflexive() {
-  if (mOccuringSymbols.find(EQ_NATIVE_NAME) == mOccuringSymbols.end())
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end())
     return;
 
   ConjunctionFormula premises;
@@ -352,14 +367,16 @@ const pair<CLFormula, string> &Theory::OriginalAxiom(size_t i) const {
 // --------------------------------------------------------------
 
 void Theory::AddConstant(string s) {
-  if (s != "_") // _ is for unconstrained arguments
-    if (!IsConstant(s))
-      mConstants.push_back(s);
+  if (s.find(' ') == string::npos) { // it is not compound term
+    if (s != "_") // _ is for unconstrained arguments
+      if (!IsConstant(s))
+        mConstants.push_back(s);
+  }
 }
 
 // --------------------------------------------------------------
 
-void Theory::AddSymbol(const string &pp, unsigned arity) {
+void Theory::AddPredicateSymbol(const string &pp, unsigned arity) {
   string p = pp;
 
   if (p == "true" || p == "$true" || p == "false"|| p == "$false")
@@ -368,15 +385,15 @@ void Theory::AddSymbol(const string &pp, unsigned arity) {
   if (pp == "_")
       return; // special symbol for underconstrained formulae
 
-  if (mOccuringSymbols.find(p) == mOccuringSymbols.end())
-    mOccuringSymbols.insert(p);
-/*for (std::set<std::string>::iterator it = mOccuringSymbols.begin();
-     it != mOccuringSymbols.end(); it++)
+  if (mOccuringPredicateSymbols.find(p) == mOccuringPredicateSymbols.end())
+    mOccuringPredicateSymbols.insert(p);
+/*for (std::set<std::string>::iterator it = mOccuringPredicateSymbols.begin();
+     it != mOccuringPredicateSymbols.end(); it++)
    cout << "sadrzaj: " << *it << endl;*/
 
 // This is ugly convention: predicates with names beginning with PREFIX_NEGATED
 // are negated versions
-//    mSignature[p] = mSignature.size()+1;
+//    mSignatureP[p] = mSignatureP.size()+1;
 //    mArity[p] = arity;
 #ifdef DEBUG_THEORY
   cout << "adding:" << p << endl;
@@ -384,8 +401,8 @@ void Theory::AddSymbol(const string &pp, unsigned arity) {
   if (p[0] == '$')
     p = p.substr(1, p.size() - 1);
 
-  for (size_t i = 0; i < mSignature.size(); i++) {
-    if (mSignature[i].first == p) {
+  for (size_t i = 0; i < mSignatureP.size(); i++) {
+    if (mSignatureP[i].first == p) {
 #ifdef DEBUG_THEORY
       cout << p << " already present" << endl;
 #endif
@@ -394,24 +411,44 @@ void Theory::AddSymbol(const string &pp, unsigned arity) {
   }
 
   if (p == "bot" || p == "top") {
-    mSignature.push_back(pair<string, unsigned>("bot", 0));
-    mSignature.push_back(pair<string, unsigned>("top", 0));
+    mSignatureP.push_back(pair<string, unsigned>("bot", 0));
+    mSignatureP.push_back(pair<string, unsigned>("top", 0));
   } else if (p.size() > 3 && p.substr(0, 3) == PREFIX_NEGATED) {
-    mSignature.push_back(
+    mSignatureP.push_back(
         pair<string, unsigned>(p.substr(3, p.size() - 3), arity));
-    mSignature.push_back(pair<string, unsigned>(p, arity));
+    mSignatureP.push_back(pair<string, unsigned>(p, arity));
   } else {
-    mSignature.push_back(pair<string, unsigned>(p, arity));
-    mSignature.push_back(pair<string, unsigned>(PREFIX_NEGATED + p, arity));
+    mSignatureP.push_back(pair<string, unsigned>(p, arity));
+    mSignatureP.push_back(pair<string, unsigned>(PREFIX_NEGATED + p, arity));
   }
+}
+
+
+// --------------------------------------------------------------
+
+void Theory::AddFunctionSymbol(const string &f, unsigned arity) {
+  if (mOccuringFunctionSymbols.find(f) == mOccuringFunctionSymbols.end())
+    mOccuringFunctionSymbols.insert(f);
+#ifdef DEBUG_THEORY
+  cout << "adding:" << f << endl;
+#endif
+  for (size_t i = 0; i < mSignatureF.size(); i++) {
+    if (mSignatureF[i].first == f) {
+#ifdef DEBUG_THEORY
+      cout << f << " already present" << endl;
+#endif
+      return;
+    }
+  }
+  mSignatureF.push_back(pair<string, unsigned>(f, arity));
 }
 
 // --------------------------------------------------------------
 
 size_t Theory::GetSymbolArity(string p) {
-  for (size_t i = 0; i < mSignature.size(); i++)
-    if (mSignature[i].first == p)
-      return mSignature[i].second;
+  for (size_t i = 0; i < mSignatureP.size(); i++)
+    if (mSignatureP[i].first == p)
+      return mSignatureP[i].second;
   return 0;
 }
 
@@ -426,7 +463,7 @@ string Theory::MakeNewConstant() {
     ss = s;
     unsigned counter = 1;
     while (IsConstant(s) ||
-           mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+           mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
       s = ss + to_string(counter++);
     }
   } else {
@@ -434,7 +471,7 @@ string Theory::MakeNewConstant() {
     ss = s;
     unsigned counter = 1;
     while (IsConstant(s) ||
-           mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+           mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
       s = ss + to_string(counter++);
     }
   }
@@ -453,7 +490,7 @@ string Theory::GetConstantName(unsigned id) const {
       ss = s;
       unsigned counter = 1;
       while (IsConstant(s) ||
-             mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+             mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
         s = ss + to_string(counter++);
       }
     } else {
@@ -461,7 +498,7 @@ string Theory::GetConstantName(unsigned id) const {
       ss = s;
       unsigned counter = 1;
       while (IsConstant(s) ||
-             mOccuringSymbols.find(s) != mOccuringSymbols.end()) {
+             mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
         s = ss + to_string(counter++);
       }
     }
@@ -550,11 +587,11 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
     Term t = f.GetArg(i);
     for (size_t a = 0; a < t.NumArgs(); a++) {
       string v = t.GetArg(a);
-      if (instantiation.find(t.GetArg(a)) == instantiation.end()) {
-        if (!IsConstant(t.GetArg(a)) && bInstantiateVars) {
+      if (instantiation.find(v) == instantiation.end()) {
+        if (!IsConstant(v) && bInstantiateVars) {
           bool bUnivVar = false;
           for (size_t j = 0; j < cl.GetNumOfUnivVars() && !bUnivVar; j++) {
-            if (cl.GetUnivVar(j) == t.GetArg(a))
+            if (cl.GetUnivVar(j) == v)
               bUnivVar = true;
           }
           string newc;
@@ -564,10 +601,25 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
           } else
             newc = MakeNewConstant();
           instantiation[t.GetArg(a)] = newc;
-          fout.SetArg(i, instantiation[t.GetArg(a)]);
+          string s = f.GetArg(i);
+          if (t.IsCompound()) {
+            replaceAll(s," "+v+" ", " "+instantiation[v]+" ");
+            replaceAll(s," "+v+")", " "+instantiation[v]+")");
+            fout.SetArg(i, s);
+          }
+          else
+            fout.SetArg(i, instantiation[v]);
         }
-      } else
-        fout.SetArg(i, instantiation[t.GetArg(a)]);
+      } else {
+        if (t.IsCompound()) { // term may be compound, so we have to instantiate all occurrences
+          string s = f.GetArg(i);
+          replaceAll(s," "+v+" ", " "+instantiation[v]+" ");
+          replaceAll(s," "+v+")", " "+instantiation[v]+")");
+          fout.SetArg(i, s);
+        }
+        else
+          fout.SetArg(i, instantiation[v]);
+      }
     }
   }
 }

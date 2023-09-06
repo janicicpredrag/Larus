@@ -110,7 +110,7 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
                                      const CLProof &p,
                                      proverParams & /*params*/) {
 
-  mSymbolsTaken = T.mOccuringSymbols;
+  mSymbolsTaken = T.mOccuringPredicateSymbols;
   for (vector<string>::const_iterator it = T.mConstants.begin();
        it != T.mConstants.end(); it++)
     mSymbolsTaken.insert(*it);
@@ -125,8 +125,8 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "Section Sec." << endl << endl;
 
   outfile << "Parameter MyT : Type." << endl;
-  for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
-       it != T.mSignature.end(); ++it) {
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
+       it != T.mSignatureP.end(); ++it) {
     string name = get<0>(*it);
     if (name != "bot" && name != "top" && name.find(PREFIX_NEGATED) != 0 &&
         name.find("eqnative") != 0)
