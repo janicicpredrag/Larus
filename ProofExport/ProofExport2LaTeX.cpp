@@ -97,8 +97,8 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         outfile << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          outfile << latexize(beautify(f.GetArg(i))) << ", ";
-        outfile << latexize(beautify(f.GetArg(f.GetArity() - 1)));
+          outfile << latexize(SMT2Bracketed((beautify(f.GetArg(i))))) << ", ";
+        outfile << latexize(SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1))));
         outfile << ")";
       }
     }

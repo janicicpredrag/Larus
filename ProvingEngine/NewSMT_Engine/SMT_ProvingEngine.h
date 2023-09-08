@@ -16,11 +16,13 @@ typedef struct EncodedProofStep {
     unsigned StepKind;
     unsigned ContentsPredicate[2];
     vector<vector<unsigned>> ContentsArgument;
+    vector<vector<string>> ContentsArgumentString;
     unsigned Nesting;
     unsigned isGoal;
     unsigned AxiomApplied;
     vector<unsigned> From;
     unsigned Instantiation[200];
+    string InstantiationString[200];
     unsigned Cases;
 } EncodedProofStep;
 
@@ -109,6 +111,7 @@ private:
   static Expression Contents(unsigned s, unsigned part);
   static Expression ContentsPredicate(unsigned s, unsigned part);
   static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
+  static Expression ContentsArgumentString(unsigned s, unsigned part, unsigned arg);
   static Expression InstAxPredicate(unsigned s, unsigned premise);
   static Expression InstAxArgument(unsigned s, unsigned premise, unsigned arg);
   // ----------------------------------------------------------

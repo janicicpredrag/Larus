@@ -57,8 +57,8 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         cout << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          cout << (beautify(f.GetArg(i))) << ", ";
-        cout << (beautify(f.GetArg(f.GetArity() - 1)));
+          cout << SMT2Bracketed(beautify(f.GetArg(i))) << ", ";
+        cout << SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1)));
         cout << ")";
       }
     }

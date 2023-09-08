@@ -20,7 +20,7 @@ void ProofExport2Coq::modifyWitnessName(string w) {
 
 // ---------------------------------------------------------------------------------
 
-string ProofExport2Coq::beautify(string w) {
+string ProofExport2Coq::beautify(const string& w) {
   if (mWitnesses.find(w) != mWitnesses.end())
     return (mWitnesses.find(w)->second);
   return w;
@@ -78,8 +78,9 @@ void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
         outfile << "~ " << f.GetName().substr(ns, string::npos);
       else
         outfile << f.GetName();
-      for (size_t i = 0; i < f.GetArity(); i++)
+      for (size_t i = 0; i < f.GetArity(); i++) {
         outfile << " " << beautify(f.GetArg(i));
+      }
     }
   }
   // outfile << " ";
@@ -133,6 +134,15 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
       outfile << "Parameter " << get<0>(*it) << " : "
               << repeat(get<1>(*it), "MyT -> ") << "Prop." << endl;
   }
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureF.begin();
+       it != T.mSignatureF.end(); ++it) {
+    outfile << "Parameter " << (*it).first << " :";
+    for (unsigned i = 0; i < (*it).second; i++) {
+       outfile << " MyT ->";
+    }
+    outfile << " MyT." << endl;
+  }
+
   for (vector<string>::iterator it = T.mInitialConstants.begin();
        it != T.mInitialConstants.end(); ++it)
     outfile << "Hypothesis " << (*it) << " : MyT." << endl;

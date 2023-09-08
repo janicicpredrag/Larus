@@ -135,7 +135,6 @@ string getFirstID(const string& str, unsigned& i)
 
 bool Term::Read()
 {
-    // mT = NEXTLEXEME;
     mT = "(" + NEXTLEXEME;
     ReadNextToken();
 
@@ -145,7 +144,7 @@ bool Term::Read()
         Term t;
         if (!t.Read())
           return false;
-        mT += " " + t.ToString();
+        mT += " " + t.ToSMTString();
         if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
           return false;
         if (NEXTTOKEN == eCLOSEB) {
@@ -192,7 +191,7 @@ void Term::SetData()
 
 // ---------------------------------------------------------------------------------------
 
-string Term::ToString() const
+string Term::ToSMTString() const
 {
   if (IsCompound() || mT[0] != '(')
      return mT;

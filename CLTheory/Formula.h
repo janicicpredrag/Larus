@@ -45,7 +45,7 @@ public:
   }
   void SetData();
   bool Read();
-  string ToString() const;
+  string ToSMTString() const;
   Term &operator=(const Term &t) {
     mT = t.mT;
     mFunctionSymbols = t.mFunctionSymbols;
@@ -105,7 +105,7 @@ public:
   string GetName() const { return mName; }
   string GetArg(size_t i) const {
     assert(mArgs.size() > i);
-    return mArgs[i].ToString();
+    return mArgs[i].ToSMTString();
   }
   bool Read();
   void SetName(const string &name) { mName = name; }
@@ -309,7 +309,7 @@ private:
 };
 
 inline ostream &operator<<(ostream &os, const Term &t) {
-   os << t.ToString();
+   os << t.ToSMTString();
    return os;
 }
 

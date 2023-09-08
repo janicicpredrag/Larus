@@ -122,3 +122,57 @@ void replaceAll( string &s, const string &search, const string &replace ) {
 }
 
 // ---------------------------------------------------------------------------------------
+
+string SMT2Bracketed(const string& s)
+{
+    if (s.find('(') == string::npos)    {
+        return s;
+    }
+    int ind=0;
+    bool bOpen = false;
+    string lexeme, arg;
+    unsigned openBrackets = 0;
+    for(;;) {
+        if (s[ind] == '\0') {
+          return arg;
+        }
+        while (s[ind] != '\0' && isspace(s[ind])) {
+          ind++;
+        }
+        lexeme.clear();
+        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+            lexeme += s[ind];
+            ind++;
+          }
+          if (bOpen) {
+            arg += lexeme + '(';
+            bOpen = false;
+          }
+          else if (openBrackets == 0) {
+            return arg;
+          } else
+            arg += lexeme + ',';
+        }
+        else if (s[ind] == '(') {
+           openBrackets++;
+           bOpen = true;
+           ind++;
+        }
+        else if (s[ind] == ')') {
+          if (openBrackets != 0) {
+            if (arg.back() == ',')
+              arg.pop_back();
+            arg += ")";
+            openBrackets--;
+            if (openBrackets == 0) {
+              return arg;
+            }
+          }
+          ind++;
+        }
+    }
+    return arg;
+}
+
+// ---------------------------------------------------------------------------------------

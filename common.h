@@ -155,6 +155,7 @@ bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 string replacestring(const string& str, const string& from, const string& to);
 void replaceAll( string &s, const string &search, const string &replace );
+string SMT2Bracketed(const string& s);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;

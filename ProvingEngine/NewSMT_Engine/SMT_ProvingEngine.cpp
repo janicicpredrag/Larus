@@ -7,9 +7,68 @@
 
 // ---------------------------------------------------------------------------------------
 
+void ParseTermArguments(const string& s, vector<string>& contents)
+{
+    if (s.find('(') == string::npos)    {
+        contents.push_back(s);
+        return;
+    }
+    int ind=0;
+    bool bOpen = false, bFirstToken = true;
+    string lexeme, arg;
+    unsigned openBrackets = 0;
+    for(;;) {
+        if (s[ind] == '\0') {
+          return;
+        }
+        while (s[ind] != '\0' && isspace(s[ind])) {
+          ind++;
+        }
+        lexeme.clear();
+        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+            lexeme += s[ind];
+            ind++;
+          }
+          if (bOpen) {
+            if (!bFirstToken) {
+              arg += '(' + lexeme + ' ';
+            } else {
+              contents.push_back(lexeme);
+              bFirstToken = false;
+            }
+            bOpen = false;
+          }
+          else if (openBrackets == 1) {
+            contents.push_back(lexeme);
+          } else
+            arg += lexeme + ' ';
+        }
+        else if (s[ind] == '(') {
+           openBrackets++;
+           bOpen = true;
+           ind++;
+        }
+        else if (s[ind] == ')') {
+          if (openBrackets != 1) {
+            if (arg.back() == ' ')
+              arg.pop_back();
+            arg += ")";
+            openBrackets--;
+            if (openBrackets == 1) {
+              contents.push_back(arg);
+              arg.clear();
+            }
+          }
+          ind++;
+        }
+    }
+    return;
+}
+
+// ---------------------------------------------------------------------------------------
+
 int GetPredicateSymbolOrdinal(const Theory& t, string p) {
-
-
     for (size_t i = 0; i < t.mSignatureP.size(); i++)
       if (t.mSignatureP[i].first == p)
         return i;
@@ -24,39 +83,6 @@ int GetConstantOrdinal(const Theory& t, string c) {
         return i;
     return -1;
 }
-
-// ---------------------------------------------------------------------------------------
-
-void ParseContents(const string& s, vector<string>& contents)
-{
-    int ind=0;
-    string lexeme;
-    for(;;) {
-        if (s[ind] == '\0') {
-          return;
-        }
-        while (s[ind] != '\0' && isspace(s[ind])) {
-          ind++;
-        }
-        lexeme = "";
-        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
-          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
-            lexeme += s[ind];
-            ind++;
-          }
-          contents.push_back(lexeme);
-        }
-
-        if (s[ind] == '(') {
-        }
-        if (s[ind] == ')') {
-        }
-
-        ind++;
-    }
-    return;
-}
-
 
 // ---------------------------------------------------------------------------------------
 
@@ -281,20 +307,20 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
 
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       // for UFBV, we need lex ordering over terms TODO
-      for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
+      /*for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
         Expression cc = False();
         for(unsigned ii=0; ii < mpT->mConstants.size(); ii++) {
           cc |= (Instantiation(s, i) == mpT->mConstants[ii]);
         }
         c &= cc;
-      }
+      }*/
       /* TODO
       for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
         c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
               mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
       }*/
     }
-    else if (mSMT_theory != eSMTUFBV_ProvingEngine) {
+    else {
       /* Constants involved are only those already introduced */
       for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
         c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
@@ -792,6 +818,10 @@ Expression SMT_ProvingEngine::ContentsArgument(unsigned s, unsigned part, unsign
 {
     return Expression("ContentsArgument_l_" + itos(s) + "_r__l_" + itos(part) + "_r__l_" + itos(arg)+ "_r_");
 }
+Expression SMT_ProvingEngine::ContentsArgumentString(unsigned s, unsigned part, unsigned arg)
+{
+    return Expression("ContentsArgumentString_l_" + itos(s) + "_r__l_" + itos(part) + "_r__l_" + itos(arg)+ "_r_");
+}
 Expression SMT_ProvingEngine::InstAxPredicate(unsigned s, unsigned premise)
 {
     return Expression("InstAxPredicate_l_" + itos(s) + "_r__l_" + itos(premise) + "_r_");
@@ -937,7 +967,10 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
     & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
   if (mSMT_theory == eSMTUFBV_ProvingEngine) {
     c &= (Contents(mnNumberOfAssumptions,0) == Expression(f.ToString()));
-
+    for (size_t i = 0; i < f.GetArity(); i++)
+      c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
+    for (size_t i = f.GetArity(); i < mnMaxArity; i++)
+      c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == 999u);
   } else {
     c &= (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
     for (size_t i = 0; i < f.GetArity(); i++)
@@ -1371,6 +1404,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
       if (mSMT_theory == eSMTUFBV_ProvingEngine) {
         // maybe should be used because of undespecified goals; TODO
+        for (unsigned k=0; k < mnMaxArity; k++) {
+          mSMTfile << "(declare-const " + ContentsArgumentString(i,0,k).toSMT(mSMT_theory) + " Term)" << endl;
+          mSMTfile << "(declare-const " + ContentsArgumentString(i,1,k).toSMT(mSMT_theory) + " Term)" << endl;
+        }
         // for (unsigned k=0; k < mnMaxArity; k++) {
         //   DeclareVarBasicType(ContentsArgument(i,0,k), nMaxConstants);
         //   DeclareVarBasicType(ContentsArgument(i,1,k), nMaxConstants);
@@ -1381,6 +1418,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
             DeclareVarBasicType(ContentsArgument(i,1,k), nMaxConstants);
           }
       }
+
+      //mSMTfile << ";(declare-const ??? " << endl;
 
       for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
         if (mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -1500,8 +1539,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
             && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
           if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-            if (formula.GetElement(0).GetElement(0).GetArg(i).find(' ') == string::npos)
-              mSMTfile << "(declare-const " << ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) << " Term)" << endl;
+            /* if (formula.GetElement(0).GetElement(0).GetArg(i).find(' ') == string::npos)
+              mSMTfile << "(declare-const " << ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) << " Term)" << endl;*/
           }
           else
             DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
@@ -1796,18 +1835,16 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     meProof[index[0]].StepKind = nVal;
   } else if (strVarName == "Contents") { //  only for UFBV
     vector<string> contents;
-    ParseContents(strVal, contents);
+    ParseTermArguments(strVal, contents);
     nVal = GetPredicateSymbolOrdinal(*mpT, contents[0]);
     meProof[index[0]].ContentsPredicate[index[1]] = nVal;
     for(unsigned int ii=1; ii<contents.size(); ii++) {
         index[2] = ii-1;
-        nVal = GetConstantOrdinal(*mpT, contents[ii]);
-
-        if (meProof[index[0]].ContentsArgument.size() < index[1]+1)
-           meProof[index[0]].ContentsArgument.resize(index[1]+1);
-        if (meProof[index[0]].ContentsArgument[index[1]].size() < index[2]+1)
-          meProof[index[0]].ContentsArgument[index[1]].resize(index[2]+1);
-        meProof[index[0]].ContentsArgument[index[1]][index[2]] = nVal;
+        if (meProof[index[0]].ContentsArgumentString.size() < index[1]+1)
+           meProof[index[0]].ContentsArgumentString.resize(index[1]+1);
+        if (meProof[index[0]].ContentsArgumentString[index[1]].size() < index[2]+1)
+          meProof[index[0]].ContentsArgumentString[index[1]].resize(index[2]+1);
+        meProof[index[0]].ContentsArgumentString[index[1]][index[2]] = contents[ii];
     }
 
   } else if (strVarName == "ContentsPredicate") {
@@ -1830,7 +1867,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     meProof[index[0]].From[index[1]] = nVal;
   } else if (strVarName == "Instantiation") {
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-      nVal = GetConstantOrdinal(*mpT, strVal);
+      meProof[index[0]].InstantiationString[index[1]] = strVal;
     }
     meProof[index[0]].Instantiation[index[1]] = nVal;
   } else if (strVarName == "bCases") {
@@ -1898,16 +1935,24 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             nStepKind != eQEDbyAssumption &&
             nStepKind != eQEDbyEFQ)
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
-            if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
+            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+              // TODO
+            } else {
+              if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
                 && numOfExistVars == 0) // eliminate spurious constants, also for inst[]
                 meProof[step].ContentsArgument[0][i] = 0;
+            }
           }
 
         if (nStepKind == eAssumption) {
           Fact f;
           f.SetName(msPredicates[nPredicate]);
-          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++)
-            f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            if (mSMT_theory == eSMTUFBV_ProvingEngine)
+              f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+            else
+              f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          }
 
           proof.AddAssumption(f); // store both assumptions and abducts
           proofTrace.push_back(f);
@@ -1915,8 +1960,12 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
         } else if (nStepKind == eFirstCase) {
           Fact f;
           f.SetName(msPredicates[nPredicate]);
-          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++)
-            f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            if (mSMT_theory == eSMTUFBV_ProvingEngine)
+              f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+            else
+              f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          }
           proofTrace.push_back(f);
           CLProof subproof;
           subproof.SetTheory(mpT);
@@ -1929,8 +1978,12 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
         } else if (nStepKind == eSecondCase) {
           Fact f;
           f.SetName(msPredicates[nPredicate]);
-          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++)
-            f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            if (mSMT_theory == eSMTUFBV_ProvingEngine)
+              f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+            else
+              f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+          }
           proofTrace.push_back(f);
           CLProof subproof;
           subproof.SetTheory(mpT);
@@ -1962,9 +2015,13 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           if (nBranching) {
             nPredicate1 = meProof[step].ContentsPredicate[1];
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]); i++) {
-              if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end() &&
-                  numOfExistVars == 0)
-                meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
+              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                // TODO
+              } else {
+                if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end() &&
+                    numOfExistVars == 0)
+                  meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
+              }
             }
           }
           ConjunctionFormula cfPremises;
@@ -1993,7 +2050,12 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
                     : mpT->mCLaxioms[nAxiom].first.GetUnivVar(i);
             if (msConstants.find(inst[i]) == msConstants.end())
               inst[i] = 0; // eliminate spurious constants
-            instantiation.push_back(
+
+            if (mSMT_theory == eSMTUFBV_ProvingEngine)
+              instantiation.push_back(
+                pair<string, string>(UnivVar, meProof[step].InstantiationString[i]));
+            else
+              instantiation.push_back(
                 pair<string, string>(UnivVar, msConstants[inst[i]]));
           }
           for (size_t i = 0; i < numOfExistVars; i++) {
@@ -2007,9 +2069,14 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           Fact f;
           f.SetName(string(msPredicates[nPredicate]));
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
-            if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end())
-              meProof[step].ContentsArgument[0][i] = 0; // eliminate spurious constants, also for inst[]
-            f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+              // TODO check like below
+              f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+            } else {
+              if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end())
+                meProof[step].ContentsArgument[0][i] = 0; // eliminate spurious constants, also for inst[]
+              f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
+            }
           }
 
           DNFFormula d;
@@ -2023,9 +2090,14 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             f.SetName(string(msPredicates[nPredicate1]));
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]);
                  i++) {
-              if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end())
-                meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
-              f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[1][i]));
+              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                // TODO check like below
+                f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+              } else {
+                if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end())
+                  meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
+                f.SetArg(i, mpT->GetConstantName(meProof[step].ContentsArgument[1][i]));
+              }
             }
             cfconc2.Add(f);
             d.Add(cfconc2);
@@ -2083,7 +2155,7 @@ void SMT_ProvingEngine::DeclareVarBasicType(const Expression& Var, unsigned Uppe
 
 // ----------------------------------------------------------
 
-void SMT_ProvingEngine::DeclareVarBoolean(const Expression& Var)
+    void SMT_ProvingEngine::DeclareVarBoolean(const Expression& Var)
 {
   if (mSMT_theory == eMiniZinc) {
     mSMTfile << "var bool: " + Var.toSMT(mSMT_theory) + ";" << endl;

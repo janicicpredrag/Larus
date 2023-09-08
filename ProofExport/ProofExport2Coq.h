@@ -24,7 +24,7 @@ private:
   void OutputProofEnd(ofstream &outfile, const EFQ *efq, unsigned);
   void OutputProofEnd(ofstream &outfile, const ByNegIntro *bni, unsigned level);
   void modifyWitnessName(string w);
-  string beautify(string w);
+  string beautify(const string& w);
   map<string, string> mWitnesses;
   set<string> mSymbolsTaken;
 };
