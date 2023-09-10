@@ -1771,8 +1771,27 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile)  {
           mSMT_theory == eSMTUFBV_ProvingEngine) {
         strVarName = strVarName.substr(strlen("  (define-fun "), strVarName.size() - 1);
         strVarName = strVarName.substr(0, strVarName.find(' '));
-        strVal = strVal.substr(strlen("    "), strVal.size());
+
+        map<string,string> let;
+        while (strVal.find("(let ") != string::npos) {
+          string l = strVal.substr(strlen("    (let (("), string::npos);
+          string v = l.substr(0, l.find(' '));
+          string val = l.substr(l.find(' ')+1, string::npos);
+          val = val.substr(0, val.find_last_of(')'));
+          val = val.substr(0, val.find_last_of(')'));
+          let.insert ( std::pair<string,string>(v,val));
+          if (!getline(smtmodel, strVal))
+            return false;
+        }
+        while (strVal[0] == ' ') {
+            strVal = strVal.substr(1, string::npos);
+        }
         strVal = strVal.substr(0, strVal.find_last_of(')'));
+
+        for (map<string,string>::iterator it = let.begin(); it != let.end(); it++) {
+            replaceAll(strVal, it->first, it->second);
+            strVal = strVal.substr(0, strVal.find_last_of(')'));
+        }
         StoreValueFromModel(strVarName, strVal);
       }
       else {
