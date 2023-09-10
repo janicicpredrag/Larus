@@ -277,7 +277,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
         c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1)));
       }
     }
-    if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it
+    if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it TODO
       if (mParams.mbNativeEQsub && !mParams.mbInlineAxioms) // inlining give better proofs without native eq support
         c |= IsMPbyEqSub(s);
 
@@ -566,15 +566,28 @@ Expression SMT_ProvingEngine::IsMPbyEqSub(unsigned s)
       for (unsigned n_from = 0; n_from < s; n_from++) {
         Expression c = (From(s,0) == n_from)
                      & (SameBranch(s,n_from))
-                     & (Cases(n_from) == False())
-                     & (ContentsPredicate(n_from,0) == EQ_NATIVE_NAME)
-                     & (
-                        ( (ContentsArgument(n_from,0,0) == Instantiation(s,0))
-                        & (ContentsArgument(n_from,0,1) == Instantiation(s,1+XX)))
-                       |
-                        ( (ContentsArgument(n_from,0,1) == Instantiation(s,0))
-                        & (ContentsArgument(n_from,0,0) == Instantiation(s,1+XX)))
-                       );
+                     & (Cases(n_from) == False());
+        if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+            assert(false); // TODO problematic because of unknown predicate symbol
+            Fact fc1, fc2;
+            fc1.SetName(EQ_NATIVE_NAME);
+            fc1.SetArg(0,Instantiation(s,0).toSMT(eSMTUFBV_ProvingEngine));
+            fc1.SetArg(1,Instantiation(s,1+XX).toSMT(eSMTUFBV_ProvingEngine));
+            fc2.SetName(EQ_NATIVE_NAME);
+            fc2.SetArg(1,Instantiation(s,0).toSMT(eSMTUFBV_ProvingEngine));
+            fc2.SetArg(0,Instantiation(s,1+XX).toSMT(eSMTUFBV_ProvingEngine));
+            c &= ( (Contents(n_from,0) == Expression(fc1.ToString()))
+                  |(Contents(n_from,0) == Expression(fc2.ToString())));
+        } else {
+            c &= (ContentsPredicate(n_from,0) == EQ_NATIVE_NAME)
+               & (
+                  ((ContentsArgument(n_from,0,0) == Instantiation(s,0))
+                   & (ContentsArgument(n_from,0,1) == Instantiation(s,1+XX)))
+                  |
+                  ((ContentsArgument(n_from,0,1) == Instantiation(s,0))
+                   & (ContentsArgument(n_from,0,0) == Instantiation(s,1+XX)))
+                 );
+        }
         MatchFirstPremise |= c;
       }
 
@@ -584,7 +597,15 @@ Expression SMT_ProvingEngine::IsMPbyEqSub(unsigned s)
                      & (SameBranch(s,n_from))
                      & (Cases(n_from) == False());
         if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-           assert(false); // difficult to support it
+           assert(false); // difficult to support it TODO ContentsPredicate cannot be used
+           c &=(ContentsPredicate(n_from, 0) == ContentsPredicate(s, 0))
+             & (ContentsArgumentString(n_from, 0, XX) == Instantiation(s,XX+1).toSMT(eSMTUFBV_ProvingEngine))
+             & (ContentsArgumentString(s, 0, XX) == Instantiation(s,0).toSMT(eSMTUFBV_ProvingEngine));
+           for (unsigned i = 0; i < mnMaxArity; i++)
+             if (i != XX) {
+               c &= ContentsArgumentString(n_from, 0, i) == Instantiation(s, 1+i).toSMT(eSMTUFBV_ProvingEngine);
+               c &= ContentsArgumentString(s, 0, i) == Instantiation(s, 1+i).toSMT(eSMTUFBV_ProvingEngine);
+             }
         }
         else {
           c &=(ContentsPredicate(n_from, 0) == ContentsPredicate(s, 0))
@@ -970,7 +991,7 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
     for (size_t i = 0; i < f.GetArity(); i++)
       c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
     for (size_t i = f.GetArity(); i < mnMaxArity; i++)
-      c &= (ContentsArgument(mnNumberOfAssumptions,0,i) == 999u);
+      c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == "null");
   } else {
     c &= (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
     for (size_t i = 0; i < f.GetArity(); i++)
@@ -1315,6 +1336,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       mSMTfile << "(declare-datatype Term" << endl;
       mSMTfile << "  (" << endl;
+      mSMTfile << "     " << "null" << endl;
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
