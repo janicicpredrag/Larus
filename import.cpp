@@ -47,9 +47,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     params.mbNativeEQsub = true;
   }
 
-  if (params.eEngine == eSMTUFBV_ProvingEngine)
-      params.mbNativeEQ = false; // difficult to support it
-
   cout << "--- Input axioms : " << endl;
   T.printAxioms();
   T.mCLOriginalAxioms = T.mCLaxioms;
@@ -221,15 +218,17 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         params.mbNativeEQsub = true;
         cout << "       (Using native EqSub support)" << endl;
       }
+      T.printAxioms();
     } else {
       if (!(params.eEngine == eURSA_ProvingEngine ||
-            params.eEngine == eSTL_ProvingEngine)) {
+            params.eEngine == eSTL_ProvingEngine ||
+            params.eEngine == eSMTUFBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "      (Using native EqSub support)" << endl;
       }
     }
-    T.printAxioms();
+
   }
 
   /*
@@ -255,7 +254,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   // T.printAxioms();
 
   if (!(params.eEngine == eSTL_ProvingEngine ||
-        params.eEngine == eURSA_ProvingEngine)) {
+        params.eEngine == eURSA_ProvingEngine ||
+        params.eEngine == eSMTUFBV_ProvingEngine)) {
     // ************ Saturation for simple axioms ************
     size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
     if (params.mbInlineAxioms) {

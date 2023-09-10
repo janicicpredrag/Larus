@@ -269,6 +269,23 @@ bool Fact::Read() {
   TMP_NEXTTOKEN = NEXTTOKEN;
   TMP_NEXTLEXEME = NEXTLEXEME;
 
+  Term tL, tR;
+  if (tL.Read()) {
+    if (NEXTTOKEN == eEQ) {
+       ReadNextToken();
+       if (tR.Read()) {
+           mName = EQ_NATIVE_NAME;
+           mArgs.push_back(tL);
+           mArgs.push_back(tR);
+           return true;
+       }
+    }
+  }
+
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
   mName = NEXTLEXEME;
   ReadNextToken();
 
@@ -279,11 +296,12 @@ bool Fact::Read() {
       t.Read();
       mArgs.push_back(t);
       if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
-            return false;
+        return false;
       if (NEXTTOKEN == eCLOSEB) {
         ReadNextToken();
-        if (NEXTTOKEN == eEQ || NEXTTOKEN == eNEQ)
+        if (NEXTTOKEN == eEQ || NEXTTOKEN == eNEQ) {
           break;
+        }
       } else
         ReadNextToken();
     }
