@@ -271,10 +271,11 @@ bool Fact::Read() {
 
   Term tL, tR;
   if (tL.Read()) {
-    if (NEXTTOKEN == eEQ) {
+    if (NEXTTOKEN == eEQ || NEXTTOKEN == eEQ ) {
+       bool bEq = NEXTTOKEN == eEQ;
        ReadNextToken();
        if (tR.Read()) {
-           mName = EQ_NATIVE_NAME;
+           mName = bEq ? EQ_NATIVE_NAME : PREFIX_NEGATED + EQ_NATIVE_NAME;
            mArgs.push_back(tL);
            mArgs.push_back(tR);
            return true;

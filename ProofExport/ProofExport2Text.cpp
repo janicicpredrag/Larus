@@ -40,14 +40,14 @@ void ProofExport2Text::OutputCLFormula (ofstream &outfile, const CLFormula &cl,
 
 void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
   if (f.GetName() == "false" || f.GetName() == "bot")
-    cout << "\u22a5";
+    cout << "\u22a5 ";
   else if (f.GetName() == "true" || f.GetName() == "top")
-    cout << "\u22a4";
+    cout << "\u22a4 ";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      cout << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
+      cout << SMT2Bracketed(beautify(f.GetArg(0))) << " = " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      cout << beautify(f.GetArg(0)) << " \u2260 " << beautify(f.GetArg(1));
+      cout << SMT2Bracketed(beautify(f.GetArg(0))) << " \u2260 " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)

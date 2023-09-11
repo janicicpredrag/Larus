@@ -85,9 +85,9 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "\\top";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " = " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " \\neq " << beautify(f.GetArg(1));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " \\neq " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
