@@ -164,19 +164,28 @@ bool Term::Read()
 void Term::SetData()
 {
    if (!IsCompound()) {
-       mArgs.push_back(mT);
+       if (mT[0] == '(')
+         mArgs.push_back(mT.substr(1, mT.size()-2));
+       else
+         mArgs.push_back(mT);
        return;
    }
    string s;
    unsigned pos = 0;
    unsigned arity = 0;
+   bool bNextIsFunc = false;
    string function_symbol;
    for(;;) {
+     if (mT[pos] == '(') {
+        bNextIsFunc = true;
+        pos++;
+     }
      s = getFirstID(mT,pos);
      if (s == "")
        return;
-     if (s[0] == '(') {
-       function_symbol = s.substr(1);
+     if (bNextIsFunc) {
+       function_symbol = s;
+       bNextIsFunc = false;
        arity = 0; // start counting arguments
        mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
      }

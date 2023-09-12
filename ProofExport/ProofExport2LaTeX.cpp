@@ -348,12 +348,12 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     if (instantiation.size() > new_witnesses.size()) {
       outfile << "; ";
-      outfile << "instantiation: ";
+      outfile << "instantiation:";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        outfile << " $" << latexize(beautify(instantiation[j].first)) << "$"
+        outfile << " $" << latexize(SMT2Bracketed(beautify(instantiation[j].first))) << "$"
                 << " $\\mapsto$ "
-                << " $" << latexize(beautify(instantiation[j].second)) << "$";
+                << " $" << latexize(SMT2Bracketed(beautify(instantiation[j].second))) << "$";
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }

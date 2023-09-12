@@ -235,12 +235,12 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     if (instantiation.size() > new_witnesses.size()) {
       cout << "; ";
-      cout << "instantiation: ";
+      cout << "instantiation:";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        cout << " " << beautify(instantiation[j].first)
+        cout << " " << SMT2Bracketed(beautify(instantiation[j].first))
                 << " \u21a6 "
-                << " " << beautify(instantiation[j].second);
+                << " " << SMT2Bracketed(beautify(instantiation[j].second));
         if (j + 1 != instantiation.size() - new_witnesses.size())
           cout << ", ";
       }

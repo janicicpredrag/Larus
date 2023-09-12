@@ -348,14 +348,25 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           string arg = GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArg(j);
           for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
             string v = GetAxiom(ax).GetUnivVar(k);
-            arg = replacestring(arg, v, Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine));
+            if (v.find(' ') == string::npos) {
+              if (v == arg)
+                 arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
+            } else {
+              arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
+              arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+            }
+          }
+          for(unsigned k=0; k < GetAxiom(ax).GetNumOfExistVars(); k++) {
+            string v = GetAxiom(ax).GetExistVar(k);
+            if (v.find(' ') == string::npos) {
+              if (v == arg)
+                arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
+            } else {
+              arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
+              arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+            }
           }
           fc.SetArg(j, arg);
-          // TODO for exi quantifiers
-/*        if (BindingAxiomGoal(ax, 0, j) != 0)
-            fc.SetArg(j, Instantiation(s,BindingAxiomGoal(ax, 0, j)-1).toSMT(eSMTUFBV_ProvingEngine));
-          else // it is a constant
-            fc.SetArg(j, GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArg(j));*/
         }
         c = (Contents(s,0) == Expression(fc.ToString()));
 
@@ -366,23 +377,31 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
               string arg = GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j);
               for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
                 string v = GetAxiom(ax).GetUnivVar(k);
-                arg = replacestring(arg, v, Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine));
+                if (v.find(' ') == string::npos) {
+                  if (v == arg)
+                     arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
+                } else {
+                  arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
+                  arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+                }
+              }
+              for(unsigned k=0; k < GetAxiom(ax).GetNumOfExistVars(); k++) {
+                string v = GetAxiom(ax).GetExistVar(k);
+                if (v.find(' ') == string::npos) {
+                  if (v == arg)
+                     arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
+                } else {
+                  arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine)+ " ");
+                  arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+                }
               }
               fc.SetArg(j, arg);
             }
-            // TODO for exi quantifiers
-/*            fc.SetName(GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetName());
-            for(unsigned j=0; j < GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArity(); j++) {
-              if (BindingAxiomGoal(ax, 1, j) != 0)
-                fc.SetArg(j, Instantiation(s,BindingAxiomGoal(ax, 1, j)-1).toSMT(eSMTUFBV_ProvingEngine));
-              else // it is a constant
-                fc.SetArg(j, GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j));
-            }*/
             c &= (Contents(s,1) == Expression(fc.ToString()));
         }
         return c;
     }
-    // Not eSMTUFBV_ProvingEngine
+    // if not eSMTUFBV_ProvingEngine:
     c = (ContentsPredicate(s,0) == GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetName());
     for(unsigned j=0; j < GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
       if (BindingAxiomGoal(ax, 0, j) != 0)
@@ -988,10 +1007,10 @@ void SMT_ProvingEngine::AddPremise(const Fact &f) {
     & (AxiomApplied(mnNumberOfAssumptions) == Assumption());
   if (mSMT_theory == eSMTUFBV_ProvingEngine) {
     c &= (Contents(mnNumberOfAssumptions,0) == Expression(f.ToString()));
-    for (size_t i = 0; i < f.GetArity(); i++)
+    /*for (size_t i = 0; i < f.GetArity(); i++)
       c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == ToUpper(f.GetArg(i)));
     for (size_t i = f.GetArity(); i < mnMaxArity; i++)
-      c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == "null");
+      c &= (ContentsArgumentString(mnNumberOfAssumptions,0,i) == "null");*/
   } else {
     c &= (ContentsPredicate(mnNumberOfAssumptions,0) == ToUpper(f.GetName()));
     for (size_t i = 0; i < f.GetArity(); i++)
@@ -1336,7 +1355,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       mSMTfile << "(declare-datatype Term" << endl;
       mSMTfile << "  (" << endl;
-      mSMTfile << "     " << "null" << endl;
+      mSMTfile << "     " << "z1 z2 z3" << endl;
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
@@ -1561,8 +1580,9 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
             && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
           if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-            /* if (formula.GetElement(0).GetElement(0).GetArg(i).find(' ') == string::npos)
-              mSMTfile << "(declare-const " << ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) << " Term)" << endl;*/
+             Term t = formula.GetElement(0).GetElement(0).GetArg(i);
+             for (unsigned j = 0; j < t.NumArgs(); j++)
+                mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
           }
           else
             DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
@@ -2133,7 +2153,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
                  i++) {
               if (mSMT_theory == eSMTUFBV_ProvingEngine) {
                 // TODO check like below
-                f.SetArg(i, meProof[step].ContentsArgumentString[0][i]);
+                f.SetArg(i, meProof[step].ContentsArgumentString[1][i]);
               } else {
                 if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end())
                   meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
