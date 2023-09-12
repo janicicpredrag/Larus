@@ -26,7 +26,7 @@ void ParseTermArguments(const string& s, vector<string>& contents)
         }
         lexeme.clear();
         if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
-          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='!') {
             lexeme += s[ind];
             ind++;
           }
@@ -348,8 +348,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           string arg = GetAxiom(ax).GetGoal().GetElement(0).GetElement(0).GetArg(j);
           for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
             string v = GetAxiom(ax).GetUnivVar(k);
-            if (v.find(' ') == string::npos) {
-              if (v == arg)
+            if (arg.find(' ') == std::string::npos) {
+              if (arg == v)
                  arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
             } else {
               arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
@@ -358,8 +358,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
           }
           for(unsigned k=0; k < GetAxiom(ax).GetNumOfExistVars(); k++) {
             string v = GetAxiom(ax).GetExistVar(k);
-            if (v.find(' ') == string::npos) {
-              if (v == arg)
+            if (arg.find(' ') == std::string::npos) {
+              if (arg == v)
                 arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
             } else {
               arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
@@ -377,8 +377,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
               string arg = GetAxiom(ax).GetGoal().GetElement(1).GetElement(0).GetArg(j);
               for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
                 string v = GetAxiom(ax).GetUnivVar(k);
-                if (v.find(' ') == string::npos) {
-                  if (v == arg)
+                if (arg.find(' ') == string::npos) {
+                  if (arg == v)
                      arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
                 } else {
                   arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
@@ -387,8 +387,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
               }
               for(unsigned k=0; k < GetAxiom(ax).GetNumOfExistVars(); k++) {
                 string v = GetAxiom(ax).GetExistVar(k);
-                if (v.find(' ') == string::npos) {
-                  if (v == arg)
+                if (arg.find(' ') == string::npos) {
+                  if (arg == v)
                      arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
                 } else {
                   arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine)+ " ");
@@ -1355,7 +1355,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       mSMTfile << "(declare-datatype Term" << endl;
       mSMTfile << "  (" << endl;
-      mSMTfile << "     " << "z1 z2 z3" << endl;
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
@@ -1577,17 +1576,23 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     set<string> exi_vars;
     for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
       if (formula.GetElement(0).GetElement(0).GetArg(i) != "_") {
-        if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
-            && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
           if (mSMT_theory == eSMTUFBV_ProvingEngine) {
              Term t = formula.GetElement(0).GetElement(0).GetArg(i);
-             for (unsigned j = 0; j < t.NumArgs(); j++)
-                mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
+             for (unsigned j = 0; j < t.NumArgs(); j++) {
+               if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
+                   && exi_vars.find(t.GetArg(j)) == exi_vars.end()) {
+                 mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
+                 exi_vars.insert(t.GetArg(j));
+               }
+             }
           }
-          else
-            DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
-          exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
-        }
+          else {
+            if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) == CONSTANTS.end()
+                && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) == exi_vars.end()) {
+              DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)), 1000); //todo
+              exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+            }
+          }
       }
     }
     if (formula.GetSize() > 1) {
