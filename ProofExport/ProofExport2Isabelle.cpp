@@ -52,11 +52,11 @@ void ProofExport2Isabelle::OutputCLFormula(ofstream &outfile,
 
 void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
 
-  if (f.GetName() == "false") {
+  if (f.GetName() == "bot") {
     outfile << "False";
     return;
   }
-  if (f.GetName() == "true") {
+  if (f.GetName() == "top") {
     outfile << "True";
     return;
   }
@@ -113,11 +113,11 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "typedecl \"MyT\"" << endl;
 
   outfile << "locale larus = " << endl;
-  for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
-       it != T.mSignature.end(); ++it) {
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
+       it != T.mSignatureP.end(); ++it) {
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
       continue;
-    if (get<0>(*it) == "false" || get<0>(*it) == "true")
+    if (get<0>(*it) == "bot" || get<0>(*it) == "top")
       continue;
     outfile << "  fixes " << get<0>(*it) << " :: \""
             << repeat2(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl;
@@ -337,7 +337,7 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
 
   for (unsigned i = 0; i < mInstantiatedGoal.GetSize(); i++) {
     if (mInstantiatedGoal.GetElement(i).GetSize() == 1 &&
-        mInstantiatedGoal.GetElement(i).GetElement(0).GetName() == "true") {
+        mInstantiatedGoal.GetElement(i).GetElement(0).GetName() == "top") {
       outfile << Indent(level) << "show ?thesis by blast" << endl;
       return;
     }

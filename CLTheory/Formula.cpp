@@ -1,117 +1,382 @@
 #include "CLTheory/Formula.h"
 #include <assert.h>
 
-// #define DEBUG_PARSER
+#define DEBUG_PARSER
 
 // ---------------------------------------------------------------------------------------
 
-Fact::Fact(const string &s) { Read(s); }
+enum TOKEN { eEXCLAM, eQUESTION, eCOLON, eOPENL, eCLOSEL, eEND, eERROR, eNUMBER, eEQ, eNEQ, eNEG, eFALSE, eTRUE, eIMPL, eCONJ, eDISJ, eID, eOPENB, eCOMMA, eCLOSEB, eOPENLIST, eCLOSELIST };
+
+const char* TEXTSTREAM;
+int TEXTINDEX;
+enum TOKEN NEXTTOKEN;
+string NEXTLEXEME;
+
+
+bool onlyClosedBrackets() {
+  int i=TEXTINDEX;
+  while(TEXTSTREAM[i] != '\0') {
+    if (TEXTSTREAM[i] != ')' &&
+        !isspace(TEXTSTREAM[i]))
+      return false;
+    i++;
+  }
+  return true;
+}
 
 // ---------------------------------------------------------------------------------------
 
-bool Fact::Read(const string &s) {
-  size_t pos1, pos2, pos;
+void ReadNextToken() {
 #ifdef DEBUG_PARSER
-  cout << "Currently Reading fact : " << s << endl;
+//   cout << "Currently Reading text: ";
+//   printf("%s\n", TEXTSTREAM+TEXTINDEX);
 #endif
 
-  if (!MatchingBrackets(s))
-    return false;
-
-  pos = s.size();
-  while (s[0] == '(' && s[pos - 1] == ')') {
-    return Read(s.substr(1, pos - 2));
+  if (TEXTSTREAM[TEXTINDEX] == '\0') {
+    NEXTTOKEN = eEND;
+    return;
   }
+  while (TEXTSTREAM[TEXTINDEX] != '\0' && isspace(TEXTSTREAM[TEXTINDEX])) {
+    TEXTINDEX++;
+  } 
+    
+  NEXTLEXEME = "";
+  if (isalpha(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='_' || TEXTSTREAM[TEXTINDEX]=='$') {
+    while (isalnum(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='_' || TEXTSTREAM[TEXTINDEX]=='$') {
+      NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
+      TEXTINDEX++;
+    }
+    NEXTTOKEN = eID;
+    TEXTINDEX--;
+  }
+  else if (isdigit(TEXTSTREAM[TEXTINDEX])) {
+    while (isdigit(TEXTSTREAM[TEXTINDEX])) {
+      NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
+      TEXTINDEX++;
+    }
+    NEXTTOKEN = eNUMBER;
+    TEXTINDEX--;
+  }   
+  else {
+  switch(TEXTSTREAM[TEXTINDEX]) {
+    case '=':
+      if (TEXTSTREAM[TEXTINDEX+1]=='>') {
+        TEXTINDEX++;
+        NEXTTOKEN = eIMPL;
+      }
+      else
+      NEXTTOKEN = eEQ;
+      break;
 
-  if (s == "false" || s == "$false") {
-    mName = "false";
+    case '!':
+      if (TEXTSTREAM[TEXTINDEX+1]=='=') {
+        TEXTINDEX++;
+        NEXTTOKEN = eNEQ;
+        }
+      else
+      NEXTTOKEN = eEXCLAM;
+      break;
+
+    case '?':
+      NEXTTOKEN = eQUESTION;
+      break;
+    case '&':
+      NEXTTOKEN = eCONJ;
+      break;
+    case '~':
+      NEXTTOKEN = eNEG;
+      break;
+    case '|':
+      NEXTTOKEN = eDISJ;
+      break;
+    case '(':
+      NEXTTOKEN = eOPENB;
+      break;
+    case ')':
+      NEXTTOKEN = eCLOSEB;
+      break;
+    case '[':
+      NEXTTOKEN = eOPENL;
+      break;
+    case ']':
+      NEXTTOKEN = eCLOSEL;
+      break;
+    case ',':
+      NEXTTOKEN = eCOMMA;
+      break;
+    case ':':
+      NEXTTOKEN = eCOLON;
+      break;
+    default:
+      NEXTTOKEN = eEND;
+      break;
+   }
+  }
+  TEXTINDEX++;
+  return;
+}
+
+// ---------------------------------------------------------------------------------------
+
+string getFirstID(const string& str, unsigned& i)
+{
+    string id;
+    while (str[i] != '\0' && (isspace(str[i]) || str[i] ==')')) {
+      i++;
+    }
+    while (isalnum(str[i]) || str[i]=='_' || str[i]=='(') {
+      id += str[i];
+      i++;
+    }
+    return id;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool Term::Read()
+{
+    mT = "(" + NEXTLEXEME;
+    ReadNextToken();
+
+    if (NEXTTOKEN == eOPENB) {
+      ReadNextToken();
+      while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
+        Term t;
+        if (!t.Read())
+          return false;
+        mT += " " + t.ToSMTString();
+        if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
+          return false;
+        if (NEXTTOKEN == eCLOSEB) {
+          ReadNextToken();
+          break;
+        }
+        ReadNextToken();
+      }
+    }
+    mT += ")";
+    SetData();
     return true;
-  }
-  if (s == "true" || s == "$true") {
-    mName = "true";
-    return true;
-  }
+}
 
-  if (s[0] == '~') {
-    if (!Read(s.substr(1, pos - 1)))
+// ---------------------------------------------------------------------------------------
+
+void Term::SetData()
+{
+   if (!IsCompound()) {
+       if (mT[0] == '(')
+         mArgs.push_back(mT.substr(1, mT.size()-2));
+       else
+         mArgs.push_back(mT);
+       return;
+   }
+   string s;
+   unsigned pos = 0;
+   unsigned arity = 0;
+   bool bNextIsFunc = false;
+   string function_symbol;
+   for(;;) {
+     if (mT[pos] == '(') {
+        bNextIsFunc = true;
+        pos++;
+     }
+     s = getFirstID(mT,pos);
+     if (s == "")
+       return;
+     if (bNextIsFunc) {
+       function_symbol = s;
+       bNextIsFunc = false;
+       arity = 0; // start counting arguments
+       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
+     }
+     else {
+       mArgs.push_back(s);
+       arity++;
+       mFunctionSymbols.pop_back();
+       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
+     }
+   }
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Term::ToSMTString() const
+{
+  if (IsCompound() || mT[0] != '(')
+     return mT;
+
+  string s = mT;
+  s.erase(0, 1); // skip '('
+  s.pop_back();  // skip ')'
+  return s;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
+Fact::Fact(const string &s)
+{
+  TEXTSTREAM = s.c_str();
+  TEXTINDEX = 0;
+  ReadNextToken();
+  Read();
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Fact::ToString() const
+{
+  if (GetArity() == 0) {
+     return GetName();
+  }
+  string s = "(" + GetName() + " ";
+  for (unsigned i = 0; i<GetArity(); i++)
+    s += GetArg(i) + " ";
+  s += ") ";
+  return s;
+}
+
+// ------------------------------------------------------
+
+bool Fact::Read() {
+  int TMP_TEXTINDEX = TEXTINDEX;
+  enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+  string TMP_NEXTLEXEME = NEXTLEXEME;
+
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    if (Read() && NEXTTOKEN == eCLOSEB) {
+      ReadNextToken();
+      return true;
+    }
+  }
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  if (NEXTTOKEN == eNEG) {
+    ReadNextToken();
+    if (!Read())
       return false;
     mName = PREFIX_NEGATED + mName;
     return true;
   }
 
-  pos = s.find("!=", 0);
-  if (pos != string::npos) {
-    unsigned l = 2;
-    mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
-    mArgs.push_back(s.substr(0, pos));
-    mArgs.push_back(s.substr(pos + l, s.size() - pos - l));
+  mArgs.clear();
+  if (NEXTLEXEME == "false" || NEXTLEXEME == "$false") {
+    mName = "bot";
+    ReadNextToken();
     return true;
   }
-  pos = s.find("=", 0);
-  if (pos != string::npos) {
-    unsigned l = 1;
+  if (NEXTLEXEME == "true" || NEXTLEXEME == "$true") {
+    mName = "top";
+    ReadNextToken();
+    return true;
+  }
+
+  TMP_TEXTINDEX = TEXTINDEX;
+  TMP_NEXTTOKEN = NEXTTOKEN;
+  TMP_NEXTLEXEME = NEXTLEXEME;
+
+  Term tL, tR;
+  if (tL.Read()) {
+    if (NEXTTOKEN == eEQ || NEXTTOKEN == eEQ ) {
+       bool bEq = NEXTTOKEN == eEQ;
+       ReadNextToken();
+       if (tR.Read()) {
+           mName = bEq ? EQ_NATIVE_NAME : PREFIX_NEGATED + EQ_NATIVE_NAME;
+           mArgs.push_back(tL);
+           mArgs.push_back(tR);
+           return true;
+       }
+    }
+  }
+
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  mName = NEXTLEXEME;
+  ReadNextToken();
+
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
+      Term t;
+      t.Read();
+      mArgs.push_back(t);
+      if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
+        return false;
+      if (NEXTTOKEN == eCLOSEB) {
+        ReadNextToken();
+        if (NEXTTOKEN == eEQ || NEXTTOKEN == eNEQ) {
+          break;
+        }
+      } else
+        ReadNextToken();
+    }
+    //if (NEXTTOKEN != eEQ && NEXTTOKEN != eNEQ)
+    return true;
+  }
+
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  mArgs.clear();
+  Term t1;
+  if (!t1.Read()) {
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+    ReadNextToken();
+    mArgs.clear();
+    return true;
+  }
+  mArgs.push_back(t1);
+  if (NEXTTOKEN == eEQ)
     mName = EQ_NATIVE_NAME;
-    mArgs.push_back(s.substr(0, pos));
-    mArgs.push_back(s.substr(pos + l, s.size() - pos - l));
+  else if (NEXTTOKEN == eNEQ)
+    mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
+  else {
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+    ReadNextToken();
+    mArgs.clear();
     return true;
   }
-
-  pos1 = s.find('(', 0);
-  if (pos1 == string::npos) {
-    /*#ifdef DEBUG_PARSER
-    cout << "Name not found in : " << s << endl;
-    #endif*/
-    mName = s;
-    return true;
-  }
-
-  pos2 = s.find(')', 0);
-  if (pos2 == string::npos) {
-#ifdef DEBUG_PARSER
-    cout << "Ending parenthesis not found in : " << s << endl;
-#endif
+  ReadNextToken();
+  Term t2;
+  if (!t2.Read())
     return false;
-  }
+  mArgs.push_back(t2);
 
-  if (s.find('(', pos1 + 1) != string::npos) {
-#ifdef DEBUG_PARSER
-    cout << "Error ( not found in : " << s << endl;
-#endif
-    return false;
-  }
-#ifdef DEBUG_PARSER
-  cout << "the constant is " << s.substr(0, pos1) << endl;
-#endif
-  mName = s.substr(0, pos1);
+  return true;
 
-  pos1++;
-  pos2 = s.size();
-  while (pos1 < pos2) {
-    pos = s.find(',', pos1);
-    if (pos == string::npos) {
-      pos = s.find(')', pos1);
-      if (pos == string::npos) {
-#ifdef DEBUG_PARSER
-        cout << "Error ) not found in " << s << endl;
-#endif
-        return false;
-      }
-      if (pos < pos2 - 1) {
-#ifdef DEBUG_PARSER
-        cout << "Error ) should be the last character of :" << s << endl;
-#endif
-        return false;
-      }
-    }
-    if (pos == pos1) {
-#ifdef DEBUG_PARSER
-      cout << "Error " << endl;
-#endif
+
+/*
+  if (NEXTTOKEN == eEQ) {
+    mArgs.push_back(mName);
+    mName = EQ_NATIVE_NAME;
+    ReadNextToken();
+    if (NEXTTOKEN != eID)
       return false;
-    }
-    mArgs.push_back(s.substr(pos1, pos - pos1));
-    pos1 = pos + 1;
+    mArgs.push_back(NEXTLEXEME);
+    ReadNextToken();
+    return true;
   }
+
+  if (NEXTTOKEN == eNEQ) {
+    mArgs.push_back(mName);
+    mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
+    ReadNextToken();
+    if (NEXTTOKEN != eID)
+      return false;
+    mArgs.push_back(NEXTLEXEME);
+    ReadNextToken();
+    return true;
+  }*/
   return true;
 }
 
@@ -131,53 +396,32 @@ bool Fact::Equals(const Fact &f) const {
 
 // ---------------------------------------------------------------------------------------
 
-bool ConjunctionFormula::Read(const string &s) {
-  string s0 = SkipChar(s, ' ');
-  if (s0 == "$false" || s0 == "$true") {
-    Fact fact;
-#ifdef DEBUG_PARSER
-    cout << "false or true in conjunction" << s0 << endl;
-#endif
-    if (fact.Read(s0.substr(1, s0.size() - 1))) {
-      Add(fact);
-      return true;
-    } else
-      return false;
+bool ConjunctionFormula::Read() {
+  int TMP_TEXTINDEX = TEXTINDEX;
+  enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+  string TMP_NEXTLEXEME = NEXTLEXEME;
+
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    if (Read() && NEXTTOKEN == eCLOSEB) {
+      ReadNextToken();
+      if (NEXTTOKEN != eCONJ)
+        return true;
+    }
   }
 
-  size_t pos1, pos2, pos;
-  pos1 = 0;
-  pos2 = s0.size();
-  if (s0[0] == '(' && s0[pos2 - 1] == ')') {
-    string ss = s0.substr(1, pos2 - 2);
-    if (Read(ss))
-      return true;
-  }
-  while (pos1 < pos2) {
-    pos = s0.find('&', pos1);
-    if (pos != string::npos) {
-      Fact fact;
-      if (fact.Read(s0.substr(pos1, pos - pos1))) {
-        Add(fact);
-        pos1 = pos + 1;
-      } else {
-#ifdef DEBUG_PARSER
-        cout << "Error could not find & in : " << s0 << endl;
-#endif
-        return false;
-      }
-    } else {
-      Fact fact;
-      if (fact.Read(s0.substr(pos1, pos2 - pos1 + 1))) {
-        Add(fact);
-        pos1 = pos2;
-      } else {
-#ifdef DEBUG_PARSER
-        cout << "Error reading : " << s0.substr(pos1, pos2 - pos1 + 1) << endl;
-#endif
-        return false;
-      }
-    }
+  Clear();
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  Fact fact;
+  while (fact.Read()) {
+    Add(fact);
+    fact.Clear();
+    if (NEXTTOKEN != eCONJ)
+      break;
+    ReadNextToken();
   }
   return true;
 }
@@ -211,54 +455,39 @@ bool ConjunctionFormula::UsesNativeEq() const {
 
 // ---------------------------------------------------------------------------------------
 
-bool DNFFormula::Read(const string &s) {
-  string s0 = SkipChar(s, ' ');
-  if (s0 == "$false" || s0 == "$true") {
-    ConjunctionFormula c;
-    Fact f(s0.substr(1, s0.size() - 1));
-    c.Add(f);
-    Add(c);
-    return true;
-  }
-  size_t pos1, pos2, pos;
-  pos = s0.size();
-  while (s0[0] == '(' && s0[pos - 1] == ')') {
-    if (!MatchingBrackets(s0.substr(1, pos - 2)))
-      break;
-    s0 = s0.substr(1, pos - 2);
-    pos = s0.size();
-  }
+bool DNFFormula::Read(CLFormula* p) {
+  int TMP_TEXTINDEX = TEXTINDEX;
+  enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+  string TMP_NEXTLEXEME = NEXTLEXEME;
 
-  pos1 = 0;
-  pos2 = s0.size();
-  while (pos1 < pos2) {
-    pos = s0.find('|', pos1);
-    if (pos != string::npos) {
-      string ss = s0.substr(pos1, pos - pos1);
-      ConjunctionFormula c;
-      if (c.Read(s0.substr(pos1, pos - pos1))) {
-        Add(c);
-        pos1 = pos + 1;
-      } else {
-#ifdef DEBUG_PARSER
-        cout << "Error reading : " << s0.substr(pos1, pos - pos1) << endl;
-#endif
-        return false;
-      }
-    } else {
-      ConjunctionFormula c;
-      if (c.Read(s0.substr(pos1, pos2 - pos1 + 1))) {
-        Add(c);
-        pos1 = pos2;
-      } else {
-#ifdef DEBUG_PARSER
-        cout << "Error reading : " << s0.substr(pos1, pos2 - pos1 + 1) << endl;
-#endif
-        return false;
-      }
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    if (Read(p) && NEXTTOKEN == eCLOSEB && onlyClosedBrackets()) {
+      ReadNextToken();
+      return true;
     }
   }
-  return true;
+  Clear();
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  if (p!=NULL && NEXTTOKEN == eQUESTION) {
+    if (!p->ReadExistVars())
+      return false;
+  if (Read())
+    return true;
+  }
+
+  ConjunctionFormula CF;
+  while (CF.Read()) {
+    Add(CF);
+    CF.Clear();
+    if (NEXTTOKEN != eDISJ)
+      break;
+    ReadNextToken();
+  }
+  return (NEXTTOKEN == eCLOSEB || NEXTTOKEN == eEND);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -280,25 +509,6 @@ bool DNFFormula::Equals(const DNFFormula &f) const {
 
 // ---------------------------------------------------------------------------------------
 
-bool MatchingBrackets(const string &v) {
-  size_t pos = v.find('>');
-  if (pos != string::npos)
-    return false;
-  string s = v;
-  int count = 0;
-  for (size_t i = 0; i < s.size(); i++) {
-    if (s[i] == '(')
-      count++;
-    else if (s[i] == ')')
-      count--;
-    if (count < 0)
-      return false;
-  }
-  return (count == 0);
-}
-
-// ---------------------------------------------------------------------------------------
-
 bool CLFormula::UsesNativeEq() const {
   if (GetPremises().UsesNativeEq())
     return true;
@@ -310,8 +520,8 @@ bool CLFormula::UsesNativeEq() const {
 
 // ---------------------------------------------------------------------------------------
 
-bool CLFormula::Read(const string &s) {
-  if (!ReadWithoutCheckingBoundness(s))
+bool CLFormula::Read() {
+  if (!ReadWithoutCheckingBoundness())
     return false;
 
   const DNFFormula& B = GetGoal();
@@ -320,19 +530,21 @@ bool CLFormula::Read(const string &s) {
   // Check if all variables in the premises are bound
   for(unsigned i = 0; i < A.GetSize(); i++) {
     for(unsigned j = 0; j < A.GetElement(i).GetArity(); j++) {
-      string arg = A.GetElement(i).GetArg(j);
+      Term t = A.GetElement(i).GetArg(j);
       bool foundArg = false;
-      for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
-        if (arg == GetUnivVar(l)) {
-          foundArg = true;
+      for(unsigned a = 0; a < t.NumArgs(); a++) {
+        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+          if (t.GetArg(a) == GetUnivVar(l)) {
+            foundArg = true;
+          }
         }
-      }
-      if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
+        if (!foundArg && 'A' <= t.GetArg(a)[0] && t.GetArg(a)[0] <= 'Z') {
 #ifdef DEBUG_PARSER
-  cout << "Ill formed CL formula: " << s << endl;
-  cout << "A variable " << arg << " in the premises is not bound! " << endl;
+  cout << "Ill-formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
+  cout << "A variable " << t.GetArg(a) << " in the premises is not bound! " << endl;
 #endif
-        return false;
+          return false;
+        }
       }
     }
   }
@@ -341,24 +553,26 @@ bool CLFormula::Read(const string &s) {
   for(unsigned i = 0; i < B.GetSize(); i++) {
     for(unsigned j = 0; j < B.GetElement(i).GetSize(); j++) {
       for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity(); k++) {
-        string arg = B.GetElement(i).GetElement(j).GetArg(k);
+        Term t = B.GetElement(i).GetElement(j).GetArg(k);
         bool foundArg = false;
-        for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
-          if (arg == GetUnivVar(l)) {
-            foundArg = true;
+        for(unsigned a = 0; a < t.NumArgs(); a++) {
+          for (unsigned l = 0; l < GetNumOfUnivVars() && !foundArg; l++) {
+            if (t.GetArg(a) == GetUnivVar(l)) {
+              foundArg = true;
+            }
           }
-        }
-        for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
-          if (arg == GetExistVar(l)) {
-            foundArg = true;
+          for (unsigned l = 0; l < GetNumOfExistVars() && !foundArg; l++) {
+            if (t.GetArg(a) == GetExistVar(l)) {
+              foundArg = true;
+            }
           }
-        }
-        if (!foundArg && 'A' <= arg[0] && arg[0] <= 'Z') {
-#ifdef DEBUG_PARSER
-  cout << "Ill formed CL formula: " << s << endl;
-  cout << "A variable " << arg << " in the goal is not bound! " << endl;
-#endif
-          return false;
+          if (!foundArg && 'A' <= t.GetArg(a)[0] && t.GetArg(a)[0] <= 'Z') {
+  #ifdef DEBUG_PARSER
+    cout << "Ill formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
+    cout << "A variable " << t.GetArg(a) << " in the goal is not bound! " << endl;
+  #endif
+            return false;
+          }
         }
       }
     }
@@ -370,23 +584,29 @@ bool CLFormula::Read(const string &s) {
     bool foundVar = false;
     for(unsigned i = 0; i < A.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < A.GetElement(i).GetArity()  && !foundVar; j++) {
-        if (var == A.GetElement(i).GetArg(j)) {
-          foundVar = true;
+        Term t = A.GetElement(i).GetArg(j);
+        for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+          if (var == t.GetArg(a)) {
+            foundVar = true;
+          }
         }
       }
     }
     for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
         for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
-          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
-            foundVar = true;
+          Term t = B.GetElement(i).GetElement(j).GetArg(k);
+          for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+            if (var == t.GetArg(a)) {
+              foundVar = true;
+            }
           }
         }
       }
     }
     if (!foundVar) {
 #ifdef DEBUG_PARSER
-    cout << "Ill formed CL formula: " << s << endl;
+    cout << "Ill-formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
     cout << "A universally quantified variable " << var << " is not used! " << endl;
 #endif
       return false;
@@ -400,18 +620,21 @@ bool CLFormula::Read(const string &s) {
     for(unsigned i = 0; i < B.GetSize() && !foundVar; i++) {
       for(unsigned j = 0; j < B.GetElement(i).GetSize()  && !foundVar; j++) {
         for(unsigned k = 0; k < B.GetElement(i).GetElement(j).GetArity() && !foundVar; k++) {
-          if (var == B.GetElement(i).GetElement(j).GetArg(k)) {
-            foundVar = true;
+          Term t = B.GetElement(i).GetElement(j).GetArg(k);
+          for(unsigned a = 0; a < t.NumArgs() && !foundVar; a++) {
+            if (var == t.GetArg(a)) {
+              foundVar = true;
+            }
           }
         }
       }
     }
     if (!foundVar) {
 #ifdef DEBUG_PARSER
-  cout << "Ill formed CL formula: " << s << endl;
+  cout << "Ill-formed CL formula: " << TEXTSTREAM+TEXTINDEX << endl;
   cout << "An existentially quantified variable " << var << " is not used! " << endl;
 #endif
-      return false;
+ // TODO     return false;
     }
   }
   return true;
@@ -419,271 +642,135 @@ bool CLFormula::Read(const string &s) {
 
 // ---------------------------------------------------------------------------------------
 
-bool CLFormula::ReadWithoutCheckingBoundness(const string &s) {
-  string s0 = SkipChar(s, ' ');
-  s0 = SkipChar(s0, '\n');
-  s0 = SkipChar(s0, '\r');
-  s0 = SkipChar(s0, '\t');
-  size_t pos, pos2, p, pp;
-#ifdef DEBUG_PARSER
-  cout << "Currently reading : " << s0 << endl;
-#endif
-  pos = s0.size();
-  if (s0[0] == '(' && s0[pos - 1] == ')') {
-    if (Read(s0.substr(1, pos - 2)))
-      return true;
-  }
-
-  pos = s0.find("![", 0);
-  if (pos != string::npos) {
+bool CLFormula::ReadUnivVars() {
+  if (NEXTTOKEN == eEXCLAM) {
+    ReadNextToken();
+    if (NEXTTOKEN != eOPENL) {
+      return false;
+    }
     ClearUnivVars();
-    pos = s0.find('[');
-    if (pos == string::npos) {
-#ifdef DEBUG_PARSER
-      cout << "Could not find [ in :" << s0 << endl;
-#endif
-      return false;
-    }
-    pos2 = s0.find(']');
-    if (pos2 == string::npos) {
-#ifdef DEBUG_PARSER
-      cout << "Could not find ] in :" << s0 << endl;
-#endif
-      return false;
-    }
-    p = pos;
-    string varname;
-    while (p < pos2) {
-      pp = s0.find(',', p + 1);
-      if (pp == string::npos || pp > pos2) {
-        varname = s0.substr(p + 1, pos2 - p - 1);
-        p = pos2;
-      } else {
-        varname = s0.substr(p + 1, pp - p - 1);
-        p = pp;
+    ReadNextToken();
+    while (NEXTTOKEN == eID) {
+      AddUnivVar(NEXTLEXEME);
+      ReadNextToken();
+      if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEL)
+        return false;
+      if (NEXTTOKEN==eCLOSEL) {
+        ReadNextToken();
+        break;
       }
-      AddUnivVar(varname);
+      ReadNextToken();
     }
-    pos = s0.find(':', pos2);
-    if (pos == string::npos) {
-#ifdef DEBUG_PARSER
-      cout << "Error coumld not find : in :" << s0 << endl;
-#endif
+    if (NEXTTOKEN != eCOLON)
       return false;
-    } else
-      s0 = s0.substr(pos + 1, s0.size() - pos - 1);
-  }
-
-  p = s0.find('?');
-  pp = s0.find('>');
-  pos = s0.size();
-  while (s0[0] == '(' && s0[pos - 1] == ')') {
-    if (p == string::npos && !MatchingBrackets(s0.substr(1, pos - 2)))
-      break;
-    if (p != string::npos && pp != string::npos && (pp < p) &&
-        !MatchingBrackets(s0.substr(1, pos - 2)))
-      break;
-    s0 = s0.substr(1, pos - 2);
-    pos = s0.size();
-  }
-
-  // pos = s0.find('?');
-  if (s0[0] == '?') {
-    ClearExistVars();
-
-    pos = s0.find('[');
-    if (pos == string::npos) {
-#ifdef DEBUG_PARSER
-      cout << "Error could not find [ in : " << s0 << endl;
-#endif
-      return false;
-    }
-    pos2 = s0.find(']');
-    if (pos == string::npos) {
-#ifdef DEBUG_PARSER
-      cout << "Error could not find ] in : " << s0 << endl;
-#endif
-      return false;
-    }
-    p = pos;
-    string varname;
-    while (p < pos2) {
-      pp = s0.find(',', p + 1);
-      if (pp == string::npos || pp > pos2) {
-        varname = s0.substr(p + 1, pos2 - p - 1);
-        p = pos2;
-      } else {
-        varname = s0.substr(p + 1, pp - p - 1);
-        p = pp;
-      }
-      AddExistVar(varname);
-    }
-    pos = s0.find(':', pos2);
-    if (pos == string::npos)
-      return false;
-    else
-      s0 = s0.substr(pos + 1, s0.size() - pos - 1);
-  }
-
-  ConjunctionFormula A;
-  DNFFormula B;
-
-  for (;;) {
-    if (ReadImplication(s0, A, B)) {
-      CLFormula clf(A, B);
-      clf.mUniversalVars = mUniversalVars;
-      clf.mExistentialVars = mExistentialVars;
-      for (size_t k = 0; k < mExistentialVars.size(); k++)
-        for (size_t i = 0; i < A.GetSize(); i++)
-          for (size_t j = 0; j < A.GetElement(i).GetArity(); j++)
-            if (A.GetElement(i).GetArg(j) == mExistentialVars[k])
-              return false;
-      *this = clf;
-      return true;
-    }
-    pos = s0.size();
-    if (s0[0] != '(' || s0[pos - 1] != ')')
-      return false;
-    s0 = s0.substr(1, pos - 2);
-  }
-  return false;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool CLFormula::MatchingBrackets(const string &v) const {
-  size_t pos = v.find('>');
-  if (pos == string::npos) {
-    string s = v;
-    int count = 0;
-    for (size_t i = 0; i < s.size(); i++) {
-      if (s[i] == '(')
-        count++;
-      else if (s[i] == ')')
-        count--;
-      if (count < 0)
-        return false;
-    }
-    return (count == 0);
-  }
-
-  string s = v.substr(0, pos);
-  int count = 0;
-  for (size_t i = 0; i < s.size(); i++) {
-    if (s[i] == '(')
-      count++;
-    else if (s[i] == ')')
-      count--;
-    if (count < 0)
-      return false;
-  }
-  if (count)
-    return false;
-  s = v.substr(pos + 1, v.size() - pos);
-  count = 0;
-  for (size_t i = 0; i < s.size(); i++) {
-    if (s[i] == '(')
-      count++;
-    else if (s[i] == ')')
-      count--;
-    if (count < 0)
-      return false;
-  }
-  if (count)
-    return false;
-  return true;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool CLFormula::ReadImplication(const string &v, ConjunctionFormula &A,
-                                DNFFormula &B) {
-  string s0 = v;
-  size_t pos2, p, pp, pos = s0.find_last_of('>');
-  if (pos == string::npos || s0.at(pos - 1) != '=') {
-    A.Clear();
-    pos = s0.size();
-    while (s0[0] == '(' && s0[pos - 1] == ')') {
-      if (!MatchingBrackets(s0.substr(1, pos - 2)))
-        break;
-      s0 = s0.substr(1, pos - 2);
-      pos = s0.size();
-    }
-    return (B.Read(s0));
-  } else {
-
-    pos = s0.size();
-    while (s0[0] == '(' && s0[pos - 1] == ')') {
-      if (!MatchingBrackets(s0.substr(1, pos - 2)))
-        break;
-      s0 = s0.substr(1, pos - 2);
-      pos = s0.size();
-    }
-    pos = s0.find_last_of('>');
-
-    string s1 = s0.substr(0, pos - 1);
-    string s2 = s0.substr(pos + 1, s0.size() - pos);
-
-    pos = s1.size();
-    while (s1[0] == '(' && s1[pos - 1] == ')') {
-      if (!MatchingBrackets(s1.substr(1, pos - 2)))
-        break;
-      s1 = s1.substr(1, pos - 2);
-      pos = s1.size();
-    }
-    pos = s2.size();
-    while (s2[0] == '(' && s2[pos - 1] == ')') {
-      if (!MatchingBrackets(s2.substr(1, pos - 2)))
-        break;
-      s2 = s2.substr(1, pos - 2);
-      pos = s2.size();
-    }
-
-    if (!A.Read(s1))
-      return false;
-
-    if (s2[0] == '?') {
-      ClearExistVars();
-
-      pos = s2.find('[');
-      if (pos == string::npos)
-        return false;
-      pos2 = s2.find(']');
-      if (pos == string::npos)
-        return false;
-      p = pos;
-      string varname;
-      while (p < pos2) {
-        pp = s2.find(',', p + 1);
-        if (pp == string::npos || pp > pos2) {
-          varname = s2.substr(p + 1, pos2 - p - 1);
-          p = pos2;
-        } else {
-          varname = s2.substr(p + 1, pp - p - 1);
-          p = pp;
-        }
-        AddExistVar(varname);
-      }
-      pos = s2.find(':', pos2);
-      if (pos == string::npos)
-        return false;
-      else
-        s2 = s2.substr(pos + 1, s2.size() - pos - 1);
-    }
-    pos = s2.size();
-    while (s2[0] == '(' && s2[pos - 1] == ')') {
-      if (!MatchingBrackets(s2.substr(1, pos - 2)))
-        break;
-      s2 = s2.substr(1, pos - 2);
-      pos = s2.size();
-    }
-
-    if (!B.Read(s2))
-      return false;
-
+    ReadNextToken();
     return true;
   }
   return false;
+}
+
+// ---------------------------------------------------------------------------------------
+
+// This function returns true if there are no
+// errors, even if there are no exists variables
+// (in contrast to ReadUnivVars
+bool CLFormula::ReadExistVars() {
+  if (NEXTTOKEN == eQUESTION) {
+    ReadNextToken();
+    if (NEXTTOKEN != eOPENL) {
+      return false;
+    }
+    ClearExistVars();
+    ReadNextToken();
+    while (NEXTTOKEN == eID) {
+      AddExistVar(NEXTLEXEME);
+      ReadNextToken();
+      if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEL)
+        return false;
+      if (NEXTTOKEN==eCLOSEL) {
+        ReadNextToken();
+        break;
+      }
+      ReadNextToken();
+    }
+    if (NEXTTOKEN != eCOLON)
+      return false;
+    ReadNextToken();
+    return true;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::ReadImplication() {
+  int TMP_TEXTINDEX = TEXTINDEX;
+  enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+  string TMP_NEXTLEXEME = NEXTLEXEME;
+
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    if (ReadImplication() && NEXTTOKEN == eCLOSEB &&
+        onlyClosedBrackets()) {
+      ReadNextToken();
+      return true;
+    }
+  }
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  mA.Clear();
+  mB.Clear();
+  if (!mA.Read())
+    return false;
+  if (NEXTTOKEN == eIMPL) {
+    ReadNextToken();
+    if (!ReadExistVars())
+      return false;
+    if (mB.Read(this))
+        return true;
+  } else {
+      TEXTINDEX = TMP_TEXTINDEX;
+      NEXTTOKEN = TMP_NEXTTOKEN;
+      NEXTLEXEME = TMP_NEXTLEXEME;
+
+      mA.Clear();
+      mB.Clear();
+      if (!ReadExistVars())
+        return false;
+      if (mB.Read(this))
+          return true;
+  }
+  return false;
+}
+
+// -----------------------------------4----------------------------------------------------
+
+bool CLFormula::ReadWithoutCheckingBoundness() {
+  int TMP_TEXTINDEX = TEXTINDEX;
+  enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+  string TMP_NEXTLEXEME = NEXTLEXEME;
+
+  if (NEXTTOKEN == eOPENB) {
+    ReadNextToken();
+    if (ReadWithoutCheckingBoundness()
+            && (NEXTTOKEN == eCLOSEB || NEXTTOKEN == eEND)
+            && onlyClosedBrackets()) {
+      ReadNextToken();
+      return true;
+    }
+  }
+  TEXTINDEX = TMP_TEXTINDEX;
+  NEXTTOKEN = TMP_NEXTTOKEN;
+  NEXTLEXEME = TMP_NEXTLEXEME;
+
+  if (ReadUnivVars()) {
+    return ReadWithoutCheckingBoundness();
+  }
+  if (!ReadExistVars())
+    return false;
+  return ReadImplication();
 }
 
 // ---------------------------------------------------------------------------------------
@@ -711,7 +798,10 @@ bool CLFormula::IsSimpleImplication() const {
   size_t numDisj = GetGoal().GetSize();
 
   if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
-      GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+      GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+    return false;
+
+  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
     return false;
 
   if (numPremises == 1 &&
@@ -734,7 +824,7 @@ bool CLFormula::IsSimpleUnivFormula() const {
     return false;
   if (GetGoal().GetElement(0).GetSize() != 1)
     return false;
-  if (GetGoal().GetElement(0).GetElement(0).GetName() == "false")
+  if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
 
   return true;
@@ -762,12 +852,12 @@ bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
 
 // ---------------------------------------------------------------------------------------
 
-bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
+bool CLFormula::ReadTPTPStatement(const string &s, string &name,
                        string &ordinal, Fact &justification, fofType &type) {
   size_t pos1, pos2;
   string ss = SkipChar(s, ' ');
 
-  cl.Clear();
+  Clear();
   justification.Clear();
 
   if (ss.substr(0, 4) != "fof(") {
@@ -778,36 +868,36 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   }
   pos1 = ss.find(',');
   if (pos1 == string::npos) {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": fof() should have three arguments (while hints should have five)." << endl;
-// #endif
+#endif
     return false;
   }
   name = ss.substr(4, pos1 - 4);
   pos2 = ss.find(',', pos1 + 1);
   if (pos2 == string::npos) {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": fof() should have three arguments (while hints should have five)." << endl;
-// #endif
+#endif
     return false;
   }
   string s1 = ss.substr(pos1 + 1, pos2 - pos1 - 1);
   if (type == eAxiom && s1 != string("axiom")) {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": 'axiom' expected, found : " << s1 << endl;
-// #endif
+#endif
     return false;
   }
   if (type == eConjecture && s1 != string("conjecture")) {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": conjecture expected, found : " << s1 << endl;
-// #endif
+#endif
     return false;
   }
   if (type == eHint && s1 != string("hint")) {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": 'hint' expected, found : " << s1 << endl;
-// #endif
+#endif
     return false;
   }
   if (s1 == string("axiom"))
@@ -817,9 +907,9 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
   else if (s1 == string("hint"))
     type = eHint;
    else {
-// #ifdef DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cout << "Input error " << s << ": unknown entry type, found: " << s1 << endl;
-// #endif
+#endif
     return false;
   }
 
@@ -850,27 +940,45 @@ bool ReadTPTPStatement(const string &s, CLFormula &cl, string &name,
       return false;
     }
 
-    if (!cl.ReadWithoutCheckingBoundness(arg[0]))
-      return false;
-    if (!(cl.GetGoal().GetSize()==1 && cl.GetGoal().GetElement(0).GetSize()==1)) {
+    TEXTSTREAM = arg[0].c_str();
+    TEXTINDEX = 0;
+    ReadNextToken();
+    Fact hfact;
+    //if (!ReadWithoutCheckingBoundness())
+    //  return false;
+    //if (!(GetGoal().GetSize()==1 && GetGoal().GetElement(0).GetSize()==1)) {
+    if (!hfact.Read()) {
       cout << "Input error " << s << ": hint formula can be only fact." << endl;
       return false;
     }
+    ConjunctionFormula cf;
+    cf.Add(hfact);
+    mB.Add(cf);
+
     ordinal = arg[1];
-    if (!justification.Read(arg[2])) {
+
+    TEXTSTREAM = arg[2].c_str();
+    TEXTINDEX = 0;
+    ReadNextToken();
+    if (!justification.Read()) {
+//    if (!justification.Read(arg[2])) {
       cout << "Input error " << s << ": hint justification (fifth argument) cannot be read." << endl;
       return false;
     }
     return true;
   } else {
+  
     ordinal = "";
     // justification = "";
-    if (cl.Read(ss)) {
+    TEXTSTREAM = ss.c_str();
+    TEXTINDEX = 0;
+    ReadNextToken();
+    if (Read()) {
     // cout << "Ax: " << cl;
     // cout << endl;
       return true;
     } else {
-      cout << "Input error: axiom: " << name << " : " << cl;
+      cout << "Input error: axiom: " << name << " : " << *this;
       cout << " gives ill-formed CL formula! " << endl << endl;
       return false;
     }
@@ -899,7 +1007,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
     if (GetPremises().GetSize() > 0)
       current = GetPremises().GetElement(0);
     else {
-      current.SetName("false");
+      current.SetName("bot");
       current.ClearArgs();
     }
     for (size_t i = 1; i < numPremises; i++) // todo: we should reorder the
@@ -921,18 +1029,18 @@ void CLFormula::Normalize(const string &name, const string &suffix,
       RHS.Add(conj);
       definitions.push_back(pair<Fact, DNFFormula>(current, RHS));
 
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occuring variables
-      {
-        if (UnivVarOrdinalNumber(current.GetArg(j)) != -1 ||
-            ExistVarOrdinalNumber(current.GetArg(j)) != -1) {
-          bool bAlreadyThere = false;
-          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-               k++)
-            if (axiom.mUniversalVars[k] == current.GetArg(j))
-              bAlreadyThere = true;
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occuring variables
+        Term t = current.GetArg(j);
+        for (size_t a = 0; a < t.NumArgs(); a++) { // quantify only occuring variables {
+          if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
+            bool bAlreadyThere = false;
+            for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
+                bAlreadyThere = true;
+            if (!bAlreadyThere)
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
         }
       }
       output.push_back(pair<CLFormula, string>(
@@ -1022,17 +1130,19 @@ void CLFormula::Normalize(const string &name, const string &suffix,
         DNFFormula disj;
         disj.Add(conj1);
         CLFormula axiom(conj, disj);
-        for (size_t jj = 0; jj < disjuncts[i].GetArity();
-             jj++) { // quantify only occuring variables
-          if (UnivVarOrdinalNumber(current.GetArg(jj)) != -1 ||
-              ExistVarOrdinalNumber(current.GetArg(jj)) != -1) {
+        for (size_t jj = 0; jj < disjuncts[i].GetArity(); jj++) { // quantify only occuring variables
+          Term t = disjuncts[i].GetArg(jj);
+          for (size_t a = 0; a < t.NumArgs(); a++) { // quantify only occuring variables
+            if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
             bool bAlreadyThere = false;
             for (size_t k = 0;
                  k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-              if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(jj))
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
                 bAlreadyThere = true;
             if (!bAlreadyThere)
-              axiom.mUniversalVars.push_back(disjuncts[i].GetArg(jj));
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
           }
         }
         output.push_back(pair<CLFormula, string>(
@@ -1065,18 +1175,18 @@ void CLFormula::Normalize(const string &name, const string &suffix,
       definitions.push_back(pair<Fact, DNFFormula>(current, disj));
 
       CLFormula axiom(conj, disj);
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occuring variables
-      {
-        if (UnivVarOrdinalNumber(current.GetArg(j)) != -1 ||
-            ExistVarOrdinalNumber(current.GetArg(j)) != -1) {
-          bool bAlreadyThere = false;
-          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-               k++)
-            if (axiom.mUniversalVars[k] == current.GetArg(j))
-              bAlreadyThere = true;
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occuring variables
+        Term t = current.GetArg(j);
+        for (size_t a = 0; a < t.NumArgs(); a++) {
+          if (UnivVarOrdinalNumber(t.GetArg(a)) != -1 ||
+              ExistVarOrdinalNumber(t.GetArg(a)) != -1) {
+            bool bAlreadyThere = false;
+            for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
+              if (axiom.mUniversalVars[k] == t.GetArg(a))
+                bAlreadyThere = true;
+            if (!bAlreadyThere)
+              axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
         }
       }
       output.push_back(pair<CLFormula, string>(
@@ -1173,16 +1283,17 @@ void CLFormula::NormalizeGoal(
       DNFFormula disj;
       disj.Add(conj1);
       CLFormula axiom(conj, disj);
-      for (size_t j = 0; j < current.GetArity();
-           j++) // quantify only occurring variables
-      {
-        bool bAlreadyThere = false;
-        for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-             k++)
-          if (axiom.mUniversalVars[k] == current.GetArg(j))
-            bAlreadyThere = true;
-        if (!bAlreadyThere)
-          axiom.mUniversalVars.push_back(current.GetArg(j));
+      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
+        for (size_t k = 0; k < axiom.mUniversalVars.size(); k++) {
+          bool bAlreadyThere = false;
+          Term t = current.GetArg(j);
+          for (size_t a = 0; a < t.NumArgs() && !bAlreadyThere; a++) {
+            if (axiom.mUniversalVars[k] == t.GetArg(a))
+              bAlreadyThere = true;
+          if (!bAlreadyThere)
+            axiom.mUniversalVars.push_back(t.GetArg(a));
+          }
+        }
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));

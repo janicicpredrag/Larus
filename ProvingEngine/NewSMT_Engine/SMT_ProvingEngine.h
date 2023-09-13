@@ -16,11 +16,13 @@ typedef struct EncodedProofStep {
     unsigned StepKind;
     unsigned ContentsPredicate[2];
     vector<vector<unsigned>> ContentsArgument;
+    vector<vector<string>> ContentsArgumentString;
     unsigned Nesting;
     unsigned isGoal;
     unsigned AxiomApplied;
     vector<unsigned> From;
     unsigned Instantiation[200];
+    string InstantiationString[200];
     unsigned Cases;
 } EncodedProofStep;
 
@@ -58,6 +60,9 @@ private:
 
   void DeclareVarBasicType(const Expression& Var, unsigned UpperLimit);
   void DeclareVarBoolean(const Expression& Var);
+  void DeclarePredicateSymbol(const Expression& N, unsigned Arity);
+  void DeclareSort(const string& s);
+
   void Assert(const Expression& c);
   void AddComment(const string& comment);
 
@@ -70,6 +75,10 @@ private:
   Expression IsAssumptionStep(unsigned s, unsigned i);
 
   Expression IsMPstep(unsigned s);
+//  Expression IsMPstepNew(unsigned s);
+//  Expression IsMPstepNewWithInlining(unsigned s);
+//  Expression PremiseSatisfiedInline(unsigned s, unsigned p);
+//  Expression PremiseSatisfiedInlineByUniv(unsigned s, unsigned p);
   Expression IsMPstepByAxiom(unsigned s, unsigned ax);
   Expression IsMPbyEqSub(unsigned s);
   Expression MatchConclusion(unsigned s, unsigned ax);
@@ -99,8 +108,12 @@ private:
   static Expression Cases(unsigned s);
   static Expression Nesting(unsigned s);
   static Expression NestingSameBranch(unsigned s1, unsigned s2);
+  static Expression Contents(unsigned s, unsigned part);
   static Expression ContentsPredicate(unsigned s, unsigned part);
   static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
+  static Expression ContentsArgumentString(unsigned s, unsigned part, unsigned arg);
+  static Expression InstAxPredicate(unsigned s, unsigned premise);
+  static Expression InstAxArgument(unsigned s, unsigned premise, unsigned arg);
   // ----------------------------------------------------------
   static Expression Assumption();
   static Expression MP();

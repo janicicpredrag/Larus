@@ -7,21 +7,17 @@
 #include "ProofExport/ProofExport2GCLC_predicates.h"
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
+#include "ProofExport/ProofExport2Text.h"
 #include "ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
 #include "ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h"
 #include "common.h"
+#include "hammering.h"
 
-extern bool ReadTPTPStatement(const string &s, CLFormula &cl, string &axname,
-                              string &ordinal, Fact &justification,
-                              fofType &type);
 ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
                                Theory &T, CLFormula &theorem,
                                string &theoremName, vector<tHint> &hints);
-bool OutputToTPTPfile(const vector<string> &theory,
-                      const vector<string> &namesOfAxiomsToBeUsed,
-                      const string theoremName);
 
 ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
                                           CLFormula &theorem,
@@ -34,15 +30,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints);
-VampireReturnValue
-FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
-                      const CLFormula &theorem, const string &hammer_invoke,
-                      unsigned time_limit);
-bool FilterOurNeededAxiomsByReachability(
-    vector<pair<CLFormula, string>> &axioms, const CLFormula &theorem);
-VampireReturnValue SatStatus(const vector<pair<CLFormula, string>> &axioms,
-                             const vector<Fact>& premises, const string &hammer_invoke,
-                             unsigned time_limit);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -55,8 +42,10 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       T.SetUseNativeEq(true);
   if (theorem.UsesNativeEq())
     T.SetUseNativeEq(true);
-  if (T.GetUseNativeEq())
+  if (T.GetUseNativeEq()) {
     params.mbNativeEQ = true;
+    params.mbNativeEQsub = true;
+  }
 
   cout << "--- Input axioms : " << endl;
   T.printAxioms();
@@ -229,15 +218,17 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         params.mbNativeEQsub = true;
         cout << "       (Using native EqSub support)" << endl;
       }
+      T.printAxioms();
     } else {
       if (!(params.eEngine == eURSA_ProvingEngine ||
-            params.eEngine == eSTL_ProvingEngine)) {
+            params.eEngine == eSTL_ProvingEngine ||
+            params.eEngine == eSMTUFBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "      (Using native EqSub support)" << endl;
       }
     }
-    T.printAxioms();
+
   }
 
   /*
@@ -263,7 +254,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   // T.printAxioms();
 
   if (!(params.eEngine == eSTL_ProvingEngine ||
-        params.eEngine == eURSA_ProvingEngine)) {
+        params.eEngine == eURSA_ProvingEngine ||
+        params.eEngine == eSMTUFBV_ProvingEngine)) {
     // ************ Saturation for simple axioms ************
     size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
     if (params.mbInlineAxioms) {
@@ -295,14 +287,13 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   }
 
   // ************ Use or not support for case splits ************
-  if (params.mbNeedsCaseSplits) {
-    for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-         it != T.mCLaxioms.end(); it++) {
+  params.mbNeedsCaseSplits = false;
+  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+    it != T.mCLaxioms.end(); it++) {
       if (it->first.GetGoal().GetSize() > 1) {
         params.mbNeedsCaseSplits = true;
         break;
       }
-    }
   }
   if (params.mbNeedsCaseSplits)
     cout << "--- Support for case splits turned ON. " << endl;
@@ -406,9 +397,10 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
   unsigned int nbInconsistentAbducts = 0;
   unsigned int nbConsistentAbducts = 0;
   unsigned int nbUnknownStatusAbducts = 0;
-  string fileName;
+  unsigned int nbAbducts = 0;
+
   if (T.mConstants.size() + T.mConstantsPermissible.size() == 0 &&
-      (theorem.GetNumOfUnivVars() == 0 || theorem.GetPremises().GetSize() == 0))
+      (theorem.GetNumOfUnivVars() == 0 /*|| theorem.GetPremises().GetSize() == 0*/))
     T.MakeNewConstant();
   T.StoreInitialConstants();
   vector<Fact> InstantiatedPremises;
@@ -418,6 +410,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     string constantName = T.MakeNewConstant();
     instantiation[theorem.GetUnivVar(i)] = constantName;
   }
+
   DNFFormula goalInstantiated;
   T.InstantiateGoal(theorem, instantiation, goalInstantiated, false);
 
@@ -530,17 +523,21 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         }
         VampireReturnValue vret = SatStatus(T.mCLaxioms, InstantiatedPremises,
                               params.msHammerInvokeForAbducts, DEFAULT_VAMPIRE_TIME_LIMIT);
+	
         if (vret == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
           nbInconsistentAbducts++;
+	  nbAbducts++;
         }
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
           nbConsistentAbducts++;
+	  nbAbducts++;
         }
         else {
           cout << "Abducts unknown consistency" << endl;
           nbUnknownStatusAbducts++;
+	  nbAbducts++;
         }
         cout << "Number of abducts found so far:" << endl << "Inconsistent : " << nbInconsistentAbducts << " Consistent : " << nbConsistentAbducts << " Unknown Status : " << nbUnknownStatusAbducts << endl;
         //for(unsigned j = 0; j < params.number_of_abducts; j++) {
@@ -551,9 +548,14 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
 
       ProofExport2LaTeX ex(fileName);
-      string sFileName("proofs/PROOF" + fileName + ".tex");
+      string sFileName("proofs/PROOF" + fileName + to_string(nbAbducts) + ".tex");
       ex.ToFile(T, proof, sFileName, params);
 
+      if (params.show){
+	ProofExport2Text ex(fileName);
+	string sFileName("std::cout");
+	ex.ToFile(T, proof, sFileName, params);
+      }
       if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
         string sFileName3("proofs/PROOF" + fileName + ".v");
@@ -616,188 +618,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
   } while (proved == eConjectureProved && params.number_of_abducts > 0);
 
   return proved;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-VampireReturnValue
-FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
-                      const CLFormula &theorem, const string &hammer_invoke,
-                      unsigned time_limit) {
-  cout << "--- Hammer filtering: filtering out input axioms (input: "
-       << axioms.size() << ")" << endl;
-  // export to TPTP
-  string for_FOL_prover = "tptpfile.txt";// tmpnam(NULL); //
-  ofstream TPTPfile;
-  TPTPfile.open(for_FOL_prover);
-  for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-       it != axioms.end(); it++)
-    TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")."
-             << endl;
-  TPTPfile << "fof("
-           << "conjecture"
-           << ", conjecture, " << theorem << ")." << endl;
-  TPTPfile.close();
-
-  vector<string> neededAxioms;
-  string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
-  string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
-  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
-                       " > " + vampire_solution;
-  // cout << sCall.c_str() << endl;
-  int rv = system(sCall.c_str());
-
-  if (rv == 0 || rv == 512) {
-    bool bProver9 = hammer_invoke_.find("prover9") != std::string::npos;
-    for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-         it != axioms.end(); it++) {
-      ifstream input_file(vampire_solution);
-      if (input_file.good()) {
-        string ss;
-        bool bProofStarted = !bProver9;
-        while (getline(input_file, ss)) {
-          if (ss.find("Satisfiable") != std::string::npos ||    // for vampire
-              ss.find("SEARCH FAILED") != std::string::npos) {  // for prover9
-            cout << "       Not valid! " << endl;
-            return eVampireSat;
-          }
-
-          if (bProver9 && (ss.find("=============== PROOF") != std::string::npos)) // for prover9
-              bProofStarted = true;
-
-          if (ss != "" && ss.at(0) != '%' && bProofStarted &&
-              ss.find(it->second + ")") != std::string::npos)
-            neededAxioms.push_back(it->second);
-        }
-      } else {
-        cout << "Error reading input file :" << vampire_solution << endl;
-        return eVampireErrorReadingAxioms;
-      }
-      input_file.close();
-    }
-    for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-         it != axioms.end();) {
-      bool axiomNeeded = false;
-      for (size_t i = 0; i < neededAxioms.size(); i++) {
-        if (it->second == neededAxioms[i]) {
-          // if (!axiomNeeded)
-          //    cout << "    Needed axiom: " << neededAxioms[i] << endl;
-          axiomNeeded = true;
-        }
-      }
-      if (!axiomNeeded)
-        it = axioms.erase(it);
-      else
-        it++;
-    }
-    cout << "       Hammer filtering (success): output size: " << axioms.size()
-         << endl;
-    return eVampireUnsat;
-  }
-  cout << "       Hammer filtering (failure): output size: " << axioms.size()
-       << endl;
-  return eVampireUnknown;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
-                             const vector<Fact>& premises, const string &hammer_invoke,
-                             unsigned time_limit) {
-  string for_FOL_prover = "tptpfile_abduct.txt"; // tmpnam(NULL); //
-  ofstream TPTPfile;
-  TPTPfile.open(for_FOL_prover);
-  for (vector<pair<CLFormula, string>>::const_iterator it = axioms.begin(); it != axioms.end(); it++)
-    TPTPfile << "fof(" << it->second << ", axiom, " << it->first << ")." << endl;
-  for (vector<Fact>::const_iterator it = premises.begin(); it != premises.end(); it++)
-    TPTPfile << "fof(premise, axiom, " << *it << ")." << endl;
-  TPTPfile.close();
-
-  string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
-  string vampire_solution = "vampire_abduct.txt";// tmpnam(NULL); //
-  const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
-                       " " + " > " + vampire_solution;
-  int rv = system(sCall.c_str());
-  if (!rv) {
-    ifstream input_file(vampire_solution);
-    if (input_file.good()) {
-      string ss;
-      while (getline(input_file, ss)) {
-        if (ss.find("Satisfiable") != std::string::npos) {
-          input_file.close();
-          return eVampireSat;
-        }
-      }
-      input_file.clear();
-      input_file.seekg(0);
-      while (getline(input_file, ss)) {
-        if (ss.find("Refutation") != std::string::npos) {
-          input_file.close();
-          return eVampireUnsat;
-        }
-      }
-      input_file.close();
-      return eVampireUnknown;
-    }
-  }
-  return eVampireUnknown;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-bool FilterOurNeededAxiomsByReachability(
-    vector<pair<CLFormula, string>> &axioms, const CLFormula &theorem) {
-  set<string> mReachablePredicateSymbols;
-  cout << "--- Reachability filtering: filtering out input axioms (input: "
-       << axioms.size() << ")" << endl;
-
-  for (size_t i = 0; i < theorem.GetPremises().GetSize(); i++)
-    mReachablePredicateSymbols.insert(
-        theorem.GetPremises().GetElement(i).GetName());
-
-  size_t RCount;
-  do {
-    RCount = mReachablePredicateSymbols.size();
-    for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-         it != axioms.end(); it++) {
-      bool bAllSymbolsReachable = true;
-      for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-        if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
-            mReachablePredicateSymbols.find(
-                it->first.GetPremises().GetElement(i).GetName()) ==
-                mReachablePredicateSymbols.end()) {
-          bAllSymbolsReachable = false;
-          break;
-        }
-      }
-      if (bAllSymbolsReachable) {
-        for (size_t j = 0; j < it->first.GetGoal().GetSize(); j++)
-          for (size_t k = 0; k < it->first.GetGoal().GetElement(j).GetSize();
-               k++)
-            mReachablePredicateSymbols.insert(
-                it->first.GetGoal().GetElement(j).GetElement(k).GetName());
-      }
-    }
-  } while (mReachablePredicateSymbols.size() != RCount);
-
-  for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-       it != axioms.end();) {
-    bool bAllSymbolsReachable = true;
-    for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-      if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
-          mReachablePredicateSymbols.find(
-              it->first.GetPremises().GetElement(i).GetName()) ==
-              mReachablePredicateSymbols.end()) {
-        bAllSymbolsReachable = false;
-        break;
-      }
-    }
-    if (!bAllSymbolsReachable)
-      it = axioms.erase(it);
-    else
-      it++;
-  }
-  return true;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -873,7 +693,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
     s = str.substr(found1, found2 - found1);
     fofType type = eAny;
 
-    if (ReadTPTPStatement(s, cl, statementName, ordinal, justification, type)) {
+    if (cl.ReadTPTPStatement(s, statementName, ordinal, justification, type)) {
 
       if (type != eHint) {
         for (unsigned i = 0; i < cl.GetPremises().GetSize(); i++)
@@ -918,10 +738,10 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
         Fact hintFact = cl.GetGoal().GetElement(0).GetElement(0);
         if (hintFact.GetName() != "_") {
           bool bPredicateSymbolExists = false;
-          for(unsigned i = 0; i<T.mSignature.size() && !bPredicateSymbolExists; i++) {
-            if (hintFact.GetName() == T.mSignature[i].first) {
+          for(unsigned i = 0; i<T.mSignatureP.size() && !bPredicateSymbolExists; i++) {
+            if (hintFact.GetName() == T.mSignatureP[i].first) {
               bPredicateSymbolExists = true;
-              if (hintFact.GetArity() != T.mSignature[i].second) {
+              if (hintFact.GetArity() != T.mSignatureP[i].second) {
                 cout << "Wrong hint fact: " << hintFact << " is ill-formed (wrong arity of predicate symbol)" << endl;
                 return eErrorReadingAxioms;
               }
@@ -954,6 +774,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             }
           }
           if (!bAxiomExists &&
+                  justification.GetName().find("ExcludedMiddle") == string::npos &&
                   justification.GetName() != "eq_excluded_middle" &&
                   justification.GetName() != "eq_neg_elim" &&
                   justification.GetName() != "leq" &&
@@ -992,72 +813,6 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
     return eNoConjectureGiven;
 
   return eOK;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
-
-bool OutputToTPTPfile(const vector<string> &theory,
-                      const vector<string> &namesOfAxiomsToBeUsed,
-                      const string theoremName) {
-  Theory T;
-  CLFormula theorem;
-  string statementName;
-
-  ofstream outfile;
-  string outfilename = "tptp-problems/" + theoremName + ".p";
-  outfile.open(outfilename.c_str());
-  if (!outfile) {
-    cout << "Problem open the output file." << endl;
-    return false;
-  }
-  for (size_t j = 0, size2 = namesOfAxiomsToBeUsed.size(); j < size2; j++) {
-    bool found = false;
-    for (size_t i = 0, size = theory.size(); i < size && !found; i++) {
-      CLFormula cl;
-      Fact justification;
-      fofType type = eAny;
-      string ordinal;
-      if (ReadTPTPStatement(theory[i], cl, statementName, ordinal,
-                            justification, type) &&
-          statementName == namesOfAxiomsToBeUsed[j]) {
-        T.AddAxiom(cl, statementName);
-        found = true;
-      }
-    }
-    if (!found) {
-      cout << "Missing axiom " << namesOfAxiomsToBeUsed[j]
-           << " or not a CL formula. Exiting..." << endl;
-      return false;
-    }
-  }
-
-  for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-    outfile << "fof(" << T.Axiom(i).second << ",axiom, " << T.Axiom(i).first
-            << ")." << endl;
-  }
-
-  bool found = false;
-  for (size_t i = 0, size = theory.size(); i < size && !found; i++) {
-    CLFormula cl;
-    Fact justification;
-    fofType type = eAny;
-    string ordinal;
-    if (ReadTPTPStatement(theory[i], cl, statementName, ordinal, justification,
-                          type) &&
-        statementName == theoremName) {
-      theorem = cl;
-      outfile << "fof(" << statementName << ",conjecture," << cl << ")."
-              << endl;
-      found = true;
-    }
-  }
-  if (!found) {
-    cout << "Missing conjecture " << theoremName
-         << " or not a CL formula. Exiting..." << endl;
-    return false;
-  }
-  outfile.close();
-  return true;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

@@ -79,15 +79,15 @@ void ProofExport2LaTeX::OutputCLFormula(ofstream &outfile, const CLFormula &cl,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
-  if (f.GetName() == "false")
+  if (f.GetName() == "bot")
     outfile << "\\bot";
-  else if (f.GetName() == "true")
+  else if (f.GetName() == "top")
     outfile << "\\top";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " = " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " \\neq " << beautify(f.GetArg(1));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " \\neq " << SMT2Bracketed(beautify(f.GetArg(1)));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -97,8 +97,8 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         outfile << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          outfile << latexize(beautify(f.GetArg(i))) << ", ";
-        outfile << latexize(beautify(f.GetArg(f.GetArity() - 1)));
+          outfile << latexize(SMT2Bracketed((beautify(f.GetArg(i))))) << ", ";
+        outfile << latexize(SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1))));
         outfile << ")";
       }
     }
@@ -123,9 +123,9 @@ void ProofExport2LaTeX::OutputOr(ofstream &outfile) { outfile << "\\vee "; }
 
 void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
                                        const CLProof &p,
-                                       proverParams & /*params*/) {
+                                       proverParams & params) {
 
-  mSymbolsTaken = T.mOccuringSymbols;
+  mSymbolsTaken = T.mOccuringPredicateSymbols;
   for (vector<string>::const_iterator it = T.mConstants.begin();
        it != T.mConstants.end(); it++)
     mSymbolsTaken.insert(*it);
@@ -250,7 +250,8 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "$." << endl;
   outfile << "\\vspace{5pt}" << endl << endl;
 
-  if (p.NumOfAssumptions() - cf.GetSize() > 0) {
+  //if (p.NumOfAssumptions() - cf.GetSize() > 0) {
+  if (params.number_of_abducts > 0) {
     outfile << "Abducts found: " << endl << endl;
     outfile << "\\begin{itemize} "  << endl;
     for (size_t i = cf.GetSize(); i < p.NumOfAssumptions(); i++) {
@@ -347,12 +348,12 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
     vector<pair<string, string>> instantiation = p.GetMP(i).instantiation;
     if (instantiation.size() > new_witnesses.size()) {
       outfile << "; ";
-      outfile << "instantiation: ";
+      outfile << "instantiation:";
       for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
            j++) {
-        outfile << " $" << latexize(beautify(instantiation[j].first)) << "$"
+        outfile << " $" << latexize(SMT2Bracketed(beautify(instantiation[j].first))) << "$"
                 << " $\\mapsto$ "
-                << " $" << latexize(beautify(instantiation[j].second)) << "$";
+                << " $" << latexize(SMT2Bracketed(beautify(instantiation[j].second))) << "$";
         if (j + 1 != instantiation.size() - new_witnesses.size())
           outfile << ", ";
       }

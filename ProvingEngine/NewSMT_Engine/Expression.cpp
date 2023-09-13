@@ -277,7 +277,7 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
 {
     stringstream stream;
     SMTOut s;
-    string sOp, sArg;
+    string sOp;
     s.SetTheory(th);
 
     switch (node->mO) {
@@ -367,9 +367,7 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
 
 string Expression::print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op)
 {
-    stringstream stream;
     SMTOut s;
-    string sOp, sArg;
     s.SetTheory(th);
 
     switch (node->mO) {

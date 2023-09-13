@@ -332,7 +332,7 @@ void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
     } else {
       EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
       if (efq)
-        MakeRelevant(relevant, Fact("false"));
+        MakeRelevant(relevant, Fact("bot"));
     }
   }
   if (mMPs.size() > 0) { // last step is always relevant
@@ -422,10 +422,10 @@ bool CLProof::DecodeProof(const DNFFormula &formula,
   vector<string> sPredicates;
   map<int, string> sConstants;
 
-  sPredicates.resize(mpT->mSignature.size() + 1);
+  sPredicates.resize(mpT->mSignatureP.size() + 1);
   int i = 0;
-  for (size_t j = 0; j < mpT->mSignature.size(); j++)
-    sPredicates[i++] = mpT->mSignature[j].first;
+  for (size_t j = 0; j < mpT->mSignatureP.size(); j++)
+    sPredicates[i++] = mpT->mSignatureP[j].first;
 
   i = 0;
   for (vector<string>::iterator it = mpT->mConstants.begin();
@@ -847,7 +847,7 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
             mpT->mCLaxioms[nAxiom - eNumberOfStepKinds]
                     .first.GetPremises()
                     .GetElement(1)
-                    .GetName() == "true")
+                    .GetName() == "top")
           noPremises = 0;
         size_t numOfVars = numOfUnivVars + numOfExistVars;
         vector<unsigned> fromSteps;

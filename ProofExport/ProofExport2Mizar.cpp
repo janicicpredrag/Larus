@@ -65,11 +65,11 @@ void ProofExport2Mizar::OutputCLFormula(ofstream &outfile,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
-  if (f.GetName() == "false") {
+  if (f.GetName() == "bot") {
     outfile << "contradiction";
     return;
   }
-  if (f.GetName() == "true") {
+  if (f.GetName() == "top") {
     outfile << "not contradiction";
     return;
   }
@@ -126,9 +126,9 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "begin" << endl << endl;
   outfile << "scheme SMyT { ";
   bool no_predicate=true;
-  for (vector<pair<string, unsigned>>::iterator it = T.mSignature.begin();
-    it != T.mSignature.end(); ++it) {
-    if (get<0>(*it) == "false" || get<0>(*it) == "true")
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
+    it != T.mSignatureP.end(); ++it) {
+    if (get<0>(*it) == "bot" || get<0>(*it) == "top")
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
        continue;
@@ -142,7 +142,7 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
       outfile << "object";
     outfile << "]";
     ++it;
-    if (it+1 != T.mSignature.end())
+    if (it+1 != T.mSignatureP.end())
        {
          if (get<0>(*(it+1)).find(PREFIX_NEGATED) != string::npos)
         outfile << " ";

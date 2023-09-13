@@ -24,8 +24,8 @@ class Theory {
 public:
   Theory() {
     miConstantsCounter = 0;
-    AddSymbol("false", 0);
-    AddSymbol("true", 0);
+    AddPredicateSymbol("bot", 0);
+    AddPredicateSymbol("top", 0);
     mbUseNativeEq = false;
   }
 
@@ -53,12 +53,13 @@ public:
   void AddConstant(string s);
   string MakeNewConstant();
   string GetConstantName(unsigned id) const;
-  bool IsConstant(string s) const;
+  bool IsConstant(Term t) const;
   size_t NumberOfConstantsWaiting();
   bool MakeNextConstantPermissible();
   void StoreInitialConstants();
 
-  void AddSymbol(const string &p, unsigned arity);
+  void AddPredicateSymbol(const string &p, unsigned arity);
+  void AddFunctionSymbol(const string &f, unsigned arity);
   void UpdateSignature(CLFormula &axiom);
   size_t GetSymbolArity(string p);
 
@@ -74,7 +75,7 @@ public:
   void SetUseNativeEq(bool b) {
     mbUseNativeEq = b;
     if (b)
-      AddSymbol(EQ_NATIVE_NAME, 2);
+      AddPredicateSymbol(EQ_NATIVE_NAME, 2);
   }
   bool GetUseNativeEq() { return mbUseNativeEq; }
 
@@ -99,8 +100,10 @@ public:
   vector<string> mConstants;
   vector<string> mInitialConstants;
   set<string> mConstantsPermissible;
-  vector<pair<string, unsigned>> mSignature;
-  set<string> mOccuringSymbols;
+  vector<pair<string, unsigned>> mSignatureP;
+  vector<pair<string, unsigned>> mSignatureF;
+  set<string> mOccuringPredicateSymbols;
+  set<string> mOccuringFunctionSymbols;
 
   size_t mBeforeSaturation;
   vector<DerivedLemma> mDerivedLemmas;

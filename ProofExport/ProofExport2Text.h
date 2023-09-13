@@ -1,11 +1,11 @@
-#ifndef PROOFEXPORT2LATEX_H
-#define PROOFEXPORT2LATEX_H
+#ifndef PROOFEXPORT2TEXT_H
+#define PROOFEXPORT2TEXT_H
 
 #include "ProofExport.h"
 
-class ProofExport2LaTeX : public ProofExport {
+class ProofExport2Text : public ProofExport {
 public:
-  ProofExport2LaTeX(string &filename) { mFileName = filename; }
+  ProofExport2Text(string &filename) { mFileName = filename; }
 
 private:
   void OutputFact(ofstream &outfile, const Fact &f);
@@ -33,4 +33,4 @@ private:
   string mFileName;
 };
 
-#endif // PROOFEXPORT2LATEX_H
+#endif // PROOFEXPORT2TEXT_H

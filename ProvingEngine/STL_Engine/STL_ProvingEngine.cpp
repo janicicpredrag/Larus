@@ -315,7 +315,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
 bool STL_ProvingEngine::ApplyEFQ() {
   for (set<Fact>::iterator it = mpDB->GetDatabase()->begin();
        it != mpDB->GetDatabase()->end(); ++it) {
-    if (it->GetName() == "false")
+    if (it->GetName() == "bot")
       return true;
   }
   return false;

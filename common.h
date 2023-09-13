@@ -103,6 +103,7 @@ const string DEFAULT_HAMMER_FOR_ABDUCTS = "vampire --cores 4 --mode casc --proof
 const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
 const bool DEFAULT_INLINE_AXIOMS = true;
 const unsigned DEFAULT_NUMBER_OF_ABDUCTS = 0;
+const bool DEFAULT_SHOW = false;
 
 const unsigned SATURATION_TIME_LIMIT = 5;
 
@@ -137,6 +138,7 @@ typedef struct proverParams {
   unsigned vampire_time_limit;
   bool mbInlineAxioms;
   unsigned number_of_abducts;
+  bool show;
 } proverParams;
 
 string itos(unsigned int i);
@@ -152,6 +154,8 @@ bool isIdentifier(const string &str);
 bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 string replacestring(const string& str, const string& from, const string& to);
+void replaceAll( string &s, const string &search, const string &replace );
+string SMT2Bracketed(const string& s);
 
 extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;

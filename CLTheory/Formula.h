@@ -12,17 +12,75 @@ using namespace std;
 class ProvingEngine;
 class Theory;
 
-bool MatchingBrackets(const string &v);
-
 class DNFFormula;
 
 // ---------------------------------------------------------------------------------------
+
+class Term {
+public:
+  Term() {}
+  Term (const Term &t) {
+    mT = t.mT;
+    mFunctionSymbols = t.mFunctionSymbols;
+    mArgs = t.mArgs;
+  }
+  Term (const string &s) {
+    mT = s;
+    SetData();
+  }
+  unsigned NumArgs() {
+    return mArgs.size();
+  }
+  string GetArg(unsigned i) {
+    return mArgs[i];
+  }
+  unsigned NumFunctionSymbols() {
+    return mFunctionSymbols.size();
+  }
+  string GetFunctionSymbol(unsigned i) {
+    return mFunctionSymbols[i].first;
+  }
+  unsigned GetFunctionSymbolArity(unsigned i) {
+    return mFunctionSymbols[i].second;
+  }
+  void SetData();
+  bool Read();
+  string ToSMTString() const;
+  Term &operator=(const Term &t) {
+    mT = t.mT;
+    mFunctionSymbols = t.mFunctionSymbols;
+    mArgs = t.mArgs;
+    return *this;
+  }
+  Term &operator=(const string &s) {
+    mT = s;
+    SetData();
+    return *this;
+  }
+  bool IsCompound() const {
+    return (mT.find(' ') != string::npos);
+  }
+  bool operator==(const Term &t) const {
+    return (mT == t.mT);
+  }
+  bool operator!=(const Term &t) const {
+    return (mT != t.mT);
+  }
+private:
+  string mT;
+  vector<pair<string,unsigned>> mFunctionSymbols;
+  vector<string> mArgs;
+};
+
+// ---------------------------------------------------------------------------------------
+
 class Fact {
 public:
   Fact() {}
   Fact(string &n, const vector<string> &a) {
     mName = n;
-    mArgs = a;
+    for(unsigned i = 0; i < a.size(); i++)
+      mArgs[i] = a[i];
   }
   Fact(const Fact &f) {
     mName = f.mName;
@@ -34,17 +92,32 @@ public:
     return *this;
   }
   bool operator==(const Fact &f) const {
-    return (mName == f.mName && mArgs == f.mArgs);
+    if (mName != f.mName)
+      return false;
+    for (unsigned i = 0; i<mArgs.size(); i++) {
+      if (mArgs[i] != f.mArgs[i])
+        return false;
+    }
+    return true;
   }
   Fact(const string &s);
   size_t GetArity() const { return mArgs.size(); }
-  string GetArg(size_t i) const {
-    return (mArgs.size() > i ? mArgs[i] : "null");
-  }
-  void ClearArgs() { mArgs.clear(); }
   string GetName() const { return mName; }
+  string GetArg(size_t i) const {
+    assert(mArgs.size() > i);
+    return mArgs[i].ToSMTString();
+  }
+  bool Read();
   void SetName(const string &name) { mName = name; }
-  bool Read(const string &s);
+  void ClearArgs() { mArgs.clear(); }
+  string ToString() const;
+
+/*  void SetArg(size_t i, const Term &t) {
+    if (mArgs.size() <= i)
+      mArgs.resize(i + 1);
+    mArgs[i] = t;
+  }*/
+
   void SetArg(size_t i, const string &s) {
     if (mArgs.size() <= i)
       mArgs.resize(i + 1);
@@ -79,7 +152,7 @@ public:
 
 private:
   string mName;
-  vector<string> mArgs;
+  vector<Term> mArgs;
 };
 
 // ---------------------------------------------------------------------------------------
@@ -104,7 +177,8 @@ public:
   }
   void Add(const Fact &f) { mConjunction.push_back(f); }
   void SetElement(size_t i, const Fact &f) { mConjunction[i] = f; }
-  bool Read(const string &s);
+  bool Read();
+  
   void Clear() { mConjunction.clear(); }
   static bool less(const ConjunctionFormula &lhs,
                    const ConjunctionFormula &rhs);
@@ -118,6 +192,7 @@ private:
 
 // ---------------------------------------------------------------------------------------
 
+class CLFormula;
 class DNFFormula {
 public:
   DNFFormula() {}
@@ -129,7 +204,9 @@ public:
   }
   void Add(const ConjunctionFormula &cf) { mDNF.push_back(cf); }
   void SetElement(size_t i, const ConjunctionFormula &cf) { mDNF[i] = cf; }
-  bool Read(const string &s);
+  //bool Read(const string &s);
+  bool Read(CLFormula* p = NULL);
+  
   const vector<ConjunctionFormula> *GetDNF() const { return &mDNF; }
   bool Equals(const DNFFormula &f) const;
   void Clear() { mDNF.clear(); }
@@ -172,33 +249,34 @@ public:
             cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/);
   }
   friend ostream &operator<<(ostream &os, const CLFormula &f);
+ // bool Read(const string &s);
+  bool Read();
+
+  bool ReadUnivVars();
+  bool ReadExistVars();
+  bool ReadImplication();
+  bool ReadWithoutCheckingBoundness();
+  
+  bool ReadTPTPStatement(const string &s, string &name,
+                         string &ordinal, Fact &justification, fofType &type);
+
   const ConjunctionFormula &GetPremises() const { return mA; }
   const DNFFormula &GetGoal() const { return mB; }
-  bool Read(const string &s);
-  bool ReadWithoutCheckingBoundness(const string &s);
-  bool ReadImplication(const string &v, ConjunctionFormula &A, DNFFormula &B);
-  bool MatchingBrackets(const string &v) const;
 
   size_t GetNumOfUnivVars() const { return mUniversalVars.size(); }
   const string &GetUnivVar(size_t i) const { return mUniversalVars[i]; }
+  void SetUnivVars(vector<string> &uv) { mUniversalVars = uv; }
+  void AddUnivVar(const string &varName) { mUniversalVars.push_back(varName); }
+  void TakeUnivVars(const CLFormula &cf) { mUniversalVars = cf.mUniversalVars; }
+  int UnivVarOrdinalNumber(string v) const;
+  void ClearUnivVars() { mUniversalVars.clear(); }
+
   size_t GetNumOfExistVars() const { return mExistentialVars.size(); }
   const string &GetExistVar(size_t i) const { return mExistentialVars[i]; }
-  void SetUnivVars(vector<string> &uv) { mUniversalVars = uv; }
   void SetExistVars(vector<string> &ev) { mExistentialVars = ev; }
-  void TakeUnivVars(const CLFormula &cf) { mUniversalVars = cf.mUniversalVars; }
-  void TakeExistVars(const CLFormula &cf) {
-    mExistentialVars = cf.mExistentialVars;
-  }
-
-  void AddUnivVar(const string &varName) { mUniversalVars.push_back(varName); }
-  void AddExistVar(const string &varName) {
-    mExistentialVars.push_back(varName);
-  }
-
-  int UnivVarOrdinalNumber(string v) const;
+  void AddExistVar(const string &varName) { mExistentialVars.push_back(varName); }
+  void TakeExistVars(const CLFormula &cf) { mExistentialVars = cf.mExistentialVars; }
   int ExistVarOrdinalNumber(string v) const;
-
-  void ClearUnivVars() { mUniversalVars.clear(); }
   void ClearExistVars() { mExistentialVars.clear(); }
 
   void Normalize(const string &name, const string &suffix,
@@ -230,11 +308,16 @@ private:
   vector<string> mExistentialVars;
 };
 
+inline ostream &operator<<(ostream &os, const Term &t) {
+   os << t.ToSMTString();
+   return os;
+}
+
 // ---------------------------------------------------------------------------------------
 inline ostream &operator<<(ostream &os, const Fact &f) {
-  if (f.GetName() == "false") {
+  if (f.GetName() == "false" || f.GetName() == "bot") {
     os << "$false";
-  } else if (f.GetName() == "true") {
+  } else if (f.GetName() == "true" || f.GetName() == "top") {
     os << "$true";
   } else if (f.GetName() == EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)

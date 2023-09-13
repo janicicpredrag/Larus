@@ -139,7 +139,7 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
 // ---------------------------------------------------------------------------------------
 
 void URSA_ProvingEngine::AddPremise(const Fact &f) {
-  mpT->AddSymbol(f.GetName(), f.GetArity());
+  mpT->AddPredicateSymbol(f.GetName(), f.GetArity());
 
   stringstream s;
   s << "/* Premise " << f << " */" << endl;
@@ -343,10 +343,10 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
     t.start();
     if (formula.GetSize() >
         0) // disjunctions in the goal can have only one disjunct
-      mpT->AddSymbol(formula.GetElement(0).GetElement(0).GetName(),
+      mpT->AddPredicateSymbol(formula.GetElement(0).GetElement(0).GetName(),
                      formula.GetElement(0).GetElement(0).GetArity());
     if (formula.GetSize() > 1)
-      mpT->AddSymbol(formula.GetElement(1).GetElement(0).GetName(),
+      mpT->AddPredicateSymbol(formula.GetElement(1).GetElement(0).GetName(),
                      formula.GetElement(1).GetElement(0).GetArity());
 
     if (mParams.shortest_proof) {
@@ -432,16 +432,16 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
 
   unsigned nMaxArity = 0;
   unsigned enumerator = 0;
-  for (size_t i = 0; i < mpT->mSignature.size(); i++) {
-    ursaFile << URSA_NUM_PREFIX << ToUpper(mpT->mSignature[i].first) << " = "
+  for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
+    ursaFile << URSA_NUM_PREFIX << ToUpper(mpT->mSignatureP[i].first) << " = "
              << enumerator++ << ";" << endl;
-    ursaFile << "nArity[" + URSA_NUM_PREFIX << ToUpper(mpT->mSignature[i].first)
-             << "] = " << mpT->mSignature[i].second << ";" << endl;
-    if (mpT->mSignature[i].second > nMaxArity)
-      nMaxArity = mpT->mSignature[i].second;
+    ursaFile << "nArity[" + URSA_NUM_PREFIX << ToUpper(mpT->mSignatureP[i].first)
+             << "] = " << mpT->mSignatureP[i].second << ";" << endl;
+    if (mpT->mSignatureP[i].second > nMaxArity)
+      nMaxArity = mpT->mSignatureP[i].second;
     ursaFile << endl;
   }
-  ursaFile << "nNumberOfPredicates = " << mpT->mSignature.size() << ";" << endl;
+  ursaFile << "nNumberOfPredicates = " << mpT->mSignatureP.size() << ";" << endl;
 
   ursaFile << "/* Intro constants */" << endl;
   enumerator = 0;
