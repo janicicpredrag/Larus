@@ -47,10 +47,10 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
       << j << ". predicate in premises */" << endl;
     for (size_t i = 0; i < axiom.GetPremises().GetElement(j).GetArity(); i++)
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
+              axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString()) != -1)
         s << "nBinding[nAxiomsCount][" << j << "*nMaxArg+" << i << "] = "
           << axiom.UnivVarOrdinalNumber(
-                 axiom.GetPremises().GetElement(j).GetArg(i)) +
+                 axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString()) +
                  1
           << "; /*" << i + 1 << ". universal variable */" << endl;
       else {
@@ -58,7 +58,7 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
           << "] = 0; /* constant */" << endl;
         s << "nAxiomArgument[nAxiomsCount][" << j << "*nMaxArg+" << i
           << "] = " << URSA_NUM_PREFIX
-          << ToUpper(axiom.GetPremises().GetElement(j).GetArg(i)) << ";"
+          << ToUpper(axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString()) << ";"
           << endl;
       }
   }
@@ -72,20 +72,20 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
     for (size_t i = 0;
          i < axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+              axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
         s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i
           << "] = "
           << axiom.UnivVarOrdinalNumber(
-                 axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
+                 axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
                  1
           << "; /* 1th univ var */" << endl;
       else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+                   axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
         s << "nBinding[nAxiomsCount][" << noPremises << "*nMaxArg+" << i
           << "] = "
           << axiom.GetNumOfUnivVars() +
                  axiom.ExistVarOrdinalNumber(
-                     axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
+                     axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
                  1
           << "; /* 1th univ var */" << endl;
       else {
@@ -93,7 +93,7 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
           << "] = 0; /* constant */" << endl;
         s << "nAxiomArgument[nAxiomsCount][" << noPremises << "*nMaxArg+" << i
           << "] = " << URSA_NUM_PREFIX
-          << ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i))
+          << ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString())
           << ";" << endl;
       }
     }
@@ -107,20 +107,20 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
     for (size_t i = 0;
          i < axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+              axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
         s << "nBinding[nAxiomsCount][" << noPremises + 1 << "*nMaxArg+" << i
           << "] = "
           << axiom.UnivVarOrdinalNumber(
-                 axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
+                 axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
                  1
           << "; /* 1th univ var */" << endl;
       else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+                   axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
         s << "nBinding[nAxiomsCount][" << noPremises + 1 << "*nMaxArg+" << i
           << "] = "
           << axiom.GetNumOfUnivVars() +
                  axiom.ExistVarOrdinalNumber(
-                     axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
+                     axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
                  1
           << "; /* 1th univ var */" << endl;
       else {
@@ -128,7 +128,7 @@ void URSA_ProvingEngine::EncodeAxiom(size_t no, CLFormula &axiom, string name) {
           << "] = 0; /* constant  */" << endl;
         s << "nAxiomArgument[nAxiomsCount][" << noPremises + 1 << "*nMaxArg+"
           << i << "] = " << URSA_NUM_PREFIX
-          << ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i))
+          << ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString())
           << ";" << endl;
       }
     }
@@ -150,7 +150,7 @@ void URSA_ProvingEngine::AddPremise(const Fact &f) {
     << endl;
   for (size_t i = 0; i < f.GetArity(); i++)
     s << "nA[nPremisesCount][" << i
-      << "] = " + URSA_NUM_PREFIX + ToUpper(f.GetArg(i)) + ";" << endl;
+      << "] = " + URSA_NUM_PREFIX + ToUpper(f.GetArg(i).ToSMTString()) + ";" << endl;
   s << "nPremisesCount++;" << endl << endl;
   mURSAstringPremises += s.str();
 }
@@ -169,12 +169,12 @@ void URSA_ProvingEngine::EncodeHint(const tHint &hint) {
   if (justification.GetName() != "_") {
     int i;
     string arg0, arg1;
-    arg0 = stoi(justification.GetArg(0), i)
+    arg0 = stoi(justification.GetArg(0).ToSMTString(), i)
                ? itos(i)
-               : URSA_NUM_PREFIX + justification.GetArg(0) + hintName;
-    arg1 = stoi(justification.GetArg(1), i)
+               : URSA_NUM_PREFIX + justification.GetArg(0).ToSMTString() + hintName;
+    arg1 = stoi(justification.GetArg(1).ToSMTString(), i)
                ? itos(i)
-               : URSA_NUM_PREFIX + justification.GetArg(1) + hintName;
+               : URSA_NUM_PREFIX + justification.GetArg(1).ToSMTString() + hintName;
 
     if (justification.GetName() == "leq" && justification.GetArity() == 2) {
       sURSAstringConstraints += "bHints &&= (" + arg0 + " <= " + arg1 + ");\n";
@@ -215,15 +215,14 @@ void URSA_ProvingEngine::EncodeHint(const tHint &hint) {
       s << "                  nAxiomApplied[" << proofStep
         << "] == " << 13 + AxiomUsed << " && " << endl;
       for (size_t i = 0; i < justification.GetArity(); i++) {
-        if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
+        if (justification.GetArg(i).ToSMTString() == "?" || justification.GetArg(i).ToSMTString() == "_")
           continue;
-        if (stoi(justification.GetArg(i),
-                 arg)) // if it is a number, it is one of the intro vars
+        if (stoi(justification.GetArg(i).ToSMTString(), arg)) // if it is a number, it is one of the intro vars
           s << "                nInst[" << proofStep << "][" << i + 1
-            << "] == " << justification.GetArg(i) << " && " << endl;
+            << "] == " << justification.GetArg(i).ToSMTString() << " && " << endl;
         else // otherwise, we bind it to a new variable
           s << "                nInst[" << proofStep << "][" << i + 1
-            << "] == nHintVarInst" + hintName + justification.GetArg(i) + " && "
+            << "] == nHintVarInst" + hintName + justification.GetArg(i).ToSMTString() + " && "
             << endl;
       }
     } else {
@@ -245,16 +244,16 @@ void URSA_ProvingEngine::EncodeHint(const tHint &hint) {
         s << "                nP[" << proofStep << "][" << j
           << "] == " + URSA_NUM_PREFIX + ToUpper(f.GetName()) + " && " << endl;
         for (size_t i = 0; i < f.GetArity(); i++) {
-          if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
+          if (f.GetArg(i).ToSMTString() == "?" || f.GetArg(i).ToSMTString() == "_")
             continue;
-          if (stoi(f.GetArg(i),
+          if (stoi(f.GetArg(i).ToSMTString(),
                    arg)) // if it is a number, it is one of the intro vars
             s << "                nA[" << proofStep << "][" << j
               << "*nMaxArg + " << i << "] == " << arg << " && " << endl;
           else // otherwise, we bind it to a new variable
             s << "                nA[" << proofStep << "][" << j
               << "*nMaxArg + " << i
-              << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && "
+              << "] == nHintVar" + hintName + ToUpper(f.GetArg(i).ToSMTString()) + " && "
               << endl;
         }
       }
@@ -281,15 +280,15 @@ void URSA_ProvingEngine::EncodeHint(const tHint &hint) {
       s << "                  nAxiomApplied[nProofStep] == " << 13 + AxiomUsed
         << " && " << endl;
       for (size_t i = 0; i < justification.GetArity(); i++) {
-        if (justification.GetArg(i) == "?" || justification.GetArg(i) == "_")
+        if (justification.GetArg(i).ToSMTString() == "?" || justification.GetArg(i).ToSMTString() == "_")
           continue;
-        if (stoi(justification.GetArg(i),
+        if (stoi(justification.GetArg(i).ToSMTString(),
                  arg)) // if it is a number, it is one of the intro vars
           s << "                nInst[nProofStep][" << i + 1
-            << "] == " << justification.GetArg(i) << " && " << endl;
+            << "] == " << justification.GetArg(i).ToSMTString() << " && " << endl;
         else // otherwise, we bind it to a new variable
           s << "                nInst[nProofStep][" << i + 1
-            << "] == nHintVarInst" + hintName + justification.GetArg(i) + " && "
+            << "] == nHintVarInst" + hintName + justification.GetArg(i).ToSMTString() + " && "
             << endl;
       }
     } else {
@@ -311,15 +310,15 @@ void URSA_ProvingEngine::EncodeHint(const tHint &hint) {
         s << "                nP[nProofStep][" << j
           << "] == " + URSA_NUM_PREFIX + ToUpper(f.GetName()) + " && " << endl;
         for (size_t i = 0; i < f.GetArity(); i++) {
-          if (f.GetArg(i) == "?" || f.GetArg(i) == "_")
+          if (f.GetArg(i).ToSMTString() == "?" || f.GetArg(i).ToSMTString() == "_")
             continue;
-          if (stoi(f.GetArg(i),
+          if (stoi(f.GetArg(i).ToSMTString(),
                    arg)) // if it is a number, it is one of the intro vars
             s << "                nA[nProofStep][" << j << "*nMaxArg + " << i
               << "] == " << arg << " && " << endl;
           else
             s << "                nA[nProofStep][" << j << "*nMaxArg + " << i
-              << "] == nHintVar" + hintName + ToUpper(f.GetArg(i)) + " && "
+              << "] == nHintVar" + hintName + ToUpper(f.GetArg(i).ToSMTString()) + " && "
               << endl;
         }
       }
@@ -600,11 +599,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
                   ToUpper(formula.GetElement(0).GetElement(0).GetName()) + ";"
            << endl;
   for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-    if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) !=
+    if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) !=
         CONSTANTS.end())
       ursaFile << "nA[nFinalStep][" << i
                << "] = " + URSA_NUM_PREFIX +
-                      ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) +
+                      ToUpper(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
                       ";"
                << endl;
     else
@@ -616,11 +615,11 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
                     ToUpper(formula.GetElement(1).GetElement(0).GetName()) + ";"
              << endl;
     for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++)
-      if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) !=
+      if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) !=
           CONSTANTS.end())
         ursaFile << "nA[nFinalStep][nMaxArg+" << i
                  << "] = " + URSA_NUM_PREFIX +
-                        ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
+                        ToUpper(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
                         ";"
                  << endl;
       else

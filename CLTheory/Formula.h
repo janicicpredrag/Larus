@@ -20,18 +20,22 @@ class Term {
 public:
   Term() {}
   Term (const Term &t) {
-    mT = t.mT;
+    mTPTPterm = t.mTPTPterm;
+    mSMTlibterm = t.mSMTlibterm;
     mFunctionSymbols = t.mFunctionSymbols;
     mArgs = t.mArgs;
   }
-  Term (const string &s) {
-    mT = s;
-    SetData();
-  }
-  unsigned NumArgs() {
+  void ReadNonCompoundString(const string &s);
+  void ReadTPTPString(const string &s);
+  void ReadSMTlibString(const string &s);
+//  Term (const string &s);
+//  Term &operator=(const string &s);
+  bool ReadTPTP();
+  bool ReadSMTlib();
+  unsigned NumArgs() const {
     return mArgs.size();
   }
-  string GetArg(unsigned i) {
+  string GetArg(unsigned i) const {
     return mArgs[i];
   }
   unsigned NumFunctionSymbols() {
@@ -43,31 +47,30 @@ public:
   unsigned GetFunctionSymbolArity(unsigned i) {
     return mFunctionSymbols[i].second;
   }
-  void SetData();
-  bool Read();
+  string ToTPTPString() const;
   string ToSMTString() const;
   Term &operator=(const Term &t) {
-    mT = t.mT;
+    mTPTPterm = t.mTPTPterm;
+    mSMTlibterm = t.mSMTlibterm;
     mFunctionSymbols = t.mFunctionSymbols;
     mArgs = t.mArgs;
     return *this;
   }
-  Term &operator=(const string &s) {
-    mT = s;
-    SetData();
-    return *this;
-  }
   bool IsCompound() const {
-    return (mT.find(' ') != string::npos);
+    return (mSMTlibterm.find(' ') != string::npos);
   }
   bool operator==(const Term &t) const {
-    return (mT == t.mT);
+    return (mTPTPterm == t.mTPTPterm);
   }
   bool operator!=(const Term &t) const {
-    return (mT != t.mT);
+    return (mTPTPterm != t.mTPTPterm);
+  }
+  const vector<string>& TermArguments() const {
+     return mArgs;
   }
 private:
-  string mT;
+  string mTPTPterm;
+  string mSMTlibterm;
   vector<pair<string,unsigned>> mFunctionSymbols;
   vector<string> mArgs;
 };
@@ -80,7 +83,7 @@ public:
   Fact(string &n, const vector<string> &a) {
     mName = n;
     for(unsigned i = 0; i < a.size(); i++)
-      mArgs[i] = a[i];
+      mArgs[i].ReadTPTPString(a[i]);
   }
   Fact(const Fact &f) {
     mName = f.mName;
@@ -103,25 +106,20 @@ public:
   Fact(const string &s);
   size_t GetArity() const { return mArgs.size(); }
   string GetName() const { return mName; }
-  string GetArg(size_t i) const {
+  const Term& GetArg(size_t i) const {
     assert(mArgs.size() > i);
-    return mArgs[i].ToSMTString();
+    return mArgs[i];
   }
+
   bool Read();
   void SetName(const string &name) { mName = name; }
   void ClearArgs() { mArgs.clear(); }
   string ToString() const;
 
-/*  void SetArg(size_t i, const Term &t) {
+  void SetArg(size_t i, const Term &t) {
     if (mArgs.size() <= i)
       mArgs.resize(i + 1);
     mArgs[i] = t;
-  }*/
-
-  void SetArg(size_t i, const string &s) {
-    if (mArgs.size() <= i)
-      mArgs.resize(i + 1);
-    mArgs[i] = s;
   }
   bool Equals(const Fact &f) const;
   void Clear() {
@@ -142,9 +140,9 @@ public:
     if (lsize > rsize)
       return 0;
     for (size_t i = 0; i != lsize; i++) {
-      if (GetArg(i) < rhs.GetArg(i))
+      if (GetArg(i).ToSMTString() < rhs.GetArg(i).ToSMTString())
         return 1;
-      if (GetArg(i) > rhs.GetArg(i))
+      if (GetArg(i).ToSMTString() > rhs.GetArg(i).ToSMTString())
         return 0;
     }
     return 0;
@@ -309,7 +307,7 @@ private:
 };
 
 inline ostream &operator<<(ostream &os, const Term &t) {
-   os << t.ToSMTString();
+   os << t.ToTPTPString();
    return os;
 }
 
@@ -321,16 +319,16 @@ inline ostream &operator<<(ostream &os, const Fact &f) {
     os << "$true";
   } else if (f.GetName() == EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)
-      os << "( " << f.GetArg(0) << " = " << f.GetArg(1) << " )";
+      os << "( " << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString() << " )";
     else
-      os << EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", " << f.GetArg(1)
+      os << EQ_NATIVE_NAME << "( " << f.GetArg(0).ToSMTString() << ", " << f.GetArg(1).ToSMTString()
          << " )";
   } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)
-      os << "( " << f.GetArg(0) << " != " << f.GetArg(1) << " )";
+      os << "( " << f.GetArg(0).ToSMTString() << " != " << f.GetArg(1).ToSMTString() << " )";
     else
-      os << PREFIX_NEGATED + EQ_NATIVE_NAME << "( " << f.GetArg(0) << ", "
-         << f.GetArg(1) << " )";
+      os << PREFIX_NEGATED + EQ_NATIVE_NAME << "( " << f.GetArg(0).ToSMTString() << ", "
+         << f.GetArg(1).ToSMTString() << " )";
   } else {
     if (f.GetName().find(PREFIX_NEGATED) == 0 && USING_ORIGINAL_SIGNATURE_NEG) {
       string s = PREFIX_NEGATED;
@@ -343,7 +341,7 @@ inline ostream &operator<<(ostream &os, const Fact &f) {
     if (f.GetArity() > 0) {
       os << "(";
       for (size_t i = 0; i < f.GetArity(); i++) {
-        os << f.GetArg(i);
+        os << f.GetArg(i).ToSMTString();
         if (i != f.GetArity() - 1)
           os << ",";
       }

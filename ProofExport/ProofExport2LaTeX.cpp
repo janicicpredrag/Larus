@@ -85,9 +85,9 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "\\top";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " = " << SMT2Bracketed(beautify(f.GetArg(1)));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " = " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << SMT2Bracketed(beautify(f.GetArg(0))) << " \\neq " << SMT2Bracketed(beautify(f.GetArg(1)));
+      outfile << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " \\neq " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -97,8 +97,8 @@ void ProofExport2LaTeX::OutputFact(ofstream &outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         outfile << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          outfile << latexize(SMT2Bracketed((beautify(f.GetArg(i))))) << ", ";
-        outfile << latexize(SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1))));
+          outfile << latexize(SMT2Bracketed((beautify(f.GetArg(i).ToSMTString())))) << ", ";
+        outfile << latexize(SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1).ToSMTString())));
         outfile << ")";
       }
     }

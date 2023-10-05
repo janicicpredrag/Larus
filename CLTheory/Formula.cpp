@@ -124,7 +124,7 @@ string getFirstID(const string& str, unsigned& i)
     while (str[i] != '\0' && (isspace(str[i]) || str[i] ==')')) {
       i++;
     }
-    while (isalnum(str[i]) || str[i]=='_' || str[i]=='(') {
+    while (isalnum(str[i]) || str[i]=='_' || str[i]=='(' || str[i]=='$' ) {
       id += str[i];
       i++;
     }
@@ -133,84 +133,184 @@ string getFirstID(const string& str, unsigned& i)
 
 // ---------------------------------------------------------------------------------------
 
-bool Term::Read()
+bool Term::ReadTPTP()
 {
-    mT = "(" + NEXTLEXEME;
+    mTPTPterm = NEXTLEXEME;
+
+    if (NEXTLEXEME == "$plus_int")
+       mSMTlibterm = "(bvadd";
+    else if (NEXTLEXEME == "$minus_int")
+       mSMTlibterm = "(bvsub";
+    else if (NEXTLEXEME == "$times_int")
+       mSMTlibterm = "(bvmul";
+    else
+      mSMTlibterm = "(" + NEXTLEXEME;
+    mArgs.push_back(NEXTLEXEME);
+    string function_symbol = NEXTLEXEME;
     ReadNextToken();
 
     if (NEXTTOKEN == eOPENB) {
+      mTPTPterm += "(";
       ReadNextToken();
+      bool bFirst = true;
+      int arity;
       while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
+        if (bFirst) {
+          arity = 1;
+          mArgs.pop_back(); // delete the initial arg, it is function symbol
+          mFunctionSymbols.push_back(make_pair(function_symbol,arity));
+          bFirst = false;
+        } else {
+          mFunctionSymbols.pop_back();
+          mFunctionSymbols.push_back(make_pair(function_symbol,++arity)); // TODO check if there is already
+        }
         Term t;
-        if (!t.Read())
+        if (!t.ReadTPTP())
           return false;
-        mT += " " + t.ToSMTString();
-        if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
+        if (arity == 1)
+          mTPTPterm += t.ToTPTPString();
+        else
+          mTPTPterm += ", " + t.ToTPTPString();
+        mSMTlibterm += " " + t.ToSMTString();
+        mFunctionSymbols.insert(mFunctionSymbols.end(), t.mFunctionSymbols.begin(), t.mFunctionSymbols.end());
+        mArgs.insert(mArgs.end(),t.mArgs.begin(), t.mArgs.end());
+
+        if (NEXTTOKEN != eCOMMA && NEXTTOKEN != eCLOSEB)
           return false;
         if (NEXTTOKEN == eCLOSEB) {
+          mTPTPterm += ")";
           ReadNextToken();
           break;
         }
         ReadNextToken();
       }
     }
-    mT += ")";
-    SetData();
+    mSMTlibterm += ")";
     return true;
 }
 
 // ---------------------------------------------------------------------------------------
 
-void Term::SetData()
+bool Term::ReadSMTlib()
 {
-   if (!IsCompound()) {
-       if (mT[0] == '(')
-         mArgs.push_back(mT.substr(1, mT.size()-2));
-       else
-         mArgs.push_back(mT);
-       return;
-   }
-   string s;
-   unsigned pos = 0;
-   unsigned arity = 0;
-   bool bNextIsFunc = false;
-   string function_symbol;
-   for(;;) {
-     if (mT[pos] == '(') {
-        bNextIsFunc = true;
-        pos++;
-     }
-     s = getFirstID(mT,pos);
-     if (s == "")
-       return;
-     if (bNextIsFunc) {
-       function_symbol = s;
-       bNextIsFunc = false;
-       arity = 0; // start counting arguments
-       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
-     }
-     else {
-       mArgs.push_back(s);
-       arity++;
-       mFunctionSymbols.pop_back();
-       mFunctionSymbols.push_back(make_pair(function_symbol,arity)); // TODO check if there is already
-     }
-   }
+    if (NEXTTOKEN == eOPENB) {
+      ReadNextToken(); // after '('
+    }
+    mSMTlibterm = NEXTLEXEME;
+    if (NEXTLEXEME == "bvadd")
+       mTPTPterm = "$plus_int";
+    else if (NEXTLEXEME == "bvsub")
+       mTPTPterm = "$minus_int";
+    else if (NEXTLEXEME == "bvmul")
+       mTPTPterm = "$times_int";
+    else
+       mTPTPterm = NEXTLEXEME;
+    mArgs.push_back(NEXTLEXEME);
+    string function_symbol = NEXTLEXEME;
+    ReadNextToken();
+    int arity = 1;
+    while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER || NEXTTOKEN == eOPENB) {
+        Term t;
+        if (!t.ReadSMTlib())
+          return false;
+        if (arity == 1) {
+            mArgs.pop_back(); // delete the initial arg, it is function symbol
+            mFunctionSymbols.push_back(make_pair(function_symbol,arity++));
+            mTPTPterm += "(" + t.ToTPTPString();
+            mSMTlibterm += " " + t.ToSMTString();
+        }
+        else {
+            mTPTPterm += ", " + t.ToTPTPString();
+            mSMTlibterm += " " + t.ToSMTString();
+            mFunctionSymbols.pop_back();
+            mFunctionSymbols.push_back(make_pair(function_symbol,arity++));
+            mFunctionSymbols.insert(mFunctionSymbols.end(), t.mFunctionSymbols.begin(), t.mFunctionSymbols.end());
+            mArgs.insert(mArgs.end(),t.mArgs.begin(), t.mArgs.end());
+        }
+        ReadNextToken();
+    }
+    if (arity > 1) {
+       mTPTPterm += ")";
+       mSMTlibterm = "(" + mSMTlibterm + ")";
+       ReadNextToken();
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void Term::ReadNonCompoundString(const string &s) {
+   mArgs.push_back(s);
+   mSMTlibterm = s;
+   mTPTPterm = s;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void Term::ReadTPTPString(const string &s) {
+    const char* TMP_TEXTSTREAM = TEXTSTREAM;
+    int TMP_TEXTINDEX = TEXTINDEX;
+    enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+    string TMP_NEXTLEXEME = NEXTLEXEME;
+    string ss;
+    if (s[0] == '(')
+      ss = s.substr(1, s.size()-2); // strip brackets
+    else
+      ss = s;
+    TEXTSTREAM = ss.c_str();
+    TEXTINDEX = 0;
+    NEXTLEXEME = "";
+    ReadNextToken();
+    ReadTPTP();
+
+    TEXTSTREAM = TMP_TEXTSTREAM;
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void Term::ReadSMTlibString(const string &s) {
+    const char* TMP_TEXTSTREAM = TEXTSTREAM;
+    int TMP_TEXTINDEX = TEXTINDEX;
+    enum TOKEN TMP_NEXTTOKEN = NEXTTOKEN;
+    string TMP_NEXTLEXEME = NEXTLEXEME;
+    TEXTSTREAM = s.c_str();
+    TEXTINDEX = 0;
+    NEXTLEXEME = "";
+    ReadNextToken();
+    ReadSMTlib();
+
+    TEXTSTREAM = TMP_TEXTSTREAM;
+    TEXTINDEX = TMP_TEXTINDEX;
+    NEXTTOKEN = TMP_NEXTTOKEN;
+    NEXTLEXEME = TMP_NEXTLEXEME;
+}
+
+// ---------------------------------------------------------------------------------------
+
+string Term::ToTPTPString() const
+{
+  if (IsCompound() || mSMTlibterm[0] != '(')
+     return mTPTPterm;
+
+  string s = mTPTPterm;
+  return s;
 }
 
 // ---------------------------------------------------------------------------------------
 
 string Term::ToSMTString() const
 {
-  if (IsCompound() || mT[0] != '(')
-     return mT;
+  if (IsCompound() || mSMTlibterm[0] != '(')
+     return mSMTlibterm;
 
-  string s = mT;
+  string s = mSMTlibterm;
   s.erase(0, 1); // skip '('
   s.pop_back();  // skip ')'
   return s;
 }
-
 
 // ---------------------------------------------------------------------------------------
 
@@ -231,7 +331,7 @@ string Fact::ToString() const
   }
   string s = "(" + GetName() + " ";
   for (unsigned i = 0; i<GetArity(); i++)
-    s += GetArg(i) + " ";
+    s += GetArg(i).ToSMTString() + " ";
   s += ") ";
   return s;
 }
@@ -279,11 +379,11 @@ bool Fact::Read() {
   TMP_NEXTLEXEME = NEXTLEXEME;
 
   Term tL, tR;
-  if (tL.Read()) {
+  if (tL.ReadTPTP()) {
     if (NEXTTOKEN == eEQ || NEXTTOKEN == eEQ ) {
        bool bEq = NEXTTOKEN == eEQ;
        ReadNextToken();
-       if (tR.Read()) {
+       if (tR.ReadTPTP()) {
            mName = bEq ? EQ_NATIVE_NAME : PREFIX_NEGATED + EQ_NATIVE_NAME;
            mArgs.push_back(tL);
            mArgs.push_back(tR);
@@ -303,7 +403,7 @@ bool Fact::Read() {
     ReadNextToken();
     while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
       Term t;
-      t.Read();
+      t.ReadTPTP();
       mArgs.push_back(t);
       if (NEXTTOKEN!=eCOMMA && NEXTTOKEN!=eCLOSEB)
         return false;
@@ -325,7 +425,7 @@ bool Fact::Read() {
 
   mArgs.clear();
   Term t1;
-  if (!t1.Read()) {
+  if (!t1.ReadTPTP()) {
     TEXTINDEX = TMP_TEXTINDEX;
     NEXTTOKEN = TMP_NEXTTOKEN;
     NEXTLEXEME = TMP_NEXTLEXEME;
@@ -348,7 +448,7 @@ bool Fact::Read() {
   }
   ReadNextToken();
   Term t2;
-  if (!t2.Read())
+  if (!t2.ReadTPTP())
     return false;
   mArgs.push_back(t2);
 
@@ -388,7 +488,7 @@ bool Fact::Equals(const Fact &f) const {
   if (GetArity() != f.GetArity())
     return false;
   for (size_t i = 0; i < GetArity(); i++) {
-    if (GetArg(i) != f.GetArg(i))
+    if (GetArg(i).ToSMTString() != f.GetArg(i).ToSMTString())
       return false;
   }
   return true;
@@ -1257,10 +1357,10 @@ void CLFormula::NormalizeGoal(
         bool bAlreadyThere = false;
         for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
              k++)
-          if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j))
+          if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j).ToSMTString())
             bAlreadyThere = true;
         if (!bAlreadyThere)
-          axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j));
+          axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j).ToSMTString());
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));
@@ -1329,14 +1429,17 @@ Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
   Fact f;
   f.SetName(a.GetName() + "_" + b.GetName() + "_" + suffix);
 
-  for (size_t i = 0; i < a.GetArity(); i++)
-    f.SetArg(i, a.GetArg(i));
+  for (size_t i = 0; i < a.GetArity(); i++) {
+    Term t;
+    t.ReadTPTPString(a.GetArg(i).ToSMTString());
+    f.SetArg(i, t);
+  }
 
   size_t s = f.GetArity();
   for (size_t i = 0; i < b.GetArity(); i++) {
     bool alreadyThere = false;
     for (size_t j = 0; j < f.GetArity() && !alreadyThere; j++)
-      if (f.GetArg(j) == b.GetArg(i))
+      if (f.GetArg(j).ToSMTString() == b.GetArg(i).ToSMTString())
         alreadyThere = true;
     if (!alreadyThere)
       f.SetArg(s++, b.GetArg(i));

@@ -69,9 +69,9 @@ void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << "True";
   } else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " = " << beautify(f.GetArg(1));
+      outfile << beautify(f.GetArg(0).ToSMTString()) << " = " << beautify(f.GetArg(1).ToSMTString());
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      outfile << beautify(f.GetArg(0)) << " <> " << beautify(f.GetArg(1));
+      outfile << beautify(f.GetArg(0).ToSMTString()) << " <> " << beautify(f.GetArg(1).ToSMTString());
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -79,7 +79,7 @@ void ProofExport2Coq::OutputFact(ofstream &outfile, const Fact &f) {
       else
         outfile << f.GetName();
       for (size_t i = 0; i < f.GetArity(); i++) {
-        outfile << " " << beautify(f.GetArg(i));
+        outfile << " " << beautify(f.GetArg(i).ToSMTString());
       }
     }
   }

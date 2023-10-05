@@ -415,7 +415,7 @@ bool STLFactsDatabase::MatchFact(const Fact &f1, const Fact &f2,
       for (std::set<string>::iterator it = mpT->mConstantsPermissible.begin();
            !found && it != mpT->mConstantsPermissible.end(); it++)
         // cout << "#" << *it << "#" << endl;
-        if (*it == f2.GetArg(j))
+        if (*it == f2.GetArg(j).ToSMTString())
           found = true;
       if (!found)
         return false;
@@ -424,18 +424,17 @@ bool STLFactsDatabase::MatchFact(const Fact &f1, const Fact &f2,
 
   bool noMatch = false;
   for (size_t j = 0; j < f1s && !noMatch; j++) {
-    std::map<string, string>::iterator it = instantiation.find(f1.GetArg(j));
+    std::map<string, string>::iterator it = instantiation.find(f1.GetArg(j).ToSMTString());
     if (it != instantiation.end()) {
       if (it->second !=
-          f2.GetArg(j) /*&& !Equal(it->second,f2.GetArg(j),AuxFacts)*/)
+          f2.GetArg(j).ToTPTPString() /*&& !Equal(it->second,f2.GetArg(j),AuxFacts)*/)
         noMatch = true;
     } else if (mpT->IsConstant(f1.GetArg(j)) &&
-               f1.GetArg(j) !=
-                   f2.GetArg(
-                       j) /*&& !Equal(f1.GetArg(j),f2.GetArg(j),AuxFacts)*/)
+               f1.GetArg(j).ToSMTString() !=
+                   f2.GetArg(j).ToSMTString() /*&& !Equal(f1.GetArg(j),f2.GetArg(j),AuxFacts)*/)
       noMatch = true;
     else if (!mpT->IsConstant(f1.GetArg(j)))
-      instantiation[f1.GetArg(j)] = f2.GetArg(j);
+      instantiation[f1.GetArg(j).ToSMTString()] = f2.GetArg(j).ToSMTString();
   }
   if (!noMatch)
     return true;
@@ -477,11 +476,11 @@ bool STLFactsDatabase::PartialMatchFact(
   if (f1s != f2.GetArity() || f1.GetName() != f2.GetName())
     return false;
   for (size_t j = 0; j < f1s; j++) {
-    std::map<string, string>::iterator it = instantiation.find(f1.GetArg(j));
+    std::map<string, string>::iterator it = instantiation.find(f1.GetArg(j).ToSMTString());
     if (it != instantiation.end()) {
-      if (it->second != f2.GetArg(j))
+      if (it->second != f2.GetArg(j).ToTPTPString())
         return false;
-    } else if (mpT->IsConstant(f1.GetArg(j)) && f1.GetArg(j) != f2.GetArg(j))
+    } else if (mpT->IsConstant(f1.GetArg(j)) && f1.GetArg(j).ToSMTString() != f2.GetArg(j).ToSMTString())
       return false;
   }
   return true;
@@ -492,11 +491,11 @@ bool STLFactsDatabase::PartialMatchFact(
 bool STLFactsDatabase::Equal(string a, string b, vector<Fact> &AuxFacts) const {
   for (std::set<Fact>::iterator it = mDatabase.begin(); it != mDatabase.end();
        ++it) {
-    if (it->GetName() == "eq" && it->GetArg(0) == a && it->GetArg(1) == b) {
+    if (it->GetName() == "eq" && it->GetArg(0).ToSMTString() == a && it->GetArg(1).ToSMTString() == b) {
       AuxFacts.push_back(*it);
       return true;
     }
-    if (it->GetName() == "eq" && it->GetArg(0) == b && it->GetArg(1) == a) {
+    if (it->GetName() == "eq" && it->GetArg(0).ToSMTString() == b && it->GetArg(1).ToSMTString() == a) {
       AuxFacts.push_back(*it);
       return true;
     }

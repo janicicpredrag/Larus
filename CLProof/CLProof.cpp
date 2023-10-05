@@ -513,9 +513,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
       if (nAxiom == eAssumption) {
         Fact f;
         f.SetName(sPredicates[nPredicate]);
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
         // Assumptions already added
         // AddAssumption(f);
         AddAssumption(f);
@@ -523,9 +525,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
       } else if (nAxiom == eNegIntro) {
         Fact f;
         f.SetName(sPredicates[nPredicate]);
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
         proofTrace.push_back(f);
 
         CLProof *subproof = new CLProof;
@@ -549,9 +553,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
       } else if (nAxiom == eFirstCase) {
         Fact f;
         f.SetName(sPredicates[nPredicate]);
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadSMTlibString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
         proofTrace.push_back(f);
 
         CLProof subproof;
@@ -565,9 +571,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
       } else if (nAxiom == eSecondCase) {
         Fact f;
         f.SetName(sPredicates[nPredicate]);
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadSMTlibString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
         proofTrace.push_back(f);
 
         CLProof subproof;
@@ -635,9 +643,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
 
         Fact f;
         f.SetName(string(sPredicates[nPredicate]));
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);i++) {
+          Term t;
+          t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
         DNFFormula d;
         ConjunctionFormula cfconc1;
         cfconc1.Add(f);
@@ -671,9 +681,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
 
         Fact f;
         f.SetName(string(sPredicates[nPredicate]));
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadSMTlibString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
 
         DNFFormula d;
         ConjunctionFormula cfconc1;
@@ -717,9 +729,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
 
         Fact f;
         f.SetName(string(sPredicates[nPredicate]));
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
 
         DNFFormula d;
         ConjunctionFormula cfconc1;
@@ -763,9 +777,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
       } else if (nAxiom == eExcludedMiddle) {
         Fact f;
         f.SetName(string(sPredicates[nPredicate]));
-        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-             i++)
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+        for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+          Term t;
+          t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
+        }
 
         DNFFormula d;
         ConjunctionFormula cfconc1, cfconc2;
@@ -782,9 +798,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
               nArgs[i] = 0;
           }
           f.SetName(string(sPredicates[nPredicate]));
-          for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]);
-               i++)
-            f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+          for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate]); i++) {
+            Term t;
+            t.ReadNonCompoundString(mpT->GetConstantName(nArgs[i]));
+            f.SetArg(i, t);
+          }
           cfconc2.Add(f);
           d.Add(cfconc2);
           // pcs = new CaseSplit;
@@ -911,7 +929,9 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
              i++) {
           if (sConstants.find(nArgs[i]) == sConstants.end())
             nArgs[i] = 0; // eliminate spurious constants, also for inst[]
-          f.SetArg(i, mpT->GetConstantName(nArgs[i]));
+          Term t;
+          t.ReadSMTlibString(mpT->GetConstantName(nArgs[i]));
+          f.SetArg(i, t);
         }
 
         DNFFormula d;
@@ -924,11 +944,12 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
         if (nBranching) {
           Fact f;
           f.SetName(string(sPredicates[nPredicate1]));
-          for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]);
-               i++) {
+          for (size_t i = 0; i < mpT->GetSymbolArity(sPredicates[nPredicate1]); i++) {
             if (sConstants.find(nArgs1[i]) == sConstants.end())
               nArgs1[i] = 0; // eliminate spurious constants, also for inst[]
-            f.SetArg(i, mpT->GetConstantName(nArgs1[i]));
+            Term t;
+            t.ReadNonCompoundString(mpT->GetConstantName(nArgs1[i]));
+            f.SetArg(i, t);
           }
           cfconc2.Add(f);
           d.Add(cfconc2);
@@ -951,8 +972,11 @@ bool CLProof::DecodeSubproof(const DNFFormula &formula,
             Fact univAxFact = cfPremises.GetElement(ii);
             for (size_t jj = 0; jj < univAxFact.GetArity(); jj++)
               for (size_t kk = 0; kk < instantiation.size(); kk++) {
-                if (univAxFact.GetArg(jj) == instantiation[kk].first)
-                  univAxFact.SetArg(jj, instantiation[kk].second);
+                if (univAxFact.GetArg(jj).ToSMTString() == instantiation[kk].first) {
+                  Term t;
+                  t.ReadSMTlibString(instantiation[kk].second);
+                  univAxFact.SetArg(jj, t);
+                }
               }
             univAxFact.SetName(univAxFact.GetName().substr(1));
             cfPremises.SetElement(ii, univAxFact);

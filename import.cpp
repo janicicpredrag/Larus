@@ -696,26 +696,29 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
     if (cl.ReadTPTPStatement(s, statementName, ordinal, justification, type)) {
 
       if (type != eHint) {
-        for (unsigned i = 0; i < cl.GetPremises().GetSize(); i++)
-          for (unsigned j = 0; j < cl.GetPremises().GetElement(i).GetArity();
-               j++)
-            if (cl.ExistVarOrdinalNumber(
-                    cl.GetPremises().GetElement(i).GetArg(j)) == -1 &&
-                cl.UnivVarOrdinalNumber(
-                    cl.GetPremises().GetElement(i).GetArg(j)) == -1)
-              T.AddConstant(cl.GetPremises().GetElement(i).GetArg(j));
+        for (unsigned i = 0; i < cl.GetPremises().GetSize(); i++) {
+          for (unsigned j = 0; j < cl.GetPremises().GetElement(i).GetArity(); j++) {
+            Term t = cl.GetPremises().GetElement(i).GetArg(j);
+            for (unsigned k = 0; k < t.NumArgs(); k++) {
+                if (cl.ExistVarOrdinalNumber(t.GetArg(k)) == -1 &&
+                    cl.UnivVarOrdinalNumber(t.GetArg(k)) == -1) {
+                  T.AddConstant(t.GetArg(k));
+                }
+            }
+          }
+        }
 
         for (unsigned i = 0; i < cl.GetGoal().GetSize(); i++)
           for (unsigned j = 0; j < cl.GetGoal().GetElement(i).GetSize(); j++)
-            for (unsigned k = 0;
-                 k < cl.GetGoal().GetElement(i).GetElement(j).GetArity(); k++)
-              if (cl.ExistVarOrdinalNumber(
-                      cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) ==
-                      -1 &&
-                  cl.UnivVarOrdinalNumber(
-                      cl.GetGoal().GetElement(i).GetElement(j).GetArg(k)) == -1)
-                T.AddConstant(
-                    cl.GetGoal().GetElement(i).GetElement(j).GetArg(k));
+            for (unsigned k = 0; k < cl.GetGoal().GetElement(i).GetElement(j).GetArity(); k++) {
+                Term t = cl.GetGoal().GetElement(i).GetElement(j).GetArg(k);
+                for (unsigned l = 0; l < t.NumArgs(); l++) {
+                   if (cl.ExistVarOrdinalNumber(t.GetArg(l)) == -1 &&
+                      cl.UnivVarOrdinalNumber(t.GetArg(l)) == -1) {
+                        T.AddConstant(t.GetArg(l));
+                   }
+                }
+            }
       }
 
       if (type == eAxiom) {
@@ -752,7 +755,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<hintFact.GetArity(); i++) {
-            if (!isHintArgument(hintFact.GetArg(i))) {
+            if (!isHintArgument(hintFact.GetArg(i).ToSMTString())) {
               cout << "Wrong hint fact: " << hintFact << " has bad arguments" << endl;
               return eErrorReadingAxioms;
             }
@@ -783,7 +786,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<justification.GetArity(); i++) {
-            if (!isHintArgument(justification.GetArg(i))) {
+            if (!isHintArgument(justification.GetArg(i).ToSMTString())) {
               cout << "Wrong hint justification: " << justification << " has bad arguments" << endl;
               return eErrorReadingAxioms;
             }
