@@ -254,8 +254,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   // T.printAxioms();
 
   if (!(params.eEngine == eSTL_ProvingEngine ||
-        params.eEngine == eURSA_ProvingEngine ||
-        params.eEngine == eSMTUFBV_ProvingEngine)) {
+        params.eEngine == eURSA_ProvingEngine
+        /*||params.eEngine == eSMTUFBV_ProvingEngine*/)) {
     // ************ Saturation for simple axioms ************
     size_t AxiomsBeforeSaturation = T.mCLaxioms.size();
     if (params.mbInlineAxioms) {

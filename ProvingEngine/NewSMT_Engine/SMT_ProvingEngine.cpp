@@ -558,17 +558,32 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
             if (BindingAxiomPremises(ax, i, j) != 0)
               c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
                     == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
-            else
-              c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+            else {
+              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+                      == GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString());
+              } else {
+                  c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
                       == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]);
+              }
+            }
           }
           else { // it is a constant
-            if (BindingAxiomPremises(ax, i, j) != 0)
-              c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
-                    /*ContentsArgument(s,0,j)*/ == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()]);
-            else
-              c &= (CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]
-                    == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()] ? True() : False());
+            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                if (BindingAxiomPremises(ax, i, j) != 0)
+                  c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
+                        == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString());
+                else
+                  c &= ((GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)
+                        == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)) ? True() : False());
+            } else {
+              if (BindingAxiomPremises(ax, i, j) != 0)
+                c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
+                      == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()]);
+              else
+                c &= (CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]
+                      == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()] ? True() : False());
+            }
           }
         }
         cOneOfInlineAxioms |= (c % ("Inline axiom " + itos(axInl) + ":"));
