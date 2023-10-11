@@ -168,8 +168,7 @@ void ProofExport2Text::OutputEpilogue(ofstream& outfile) {
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputProof(ofstream& outfile,
-				   const CLProof &p,
-                                    unsigned level) {
+                   const CLProof &p, unsigned level) {
   if (level > 0) {
 
     if (p.NumOfCLAssumptions() > 0) {
@@ -236,8 +235,7 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
     if (instantiation.size() > new_witnesses.size()) {
       cout << "; ";
       cout << "instantiation:";
-      for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
-           j++) {
+      for (size_t j = 0; j != instantiation.size() - new_witnesses.size(); j++) {
         cout << " " << SMT2Bracketed(beautify(instantiation[j].first))
                 << " \u21a6 "
                 << " " << SMT2Bracketed(beautify(instantiation[j].second));

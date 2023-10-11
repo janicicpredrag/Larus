@@ -240,6 +240,8 @@ bool Term::ReadSMTlib()
 // ---------------------------------------------------------------------------------------
 
 void Term::ReadNonCompoundString(const string &s) {
+   mArgs.clear();
+   mFunctionSymbols.clear();
    mArgs.push_back(s);
    mSMTlibterm = s;
    mTPTPterm = s;
@@ -897,12 +899,38 @@ bool CLFormula::IsSimpleImplication() const {
   size_t numPremises = GetPremises().GetSize();
   size_t numDisj = GetGoal().GetSize();
 
+  if (numPremises != 1 || numDisj != 1)
+    return false;
+
   if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
       GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
 
   if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
     return false;
+
+  for (unsigned i = 0; i < numPremises; i++) {
+    Fact f = GetPremises().GetElement(0);
+    for (unsigned j = 0; j < f.GetArity(); j++) {
+      Term t = f.GetArg(j);
+      if (t.NumFunctionSymbols() > 0)
+        return false;
+    }
+  }
+
+  Fact f = GetPremises().GetElement(0);
+  for (unsigned j = 0; j < f.GetArity(); j++) {
+    Term t = f.GetArg(j);
+    if (t.NumFunctionSymbols() > 0)
+      return false;
+  }
+
+  f = GetGoal().GetElement(0).GetElement(0);
+  for (unsigned j = 0; j < f.GetArity(); j++) {
+    Term t = f.GetArg(j);
+    if (t.NumFunctionSymbols() > 0)
+      return false;
+  }
 
   if (numPremises == 1 &&
       numDisj == 1 &&
@@ -926,6 +954,12 @@ bool CLFormula::IsSimpleUnivFormula() const {
     return false;
   if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
+  Fact f = GetGoal().GetElement(0).GetElement(0);
+  for (unsigned j = 0; j < f.GetArity(); j++) {
+    Term t = f.GetArg(j);
+    if (t.NumFunctionSymbols() > 0)
+      return false;
+  }
 
   return true;
 }

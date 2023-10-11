@@ -314,11 +314,12 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
         }
         c &= cc;
       }*/
-      /* TODO
+      /* TODO */
       for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
+        unsigned index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
         c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
-              mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
-      }*/
+              Expression("(witness " + itos(index) + ")"));
+      }
     }
     else {
       /* Constants involved are only those already introduced */
@@ -1393,6 +1394,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
            it != mpT->mConstantsPermissible.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
           mSMTfile << "     " << ToUpper(*it) << endl;
+      // countable array of new witnesses
+      mSMTfile << "     (witness (subwitness_0 Int))" << endl;
 
       for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
         mSMTfile << "    (" << ToUpper(mpT->mSignatureF[i].first) << " ";
@@ -2165,7 +2168,12 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           }
           for (size_t i = 0; i < numOfExistVars; i++) {
             const string existVar = mpT->mCLaxioms[nAxiom].first.GetExistVar(i);
-            const string newWitness = mpT->GetConstantName(inst[numOfUnivVars + i]);
+
+            unsigned index = (mnMaxNumberOfVarsInAxioms*step + (unsigned)(mpT->mInitialConstants).size() + inst[numOfUnivVars + i] + 1);
+            const string newWitness =
+                    (mSMT_theory == eSMTUFBV_ProvingEngine) ?
+                    "(witness " + itos(index) + ")" :
+                    mpT->GetConstantName(inst[numOfUnivVars + i]);
             msConstants[inst[numOfUnivVars + i]] = newWitness;
             instantiation.push_back(pair<string, string>(existVar, newWitness));
             new_witnesses.push_back(pair<string, string>(existVar, newWitness));
