@@ -61,11 +61,11 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
     return;
   }
   if (f.GetName() == EQ_NATIVE_NAME) {
-    outfile << f.GetArg(0) << " = " << f.GetArg(1);
+    outfile << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString();
     return;
   }
   else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-    outfile << f.GetArg(0) << " <> " << f.GetArg(1);
+    outfile << f.GetArg(0).ToSMTString() << " <> " << f.GetArg(1).ToSMTString();
     return;
   }
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)
@@ -74,7 +74,7 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << f.GetName();
 
   for (size_t i = 0; i < f.GetArity(); i++)
-    outfile << " " << f.GetArg(i);
+    outfile << " " << f.GetArg(i).ToSMTString();
 }
 
 // ---------------------------------------------------------------------------------

@@ -45,9 +45,9 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
     cout << "\u22a4 ";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      cout << SMT2Bracketed(beautify(f.GetArg(0))) << " = " << SMT2Bracketed(beautify(f.GetArg(1)));
+      cout << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " = " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      cout << SMT2Bracketed(beautify(f.GetArg(0))) << " \u2260 " << SMT2Bracketed(beautify(f.GetArg(1)));
+      cout << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " \u2260 " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -57,8 +57,8 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         cout << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          cout << SMT2Bracketed(beautify(f.GetArg(i))) << ", ";
-        cout << SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1)));
+          cout << SMT2Bracketed(beautify(f.GetArg(i).ToSMTString())) << ", ";
+        cout << SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1).ToSMTString()));
         cout << ")";
       }
     }
@@ -168,8 +168,7 @@ void ProofExport2Text::OutputEpilogue(ofstream& outfile) {
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputProof(ofstream& outfile,
-				   const CLProof &p,
-                                    unsigned level) {
+                   const CLProof &p, unsigned level) {
   if (level > 0) {
 
     if (p.NumOfCLAssumptions() > 0) {
@@ -236,8 +235,7 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
     if (instantiation.size() > new_witnesses.size()) {
       cout << "; ";
       cout << "instantiation:";
-      for (size_t j = 0; j != instantiation.size() - new_witnesses.size();
-           j++) {
+      for (size_t j = 0; j != instantiation.size() - new_witnesses.size(); j++) {
         cout << " " << SMT2Bracketed(beautify(instantiation[j].first))
                 << " \u21a6 "
                 << " " << SMT2Bracketed(beautify(instantiation[j].second));

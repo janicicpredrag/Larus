@@ -74,11 +74,11 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
     return;
   }
   if (f.GetName() == EQ_NATIVE_NAME) {
-    outfile << decorateConstant(f.GetArg(0)) << " = " << decorateConstant(f.GetArg(1));
+    outfile << decorateConstant(f.GetArg(0).ToSMTString()) << " = " << decorateConstant(f.GetArg(1).ToSMTString());
     return;
   }
   else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-    outfile << decorateConstant(f.GetArg(0)) << " <> " << decorateConstant(f.GetArg(1));
+    outfile << decorateConstant(f.GetArg(0).ToSMTString()) << " <> " << decorateConstant(f.GetArg(1).ToSMTString());
     return;
   }
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)
@@ -88,7 +88,7 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
 
   outfile << "[";
   for (size_t i = 0; i < f.GetArity(); i++) {
-    outfile << decorateConstant(f.GetArg(i));
+    outfile << decorateConstant(f.GetArg(i).ToSMTString());
     if (i+1 < f.GetArity())
         outfile << ",";
   }

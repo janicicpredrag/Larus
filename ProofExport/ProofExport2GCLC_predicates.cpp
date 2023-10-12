@@ -158,7 +158,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       for (size_t k = 0; k < f.GetArity(); k++) {
         bool found_var = false;
         for (size_t l = 0; l != instantiation.size() && !found_var; l++) {
-          if (instantiation[l].first == f.GetArg(k)) {
+          if (instantiation[l].first == f.GetArg(k).ToSMTString()) {
             string const_name = instantiation[l].second;
             const_name = beautify(const_name);
             outfile << const_name << " ";
@@ -166,7 +166,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
           }
         }
         if (!found_var) { // this is a symbol of a constant
-            outfile << f.GetArg(k) << " ";
+            outfile << f.GetArg(k).ToSMTString() << " ";
         }
       }
       outfile << " 0 }" << endl;
@@ -178,7 +178,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
         const Fact &f = dnf.GetElement(0).GetElement(j);
         outfile << "call draw_" << f.GetName() << " { ";
         for (size_t k = 0; k < f.GetArity(); k++) {
-          outfile << beautify(f.GetArg(k)) << " ";
+          outfile << beautify(f.GetArg(k).ToSMTString()) << " ";
         }
         outfile << " 1 }" << endl;
       }
@@ -190,7 +190,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
         const Fact &f = dnf.GetElement(0).GetElement(j);
         outfile << "call draw_" << f.GetName() << " { ";
         for (size_t k = 0; k < f.GetArity(); k++) {
-          outfile << beautify(f.GetArg(k)) << " ";
+          outfile << beautify(f.GetArg(k).ToSMTString()) << " ";
         }
         outfile << " 2 }" << endl;
       }

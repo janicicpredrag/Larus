@@ -306,16 +306,16 @@ void OldSMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
                   ToUpper(axiom.GetPremises().GetElement(j).GetName())];
     for (size_t i = 0; i < axiom.GetPremises().GetElement(j).GetArity(); i++)
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetPremises().GetElement(j).GetArg(i)) != -1)
+              axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString()) != -1)
         AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
-                axiom.GetPremises().GetElement(j).GetArg(i)) +
+                axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString()) +
             1;
       else {
         AXIOMS[mnAxiomsCount].nBinding[j * mnMaxArity + i] = 0;
         AXIOMS[mnAxiomsCount].nAxiomArgument[j * mnMaxArity + i] =
             URSA_NUM_PREFIX +
-            ToUpper(axiom.GetPremises().GetElement(j).GetArg(i));
+            ToUpper(axiom.GetPremises().GetElement(j).GetArg(i).ToSMTString());
       }
   }
   if (axiom.GetGoal().GetSize() >
@@ -327,23 +327,23 @@ void OldSMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
     for (size_t i = 0;
          i < axiom.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+              axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
         AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
-                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
+                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
             1;
       else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) != -1)
+                   axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
         AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] =
             axiom.GetNumOfUnivVars() +
             axiom.ExistVarOrdinalNumber(
-                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i)) +
+                axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
             1;
       else {
         AXIOMS[mnAxiomsCount].nBinding[noPremises * mnMaxArity + i] = 0;
         AXIOMS[mnAxiomsCount].nAxiomArgument[noPremises * mnMaxArity + i] =
             URSA_NUM_PREFIX +
-            ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i));
+            ToUpper(axiom.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString());
       }
     }
   }
@@ -355,24 +355,24 @@ void OldSMT_ProvingEngine::EncodeAxiom(CLFormula &axiom) {
     for (size_t i = 0;
          i < axiom.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
       if ((int)axiom.UnivVarOrdinalNumber(
-              axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+              axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
         AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
             axiom.UnivVarOrdinalNumber(
-                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
+                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
             1;
       else if ((int)axiom.ExistVarOrdinalNumber(
-                   axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) != -1)
+                   axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
         AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] =
             axiom.GetNumOfUnivVars() +
             axiom.ExistVarOrdinalNumber(
-                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i)) +
+                axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
             1;
       else {
         AXIOMS[mnAxiomsCount].nBinding[(noPremises + 1) * mnMaxArity + i] = 0;
         AXIOMS[mnAxiomsCount]
             .nAxiomArgument[(noPremises + 1) * mnMaxArity + i] =
             URSA_NUM_PREFIX +
-            ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i));
+            ToUpper(axiom.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString());
       }
     }
   }
@@ -397,7 +397,7 @@ void OldSMT_ProvingEngine::AddPremise(const Fact &f) {
   for (size_t i = 0; i < f.GetArity(); i++)
     mURSAstringPremises += "(assert " +
                            appeq(app("nArg", mnPremisesCount, i),
-                                 URSA_NUM_PREFIX + ToUpper(f.GetArg(i))) +
+                                 URSA_NUM_PREFIX + ToUpper(f.GetArg(i).ToSMTString())) +
                            ")\n";
   mnPremisesCount++;
 }
@@ -641,20 +641,20 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
 
   set<string> exi_vars;
   for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-    if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i)) ==
+    if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) ==
             CONSTANTS.end() &&
-        exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i)) ==
+        exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) ==
             exi_vars.end()) {
       sPreabmle += "(declare-const n" +
-                   ToUpper(formula.GetElement(0).GetElement(0).GetArg(i)) +
+                   ToUpper(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) +
                    " " + mSMT_type + ") \n";
-      exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i));
+      exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString());
     }
     sPreabmle +=
         "(assert " +
         appeq(app("nArg", nFinalStep, i),
               URSA_NUM_PREFIX +
-                  ToUpper(formula.GetElement(0).GetElement(0).GetArg(i))) +
+                  ToUpper(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString())) +
         ") \n";
   }
   if (formula.GetSize() > 1) {
@@ -666,21 +666,21 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
         ") \n";
     for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity();
          i++) {
-      if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
+      if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) ==
               CONSTANTS.end() &&
-          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i)) ==
+          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) ==
               exi_vars.end()) {
         sPreabmle += "(declare-const n" +
-                     ToUpper(formula.GetElement(1).GetElement(0).GetArg(i)) +
+                     ToUpper(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
                      " " + mSMT_type + ") \n";
-        exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i));
+        exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString());
       }
 
       sPreabmle +=
           "(assert " +
           appeq(app("nArg", nFinalStep, mnMaxArity + i),
                 URSA_NUM_PREFIX +
-                    ToUpper(formula.GetElement(1).GetElement(0).GetArg(i))) +
+                    ToUpper(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString())) +
           ") \n";
     }
   }
@@ -721,7 +721,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       sbPrevStepGoal += "(not " + app("bCases", nProofStep) + ")";
     sbPrevStepGoal += appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 0));
     for (unsigned nInd = 0; nInd < ArityFinal; nInd++)
-      if (exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(nInd)) ==
+      if (exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(nInd).ToSMTString()) ==
           exi_vars.end())
         sbPrevStepGoal +=
             appeq(app("nArg", nProofStep, nInd), app("nArg", nFinalStep, nInd));
@@ -734,7 +734,7 @@ void OldSMT_ProvingEngine::EncodeProof(const DNFFormula &formula,
       sbPrevStepGoal2 =
           "(and " + appeq(app("nP", nProofStep, 0), app("nP", nFinalStep, 1));
       for (unsigned nInd = 0; nInd < ArityFinal1; nInd++)
-        if (exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(nInd)) ==
+        if (exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(nInd).ToSMTString()) ==
             exi_vars.end())
           sbPrevStepGoal2 += appeq(app("nArg", nProofStep, nInd),
                                    app("nArg", nFinalStep, mnMaxArity + nInd));

@@ -93,12 +93,15 @@ void Theory::AddEqNegElimAxioms() {
   ConjunctionFormula conc0, conc1;
   Fact a, b;
   a.SetName(EQ_NATIVE_NAME);
-  a.SetArg(0, "A");
-  a.SetArg(1, "B");
+  Term ta, tb;
+  ta.ReadNonCompoundString("A");
+  tb.ReadNonCompoundString("B");
+  a.SetArg(0, ta);
+  a.SetArg(1, tb);
   conc0.Add(a);
   b.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
-  b.SetArg(0, "A");
-  b.SetArg(1, "B");
+  b.SetArg(0, ta);
+  b.SetArg(1, tb);
   conc0.Add(b);
 
   Fact c;
@@ -137,8 +140,11 @@ void Theory::AddNegElimAxioms() {
     Fact a, b;
     // ugly convention: in the signature R and nR go one after another
     a.SetName(mSignatureP[i].first);
-    for (size_t j = 0; j < mSignatureP[i].second; j++)
-      a.SetArg(j, string(1, 'A' + j));
+    for (size_t j = 0; j < mSignatureP[i].second; j++) {
+      Term t;
+      t.ReadNonCompoundString(string(1, 'A' + j));
+      a.SetArg(j, t);
+    }
     premises.Add(a);
     a.SetName(mSignatureP[i + 1].first);
     premises.Add(a);
@@ -181,12 +187,18 @@ void Theory::AddExcludedMiddleAxioms() {
     Fact a, b;
     // ugly convention: in the signature R and nR go one after another
     a.SetName(mSignatureP[i].first);
-    for (size_t j = 0; j < mSignatureP[i].second; j++)
-      a.SetArg(j, string(1, 'A' + j));
+    for (size_t j = 0; j < mSignatureP[i].second; j++) {
+      Term t;
+      t.ReadNonCompoundString(string(1, 'A' + j));
+      a.SetArg(j, t);
+    }
     conc0.Add(a);
     b.SetName(mSignatureP[i + 1].first);
-    for (size_t j = 0; j < mSignatureP[i].second; j++)
-      b.SetArg(j, string(1, 'A' + j));
+    for (size_t j = 0; j < mSignatureP[i].second; j++) {
+      Term t;
+      t.ReadNonCompoundString(string(1, 'A' + j));
+      b.SetArg(j, t);
+    }
     conc1.Add(b);
     conclusion.Add(conc0);
     conclusion.Add(conc1);
@@ -209,14 +221,17 @@ void Theory::AddEqExcludedMiddleAxiom() {
   DNFFormula conclusion;
   ConjunctionFormula conc0, conc1;
   Fact a, b;
+  Term ta, tb;
+  ta.ReadNonCompoundString("A");
+  tb.ReadNonCompoundString("B");
   // ugly convention: in the signature R and nR go one after another
   a.SetName(EQ_NATIVE_NAME);
-  a.SetArg(0, "A");
-  a.SetArg(1, "B");
+  a.SetArg(0, ta);
+  a.SetArg(1, tb);
   conc0.Add(a);
   b.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
-  b.SetArg(0, "A");
-  b.SetArg(1, "B");
+  b.SetArg(0, ta);
+  b.SetArg(1, tb);
   conc1.Add(b);
   conclusion.Add(conc0);
   conclusion.Add(conc1);
@@ -248,18 +263,26 @@ void Theory::AddEqSubAxioms() {
       DNFFormula conclusion;
       ConjunctionFormula conc0;
       Fact a, b, c;
+      Term t;
       b.SetName(mSignatureP[i].first);
-      for (size_t k = 0; k < mSignatureP[i].second; k++)
-        b.SetArg(k, string(1, 'A' + k));
+      for (size_t k = 0; k < mSignatureP[i].second; k++) {
+        t.ReadNonCompoundString(string(1, 'A' + k));
+        b.SetArg(k, t);
+      }
       premises.Add(b);
       a.SetName(EQ_NATIVE_NAME);
-      a.SetArg(0, string(1, 'A' + j));
-      a.SetArg(1, "X");
+      t.ReadNonCompoundString(string(1, 'A' + j));
+      a.SetArg(0, t);
+      t.ReadNonCompoundString("X");
+      a.SetArg(1, t);
       premises.Add(a);
       c.SetName(mSignatureP[i].first);
-      for (size_t k = 0; k < mSignatureP[i].second; k++)
-        c.SetArg(k, string(1, 'A' + k));
-      c.SetArg(j, "X");
+      for (size_t k = 0; k < mSignatureP[i].second; k++) {
+        t.ReadNonCompoundString(string(1, 'A' + k));
+        c.SetArg(k, t);
+      }
+      t.ReadNonCompoundString("X");
+      c.SetArg(j, t);
       conc0.Add(c);
       conclusion.Add(conc0);
       CLFormula axiom(premises, conclusion);
@@ -281,13 +304,16 @@ void Theory::AddAxiomEqSymm() {
   DNFFormula conclusion;
   ConjunctionFormula conc0;
   Fact a, b;
+  Term ta, tb;
+  ta.ReadNonCompoundString("A");
+  tb.ReadNonCompoundString("B");
   a.SetName(EQ_NATIVE_NAME);
-  a.SetArg(0, "A");
-  a.SetArg(1, "B");
+  a.SetArg(0, ta);
+  a.SetArg(1, tb);
   premises.Add(a);
   b.SetName(EQ_NATIVE_NAME);
-  b.SetArg(0, "B");
-  b.SetArg(1, "A");
+  b.SetArg(0, tb);
+  b.SetArg(1, ta);
   conc0.Add(b);
   conclusion.Add(conc0);
   CLFormula axiom(premises, conclusion);
@@ -307,13 +333,16 @@ void Theory::AddAxiomNEqSymm() {
   DNFFormula conclusion;
   ConjunctionFormula conc0;
   Fact a, b;
+  Term ta, tb;
+  ta.ReadNonCompoundString("A");
+  tb.ReadNonCompoundString("B");
   a.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
-  a.SetArg(0, "A");
-  a.SetArg(1, "B");
+  a.SetArg(0, ta);
+  a.SetArg(1, tb);
   premises.Add(a);
   b.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
-  b.SetArg(0, "B");
-  b.SetArg(1, "A");
+  b.SetArg(0, tb);
+  b.SetArg(1, ta);
   conc0.Add(b);
   conclusion.Add(conc0);
   CLFormula axiom(premises, conclusion);
@@ -332,9 +361,11 @@ void Theory::AddAxiomEqReflexive() {
   DNFFormula conclusion;
   ConjunctionFormula conc0;
   Fact b;
+  Term ta;
+  ta.ReadNonCompoundString("A");
   b.SetName(EQ_NATIVE_NAME);
-  b.SetArg(0, "A");
-  b.SetArg(1, "A");
+  b.SetArg(0, ta);
+  b.SetArg(1, ta);
   conc0.Add(b);
   conclusion.Add(conc0);
   CLFormula axiom(premises, conclusion);
@@ -368,9 +399,12 @@ const pair<CLFormula, string> &Theory::OriginalAxiom(size_t i) const {
 
 void Theory::AddConstant(string s) {
   if (s.find(' ') == string::npos) { // it is not compound term
-    if (s != "_") // _ is for unconstrained arguments
-      if (!IsConstant(s))
+    if (s != "_") { // _ is for unconstrained arguments
+      Term t;
+      t.ReadNonCompoundString(s);
+      if (!IsConstant(t))
         mConstants.push_back(s);
+    }
   }
 }
 
@@ -462,7 +496,9 @@ string Theory::MakeNewConstant() {
     s[0] += id;
     ss = s;
     unsigned counter = 1;
-    while (IsConstant(s) ||
+    Term t;
+    t.ReadNonCompoundString(s);
+    while (IsConstant(t) ||
            mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
       s = ss + to_string(counter++);
     }
@@ -470,7 +506,9 @@ string Theory::MakeNewConstant() {
     s = "c" + to_string(id);
     ss = s;
     unsigned counter = 1;
-    while (IsConstant(s) ||
+    Term t;
+    t.ReadNonCompoundString(s);
+    while (IsConstant(t) ||
            mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
       s = ss + to_string(counter++);
     }
@@ -489,17 +527,23 @@ string Theory::GetConstantName(unsigned id) const {
       s[0] += id;
       ss = s;
       unsigned counter = 1;
-      while (IsConstant(s) ||
+      Term t;
+      t.ReadNonCompoundString(s);
+      while (IsConstant(t) ||
              mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
         s = ss + to_string(counter++);
+        t.ReadNonCompoundString(s);
       }
     } else {
       s = "c" + to_string(id);
       ss = s;
       unsigned counter = 1;
-      while (IsConstant(s) ||
+      Term t;
+      t.ReadNonCompoundString(s);
+      while (IsConstant(t) ||
              mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
         s = ss + to_string(counter++);
+        t.ReadNonCompoundString(s);
       }
     }
     return s;
@@ -577,7 +621,6 @@ void Theory::InstantiateGoalDisj(const CLFormula &cl, size_t i,
 }
 
 // ---------------------------------------------------------------------------------------
-
 void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
                              map<string, string> &instantiation, Fact &fout,
                              bool bInstantiateVars) {
@@ -586,12 +629,14 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
   for (size_t i = 0; i < size; i++) {
     Term t = f.GetArg(i);
     for (size_t a = 0; a < t.NumArgs(); a++) {
-      string v = t.GetArg(a);
-      if (instantiation.find(v) == instantiation.end()) {
-        if (!IsConstant(v) && bInstantiateVars) {
+      string var = t.GetArg(a);
+      if (instantiation.find(var) == instantiation.end()) {
+        Term tvar;
+        tvar.ReadNonCompoundString(var);
+        if (!IsConstant(tvar) && bInstantiateVars) {
           bool bUnivVar = false;
           for (size_t j = 0; j < cl.GetNumOfUnivVars() && !bUnivVar; j++) {
-            if (cl.GetUnivVar(j) == v)
+            if (cl.GetUnivVar(j) == var)
               bUnivVar = true;
           }
           string newc;
@@ -601,24 +646,28 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
           } else
             newc = MakeNewConstant();
           instantiation[t.GetArg(a)] = newc;
-          string s = f.GetArg(i);
           if (t.IsCompound()) {
-            replaceAll(s," "+v+" ", " "+instantiation[v]+" ");
-            replaceAll(s," "+v+")", " "+instantiation[v]+")");
-            fout.SetArg(i, s);
+            string s = t.ToSMTString();
+            replaceAll(s," "+var+" ", " "+instantiation[var]+" ");
+            replaceAll(s," "+var+")", " "+instantiation[var]+")");
+            t.ReadSMTlibString(s);
           }
-          else
-            fout.SetArg(i, instantiation[v]);
+          else {
+            t.ReadNonCompoundString(instantiation[var]);
+          }
+          fout.SetArg(i, t);
         }
       } else {
         if (t.IsCompound()) { // term may be compound, so we have to instantiate all occurrences
-          string s = f.GetArg(i);
-          replaceAll(s," "+v+" ", " "+instantiation[v]+" ");
-          replaceAll(s," "+v+")", " "+instantiation[v]+")");
-          fout.SetArg(i, s);
+          string s = t.ToSMTString();
+          replaceAll(s," "+var+" ", " "+instantiation[var]+" ");
+          replaceAll(s," "+var+")", " "+instantiation[var]+")");
+          t.ReadSMTlibString(s);
         }
-        else
-          fout.SetArg(i, instantiation[v]);
+        else {
+          t.ReadNonCompoundString(instantiation[var]);
+        }
+        fout.SetArg(i, t);
       }
     }
   }
@@ -646,8 +695,7 @@ bool Theory::Saturate() {
         continue;
       Fact fact_ax1 = ax1.GetPremises().GetElement(0);
 
-      for (size_t j = 0; j < mCLaxioms.size();
-           j++) { // check simple implications and univ axioms
+      for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications and univ axioms
         const CLFormula ax2 = mCLaxioms[j].first;
         // ax1 is to be applied to RHS of ax2
         if (ax2.IsSimpleImplication() || ax2.IsSimpleUnivFormula()) {
@@ -660,21 +708,24 @@ bool Theory::Saturate() {
           for (size_t k = 0; k < fact_ax2.GetArity() && !no_match; k++) {
             if (IsConstant(fact_ax1.GetArg(k))) {
               if (!IsConstant(fact_ax2.GetArg(k)) ||
-                  fact_ax1.GetArg(k) != fact_ax2.GetArg(k))
+                  fact_ax1.GetArg(k).ToSMTString() != fact_ax2.GetArg(k).ToSMTString())
                 no_match = true;
-            } else if (inst.find(fact_ax1.GetArg(k)) != inst.cend()) {
-              if (inst.find(fact_ax1.GetArg(k))->second != fact_ax2.GetArg(k))
+            } else if (inst.find(fact_ax1.GetArg(k).ToSMTString()) != inst.cend()) {
+              if (inst.find(fact_ax1.GetArg(k).ToSMTString())->second != fact_ax2.GetArg(k).ToSMTString())
                 no_match = true;
             } else
-              inst[fact_ax1.GetArg(k)] = fact_ax2.GetArg(k);
+              inst[fact_ax1.GetArg(k).ToSMTString()] = fact_ax2.GetArg(k).ToSMTString();
           }
           if (no_match)
             continue;
 
           Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
           for (size_t k = 0; k < fact_new.GetArity() && !no_match; k++) {
-            if (inst.find(fact_new.GetArg(k)) != inst.cend())
-              fact_new.SetArg(k, inst.find(fact_new.GetArg(k))->second);
+            if (inst.find(fact_new.GetArg(k).ToSMTString()) != inst.cend()) {
+              Term t;
+              t.ReadNonCompoundString(inst.find(fact_new.GetArg(k).ToSMTString())->second);
+              fact_new.SetArg(k, t);
+            }
           }
           if (no_match)
             continue;
@@ -698,10 +749,10 @@ bool Theory::Saturate() {
             if (!IsConstant(fact_new.GetArg(l))) {
               for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found;
                    ll++)
-                if (fact_new.GetArg(l) == newUnivAx.GetUnivVar(ll))
+                if (fact_new.GetArg(l).ToSMTString() == newUnivAx.GetUnivVar(ll))
                   found = true;
               if (!found)
-                newUnivAx.AddUnivVar(fact_new.GetArg(l));
+                newUnivAx.AddUnivVar(fact_new.GetArg(l).ToSMTString());
             }
           }
 
@@ -764,8 +815,9 @@ bool Theory::SaturateEqSub() {
 
         for (size_t k = 0; k < fact_goal.GetArity(); k++)
           if (IsConstant(fact_goal.GetArg(k))) {
-            if (fact_goal.GetArg(k) == fact_ax1.GetArg(0))
+            if (fact_goal.GetArg(k).ToSMTString() == fact_ax1.GetArg(0).ToSMTString()) {
               fact_goal.SetArg(k, fact_ax1.GetArg(1));
+            }
           }
 
         ConjunctionFormula cf;
@@ -848,12 +900,12 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f,
     return false;
   for (size_t k = 0; k < f.GetArity(); k++) {
     if (IsConstant(LHS.GetArg(k))) {
-      if (!IsConstant(f.GetArg(k)) || LHS.GetArg(k) != f.GetArg(k))
+      if (!IsConstant(f.GetArg(k)) || LHS.GetArg(k).ToSMTString() != f.GetArg(k).ToSMTString())
         return false;
     }
-    if (LHS.GetArg(k) != f.GetArg(k))
+    if (LHS.GetArg(k).ToSMTString() != f.GetArg(k).ToSMTString())
       nontrivial = true;
-    inst[LHS.GetArg(k)] = f.GetArg(k);
+    inst[LHS.GetArg(k).ToSMTString()] = f.GetArg(k).ToSMTString();
   }
   if (RHS.GetSize() > 1)
     nontrivial = true;
@@ -867,9 +919,11 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f,
       if (f.GetName() != fact.GetName())
         nontrivial = true;
       for (size_t k = 0; k < RHS.GetElement(i).GetElement(j).GetArity(); k++) {
-        if (inst.find(fact.GetArg(k)) != inst.cend()) {
-          string s = inst.find(fact.GetArg(k))->second;
-          fact.SetArg(k, s);
+        if (inst.find(fact.GetArg(k).ToSMTString()) != inst.cend()) {
+          string s = inst.find(fact.GetArg(k).ToSMTString())->second;
+          Term t;
+          t.ReadNonCompoundString(s);
+          fact.SetArg(k, t);
         }
       }
       cf.Add(fact);
@@ -972,14 +1026,14 @@ bool Theory::sameUpToRenaming(const CLFormula &cf1,
       return false;
     for (unsigned j = 0; j < cf1.GetPremises().GetElement(i).GetArity(); j++) {
       if (IsConstant(cf1.GetPremises().GetElement(i).GetArg(j)))
-        if (cf1.GetPremises().GetElement(i).GetArg(j) !=
-            cf2.GetPremises().GetElement(i).GetArg(j))
+        if (cf1.GetPremises().GetElement(i).GetArg(j).ToSMTString() !=
+            cf2.GetPremises().GetElement(i).GetArg(j).ToSMTString())
           return false;
-      if (inst.find(cf1.GetPremises().GetElement(i).GetArg(j)) == inst.cend())
-        inst[cf1.GetPremises().GetElement(i).GetArg(j)] =
-            cf2.GetPremises().GetElement(i).GetArg(j);
-      else if (inst.at(cf1.GetPremises().GetElement(i).GetArg(j)) !=
-               cf2.GetPremises().GetElement(i).GetArg(j))
+      if (inst.find(cf1.GetPremises().GetElement(i).GetArg(j).ToSMTString()) == inst.cend())
+        inst[cf1.GetPremises().GetElement(i).GetArg(j).ToSMTString()] =
+            cf2.GetPremises().GetElement(i).GetArg(j).ToSMTString();
+      else if (inst.at(cf1.GetPremises().GetElement(i).GetArg(j).ToSMTString()) !=
+               cf2.GetPremises().GetElement(i).GetArg(j).ToSMTString())
         return false;
     }
   }
@@ -992,16 +1046,16 @@ bool Theory::sameUpToRenaming(const CLFormula &cf1,
            k < cf1.GetGoal().GetElement(i).GetElement(j).GetArity(); k++) {
 
         if (IsConstant(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)))
-          if (cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k) !=
-              cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k))
+          if (cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString() !=
+              cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString())
             return false;
 
-        if (inst.find(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)) ==
+        if (inst.find(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString()) ==
             inst.cend())
-          inst[cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)] =
-              cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k);
-        else if (inst.at(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k)) !=
-                 cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k))
+          inst[cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString()] =
+              cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString();
+        else if (inst.at(cf1.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString()) !=
+                 cf2.GetGoal().GetElement(i).GetElement(j).GetArg(k).ToSMTString())
           return false;
       }
     }
