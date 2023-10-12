@@ -305,33 +305,37 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
        & (MatchConclusion(s,ax))
        & (MatchAllPremises(s,ax));
 
-    if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-      // for UFBV, we need lex ordering over terms TODO
-      /*for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
-        Expression cc = False();
-        for(unsigned ii=0; ii < mpT->mConstants.size(); ii++) {
-          cc |= (Instantiation(s, i) == mpT->mConstants[ii]);
-        }
-        c &= cc;
-      }*/
-      /* TODO */
-      for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
-        unsigned index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
+    for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
+      /* Constants involved are only those already introduced */
+      if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+        // for UFBV, we need lex ordering over terms TODO
+        /*for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
+              Expression cc = False();
+              for(unsigned ii=0; ii < mpT->mConstants.size(); ii++) {
+                cc |= (Instantiation(s, i) == mpT->mConstants[ii]);
+              }
+              c &= cc;
+        }*/
+        int index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
+      // TODO
+      //  c &= (Expression("(pre Instantiation_l_" + itos(s) + "_r__l_" + itos(i) + "_r_" + " " + "(witness " + itos(index)+ "))"));
+      }
+      else {
+        c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
+      }
+    }
+
+    for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
+      /* The id of a new constant is */
+      /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
+      /* so they don't overlap */
+      unsigned index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
+      if (mSMT_theory == eSMTUFBV_ProvingEngine) {
         c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
               Expression("(witness " + itos(index) + ")"));
       }
-    }
-    else {
-      /* Constants involved are only those already introduced */
-      for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
-        c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
-      }
-      for (unsigned i = 0; i < GetAxiom(ax).GetNumOfExistVars(); i++) {
-        /* The id of a new constant is */
-        /* number of initial constants + mnMaxNumberOfVarsInAxioms*(nProofStep+1)+ i, */
-        /* so they don't overlap */
-        c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
-              mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
+      else {
+        c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) == index);
       }
     }
     return c % ("----- ----- Is axiom " + itos(ax) + " applied: ");
@@ -1407,6 +1411,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       mSMTfile << "  )" << endl;
       mSMTfile << ")" << endl;
 
+      mSMTfile << ";     (declare-fun pre (Term Term) Bool)" << endl;
+      mSMTfile << ";     (assert (forall ((t1 Term) (t2 Term) (i1 Int) (i2 Int))" << endl;
+      mSMTfile << ";             (implies (and (= t1 (witness i1)) (= t2 (witness i2)) (< i1 i2)) (pre t1 t2))))" << endl;
+
       mSMTfile << "(declare-datatype Atom" << endl;
       mSMTfile << "  (" << endl;
       for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
@@ -2168,11 +2176,9 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           }
           for (size_t i = 0; i < numOfExistVars; i++) {
             const string existVar = mpT->mCLaxioms[nAxiom].first.GetExistVar(i);
-
-            unsigned index = (mnMaxNumberOfVarsInAxioms*step + (unsigned)(mpT->mInitialConstants).size() + inst[numOfUnivVars + i] + 1);
             const string newWitness =
                     (mSMT_theory == eSMTUFBV_ProvingEngine) ?
-                    "(witness " + itos(index) + ")" :
+                    meProof[step].InstantiationString[numOfUnivVars + i] :
                     mpT->GetConstantName(inst[numOfUnivVars + i]);
             msConstants[inst[numOfUnivVars + i]] = newWitness;
             instantiation.push_back(pair<string, string>(existVar, newWitness));
