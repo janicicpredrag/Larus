@@ -83,6 +83,18 @@ bool isIdentifier(const string &str) {
 
 // ---------------------------------------------------------------------------------------
 
+unsigned readNumber(const string &str) {
+  unsigned i = 0, number = 0;
+  while (isspace(str[i]))
+    i++;
+  while (isdigit(str[i]))
+    number = 10*number + (str[i++]-'0');
+  return number;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
 bool isHintArgument(const string &str) {
   int i;
   return (isIdentifier(str) || stoi(str,i) || str == "_");
