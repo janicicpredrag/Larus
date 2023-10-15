@@ -25,8 +25,8 @@ void ParseTermArguments(const string& s, vector<string>& contents)
           ind++;
         }
         lexeme.clear();
-        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
-          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='!') {
+        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='#') {
+          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='!' || s[ind]=='#') {
             lexeme += s[ind];
             ind++;
           }
@@ -308,17 +308,8 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
     for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
       /* Constants involved can be only those already introduced */
       if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-        // for UFBV, we need lex ordering over terms TODO
-        /*for (unsigned i = 0; i < GetAxiom(ax).GetNumOfUnivVars(); i++) {
-              Expression cc = False();
-              for(unsigned ii=0; ii < mpT->mConstants.size(); ii++) {
-                cc |= (Instantiation(s, i) == mpT->mConstants[ii]);
-              }
-              c &= cc;
-        }*/
         int index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
-      // TODO
-      //  c &= (Expression("(pre Instantiation_l_" + itos(s) + "_r__l_" + itos(i) + "_r_" + " " + "(witness " + itos(index)+ "))"));
+         c &= (WitnessOrdinal(Instantiation(s, i).toString()) < (unsigned)index);
       }
       else {
         c &= (Instantiation(s, i) < mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + 1u);
@@ -331,8 +322,7 @@ Expression SMT_ProvingEngine::IsMPstepByAxiom(unsigned s, unsigned ax)
       /* so they don't overlap */
       unsigned index = (mnMaxNumberOfVarsInAxioms*s + (unsigned)(mpT->mConstants).size() + i + 1);
       if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-        c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) ==
-              Expression("(witness " + itos(index) + ")"));
+        c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) == Witness(index));
       }
       else {
         c &= (Instantiation(s, GetAxiom(ax).GetNumOfUnivVars()+i) == index);
@@ -868,6 +858,15 @@ Expression SMT_ProvingEngine::ProofSize()
 {
     return string("ProofSize");
 }
+Expression SMT_ProvingEngine::WitnessOrdinal(const string& s)
+{
+    return Expression("(WitnessOrdinal " + s + ")");
+}
+Expression SMT_ProvingEngine::Witness(unsigned i)
+{
+    return Expression("(witness #x" + itohexs(i) + ")");
+}
+
 
 // ----------------------------------------------------------
 
@@ -1357,8 +1356,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
            it != mpT->mConstantsPermissible.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
           mSMTfile << "     " << ToUpper(*it) << endl;
-      // countable array of new witnesses
-      mSMTfile << "     (witness (subwitness_0 Int))" << endl;
+      // finite array of new witnesses
+      mSMTfile << "     (witness (subwitness_0 (_ BitVec 12)))" << endl;
 
       for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
         mSMTfile << "    (" << ToUpper(mpT->mSignatureF[i].first) << " ";
@@ -1366,13 +1365,25 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
           mSMTfile << "(sub" << ToUpper(mpT->mSignatureF[i].first) << "_" << j << " Term)";
         mSMTfile << ")" << endl;
       }
-
       mSMTfile << "  )" << endl;
       mSMTfile << ")" << endl;
 
-      mSMTfile << ";     (declare-fun pre (Term Term) Bool)" << endl;
-      mSMTfile << ";     (assert (forall ((t1 Term) (t2 Term) (i1 Int) (i2 Int))" << endl;
-      mSMTfile << ";             (implies (and (= t1 (witness i1)) (= t2 (witness i2)) (< i1 i2)) (pre t1 t2))))" << endl;
+      mSMTfile << endl;
+      mSMTfile << "(declare-fun WitnessOrdinal (Term) (_ BitVec 12))" << endl;
+      for (vector<string>::const_iterator it = mpT->mConstants.begin();
+           it != mpT->mConstants.end(); it++)
+        if (ToUpper(*it).find(" ") == string::npos)
+           mSMTfile << "(assert (= (WitnessOrdinal " << ToUpper(*it) << ") #x000))" << endl;;
+      for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
+           it != mpT->mConstantsPermissible.end(); it++)
+        if (ToUpper(*it).find(" ") == string::npos)
+           mSMTfile << "(assert (= (WitnessOrdinal " << ToUpper(*it) << ") #x000))" << endl;;
+      mSMTfile << endl;
+
+      mSMTfile << "; (assert (forall ((i (_ BitVec 12))) (= (WitnessOrdinal (witness i)) i)))" << endl;
+      for (unsigned i = 0; i < 256; i++)
+        mSMTfile << "(assert (= (WitnessOrdinal (witness #x" << itohexs(i) << ")) #x" << itohexs(mpT->mConstants.size()+ mpT->mConstantsPermissible.size()+1) << "))" << endl;
+      mSMTfile << endl;
 
       mSMTfile << "(declare-datatype Atom" << endl;
       mSMTfile << "  (" << endl;
@@ -1415,7 +1426,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
     unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
     DeclareVarBasicType(ProofSize(), nFinalStep+1);
-    //for(unsigned i = mnNumberOfAssumptions; i <= mnNumberOfAssumptions + mProofLength; i++) {
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i), eNumberOfStepKinds);
       DeclareVarBasicType(AxiomApplied(i), mpT->mCLaxioms.size());
@@ -1458,8 +1468,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
             DeclareVarBasicType(ContentsArgument(i,1,k), nMaxConstants);
           }
       }
-
-      //mSMTfile << ";(declare-const ??? " << endl;
 
       for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
         if (mSMT_theory == eSMTUFBV_ProvingEngine) {
@@ -1805,11 +1813,6 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile)  {
     if (strLine.substr(0,strlen("(model")) != "(model" &&
        strLine.substr(0,strlen("(")) != "(")
        return false;
-    // {if (!(mSMT_theory == eSMTUFLIA_ProvingEngine ||
-    //       mSMT_theory == eSMTUFBV_ProvingEngine))
-    // getline(smtmodel, str);
-    // else
-    // str = ""; }
 
     while (getline(smtmodel, strVarName)) {
       if (strVarName.find("(define-fun ") == string::npos)
@@ -2003,11 +2006,17 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             nStepKind != eQEDbyAssumption &&
             nStepKind != eQEDbyEFQ)
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            // eliminate spurious constants, also for inst[]
             if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-                // TODO do as below FIXME
+              if (nStepKind != eMP) {
+                Term t;
+                t.ReadSMTlibString(meProof[step].ContentsArgumentString[0][i]);
+                EliminateSpuriousConstants(t);
+                meProof[step].ContentsArgumentString[0][i] = t.ToSMTString();
+              }
             } else {
               if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end()
-                && numOfExistVars == 0) // eliminate spurious constants, also for inst[]
+                && numOfExistVars == 0)
                 meProof[step].ContentsArgument[0][i] = 0;
             }
           }
@@ -2090,11 +2099,12 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           if (nBranching) {
             nPredicate1 = meProof[step].ContentsPredicate[1];
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]); i++) {
+              // eliminate spurious constants, also for inst[]
               if (mSMT_theory == eSMTUFBV_ProvingEngine) {
               } else {
                 if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end() &&
                     numOfExistVars == 0)
-                  meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
+                  meProof[step].ContentsArgument[1][i] = 0;
               }
             }
           }
@@ -2116,14 +2126,9 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           int inst[numOfVars];
           for (size_t i = 0; i < numOfVars; i++)  {
             if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-              // TODO do as below FIXME
-              Term t;
-              t.ReadSMTlibString(meProof[step].InstantiationString[i]);
-              string s = t.ToSMTString();
-              if (s.find(" ") == string::npos) {
-                int c;
-                stoi(s, c);
-                inst[i] = c;
+              string s = meProof[step].InstantiationString[i];
+              if (s.substr(0, strlen("(witness ")) == "(witness ") {
+                inst[i] = readNumber(s.substr(strlen("(witness ")));
               }
             } else {
               inst[i] = meProof[step].Instantiation[i];
@@ -2135,37 +2140,21 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             string UnivVar = bIsEqSub
                     ? "X" + itos(i)
                     : mpT->mCLaxioms[nAxiom].first.GetUnivVar(i);
-
+            // eliminate spurious constants
             if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-              // TODO do as below FIXME
               Term t;
               t.ReadSMTlibString(meProof[step].InstantiationString[i]);
-              string s = t.ToSMTString();
-              size_t pos = 0;
-              while(pos < s.size()) {
-                pos = s.find("(witness ", pos);
-                if (pos != string::npos) {
-                  pos += strlen("(witness ");
-                  string ss = s.substr(pos);
-                  unsigned c = readNumber(ss);
-                  if (msConstants.find(c) == msConstants.end()) {
-                    replaceAll(s,"(witness " + itos(c) + ")", "a"); // eliminate spurious constants, also for inst[]
-                  }
-                  else {
-                    replaceAll(s,"(witness " + itos(c) + ")", "witness_" + itos(c));
-                  }
-                }
-                meProof[step].InstantiationString[i] = s;
-                if (s.find(" ") == string::npos) {
-                  int c;
-                  stoi(s, c);
-                  inst[i] = c;
-                }
+              EliminateSpuriousConstants(t);
+              meProof[step].InstantiationString[i] = t.ToSMTString();
+              if (t.ToSMTString().find(" ") == string::npos) {
+                int c;
+                stoi(t.ToSMTString(), c);
+                inst[i] = c;
               }
             } else {
               inst[i] = meProof[step].Instantiation[i];
               if (msConstants.find(inst[i]) == msConstants.end())
-                inst[i] = 0; // eliminate spurious constants
+                inst[i] = 0;
             }
 
             if (mSMT_theory == eSMTUFBV_ProvingEngine)
@@ -2177,10 +2166,18 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           }
           for (size_t i = 0; i < numOfExistVars; i++) {
             const string existVar = mpT->mCLaxioms[nAxiom].first.GetExistVar(i);
-            const string newWitness =
+            string newWitness =
                     (mSMT_theory == eSMTUFBV_ProvingEngine) ?
                     meProof[step].InstantiationString[numOfUnivVars + i] :
                     mpT->GetConstantName(inst[numOfUnivVars + i]);
+            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+            if (newWitness.substr(0, strlen("(witness ")) == "(witness ") {
+                int c;
+                newWitness = newWitness.substr(strlen("(witness "));
+                c = readNumber(newWitness);
+                newWitness = "witness_" + itos(c);
+              }
+            }
             msConstants[inst[numOfUnivVars + i]] = newWitness;
             instantiation.push_back(pair<string, string>(existVar, newWitness));
             new_witnesses.push_back(pair<string, string>(existVar, newWitness));
@@ -2189,33 +2186,16 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           Fact f;
           f.SetName(string(msPredicates[nPredicate]));
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
+            // eliminate spurious constants and set term argumetn
             Term t;
-            if (mSMT_theory == eSMTUFBV_ProvingEngine) { // TODO check like below
-               // TODO do as below FIXME
+            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
                t.ReadSMTlibString(meProof[step].ContentsArgumentString[0][i]);
-               string s = t.ToSMTString();
-               size_t pos = 0;
-               unsigned c;
-               while(pos < s.size()) {
-                 pos = s.find("(witness ", pos);
-                 if (pos != string::npos) {
-                   pos += strlen("(witness ");
-                   string ss = s.substr(pos);
-                   c = readNumber(ss);
-                   if (msConstants.find(c) == msConstants.end()) {
-                     replaceAll(s,"(witness " + itos(c) + ")", "a"); // eliminate spurious constants, also for inst[]
-                   }
-                   else {
-                     replaceAll(s,"(witness " + itos(c) + ")", "witness_" + itos(c));
-                   }
-                 }
-                 meProof[step].ContentsArgumentString[0][i] = s;
-               }
-               t.ReadSMTlibString(meProof[step].ContentsArgumentString[0][i]);
+               EliminateSpuriousConstants(t);
+               meProof[step].ContentsArgumentString[0][i] = t.ToSMTString();
             }
             else {
               if (msConstants.find(meProof[step].ContentsArgument[0][i]) == msConstants.end())
-                meProof[step].ContentsArgument[0][i] = 0; // eliminate spurious constants, also for inst[]
+                meProof[step].ContentsArgument[0][i] = 0;
               t.ReadNonCompoundString(mpT->GetConstantName(meProof[step].ContentsArgument[0][i]));
             }
             f.SetArg(i, t);
@@ -2231,32 +2211,15 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             Fact f;
             f.SetName(string(msPredicates[nPredicate1]));
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]); i++) {
+              // eliminate spurious constants and set the term argument
               Term t;
               if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-                // TODO do as below FIXME
                 t.ReadSMTlibString(meProof[step].ContentsArgumentString[1][i]);
-                string s = t.ToSMTString();
-                size_t pos = 0;
-                unsigned c;
-                while(pos < s.size()) {
-                  pos = s.find("(witness ", pos);
-                  if (pos != string::npos) {
-                    pos += strlen("(witness ");
-                    string ss = s.substr(pos);
-                    c = readNumber(ss);
-                    if (msConstants.find(c) == msConstants.end()) {
-                      replaceAll(s,"(witness " + itos(c) + ")", "a"); // eliminate spurious constants, also for inst[]
-                    }
-                    else {
-                      replaceAll(s,"(witness " + itos(c) + ")", "witness_" + itos(c));
-                    }
-                  }
-                  meProof[step].ContentsArgumentString[1][i] = s;
-                }
-                t.ReadSMTlibString(meProof[step].ContentsArgumentString[1][i]);
+                EliminateSpuriousConstants(t);
+                meProof[step].ContentsArgumentString[1][i] = t.ToSMTString();
               } else {
                 if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end())
-                  meProof[step].ContentsArgument[1][i] = 0; // eliminate spurious constants, also for inst[]
+                  meProof[step].ContentsArgument[1][i] = 0;
                 t.ReadNonCompoundString(mpT->GetConstantName(meProof[step].ContentsArgument[1][i]));
               }
               f.SetArg(i, t);
@@ -2375,3 +2338,25 @@ void SMT_ProvingEngine::AddComment(const string& comment)
 }
 
 // ----------------------------------------------------------
+
+void SMT_ProvingEngine::EliminateSpuriousConstants(Term& t)
+{
+  string s = t.ToSMTString();
+  size_t pos = 0;
+  unsigned c;
+  while(pos < s.size()) {
+    pos = s.find("(witness ", pos);
+    if (pos != string::npos) {
+      pos += strlen("(witness ");
+      string ss = s.substr(pos);
+      c = readNumber(ss);
+      if (msConstants.find(c) == msConstants.end()) {
+        replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
+      }
+      else {
+        replaceAll(s,"(witness #x" + itohexs(c) + ")", "witness_" + itos(c));
+      }
+    }
+  }
+  t.ReadSMTlibString(s);
+}

@@ -49,8 +49,8 @@ void ReadNextToken() {
     NEXTTOKEN = eID;
     TEXTINDEX--;
   }
-  else if (isdigit(TEXTSTREAM[TEXTINDEX])) {
-    while (isdigit(TEXTSTREAM[TEXTINDEX])) {
+  else if (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#') {
+    while (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#' || TEXTSTREAM[TEXTINDEX]=='x') {
       NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
       TEXTINDEX++;
     }

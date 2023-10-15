@@ -87,8 +87,14 @@ unsigned readNumber(const string &str) {
   unsigned i = 0, number = 0;
   while (isspace(str[i]))
     i++;
-  while (isdigit(str[i]))
+  if (str[i] == '#' && str[i+1] == 'x') {
+    std::stringstream ss;
+    ss << std::hex << str.substr(strlen("#x"),str.size());
+    ss >> number;
+  } else {
+    while (isdigit(str[i]))
     number = 10*number + (str[i++]-'0');
+  }
   return number;
 }
 
@@ -152,8 +158,8 @@ string SMT2Bracketed(const string& s)
           ind++;
         }
         lexeme.clear();
-        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
-          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_') {
+        if (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='#')  {
+          while (isalpha(s[ind]) || isdigit(s[ind]) || s[ind]=='_' || s[ind]=='#') {
             lexeme += s[ind];
             ind++;
           }
