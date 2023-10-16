@@ -57,6 +57,7 @@ private:
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace);
+  void EliminateSpuriousConstants(Term& t);
 
   void DeclareVarBasicType(const Expression& Var, unsigned UpperLimit);
   void DeclareVarBoolean(const Expression& Var);
@@ -99,6 +100,8 @@ private:
   Expression IsGoal(unsigned s);
   static Expression IsQEDStep(unsigned s);
   // ----------------------------------------------------------
+  Expression Witness(unsigned i);
+  Expression WitnessOrdinal(const string& s);
   static Expression ProofSize();
   static Expression StepKind(unsigned s);
   static Expression From(unsigned s, unsigned i);

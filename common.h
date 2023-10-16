@@ -151,6 +151,7 @@ string ToUpper(const string &str);
 string dirnameOf(const string &fname);
 string SkipChar(const string &str, char c);
 bool isIdentifier(const string &str);
+unsigned readNumber(const string &str);
 bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 string replacestring(const string& str, const string& from, const string& to);

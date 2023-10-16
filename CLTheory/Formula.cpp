@@ -49,8 +49,8 @@ void ReadNextToken() {
     NEXTTOKEN = eID;
     TEXTINDEX--;
   }
-  else if (isdigit(TEXTSTREAM[TEXTINDEX])) {
-    while (isdigit(TEXTSTREAM[TEXTINDEX])) {
+  else if (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#') {
+    while (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#' || TEXTSTREAM[TEXTINDEX]=='x') {
       NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
       TEXTINDEX++;
     }
@@ -214,10 +214,12 @@ bool Term::ReadSMTlib()
         if (!t.ReadSMTlib())
           return false;
         if (arity == 1) {
-            mArgs.pop_back(); // delete the initial arg, it is function symbol
-            mFunctionSymbols.push_back(make_pair(function_symbol,arity++));
             mTPTPterm += "(" + t.ToTPTPString();
             mSMTlibterm += " " + t.ToSMTString();
+            mArgs.pop_back(); // delete the initial arg, it is a function symbol
+            mFunctionSymbols.push_back(make_pair(function_symbol,arity++));
+            mFunctionSymbols.insert(mFunctionSymbols.end(), t.mFunctionSymbols.begin(), t.mFunctionSymbols.end());
+            mArgs.insert(mArgs.end(),t.mArgs.begin(), t.mArgs.end());
         }
         else {
             mTPTPterm += ", " + t.ToTPTPString();
