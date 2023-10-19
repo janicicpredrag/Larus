@@ -2178,14 +2178,18 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
                     meProof[step].InstantiationString[numOfUnivVars + i] :
                     mpT->GetConstantName(inst[numOfUnivVars + i]);
             if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-            if (newWitness.substr(0, strlen("(witness ")) == "(witness ") {
+              if (newWitness.substr(0, strlen("(witness ")) == "(witness ") {
                 int c;
                 newWitness = newWitness.substr(strlen("(witness "));
                 c = readNumber(newWitness);
                 newWitness = "witness_" + itos(c);
+                msConstants[inst[numOfUnivVars + i]+100] = newWitness;
               }
+              else
+                msConstants[inst[numOfUnivVars + i]] = newWitness;
+            } else {
+              msConstants[inst[numOfUnivVars + i]] = newWitness;
             }
-            msConstants[inst[numOfUnivVars + i]+100] = newWitness;
             instantiation.push_back(pair<string, string>(existVar, newWitness));
             new_witnesses.push_back(pair<string, string>(existVar, newWitness));
           }
@@ -2350,14 +2354,17 @@ void SMT_ProvingEngine::EliminateSpuriousConstants(Term& t)
 {
   string s = t.ToSMTString();
   size_t pos = 0;
-  unsigned c;
+  unsigned c, cc;
   while(pos < s.size()) {
     pos = s.find("(witness ", pos);
     if (pos != string::npos) {
       pos += strlen("(witness ");
       string ss = s.substr(pos);
       c = readNumber(ss);
-      if (msConstants.find(c+100) == msConstants.end()) {
+      cc = c;
+      if (mSMT_theory == eSMTUFBV_ProvingEngine)
+        cc = c + 100;
+      if (msConstants.find(cc) == msConstants.end()) {
         replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
       }
       else {
