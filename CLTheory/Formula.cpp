@@ -50,7 +50,8 @@ void ReadNextToken() {
     TEXTINDEX--;
   }
   else if (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#') {
-    while (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#' || TEXTSTREAM[TEXTINDEX]=='x') {
+    while (isdigit(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='#' || TEXTSTREAM[TEXTINDEX]=='x'
+           || (TEXTSTREAM[TEXTINDEX]>='a' && TEXTSTREAM[TEXTINDEX]<='f')) {
       NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
       TEXTINDEX++;
     }
@@ -1362,8 +1363,7 @@ void CLFormula::NormalizeGoal(
     vector<pair<CLFormula, string>> &output,
     vector<pair<Fact, DNFFormula>> &definitions) const {
   if (mExistentialVars.size() == 0 &&
-      GetGoal().GetSize() ==
-          1) // in this case, the theorem will be split to several ones
+      GetGoal().GetSize() == 1) // in this case, the theorem will be split to several ones
     return;
   unsigned count_aux = 0;
   /* P => (C1 & C2 & C3) | ... gives  axioms: C1 & C2 & C3 => C123 ... */
@@ -1388,15 +1388,18 @@ void CLFormula::NormalizeGoal(
       dnf.Add(GetGoal().GetElement(i));
       definitions.push_back(pair<Fact, DNFFormula>(current, dnf));
 
-      for (size_t j = 0; j < disjuncts[i].GetArity();
-           j++) { // quantify only occuring variables
-        bool bAlreadyThere = false;
-        for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere;
-             k++)
-          if (axiom.mUniversalVars[k] == disjuncts[i].GetArg(j).ToSMTString())
-            bAlreadyThere = true;
-        if (!bAlreadyThere)
-          axiom.mUniversalVars.push_back(disjuncts[i].GetArg(j).ToSMTString());
+      for (size_t j = 0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
+        Term t;
+        t = disjuncts[i].GetArg(j);
+        for (size_t a = 0; a < t.NumArgs(); a++) {
+          bool bAlreadyThere = false;
+          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++) {
+            if (axiom.mUniversalVars[k] == t.GetArg(a))
+              bAlreadyThere = true;
+          }
+          if (!bAlreadyThere)
+            axiom.mUniversalVars.push_back(t.GetArg(a));
+        }
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));

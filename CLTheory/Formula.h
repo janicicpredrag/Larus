@@ -319,16 +319,16 @@ inline ostream &operator<<(ostream &os, const Fact &f) {
     os << "$true";
   } else if (f.GetName() == EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)
-      os << "( " << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString() << " )";
+      os << "( " << f.GetArg(0).ToTPTPString() << " = " << f.GetArg(1).ToTPTPString() << " )";
     else
-      os << EQ_NATIVE_NAME << "( " << f.GetArg(0).ToSMTString() << ", " << f.GetArg(1).ToSMTString()
+      os << EQ_NATIVE_NAME << "( " << f.GetArg(0).ToTPTPString() << ", " << f.GetArg(1).ToTPTPString()
          << " )";
   } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)
-      os << "( " << f.GetArg(0).ToSMTString() << " != " << f.GetArg(1).ToSMTString() << " )";
+      os << "( " << f.GetArg(0).ToTPTPString() << " != " << f.GetArg(1).ToTPTPString() << " )";
     else
-      os << PREFIX_NEGATED + EQ_NATIVE_NAME << "( " << f.GetArg(0).ToSMTString() << ", "
-         << f.GetArg(1).ToSMTString() << " )";
+      os << PREFIX_NEGATED + EQ_NATIVE_NAME << "( " << f.GetArg(0).ToTPTPString() << ", "
+         << f.GetArg(1).ToTPTPString() << " )";
   } else {
     if (f.GetName().find(PREFIX_NEGATED) == 0 && USING_ORIGINAL_SIGNATURE_NEG) {
       string s = PREFIX_NEGATED;
@@ -341,7 +341,7 @@ inline ostream &operator<<(ostream &os, const Fact &f) {
     if (f.GetArity() > 0) {
       os << "(";
       for (size_t i = 0; i < f.GetArity(); i++) {
-        os << f.GetArg(i).ToSMTString();
+        os << f.GetArg(i).ToTPTPString();
         if (i != f.GetArity() - 1)
           os << ",";
       }

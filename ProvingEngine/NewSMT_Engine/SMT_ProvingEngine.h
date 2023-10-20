@@ -52,6 +52,7 @@ private:
   void Clear();
   ReturnValue OneProvingAttempt(const DNFFormula& formula, unsigned length);
   void EncodeProofToSMT(const DNFFormula &formula, unsigned nProofLen, string prove_smt_filename);
+  Expression GoalContents(const DNFFormula &formula, unsigned step,unsigned ind);
   bool ReadModel(const string &sModelFile);
   bool StoreValueFromModel(string& strVarName, string& strVal);
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
