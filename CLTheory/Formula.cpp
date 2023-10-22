@@ -42,7 +42,7 @@ void ReadNextToken() {
     
   NEXTLEXEME = "";
   if (isalpha(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='_' || TEXTSTREAM[TEXTINDEX]=='$') {
-    while (isalnum(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='_' || TEXTSTREAM[TEXTINDEX]=='$') {
+    while (isalnum(TEXTSTREAM[TEXTINDEX]) || TEXTSTREAM[TEXTINDEX]=='_' || TEXTSTREAM[TEXTINDEX]=='$' || isdigit(TEXTSTREAM[TEXTINDEX])) {
       NEXTLEXEME += TEXTSTREAM[TEXTINDEX];
       TEXTINDEX++;
     }
@@ -212,7 +212,10 @@ bool Term::ReadSMTlib()
     int arity = 1;
     while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER || NEXTTOKEN == eOPENB) {
         Term t;
-        if (!t.ReadSMTlib())
+        if (NEXTTOKEN == eID) {
+           t.ReadNonCompoundString(NEXTLEXEME);
+           ReadNextToken();
+        } else if (!t.ReadSMTlib())
           return false;
         if (arity == 1) {
             mTPTPterm += "(" + t.ToTPTPString();
@@ -230,9 +233,9 @@ bool Term::ReadSMTlib()
             mFunctionSymbols.insert(mFunctionSymbols.end(), t.mFunctionSymbols.begin(), t.mFunctionSymbols.end());
             mArgs.insert(mArgs.end(),t.mArgs.begin(), t.mArgs.end());
         }
-        ReadNextToken();
     }
     if (arity > 1) {
+       assert(NEXTTOKEN == eCLOSEB);
        mTPTPterm += ")";
        mSMTlibterm = "(" + mSMTlibterm + ")";
        ReadNextToken();
@@ -298,8 +301,7 @@ void Term::ReadSMTlibString(const string &s) {
 string Term::ToTPTPString() const
 {
   if (IsCompound() || mSMTlibterm[0] != '(')
-     return mTPTPterm;
-
+    return mTPTPterm;
   string s = mTPTPterm;
   return s;
 }
@@ -309,8 +311,7 @@ string Term::ToTPTPString() const
 string Term::ToSMTString() const
 {
   if (IsCompound() || mSMTlibterm[0] != '(')
-     return mSMTlibterm;
-
+    return mSMTlibterm;
   string s = mSMTlibterm;
   s.erase(0, 1); // skip '('
   s.pop_back();  // skip ')'

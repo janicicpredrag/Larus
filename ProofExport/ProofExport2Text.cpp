@@ -45,9 +45,9 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
     cout << "\u22a4 ";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {
-      cout << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " = " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
+      cout << beautify(f.GetArg(0).ToTPTPString()) << " = " << beautify(f.GetArg(1).ToTPTPString());
     } else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-      cout << SMT2Bracketed(beautify(f.GetArg(0).ToSMTString())) << " \u2260 " << SMT2Bracketed(beautify(f.GetArg(1).ToSMTString()));
+      cout << beautify(f.GetArg(0).ToTPTPString()) << " \u2260 " << beautify(f.GetArg(1).ToTPTPString());
     } else {
       int ns = PREFIX_NEGATED.size();
       if (f.GetName().find(PREFIX_NEGATED) == 0)
@@ -57,8 +57,8 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
       if (f.GetArity() > 0) {
         cout << "(";
         for (size_t i = 0; i < f.GetArity() - 1; i++)
-          cout << SMT2Bracketed(beautify(f.GetArg(i).ToSMTString())) << ", ";
-        cout << SMT2Bracketed(beautify(f.GetArg(f.GetArity() - 1).ToSMTString()));
+          cout << beautify(f.GetArg(i).ToTPTPString()) << ", ";
+        cout << beautify(f.GetArg(f.GetArity() - 1).ToTPTPString());
         cout << ")";
       }
     }

@@ -1588,38 +1588,25 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     AddComment("******************************* Goal *********************************");
 
     set<string> exi_vars;
-    for (size_t i = 0; i < formula.GetElement(0).GetElement(0).GetArity(); i++) {
-      if (formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString() != "_") {
+    for(unsigned k = 0; k < formula.GetSize(); k++) {
+      for (size_t i = 0; i < formula.GetElement(k).GetElement(0).GetArity(); i++) {
+        if (formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString() != "_") {
           if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-             Term t = formula.GetElement(0).GetElement(0).GetArg(i);
-             for (unsigned j = 0; j < t.NumArgs(); j++) {
-               if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
-                   && exi_vars.find(t.GetArg(j)) == exi_vars.end()) {
-                 mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
-                 exi_vars.insert(t.GetArg(j));
-               }
-             }
-          }
-          else {
-            if (CONSTANTS.find(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) == CONSTANTS.end()
-                && exi_vars.find(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()) == exi_vars.end()) {
-              DeclareVarBasicType(ToUpper(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString()), 1000); //todo
-              exi_vars.insert(formula.GetElement(0).GetElement(0).GetArg(i).ToSMTString());
+            Term t = formula.GetElement(k).GetElement(0).GetArg(i);
+            for (unsigned j = 0; j < t.NumArgs(); j++) {
+              if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
+                  && exi_vars.find(t.GetArg(j)) == exi_vars.end()) {
+                mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
+                exi_vars.insert(t.GetArg(j));
+              }
             }
           }
-      }
-    }
-    if (formula.GetSize() > 1) {
-      for (size_t i = 0; i < formula.GetElement(1).GetElement(0).GetArity(); i++) {
-        if (formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString() != "_") {
-          if (CONSTANTS.find(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) == CONSTANTS.end() &&
-          exi_vars.find(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) ==
-                exi_vars.end()) {
-            if (mSMT_theory == eSMTUFBV_ProvingEngine)
-              mSMTfile << "(declare-const " << ToUpper(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()) << " Term)" << endl;
-            else
-              DeclareVarBasicType(ToUpper(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString()), 1000);//todo
-          exi_vars.insert(formula.GetElement(1).GetElement(0).GetArg(i).ToSMTString());
+          else {
+            if (CONSTANTS.find(formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString()) == CONSTANTS.end()
+                && exi_vars.find(formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString()) == exi_vars.end()) {
+              DeclareVarBasicType(ToUpper(formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString()), 1000); //todo
+              exi_vars.insert(formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString());
+            }
           }
         }
       }
@@ -1802,7 +1789,7 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
     Expression e = True();
     set<string> exi_vars;
     for (size_t i = 0; i < formula.GetElement(ind).GetElement(0).GetArity(); i++) {
-      if (formula.GetElement(ind).GetElement(ind).GetArg(i).ToSMTString() != "_") {
+      if (formula.GetElement(ind).GetElement(0).GetArg(i).ToSMTString() != "_") {
         Term t = formula.GetElement(ind).GetElement(0).GetArg(i);
         for (unsigned j = 0; j < t.NumArgs(); j++) {
           if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()

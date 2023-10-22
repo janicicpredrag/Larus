@@ -25,6 +25,12 @@ public:
     mFunctionSymbols = t.mFunctionSymbols;
     mArgs = t.mArgs;
   }
+  void Clear() {
+    mTPTPterm = "";
+    mSMTlibterm = "";
+    mFunctionSymbols.clear();
+    mArgs.clear();
+  }
   void ReadNonCompoundString(const string &s);
   void ReadTPTPString(const string &s);
   void ReadSMTlibString(const string &s);

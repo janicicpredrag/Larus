@@ -75,6 +75,7 @@ otherwise:
 
    `-e<engine>`           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
                           when using minizinc, the solver or-tools is used;
+                          function symbols within formula can be used only with smtufbv;
                           examples: `-eursa`; default: `smtbv`
 
    `-n<max nesting>`      for maximal proof depth in which a fact can be used; example: `-n3`; default: `2`
