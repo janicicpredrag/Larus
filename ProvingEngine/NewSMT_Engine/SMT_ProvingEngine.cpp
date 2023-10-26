@@ -350,8 +350,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
               if (arg == v)
                  arg = Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine);
             } else {
-              arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
-              arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+              arg = replaceAll(arg, " " + v + " ", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + " ");
+              arg = replaceAll(arg, " " + v + ")", " " + Instantiation(s,k).toSMT(eSMTUFBV_ProvingEngine) + ")");
             }
           }
           for(unsigned k=0; k < GetAxiom(ax).GetNumOfExistVars(); k++) {
@@ -360,8 +360,8 @@ Expression SMT_ProvingEngine::MatchConclusion(unsigned s, unsigned ax)
               if (arg == v)
                 arg = Instantiation(s,GetAxiom(ax).GetNumOfUnivVars()+k).toSMT(eSMTUFBV_ProvingEngine);
               } else {
-                arg = replacestring(arg, " " + v + " ", " " + Instantiation(s,GetAxiom(ax).GetNumOfUnivVars()+k).toSMT(eSMTUFBV_ProvingEngine) + " ");
-                arg = replacestring(arg, " " + v + ")", " " + Instantiation(s,GetAxiom(ax).GetNumOfUnivVars()+k).toSMT(eSMTUFBV_ProvingEngine) + ")");
+                arg = replaceAll(arg, " " + v + " ", " " + Instantiation(s,GetAxiom(ax).GetNumOfUnivVars()+k).toSMT(eSMTUFBV_ProvingEngine) + " ");
+                arg = replaceAll(arg, " " + v + ")", " " + Instantiation(s,GetAxiom(ax).GetNumOfUnivVars()+k).toSMT(eSMTUFBV_ProvingEngine) + ")");
               }
           }
           t.ReadSMTlibString(arg);
@@ -437,8 +437,8 @@ Expression SMT_ProvingEngine::MatchPremiseToStep(unsigned s, unsigned ax, unsign
           if (arg == GetAxiom(ax).GetUnivVar(k)) {
             arg = e.toString();
           } else {
-            arg = replacestring(arg, " " + GetAxiom(ax).GetUnivVar(k) + " ", " " + e.toString() + " ");
-            arg = replacestring(arg, " " + GetAxiom(ax).GetUnivVar(k) + ")", " " + e.toString() + ")");
+            arg = replaceAll(arg, " " + GetAxiom(ax).GetUnivVar(k) + " ", " " + e.toString() + " ");
+            arg = replaceAll(arg, " " + GetAxiom(ax).GetUnivVar(k) + ")", " " + e.toString() + ")");
           }
         }
         t.ReadSMTlibString(arg);
@@ -1460,10 +1460,10 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
       if (mSMT_theory == eSMTUFBV_ProvingEngine) {
         // maybe should be used because of undespecified goals; TODO
-        for (unsigned k=0; k < mnMaxArity; k++) {
-          mSMTfile << "(declare-const " + ContentsArgumentString(i,0,k).toSMT(mSMT_theory) + " Term)" << endl;
-          mSMTfile << "(declare-const " + ContentsArgumentString(i,1,k).toSMT(mSMT_theory) + " Term)" << endl;
-        }
+//        for (unsigned k=0; k < mnMaxArity; k++) {
+//          mSMTfile << "(declare-const " + ContentsArgumentString(i,0,k).toSMT(mSMT_theory) + " Term)" << endl;
+//          mSMTfile << "(declare-const " + ContentsArgumentString(i,1,k).toSMT(mSMT_theory) + " Term)" << endl;
+//        }
         // for (unsigned k=0; k < mnMaxArity; k++) {
         //   DeclareVarBasicType(ContentsArgument(i,0,k), nMaxConstants);
         //   DeclareVarBasicType(ContentsArgument(i,1,k), nMaxConstants);
@@ -1818,8 +1818,8 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
           if (arg.find(" ") == string::npos)
               arg += ext;
           else {
-            arg = replacestring(arg, " " + t.GetArg(a) + " ", " " + t.GetArg(a) + ext + " ");
-            arg = replacestring(arg, " " + t.GetArg(a) + ")", " " + t.GetArg(a) + ext + ")");
+            arg = replaceAll(arg, " " + t.GetArg(a) + " ", " " + t.GetArg(a) + ext + " ");
+            arg = replaceAll(arg, " " + t.GetArg(a) + ")", " " + t.GetArg(a) + ext + ")");
           }
         }
       }
@@ -1855,46 +1855,13 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile)  {
        strLine.substr(0,strlen("(")) != "(")
        return false;
 
-    while (getline(smtmodel, strVarName)) {
-      if (strVarName.find("(define-fun ") == string::npos)
-        continue;
-      if (!getline(smtmodel, strVal))
-        break;
-      if (mSMT_theory == eSMTUFLIA_ProvingEngine ||
-          mSMT_theory == eSMTUFBV_ProvingEngine) {
-        strVarName = strVarName.substr(strlen("  (define-fun "), strVarName.size() - 1);
-        strVarName = strVarName.substr(0, strVarName.find(' '));
-
-        map<string,string> let;
-        while (strVal.find("(let ") != string::npos) {
-          string l = strVal.substr(strlen("    (let (("), string::npos);
-          string v = l.substr(0, l.find(' '));
-          string val = l.substr(l.find(' ')+1, string::npos);
-          val = val.substr(0, val.find_last_of(')'));
-          val = val.substr(0, val.find_last_of(')'));
-          let.insert ( std::pair<string,string>(v,val));
-          if (!getline(smtmodel, strVal))
-            return false;
-        }
-        while (strVal[0] == ' ') {
-            strVal = strVal.substr(1, string::npos);
-        }
-        strVal = strVal.substr(0, strVal.find_last_of(')'));
-
-        for (map<string,string>::iterator it = let.begin(); it != let.end(); it++) {
-            replaceAll(strVal, it->first, it->second);
-            strVal = strVal.substr(0, strVal.find_last_of(')'));
-        }
+    bool b;
+    do {
+      b = ReadOneVarValue(smtmodel, strVarName, strVal);
+      if (b)
         StoreValueFromModel(strVarName, strVal);
-      }
-      else {
-        strVarName = strVarName.substr(strlen("  (define-fun "), strVarName.size() - 1);
-        strVarName = strVarName.substr(0, strVarName.find(' '));
-        strVal = strVal.substr(strlen("    "), strVal.size());
-        strVal = strVal.substr(0, strVal.find(')'));
-        StoreValueFromModel(strVarName, strVal);
-      }
-    }
+    } while (b);
+
   } else { // MiniZinc
     while (getline(smtmodel, strLine)) {
       if (strLine.find("------") != string::npos)
@@ -1907,6 +1874,63 @@ bool SMT_ProvingEngine::ReadModel(const string &sModelFile)  {
       StoreValueFromModel(strVarName, strVal);
     }
   }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool SMT_ProvingEngine::ReadOneVarValue(ifstream& smtmodel, string& strVarName, string& strVal)
+{
+  string s, svar;
+  int brackets = 0;
+  do {
+    if (!getline(smtmodel, s))
+      return false;
+    brackets += Brackets(s);
+    svar = svar + s;
+  } while (brackets != 0);
+
+  if (svar.find("(define-fun ") == string::npos)
+    return false;
+  strVarName = svar.substr(svar.find("(define-fun ") + strlen("define-fun ") + 1, svar.size());
+  strVarName = strVarName.substr(0, strVarName.find(' '));
+
+  if (svar.find("(let ") == string::npos) {
+    strVal = svar.substr(svar.find("  (define-fun ") + strlen("  (define-fun "));
+    strVal = strVal.substr(strVal.find("    ")+strlen("    "));
+    strVal.pop_back();
+    return true;
+  }
+  // there is "let":
+  svar = svar.substr(svar.find("(let (") + strlen("(let ("));
+  vector<pair<string,string>> let;
+
+  while (svar[0] == '(') {
+    svar = svar.substr(svar.find('(')+1);
+    brackets = 1;
+    int i = 0;
+    do {
+      if (svar[i++] == '(')
+        brackets++;
+      else if (svar[i] == ')')
+        brackets--;
+    }
+    while (brackets != 0);
+    unsigned pos = svar.find(' ');
+    string v = svar.substr(0, pos);
+    string val = svar.substr(pos + 1, i-pos-1);
+    let.push_back( std::pair<string,string>(v,val));
+    svar = svar.substr(i+1);
+    svar = svar.substr(svar.find_first_not_of(" "));
+  }
+  svar = svar.substr(1);  // final ')' for "let" vars
+  svar.pop_back(); // final ')' for "let"
+  svar.pop_back(); // final ')' for "define"
+
+  for (vector<pair<string,string>>::iterator it = let.begin(); it != let.end(); it++) {
+    strVal = replaceAll(svar, it->first, it->second);
+  }
+
   return true;
 }
 
@@ -1932,6 +1956,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
            mSMT_theory == eSMTUFBV_ProvingEngine) {
     if (strVal.find("#x") != string::npos) {
       std::stringstream ss;
+      strVal = strVal.substr(strVal.find_first_not_of(" "));
       ss << std::hex << strVal.substr(strlen("#x"),strVal.size());
       ss >> nVal;
     } else {
@@ -2405,10 +2430,10 @@ void SMT_ProvingEngine::EliminateSpuriousConstants(Term& t)
       if (mSMT_theory == eSMTUFBV_ProvingEngine)
         cc = c + 100;
       if (msConstants.find(cc) == msConstants.end()) {
-        replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
+        s = replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
       }
       else {
-        replaceAll(s,"(witness #x" + itohexs(c) + ")", "witness_" + itos(c));
+        s = replaceAll(s,"(witness #x" + itohexs(c) + ")", "witness_" + itos(c));
       }
     }
   }

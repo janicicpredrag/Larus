@@ -648,11 +648,11 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
           instantiation[t.GetArg(a)] = newc;
           if (t.IsCompound()) {
             string s = t.ToTPTPString();
-            replaceAll(s,"("+var+")", "("+instantiation[var]+")");
-            replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
-            replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
-            replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
-            replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
+            s = replaceAll(s,"("+var+")", "("+instantiation[var]+")");
+            s = replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
+            s = replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
+            s = replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
+            s = replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
             t.Clear();
             t.ReadTPTPString(s);
           }
@@ -665,11 +665,11 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
         if (t.IsCompound()) { // term may be compound, so we have to instantiate all occurrences
             var = t.GetArg(a);
           string s = t.ToTPTPString();
-          replaceAll(s,"("+var+")", "("+instantiation[var]+")");
-          replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
-          replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
-          replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
-          replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
+          s = replaceAll(s,"("+var+")", "("+instantiation[var]+")");
+          s = replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
+          s = replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
+          s = replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
+          s = replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
           t.Clear();
           t.ReadTPTPString(s);
         }

@@ -54,6 +54,7 @@ private:
   void EncodeProofToSMT(const DNFFormula &formula, unsigned nProofLen, string prove_smt_filename);
   Expression GoalContents(const DNFFormula &formula, unsigned step,unsigned ind);
   bool ReadModel(const string &sModelFile);
+  bool ReadOneVarValue(ifstream& smtmodel, string& strVarName, string& strVal);
   bool StoreValueFromModel(string& strVarName, string& strVal);
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,

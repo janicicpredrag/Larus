@@ -130,16 +130,34 @@ string replacestring(const string& str, const string& from, const string& to) {
 
 // ---------------------------------------------------------------------------------------
 
-void replaceAll( string &s, const string &search, const string &replace ) {
+string replaceAll(const string &s, const string &search, const string &replace ) {
+    string ss = s;
     for( size_t pos = 0; ; pos += replace.length() ) {
-        pos = s.find( search, pos );
+        pos = ss.find( search, pos );
         if( pos == string::npos ) break;
-        s.erase( pos, search.length() );
-        s.insert( pos, replace );
+        ss.erase( pos, search.length() );
+        ss.insert( pos, replace );
     }
+    return ss;
 }
 
 // ---------------------------------------------------------------------------------------
+
+int Brackets(const string& s)
+{
+    int count = 0;
+    for(unsigned i = 0; i < s.size(); i++) {
+      if (s[i] == '(')
+        count++;
+      if (s[i] == ')')
+        count--;
+    }
+    return count;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
 
 string SMT2Bracketed(const string& s)
 {
