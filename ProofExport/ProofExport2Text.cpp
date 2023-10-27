@@ -82,9 +82,9 @@ void ProofExport2Text::OutputOr(ofstream& outfile) { cout << " \u2228 "; }
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputPrologue(ofstream& outfile,
-				      Theory &T,
-                                       const CLProof &p,
-                                       proverParams & /*params*/) {
+                                      Theory &T,
+                                      const CLProof &p,
+                                      proverParams & /*params*/) {
 
   mSymbolsTaken = T.mOccuringPredicateSymbols;
   for (vector<string>::const_iterator it = T.mConstants.begin();

@@ -91,6 +91,8 @@ public:
   }
   size_t GetNumberOfAxiomsBeforeSaturation() { return mBeforeSaturation; }
 
+  bool hasFunctionSymbols() const;
+
   bool Rewrite(Fact LHS, DNFFormula RHS, Fact f, DNFFormula &fout) const;
   bool Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
                DNFFormula &fout) const;

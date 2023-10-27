@@ -468,7 +468,9 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
     // An axiom q(x,y) => r(x,y) can be used, while p(x,b) => q(b,x) is inlined
     Expression cOneOfInlineAxioms = False();
     for(unsigned axInl = 0; axInl < mpT->mCLaxioms.size(); axInl++) {
-      if (GetAxiom(axInl).IsSimpleFormula() &&
+      if (
+          (GetAxiom(axInl).IsSimpleFormula() ||
+          (GetAxiom(axInl).IsSimpleUFFormula() && (mSMT_theory == eSMTUFBV_ProvingEngine))) &&
           GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName()
           == GetAxiom(ax).GetPremises().GetElement(i).GetName())
       {
@@ -1933,34 +1935,53 @@ bool SMT_ProvingEngine::ReadOneVarValue(ifstream& smtmodel, string& strVarName, 
     return true;
   }
   // there is "let":
-  svar = svar.substr(svar.find("(let (") + strlen("(let ("));
   vector<pair<string,string>> let;
 
-  while (svar[0] == '(') {
-    svar = svar.substr(svar.find('(')+1);
-    brackets = 1;
-    int i = 0;
-    do {
-      if (svar[i++] == '(')
-        brackets++;
-      else if (svar[i] == ')')
-        brackets--;
+  for (;;) {
+    if (svar.find("(let ") == string::npos)
+       break;
+    svar = svar.substr(svar.find("(let ") + strlen("(let "));
+    while (isspace(svar[0])) {
+      svar = svar.substr(1);
     }
-    while (brackets != 0);
-    unsigned pos = svar.find(' ');
-    string v = svar.substr(0, pos);
-    string val = svar.substr(pos + 1, i-pos-1);
-    let.push_back( std::pair<string,string>(v,val));
-    svar = svar.substr(i+1);
-    svar = svar.substr(svar.find_first_not_of(" "));
+    while (svar[0] == '(' && svar[1] == '(') {
+      brackets = 0;
+      int i = 0;
+      do {
+        if (svar[i] == '(')
+          brackets++;
+        else if (svar[i] == ')')
+          brackets--;
+        i++;
+      }
+      while (brackets != 0);
+      unsigned pos = svar.find(' ');
+      string v = svar.substr(2, pos-2); // after "(("
+      string val = svar.substr(pos + 1, i-pos-3);
+      let.push_back( std::pair<string,string>(v,val));
+      svar = svar.substr(i);
+    }
   }
-  svar = svar.substr(1);  // final ')' for "let" vars
-  svar.pop_back(); // final ')' for "let"
-  svar.pop_back(); // final ')' for "define"
 
-  for (vector<pair<string,string>>::iterator it = let.begin(); it != let.end(); it++) {
-    strVal = replaceAll(svar, it->first, it->second);
+  while (isspace(svar[0])) {
+    svar = svar.substr(1);
   }
+  brackets = 0;
+  int i = 0;
+  do {
+    if (svar[i] == '(')
+      brackets++;
+    else if (svar[i] == ')')
+      brackets--;
+    i++;
+  }
+  while (brackets != 0);
+  svar = svar.substr(0, i);
+
+  for (vector<pair<string,string>>::reverse_iterator it = let.rbegin(); it != let.rend(); it++) {
+    svar = replaceAll(svar, it->first, it->second);
+  }
+  strVal = svar;
 
   return true;
 }
@@ -2461,7 +2482,8 @@ void SMT_ProvingEngine::EliminateSpuriousConstants(Term& t)
       if (mSMT_theory == eSMTUFBV_ProvingEngine)
         cc = c + 100;
       if (msConstants.find(cc) == msConstants.end()) {
-        s = replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
+        // s = replaceAll(s,"(witness #x" + itohexs(c) + ")", "a"); // eliminate spurious constants, also for inst[]
+        s = replaceAll(s,"(witness #x" + itohexs(c) + ")", msConstants[0]); // eliminate spurious constants, also for inst[]
       }
       else {
         s = replaceAll(s,"(witness #x" + itohexs(c) + ")", "witness_" + itos(c));

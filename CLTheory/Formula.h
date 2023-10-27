@@ -295,7 +295,14 @@ public:
   bool IsSimpleImplication() const;
   bool IsSimpleUnivFormula() const;
   bool IsSimpleFormula() const;
+
+  bool IsSimpleUFImplication() const;
+  bool IsSimpleUnivUFFormula() const;
+  bool IsSimpleUFFormula() const;
+
   bool IsSimpleFormulaWithoutDisjunction() const;
+
+  bool hasFunctionSymbols() const;
 
   void Clear() {
     mA.Clear();

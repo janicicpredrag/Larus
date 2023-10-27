@@ -900,6 +900,47 @@ int CLFormula::ExistVarOrdinalNumber(string v) const {
 // ---------------------------------------------------------------------------------------
 
 bool CLFormula::IsSimpleImplication() const {
+    size_t numPremises = GetPremises().GetSize();
+    size_t numDisj = GetGoal().GetSize();
+
+    if (numPremises != 1 || numDisj != 1)
+      return false;
+
+    if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
+        GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+      return false;
+
+    if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
+      return false;
+
+    for (unsigned i = 0; i < numPremises; i++) {
+      Fact f = GetPremises().GetElement(0);
+      for (unsigned j = 0; j < f.GetArity(); j++) {
+        Term t = f.GetArg(j);
+        if (t.NumFunctionSymbols() > 0)
+          return false;
+      }
+    }
+
+    Fact f = GetGoal().GetElement(0).GetElement(0);
+    for (unsigned j = 0; j < f.GetArity(); j++) {
+      Term t = f.GetArg(j);
+      if (t.NumFunctionSymbols() > 0)
+        return false;
+    }
+
+    if (numPremises == 1 &&
+        numDisj == 1 &&
+        GetGoal().GetElement(0).GetSize() == 1 &&
+        GetNumOfExistVars() == 0)
+      return true;
+
+    return false;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::IsSimpleUFImplication() const {
   size_t numPremises = GetPremises().GetSize();
   size_t numDisj = GetGoal().GetSize();
 
@@ -913,29 +954,6 @@ bool CLFormula::IsSimpleImplication() const {
   if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
     return false;
 
-  for (unsigned i = 0; i < numPremises; i++) {
-    Fact f = GetPremises().GetElement(0);
-    for (unsigned j = 0; j < f.GetArity(); j++) {
-      Term t = f.GetArg(j);
-      if (t.NumFunctionSymbols() > 0)
-        return false;
-    }
-  }
-
-  Fact f = GetPremises().GetElement(0);
-  for (unsigned j = 0; j < f.GetArity(); j++) {
-    Term t = f.GetArg(j);
-    if (t.NumFunctionSymbols() > 0)
-      return false;
-  }
-
-  f = GetGoal().GetElement(0).GetElement(0);
-  for (unsigned j = 0; j < f.GetArity(); j++) {
-    Term t = f.GetArg(j);
-    if (t.NumFunctionSymbols() > 0)
-      return false;
-  }
-
   if (numPremises == 1 &&
       numDisj == 1 &&
       GetGoal().GetElement(0).GetSize() == 1 &&
@@ -945,9 +963,32 @@ bool CLFormula::IsSimpleImplication() const {
   return false;
 }
 
+
 // ---------------------------------------------------------------------------------------
 
 bool CLFormula::IsSimpleUnivFormula() const {
+    if (GetNumOfExistVars() != 0)
+      return false;
+    if (GetPremises().GetSize() != 0)
+      return false;
+    if (GetGoal().GetSize() != 1)
+      return false;
+    if (GetGoal().GetElement(0).GetSize() != 1)
+      return false;
+    if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+      return false;
+  Fact f = GetGoal().GetElement(0).GetElement(0);
+  for (unsigned j = 0; j < f.GetArity(); j++) {
+    Term t = f.GetArg(j);
+    if (t.NumFunctionSymbols() > 0)
+      return false;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::IsSimpleUnivUFFormula() const {
   if (GetNumOfExistVars() != 0)
     return false;
   if (GetPremises().GetSize() != 0)
@@ -958,13 +999,6 @@ bool CLFormula::IsSimpleUnivFormula() const {
     return false;
   if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
     return false;
-  Fact f = GetGoal().GetElement(0).GetElement(0);
-  for (unsigned j = 0; j < f.GetArity(); j++) {
-    Term t = f.GetArg(j);
-    if (t.NumFunctionSymbols() > 0)
-      return false;
-  }
-
   return true;
 }
 
@@ -973,19 +1007,49 @@ bool CLFormula::IsSimpleUnivFormula() const {
 bool CLFormula::IsSimpleFormula() const
 {
     return IsSimpleImplication() || IsSimpleUnivFormula();
-/*
-    return (GetNumOfExistVars() == 0)
+/*  return (GetNumOfExistVars() == 0)
            && (GetGoal().GetSize() == 1)
            && (GetPremises().GetSize() <= 1);*/
 }
 
 // ----------------------------------------------------------
 
+bool CLFormula::IsSimpleUFFormula() const
+{
+    return IsSimpleUFImplication() || IsSimpleUnivUFFormula();
+}
+
+// ----------------------------------------------------------
+
+
 bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
 {
     return (GetNumOfExistVars() == 0)
            && (GetGoal().GetSize() == 1)
            && (GetPremises().GetSize() <= 1);
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool CLFormula::hasFunctionSymbols() const
+{
+    for (unsigned i = 0; i < GetPremises().GetSize(); i++) {
+      for (unsigned j = 0; j < GetPremises().GetElement(i).GetArity(); j++) {
+        Term t = GetPremises().GetElement(i).GetArg(j);
+        if (t.NumFunctionSymbols() > 0)
+          return true;
+      }
+    }
+    for (unsigned i = 0; i < GetGoal().GetSize(); i++) {
+      for (unsigned j = 0; j < GetGoal().GetElement(i).GetSize(); j++) {
+        for (unsigned k = 0; k < GetGoal().GetElement(i).GetElement(j).GetArity(); k++) {
+          Term t = GetGoal().GetElement(i).GetElement(j).GetArg(k);
+          if (t.NumFunctionSymbols() > 0)
+            return true;
+        }
+      }
+    }
+    return false;
 }
 
 // ---------------------------------------------------------------------------------------

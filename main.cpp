@@ -325,10 +325,22 @@ int main(int argc, char **argv) {
 
   timer.start();
   if ((rv = ReadTPTPConjecture(inputFilename, params,
-                               T, theorem, theoremName, hints)) == eOK)
-    if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK)
+                               T, theorem, theoremName, hints)) == eOK) {
+    if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK) {
+
+      if (params.eEngine != eSMTUFBV_ProvingEngine &&
+          (T.hasFunctionSymbols() || theorem.hasFunctionSymbols())) {
+        cout << endl;
+        cout << "Conjectures involving function symbols can be ";
+        cout << "handled only by smtufbv proving engine.";
+        cout << endl << endl;
+        return 0;
+      }
+
       rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName,
                                          inputFilename, hints);
+    }
+  }
   double elapsed_secs = timer.elapsed();
   cout << endl << "Elapsed time: " << fixed << setprecision(2) << elapsed_secs << "s" << endl;
 

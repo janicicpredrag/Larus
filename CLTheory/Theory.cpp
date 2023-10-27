@@ -1072,3 +1072,12 @@ bool Theory::sameUpToRenaming(const CLFormula &cf1,
 }
 
 // ---------------------------------------------------------------------------------------
+
+bool Theory::hasFunctionSymbols() const {
+    for (size_t i = 0; i < mCLaxioms.size(); i++)
+      if (mCLaxioms[i].first.hasFunctionSymbols())
+        return true;
+    return false;
+}
+
+// ---------------------------------------------------------------------------------------
