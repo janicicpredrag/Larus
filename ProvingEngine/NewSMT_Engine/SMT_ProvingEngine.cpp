@@ -488,13 +488,19 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
                 Fact fc;
                 fc.SetName(GetAxiom(axInl).GetPremises().GetElement(0).GetName());
                 for(unsigned j=0; j < GetAxiom(axInl).GetPremises().GetElement(0).GetArity(); j++) {
-                  if (BindingAxiomPremises(axInl, 0, j) != 0) {
-                    Term t;
-                    t.ReadTPTPString(InstantiationInline(s,i,BindingAxiomPremises(axInl, 0, j)-1).toSMT(eSMTUFBV_ProvingEngine));
-                    fc.SetArg(j, t);
+                  Term t = GetAxiom(axInl).GetPremises().GetElement(0).GetArg(j);
+                  string arg = t.ToSMTString();
+                  for(unsigned k=0; k < GetAxiom(axInl).GetNumOfUnivVars(); k++) {
+                    Expression e = InstantiationInline(s,i,k);
+                    if (arg == GetAxiom(axInl).GetUnivVar(k)) {
+                      arg = e.toString();
+                    } else {
+                      arg = replaceAll(arg, " " + GetAxiom(axInl).GetUnivVar(k) + " ", " " + e.toString() + " ");
+                      arg = replaceAll(arg, " " + GetAxiom(axInl).GetUnivVar(k) + ")", " " + e.toString() + ")");
+                    }
                   }
-                  else // it is a constant
-                    fc.SetArg(j, GetAxiom(axInl).GetPremises().GetElement(0).GetArg(j));
+                  t.ReadSMTlibString(arg);
+                  fc.SetArg(j, t);
                 }
                 c &= (Contents(ss,0) == Expression(fc.ToString()));
             } else {
@@ -514,32 +520,56 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
         // Match the goal in the inline axiom:
         Expression c = cOneOfInlinePremises;
         for(unsigned j=0; j < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
-          if (BindingAxiomGoal(axInl, 0, j) != 0) {
-            if (BindingAxiomPremises(ax, i, j) != 0)
-              c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
-                    == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
-            else {
-              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-                c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
-                      == GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString());
-              } else {
-                  c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
-                      == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]);
+          if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+            Fact fc, fcs;
+            fc.SetName(GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName());
+            fcs.SetName(GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetName());
+            for(unsigned j=0; j < GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArity(); j++) {
+              Term t = GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j);
+              string arg = t.ToSMTString();
+              for(unsigned k=0; k < GetAxiom(axInl).GetNumOfUnivVars(); k++) {
+                Expression e = InstantiationInline(s,i,k);
+                if (arg == GetAxiom(axInl).GetUnivVar(k)) {
+                  arg = e.toString();
+                } else {
+                  arg = replaceAll(arg, " " + GetAxiom(axInl).GetUnivVar(k) + " ", " " + e.toString() + " ");
+                  arg = replaceAll(arg, " " + GetAxiom(axInl).GetUnivVar(k) + ")", " " + e.toString() + ")");
+                }
               }
+              t.ReadSMTlibString(arg);
+              fc.SetArg(j, t);
             }
-          }
-          else { // it is a constant
-            if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-                if (BindingAxiomPremises(ax, i, j) != 0)
-                  c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
-                        == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString());
-                else
-                  c &= ((GetAxiom(ax).GetPremises().GetElement(i).GetArg(j)
-                        == GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j)) ? True() : False());
-            } else {
-              if (BindingAxiomPremises(ax, i, j) != 0)
+            for(unsigned j=0; j < GetAxiom(ax).GetPremises().GetElement(i).GetArity(); j++) {
+              Term t = GetAxiom(ax).GetPremises().GetElement(i).GetArg(j);
+              string arg = t.ToSMTString();
+              for(unsigned k=0; k < GetAxiom(ax).GetNumOfUnivVars(); k++) {
+                Expression e = Instantiation(s,k);
+                if (arg == GetAxiom(ax).GetUnivVar(k)) {
+                  arg = e.toString();
+                } else {
+                  arg = replaceAll(arg, " " + GetAxiom(ax).GetUnivVar(k) + " ", " " + e.toString() + " ");
+                  arg = replaceAll(arg, " " + GetAxiom(ax).GetUnivVar(k) + ")", " " + e.toString() + ")");
+                }
+              }
+              t.ReadSMTlibString(arg);
+              fcs.SetArg(j, t);
+            }
+            c &= (Expression(fcs.ToString()) == Expression(fc.ToString()));
+          } else {
+            if (BindingAxiomGoal(axInl, 0, j) != 0) {
+              if (BindingAxiomPremises(ax, i, j) != 0) {
+                c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+                      == Instantiation(s,BindingAxiomPremises(ax, i, j)-1));
+              }
+              else {
+                c &= (InstantiationInline(s,i,BindingAxiomGoal(axInl, 0, j)-1)
+                   == CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]);
+              }
+            } else { // it is a constant
+              if (BindingAxiomPremises(ax, i, j) != 0) {
                 c &= (Instantiation(s,BindingAxiomPremises(ax, i, j)-1)
                       == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()]);
+              }
               else
                 c &= (CONSTANTS[GetAxiom(ax).GetPremises().GetElement(i).GetArg(j).ToSMTString()]
                       == CONSTANTS[GetAxiom(axInl).GetGoal().GetElement(0).GetElement(0).GetArg(j).ToSMTString()] ? True() : False());
@@ -1294,6 +1324,7 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       cout << endl << "z3/CSP solver not found in the PATH!" << endl << flush;
       return eConjectureNotProved;
     }
+    cout << " reading model... " << flush;
     mParams.time_limit = mParams.time_limit - t.elapsed();
     cout << "(remaining time: " << fixed << setprecision(2) << mParams.time_limit << "s); " << flush;
     if (!ReadModel(smt_model_filename)) {
