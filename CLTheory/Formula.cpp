@@ -73,7 +73,7 @@ void ReadNextToken() {
       if (TEXTSTREAM[TEXTINDEX+1]=='=') {
         TEXTINDEX++;
         NEXTTOKEN = eNEQ;
-        }
+      }
       else
       NEXTTOKEN = eEXCLAM;
       break;
@@ -212,7 +212,7 @@ bool Term::ReadSMTlib()
     int arity = 1;
     while (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER || NEXTTOKEN == eOPENB) {
         Term t;
-        if (NEXTTOKEN == eID) {
+        if (NEXTTOKEN == eID || NEXTTOKEN == eNUMBER) {
            t.ReadNonCompoundString(NEXTLEXEME);
            ReadNextToken();
         } else if (!t.ReadSMTlib())
@@ -386,8 +386,8 @@ bool Fact::Read() {
 
   Term tL, tR;
   if (tL.ReadTPTP()) {
-    if (NEXTTOKEN == eEQ || NEXTTOKEN == eEQ ) {
-       bool bEq = NEXTTOKEN == eEQ;
+    if (NEXTTOKEN == eEQ || NEXTTOKEN == eNEQ ) {
+       bool bEq = (NEXTTOKEN == eEQ);
        ReadNextToken();
        if (tR.ReadTPTP()) {
            mName = bEq ? EQ_NATIVE_NAME : PREFIX_NEGATED + EQ_NATIVE_NAME;

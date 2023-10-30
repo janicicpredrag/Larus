@@ -4,4 +4,9 @@ fof(ax3, axiom, (! [X] : (op(e,X) = X))).
 fof(ax4, axiom, (! [X] : (op(X,inv(X)) = e))).
 fof(ax5, axiom, (! [X] : (op(inv(X),X) = e))).
 
-fof(thm, conjecture,  ! [E] : (~(E=e) => (? [X] : ( ~(op(X,E) = X) | ~(op(E,X) = X) ) ))).
+fof(ax2a, axiom, (! [X] : (op(X,e1) = X))).
+fof(ax3a, axiom, (! [X] : (op(e1,X) = X))).
+
+
+
+fof(thm, conjecture,  e=e1).

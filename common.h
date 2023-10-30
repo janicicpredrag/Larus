@@ -146,6 +146,7 @@ string itos(PROVING_ENGINE T, unsigned int i);
 string itohexs(unsigned int i);
 bool stoi(string s, int &i);
 bool stou(string s, unsigned &i);
+bool isNumber(string n);
 string SkipChar(const string &str, char c);
 string ToUpper(const string &str);
 string dirnameOf(const string &fname);

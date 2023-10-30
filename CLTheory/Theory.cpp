@@ -398,6 +398,8 @@ const pair<CLFormula, string> &Theory::OriginalAxiom(size_t i) const {
 // --------------------------------------------------------------
 
 void Theory::AddConstant(string s) {
+  if (isNumber(s))
+    return;
   if (s.find(' ') == string::npos) { // it is not compound term
     if (s != "_") { // _ is for unconstrained arguments
       Term t;

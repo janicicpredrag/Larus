@@ -1384,31 +1384,73 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     Assert(QEDbyEFQ()        == 0x00bu);
     Assert(MP()              == 0x00cu);
 
+    mnMaxNumberOfVarsInAxioms = 0;
+    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
+         it != mpT->mCLaxioms.end(); it++) {
+      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
+      if (num > mnMaxNumberOfVarsInAxioms)
+          mnMaxNumberOfVarsInAxioms = num;
+    }
+    if (mParams.mbNativeEQsub) {
+        if (mnMaxNumberOfPremisesInAxioms < 2) {
+          mnMaxNumberOfPremisesInAxioms = 2;
+        }
+        if (mnMaxNumberOfVarsInAxioms < mnMaxArity+1) {
+          mnMaxNumberOfVarsInAxioms = mnMaxArity+1;
+        }
+    }
+    unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
+    unsigned nMaxConstants =
+            mnMaxNumberOfVarsInAxioms * (nFinalStep+1) +
+            mpT->mConstants.size() +
+            mpT->mConstantsPermissible.size();
+
+    string sTermType = "Term";
+    //string sTermType = "(_ BitVec 12)";
+
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-      mSMTfile << "(declare-datatype Term" << endl;
-      mSMTfile << "  (" << endl;
-      for (vector<string>::const_iterator it = mpT->mConstants.begin();
-           it != mpT->mConstants.end(); it++)
-        if (ToUpper(*it).find(" ") == string::npos)
-           mSMTfile << "     " << ToUpper(*it) << endl;
-      for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
-           it != mpT->mConstantsPermissible.end(); it++)
-        if (ToUpper(*it).find(" ") == string::npos)
-          mSMTfile << "     " << ToUpper(*it) << endl;
-      // finite array of new witnesses
-      mSMTfile << "     (witness (subwitness_0 (_ BitVec 12)))" << endl;
 
-      for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
-        mSMTfile << "    (" << ToUpper(mpT->mSignatureF[i].first) << " ";
-        for (size_t j = 0; j < mpT->mSignatureF[i].second; j++)
-          mSMTfile << "(sub" << ToUpper(mpT->mSignatureF[i].first) << "_" << j << " Term)";
+      if (sTermType == "Term") {
+        mSMTfile << endl << "(declare-datatype " << sTermType << endl;
+        mSMTfile << "  (" << endl;
+        for (vector<string>::const_iterator it = mpT->mConstants.begin();
+             it != mpT->mConstants.end(); it++)
+          if (ToUpper(*it).find(" ") == string::npos)
+             mSMTfile << "     " << ToUpper(*it) << endl;
+        for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
+             it != mpT->mConstantsPermissible.end(); it++)
+          if (ToUpper(*it).find(" ") == string::npos)
+            mSMTfile << "     " << ToUpper(*it) << endl;
+        for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
+          mSMTfile << "     (" << ToUpper(mpT->mSignatureF[i].first) << " ";
+          for (size_t j = 0; j < mpT->mSignatureF[i].second; j++)
+            mSMTfile << "(sub" << ToUpper(mpT->mSignatureF[i].first) << "_" << j << " " << sTermType << ")";
+          mSMTfile << ")" << endl;
+        }
+        mSMTfile << "    (witness (subwitness_0 (_ BitVec 12)))" << endl;
+        mSMTfile << "  )" << endl;
         mSMTfile << ")" << endl;
-      }
-      mSMTfile << "  )" << endl;
-      mSMTfile << ")" << endl;
 
-      mSMTfile << endl;
-      mSMTfile << "(declare-fun WitnessOrdinal (Term) (_ BitVec 12))" << endl;
+      } else { // not Term
+/*        for (size_t i = 0; i < mpT->mSignatureP.size(); i++)
+          DeclareVarBasicType(ToUpper(mpT->mSignatureP[i].first), mpT->mSignatureP.size());*/
+        for (vector<string>::const_iterator it = mpT->mConstants.begin();
+             it != mpT->mConstants.end(); it++)
+          DeclareVarBasicType(ToUpper(*it), mpT->mConstants.size());
+        for (set<string>::iterator it = mpT->mConstantsPermissible.begin();
+             it != mpT->mConstantsPermissible.end(); it++)
+          DeclareVarBasicType(ToUpper(*it),mpT->mConstantsPermissible.size());
+        for (size_t i = 0; i < mpT->mSignatureF.size(); i++) {
+          mSMTfile << "(declare-fun " << ToUpper(mpT->mSignatureF[i].first) << " ( ";
+          for (size_t j = 0; j < mpT->mSignatureF[i].second; j++)
+            mSMTfile << sTermType << " ";
+          mSMTfile << ")" << sTermType << " )" << endl;
+        }
+        // finite array of new witnesses
+        mSMTfile << "(declare-fun witness ((_ BitVec 12)) (_ BitVec 12))" << endl;
+      }
+
+      mSMTfile << "(declare-fun WitnessOrdinal (" << sTermType << ") (_ BitVec 12))" << endl;
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
         if (ToUpper(*it).find(" ") == string::npos)
@@ -1420,7 +1462,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       mSMTfile << endl;
 
       mSMTfile << "; (assert (forall ((i (_ BitVec 12))) (= (WitnessOrdinal (witness i)) i)))" << endl;
-      for (unsigned i = 0; i < 256; i++)
+      for (unsigned i = 0; i < nMaxConstants; i++)
         mSMTfile << "(assert (= (WitnessOrdinal (witness #x" << itohexs(i) << ")) #x" << itohexs(i + mpT->mConstants.size()+ mpT->mConstantsPermissible.size()) << "))" << endl;
       mSMTfile << endl;
 
@@ -1429,12 +1471,13 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
         mSMTfile << "    (" << ToUpper(mpT->mSignatureP[i].first) << " ";
         for (size_t j = 0; j < mpT->mSignatureP[i].second; j++)
-          mSMTfile << "(sub" << ToUpper(mpT->mSignatureP[i].first) << "_" << j << " Term)";
+          mSMTfile << "(sub" << ToUpper(mpT->mSignatureP[i].first) << "_" << j << " " << sTermType << ")";
         mSMTfile << ")" << endl;
       }
       mSMTfile << "  )" << endl;
       mSMTfile << ")" << endl;
-    } else {
+
+    } else { // mSMT_theory != eSMTUFBV_ProvingEngine
       for (size_t i = 0; i < mpT->mSignatureP.size(); i++)
         DeclareVarBasicType(ToUpper(mpT->mSignatureP[i].first), mpT->mSignatureP.size());
 
@@ -1446,24 +1489,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         DeclareVarBasicType(ToUpper(*it),mpT->mConstantsPermissible.size());
     }
 
-    mnMaxNumberOfVarsInAxioms = 0;
-    for (vector<pair<CLFormula, string>>::iterator it = mpT->mCLaxioms.begin();
-         it != mpT->mCLaxioms.end(); it++) {
-      unsigned num = it->first.GetNumOfUnivVars() + it->first.GetNumOfExistVars();
-      if (num > mnMaxNumberOfVarsInAxioms)
-          mnMaxNumberOfVarsInAxioms = num;
-    }
-
-    if (mParams.mbNativeEQsub) {
-        if (mnMaxNumberOfPremisesInAxioms < 2) {
-          mnMaxNumberOfPremisesInAxioms = 2;
-        }
-        if (mnMaxNumberOfVarsInAxioms < mnMaxArity+1) {
-          mnMaxNumberOfVarsInAxioms = mnMaxArity+1;
-        }
-    }
-
-    unsigned nFinalStep = mnNumberOfAssumptions + nProofLen - 1;
     DeclareVarBasicType(ProofSize(), nFinalStep+1);
     for (unsigned i=0; i <= nFinalStep; i++) {
       DeclareVarBasicType(StepKind(i), eNumberOfStepKinds);
@@ -1486,11 +1511,6 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       DeclareVarBoolean(Cases(i));
       DeclareVarBoolean(IsGoal(i));
 
-      unsigned nMaxConstants =
-              mnMaxNumberOfVarsInAxioms * (nFinalStep+1) +
-              mpT->mConstants.size() +
-              mpT->mConstantsPermissible.size();
-
       if (mSMT_theory == eSMTUFBV_ProvingEngine) {
         // maybe should be used because of undespecified goals; TODO
 //        for (unsigned k=0; k < mnMaxArity; k++) {
@@ -1510,7 +1530,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
       for (unsigned k=0; k < mnMaxNumberOfVarsInAxioms; k++) {
         if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-          mSMTfile << "(declare-const " + Instantiation(i,k).toSMT(mSMT_theory) + " Term)" << endl;
+          mSMTfile << "(declare-const " + Instantiation(i,k).toSMT(mSMT_theory) + " " + sTermType + ")" << endl;
         } else {
           DeclareVarBasicType(Instantiation(i,k), nMaxConstants);
         }
@@ -1518,7 +1538,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       for (unsigned k=0; k < mnMaxNumberOfPremisesInAxioms; k++) {
         for (unsigned j=0; j < mnMaxNumberOfVarsInAxioms; j++) {
           if (mSMT_theory == eSMTUFBV_ProvingEngine)
-            mSMTfile << "(declare-const " + InstantiationInline(i,k,j).toSMT(mSMT_theory) + " Term)" << endl;
+            mSMTfile << "(declare-const " + InstantiationInline(i,k,j).toSMT(mSMT_theory) + " " + sTermType + ")" << endl;
           else
             DeclareVarBasicType(InstantiationInline(i,k,j), nMaxConstants);
         }
@@ -1628,7 +1648,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
             Term t = formula.GetElement(k).GetElement(0).GetArg(i);
             for (unsigned j = 0; j < t.NumArgs(); j++) {
               if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
-                  && exi_vars.find(t.GetArg(j)) == exi_vars.end()) {
+                  && exi_vars.find(t.GetArg(j)) == exi_vars.end()
+                  && !isNumber(t.GetArg(j))) {
                 mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << " Term)" << endl;
                 exi_vars.insert(t.GetArg(j));
               }
@@ -1826,7 +1847,8 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
         Term t = formula.GetElement(ind).GetElement(0).GetArg(i);
         for (unsigned j = 0; j < t.NumArgs(); j++) {
           if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
-              && exi_vars.find(t.GetArg(j)) == exi_vars.end()) {
+              && exi_vars.find(t.GetArg(j)) == exi_vars.end()
+              && !isNumber(t.GetArg(j))) {
              mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << "_" << step << "_" << ind << " Term)" << endl;
             exi_vars.insert(t.GetArg(j));
           }
@@ -1944,7 +1966,9 @@ bool SMT_ProvingEngine::ReadOneVarValue(ifstream& smtmodel, string& strVarName, 
     while (isspace(svar[0])) {
       svar = svar.substr(1);
     }
-    while (svar[0] == '(' && svar[1] == '(') {
+    assert(svar[0] == '(');
+    svar = svar.substr(1);
+    while (svar[0] == '(' /*&& svar[1] == '('*/) {
       brackets = 0;
       int i = 0;
       do {
@@ -1956,13 +1980,17 @@ bool SMT_ProvingEngine::ReadOneVarValue(ifstream& smtmodel, string& strVarName, 
       }
       while (brackets != 0);
       unsigned pos = svar.find(' ');
-      string v = svar.substr(2, pos-2); // after "(("
-      string val = svar.substr(pos + 1, i-pos-3);
+      string v = svar.substr(1, pos-1); // after "(("
+      string val = svar.substr(pos, i-pos-1);
       let.push_back( std::pair<string,string>(v,val));
       svar = svar.substr(i);
+      while (isspace(svar[0])) {
+        svar = svar.substr(1);
+      }
     }
   }
-
+  assert(svar[0] == ')');
+  svar = svar.substr(1);
   while (isspace(svar[0])) {
     svar = svar.substr(1);
   }
@@ -2250,10 +2278,6 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
                 // will handle all existentially quantified variables
                 inst[i] = readNumber(s.substr(strlen("(witness ")));
               }
-            //  Term t;
-            //  t.ReadSMTlibString(meProof[step].InstantiationString[i]);
-            //  EliminateSpuriousConstants(t);
-            //  meProof[step].InstantiationString[i] = t.ToSMTString();
             } else {
               inst[i] = meProof[step].Instantiation[i];
             }
