@@ -1060,11 +1060,16 @@ void SMT_ProvingEngine::AddAbduct() {
   c = (StepKind(mnNumberOfAssumptions) == Assumption())
     & (Nesting(mnNumberOfAssumptions) == 1u)
     & (Cases(mnNumberOfAssumptions) == False());
-  c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignatureP.size());
-  for (size_t i = 0; i < mnMaxArity; i++)
-    c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
+  if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+      c &= ((Contents(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
+  } else {
+    c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignatureP.size());
+    for (size_t i = 0; i < mnMaxArity; i++)
+      c &= (ContentsArgument(mnNumberOfAssumptions,0,i) < (unsigned)mpT->mConstants.size());
+    c &= ((ContentsPredicate(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
+  }
   c &= (IsGoal(mnNumberOfAssumptions) == False()); // the goal itself cannot be abduct
-  c &= ((ContentsPredicate(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
+
 
 
   mProofPremises &= c % ("Abduct " + itos(mnNumberOfAssumptions) + ":");
@@ -1179,10 +1184,15 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       Expression blocking;
       for (unsigned j = 0; j < abducts[i].size(); j++) {
         Fact af = abducts[i][j];
-        Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == af.GetName());
-        for(unsigned int k = 0; k < af.GetArity(); k++)
-          c &= (ContentsArgument(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0, k) == af.GetArg(k).ToSMTString());
-        blocking |= (c == False());
+        if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+          Expression fc = Contents(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0);
+          blocking |= ((fc == af.ToString()) == False());
+        } else {
+          Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == af.GetName());
+          for(unsigned int k = 0; k < af.GetArity(); k++)
+             c &= (ContentsArgument(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0, k) == af.GetArg(k).ToSMTString());
+          blocking |= (c == False());
+        }
       }
       mBlockingAbducts &= blocking;
     }
@@ -1535,12 +1545,14 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
           DeclareVarBasicType(Instantiation(i,k), nMaxConstants);
         }
       }
-      for (unsigned k=0; k < mnMaxNumberOfPremisesInAxioms; k++) {
-        for (unsigned j=0; j < mnMaxNumberOfVarsInAxioms; j++) {
-          if (mSMT_theory == eSMTUFBV_ProvingEngine)
-            mSMTfile << "(declare-const " + InstantiationInline(i,k,j).toSMT(mSMT_theory) + " " + sTermType + ")" << endl;
-          else
-            DeclareVarBasicType(InstantiationInline(i,k,j), nMaxConstants);
+      if (mParams.mbInlineAxioms) {
+        for (unsigned k=0; k < mnMaxNumberOfPremisesInAxioms; k++) {
+          for (unsigned j=0; j < mnMaxNumberOfVarsInAxioms; j++) {
+            if (mSMT_theory == eSMTUFBV_ProvingEngine)
+              mSMTfile << "(declare-const " + InstantiationInline(i,k,j).toSMT(mSMT_theory) + " " + sTermType + ")" << endl;
+            else
+              DeclareVarBasicType(InstantiationInline(i,k,j), nMaxConstants);
+          }
         }
       }
       for (unsigned j=0; j < mnMaxNumberOfPremisesInAxioms; j++) {
