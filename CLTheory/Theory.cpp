@@ -933,7 +933,7 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f,
         if (inst.find(fact.GetArg(k).ToSMTString()) != inst.cend()) {
           string s = inst.find(fact.GetArg(k).ToSMTString())->second;
           Term t;
-          t.ReadNonCompoundString(s);
+          t.ReadSMTlibString(s);
           fact.SetArg(k, t);
         }
       }
