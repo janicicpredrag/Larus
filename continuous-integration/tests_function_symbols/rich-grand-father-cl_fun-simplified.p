@@ -1,4 +1,4 @@
-%fof(start,axiom,( ~rich(a)  )).
+fof(start,axiom,( rich(a)  )).
 
 fof(poor_rich_father,axiom,(
    ! [X] :
