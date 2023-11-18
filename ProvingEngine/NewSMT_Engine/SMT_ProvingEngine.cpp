@@ -1062,6 +1062,13 @@ void SMT_ProvingEngine::AddAbduct() {
     & (Cases(mnNumberOfAssumptions) == False());
   if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       c &= ((Contents(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
+/*      Fact af;
+      Term t;
+      t.ReadNonCompoundString("abX" + itos(mnNumberOfAssumptions) + "l");
+      af.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
+      af.SetArg(0,t);
+      af.SetArg(1,t);
+      c &= ((Contents(mnNumberOfAssumptions,0) == af.ToString()) == False());*/
   } else {
     c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignatureP.size());
     for (size_t i = 0; i < mnMaxArity; i++)
@@ -1069,8 +1076,6 @@ void SMT_ProvingEngine::AddAbduct() {
     c &= ((ContentsPredicate(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
   }
   c &= (IsGoal(mnNumberOfAssumptions) == False()); // the goal itself cannot be abduct
-
-
 
   mProofPremises &= c % ("Abduct " + itos(mnNumberOfAssumptions) + ":");
   mnNumberOfAssumptions++;
@@ -1186,7 +1191,17 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
         Fact af = abducts[i][j];
         if (mSMT_theory == eSMTUFBV_ProvingEngine) {
           Expression fc = Contents(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0);
-          blocking |= ((fc == af.ToString()) == False());
+
+          if (af.GetName() == EQ_NATIVE_NAME) {
+            Fact af2;
+            af2.SetName(EQ_NATIVE_NAME);
+            af2.SetArg(0, af.GetArg(1));
+            af2.SetArg(1, af.GetArg(0));
+            blocking |= (((fc == af.ToString()) == False()) & ((fc == af2.ToString()) == False()));
+          }
+          else {
+            blocking |= ((fc == af.ToString()) == False());
+          }
         } else {
           Expression c = (ContentsPredicate(mnNumberOfAssumptions - mParams.number_of_abducts + j, 0) == af.GetName());
           for(unsigned int k = 0; k < af.GetArity(); k++)
@@ -2350,7 +2365,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           Fact f;
           f.SetName(string(msPredicates[nPredicate]));
           for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate]); i++) {
-            // eliminate spurious constants and set term argumetn
+            // eliminate spurious constants and set term argument
             Term t;
             if (mSMT_theory == eSMTUFBV_ProvingEngine) {
                t.ReadSMTlibString(meProof[step].ContentsArgumentString[0][i]);
