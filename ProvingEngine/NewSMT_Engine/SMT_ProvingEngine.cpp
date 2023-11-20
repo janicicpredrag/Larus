@@ -1062,13 +1062,6 @@ void SMT_ProvingEngine::AddAbduct() {
     & (Cases(mnNumberOfAssumptions) == False());
   if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       c &= ((Contents(mnNumberOfAssumptions,0) == Bot()) == False()); // Bot cannot be adbuct
-/*      Fact af;
-      Term t;
-      t.ReadNonCompoundString("abX" + itos(mnNumberOfAssumptions) + "l");
-      af.SetName(PREFIX_NEGATED + EQ_NATIVE_NAME);
-      af.SetArg(0,t);
-      af.SetArg(1,t);
-      c &= ((Contents(mnNumberOfAssumptions,0) == af.ToString()) == False());*/
   } else {
     c &= (ContentsPredicate(mnNumberOfAssumptions,0) < (unsigned)mpT->mSignatureP.size());
     for (size_t i = 0; i < mnMaxArity; i++)
@@ -1838,6 +1831,13 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
   if (mParams.number_of_abducts > 0) {
     AddComment("******************** Blocking abducts already found ********************");
     Assert(mBlockingAbducts);
+    if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+      for (unsigned int i = mnNumberOfAssumptions - mParams.number_of_abducts; i < mnNumberOfAssumptions; i++) {
+        string sc = "Contents_l_" + itos(i) + "_r__l_0_r_";
+        mSMTfile << "(assert (or (= ((_ is nnneqnative) " << sc << ") false)" << endl;
+        mSMTfile << "(= (= (subnnneqnative_0 " << sc << ") (subnnneqnative_1 Contents_l_0_r__l_0_r_)) false)))" << endl;
+      }
+    }
   }
 
 /*  if (mSMT_theory == eSMTUFLIA_ProvingEngine ||

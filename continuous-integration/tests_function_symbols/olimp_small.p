@@ -4,11 +4,12 @@ fof(a5, axiom, father(zeus) = cronus).
 fof(a6, axiom, father(poseidon) = cronus).
 %fof(a7, axiom, father(apolon) = zeus).
 
-fof(a8, axiom, (![X,Y,Z] : ((father(X) = Z) & (father(Y) = Z) & (X != Y)) => brother(X,Y)))).
-fof(a9, axiom, (![X,Y,Z] : ((brother(X,Z) & father(Y) = Z) => uncle(X,Y)))).
+fof(a8, axiom, (![X,Y] : (((father(X) = father(Y)) & (X != Y)) => brother(X,Y)))).
+fof(a9, axiom, (![X,Y] : ((brother(X,father(Y))) => uncle(X,Y)))).
 
-fof(thm, conjecture, uncle(poseidon,apolon)).
+fof(thm, conjecture, brother(poseidon,father(apolon))).
+%fof(thm, conjecture, (father(father(apolon))=father(poseidon)) => uncle(poseidon,apolon)).
 
 % prove using:
-% -l100 -i -t  -m7 -p7 -b1
+% -l100 -i -t  -m8 -p8 -b1
 % gives two abucts 
