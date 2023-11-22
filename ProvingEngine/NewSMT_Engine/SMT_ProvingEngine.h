@@ -114,6 +114,7 @@ private:
   static Expression Nesting(unsigned s);
   static Expression NestingSameBranch(unsigned s1, unsigned s2);
   static Expression Contents(unsigned s, unsigned part);
+  static Expression ContentsArg(unsigned s, unsigned part, string predicate, unsigned i);
   static Expression ContentsPredicate(unsigned s, unsigned part);
   static Expression ContentsArgument(unsigned s, unsigned part, unsigned arg);
   static Expression ContentsArgumentString(unsigned s, unsigned part, unsigned arg);

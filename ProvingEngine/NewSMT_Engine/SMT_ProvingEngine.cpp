@@ -872,6 +872,10 @@ Expression SMT_ProvingEngine::Contents(unsigned s, unsigned part)
 {
     return Expression("Contents_l_" + itos(s) + "_r__l_" + itos(part)+ "_r_");
 }
+Expression SMT_ProvingEngine::ContentsArg(unsigned s, unsigned part, string predicate, unsigned i)
+{
+    return Expression("(sub" + predicate + "_" + itos(i) + " Contents_l_" + itos(s) + "_r__l_" + itos(part)+ "_r_)");
+}
 Expression SMT_ProvingEngine::ContentsPredicate(unsigned s, unsigned part)
 {
     return Expression("ContentsPredicate_l_" + itos(s) + "_r__l_" + itos(part)+ "_r_");
@@ -1689,22 +1693,33 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
     Assert(Cases(nFinalStep) == (formula.GetSize() > 1 ? True() : False()));
 
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+        Expression e = True();
         for(unsigned i = 0; i < formula.GetSize(); i++) {
+          bool bPartiallySpecified = false;
           if (formula.GetElement(i).GetElement(0).GetName() == "_")
-            assert(false); // cannot have underspecified goals
+            assert(false); // cannot have underspecified predicate in goals
           Fact fc;
           fc.SetName(ToUpper(formula.GetElement(i).GetElement(0).GetName()));
+          e &= Expression( "((_ is " + formula.GetElement(i).GetElement(0).GetName() + ") "
+                            + Contents(nFinalStep, i).toString() + ")");
           for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
-            if (formula.GetElement(i).GetElement(0).GetArg(j).ToSMTString() == "_")
-              assert(false); // cannot have underspecified goals
+            if (formula.GetElement(i).GetElement(0).GetArg(j).ToSMTString() == "_") {
+              bPartiallySpecified = true;
+              // assert(false); // cannot have underspecified goals
+              continue;
+            }
             Term t;
             if (CONSTANTS.find(formula.GetElement(i).GetElement(0).GetArg(j).ToSMTString()) != CONSTANTS.end())
               t = formula.GetElement(i).GetElement(0).GetArg(j);
             else
               t = formula.GetElement(i).GetElement(0).GetArg(j);
             fc.SetArg(j,t);
+            e &= (ContentsArg(nFinalStep, 0, formula.GetElement(i).GetElement(0).GetName(), j) == t.ToSMTString());
           }
-          Assert(Contents(nFinalStep, i) == fc.ToString());
+          if (bPartiallySpecified)
+            Assert(e);
+          else
+            Assert(Contents(nFinalStep, i) == fc.ToString());
         }
 
     } else {
@@ -1783,17 +1798,17 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
 
   for (unsigned i=0; i < nFinalStep; i++) {
     Expression cc, cg[2];
-      for (unsigned ind1=0; ind1<2; ind1++) {
-        if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-          cg[ind1] = GoalContents(formula, i, ind1); // (Contents(i,0) == Contents(nFinalStep,ind1));
-        } else {
-          cg[ind1] = (ContentsPredicate(i,0) == ContentsPredicate(nFinalStep,ind1));
-          for(unsigned int j = 0; j < mGoal.GetElement(ind1).GetElement(0).GetArity(); j++)
-            if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j).ToSMTString()) ==
-               exi_vars.end())
-             cg[ind1] &= (ContentsArgument(i,0,j) == ContentsArgument(nFinalStep,ind1,j));
-        }
+    for (unsigned ind1=0; ind1<2; ind1++) {
+      if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+        cg[ind1] = GoalContents(formula, i, ind1); // (Contents(i,0) == Contents(nFinalStep,ind1));
+      } else {
+        cg[ind1] = (ContentsPredicate(i,0) == ContentsPredicate(nFinalStep,ind1));
+        for(unsigned int j = 0; j < mGoal.GetElement(ind1).GetElement(0).GetArity(); j++)
+          if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j).ToSMTString()) ==
+             exi_vars.end())
+           cg[ind1] &= (ContentsArgument(i,0,j) == ContentsArgument(nFinalStep,ind1,j));
       }
+    }
     if (mGoal.GetSize() == 1) {
       cc = ((Cases(i) == False()) & cg[0]);
     }
@@ -1876,22 +1891,26 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
           if (CONSTANTS.find(t.GetArg(j)) == CONSTANTS.end()
               && exi_vars.find(t.GetArg(j)) == exi_vars.end()
               && !isNumber(t.GetArg(j))) {
-             mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << "_" << step << "_" << ind << " Term)" << endl;
+            mSMTfile << "(declare-const " << ToUpper(t.GetArg(j)) << "_" << step << "_" << ind << " Term)" << endl;
             exi_vars.insert(t.GetArg(j));
           }
         }
       }
     }
 
-  //  e &= (Cases(step) == (formula.GetSize() > 1 ? True() : False()));
-
     if (formula.GetElement(ind).GetElement(0).GetName() == "_")
-      assert(false); // cannot have underspecified goals
+      assert(false); // cannot have underspecified predicate in goals
+    e = Expression( "((_ is " + formula.GetElement(ind).GetElement(0).GetName() + ") "
+                     + Contents(step, 0).toString() + ")");
     Fact fc;
     fc.SetName(ToUpper(formula.GetElement(ind).GetElement(0).GetName()));
+
+    bool bPartiallySpecified = false;
     for (size_t j = 0; j < formula.GetElement(ind).GetElement(0).GetArity(); j++) {
-      if (formula.GetElement(ind).GetElement(0).GetArg(j).ToSMTString() == "_")
-        assert(false); // cannot have underspecified goals
+      if (formula.GetElement(ind).GetElement(0).GetArg(j).ToSMTString() == "_") {
+        bPartiallySpecified = true;
+        continue;
+      }
       Term t = formula.GetElement(ind).GetElement(0).GetArg(j);
       string arg = t.ToSMTString();
       for(unsigned a = 0; a < t.NumArgs(); a++) {
@@ -1907,9 +1926,12 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
       }
       t.ReadSMTlibString(arg);
       fc.SetArg(j,t);
+      e &= (ContentsArg(step, 0, formula.GetElement(ind).GetElement(0).GetName(), j) == t.ToSMTString());
     }
-    e &= (Contents(step, 0) == fc.ToString());
-    return e;
+    if (bPartiallySpecified)
+      return e;
+    else
+      return (Contents(step, 0) == fc.ToString());
 }
 
 // ---------------------------------------------------------------------------------------

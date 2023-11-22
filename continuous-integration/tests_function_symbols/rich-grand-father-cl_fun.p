@@ -9,3 +9,5 @@ fof(rich_rich_grand_father,conjecture,(
    ? [H] : (rich(H) & rich(father(father(H))))
    )).
 
+% use
+% -esmtufbv  -l100  -t  -m26 -p26 -n3
