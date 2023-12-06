@@ -755,7 +755,7 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             return eErrorReadingAxioms;
           }
           for(unsigned i = 0; i<hintFact.GetArity(); i++) {
-            if (!isHintArgument(hintFact.GetArg(i).ToSMTString())) {
+            if (!isHintArgument(hintFact.GetArg(i).ToSMTString()) && (params.eEngine != eSMTUFBV_ProvingEngine)) {
               cout << "Wrong hint fact: " << hintFact << " has bad arguments" << endl;
               return eErrorReadingAxioms;
             }

@@ -1120,7 +1120,6 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
     return Hints;
   if (hintFormula.GetGoal().GetElement(0).GetSize() > 1)
     return Hints;
-  //stringstream s;
 
   int proofStep;
   unsigned from, to;
@@ -1153,14 +1152,32 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
         if (hintFormula.GetGoal().GetElement(j).GetSize() > 1)
           return Hints;
         Fact f = hintFormula.GetGoal().GetElement(j).GetElement(0);
-        oneStep &= (ContentsPredicate(proofStep,j) == ToUpper(f.GetName()));
+        if (mSMT_theory == eSMTUFBV_ProvingEngine)
+          oneStep &= Expression( "((_ is " + f.GetName() + ") "
+                     + Contents(proofStep,j).toString() + ")");
+        else
+          oneStep &= (ContentsPredicate(proofStep,j) == ToUpper(f.GetName()));
         for (size_t i = 0; i < f.GetArity(); i++) {
           int ii;
           if (f.GetArg(i).ToSMTString() != "?" && f.GetArg(i).ToSMTString() != "_") {
-            if (stoi(f.GetArg(i).ToSMTString(),ii))
-              oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)ii);
-            else
-              oneStep &= (ContentsArgument(proofStep,j,i) == f.GetArg(i).ToSMTString());
+            if (stoi(f.GetArg(i).ToSMTString(),ii)) {
+              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                assert(f.GetName() != "_"); // if there is arg given, the predicate name cannot be "_"
+                oneStep &= Expression("(sub" + f.GetName() + "_" + itos(j) + " " +
+                           ContentsArgument(proofStep,j,i).toString()) == (unsigned)ii;
+              }
+              else
+                oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)ii);
+            }
+            else {
+              if (mSMT_theory == eSMTUFBV_ProvingEngine) {
+                assert(f.GetName() != "_"); // if there is arg given, the predicate name cannot be "_"
+                oneStep &= Expression("(sub" + f.GetName() + "_" + itos(i) + " " +
+                             Contents(proofStep,j).toString() + ")") == f.GetArg(i).ToSMTString();
+              }
+              else
+                oneStep &= (ContentsArgument(proofStep,j,i) == f.GetArg(i).ToSMTString());
+            }
           }
         }
       }
