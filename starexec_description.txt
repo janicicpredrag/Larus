@@ -1,0 +1,1 @@
+Larus is a theorem prover for coherent logic that uses SAT/SMT provers to construct proofs. Larus can generate natural language proofs (in LaTeX) and verifiable Coq proofs.
