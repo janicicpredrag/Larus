@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./larus -l$STAREXEC_WALLCLOCK_LIMIT -esmtufbv -m5 -n1 -t $1
