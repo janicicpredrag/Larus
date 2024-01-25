@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./larus -l$STAREXEC_WALLCLOCK_LIMIT -estl $1
