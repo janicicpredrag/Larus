@@ -278,7 +278,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
       }
     }
     if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it TODO
-      if (mParams.mbNativeEQsub) // && !mParams.mbInlineAxioms) // inlining give better proofs without native eq support
+      if (mParams.mbNativeEQsub  && !mParams.mbInlineAxioms) // inlining give better proofs without native eq support
         c |= IsMPbyEqSub(s);
 
     // canonization
