@@ -6,7 +6,7 @@ fof(cn_congruencereflexive,axiom, (! [A,B] : ((cong(A,B,A,B))))).
 fof(defoutside,axiom, (! [P,J] : (? [X,U,V,W] : ((outCirc(P,J)) => ((cI(J,U,V,W) & betS(U,X,P) & cong(U,X,V,W))))))).
 fof(defoutside2,axiom, (! [P,J,X,U,V,W] : ((cI(J,U,V,W) & betS(U,X,P) & cong(U,X,V,W)) => ((outCirc(P,J)))))).
 fof(definside,axiom, (! [P,J] : (? [X,Y,U,V,W] : ((inCirc(P,J)) => ((cI(J,U,V,W) & ( P = U )) | (cI(J,U,V,W) & betS(U,Y,X) & cong(U,X,V,W) & cong(U,P,U,Y))))))).
-fof(definside2a,axiom, (! [P,J,X,Y,U,V,W] : ((cI(J,U,V,W) & ( P = U )) => ((inCirc(P,J)))))).
+fof(definside2a,axiom, (! [P,J,U,V,W] : ((cI(J,U,V,W) & ( P = U )) => ((inCirc(P,J)))))).
 fof(definside2b,axiom, (! [P,J,X,Y,U,V,W] : ((cI(J,U,V,W) & betS(U,Y,X) & cong(U,X,V,W) & cong(U,P,U,Y)) => ((inCirc(P,J)))))).
 fof(defon,axiom, (! [B,J] : (? [X,Y,U] : ((onCirc(B,J)) => ((cI(J,U,X,Y) & cong(U,B,X,Y))))))).
 fof(defon2,axiom, (! [B,J,X,Y,U] : ((cI(J,U,X,Y) & cong(U,B,X,Y)) => ((onCirc(B,J)))))).
