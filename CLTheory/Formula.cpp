@@ -1488,11 +1488,11 @@ void CLFormula::NormalizeGoal(
       disj.Add(conj1);
       CLFormula axiom(conj, disj);
       for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
-        for (size_t k = 0; k < axiom.mUniversalVars.size(); k++) {
+        for (size_t k = 0; k < mUniversalVars.size(); k++) {
           bool bAlreadyThere = false;
           Term t = current.GetArg(j);
           for (size_t a = 0; a < t.NumArgs() && !bAlreadyThere; a++) {
-            if (axiom.mUniversalVars[k] == t.GetArg(a))
+            if (mUniversalVars[k] == t.GetArg(a))
               bAlreadyThere = true;
           if (!bAlreadyThere)
             axiom.mUniversalVars.push_back(t.GetArg(a));
