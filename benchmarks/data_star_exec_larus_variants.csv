@@ -1,0 +1,937 @@
+benchmark,solver,configuration,status,cpu time,wallclock time,memory usage,result,expected,SZSResult,SZSOutput,SZSStatus
+euclid-native-eq/006_lemma_3_5b.p,Larus-25012024,smtbv,complete,0.104723,0.105331,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_3_5b.p,Larus-25012024,smtbv_old,complete,0.117289,0.117704,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_3_5b.p,Larus-25012024,smtufbv,complete,0.123552,0.124105,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_3_5b.p,Larus-25012024,stl,complete,0.00637,0.0145101,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencesymmetric.p,Larus-25012024,smtbv,complete,0.107925,0.111354,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencesymmetric.p,Larus-25012024,smtbv_old,complete,0.132083,0.132351,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencesymmetric.p,Larus-25012024,smtufbv,complete,0.155149,0.155734,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencesymmetric.p,Larus-25012024,stl,complete,0.014794,0.017744,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencetransitive.p,Larus-25012024,smtbv,complete,0.126927,0.127455,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencetransitive.p,Larus-25012024,smtbv_old,complete,0.151365,0.151696,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencetransitive.p,Larus-25012024,smtufbv,complete,0.206338,0.206899,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_congruencetransitive.p,Larus-25012024,stl,complete,0.009443,0.017633,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_equalitysymmetric.p,Larus-25012024,smtbv,complete,0.100189,0.100497,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_equalitysymmetric.p,Larus-25012024,smtbv_old,complete,0.182557,0.183017,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_equalitysymmetric.p,Larus-25012024,smtufbv,complete,0.206564,0.206956,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_lemma_equalitysymmetric.p,Larus-25012024,stl,complete,0.00677,0.017808,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_proposition_31short.p,Larus-25012024,smtbv,complete,0.398809,0.399754,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_proposition_31short.p,Larus-25012024,smtbv_old,complete,0.326562,0.327027,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_proposition_31short.p,Larus-25012024,smtufbv,complete,0.599696,0.600104,423672.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/006_proposition_31short.p,Larus-25012024,stl,complete,0.005392,0.00970007,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ETreflexive.p,Larus-25012024,smtbv,complete,0.092071,0.0924909,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ETreflexive.p,Larus-25012024,smtbv_old,complete,0.152814,0.153421,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ETreflexive.p,Larus-25012024,smtufbv,complete,0.139875,0.140598,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ETreflexive.p,Larus-25012024,stl,complete,0.00628,0.0147131,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ray2.p,Larus-25012024,smtbv,complete,0.261707,0.26208,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ray2.p,Larus-25012024,smtbv_old,complete,0.286058,0.28645,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ray2.p,Larus-25012024,smtufbv,complete,0.668055,0.66855,423932.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_ray2.p,Larus-25012024,stl,complete,299.968,300.007,149644.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/007_lemma_ray5.p,Larus-25012024,smtbv,timeout (wallclock),299.78,300.04,715080.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/007_lemma_ray5.p,Larus-25012024,smtbv_old,timeout (cpu),300.04,300.123,625848.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/007_lemma_ray5.p,Larus-25012024,smtufbv,timeout (wallclock),300.019,300.038,473804.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/007_lemma_ray5.p,Larus-25012024,stl,complete,0.132648,0.1331,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_raystrict.p,Larus-25012024,smtbv,complete,0.273522,0.273844,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_raystrict.p,Larus-25012024,smtbv_old,complete,0.297057,0.297627,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_raystrict.p,Larus-25012024,smtufbv,complete,0.57993,0.580147,424036.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_raystrict.p,Larus-25012024,stl,timeout (cpu),300.01,300.009,150268.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/007_lemma_squarerectangle.p,Larus-25012024,smtbv,complete,0.330878,0.331197,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_squarerectangle.p,Larus-25012024,smtbv_old,complete,0.299044,0.299438,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_squarerectangle.p,Larus-25012024,smtufbv,complete,0.348824,0.349176,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/007_lemma_squarerectangle.p,Larus-25012024,stl,complete,4.4546,4.4551,121888.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6a.p,Larus-25012024,smtbv,complete,0.113014,0.113267,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6a.p,Larus-25012024,smtbv_old,complete,0.119497,0.119845,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6a.p,Larus-25012024,smtufbv,complete,0.181656,0.181914,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6a.p,Larus-25012024,stl,complete,0.00829,0.0191149,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6b.p,Larus-25012024,smtbv,complete,0.113284,0.113564,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6b.p,Larus-25012024,smtbv_old,complete,0.132386,0.132642,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6b.p,Larus-25012024,smtufbv,complete,0.175136,0.175455,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_6b.p,Larus-25012024,stl,complete,0.006918,0.0156709,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_7b.p,Larus-25012024,smtbv,complete,0.120982,0.121514,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_7b.p,Larus-25012024,smtbv_old,complete,0.112044,0.112487,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_7b.p,Larus-25012024,smtufbv,complete,0.165589,0.167347,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_3_7b.p,Larus-25012024,stl,complete,0.007605,0.016274,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_angleorderrespectscongruence2.p,Larus-25012024,smtbv,complete,0.340926,0.341315,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_angleorderrespectscongruence2.p,Larus-25012024,smtbv_old,complete,0.307489,0.307894,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_angleorderrespectscongruence2.p,Larus-25012024,smtufbv,complete,0.494114,0.494528,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_angleorderrespectscongruence2.p,Larus-25012024,stl,complete,0.026011,0.0264459,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_equalanglesreflexive.p,Larus-25012024,smtbv,complete,0.233092,0.233529,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_equalanglesreflexive.p,Larus-25012024,smtbv_old,complete,0.249355,0.249887,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_equalanglesreflexive.p,Larus-25012024,smtufbv,complete,0.346078,0.346359,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_equalanglesreflexive.p,Larus-25012024,stl,complete,0.007669,0.0158421,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_lessthancongruence2.p,Larus-25012024,smtbv,complete,0.178863,0.179185,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_lessthancongruence2.p,Larus-25012024,smtbv_old,complete,0.242244,0.242839,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_lessthancongruence2.p,Larus-25012024,smtufbv,complete,0.256613,0.256972,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_lessthancongruence2.p,Larus-25012024,stl,complete,0.008025,0.0154991,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_PGflip.p,Larus-25012024,smtbv,complete,0.365377,0.366149,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_PGflip.p,Larus-25012024,smtbv_old,complete,0.767921,0.768259,485100.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_PGflip.p,Larus-25012024,smtufbv,complete,0.582401,0.582832,423752.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_PGflip.p,Larus-25012024,stl,complete,0.023493,0.023946,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_supplementsymmetric.p,Larus-25012024,smtbv,complete,0.181042,0.181381,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_supplementsymmetric.p,Larus-25012024,smtbv_old,complete,0.214909,0.215641,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_supplementsymmetric.p,Larus-25012024,smtufbv,complete,0.237131,0.237978,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_supplementsymmetric.p,Larus-25012024,stl,complete,0.008434,0.0159719,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TCreflexive.p,Larus-25012024,smtbv,complete,0.234828,0.235408,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TCreflexive.p,Larus-25012024,smtbv_old,complete,0.2576,0.257993,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TCreflexive.p,Larus-25012024,smtufbv,complete,0.364236,0.364854,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TCreflexive.p,Larus-25012024,stl,complete,0.025816,0.0264551,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TTorder.p,Larus-25012024,smtbv,complete,0.248021,0.248264,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TTorder.p,Larus-25012024,smtbv_old,complete,0.256197,0.25749,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TTorder.p,Larus-25012024,smtufbv,complete,0.367626,0.368268,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_lemma_TTorder.p,Larus-25012024,stl,complete,0.009045,0.014791,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_proposition_03.p,Larus-25012024,smtbv,complete,0.246943,0.247171,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_proposition_03.p,Larus-25012024,smtbv_old,complete,0.267049,0.268165,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_proposition_03.p,Larus-25012024,smtufbv,complete,0.367081,0.367346,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/008_proposition_03.p,Larus-25012024,stl,complete,0.007375,0.0151111,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_collinearorder.p,Larus-25012024,smtbv,complete,0.31472,0.31814,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_collinearorder.p,Larus-25012024,smtbv_old,complete,0.668362,0.668328,205892.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_collinearorder.p,Larus-25012024,smtufbv,complete,0.546677,0.547318,418156.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_collinearorder.p,Larus-25012024,stl,complete,0.008735,0.016025,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_congruenceflip.p,Larus-25012024,smtbv,complete,0.264311,0.26445,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_congruenceflip.p,Larus-25012024,smtbv_old,complete,0.317684,0.317785,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_congruenceflip.p,Larus-25012024,smtufbv,complete,0.372941,0.372908,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_congruenceflip.p,Larus-25012024,stl,complete,0.103085,0.103608,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_doublereverse.p,Larus-25012024,smtbv,complete,0.262837,0.263345,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_doublereverse.p,Larus-25012024,smtbv_old,complete,0.275129,0.275686,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_doublereverse.p,Larus-25012024,smtufbv,complete,0.404974,0.405436,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_doublereverse.p,Larus-25012024,stl,complete,0.183136,0.183673,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_equalangleshelper.p,Larus-25012024,smtbv,complete,9.69782,9.69805,852368.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_equalangleshelper.p,Larus-25012024,smtbv_old,complete,0.549054,0.549356,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_equalangleshelper.p,Larus-25012024,smtufbv,complete,1.39784,1.39836,427356.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_equalangleshelper.p,Larus-25012024,stl,timeout (wallclock),299.978,300.008,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/009_lemma_lessthannotequal.p,Larus-25012024,smtbv,complete,0.582504,0.582557,419756.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_lessthannotequal.p,Larus-25012024,smtbv_old,complete,0.599474,0.599776,499008.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_lessthannotequal.p,Larus-25012024,smtufbv,complete,1.41292,1.41317,428444.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_lessthannotequal.p,Larus-25012024,stl,complete,299.902,300.011,127612.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/009_lemma_oppositesideflip.p,Larus-25012024,smtbv,complete,0.394321,0.394751,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_oppositesideflip.p,Larus-25012024,smtbv_old,complete,0.345237,0.345529,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_oppositesideflip.p,Larus-25012024,smtufbv,complete,0.574599,0.574934,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_oppositesideflip.p,Larus-25012024,stl,complete,299.916,300.014,127128.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/009_lemma_PGrotate.p,Larus-25012024,smtbv,complete,0.390383,0.390736,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGrotate.p,Larus-25012024,smtbv_old,complete,0.201813,0.202321,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGrotate.p,Larus-25012024,smtufbv,complete,0.550497,0.550963,353244.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGrotate.p,Larus-25012024,stl,complete,0.036915,0.0373279,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGsymmetric.p,Larus-25012024,smtbv,complete,0.343734,0.344112,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGsymmetric.p,Larus-25012024,smtbv_old,complete,0.328524,0.328969,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGsymmetric.p,Larus-25012024,smtufbv,complete,0.695748,0.698661,423776.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_PGsymmetric.p,Larus-25012024,stl,complete,0.046081,0.0469631,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_RTcongruence.p,Larus-25012024,smtbv,complete,0.475373,0.475697,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_RTcongruence.p,Larus-25012024,smtbv_old,complete,0.392929,0.393241,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_RTcongruence.p,Larus-25012024,smtufbv,complete,1.06905,1.06948,424620.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/009_lemma_RTcongruence.p,Larus-25012024,stl,complete,0.059631,0.0600249,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_inequalitysymmetric.p,Larus-25012024,smtbv,complete,0.120495,0.121122,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_inequalitysymmetric.p,Larus-25012024,smtbv_old,complete,0.194789,0.195045,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_inequalitysymmetric.p,Larus-25012024,smtufbv,complete,0.199131,0.199481,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_inequalitysymmetric.p,Larus-25012024,stl,complete,0.004425,0.0139409,0.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rayimpliescollinear.p,Larus-25012024,smtbv,complete,0.624075,0.624561,432660.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rayimpliescollinear.p,Larus-25012024,smtbv_old,complete,0.503938,0.504285,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rayimpliescollinear.p,Larus-25012024,smtufbv,complete,2.21972,2.21997,436052.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rayimpliescollinear.p,Larus-25012024,stl,complete,300.004,300.01,123600.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/010_lemma_rectanglerotate.p,Larus-25012024,smtbv,complete,0.340257,0.340639,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rectanglerotate.p,Larus-25012024,smtbv_old,complete,0.296252,0.296523,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rectanglerotate.p,Larus-25012024,smtufbv,complete,0.282997,0.283456,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/010_lemma_rectanglerotate.p,Larus-25012024,stl,complete,2.17336,2.17552,121888.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_ray1.p,Larus-25012024,smtbv,complete,3.99173,3.99247,616000.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_ray1.p,Larus-25012024,smtbv_old,timeout (wallclock),299.921,300.053,842748.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_ray1.p,Larus-25012024,smtufbv,complete,300.033,300.035,469508.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_ray1.p,Larus-25012024,stl,timeout (cpu),300.01,300.015,466796.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_rightreverse.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.103,784884.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_rightreverse.p,Larus-25012024,smtbv_old,complete,2.05238,2.05295,594028.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_rightreverse.p,Larus-25012024,smtufbv,complete,10.4615,10.4643,450788.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_rightreverse.p,Larus-25012024,stl,complete,299.999,300.011,122280.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_samesideflip.p,Larus-25012024,smtbv,complete,0.748508,0.748697,432128.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesideflip.p,Larus-25012024,smtbv_old,complete,0.612937,0.613367,274276.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesideflip.p,Larus-25012024,smtufbv,complete,1.30353,1.30407,430904.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesideflip.p,Larus-25012024,stl,timeout (cpu),300.01,300.008,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_samesidetransitive.p,Larus-25012024,smtbv,complete,6.32382,6.32402,773300.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesidetransitive.p,Larus-25012024,smtbv_old,complete,6.89405,6.89426,807324.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesidetransitive.p,Larus-25012024,smtufbv,complete,135.389,135.423,483676.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_samesidetransitive.p,Larus-25012024,stl,complete,300.018,300.008,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/011_lemma_supplementofright.p,Larus-25012024,smtbv,complete,1.0151,1.01536,135124.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_supplementofright.p,Larus-25012024,smtbv_old,complete,0.979824,0.980435,353732.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_supplementofright.p,Larus-25012024,smtufbv,complete,5.92446,5.92429,438368.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_supplementofright.p,Larus-25012024,stl,complete,260.994,260.985,123920.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_TTflip.p,Larus-25012024,smtbv,complete,0.780468,0.780769,133228.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_TTflip.p,Larus-25012024,smtbv_old,complete,0.500157,0.500464,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_TTflip.p,Larus-25012024,smtufbv,complete,1.29977,1.30011,426060.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/011_lemma_TTflip.p,Larus-25012024,stl,complete,0.055762,0.056483,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/012_lemma_3_7a.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.104,637572.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/012_lemma_3_7a.p,Larus-25012024,smtbv_old,complete,1.39977,1.40448,489944.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/012_lemma_3_7a.p,Larus-25012024,smtufbv,complete,6.56443,6.63464,430508.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/012_lemma_3_7a.p,Larus-25012024,stl,timeout (cpu),300.034,300.007,123472.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/012_lemma_lessthanbetween.p,Larus-25012024,smtbv,timeout (wallclock),299.89,300.039,642596.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/012_lemma_lessthanbetween.p,Larus-25012024,smtbv_old,complete,0.329077,0.329309,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/012_lemma_lessthanbetween.p,Larus-25012024,smtufbv,complete,2.18519,2.18539,430604.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/012_lemma_lessthanbetween.p,Larus-25012024,stl,complete,299.966,300.01,123340.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/013_lemma_samesidesymmetric.p,Larus-25012024,smtbv,complete,1.94861,1.94864,436796.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_samesidesymmetric.p,Larus-25012024,smtbv_old,complete,2.97673,1.64692,590960.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_samesidesymmetric.p,Larus-25012024,smtufbv,complete,3.98957,3.98971,434136.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_samesidesymmetric.p,Larus-25012024,stl,complete,300.009,300.008,122016.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/013_lemma_squareflip.p,Larus-25012024,smtbv,complete,0.869709,0.873038,434560.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_squareflip.p,Larus-25012024,smtbv_old,complete,0.406492,0.406745,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_squareflip.p,Larus-25012024,smtufbv,complete,0.767155,0.767464,427516.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/013_lemma_squareflip.p,Larus-25012024,stl,complete,300.014,300.007,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/014_lemma_localextension.p,Larus-25012024,smtbv,complete,4.67059,4.6709,659856.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_localextension.p,Larus-25012024,smtbv_old,complete,7.16581,7.16648,875384.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_localextension.p,Larus-25012024,smtufbv,complete,291.421,291.473,560800.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_localextension.p,Larus-25012024,stl,complete,300.013,300.01,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/014_lemma_RTsymmetric.p,Larus-25012024,smtbv,complete,0.627108,0.629648,427468.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_RTsymmetric.p,Larus-25012024,smtbv_old,complete,1.02155,1.02195,500152.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_RTsymmetric.p,Larus-25012024,smtufbv,complete,1.38071,1.381,426020.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_RTsymmetric.p,Larus-25012024,stl,complete,0.17942,0.179996,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_samenotopposite.p,Larus-25012024,smtbv,complete,2.67659,2.67669,575364.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_samenotopposite.p,Larus-25012024,smtbv_old,complete,1.66731,1.66753,594732.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_samenotopposite.p,Larus-25012024,smtufbv,complete,5.09651,5.09778,445000.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/014_lemma_samenotopposite.p,Larus-25012024,stl,timeout (wallclock),299.91,300.014,134728.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/015_lemma_crossimpliesopposite.p,Larus-25012024,smtbv,complete,2.84676,2.84674,151860.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_crossimpliesopposite.p,Larus-25012024,smtbv_old,complete,3.20634,3.20618,603584.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_crossimpliesopposite.p,Larus-25012024,smtufbv,complete,11.9955,11.9961,452524.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_crossimpliesopposite.p,Larus-25012024,stl,timeout (wallclock),299.98,300.014,123844.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/015_lemma_parallelsymmetric.p,Larus-25012024,smtbv,timeout (wallclock),299.9,300.056,1156420.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/015_lemma_parallelsymmetric.p,Larus-25012024,smtbv_old,complete,261.391,261.545,1526452.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_parallelsymmetric.p,Larus-25012024,smtufbv,timeout (wallclock),299.82,300.054,598004.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/015_lemma_parallelsymmetric.p,Larus-25012024,stl,complete,299.96,300.008,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/015_lemma_rectanglereverse.p,Larus-25012024,smtbv,complete,0.395058,0.395347,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_rectanglereverse.p,Larus-25012024,smtbv_old,complete,0.335593,0.336441,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_rectanglereverse.p,Larus-25012024,smtufbv,complete,0.665428,0.665996,424400.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_lemma_rectanglereverse.p,Larus-25012024,stl,complete,149.738,149.731,121880.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_proposition_05.p,Larus-25012024,smtbv,complete,3.96512,3.96531,601212.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_proposition_05.p,Larus-25012024,smtbv_old,complete,4.45445,4.45443,670464.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_proposition_05.p,Larus-25012024,smtufbv,complete,24.4978,24.4978,466736.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/015_proposition_05.p,Larus-25012024,stl,complete,6.4794,6.47968,139284.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/016_lemma_supplements2.p,Larus-25012024,smtbv,complete,37.2065,37.2106,779304.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/016_lemma_supplements2.p,Larus-25012024,smtbv_old,complete,33.6418,33.6425,829160.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/016_lemma_supplements2.p,Larus-25012024,smtufbv,timeout (wallclock),300.039,300.048,482544.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/016_lemma_supplements2.p,Larus-25012024,stl,complete,3.32807,3.32829,122172.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_collinear5.p,Larus-25012024,smtbv,complete,17.4906,17.4991,559780.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/017_lemma_collinear5.p,Larus-25012024,smtbv_old,complete,2.36553,2.36567,596228.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_collinear5.p,Larus-25012024,smtufbv,complete,65.5546,65.554,452080.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_collinear5.p,Larus-25012024,stl,complete,23.4354,23.4358,123208.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_equalanglesflip.p,Larus-25012024,smtbv,complete,0.372028,0.372407,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_equalanglesflip.p,Larus-25012024,smtbv_old,complete,0.347701,0.348309,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_equalanglesflip.p,Larus-25012024,smtufbv,complete,0.901036,0.904452,424032.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_equalanglesflip.p,Larus-25012024,stl,complete,6.95596,6.95608,160940.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_partnotequalwhole.p,Larus-25012024,smtbv,complete,25.1602,25.1596,531368.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_partnotequalwhole.p,Larus-25012024,smtbv_old,complete,53.4469,54.0384,660984.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_partnotequalwhole.p,Larus-25012024,smtufbv,timeout (wallclock),299.996,300.038,483068.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/017_lemma_partnotequalwhole.p,Larus-25012024,stl,timeout (cpu),300.0,300.026,135816.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/017_lemma_samesidereflexive.p,Larus-25012024,smtbv,complete,7.11112,7.11111,833316.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_samesidereflexive.p,Larus-25012024,smtbv_old,complete,19.7014,9.92232,1070104.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_samesidereflexive.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.088,595764.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/017_lemma_samesidereflexive.p,Larus-25012024,stl,timeout (cpu),300.021,300.01,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/017_lemma_trichotomy2.p,Larus-25012024,smtbv,complete,3.30833,3.30843,566492.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_trichotomy2.p,Larus-25012024,smtbv_old,complete,10.8947,10.8952,637944.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_trichotomy2.p,Larus-25012024,smtufbv,complete,17.8177,17.817,450964.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/017_lemma_trichotomy2.p,Larus-25012024,stl,complete,300.062,300.046,173560.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/018_lemma_extensionunique.p,Larus-25012024,smtbv,complete,2.95869,2.95887,574756.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_extensionunique.p,Larus-25012024,smtbv_old,complete,4.52372,4.52389,757808.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_extensionunique.p,Larus-25012024,smtufbv,complete,118.693,118.691,483004.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_extensionunique.p,Larus-25012024,stl,timeout (cpu),300.031,300.01,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/018_lemma_layoff.p,Larus-25012024,smtbv,complete,0.630262,0.632651,430468.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_layoff.p,Larus-25012024,smtbv_old,complete,1.01618,1.01654,581848.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_layoff.p,Larus-25012024,smtufbv,complete,3.43032,1.78047,433208.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_layoff.p,Larus-25012024,stl,timeout (cpu),300.01,300.031,124528.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/018_lemma_samesidecollinear.p,Larus-25012024,smtbv,complete,177.036,177.026,1246416.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_samesidecollinear.p,Larus-25012024,smtbv_old,complete,164.923,164.96,1564632.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_lemma_samesidecollinear.p,Larus-25012024,smtufbv,timeout (wallclock),299.91,300.048,804896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/018_lemma_samesidecollinear.p,Larus-25012024,stl,timeout (cpu),300.032,300.007,122020.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/018_proposition_06.p,Larus-25012024,smtbv,complete,4.41971,4.41978,646392.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_proposition_06.p,Larus-25012024,smtbv_old,complete,6.06486,6.06514,821608.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/018_proposition_06.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.097,553008.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/018_proposition_06.p,Larus-25012024,stl,complete,299.988,300.012,137064.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/020_lemma_TGsymmetric.p,Larus-25012024,smtbv,complete,10.2825,10.2833,896452.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/020_lemma_TGsymmetric.p,Larus-25012024,smtbv_old,complete,138.769,138.774,1222896.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/020_lemma_TGsymmetric.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.041,659496.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/020_lemma_TGsymmetric.p,Larus-25012024,stl,complete,299.981,300.012,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/020_proposition_13.p,Larus-25012024,smtbv,complete,1.81767,1.81803,486700.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/020_proposition_13.p,Larus-25012024,smtbv_old,complete,2.76294,2.76328,817864.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/020_proposition_13.p,Larus-25012024,smtufbv,complete,29.3498,29.3909,478172.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/020_proposition_13.p,Larus-25012024,stl,timeout (cpu),300.0,300.017,122408.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/021_lemma_together.p,Larus-25012024,smtbv,complete,14.3884,14.4334,884460.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/021_lemma_together.p,Larus-25012024,smtbv_old,complete,23.6484,23.6479,1112500.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/021_lemma_together.p,Larus-25012024,smtufbv,timeout (wallclock),299.9,300.039,627396.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/021_lemma_together.p,Larus-25012024,stl,complete,300.029,300.014,122280.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/021_proposition_05b.p,Larus-25012024,smtbv,complete,5.92912,5.92914,675400.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/021_proposition_05b.p,Larus-25012024,smtbv_old,complete,7.80446,7.80454,931336.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/021_proposition_05b.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.089,615488.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/021_proposition_05b.p,Larus-25012024,stl,timeout (wallclock),299.98,300.013,133316.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/022_lemma_TGflip.p,Larus-25012024,smtbv,complete,72.8574,72.8549,847056.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/022_lemma_TGflip.p,Larus-25012024,smtbv_old,complete,70.1641,70.1584,1101916.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/022_lemma_TGflip.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.048,589648.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/022_lemma_TGflip.p,Larus-25012024,stl,complete,300.014,300.013,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/022_proposition_33B.p,Larus-25012024,smtbv,complete,24.6826,24.6806,993576.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/022_proposition_33B.p,Larus-25012024,smtbv_old,complete,31.3568,31.3607,1271400.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/022_proposition_33B.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.086,781528.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/022_proposition_33B.p,Larus-25012024,stl,timeout (cpu),300.032,300.009,123960.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_collinearparallel.p,Larus-25012024,smtbv,timeout (wallclock),300.01,300.055,1602604.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_collinearparallel.p,Larus-25012024,smtbv_old,timeout (wallclock),299.87,300.051,1901064.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_collinearparallel.p,Larus-25012024,smtufbv,timeout (cpu),300.01,300.053,828696.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_collinearparallel.p,Larus-25012024,stl,timeout (wallclock),300.005,300.013,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_NChelper.p,Larus-25012024,smtbv,timeout (wallclock),299.89,300.037,761524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_NChelper.p,Larus-25012024,smtbv_old,timeout (wallclock),299.91,300.066,1103688.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_NChelper.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.037,607716.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/023_lemma_NChelper.p,Larus-25012024,stl,complete,300.008,300.012,122660.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_betweennesspreserved.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.064,765060.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_betweennesspreserved.p,Larus-25012024,smtbv_old,timeout (wallclock),299.88,300.039,951636.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_betweennesspreserved.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.096,548584.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_betweennesspreserved.p,Larus-25012024,stl,complete,300.002,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_TTtransitive.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.12,1009384.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_TTtransitive.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.092,1157856.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_TTtransitive.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.109,643580.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/024_lemma_TTtransitive.p,Larus-25012024,stl,timeout (cpu),300.0,300.014,123232.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_NCdistinct.p,Larus-25012024,smtbv,complete,21.3699,10.7287,507244.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_lemma_NCdistinct.p,Larus-25012024,smtbv_old,complete,17.5994,17.5974,639132.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_lemma_NCdistinct.p,Larus-25012024,smtufbv,complete,140.731,140.771,483660.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_lemma_NCdistinct.p,Larus-25012024,stl,complete,0.33937,0.340046,113176.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_righttogether.p,Larus-25012024,smtbv,complete,269.918,269.936,1519960.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_lemma_righttogether.p,Larus-25012024,smtbv_old,timeout (wallclock),299.92,300.038,1933912.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_righttogether.p,Larus-25012024,smtufbv,timeout (cpu),300.06,300.12,1007608.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_righttogether.p,Larus-25012024,stl,timeout (wallclock),299.99,300.019,122680.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_TTflip2.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.108,1215608.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_TTflip2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.93,300.101,1625596.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_TTflip2.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.088,778872.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_TTflip2.p,Larus-25012024,stl,timeout (cpu),300.01,300.014,122148.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_twoperpsparallel.p,Larus-25012024,smtbv,complete,233.743,233.771,1211336.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_lemma_twoperpsparallel.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.048,1660476.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_twoperpsparallel.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.073,841376.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_lemma_twoperpsparallel.p,Larus-25012024,stl,complete,300.02,300.018,126340.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_11.p,Larus-25012024,smtbv,timeout (wallclock),299.96,300.04,1088208.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_11.p,Larus-25012024,smtbv_old,timeout (wallclock),299.64,300.053,1484804.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_11.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.049,894464.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_11.p,Larus-25012024,stl,timeout (cpu),300.02,300.016,122532.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_27B.p,Larus-25012024,smtbv,complete,8.53809,8.5377,909740.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_proposition_27B.p,Larus-25012024,smtbv_old,complete,12.088,12.089,1097228.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/025_proposition_27B.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.103,709188.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/025_proposition_27B.p,Larus-25012024,stl,complete,299.983,300.013,122280.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_26B.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.056,1464056.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_26B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.988,300.051,1078044.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_26B.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.041,627244.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_26B.p,Larus-25012024,stl,timeout (cpu),300.02,300.015,122528.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_28C.p,Larus-25012024,smtbv,complete,16.2491,16.2486,1146756.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/026_proposition_28C.p,Larus-25012024,smtbv_old,complete,19.7544,19.7531,1496336.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/026_proposition_28C.p,Larus-25012024,smtufbv,timeout (wallclock),299.9,300.033,818896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_28C.p,Larus-25012024,stl,complete,300.024,300.014,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_28D.p,Larus-25012024,smtbv,complete,18.6904,18.6914,1199656.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/026_proposition_28D.p,Larus-25012024,smtbv_old,complete,66.2784,33.1855,1621808.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/026_proposition_28D.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.051,855528.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_28D.p,Larus-25012024,stl,complete,300.038,300.017,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_41.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.045,1447740.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_41.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.046,1185220.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_41.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.06,938640.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/026_proposition_41.p,Larus-25012024,stl,complete,300.004,300.012,127060.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/027_lemma_betweennotequal.p,Larus-25012024,smtbv,complete,5.10394,5.10408,582692.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/027_lemma_betweennotequal.p,Larus-25012024,smtbv_old,complete,6.08231,6.08233,580092.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/027_lemma_betweennotequal.p,Larus-25012024,smtufbv,complete,84.1193,84.2024,450892.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/027_lemma_betweennotequal.p,Larus-25012024,stl,complete,1.3834,1.38398,135524.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/027_lemma_erectedperpendicularunique.p,Larus-25012024,smtbv,timeout (wallclock),299.9,300.048,922712.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/027_lemma_erectedperpendicularunique.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.034,1253236.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/027_lemma_erectedperpendicularunique.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.072,752180.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/027_lemma_erectedperpendicularunique.p,Larus-25012024,stl,complete,299.915,300.013,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.084,946720.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray.p,Larus-25012024,smtbv_old,timeout (wallclock),299.8,300.047,1124308.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.053,663496.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray.p,Larus-25012024,stl,complete,300.02,300.015,124376.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray4_1.p,Larus-25012024,smtbv,complete,0.484125,0.48444,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_1.p,Larus-25012024,smtbv_old,complete,0.84287,0.843229,492424.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_1.p,Larus-25012024,smtufbv,complete,1.52824,1.52865,429748.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_1.p,Larus-25012024,stl,complete,31.2291,31.233,124920.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_2.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.036,635000.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_ray4_2.p,Larus-25012024,smtbv_old,complete,0.844303,0.844675,493896.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_2.p,Larus-25012024,smtufbv,complete,0.897992,0.898691,429320.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_2.p,Larus-25012024,stl,complete,8.48425,8.48421,124392.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_3.p,Larus-25012024,smtbv,complete,0.469551,0.469999,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_3.p,Larus-25012024,smtbv_old,complete,0.332944,0.333384,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_3.p,Larus-25012024,smtufbv,complete,1.19154,1.19204,429752.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_ray4_3.p,Larus-25012024,stl,complete,4.55876,4.55984,124800.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/030_lemma_trichotomy1.p,Larus-25012024,smtbv,timeout (wallclock),299.96,300.111,754628.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_trichotomy1.p,Larus-25012024,smtbv_old,timeout (wallclock),299.89,300.076,938528.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_trichotomy1.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.037,566068.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/030_lemma_trichotomy1.p,Larus-25012024,stl,complete,300.017,300.012,123324.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/031_proposition_23C.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.091,1565120.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/031_proposition_23C.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.118,2052132.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/031_proposition_23C.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.036,1009412.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/031_proposition_23C.p,Larus-25012024,stl,complete,300.011,300.013,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_8_3.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.1,809528.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_8_3.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.049,1104816.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_8_3.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.084,620916.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_8_3.p,Larus-25012024,stl,timeout (cpu),300.0,300.01,122016.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_ray3.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.05,601356.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_ray3.p,Larus-25012024,smtbv_old,complete,299.69,299.839,747172.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_ray3.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.058,497660.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/032_lemma_ray3.p,Larus-25012024,stl,timeout (cpu),300.0,300.01,123204.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/033_lemma_collinear1.p,Larus-25012024,smtbv,complete,3.79626,3.79689,619260.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/033_lemma_collinear1.p,Larus-25012024,smtbv_old,complete,57.4628,57.464,910376.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/033_lemma_collinear1.p,Larus-25012024,smtufbv,timeout (wallclock),300.02,300.066,500208.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/033_lemma_collinear1.p,Larus-25012024,stl,complete,0.064874,0.0654191,113176.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/033_proposition_28A.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.052,1369332.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/033_proposition_28A.p,Larus-25012024,smtbv_old,timeout (wallclock),299.9,300.1,1786536.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/033_proposition_28A.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.079,867648.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/033_proposition_28A.p,Larus-25012024,stl,timeout (cpu),300.026,300.016,122152.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/034_lemma_extension.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.114,993388.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/034_lemma_extension.p,Larus-25012024,smtbv_old,timeout (wallclock),299.94,300.039,1291412.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/034_lemma_extension.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.116,713712.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/034_lemma_extension.p,Larus-25012024,stl,timeout (cpu),300.02,300.012,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/034_lemma_NCorder.p,Larus-25012024,smtbv,complete,3.67754,3.677,452040.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_NCorder.p,Larus-25012024,smtbv_old,complete,3.67301,3.24227,530724.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_NCorder.p,Larus-25012024,smtufbv,complete,4.93153,4.93106,432040.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_NCorder.p,Larus-25012024,stl,complete,4.42659,4.4275,309044.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_Playfair.p,Larus-25012024,smtbv,complete,3.11395,3.11406,582512.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_Playfair.p,Larus-25012024,smtbv_old,complete,3.46234,3.46268,625632.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_Playfair.p,Larus-25012024,smtufbv,complete,6.9117,6.91165,452088.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/034_lemma_Playfair.p,Larus-25012024,stl,timeout (wallclock),299.97,300.022,135652.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_collinear2.p,Larus-25012024,smtbv,complete,3.99903,3.9993,652572.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_collinear2.p,Larus-25012024,smtbv_old,complete,58.2919,58.3095,897844.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_collinear2.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.065,499060.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_collinear2.p,Larus-25012024,stl,complete,0.054786,0.0552031,113176.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_EFreflexive.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.064,1387496.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_EFreflexive.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.047,1538872.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_EFreflexive.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.036,1055964.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_lemma_EFreflexive.p,Larus-25012024,stl,complete,300.029,300.023,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/035_proposition_28B.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.035,1911456.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_proposition_28B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.043,2149624.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_proposition_28B.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.034,1099844.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/035_proposition_28B.p,Larus-25012024,stl,complete,300.018,300.02,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/035_proposition_43.p,Larus-25012024,smtbv,complete,13.2774,13.2774,830888.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/035_proposition_43.p,Larus-25012024,smtbv_old,complete,13.835,13.8348,1284188.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/035_proposition_43.p,Larus-25012024,smtufbv,complete,37.1974,37.1978,646256.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/035_proposition_43.p,Larus-25012024,stl,timeout (cpu),300.01,300.014,122280.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/036_lemma_8_7.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.124,966752.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/036_lemma_8_7.p,Larus-25012024,smtbv_old,complete,25.8177,25.8162,1317996.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/036_lemma_8_7.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.05,789920.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/036_lemma_8_7.p,Larus-25012024,stl,complete,299.997,300.015,123444.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/038_lemma_ondiameter.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.128,1321000.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/038_lemma_ondiameter.p,Larus-25012024,smtbv_old,timeout (wallclock),299.83,300.036,1080416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/038_lemma_ondiameter.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.042,595900.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/038_lemma_ondiameter.p,Larus-25012024,stl,complete,299.991,300.013,122928.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/038_proposition_25.p,Larus-25012024,smtbv,complete,28.4451,28.4467,1181284.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/038_proposition_25.p,Larus-25012024,smtbv_old,complete,23.9162,23.9167,1329444.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/038_proposition_25.p,Larus-25012024,smtufbv,complete,278.529,278.574,599492.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/038_proposition_25.p,Larus-25012024,stl,complete,300.015,300.012,122776.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/039_lemma_ABCequalsCBA.p,Larus-25012024,smtbv,timeout (cpu),300.08,300.103,2940132.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/039_lemma_ABCequalsCBA.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.134,1584896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/039_lemma_ABCequalsCBA.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.135,758872.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/039_lemma_ABCequalsCBA.p,Larus-25012024,stl,timeout (wallclock),299.96,300.015,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/040_lemma_parallelNC.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.132,1778320.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_lemma_parallelNC.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.071,2229584.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_lemma_parallelNC.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.051,958764.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_lemma_parallelNC.p,Larus-25012024,stl,timeout (wallclock),299.93,300.012,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_02.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.036,1373968.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_02.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.066,910156.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_02.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.05,1006432.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_02.p,Larus-25012024,stl,timeout (wallclock),299.98,300.015,122800.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_36A.p,Larus-25012024,smtbv,timeout (wallclock),299.91,300.109,2193732.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_36A.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.061,2981364.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_36A.p,Larus-25012024,smtufbv,timeout (cpu),300.08,300.137,774752.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/040_proposition_36A.p,Larus-25012024,stl,timeout (wallclock),299.99,300.019,122680.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/041_lemma_twolines.p,Larus-25012024,smtbv,complete,74.1059,74.1084,837048.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/041_lemma_twolines.p,Larus-25012024,smtbv_old,complete,162.13,162.149,1181536.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/041_lemma_twolines.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.034,654496.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/041_lemma_twolines.p,Larus-25012024,stl,timeout (cpu),300.01,300.011,122808.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equalanglessymmetric.p,Larus-25012024,smtbv,timeout (cpu),300.05,300.122,1373704.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equalanglessymmetric.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.05,1586624.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equalanglessymmetric.p,Larus-25012024,smtufbv,timeout (cpu),300.07,300.116,721588.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equalanglessymmetric.p,Larus-25012024,stl,timeout (wallclock),299.99,300.013,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equaltorightisright.p,Larus-25012024,smtbv,timeout (wallclock),299.84,300.053,2257068.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equaltorightisright.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.086,3111216.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equaltorightisright.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.045,1178060.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_lemma_equaltorightisright.p,Larus-25012024,stl,complete,300.03,300.014,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_19.p,Larus-25012024,smtbv,timeout (wallclock),299.91,300.034,1053900.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_19.p,Larus-25012024,smtbv_old,timeout (cpu),300.07,300.114,1597388.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_19.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.083,854592.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_19.p,Larus-25012024,stl,timeout (cpu),300.02,300.022,124252.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_40.p,Larus-25012024,smtbv,timeout (wallclock),299.81,300.035,2222720.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_40.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.047,2738400.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_40.p,Larus-25012024,smtufbv,timeout (wallclock),299.87,300.053,601540.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/042_proposition_40.p,Larus-25012024,stl,timeout (wallclock),299.97,300.017,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/043_lemma_angledistinct.p,Larus-25012024,smtbv,complete,53.8857,53.88,877428.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/043_lemma_angledistinct.p,Larus-25012024,smtbv_old,complete,206.805,206.833,1304300.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/043_lemma_angledistinct.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.094,586680.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/043_lemma_angledistinct.p,Larus-25012024,stl,complete,300.009,300.013,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_equalanglestransitive.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.064,1436820.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_equalanglestransitive.p,Larus-25012024,smtbv_old,timeout (wallclock),299.92,300.088,1600616.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_equalanglestransitive.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.042,712128.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_equalanglestransitive.p,Larus-25012024,stl,timeout (cpu),300.019,300.014,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_PGrectangle.p,Larus-25012024,smtbv,timeout (wallclock),299.95,300.054,1670260.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_PGrectangle.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.047,2708648.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_PGrectangle.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.094,1274252.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_PGrectangle.p,Larus-25012024,stl,complete,300.016,300.021,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_subtractequals.p,Larus-25012024,smtbv,timeout (wallclock),299.88,300.04,820252.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_subtractequals.p,Larus-25012024,smtbv_old,timeout (wallclock),299.89,300.034,1060988.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_subtractequals.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.041,589864.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_subtractequals.p,Larus-25012024,stl,timeout (wallclock),299.99,300.013,123188.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_trapezoiddiagonals.p,Larus-25012024,smtbv,timeout (wallclock),299.53,300.075,3050564.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_trapezoiddiagonals.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.046,3987828.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_trapezoiddiagonals.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.105,1682048.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_lemma_trapezoiddiagonals.p,Larus-25012024,stl,complete,300.019,300.016,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/044_proposition_33.p,Larus-25012024,smtbv,timeout (wallclock),299.85,300.077,2459548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_proposition_33.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.056,2750872.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_proposition_33.p,Larus-25012024,smtufbv,timeout (cpu),300.06,300.134,1349612.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/044_proposition_33.p,Larus-25012024,stl,complete,300.029,300.018,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_21helper.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.039,1209728.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_21helper.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.055,1621392.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_21helper.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.073,809816.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_21helper.p,Larus-25012024,stl,complete,299.993,300.017,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_collinearparallel2.p,Larus-25012024,smtbv,timeout (wallclock),299.91,300.036,707008.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_collinearparallel2.p,Larus-25012024,smtbv_old,complete,24.7584,24.7566,869396.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/045_lemma_collinearparallel2.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.085,551620.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_collinearparallel2.p,Larus-25012024,stl,complete,299.983,300.013,125288.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_droppedperpendicularunique.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.071,921028.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_droppedperpendicularunique.p,Larus-25012024,smtbv_old,timeout (wallclock),299.84,300.053,1131712.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_droppedperpendicularunique.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.049,758312.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_droppedperpendicularunique.p,Larus-25012024,stl,complete,299.999,300.016,122544.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_outerconnectivity.p,Larus-25012024,smtbv,timeout (wallclock),299.86,300.058,806520.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_outerconnectivity.p,Larus-25012024,smtbv_old,timeout (wallclock),299.84,300.043,1068260.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_outerconnectivity.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.122,583808.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_outerconnectivity.p,Larus-25012024,stl,complete,300.017,300.012,122536.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_tarskiparallelflip.p,Larus-25012024,smtbv,complete,25.518,25.5223,709556.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/045_lemma_tarskiparallelflip.p,Larus-25012024,smtbv_old,complete,43.1849,43.1826,924176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/045_lemma_tarskiparallelflip.p,Larus-25012024,smtufbv,timeout (cpu),300.07,300.136,595328.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/045_lemma_tarskiparallelflip.p,Larus-25012024,stl,timeout (cpu),300.01,300.013,123960.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_interior5.p,Larus-25012024,smtbv,timeout (wallclock),299.95,300.055,1086716.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_interior5.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.102,1433880.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_interior5.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.099,489200.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_interior5.p,Larus-25012024,stl,timeout (wallclock),299.99,300.011,122016.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_lessthancongruence.p,Larus-25012024,smtbv,timeout (cpu),300.06,300.103,1172180.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_lessthancongruence.p,Larus-25012024,smtbv_old,timeout (wallclock),299.88,300.07,1476936.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_lessthancongruence.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.103,791212.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/046_lemma_lessthancongruence.p,Larus-25012024,stl,complete,300.019,300.014,122148.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelcollinear.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.073,1094000.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelcollinear.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.039,882692.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelcollinear.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.05,583040.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelcollinear.p,Larus-25012024,stl,timeout (cpu),300.0,300.012,122156.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelflip.p,Larus-25012024,smtbv,complete,145.262,98.7839,1426716.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/047_lemma_parallelflip.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.043,1701204.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelflip.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.066,785824.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/047_lemma_parallelflip.p,Larus-25012024,stl,complete,300.004,300.013,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_8_2.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.081,1389768.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_8_2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.047,1729204.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_8_2.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.049,994188.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_8_2.p,Larus-25012024,stl,complete,300.036,300.017,122408.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_oppositesidesymmetric.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.042,803728.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_oppositesidesymmetric.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.036,1116952.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_oppositesidesymmetric.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.102,633368.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_oppositesidesymmetric.p,Larus-25012024,stl,timeout (cpu),300.02,300.013,122684.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_parallelPasch.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.035,3458996.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_parallelPasch.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.058,4161548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_parallelPasch.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.045,634036.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_parallelPasch.p,Larus-25012024,stl,timeout (cpu),300.01,300.019,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_tworays.p,Larus-25012024,smtbv,complete,7.25992,7.26079,630696.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_tworays.p,Larus-25012024,smtbv_old,timeout (wallclock),299.885,300.048,866452.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_tworays.p,Larus-25012024,smtufbv,timeout (wallclock),300.021,300.04,474828.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_lemma_tworays.p,Larus-25012024,stl,complete,0.123056,0.123834,113176.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/048_proposition_14.p,Larus-25012024,smtbv,timeout (wallclock),299.91,300.056,3176252.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_proposition_14.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.053,4405108.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_proposition_14.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.12,632564.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/048_proposition_14.p,Larus-25012024,stl,timeout (cpu),300.0,300.023,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/049_lemma_equalanglesNC.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.058,1352756.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/049_lemma_equalanglesNC.p,Larus-25012024,smtbv_old,timeout (wallclock),299.87,300.045,1579108.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/049_lemma_equalanglesNC.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.098,719560.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/049_lemma_equalanglesNC.p,Larus-25012024,stl,timeout (cpu),300.01,300.013,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/050_lemma_paralleldef2A.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.084,3114392.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/050_lemma_paralleldef2A.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,295.852,4058184.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/050_lemma_paralleldef2A.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.055,1553776.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/050_lemma_paralleldef2A.p,Larus-25012024,stl,timeout (cpu),300.0,300.016,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_fiveline.p,Larus-25012024,smtbv,timeout (cpu),300.06,300.102,1694100.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_fiveline.p,Larus-25012024,smtbv_old,timeout (wallclock),299.78,300.058,1229164.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_fiveline.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.07,664116.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_fiveline.p,Larus-25012024,stl,complete,300.029,300.014,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_midpointunique.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.104,759772.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_midpointunique.p,Larus-25012024,smtbv_old,timeout (wallclock),299.85,300.035,1075392.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_midpointunique.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.066,615120.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/056_lemma_midpointunique.p,Larus-25012024,stl,complete,300.03,300.011,123856.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_differenceofparts.p,Larus-25012024,smtbv,timeout (wallclock),299.86,300.06,894672.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_differenceofparts.p,Larus-25012024,smtbv_old,timeout (wallclock),299.76,300.036,1029860.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_differenceofparts.p,Larus-25012024,smtufbv,timeout (wallclock),300.014,300.04,463488.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_differenceofparts.p,Larus-25012024,stl,complete,300.023,300.011,122016.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_squaresequal.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.083,5226588.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_squaresequal.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.051,3119692.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_squaresequal.p,Larus-25012024,smtufbv,timeout (wallclock),299.69,300.139,1035232.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_lemma_squaresequal.p,Larus-25012024,stl,timeout (cpu),300.029,300.001,122548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_29B.p,Larus-25012024,smtbv,timeout (wallclock),299.87,300.074,2397460.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_29B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.06,2711884.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_29B.p,Larus-25012024,smtufbv,timeout (cpu),300.01,300.053,1269760.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_29B.p,Larus-25012024,stl,timeout (cpu),300.0,300.016,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_38.p,Larus-25012024,smtbv,timeout (wallclock),299.22,300.051,3620160.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_38.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.044,2106928.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_38.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.06,989312.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/059_proposition_38.p,Larus-25012024,stl,timeout (cpu),300.03,300.027,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/060_lemma_lessthantransitive.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.033,894152.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/060_lemma_lessthantransitive.p,Larus-25012024,smtbv_old,timeout (cpu),300.02,299.218,1032556.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/060_lemma_lessthantransitive.p,Larus-25012024,smtufbv,timeout (wallclock),299.91,300.065,631808.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/060_lemma_lessthantransitive.p,Larus-25012024,stl,complete,300.007,300.013,122156.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/062_proposition_37.p,Larus-25012024,smtbv,timeout (wallclock),299.67,300.049,2883124.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/062_proposition_37.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.04,4731372.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/062_proposition_37.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.035,830564.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/062_proposition_37.p,Larus-25012024,stl,complete,300.034,300.023,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/064_proposition_47.p,Larus-25012024,smtbv,timeout (wallclock),299.8,300.036,2292028.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/064_proposition_47.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.049,3146364.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/064_proposition_47.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.035,646508.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/064_proposition_47.p,Larus-25012024,stl,complete,299.997,300.024,122672.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/065_proposition_12.p,Larus-25012024,smtbv,complete,0.0074,0.0158279,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/065_proposition_12.p,Larus-25012024,smtbv_old,timeout (cpu),300.05,300.096,3101668.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/065_proposition_12.p,Larus-25012024,smtufbv,complete,0.007789,0.014789,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/065_proposition_12.p,Larus-25012024,stl,complete,0.007767,0.015793,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/066_proposition_30B.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.059,2723816.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/066_proposition_30B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.063,2839688.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/066_proposition_30B.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.106,677476.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/066_proposition_30B.p,Larus-25012024,stl,timeout (wallclock),299.98,300.021,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/067_lemma_10_12.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.046,1169844.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_lemma_10_12.p,Larus-25012024,smtbv_old,timeout (wallclock),299.87,300.054,1573548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_lemma_10_12.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.069,502632.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_lemma_10_12.p,Larus-25012024,stl,complete,300.013,300.012,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/067_proposition_44.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.037,4123748.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_proposition_44.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.092,5602484.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_proposition_44.p,Larus-25012024,smtufbv,timeout (cpu),300.06,300.08,774624.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/067_proposition_44.p,Larus-25012024,stl,timeout (cpu),300.034,300.015,122544.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/068_lemma_Playfairhelper.p,Larus-25012024,smtbv,timeout (wallclock),299.25,300.05,3490520.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/068_lemma_Playfairhelper.p,Larus-25012024,smtbv_old,timeout (cpu),300.08,300.121,1360088.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/068_lemma_Playfairhelper.p,Larus-25012024,smtufbv,timeout (wallclock),299.95,300.038,765492.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/068_lemma_Playfairhelper.p,Larus-25012024,stl,complete,300.016,300.022,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/069_proposition_06a.p,Larus-25012024,smtbv,timeout (wallclock),300.01,300.036,1488912.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/069_proposition_06a.p,Larus-25012024,smtbv_old,timeout (cpu),300.05,300.108,1832396.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/069_proposition_06a.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.071,963652.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/069_proposition_06a.p,Larus-25012024,stl,complete,300.032,300.022,123860.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/070_lemma_collinearright.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.037,941572.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_lemma_collinearright.p,Larus-25012024,smtbv_old,timeout (wallclock),299.91,300.036,1217856.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_lemma_collinearright.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.07,748896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_lemma_collinearright.p,Larus-25012024,stl,complete,300.024,300.013,122404.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/070_proposition_01.p,Larus-25012024,smtbv,complete,0.008906,0.0195189,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/070_proposition_01.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.046,2305388.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_proposition_01.p,Larus-25012024,smtufbv,complete,0.006807,0.015827,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/070_proposition_01.p,Larus-25012024,stl,complete,0.006702,0.0152981,0.0,Inappropriate,,IAP-Non,Non,IAP
+euclid-native-eq/070_proposition_48.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.034,4395380.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_proposition_48.p,Larus-25012024,smtbv_old,timeout (cpu),300.1,300.132,1445204.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_proposition_48.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.035,858160.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/070_proposition_48.p,Larus-25012024,stl,timeout (wallclock),299.99,300.02,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_altitudebisectsbase.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.036,2502748.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_altitudebisectsbase.p,Larus-25012024,smtbv_old,timeout (cpu),300.09,300.133,3129332.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_altitudebisectsbase.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.108,588104.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_altitudebisectsbase.p,Larus-25012024,stl,complete,300.016,300.021,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_legsmallerhypotenuse.p,Larus-25012024,smtbv,timeout (wallclock),299.96,300.048,1507752.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_legsmallerhypotenuse.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.054,2003092.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_legsmallerhypotenuse.p,Larus-25012024,smtufbv,timeout (wallclock),299.88,300.079,924696.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_lemma_legsmallerhypotenuse.p,Larus-25012024,stl,timeout (cpu),300.026,300.02,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/072_proposition_09.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.058,1865248.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_proposition_09.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.043,2220504.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_proposition_09.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.047,1081812.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/072_proposition_09.p,Larus-25012024,stl,complete,300.038,300.019,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_26helper.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.077,1261128.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_26helper.p,Larus-25012024,smtbv_old,timeout (wallclock),299.94,300.045,1492004.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_26helper.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.09,919412.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_26helper.p,Larus-25012024,stl,complete,299.978,300.022,126972.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_angleordertransitive.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.042,1276508.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_angleordertransitive.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.044,1551264.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_angleordertransitive.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.049,831532.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_angleordertransitive.p,Larus-25012024,stl,complete,300.035,300.016,122408.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_collinearitypreserved.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.05,633728.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_collinearitypreserved.p,Larus-25012024,smtbv_old,timeout (wallclock),299.993,300.126,784516.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_collinearitypreserved.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.037,532840.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/073_lemma_collinearitypreserved.p,Larus-25012024,stl,complete,300.034,300.013,122280.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/074_lemma_lessthanadditive.p,Larus-25012024,smtbv,timeout (wallclock),300.01,300.085,1178892.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/074_lemma_lessthanadditive.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.118,1427108.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/074_lemma_lessthanadditive.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.041,792148.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/074_lemma_lessthanadditive.p,Larus-25012024,stl,timeout (wallclock),299.97,300.015,123192.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/075_proposition_29C.p,Larus-25012024,smtbv,timeout (cpu),300.08,300.133,3228400.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/075_proposition_29C.p,Larus-25012024,smtbv_old,timeout (cpu),300.07,300.125,4187176.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/075_proposition_29C.p,Larus-25012024,smtufbv,timeout (cpu),300.07,300.142,658976.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/075_proposition_29C.p,Larus-25012024,stl,complete,300.012,300.02,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/076_proposition_23.p,Larus-25012024,smtbv,timeout (wallclock),299.79,300.08,3653268.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/076_proposition_23.p,Larus-25012024,smtbv_old,timeout (wallclock),299.88,300.057,2205648.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/076_proposition_23.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.079,1124264.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/076_proposition_23.p,Larus-25012024,stl,timeout (cpu),300.018,300.016,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_30helper.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.099,3392396.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_30helper.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.075,3921316.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_30helper.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.035,641652.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_30helper.p,Larus-25012024,stl,complete,300.034,300.019,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_triangletoparallelogram.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.038,5126424.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_triangletoparallelogram.p,Larus-25012024,smtbv_old,timeout (cpu),300.04,300.089,1444148.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_triangletoparallelogram.p,Larus-25012024,smtufbv,timeout (cpu),300.07,300.115,786248.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/079_lemma_triangletoparallelogram.p,Larus-25012024,stl,timeout (cpu),300.04,300.022,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/082_lemma_angleaddition.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.046,4763056.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_lemma_angleaddition.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.043,1463324.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_lemma_angleaddition.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.046,739524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_lemma_angleaddition.p,Larus-25012024,stl,timeout (cpu),300.02,300.029,122548.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/082_proposition_21.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.041,1138352.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_proposition_21.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.037,1647376.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_proposition_21.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.128,521116.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/082_proposition_21.p,Larus-25012024,stl,complete,300.041,300.022,122928.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/083_lemma_angleorderrespectscongruence.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.056,2071980.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/083_lemma_angleorderrespectscongruence.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.064,2563940.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/083_lemma_angleorderrespectscongruence.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.081,565076.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/083_lemma_angleorderrespectscongruence.p,Larus-25012024,stl,complete,300.004,300.023,122412.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/084_lemma_crossbar2.p,Larus-25012024,smtbv,timeout (wallclock),299.96,300.035,3267928.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_lemma_crossbar2.p,Larus-25012024,smtbv_old,timeout (cpu),300.08,300.112,3634808.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_lemma_crossbar2.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.094,1022104.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_lemma_crossbar2.p,Larus-25012024,stl,complete,300.019,300.023,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/084_proposition_34.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.039,4173336.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_proposition_34.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.054,4881052.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_proposition_34.p,Larus-25012024,smtufbv,timeout (wallclock),299.89,300.039,2534296.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/084_proposition_34.p,Larus-25012024,stl,timeout (cpu),300.052,300.025,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/085_lemma_squareunique.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.133,2182260.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/085_lemma_squareunique.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.051,2939976.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/085_lemma_squareunique.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.102,1661100.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/085_lemma_squareunique.p,Larus-25012024,stl,complete,300.029,300.02,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/086_lemma_9_5a.p,Larus-25012024,smtbv,timeout (cpu),300.04,300.116,1001800.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/086_lemma_9_5a.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.052,1417000.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/086_lemma_9_5a.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.056,769484.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/086_lemma_9_5a.p,Larus-25012024,stl,complete,300.033,300.013,122800.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/087_proposition_36.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.062,2124516.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/087_proposition_36.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.076,2888148.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/087_proposition_36.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.074,745836.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/087_proposition_36.p,Larus-25012024,stl,complete,300.034,300.022,122808.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/090_lemma_rectangleparallelogram.p,Larus-25012024,smtbv,timeout (wallclock),299.85,300.044,2279628.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/090_lemma_rectangleparallelogram.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.038,3311584.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/090_lemma_rectangleparallelogram.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.126,1233984.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/090_lemma_rectangleparallelogram.p,Larus-25012024,stl,complete,299.987,300.017,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/091_proposition_08.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.052,2371320.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/091_proposition_08.p,Larus-25012024,smtbv_old,timeout (cpu),300.05,300.105,1518896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/091_proposition_08.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.053,729732.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/091_proposition_08.p,Larus-25012024,stl,timeout (cpu),300.0,300.013,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/093_lemma_9_5b.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.077,1007904.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/093_lemma_9_5b.p,Larus-25012024,smtbv_old,timeout (wallclock),299.93,300.062,1432608.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/093_lemma_9_5b.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.069,769844.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/093_lemma_9_5b.p,Larus-25012024,stl,complete,299.968,300.014,122800.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/095_proposition_18.p,Larus-25012024,smtbv,timeout (cpu),300.06,300.098,1224184.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/095_proposition_18.p,Larus-25012024,smtbv_old,timeout (cpu),300.08,300.13,1570388.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/095_proposition_18.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.049,846488.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/095_proposition_18.p,Larus-25012024,stl,timeout (cpu),300.0,300.021,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/097_lemma_Playfairhelper2.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.049,4185024.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/097_lemma_Playfairhelper2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.052,4799900.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/097_lemma_Playfairhelper2.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.079,693196.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/097_lemma_Playfairhelper2.p,Larus-25012024,stl,timeout (wallclock),299.98,300.018,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/098_lemma_parallelbetween.p,Larus-25012024,smtbv,timeout (wallclock),299.87,300.118,2733352.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/098_lemma_parallelbetween.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.043,3250264.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/098_lemma_parallelbetween.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.049,1180264.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/098_lemma_parallelbetween.p,Larus-25012024,stl,complete,300.009,300.015,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_15.p,Larus-25012024,smtbv,timeout (wallclock),299.87,300.036,925968.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_15.p,Larus-25012024,smtbv_old,timeout (wallclock),299.85,300.046,1171392.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_15.p,Larus-25012024,smtufbv,timeout (wallclock),299.91,300.063,709240.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_15.p,Larus-25012024,stl,timeout (cpu),300.029,300.014,122800.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_39.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.068,2298200.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_39.p,Larus-25012024,smtbv_old,timeout (cpu),300.05,300.106,1458004.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_39.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.094,1092012.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/100_proposition_39.p,Larus-25012024,stl,timeout (cpu),300.024,300.019,122796.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/104_proposition_48A.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.058,5273460.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/104_proposition_48A.p,Larus-25012024,smtbv_old,timeout (cpu),300.02,300.11,2837016.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/104_proposition_48A.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.064,1060720.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/104_proposition_48A.p,Larus-25012024,stl,complete,300.031,300.029,122548.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/105_proposition_17.p,Larus-25012024,smtbv,timeout (wallclock),299.87,300.053,2137284.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/105_proposition_17.p,Larus-25012024,smtbv_old,timeout (cpu),300.05,300.103,2909872.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/105_proposition_17.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.102,554052.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/105_proposition_17.p,Larus-25012024,stl,complete,300.033,300.022,122428.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/108_proposition_20.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.044,1770052.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/108_proposition_20.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.079,2259748.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/108_proposition_20.p,Larus-25012024,smtufbv,timeout (wallclock),299.88,300.094,1099428.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/108_proposition_20.p,Larus-25012024,stl,complete,299.989,300.022,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/109_proposition_42B.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.047,7927536.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/109_proposition_42B.p,Larus-25012024,smtbv_old,timeout (cpu),300.04,300.079,2221136.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/109_proposition_42B.p,Larus-25012024,smtufbv,timeout (cpu),300.09,300.125,1140508.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/109_proposition_42B.p,Larus-25012024,stl,timeout (cpu),300.041,300.039,123088.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/111_lemma_diagonalsbisect.p,Larus-25012024,smtbv,timeout (cpu),300.08,300.123,3124168.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/111_lemma_diagonalsbisect.p,Larus-25012024,smtbv_old,timeout (wallclock),299.92,300.052,3497440.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/111_lemma_diagonalsbisect.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.099,741456.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/111_lemma_diagonalsbisect.p,Larus-25012024,stl,complete,300.032,300.022,122684.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/112_lemma_squareparallelogram.p,Larus-25012024,smtbv,timeout (wallclock),299.06,300.054,3241980.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/112_lemma_squareparallelogram.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.065,1305048.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/112_lemma_squareparallelogram.p,Larus-25012024,smtufbv,timeout (wallclock),299.46,300.038,665336.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/112_lemma_squareparallelogram.p,Larus-25012024,stl,complete,300.016,300.023,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/114_proposition_26A.p,Larus-25012024,smtbv,timeout (wallclock),299.72,300.055,2857820.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/114_proposition_26A.p,Larus-25012024,smtbv_old,timeout (wallclock),299.93,300.034,2872336.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/114_proposition_26A.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.064,608432.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/114_proposition_26A.p,Larus-25012024,stl,timeout (wallclock),299.991,300.022,122412.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_lemma_layoffunique.p,Larus-25012024,smtbv,timeout (wallclock),299.87,300.06,855880.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_lemma_layoffunique.p,Larus-25012024,smtbv_old,timeout (wallclock),299.93,300.064,1000524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_lemma_layoffunique.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.041,570172.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_lemma_layoffunique.p,Larus-25012024,stl,complete,299.944,300.01,122012.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/116_proposition_30A.p,Larus-25012024,smtbv,timeout (wallclock),299.95,300.065,6576940.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_proposition_30A.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.048,5950292.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_proposition_30A.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.053,950336.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/116_proposition_30A.p,Larus-25012024,stl,timeout (cpu),300.033,299.999,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/122_lemma_Euclid4.p,Larus-25012024,smtbv,timeout (cpu),300.08,300.135,3359340.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/122_lemma_Euclid4.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.045,5092536.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/122_lemma_Euclid4.p,Larus-25012024,smtufbv,timeout (cpu),300.01,300.13,682256.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/122_lemma_Euclid4.p,Larus-25012024,stl,complete,299.998,300.022,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/125_proposition_11B.p,Larus-25012024,smtbv,timeout (cpu),300.04,300.118,2379256.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/125_proposition_11B.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.044,3423564.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/125_proposition_11B.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.131,1654916.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/125_proposition_11B.p,Larus-25012024,stl,complete,300.031,300.02,123332.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_rightangleNC.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.036,1003088.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_rightangleNC.p,Larus-25012024,smtbv_old,timeout (wallclock),299.92,300.051,1411732.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_rightangleNC.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.099,810124.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_rightangleNC.p,Larus-25012024,stl,complete,300.013,300.014,122408.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_supplementinequality.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.07,2003780.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_supplementinequality.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.058,2318804.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_supplementinequality.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.045,576660.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/127_lemma_supplementinequality.p,Larus-25012024,stl,timeout (cpu),300.053,300.019,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_lemma_9_5.p,Larus-25012024,smtbv,timeout (wallclock),300.01,300.103,1041456.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_lemma_9_5.p,Larus-25012024,smtbv_old,timeout (wallclock),299.82,300.049,1328476.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_lemma_9_5.p,Larus-25012024,smtufbv,timeout (wallclock),299.46,300.127,741428.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_lemma_9_5.p,Larus-25012024,stl,timeout (cpu),300.019,300.015,122144.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/133_proposition_43B.p,Larus-25012024,smtbv,timeout (wallclock),299.81,300.049,2425088.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_proposition_43B.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.084,1279764.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_proposition_43B.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.051,724612.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/133_proposition_43B.p,Larus-25012024,stl,timeout (wallclock),299.99,300.023,122544.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/134_lemma_crossbar.p,Larus-25012024,smtbv,timeout (wallclock),299.94,300.074,1617404.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_lemma_crossbar.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.036,1861768.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_lemma_crossbar.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.05,1170668.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_lemma_crossbar.p,Larus-25012024,stl,timeout (wallclock),300.015,300.024,127008.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/134_proposition_39A.p,Larus-25012024,smtbv,timeout (wallclock),299.49,300.055,3070544.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_proposition_39A.p,Larus-25012024,smtbv_old,timeout (cpu),300.04,300.092,3909760.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_proposition_39A.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.051,734768.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/134_proposition_39A.p,Larus-25012024,stl,complete,299.935,300.026,122680.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_notperp.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.116,1617096.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_notperp.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.115,2095292.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_notperp.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.12,1176356.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_notperp.p,Larus-25012024,stl,timeout (cpu),300.01,300.016,122932.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_parallelcollinear2.p,Larus-25012024,smtbv,timeout (wallclock),299.85,300.126,2146292.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_parallelcollinear2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.97,300.048,2668160.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_parallelcollinear2.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.076,1288308.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/138_lemma_parallelcollinear2.p,Larus-25012024,stl,timeout (cpu),300.039,300.013,122152.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/145_lemma_angletrichotomy.p,Larus-25012024,smtbv,timeout (wallclock),299.74,300.033,2470312.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/145_lemma_angletrichotomy.p,Larus-25012024,smtbv_old,timeout (cpu),300.06,300.084,3489476.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/145_lemma_angletrichotomy.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.046,1281548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/145_lemma_angletrichotomy.p,Larus-25012024,stl,complete,300.026,300.021,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_linereflectionisometry.p,Larus-25012024,smtbv,timeout (wallclock),300.01,300.11,767948.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_linereflectionisometry.p,Larus-25012024,smtbv_old,timeout (cpu),300.06,300.095,964688.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_linereflectionisometry.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.062,645428.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_linereflectionisometry.p,Larus-25012024,stl,timeout (cpu),300.0,300.018,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_sameside2.p,Larus-25012024,smtbv,timeout (wallclock),299.97,300.049,1645884.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_sameside2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.91,300.038,2112620.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_sameside2.p,Larus-25012024,smtufbv,timeout (wallclock),299.97,300.035,1004572.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_sameside2.p,Larus-25012024,stl,complete,300.04,300.014,122020.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_together2.p,Larus-25012024,smtbv,timeout (wallclock),299.82,300.051,2285596.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_together2.p,Larus-25012024,smtbv_old,timeout (cpu),300.01,300.072,2331148.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_together2.p,Larus-25012024,smtufbv,timeout (cpu),300.07,300.119,1396292.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/147_lemma_together2.p,Larus-25012024,stl,timeout (cpu),300.03,300.022,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/150_lemma_pointreflectionisometry.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.135,1906860.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_lemma_pointreflectionisometry.p,Larus-25012024,smtbv_old,timeout (cpu),300.02,300.12,2010072.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_lemma_pointreflectionisometry.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.069,580716.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_lemma_pointreflectionisometry.p,Larus-25012024,stl,timeout (wallclock),299.984,300.022,123324.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_proposition_10.p,Larus-25012024,smtbv,timeout (wallclock),299.88,300.12,2465236.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_proposition_10.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.08,3614360.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_proposition_10.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.09,1668172.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/150_proposition_10.p,Larus-25012024,stl,complete,300.022,300.019,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/154_lemma_collinearbetween.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.05,1294524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/154_lemma_collinearbetween.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.047,2124576.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/154_lemma_collinearbetween.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.058,957396.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/154_lemma_collinearbetween.p,Larus-25012024,stl,complete,300.018,300.013,122540.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/164_lemma_altitudeofrighttriangle.p,Larus-25012024,smtbv,timeout (wallclock),299.95,300.034,956916.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/164_lemma_altitudeofrighttriangle.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.054,1174760.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/164_lemma_altitudeofrighttriangle.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.034,769640.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/164_lemma_altitudeofrighttriangle.p,Larus-25012024,stl,timeout (cpu),300.034,300.009,124372.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_lemma_diagonalsmeet.p,Larus-25012024,smtbv,timeout (wallclock),299.96,300.041,4650424.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_lemma_diagonalsmeet.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.059,5560464.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_lemma_diagonalsmeet.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.083,2625024.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_lemma_diagonalsmeet.p,Larus-25012024,stl,timeout (cpu),300.0,300.02,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/166_proposition_45.p,Larus-25012024,smtbv,timeout (cpu),300.02,300.056,2411660.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_proposition_45.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.041,4133756.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_proposition_45.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.127,1697896.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/166_proposition_45.p,Larus-25012024,stl,complete,300.026,300.038,122940.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/173_proposition_31.p,Larus-25012024,smtbv,timeout (wallclock),298.88,300.072,3497136.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/173_proposition_31.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.047,4218088.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/173_proposition_31.p,Larus-25012024,smtufbv,timeout (cpu),300.06,300.132,638108.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/173_proposition_31.p,Larus-25012024,stl,timeout (cpu),300.024,300.017,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/175_lemma_collinear4.p,Larus-25012024,smtbv,complete,14.6104,14.6299,896604.0,Unknown,,UNK-Non,Non,UNK
+euclid-native-eq/175_lemma_collinear4.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.03,790228.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/175_lemma_collinear4.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.098,550880.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/175_lemma_collinear4.p,Larus-25012024,stl,complete,300.022,300.01,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/176_proposition_22.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.101,4022256.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/176_proposition_22.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.051,4281732.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/176_proposition_22.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.057,2475012.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/176_proposition_22.p,Larus-25012024,stl,timeout (wallclock),300.026,300.021,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/180_proposition_46.p,Larus-25012024,smtbv,timeout (wallclock),299.93,300.034,6102720.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/180_proposition_46.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.069,7124924.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/180_proposition_46.p,Larus-25012024,smtufbv,timeout (cpu),300.01,300.053,876992.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/180_proposition_46.p,Larus-25012024,stl,complete,300.02,300.027,122552.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/182_lemma_paralleldef2B.p,Larus-25012024,smtbv,timeout (cpu),300.05,300.124,3891248.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/182_lemma_paralleldef2B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.047,5144652.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/182_lemma_paralleldef2B.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.108,2065472.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/182_lemma_paralleldef2B.p,Larus-25012024,stl,timeout (cpu),300.028,300.018,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/190_lemma_35helper.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.058,1216308.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/190_lemma_35helper.p,Larus-25012024,smtbv_old,timeout (wallclock),299.91,300.041,1660328.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/190_lemma_35helper.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.057,826052.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/190_lemma_35helper.p,Larus-25012024,stl,timeout (cpu),300.023,300.013,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/197_lemma_crisscross.p,Larus-25012024,smtbv,timeout (wallclock),299.9,300.039,5146512.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/197_lemma_crisscross.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.081,5418604.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/197_lemma_crisscross.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.067,737064.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/197_lemma_crisscross.p,Larus-25012024,stl,complete,300.032,300.022,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/199_proposition_47B.p,Larus-25012024,smtbv,complete,58.4921,59.746,128524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/199_proposition_47B.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.045,4224852.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/199_proposition_47B.p,Larus-25012024,smtufbv,complete,6.31615,6.31704,126548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/199_proposition_47B.p,Larus-25012024,stl,timeout (wallclock),300.005,300.035,123344.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/204_proposition_32.p,Larus-25012024,smtbv,timeout (wallclock),299.9,300.042,7738472.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/204_proposition_32.p,Larus-25012024,smtbv_old,timeout (cpu),300.04,300.119,7411160.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/204_proposition_32.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.052,885744.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/204_proposition_32.p,Larus-25012024,stl,timeout (cpu),300.048,300.022,122548.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/209_proposition_04.p,Larus-25012024,smtbv,timeout (wallclock),299.77,300.094,2778660.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/209_proposition_04.p,Larus-25012024,smtbv_old,timeout (cpu),300.02,300.1,3343188.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/209_proposition_04.p,Larus-25012024,smtufbv,timeout (cpu),300.02,300.105,583672.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/209_proposition_04.p,Larus-25012024,stl,timeout (wallclock),299.98,300.023,122284.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/215_proposition_47A.p,Larus-25012024,smtbv,timeout (wallclock),299.92,300.055,1523544.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/215_proposition_47A.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.067,2228948.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/215_proposition_47A.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.095,1061232.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/215_proposition_47A.p,Larus-25012024,stl,timeout (cpu),300.029,300.021,122816.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/225_proposition_29.p,Larus-25012024,smtbv,timeout (wallclock),299.95,300.05,1.3292696E7,--,,UNK-Non,Non,UNK
+euclid-native-eq/225_proposition_29.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.055,1.0859668E7,--,,UNK-Non,Non,UNK
+euclid-native-eq/225_proposition_29.p,Larus-25012024,smtufbv,timeout (wallclock),299.89,300.064,1478952.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/225_proposition_29.p,Larus-25012024,stl,timeout (cpu),300.02,300.021,122680.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/243_proposition_44A.p,Larus-25012024,smtbv,timeout (cpu),300.01,300.085,2246060.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/243_proposition_44A.p,Larus-25012024,smtbv_old,timeout (wallclock),300.0,300.04,4282228.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/243_proposition_44A.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.036,1484752.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/243_proposition_44A.p,Larus-25012024,stl,timeout (wallclock),299.97,300.033,122680.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/264_lemma_parallelcollinear1.p,Larus-25012024,smtbv,timeout (wallclock),299.35,300.077,3268524.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/264_lemma_parallelcollinear1.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.039,4026432.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/264_lemma_parallelcollinear1.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.06,1745420.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/264_lemma_parallelcollinear1.p,Larus-25012024,stl,complete,300.023,300.017,122152.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/268_proposition_23B.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.107,3951808.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/268_proposition_23B.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.052,1333276.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/268_proposition_23B.p,Larus-25012024,smtufbv,timeout (cpu),300.05,300.132,739484.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/268_proposition_23B.p,Larus-25012024,stl,timeout (cpu),300.03,300.027,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/282_proposition_07.p,Larus-25012024,smtbv,timeout (wallclock),299.99,300.078,3887624.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/282_proposition_07.p,Larus-25012024,smtbv_old,timeout (wallclock),300.01,300.055,4820004.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/282_proposition_07.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.042,2504368.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/282_proposition_07.p,Larus-25012024,stl,timeout (cpu),300.037,300.014,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/283_proposition_30.p,Larus-25012024,smtbv,timeout (cpu),300.05,300.104,1967976.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/283_proposition_30.p,Larus-25012024,smtbv_old,timeout (cpu),300.02,300.071,1670732.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/283_proposition_30.p,Larus-25012024,smtufbv,timeout (cpu),300.08,300.128,1160736.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/283_proposition_30.p,Larus-25012024,stl,timeout (cpu),300.038,300.012,122416.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/299_lemma_paste5.p,Larus-25012024,smtbv,timeout (cpu),300.09,300.11,2096744.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/299_lemma_paste5.p,Larus-25012024,smtbv_old,timeout (wallclock),299.54,300.087,4133268.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/299_lemma_paste5.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.034,1749684.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/299_lemma_paste5.p,Larus-25012024,stl,complete,300.027,300.036,122944.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/314_proposition_42.p,Larus-25012024,smtbv,complete,6.14209,6.14219,126684.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/314_proposition_42.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.047,4473320.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/314_proposition_42.p,Larus-25012024,smtufbv,complete,5.54053,5.54113,129756.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/314_proposition_42.p,Larus-25012024,stl,timeout (wallclock),299.613,300.025,123464.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/321_proposition_24.p,Larus-25012024,smtbv,timeout (cpu),300.05,300.085,3023572.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/321_proposition_24.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.069,3429636.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/321_proposition_24.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.098,690876.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/321_proposition_24.p,Larus-25012024,stl,timeout (cpu),300.019,300.026,122416.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/324_proposition_35A.p,Larus-25012024,smtbv,complete,6.53684,6.53703,126376.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/324_proposition_35A.p,Larus-25012024,smtbv_old,timeout (cpu),300.03,300.066,4238500.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/324_proposition_35A.p,Larus-25012024,smtufbv,complete,6.51389,6.51456,129580.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/324_proposition_35A.p,Larus-25012024,stl,timeout (cpu),300.031,300.03,123328.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/352_proposition_16.p,Larus-25012024,smtbv,timeout (wallclock),299.85,300.104,2307512.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/352_proposition_16.p,Larus-25012024,smtbv_old,timeout (wallclock),299.96,300.04,2787576.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/352_proposition_16.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.065,580452.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/352_proposition_16.p,Larus-25012024,stl,complete,300.032,300.021,123068.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/379_proposition_27.p,Larus-25012024,smtbv,timeout (wallclock),300.0,300.05,7707424.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/379_proposition_27.p,Larus-25012024,smtbv_old,timeout (wallclock),299.98,300.041,7236420.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/379_proposition_27.p,Larus-25012024,smtufbv,timeout (wallclock),299.95,300.031,984544.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/379_proposition_27.p,Larus-25012024,stl,timeout (cpu),300.02,300.031,122552.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/461_proposition_35.p,Larus-25012024,smtbv,timeout (wallclock),299.98,300.053,1232468.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/461_proposition_35.p,Larus-25012024,smtbv_old,timeout (wallclock),299.99,300.044,2166268.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/461_proposition_35.p,Larus-25012024,smtufbv,timeout (cpu),300.04,300.099,1035224.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/461_proposition_35.p,Larus-25012024,stl,timeout (wallclock),299.98,300.03,122560.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/551_lemma_angletrichotomy2.p,Larus-25012024,smtbv,timeout (cpu),300.04,300.113,5821620.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/551_lemma_angletrichotomy2.p,Larus-25012024,smtbv_old,timeout (wallclock),299.95,300.058,5854484.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/551_lemma_angletrichotomy2.p,Larus-25012024,smtufbv,timeout (wallclock),299.99,300.036,856112.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/551_lemma_angletrichotomy2.p,Larus-25012024,stl,timeout (cpu),300.0,300.029,122548.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/lemma_4_19.p,Larus-25012024,smtbv,complete,3.00128,3.00174,568452.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/lemma_4_19.p,Larus-25012024,smtbv_old,complete,4.9804,4.99552,757212.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/lemma_4_19.p,Larus-25012024,smtufbv,complete,188.825,188.854,487344.0,Theorem,,THM-Ass,Ass,THM
+euclid-native-eq/lemma_4_19.p,Larus-25012024,stl,complete,300.013,300.008,121888.0,TimeOut,,UNK-Non,Non,UNK
+euclid-native-eq/lemma_rightreflection.p,Larus-25012024,smtbv,timeout (cpu),300.03,300.054,1326456.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/lemma_rightreflection.p,Larus-25012024,smtbv_old,timeout (cpu),300.1,300.135,1920508.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/lemma_rightreflection.p,Larus-25012024,smtufbv,timeout (wallclock),299.98,300.05,967132.0,--,,UNK-Non,Non,UNK
+euclid-native-eq/lemma_rightreflection.p,Larus-25012024,stl,complete,300.032,300.013,122284.0,TimeOut,,UNK-Non,Non,UNK
