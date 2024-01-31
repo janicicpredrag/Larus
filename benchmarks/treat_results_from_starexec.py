@@ -12,10 +12,10 @@ from matplotlib import rc
 
 
 def number_solved_in_less_than(data, prover_name, bench_name, maxtime):
-    return([ len([ row for row in data if float(row['cpu time'])<i and prover_name in row['configuration'] and row['result'].strip()=="Theorem" and bench_name in row['benchmark']]) for  i in range(1,maxtime)])
+    return([ len([ row for row in data if float(row['cpu time'])<i and prover_name == row['configuration'] and row['result'].strip()=="Theorem" and bench_name in row['benchmark']]) for  i in range(1,maxtime)])
 
 def number_of_benches(data, list_of_provers, bench_name):
-    l=[len([row for row in data if prover_name in row['configuration'].strip() and bench_name in row['benchmark']]) for prover_name in list_of_provers]
+    l=[len([row for row in data if prover_name == row['configuration'].strip() and bench_name in row['benchmark']]) for prover_name in list_of_provers]
     if min(l) != max(l):
         print(l)
         print("Warning not same number of benches for all provers !")
@@ -142,11 +142,12 @@ def generate_graph_size_vs_time(data,filename,provers,maxtime):
     plt.show()    
 
 
-with open('data_star_exec.csv') as csvfile:
+with open('data_star_exec_euclid_7provers.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=',')
     data= list( row for row in reader)
-with open('data-clprover-variants.csv') as csvfile:
-    reader = csv.DictReader(csvfile, delimiter=';')
+    
+with open('data_star_exec_larus_variants.csv') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=',')
     data_larus= list( row for row in reader)
     big_list= [("leanCoP---2.2","darkred",(0, (3, 1, 1, 1, 1, 1))),
                ("Goeland---1.0.0","darkgreen",(0,(3,5,1,5))),
@@ -156,15 +157,15 @@ with open('data-clprover-variants.csv') as csvfile:
                ("Geo-III---2018C","purple",(0, (1, 10))),
                ]
     variants= [
-               ("Larusursa","orange",(0, (3, 5, 1, 10))),
-               ("Larusstl","green","dashed"),
-               ("Larus-i","blue","dotted"),
-               ("Laruslia","purple",(0,(1,5,2,5))),
-               ("Larusbase","red","solid"),
+               ("stl","purple",(0, (3, 1, 1, 1))),
+               ("smtbv","orange",(0, (3, 5, 1, 10))),
+               ("smtufbv","blue","dotted"),
+               ("smtbv_old","red","solid"),
                ]
-    maxtime=100
+    maxtime=200
+    generate_graph(data_larus,"larus-variants.pdf", variants, "euclid", "Euclid Book I", maxtime)
   #  generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
-    generate_graph(data,"euclid-graph.pdf", big_list, "euclid", "Euclid Book I", maxtime)
-    generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
-    generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
+    generate_graph(data,"euclid-graph.pdf", big_list+variants, "euclid", "Euclid Book I", maxtime)
+  #   generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
+  #  generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)
 
