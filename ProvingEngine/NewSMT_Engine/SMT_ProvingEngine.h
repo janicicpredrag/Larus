@@ -137,8 +137,6 @@ private:
   static Expression False(); // SMT level "false"
   // ----------------------------------------------------------
   const CLFormula& GetAxiom(unsigned k);
-  void ComputeBindingForAxioms();
-  void ComputeBinding(const CLFormula &f, unsigned k);
   unsigned BindingAxiomPremises(unsigned ax, unsigned premise, unsigned arg);
   unsigned BindingAxiomGoal(unsigned ax, unsigned goal, unsigned arg);
   // ----------------------------------------------------------
@@ -149,8 +147,6 @@ private:
   unsigned mnMaxArity;
   unsigned mnMaxNumberOfPremisesInAxioms;
   unsigned mnMaxNumberOfVarsInAxioms;
-  unsigned mBindingAx[MAX_AXIOMS][MAX_PREMISES][MAX_ARITY];
-  unsigned mBindingAxGoal[MAX_AXIOMS][2][MAX_ARITY];
 
   map<string, unsigned> PREDICATE;
   map<string, unsigned> CONSTANTS;

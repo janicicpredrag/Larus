@@ -685,14 +685,28 @@ Expression SMT_ProvingEngine::SameContents(unsigned step1, unsigned part1, unsig
 
 unsigned SMT_ProvingEngine::BindingAxiomPremises(unsigned ax, unsigned premise, unsigned arg)
 {
-    return mBindingAx[ax][premise][arg];
+    CLFormula f = mpT->mCLaxioms[ax].first;
+    int v = (int)f.UnivVarOrdinalNumber(f.GetPremises().GetElement(premise).GetArg(arg).ToSMTString());
+    if (v != -1)
+      return v + 1;
+    else
+      return 0;
 }
 
 // ---------------------------------------------------------------------------------------
 
 unsigned SMT_ProvingEngine::BindingAxiomGoal(unsigned ax, unsigned goal, unsigned arg)
 {
-    return mBindingAxGoal[ax][goal][arg];
+    CLFormula f = mpT->mCLaxioms[ax].first;
+    int vu = (int)f.UnivVarOrdinalNumber(f.GetGoal().GetElement(goal).GetElement(0).GetArg(arg).ToSMTString());
+    int ve = (int)f.ExistVarOrdinalNumber(f.GetGoal().GetElement(goal).GetElement(0).GetArg(arg).ToSMTString());
+
+    if (vu != -1)
+      return vu + 1;
+    else if (ve != -1)
+      return f.GetNumOfUnivVars() + ve + 1;
+    else
+      return 0;
 }
 
 // -----------------------------------------------------------------
@@ -970,65 +984,6 @@ const CLFormula& SMT_ProvingEngine::GetAxiom(unsigned k)
     return mpT->Axiom(k).first;
 }
 
-// ----------------------------------------------------------
-
-void SMT_ProvingEngine::ComputeBindingForAxioms()
-{
-    for (unsigned k = 0; k < mpT->NumberOfAxioms(); k++)
-       ComputeBinding(GetAxiom(k),k);
-}
-
-// ----------------------------------------------------------
-
-void SMT_ProvingEngine::ComputeBinding(const CLFormula &f, unsigned k) {
-  for (size_t j = 0; j < f.GetPremises().GetSize(); j++) {
-    for (size_t i = 0; i < f.GetPremises().GetElement(j).GetArity(); i++)
-      if ((int)f.UnivVarOrdinalNumber(
-              f.GetPremises().GetElement(j).GetArg(i).ToSMTString()) != -1)
-        mBindingAx[k][j][i] =
-          f.UnivVarOrdinalNumber(f.GetPremises().GetElement(j).GetArg(i).ToSMTString()) + 1;
-      else {
-        mBindingAx[k][j][i] = 0;
-      }
-  }
-  if (f.GetGoal().GetSize() > 0) { // disjunctions in the goal can have only one disjunct
-    for (size_t i = 0;
-         i < f.GetGoal().GetElement(0).GetElement(0).GetArity(); i++) {
-      if ((int)f.UnivVarOrdinalNumber(
-              f.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
-        mBindingAxGoal[k][0][i] =
-          f.UnivVarOrdinalNumber(f.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) + 1;
-      else if ((int)f.ExistVarOrdinalNumber(
-                   f.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) != -1)
-        mBindingAxGoal[k][0][i] = f.GetNumOfUnivVars() +
-          f.ExistVarOrdinalNumber(f.GetGoal().GetElement(0).GetElement(0).GetArg(i).ToSMTString()) + 1;
-      else {
-        mBindingAxGoal[k][0][i] = 0;
-      }
-    }
-  }
-  if (f.GetGoal().GetSize() > 1) {
-    for (size_t i = 0;
-         i < f.GetGoal().GetElement(1).GetElement(0).GetArity(); i++) {
-      if ((int)f.UnivVarOrdinalNumber(
-              f.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
-        mBindingAxGoal[k][1][i] =
-            f.UnivVarOrdinalNumber(
-                f.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) +
-            1;
-      else if ((int)f.ExistVarOrdinalNumber(
-                   f.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) != -1)
-        mBindingAxGoal[k][1][i] =
-            f.GetNumOfUnivVars() +
-            f.ExistVarOrdinalNumber(
-                f.GetGoal().GetElement(1).GetElement(0).GetArg(i).ToSMTString()) + 1;
-      else {
-        mBindingAxGoal[k][1][i] = 0;
-      }
-    }
-  }
-}
-
 // ---------------------------------------------------------------------------------------
 
 void SMT_ProvingEngine::AddPremise(const Fact &f) {
@@ -1248,7 +1203,6 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
   bool ret = false;
   bool bTimeOut = false;
   mGoal = formula;
-  ComputeBindingForAxioms();
 
   if (system(NULL)) {
 
