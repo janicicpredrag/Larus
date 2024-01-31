@@ -173,8 +173,9 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
           vampire_succeeded = false;
           T.AddExcludedMiddleAxioms();
         }
-      } else
+      } else {
         T.AddExcludedMiddleAxioms();
+      }
       cout << "       After check of excluded middle axioms: output size: "
            << T.mCLaxioms.size() << endl;
       T.printAxioms();

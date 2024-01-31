@@ -131,8 +131,8 @@ void Theory::AddNegElimAxioms() {
         mOccuringPredicateSymbols.find(mSignatureP[i].first) == mOccuringPredicateSymbols.end())
       continue;
 
-    if (mSignatureP[i].first.find('_', 0) != string::npos)
-      continue;
+    //if (mSignatureP[i].first.find('_', 0) != string::npos)
+    //  continue;
 
     ConjunctionFormula premises;
     DNFFormula conclusion;
@@ -178,8 +178,8 @@ void Theory::AddExcludedMiddleAxioms() {
         mOccuringPredicateSymbols.find(mSignatureP[i].first) == mOccuringPredicateSymbols.end())
       continue;
 
-    if (mSignatureP[i].first.find('_', 0) != string::npos)
-      continue;
+    //if (mSignatureP[i].first.find('_', 0) != string::npos)
+    //  continue;
 
     ConjunctionFormula premises;
     DNFFormula conclusion;
