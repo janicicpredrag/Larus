@@ -149,7 +149,11 @@ with open('data_star_exec_euclid_7provers.csv') as csvfile:
 with open('data_star_exec_geo_selection.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=',')
     datageo= list( row for row in reader)
-       
+
+with open('data_star_exec_crafted_hard.csv') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=',')
+    datacrafted= list( row for row in reader)
+        
 with open('data_star_exec_larus_variants.csv') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=',')
     data_larus= list( row for row in reader)
@@ -171,6 +175,7 @@ with open('data_star_exec_larus_variants.csv') as csvfile:
   #  generate_graph(data,"col-trans-graph.pdf", big_list, "col-trans", "Col transitivity", maxtime)
     generate_graph(data,"euclid-graph.pdf", big_list+variants, "euclid", "Euclid Book I", maxtime)
     generate_graph(datageo,"geo-graph.pdf", big_list+[("smtufbv","red","solid")], "GEO", "GEO", maxtime)
+    generate_graph(datacrafted,"crafted-graph.pdf", big_list+[("smtufbv","red","solid")], "crafted", "Crafted-hard", maxtime)
  
   #   generate_graph(data,"cl-benches-graph.pdf", big_list, "coherent", "Coherent Logic Benches", maxtime)
   #  generate_graph(data,"crafted-hard-graph.pdf", big_list, "crafted-hard", "Crafted", maxtime)

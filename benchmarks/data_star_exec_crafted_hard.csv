@@ -1,0 +1,1101 @@
+benchmark,solver,configuration,status,cpu time,wallclock time,memory usage,result,expected,SZSResult,SZSOutput,SZSStatus
+crafted-hard/1-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.441116,1.42298,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/1-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.238143,0.364258,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/1-hard.p,Geo-III---2018C,Geo-III---2018C,complete,0.127463,0.265862,119284.0,Theorem,,THM-Ref,Ref,THM
+crafted-hard/1-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.213155,0.343577,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/1-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.387882,1.38446,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/1-hard.p,Vampire---4.8,Vampire---4.8,complete,0.301251,0.428307,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/1-hard.p,Larus-25012024,default,complete,0.144113,0.144363,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/1-hard.p,Larus-25012024,smtbv,complete,0.059867,0.060374,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/1-hard.p,Larus-25012024,smtbv_old,complete,0.132879,0.133227,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/1-hard.p,Larus-25012024,smtufbv,complete,0.105862,0.106335,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/1-hard.p,Larus-25012024,stl,complete,0.004866,0.017565,0.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/10-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.445924,1.42916,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/10-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.407944,0.519707,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/10-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.998,300.135,142612.0,--,,UNK-Non,Non,UNK
+crafted-hard/10-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,6.39254,3.69794,829904.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/10-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.388253,1.38217,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/10-hard.p,Vampire---4.8,Vampire---4.8,complete,0.297259,0.42768,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/10-hard.p,Larus-25012024,default,complete,0.574978,0.575547,130656.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/10-hard.p,Larus-25012024,smtbv,complete,0.219142,0.220063,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/10-hard.p,Larus-25012024,smtbv_old,complete,0.233354,0.2336,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/10-hard.p,Larus-25012024,smtufbv,complete,0.333701,0.334202,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/10-hard.p,Larus-25012024,stl,complete,300.011,300.009,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/100-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.470753,1.42988,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/100-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,4.70973,4.81917,570792.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/100-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.868,300.053,233540.0,--,,UNK-Non,Non,UNK
+crafted-hard/100-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,115.802,970920.0,--,,UNK-Non,Non,UNK
+crafted-hard/100-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.436608,1.4024,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/100-hard.p,Vampire---4.8,Vampire---4.8,complete,0.316286,0.443396,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/100-hard.p,Larus-25012024,default,complete,23.8519,23.8615,1851832.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/100-hard.p,Larus-25012024,smtbv,complete,6.80418,6.80464,803652.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/100-hard.p,Larus-25012024,smtbv_old,complete,6.89673,3.79715,1077844.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/100-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.039,701984.0,--,,UNK-Non,Non,UNK
+crafted-hard/100-hard.p,Larus-25012024,stl,timeout (cpu),300.02,300.015,122024.0,--,,UNK-Non,Non,UNK
+crafted-hard/11-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.447084,1.42247,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/11-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.391615,0.505327,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/11-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.942,300.056,144220.0,--,,UNK-Non,Non,UNK
+crafted-hard/11-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,9.31942,5.41133,829840.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/11-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.419588,1.41059,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/11-hard.p,Vampire---4.8,Vampire---4.8,complete,0.321321,0.447001,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/11-hard.p,Larus-25012024,default,complete,0.652899,0.653405,433192.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/11-hard.p,Larus-25012024,smtbv,complete,0.222389,0.222687,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/11-hard.p,Larus-25012024,smtbv_old,complete,0.251406,0.252341,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/11-hard.p,Larus-25012024,smtufbv,complete,0.34038,0.340691,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/11-hard.p,Larus-25012024,stl,complete,300.019,300.007,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/12-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.466635,1.45452,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/12-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.608857,0.519945,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/12-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.977,300.088,138136.0,--,,UNK-Non,Non,UNK
+crafted-hard/12-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,8.65775,5.07588,830352.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/12-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.400494,1.39463,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/12-hard.p,Vampire---4.8,Vampire---4.8,complete,0.304332,0.43257,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/12-hard.p,Larus-25012024,default,complete,0.708439,0.708625,442888.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/12-hard.p,Larus-25012024,smtbv,complete,0.202281,0.202843,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/12-hard.p,Larus-25012024,smtbv_old,complete,0.256337,0.256585,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/12-hard.p,Larus-25012024,smtufbv,complete,0.482505,0.48307,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/12-hard.p,Larus-25012024,stl,complete,299.957,300.007,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/13-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.475916,1.44522,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/13-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.414795,0.526255,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/13-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.951,300.062,149740.0,--,,UNK-Non,Non,UNK
+crafted-hard/13-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,29.2331,15.6204,830608.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/13-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.393986,1.38464,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/13-hard.p,Vampire---4.8,Vampire---4.8,complete,0.21728,0.352795,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/13-hard.p,Larus-25012024,default,complete,0.721974,0.722231,453472.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/13-hard.p,Larus-25012024,smtbv,complete,0.241676,0.24211,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/13-hard.p,Larus-25012024,smtbv_old,complete,0.274268,0.274746,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/13-hard.p,Larus-25012024,smtufbv,complete,0.657199,0.657777,424656.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/13-hard.p,Larus-25012024,stl,complete,299.91,300.007,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/14-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.44145,1.41619,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/14-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.411867,0.52378,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/14-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.959,300.108,151164.0,--,,UNK-Non,Non,UNK
+crafted-hard/14-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,27.9736,15.4162,830608.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/14-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.385474,1.38273,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/14-hard.p,Vampire---4.8,Vampire---4.8,complete,0.300167,0.429945,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/14-hard.p,Larus-25012024,default,complete,0.850995,0.851139,456012.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/14-hard.p,Larus-25012024,smtbv,complete,0.270409,0.270796,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/14-hard.p,Larus-25012024,smtbv_old,complete,0.304393,0.305014,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/14-hard.p,Larus-25012024,smtufbv,complete,0.439123,0.439736,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/14-hard.p,Larus-25012024,stl,complete,300.026,300.008,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/15-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.451247,1.43797,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/15-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.418952,0.531574,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/15-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.888,300.039,152320.0,--,,UNK-Non,Non,UNK
+crafted-hard/15-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,103.494,54.3293,831376.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/15-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.419208,1.40815,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/15-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310845,0.438901,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/15-hard.p,Larus-25012024,default,complete,0.903615,0.904377,458376.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/15-hard.p,Larus-25012024,smtbv,complete,0.286134,0.287036,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/15-hard.p,Larus-25012024,smtbv_old,complete,0.282218,0.283177,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/15-hard.p,Larus-25012024,smtufbv,complete,0.494957,0.495269,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/15-hard.p,Larus-25012024,stl,complete,299.993,300.01,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/16-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.459962,1.43778,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/16-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.424809,0.535262,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/16-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.952,300.08,142984.0,--,,UNK-Non,Non,UNK
+crafted-hard/16-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,55.2916,30.4724,831376.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/16-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.680969,1.38004,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/16-hard.p,Vampire---4.8,Vampire---4.8,complete,0.305554,0.43448,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/16-hard.p,Larus-25012024,default,complete,1.01796,1.01827,462644.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/16-hard.p,Larus-25012024,smtbv,complete,0.357548,0.357796,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/16-hard.p,Larus-25012024,smtbv_old,complete,0.286842,0.287189,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/16-hard.p,Larus-25012024,smtufbv,complete,0.558752,0.559096,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/16-hard.p,Larus-25012024,stl,complete,300.018,300.008,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/17-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.437674,1.42389,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/17-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.409856,0.524711,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/17-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.928,300.077,156392.0,--,,UNK-Non,Non,UNK
+crafted-hard/17-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,191.931,101.477,832144.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/17-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.386627,1.38126,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/17-hard.p,Vampire---4.8,Vampire---4.8,complete,0.181295,0.316236,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/17-hard.p,Larus-25012024,default,complete,1.13384,1.1417,467624.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/17-hard.p,Larus-25012024,smtbv,complete,0.385628,0.385992,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/17-hard.p,Larus-25012024,smtbv_old,complete,0.29376,0.294437,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/17-hard.p,Larus-25012024,smtufbv,complete,0.559728,0.560531,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/17-hard.p,Larus-25012024,stl,complete,299.956,300.008,121884.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/18-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.460451,1.44418,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/18-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.411765,0.526507,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/18-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.883,300.031,158048.0,--,,UNK-Non,Non,UNK
+crafted-hard/18-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,104.988,55.9089,831632.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/18-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.393325,1.38443,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/18-hard.p,Vampire---4.8,Vampire---4.8,complete,0.330977,0.456441,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/18-hard.p,Larus-25012024,default,complete,1.13043,1.13087,469696.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/18-hard.p,Larus-25012024,smtbv,complete,0.410953,0.411332,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/18-hard.p,Larus-25012024,smtbv_old,complete,0.336711,0.337103,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/18-hard.p,Larus-25012024,smtufbv,complete,0.639111,0.639542,428904.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/18-hard.p,Larus-25012024,stl,complete,300.01,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/19-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.452442,1.434,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/19-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.473635,0.586176,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/19-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.888,300.024,159664.0,--,,UNK-Non,Non,UNK
+crafted-hard/19-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,118.38,64.4148,831888.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/19-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.404404,1.39397,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/19-hard.p,Vampire---4.8,Vampire---4.8,complete,0.306406,0.436063,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/19-hard.p,Larus-25012024,default,complete,1.11033,1.11176,471916.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/19-hard.p,Larus-25012024,smtbv,complete,0.456613,0.457002,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/19-hard.p,Larus-25012024,smtbv_old,complete,0.3655,0.365833,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/19-hard.p,Larus-25012024,smtufbv,complete,0.758349,0.75894,429544.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/19-hard.p,Larus-25012024,stl,complete,300.019,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/2-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.519281,1.48147,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/2-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.396321,0.509306,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/2-hard.p,Geo-III---2018C,Geo-III---2018C,complete,0.249414,0.377756,119284.0,Theorem,,THM-Ref,Ref,THM
+crafted-hard/2-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.255691,0.377159,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/2-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.364784,1.38865,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/2-hard.p,Vampire---4.8,Vampire---4.8,complete,0.30227,0.430891,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/2-hard.p,Larus-25012024,default,complete,0.204206,0.204592,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/2-hard.p,Larus-25012024,smtbv,complete,0.08887,0.0892611,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/2-hard.p,Larus-25012024,smtbv_old,complete,0.13266,0.133044,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/2-hard.p,Larus-25012024,smtufbv,complete,0.125953,0.126558,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/2-hard.p,Larus-25012024,stl,complete,0.006074,0.0159729,0.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/20-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.432466,1.42529,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/20-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.440577,0.551953,406376.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/20-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.9,300.026,161932.0,--,,UNK-Non,Non,UNK
+crafted-hard/20-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,151.48,832912.0,--,,UNK-Non,Non,UNK
+crafted-hard/20-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.476787,1.45321,608184.0,--,,UNK-Non,Non,UNK
+crafted-hard/20-hard.p,Vampire---4.8,Vampire---4.8,complete,0.303914,0.433374,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/20-hard.p,Larus-25012024,default,complete,1.37424,1.37439,483000.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/20-hard.p,Larus-25012024,smtbv,complete,0.473285,0.473686,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/20-hard.p,Larus-25012024,smtbv_old,complete,0.40082,0.401179,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/20-hard.p,Larus-25012024,smtufbv,complete,1.56073,1.56092,431280.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/20-hard.p,Larus-25012024,stl,timeout (wallclock),299.97,300.01,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/21-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.440347,1.41715,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/21-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.484492,0.593365,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/21-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.912,300.036,163176.0,--,,UNK-Non,Non,UNK
+crafted-hard/21-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,156.356,833040.0,--,,UNK-Non,Non,UNK
+crafted-hard/21-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.405616,1.40069,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/21-hard.p,Vampire---4.8,Vampire---4.8,complete,0.30231,0.430269,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/21-hard.p,Larus-25012024,default,complete,1.42537,1.42547,512548.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/21-hard.p,Larus-25012024,smtbv,complete,0.522009,0.522363,130216.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/21-hard.p,Larus-25012024,smtbv_old,complete,0.375978,0.376313,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/21-hard.p,Larus-25012024,smtufbv,complete,0.798072,0.79851,431744.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/21-hard.p,Larus-25012024,stl,timeout (cpu),300.01,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/22-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.443434,1.4236,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/22-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.467434,0.578234,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/22-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.946,300.095,164820.0,--,,UNK-Non,Non,UNK
+crafted-hard/22-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.08,152.694,832912.0,--,,UNK-Non,Non,UNK
+crafted-hard/22-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.392179,1.38556,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/22-hard.p,Vampire---4.8,Vampire---4.8,complete,0.328557,0.457127,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/22-hard.p,Larus-25012024,default,complete,1.54176,1.54214,550652.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/22-hard.p,Larus-25012024,smtbv,complete,0.522367,0.522605,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/22-hard.p,Larus-25012024,smtbv_old,complete,0.382082,0.382454,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/22-hard.p,Larus-25012024,smtufbv,complete,1.10426,1.10464,433152.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/22-hard.p,Larus-25012024,stl,timeout (cpu),300.01,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/23-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.439681,1.4229,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/23-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.438039,0.55148,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/23-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.92,300.084,166584.0,--,,UNK-Non,Non,UNK
+crafted-hard/23-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,151.721,832912.0,--,,UNK-Non,Non,UNK
+crafted-hard/23-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.446268,1.43136,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/23-hard.p,Vampire---4.8,Vampire---4.8,complete,0.303178,0.431666,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/23-hard.p,Larus-25012024,default,complete,1.70156,1.70193,553356.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/23-hard.p,Larus-25012024,smtbv,complete,0.569943,0.570313,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/23-hard.p,Larus-25012024,smtbv_old,complete,0.409438,0.410343,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/23-hard.p,Larus-25012024,smtufbv,complete,0.882828,0.883257,434180.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/23-hard.p,Larus-25012024,stl,complete,300.002,300.011,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/24-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.533147,1.49825,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/24-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.438473,0.550804,406376.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/24-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.919,300.07,155612.0,--,,UNK-Non,Non,UNK
+crafted-hard/24-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.25,157.318,833296.0,--,,UNK-Non,Non,UNK
+crafted-hard/24-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.388113,1.38589,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/24-hard.p,Vampire---4.8,Vampire---4.8,complete,0.304106,0.430769,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/24-hard.p,Larus-25012024,default,complete,1.57587,1.57602,525616.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/24-hard.p,Larus-25012024,smtbv,complete,0.616448,0.616789,425940.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/24-hard.p,Larus-25012024,smtbv_old,complete,0.411068,0.411574,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/24-hard.p,Larus-25012024,smtufbv,complete,2.37913,2.37963,436324.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/24-hard.p,Larus-25012024,stl,complete,300.032,300.01,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/25-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.437918,1.42641,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/25-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.634911,0.557031,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/25-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.899,300.039,156180.0,--,,UNK-Non,Non,UNK
+crafted-hard/25-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,153.279,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/25-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.375305,1.37647,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/25-hard.p,Vampire---4.8,Vampire---4.8,complete,0.304926,0.433045,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/25-hard.p,Larus-25012024,default,complete,2.09925,2.09958,561756.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/25-hard.p,Larus-25012024,smtbv,complete,0.54485,0.547688,132172.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/25-hard.p,Larus-25012024,smtbv_old,complete,0.337965,0.338506,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/25-hard.p,Larus-25012024,smtufbv,complete,1.70225,1.70255,436556.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/25-hard.p,Larus-25012024,stl,complete,300.008,300.012,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/26-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.456089,1.43117,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/26-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.465045,0.576965,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/26-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.916,300.045,156484.0,--,,UNK-Non,Non,UNK
+crafted-hard/26-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.08,150.361,832976.0,--,,UNK-Non,Non,UNK
+crafted-hard/26-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.38602,1.37877,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/26-hard.p,Vampire---4.8,Vampire---4.8,complete,0.301767,0.428983,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/26-hard.p,Larus-25012024,default,complete,1.67062,1.67099,564708.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/26-hard.p,Larus-25012024,smtbv,complete,0.679507,0.67985,427748.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/26-hard.p,Larus-25012024,smtbv_old,complete,0.457403,0.457628,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/26-hard.p,Larus-25012024,smtufbv,complete,1.04807,1.04845,437024.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/26-hard.p,Larus-25012024,stl,complete,300.014,300.009,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/27-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.459875,1.42883,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/27-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.522774,0.631864,406376.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/27-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.906,300.027,158516.0,--,,UNK-Non,Non,UNK
+crafted-hard/27-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.25,151.446,832720.0,--,,UNK-Non,Non,UNK
+crafted-hard/27-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.45401,1.42634,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/27-hard.p,Vampire---4.8,Vampire---4.8,complete,0.210525,0.345805,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/27-hard.p,Larus-25012024,default,complete,2.04923,2.04984,568024.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/27-hard.p,Larus-25012024,smtbv,complete,0.716573,0.716882,428788.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/27-hard.p,Larus-25012024,smtbv_old,complete,0.477515,0.477978,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/27-hard.p,Larus-25012024,smtufbv,complete,2.41458,2.41477,438832.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/27-hard.p,Larus-25012024,stl,complete,300.035,300.011,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/28-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.532179,1.48896,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/28-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.481027,0.591648,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/28-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.946,300.099,159508.0,--,,UNK-Non,Non,UNK
+crafted-hard/28-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.23,153.152,832848.0,--,,UNK-Non,Non,UNK
+crafted-hard/28-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.389125,1.37591,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/28-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310207,0.436497,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/28-hard.p,Larus-25012024,default,complete,2.18793,2.18804,572148.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/28-hard.p,Larus-25012024,smtbv,complete,0.830579,0.83087,430104.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/28-hard.p,Larus-25012024,smtbv_old,complete,0.611079,0.611461,500752.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/28-hard.p,Larus-25012024,smtufbv,complete,4.01031,4.01086,441380.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/28-hard.p,Larus-25012024,stl,complete,299.995,300.011,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/29-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.448672,1.43012,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/29-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.472511,0.583745,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/29-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.892,300.03,160104.0,--,,UNK-Non,Non,UNK
+crafted-hard/29-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.03,151.835,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/29-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.433796,1.4119,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/29-hard.p,Vampire---4.8,Vampire---4.8,complete,0.212887,0.348318,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/29-hard.p,Larus-25012024,default,complete,2.25569,2.25593,546956.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/29-hard.p,Larus-25012024,smtbv,complete,0.785167,0.785485,440288.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/29-hard.p,Larus-25012024,smtbv_old,complete,0.537131,0.537505,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/29-hard.p,Larus-25012024,smtufbv,complete,1.77674,1.77719,441908.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/29-hard.p,Larus-25012024,stl,timeout (cpu),300.01,300.012,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/3-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.474585,1.44852,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/3-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.419219,0.530151,355508.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/3-hard.p,Geo-III---2018C,Geo-III---2018C,complete,0.225556,0.3556,119284.0,Theorem,,THM-Ref,Ref,THM
+crafted-hard/3-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.248978,0.366301,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/3-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.387427,1.38359,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/3-hard.p,Vampire---4.8,Vampire---4.8,complete,0.303776,0.431583,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/3-hard.p,Larus-25012024,default,complete,0.223089,0.223675,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/3-hard.p,Larus-25012024,smtbv,complete,0.080076,0.080294,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/3-hard.p,Larus-25012024,smtbv_old,complete,0.163715,0.164177,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/3-hard.p,Larus-25012024,smtufbv,complete,0.162914,0.163495,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/3-hard.p,Larus-25012024,stl,complete,0.056139,0.0565381,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/30-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.469325,1.43799,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/30-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.461804,0.575932,406376.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/30-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.885,300.024,161096.0,--,,UNK-Non,Non,UNK
+crafted-hard/30-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.03,152.08,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/30-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.381623,1.38299,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/30-hard.p,Vampire---4.8,Vampire---4.8,complete,0.302446,0.431909,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/30-hard.p,Larus-25012024,default,complete,2.44057,2.44081,589324.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/30-hard.p,Larus-25012024,smtbv,complete,0.932854,0.933252,441020.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/30-hard.p,Larus-25012024,smtbv_old,complete,0.541952,0.542435,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/30-hard.p,Larus-25012024,smtufbv,complete,1.45606,1.45648,443116.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/30-hard.p,Larus-25012024,stl,complete,300.017,300.012,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/31-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.441062,1.42014,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/31-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.685275,0.606047,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/31-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.94,300.073,161868.0,--,,UNK-Non,Non,UNK
+crafted-hard/31-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.1,150.448,832848.0,--,,UNK-Non,Non,UNK
+crafted-hard/31-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.383117,1.38267,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/31-hard.p,Vampire---4.8,Vampire---4.8,complete,0.316173,0.443976,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/31-hard.p,Larus-25012024,default,complete,2.87108,2.87497,589244.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/31-hard.p,Larus-25012024,smtbv,complete,0.873139,0.873399,438488.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/31-hard.p,Larus-25012024,smtbv_old,complete,0.705047,0.705383,587100.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/31-hard.p,Larus-25012024,smtufbv,complete,1.55961,1.56,444252.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/31-hard.p,Larus-25012024,stl,complete,300.006,300.013,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/32-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.469901,1.44425,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/32-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.480667,0.590939,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/32-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.914,300.035,162916.0,--,,UNK-Non,Non,UNK
+crafted-hard/32-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,154.237,833040.0,--,,UNK-Non,Non,UNK
+crafted-hard/32-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.431742,1.41857,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/32-hard.p,Vampire---4.8,Vampire---4.8,complete,0.322602,0.449142,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/32-hard.p,Larus-25012024,default,complete,2.59959,2.59979,627532.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/32-hard.p,Larus-25012024,smtbv,complete,0.881198,0.881638,452416.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/32-hard.p,Larus-25012024,smtbv_old,complete,0.703283,0.703653,589676.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/32-hard.p,Larus-25012024,smtufbv,complete,3.15369,1.61429,446008.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/32-hard.p,Larus-25012024,stl,complete,300.0,300.013,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/33-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.467434,1.43962,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/33-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.67542,0.609212,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/33-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.954,300.072,162000.0,--,,UNK-Non,Non,UNK
+crafted-hard/33-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,154.37,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/33-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.389346,1.37619,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/33-hard.p,Vampire---4.8,Vampire---4.8,complete,0.314707,0.441125,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/33-hard.p,Larus-25012024,default,complete,2.8065,2.84534,588256.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/33-hard.p,Larus-25012024,smtbv,complete,0.961081,0.961302,455096.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/33-hard.p,Larus-25012024,smtbv_old,complete,0.673918,0.674859,593268.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/33-hard.p,Larus-25012024,smtufbv,complete,2.01883,2.01901,446772.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/33-hard.p,Larus-25012024,stl,complete,300.024,300.013,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/34-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.444611,1.43062,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/34-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.498271,0.611359,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/34-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.881,300.029,164368.0,--,,UNK-Non,Non,UNK
+crafted-hard/34-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.16,153.131,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/34-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.394719,1.38189,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/34-hard.p,Vampire---4.8,Vampire---4.8,complete,0.305767,0.435718,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/34-hard.p,Larus-25012024,default,complete,3.00363,3.0043,638520.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/34-hard.p,Larus-25012024,smtbv,complete,1.02859,1.0291,456852.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/34-hard.p,Larus-25012024,smtbv_old,complete,0.705728,0.70609,594256.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/34-hard.p,Larus-25012024,smtufbv,complete,15.2133,15.2194,450272.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/34-hard.p,Larus-25012024,stl,timeout (cpu),300.021,300.002,121888.0,--,,UNK-Non,Non,UNK
+crafted-hard/35-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.461697,1.43411,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/35-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.496787,0.60944,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/35-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.906,300.026,165736.0,--,,UNK-Non,Non,UNK
+crafted-hard/35-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.09,150.223,832848.0,--,,UNK-Non,Non,UNK
+crafted-hard/35-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.389818,1.37844,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/35-hard.p,Vampire---4.8,Vampire---4.8,complete,0.31038,0.437956,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/35-hard.p,Larus-25012024,default,complete,3.07961,3.08027,641116.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/35-hard.p,Larus-25012024,smtbv,complete,1.15465,1.15506,474660.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/35-hard.p,Larus-25012024,smtbv_old,complete,0.748513,0.74915,591356.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/35-hard.p,Larus-25012024,smtufbv,complete,6.71727,6.71772,451456.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/35-hard.p,Larus-25012024,stl,timeout (wallclock),300.015,300.014,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/36-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.447543,1.42586,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/36-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.52438,0.636916,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/36-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.912,300.05,167192.0,--,,UNK-Non,Non,UNK
+crafted-hard/36-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,150.706,833424.0,--,,UNK-Non,Non,UNK
+crafted-hard/36-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.392206,1.38415,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/36-hard.p,Vampire---4.8,Vampire---4.8,complete,0.32065,0.448409,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/36-hard.p,Larus-25012024,default,complete,3.33707,3.33728,646416.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/36-hard.p,Larus-25012024,smtbv,complete,1.12393,1.12437,458676.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/36-hard.p,Larus-25012024,smtbv_old,complete,0.776751,0.777406,596844.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/36-hard.p,Larus-25012024,smtufbv,complete,2.33859,2.34613,451560.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/36-hard.p,Larus-25012024,stl,timeout (wallclock),300.004,300.015,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/37-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.490763,1.4576,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/37-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.540417,0.651888,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/37-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.883,300.043,168220.0,--,,UNK-Non,Non,UNK
+crafted-hard/37-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,149.209,833040.0,--,,UNK-Non,Non,UNK
+crafted-hard/37-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.378913,1.36931,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/37-hard.p,Vampire---4.8,Vampire---4.8,complete,0.309434,0.438455,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/37-hard.p,Larus-25012024,default,complete,3.66342,3.68751,650736.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/37-hard.p,Larus-25012024,smtbv,complete,1.11172,1.11238,461484.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/37-hard.p,Larus-25012024,smtbv_old,complete,0.692614,0.69297,598000.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/37-hard.p,Larus-25012024,smtufbv,complete,1.94638,1.94724,452480.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/37-hard.p,Larus-25012024,stl,timeout (cpu),300.0,300.014,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/38-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.449342,1.42234,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/38-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.538931,0.651676,406756.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/38-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.891,300.034,169280.0,--,,UNK-Non,Non,UNK
+crafted-hard/38-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,148.204,833360.0,--,,UNK-Non,Non,UNK
+crafted-hard/38-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.395049,1.38588,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/38-hard.p,Vampire---4.8,Vampire---4.8,complete,0.305809,0.432588,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/38-hard.p,Larus-25012024,default,complete,3.6393,3.64,655384.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/38-hard.p,Larus-25012024,smtbv,complete,1.19932,1.20066,462144.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/38-hard.p,Larus-25012024,smtbv_old,complete,0.909603,0.910063,593080.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/38-hard.p,Larus-25012024,smtufbv,complete,14.5305,14.5378,456828.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/38-hard.p,Larus-25012024,stl,complete,300.013,300.017,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/39-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.438757,1.42436,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/39-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.588028,0.699458,406756.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/39-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.896,300.068,169896.0,--,,UNK-Non,Non,UNK
+crafted-hard/39-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,147.686,833616.0,--,,UNK-Non,Non,UNK
+crafted-hard/39-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.412861,1.41055,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/39-hard.p,Vampire---4.8,Vampire---4.8,complete,0.321913,0.448778,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/39-hard.p,Larus-25012024,default,complete,3.8471,3.8474,727476.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/39-hard.p,Larus-25012024,smtbv,complete,1.47786,1.47856,462964.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/39-hard.p,Larus-25012024,smtbv_old,complete,0.982386,0.984417,599564.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/39-hard.p,Larus-25012024,smtufbv,complete,13.7614,13.7634,457500.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/39-hard.p,Larus-25012024,stl,complete,300.008,300.015,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/4-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.434591,1.4186,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/4-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.379628,0.492101,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/4-hard.p,Geo-III---2018C,Geo-III---2018C,complete,0.272887,0.403435,119284.0,Theorem,,THM-Ref,Ref,THM
+crafted-hard/4-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.278302,0.385459,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/4-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.383612,1.37852,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/4-hard.p,Vampire---4.8,Vampire---4.8,complete,0.299792,0.427377,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/4-hard.p,Larus-25012024,default,complete,0.272798,0.272885,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/4-hard.p,Larus-25012024,smtbv,complete,0.093297,0.0937801,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/4-hard.p,Larus-25012024,smtbv_old,complete,0.155737,0.156237,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/4-hard.p,Larus-25012024,smtufbv,complete,0.150775,0.151132,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/4-hard.p,Larus-25012024,stl,complete,299.976,300.006,122412.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/40-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.455125,1.42717,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/40-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.570256,0.680399,406760.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/40-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.882,300.032,169700.0,--,,UNK-Non,Non,UNK
+crafted-hard/40-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.09,148.471,833360.0,--,,UNK-Non,Non,UNK
+crafted-hard/40-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.39287,1.38435,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/40-hard.p,Vampire---4.8,Vampire---4.8,complete,0.30727,0.433957,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/40-hard.p,Larus-25012024,default,complete,3.90164,3.9025,664808.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/40-hard.p,Larus-25012024,smtbv,complete,1.27114,1.27168,465724.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/40-hard.p,Larus-25012024,smtbv_old,complete,0.879871,0.880147,621356.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/40-hard.p,Larus-25012024,smtufbv,complete,2.78586,2.78627,458588.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/40-hard.p,Larus-25012024,stl,complete,300.004,300.015,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/41-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.437954,1.41965,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/41-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.576344,0.689019,406760.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/41-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.89,300.035,172052.0,--,,UNK-Non,Non,UNK
+crafted-hard/41-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,146.2,833104.0,--,,UNK-Non,Non,UNK
+crafted-hard/41-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.391606,1.38531,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/41-hard.p,Vampire---4.8,Vampire---4.8,complete,0.328132,0.452943,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/41-hard.p,Larus-25012024,default,complete,4.40736,4.40857,742668.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/41-hard.p,Larus-25012024,smtbv,complete,1.48348,1.48389,466372.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/41-hard.p,Larus-25012024,smtbv_old,complete,0.904223,0.90484,624900.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/41-hard.p,Larus-25012024,smtufbv,complete,32.0057,32.0154,472336.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/41-hard.p,Larus-25012024,stl,complete,300.039,300.016,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/42-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.439676,1.43136,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/42-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.598047,0.711443,406760.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/42-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.806,300.039,172544.0,--,,UNK-Non,Non,UNK
+crafted-hard/42-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,146.849,833360.0,--,,UNK-Non,Non,UNK
+crafted-hard/42-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.452488,1.43263,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/42-hard.p,Vampire---4.8,Vampire---4.8,complete,0.341905,0.466646,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/42-hard.p,Larus-25012024,default,complete,3.83806,3.83937,711932.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/42-hard.p,Larus-25012024,smtbv,complete,1.36709,1.36741,467844.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/42-hard.p,Larus-25012024,smtbv_old,complete,0.914741,0.9154,625908.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/42-hard.p,Larus-25012024,smtufbv,complete,35.3199,17.7088,473352.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/42-hard.p,Larus-25012024,stl,complete,300.031,300.017,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/43-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.452058,1.43226,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/43-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.610496,0.722965,406372.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/43-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.906,300.056,173308.0,--,,UNK-Non,Non,UNK
+crafted-hard/43-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,144.436,833168.0,--,,UNK-Non,Non,UNK
+crafted-hard/43-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.40435,1.38691,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/43-hard.p,Vampire---4.8,Vampire---4.8,complete,0.311352,0.439758,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/43-hard.p,Larus-25012024,default,complete,4.53748,4.53874,715268.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/43-hard.p,Larus-25012024,smtbv,complete,1.61982,1.62205,485920.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/43-hard.p,Larus-25012024,smtbv_old,complete,2.39958,2.40028,769764.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/43-hard.p,Larus-25012024,smtufbv,complete,2.93329,2.93366,472812.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/43-hard.p,Larus-25012024,stl,complete,299.993,300.018,121880.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/44-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.502942,1.46944,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/44-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.636613,0.748643,414580.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/44-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.88,300.025,174400.0,--,,UNK-Non,Non,UNK
+crafted-hard/44-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,144.14,833872.0,--,,UNK-Non,Non,UNK
+crafted-hard/44-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.427177,1.42288,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/44-hard.p,Vampire---4.8,Vampire---4.8,complete,0.340375,0.466099,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/44-hard.p,Larus-25012024,default,complete,4.40041,4.40094,752972.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/44-hard.p,Larus-25012024,smtbv,complete,1.50482,1.50521,471532.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/44-hard.p,Larus-25012024,smtbv_old,complete,0.909703,0.910212,629780.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/44-hard.p,Larus-25012024,smtufbv,complete,3.43508,3.43519,475052.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/44-hard.p,Larus-25012024,stl,complete,300.036,300.016,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/45-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.444697,1.4229,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/45-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.719483,0.830886,414584.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/45-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.88,300.02,174788.0,--,,UNK-Non,Non,UNK
+crafted-hard/45-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.16,143.429,833168.0,--,,UNK-Non,Non,UNK
+crafted-hard/45-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.42688,1.4122,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/45-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310168,0.43765,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/45-hard.p,Larus-25012024,default,complete,4.35511,4.35577,759128.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/45-hard.p,Larus-25012024,smtbv,complete,1.80159,1.80213,472380.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/45-hard.p,Larus-25012024,smtbv_old,complete,0.975724,0.976235,629748.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/45-hard.p,Larus-25012024,smtufbv,complete,3.2161,3.21659,475336.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/45-hard.p,Larus-25012024,stl,complete,300.042,300.017,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/46-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.470676,1.43472,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/46-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.667407,0.780635,414584.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/46-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.875,300.043,174980.0,--,,UNK-Non,Non,UNK
+crafted-hard/46-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,146.282,833744.0,--,,UNK-Non,Non,UNK
+crafted-hard/46-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.395586,1.38613,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/46-hard.p,Vampire---4.8,Vampire---4.8,complete,0.307096,0.434685,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/46-hard.p,Larus-25012024,default,complete,4.64774,4.64854,729984.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/46-hard.p,Larus-25012024,smtbv,complete,1.49203,1.49259,473772.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/46-hard.p,Larus-25012024,smtbv_old,complete,2.50572,2.50605,749884.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/46-hard.p,Larus-25012024,smtufbv,complete,5.50969,5.50954,480304.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/46-hard.p,Larus-25012024,stl,complete,300.023,300.019,121876.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/47-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.466379,1.42958,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/47-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.686882,0.799427,414580.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/47-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.854,300.092,176268.0,--,,UNK-Non,Non,UNK
+crafted-hard/47-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.17,144.752,833808.0,--,,UNK-Non,Non,UNK
+crafted-hard/47-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.39051,1.38189,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/47-hard.p,Vampire---4.8,Vampire---4.8,complete,0.302026,0.430496,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/47-hard.p,Larus-25012024,default,complete,4.7267,4.72673,767620.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/47-hard.p,Larus-25012024,smtbv,complete,1.61641,1.61667,492132.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/47-hard.p,Larus-25012024,smtbv_old,complete,0.950945,0.951488,633072.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/47-hard.p,Larus-25012024,smtufbv,complete,4.20827,4.21076,480140.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/47-hard.p,Larus-25012024,stl,timeout (wallclock),299.92,300.018,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/48-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.457705,1.44021,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/48-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.701963,0.813936,414580.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/48-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.914,300.078,176852.0,--,,UNK-Non,Non,UNK
+crafted-hard/48-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,141.037,833296.0,--,,UNK-Non,Non,UNK
+crafted-hard/48-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.278444,1.32684,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/48-hard.p,Vampire---4.8,Vampire---4.8,complete,0.311782,0.439456,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/48-hard.p,Larus-25012024,default,complete,5.50014,5.50271,772896.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/48-hard.p,Larus-25012024,smtbv,complete,1.73684,1.73754,501100.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/48-hard.p,Larus-25012024,smtbv_old,complete,1.03991,1.04064,634080.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/48-hard.p,Larus-25012024,smtufbv,complete,52.78,52.7883,486336.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/48-hard.p,Larus-25012024,stl,complete,300.015,300.018,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/49-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.458576,1.43203,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/49-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.783955,0.892314,414584.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/49-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.851,300.035,180576.0,--,,UNK-Non,Non,UNK
+crafted-hard/49-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,141.421,833232.0,--,,UNK-Non,Non,UNK
+crafted-hard/49-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.373336,1.37868,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/49-hard.p,Vampire---4.8,Vampire---4.8,complete,0.309779,0.437887,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/49-hard.p,Larus-25012024,default,complete,5.60286,5.60467,786636.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/49-hard.p,Larus-25012024,smtbv,complete,1.75408,1.7546,502988.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/49-hard.p,Larus-25012024,smtbv_old,complete,1.16305,1.1636,635504.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/49-hard.p,Larus-25012024,smtufbv,complete,47.4336,47.4315,488224.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/49-hard.p,Larus-25012024,stl,timeout (cpu),300.03,300.019,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/5-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.450864,1.42994,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/5-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.384154,0.497198,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/5-hard.p,Geo-III---2018C,Geo-III---2018C,complete,78.9651,79.1006,127860.0,Theorem,,THM-Ref,Ref,THM
+crafted-hard/5-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.323825,0.414548,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/5-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.39121,1.39625,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/5-hard.p,Vampire---4.8,Vampire---4.8,complete,0.301209,0.429324,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/5-hard.p,Larus-25012024,default,complete,0.349668,0.349977,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/5-hard.p,Larus-25012024,smtbv,complete,0.107571,0.107934,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/5-hard.p,Larus-25012024,smtbv_old,complete,0.166513,0.166874,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/5-hard.p,Larus-25012024,smtufbv,complete,0.172446,0.172809,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/5-hard.p,Larus-25012024,stl,complete,300.018,300.007,122152.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/50-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.496784,1.45841,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/50-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.747171,0.860105,414584.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/50-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.946,300.103,180836.0,--,,UNK-Non,Non,UNK
+crafted-hard/50-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,139.68,833616.0,--,,UNK-Non,Non,UNK
+crafted-hard/50-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.401523,1.3826,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/50-hard.p,Vampire---4.8,Vampire---4.8,complete,0.308444,0.436418,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/50-hard.p,Larus-25012024,default,complete,5.51079,5.51221,724352.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/50-hard.p,Larus-25012024,smtbv,complete,1.61274,1.61326,492144.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/50-hard.p,Larus-25012024,smtbv_old,complete,1.34411,1.34682,636628.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/50-hard.p,Larus-25012024,smtufbv,complete,3.70512,3.70602,487312.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/50-hard.p,Larus-25012024,stl,timeout (cpu),300.03,300.02,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/51-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.307501,1.34606,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/51-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.762168,0.874662,422408.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/51-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.935,300.067,181832.0,--,,UNK-Non,Non,UNK
+crafted-hard/51-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,139.188,833488.0,--,,UNK-Non,Non,UNK
+crafted-hard/51-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.395466,1.38788,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/51-hard.p,Vampire---4.8,Vampire---4.8,complete,0.345639,0.473072,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/51-hard.p,Larus-25012024,default,complete,7.72656,7.72735,796364.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/51-hard.p,Larus-25012024,smtbv,complete,1.89675,1.89725,521896.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/51-hard.p,Larus-25012024,smtbv_old,complete,3.32495,3.32543,835728.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/51-hard.p,Larus-25012024,smtufbv,complete,10.6017,10.6022,489548.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/51-hard.p,Larus-25012024,stl,timeout (cpu),300.035,300.008,121880.0,--,,UNK-Non,Non,UNK
+crafted-hard/52-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.462894,1.43252,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/52-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.900646,1.01052,422404.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/52-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.934,300.107,182384.0,--,,UNK-Non,Non,UNK
+crafted-hard/52-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.09,139.013,833296.0,--,,UNK-Non,Non,UNK
+crafted-hard/52-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.382021,1.38057,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/52-hard.p,Vampire---4.8,Vampire---4.8,complete,0.320587,0.445751,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/52-hard.p,Larus-25012024,default,complete,5.87873,5.8809,803064.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/52-hard.p,Larus-25012024,smtbv,complete,1.69108,1.6917,522828.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/52-hard.p,Larus-25012024,smtbv_old,complete,1.18587,1.18631,645956.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/52-hard.p,Larus-25012024,smtufbv,complete,9.82229,9.82273,489992.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/52-hard.p,Larus-25012024,stl,complete,300.022,300.021,121880.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/53-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.451039,1.42921,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/53-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.856577,0.96841,423560.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/53-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.909,300.078,182716.0,--,,UNK-Non,Non,UNK
+crafted-hard/53-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.16,139.227,901012.0,--,,UNK-Non,Non,UNK
+crafted-hard/53-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.396441,1.38381,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/53-hard.p,Vampire---4.8,Vampire---4.8,complete,0.305013,0.432682,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/53-hard.p,Larus-25012024,default,complete,6.96298,6.96387,874608.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/53-hard.p,Larus-25012024,smtbv,complete,2.41106,2.41172,507344.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/53-hard.p,Larus-25012024,smtbv_old,complete,1.21735,1.21768,647064.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/53-hard.p,Larus-25012024,smtufbv,complete,5.04731,5.04868,491164.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/53-hard.p,Larus-25012024,stl,complete,300.015,300.022,121880.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/54-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.455217,1.43136,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/54-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.85228,0.965142,423560.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/54-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.909,300.056,183900.0,--,,UNK-Non,Non,UNK
+crafted-hard/54-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,139.574,901588.0,--,,UNK-Non,Non,UNK
+crafted-hard/54-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.396586,1.38087,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/54-hard.p,Vampire---4.8,Vampire---4.8,complete,0.302756,0.431704,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/54-hard.p,Larus-25012024,default,complete,6.51215,6.51218,883384.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/54-hard.p,Larus-25012024,smtbv,complete,2.04783,2.04801,498856.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/54-hard.p,Larus-25012024,smtbv_old,complete,1.25221,1.25263,650004.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/54-hard.p,Larus-25012024,smtufbv,complete,11.0347,5.54494,493140.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/54-hard.p,Larus-25012024,stl,timeout (cpu),300.045,300.024,121888.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/55-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.462682,1.43625,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/55-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.882764,0.995943,423556.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/55-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.882,300.034,184844.0,--,,UNK-Non,Non,UNK
+crafted-hard/55-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,137.739,901268.0,--,,UNK-Non,Non,UNK
+crafted-hard/55-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.402841,1.39178,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/55-hard.p,Vampire---4.8,Vampire---4.8,complete,0.305895,0.432664,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/55-hard.p,Larus-25012024,default,complete,6.69636,6.69738,887224.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/55-hard.p,Larus-25012024,smtbv,complete,2.10646,2.10678,527228.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/55-hard.p,Larus-25012024,smtbv_old,complete,1.32749,1.3288,651796.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/55-hard.p,Larus-25012024,smtufbv,complete,50.7394,50.735,499452.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/55-hard.p,Larus-25012024,stl,complete,300.022,300.022,121880.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/56-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.444258,1.42406,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/56-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.0152,1.12615,423560.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/56-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.865,300.046,184236.0,--,,UNK-Non,Non,UNK
+crafted-hard/56-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.21,137.765,901268.0,--,,UNK-Non,Non,UNK
+crafted-hard/56-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.390325,1.38222,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/56-hard.p,Vampire---4.8,Vampire---4.8,complete,0.307314,0.434482,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/56-hard.p,Larus-25012024,default,complete,17.6855,8.89663,904836.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/56-hard.p,Larus-25012024,smtbv,complete,2.2151,2.21553,562560.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/56-hard.p,Larus-25012024,smtbv_old,complete,1.30769,1.30798,652784.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/56-hard.p,Larus-25012024,smtufbv,complete,5.97219,5.97618,497652.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/56-hard.p,Larus-25012024,stl,timeout (cpu),300.03,300.023,121884.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/57-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.459624,1.42708,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/57-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.955788,1.06701,423556.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/57-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.912,300.086,185748.0,--,,UNK-Non,Non,UNK
+crafted-hard/57-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,134.729,900948.0,--,,UNK-Non,Non,UNK
+crafted-hard/57-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.405093,1.38117,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/57-hard.p,Vampire---4.8,Vampire---4.8,complete,0.350887,0.477453,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/57-hard.p,Larus-25012024,default,complete,6.8646,6.86463,907712.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/57-hard.p,Larus-25012024,smtbv,complete,2.23883,2.239,532980.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/57-hard.p,Larus-25012024,smtbv_old,complete,1.35743,1.35777,656496.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/57-hard.p,Larus-25012024,smtufbv,complete,5.94462,5.94492,503632.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/57-hard.p,Larus-25012024,stl,timeout (wallclock),299.99,300.023,121892.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/58-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.4556,1.42877,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/58-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.87797,1.08051,431384.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/58-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.931,300.075,186872.0,--,,UNK-Non,Non,UNK
+crafted-hard/58-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.17,133.532,901652.0,--,,UNK-Non,Non,UNK
+crafted-hard/58-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.399911,1.38216,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/58-hard.p,Vampire---4.8,Vampire---4.8,complete,0.306066,0.433078,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/58-hard.p,Larus-25012024,default,complete,7.29987,7.30018,914592.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/58-hard.p,Larus-25012024,smtbv,complete,2.34848,2.3487,533368.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/58-hard.p,Larus-25012024,smtbv_old,complete,1.48033,1.48086,659808.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/58-hard.p,Larus-25012024,smtufbv,complete,73.012,73.0524,511560.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/58-hard.p,Larus-25012024,stl,timeout (cpu),300.03,300.007,121988.0,--,,UNK-Non,Non,UNK
+crafted-hard/59-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.462188,1.42434,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/59-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.83854,1.08045,431380.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/59-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.904,300.066,187416.0,--,,UNK-Non,Non,UNK
+crafted-hard/59-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.16,138.697,901812.0,--,,UNK-Non,Non,UNK
+crafted-hard/59-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.391066,1.3808,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/59-hard.p,Vampire---4.8,Vampire---4.8,complete,0.30747,0.434417,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/59-hard.p,Larus-25012024,default,complete,7.7753,7.77506,917852.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/59-hard.p,Larus-25012024,smtbv,complete,2.431,2.43139,569160.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/59-hard.p,Larus-25012024,smtbv_old,complete,1.66479,1.66894,661644.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/59-hard.p,Larus-25012024,smtufbv,complete,8.6463,8.64763,511272.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/59-hard.p,Larus-25012024,stl,complete,300.045,300.026,121988.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/6-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.446983,1.42206,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/6-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.386504,0.498969,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/6-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.904,300.044,130764.0,--,,UNK-Non,Non,UNK
+crafted-hard/6-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.519642,0.5387,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/6-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.380685,1.37835,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/6-hard.p,Vampire---4.8,Vampire---4.8,complete,0.30625,0.433507,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/6-hard.p,Larus-25012024,default,complete,0.365713,0.365921,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/6-hard.p,Larus-25012024,smtbv,complete,0.123352,0.123898,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/6-hard.p,Larus-25012024,smtbv_old,complete,0.174829,0.175465,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/6-hard.p,Larus-25012024,smtufbv,complete,0.200244,0.201147,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/6-hard.p,Larus-25012024,stl,complete,300.003,300.009,122016.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/60-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.340463,1.35562,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/60-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.0235,1.13527,431380.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/60-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.888,300.045,188324.0,--,,UNK-Non,Non,UNK
+crafted-hard/60-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,132.675,901428.0,--,,UNK-Non,Non,UNK
+crafted-hard/60-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.411136,1.39035,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/60-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310797,0.438871,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/60-hard.p,Larus-25012024,default,complete,8.08854,8.08921,1027792.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/60-hard.p,Larus-25012024,smtbv,complete,2.57628,2.5771,537956.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/60-hard.p,Larus-25012024,smtbv_old,complete,1.66175,1.66216,662960.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/60-hard.p,Larus-25012024,smtufbv,complete,7.92135,7.92157,514076.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/60-hard.p,Larus-25012024,stl,timeout (cpu),300.03,300.019,121892.0,--,,UNK-Non,Non,UNK
+crafted-hard/61-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.474647,1.44097,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/61-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.09498,1.20412,438948.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/61-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.891,300.048,186448.0,--,,UNK-Non,Non,UNK
+crafted-hard/61-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,132.44,901940.0,--,,UNK-Non,Non,UNK
+crafted-hard/61-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.407391,1.38209,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/61-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310769,0.437251,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/61-hard.p,Larus-25012024,default,complete,8.11718,8.11727,1035728.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/61-hard.p,Larus-25012024,smtbv,complete,2.53138,2.53187,539336.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/61-hard.p,Larus-25012024,smtbv_old,complete,1.82358,1.82428,664920.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/61-hard.p,Larus-25012024,smtufbv,complete,12.0492,12.0538,516400.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/61-hard.p,Larus-25012024,stl,timeout (cpu),300.01,300.025,121996.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/62-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.447275,1.41851,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/62-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.04955,1.16239,431380.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/62-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.906,300.036,188756.0,--,,UNK-Non,Non,UNK
+crafted-hard/62-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.08,135.686,901620.0,--,,UNK-Non,Non,UNK
+crafted-hard/62-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.30139,1.33351,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/62-hard.p,Vampire---4.8,Vampire---4.8,complete,0.197532,0.335123,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/62-hard.p,Larus-25012024,default,complete,8.57462,8.57463,1040224.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/62-hard.p,Larus-25012024,smtbv,complete,2.64264,2.64298,575012.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/62-hard.p,Larus-25012024,smtbv_old,complete,1.58682,1.58707,707412.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/62-hard.p,Larus-25012024,smtufbv,complete,9.8474,9.84776,533444.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/62-hard.p,Larus-25012024,stl,complete,300.035,300.025,121996.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/63-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.44891,1.42568,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/63-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.15378,1.26321,439460.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/63-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.871,300.072,187944.0,--,,UNK-Non,Non,UNK
+crafted-hard/63-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,133.18,901620.0,--,,UNK-Non,Non,UNK
+crafted-hard/63-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.390536,1.37934,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/63-hard.p,Vampire---4.8,Vampire---4.8,complete,0.308538,0.436481,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/63-hard.p,Larus-25012024,default,complete,8.87096,8.87043,1048884.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/63-hard.p,Larus-25012024,smtbv,complete,2.72332,2.73013,546548.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/63-hard.p,Larus-25012024,smtbv_old,complete,4.81178,4.81408,1023912.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/63-hard.p,Larus-25012024,smtufbv,complete,6.33421,6.3437,535116.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/63-hard.p,Larus-25012024,stl,timeout (wallclock),300.001,300.016,122000.0,--,,UNK-Non,Non,UNK
+crafted-hard/64-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.512066,1.47262,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/64-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.21557,1.32816,438948.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/64-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.92,300.052,191208.0,--,,UNK-Non,Non,UNK
+crafted-hard/64-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.02,135.221,901940.0,--,,UNK-Non,Non,UNK
+crafted-hard/64-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.398113,1.37711,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/64-hard.p,Vampire---4.8,Vampire---4.8,complete,0.352109,0.477222,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/64-hard.p,Larus-25012024,default,complete,8.97811,8.97796,1054488.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/64-hard.p,Larus-25012024,smtbv,complete,2.72757,2.72793,581748.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/64-hard.p,Larus-25012024,smtbv_old,complete,1.60052,1.60103,714884.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/64-hard.p,Larus-25012024,smtufbv,complete,7.76054,7.79362,537940.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/64-hard.p,Larus-25012024,stl,complete,300.045,300.027,122004.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/65-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.460863,1.42632,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/65-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.22416,1.33673,446772.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/65-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.893,300.081,190780.0,--,,UNK-Non,Non,UNK
+crafted-hard/65-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.18,132.723,902196.0,--,,UNK-Non,Non,UNK
+crafted-hard/65-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.399754,1.38424,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/65-hard.p,Vampire---4.8,Vampire---4.8,complete,0.33802,0.466452,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/65-hard.p,Larus-25012024,default,complete,9.39574,9.39799,1060980.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/65-hard.p,Larus-25012024,smtbv,complete,2.84439,2.84485,583900.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/65-hard.p,Larus-25012024,smtbv_old,complete,1.68306,1.6834,715596.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/65-hard.p,Larus-25012024,smtufbv,complete,12.4027,12.4026,540972.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/65-hard.p,Larus-25012024,stl,timeout (cpu),300.01,300.028,122008.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/66-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.477918,1.44229,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/66-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.27418,1.38642,446772.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/66-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.898,300.042,193860.0,--,,UNK-Non,Non,UNK
+crafted-hard/66-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,139.037,902196.0,--,,UNK-Non,Non,UNK
+crafted-hard/66-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.384733,1.37957,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/66-hard.p,Vampire---4.8,Vampire---4.8,complete,0.296166,0.429016,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/66-hard.p,Larus-25012024,default,complete,9.93263,9.93264,1069960.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/66-hard.p,Larus-25012024,smtbv,complete,2.91703,2.91718,585724.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/66-hard.p,Larus-25012024,smtbv_old,complete,1.68648,1.68685,718804.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/66-hard.p,Larus-25012024,smtufbv,complete,22.4288,22.4501,543520.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/66-hard.p,Larus-25012024,stl,complete,299.982,300.029,122008.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/67-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.497813,1.47285,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/67-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.26986,1.37922,446772.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/67-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.865,300.019,194644.0,--,,UNK-Non,Non,UNK
+crafted-hard/67-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,131.81,902196.0,--,,UNK-Non,Non,UNK
+crafted-hard/67-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.410282,1.39483,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/67-hard.p,Vampire---4.8,Vampire---4.8,complete,0.311621,0.438823,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/67-hard.p,Larus-25012024,default,complete,10.728,10.7402,1078852.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/67-hard.p,Larus-25012024,smtbv,complete,2.95658,2.95703,538928.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/67-hard.p,Larus-25012024,smtbv_old,complete,8.75315,8.7528,1331748.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/67-hard.p,Larus-25012024,smtufbv,complete,136.219,136.271,549320.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/67-hard.p,Larus-25012024,stl,timeout (cpu),300.041,300.021,122012.0,--,,UNK-Non,Non,UNK
+crafted-hard/68-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.457531,1.4212,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/68-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.31012,1.42123,447284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/68-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.865,300.019,195020.0,--,,UNK-Non,Non,UNK
+crafted-hard/68-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.09,132.58,902388.0,--,,UNK-Non,Non,UNK
+crafted-hard/68-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.392854,1.38049,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/68-hard.p,Vampire---4.8,Vampire---4.8,complete,0.314045,0.442603,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/68-hard.p,Larus-25012024,default,complete,13.0477,13.0486,1083912.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/68-hard.p,Larus-25012024,smtbv,complete,3.09419,3.09444,558092.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/68-hard.p,Larus-25012024,smtbv_old,complete,5.64388,5.64365,1074416.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/68-hard.p,Larus-25012024,smtufbv,complete,10.3835,10.3831,546144.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/68-hard.p,Larus-25012024,stl,timeout (cpu),300.031,300.024,122016.0,--,,UNK-Non,Non,UNK
+crafted-hard/69-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.469632,1.4384,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/69-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.36711,1.47798,455108.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/69-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.823,300.02,198064.0,--,,UNK-Non,Non,UNK
+crafted-hard/69-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,133.093,902452.0,--,,UNK-Non,Non,UNK
+crafted-hard/69-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.391889,1.37759,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/69-hard.p,Vampire---4.8,Vampire---4.8,complete,0.308137,0.436365,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/69-hard.p,Larus-25012024,default,complete,10.1561,10.157,1091224.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/69-hard.p,Larus-25012024,smtbv,complete,3.1702,3.17093,595424.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/69-hard.p,Larus-25012024,smtbv_old,complete,1.83377,1.83401,725740.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/69-hard.p,Larus-25012024,smtufbv,complete,13.2026,13.2032,546000.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/69-hard.p,Larus-25012024,stl,timeout (cpu),300.033,300.018,122016.0,--,,UNK-Non,Non,UNK
+crafted-hard/7-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.457271,1.4314,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/7-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.390259,0.503023,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/7-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.852,300.02,138708.0,--,,UNK-Non,Non,UNK
+crafted-hard/7-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,0.791214,0.700364,829072.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/7-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.37473,1.37781,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/7-hard.p,Vampire---4.8,Vampire---4.8,complete,0.303219,0.430957,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/7-hard.p,Larus-25012024,default,complete,0.413411,0.413866,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/7-hard.p,Larus-25012024,smtbv,complete,0.148103,0.148583,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/7-hard.p,Larus-25012024,smtbv_old,complete,0.203379,0.203977,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/7-hard.p,Larus-25012024,smtufbv,complete,0.222803,0.223534,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/7-hard.p,Larus-25012024,stl,timeout (cpu),300.0,300.006,122024.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/70-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.406903,1.42595,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/70-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.43278,1.57162,455108.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/70-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.926,300.053,199664.0,--,,UNK-Non,Non,UNK
+crafted-hard/70-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.25,130.482,902196.0,--,,UNK-Non,Non,UNK
+crafted-hard/70-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.387753,1.37757,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/70-hard.p,Vampire---4.8,Vampire---4.8,complete,0.31675,0.443273,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/70-hard.p,Larus-25012024,default,complete,11.0846,11.0895,1096648.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/70-hard.p,Larus-25012024,smtbv,complete,3.24113,3.24137,564616.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/70-hard.p,Larus-25012024,smtbv_old,complete,1.86812,1.86851,725436.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/70-hard.p,Larus-25012024,smtufbv,complete,9.30732,9.30743,556232.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/70-hard.p,Larus-25012024,stl,complete,300.047,300.035,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/71-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.474395,1.43972,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/71-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.50499,1.61589,455108.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/71-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.895,300.079,198160.0,--,,UNK-Non,Non,UNK
+crafted-hard/71-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.08,132.076,902068.0,--,,UNK-Non,Non,UNK
+crafted-hard/71-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.413205,1.39287,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/71-hard.p,Vampire---4.8,Vampire---4.8,complete,0.309512,0.444271,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/71-hard.p,Larus-25012024,default,complete,10.8178,10.8353,1104444.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/71-hard.p,Larus-25012024,smtbv,complete,3.37716,3.37781,567184.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/71-hard.p,Larus-25012024,smtbv_old,complete,1.92662,1.9272,728780.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/71-hard.p,Larus-25012024,smtufbv,complete,272.576,272.663,566956.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/71-hard.p,Larus-25012024,stl,complete,300.024,300.03,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/72-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.523716,1.47725,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/72-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.42014,1.54531,462932.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/72-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.922,300.086,200128.0,--,,UNK-Non,Non,UNK
+crafted-hard/72-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.22,132.148,902260.0,--,,UNK-Non,Non,UNK
+crafted-hard/72-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.402592,1.38299,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/72-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310053,0.438308,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/72-hard.p,Larus-25012024,default,complete,11.7197,11.7189,1127508.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/72-hard.p,Larus-25012024,smtbv,complete,3.99156,3.99225,638044.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/72-hard.p,Larus-25012024,smtbv_old,complete,1.91767,1.91855,730576.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/72-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.067,567296.0,--,,UNK-Non,Non,UNK
+crafted-hard/72-hard.p,Larus-25012024,stl,complete,299.994,300.031,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/73-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.47227,1.43135,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/73-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.58227,1.69356,462932.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/73-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.878,300.096,201484.0,--,,UNK-Non,Non,UNK
+crafted-hard/73-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.02,132.388,902260.0,--,,UNK-Non,Non,UNK
+crafted-hard/73-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.476456,1.42322,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/73-hard.p,Vampire---4.8,Vampire---4.8,complete,0.32479,0.45198,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/73-hard.p,Larus-25012024,default,complete,11.7321,11.7338,1132888.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/73-hard.p,Larus-25012024,smtbv,complete,3.57197,3.57237,612556.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/73-hard.p,Larus-25012024,smtbv_old,complete,1.90705,1.90737,730948.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/73-hard.p,Larus-25012024,smtufbv,complete,253.051,253.098,569920.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/73-hard.p,Larus-25012024,stl,timeout (wallclock),300.002,300.028,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/74-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.461593,1.42084,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/74-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.69883,1.81033,462932.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/74-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.921,300.064,201892.0,--,,UNK-Non,Non,UNK
+crafted-hard/74-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,132.171,902452.0,--,,UNK-Non,Non,UNK
+crafted-hard/74-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.400015,1.38235,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/74-hard.p,Vampire---4.8,Vampire---4.8,complete,0.31355,0.444993,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/74-hard.p,Larus-25012024,default,complete,16.1846,16.1843,1155208.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/74-hard.p,Larus-25012024,smtbv,complete,4.24113,4.24168,615480.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/74-hard.p,Larus-25012024,smtbv_old,complete,1.7833,1.7835,731824.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/74-hard.p,Larus-25012024,smtufbv,complete,11.0379,11.0388,564584.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/74-hard.p,Larus-25012024,stl,timeout (wallclock),300.013,300.019,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/75-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.464193,1.43328,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/75-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.68309,1.79659,472804.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/75-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.831,300.022,201012.0,--,,UNK-Non,Non,UNK
+crafted-hard/75-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,127.348,902452.0,--,,UNK-Non,Non,UNK
+crafted-hard/75-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.414122,1.38868,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/75-hard.p,Vampire---4.8,Vampire---4.8,complete,0.312145,0.441402,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/75-hard.p,Larus-25012024,default,complete,12.2006,12.2013,1160988.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/75-hard.p,Larus-25012024,smtbv,complete,3.75005,3.75048,619028.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/75-hard.p,Larus-25012024,smtbv_old,complete,5.30189,5.3025,1031628.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/75-hard.p,Larus-25012024,smtufbv,complete,300.036,300.087,575508.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/75-hard.p,Larus-25012024,stl,timeout (wallclock),299.91,300.035,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/76-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.461687,1.42911,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/76-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.80957,1.91968,472804.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/76-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.984,300.122,203736.0,--,,UNK-Non,Non,UNK
+crafted-hard/76-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,128.281,902388.0,--,,UNK-Non,Non,UNK
+crafted-hard/76-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.454087,1.43978,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/76-hard.p,Vampire---4.8,Vampire---4.8,complete,0.311062,0.438043,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/76-hard.p,Larus-25012024,default,complete,12.5744,12.575,1165516.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/76-hard.p,Larus-25012024,smtbv,complete,3.84457,3.84496,651896.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/76-hard.p,Larus-25012024,smtbv_old,complete,2.01169,2.01221,735772.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/76-hard.p,Larus-25012024,smtufbv,complete,15.9219,15.9223,573728.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/76-hard.p,Larus-25012024,stl,timeout (cpu),300.02,300.034,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/77-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.461808,1.43266,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/77-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.24863,2.35903,472804.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/77-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.929,300.086,201892.0,--,,UNK-Non,Non,UNK
+crafted-hard/77-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.2,128.309,902372.0,--,,UNK-Non,Non,UNK
+crafted-hard/77-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.397871,1.38226,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/77-hard.p,Vampire---4.8,Vampire---4.8,complete,0.32063,0.446031,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/77-hard.p,Larus-25012024,default,complete,16.901,16.9009,1179472.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/77-hard.p,Larus-25012024,smtbv,complete,3.94096,3.94111,655336.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/77-hard.p,Larus-25012024,smtbv_old,complete,2.56227,2.56277,739376.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/77-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.052,577868.0,--,,UNK-Non,Non,UNK
+crafted-hard/77-hard.p,Larus-25012024,stl,complete,300.029,300.035,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/78-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.487138,1.45251,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/78-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,1.92926,2.04054,480628.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/78-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.877,300.044,203980.0,--,,UNK-Non,Non,UNK
+crafted-hard/78-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,128.064,902692.0,--,,UNK-Non,Non,UNK
+crafted-hard/78-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.413837,1.38758,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/78-hard.p,Vampire---4.8,Vampire---4.8,complete,0.31487,0.442119,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/78-hard.p,Larus-25012024,default,complete,13.5032,13.504,1186884.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/78-hard.p,Larus-25012024,smtbv,complete,3.96272,3.96305,658960.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/78-hard.p,Larus-25012024,smtbv_old,complete,6.65442,6.65467,1345676.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/78-hard.p,Larus-25012024,smtufbv,complete,19.4881,19.4881,579408.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/78-hard.p,Larus-25012024,stl,timeout (cpu),300.021,300.018,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/79-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.462316,1.4249,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/79-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.15505,2.26464,480628.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/79-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.918,300.076,205416.0,--,,UNK-Non,Non,UNK
+crafted-hard/79-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,125.223,902500.0,--,,UNK-Non,Non,UNK
+crafted-hard/79-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.411339,1.38098,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/79-hard.p,Vampire---4.8,Vampire---4.8,complete,0.319505,0.448045,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/79-hard.p,Larus-25012024,default,complete,20.5412,20.5408,1194008.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/79-hard.p,Larus-25012024,smtbv,complete,3.96449,3.96471,664136.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/79-hard.p,Larus-25012024,smtbv_old,complete,2.06814,2.06851,756636.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/79-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.95,300.061,585876.0,--,,UNK-Non,Non,UNK
+crafted-hard/79-hard.p,Larus-25012024,stl,timeout (cpu),300.023,300.001,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/8-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.436438,1.42998,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/8-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.413871,0.525114,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/8-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.878,300.018,139256.0,--,,UNK-Non,Non,UNK
+crafted-hard/8-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,1.35471,1.06208,829328.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/8-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.394339,1.38685,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/8-hard.p,Vampire---4.8,Vampire---4.8,complete,0.239674,0.375177,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/8-hard.p,Larus-25012024,default,complete,0.453849,0.454146,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/8-hard.p,Larus-25012024,smtbv,complete,0.171803,0.172397,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/8-hard.p,Larus-25012024,smtbv_old,complete,0.202898,0.203237,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/8-hard.p,Larus-25012024,smtufbv,complete,0.200237,0.200968,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/8-hard.p,Larus-25012024,stl,complete,300.018,300.007,122148.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/80-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.457704,1.42488,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/80-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.11631,2.22887,480628.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/80-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.922,300.088,205104.0,--,,UNK-Non,Non,UNK
+crafted-hard/80-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.02,127.066,902692.0,--,,UNK-Non,Non,UNK
+crafted-hard/80-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.385614,1.37387,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/80-hard.p,Vampire---4.8,Vampire---4.8,complete,0.285988,0.415468,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/80-hard.p,Larus-25012024,default,complete,14.0887,14.0886,1330380.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/80-hard.p,Larus-25012024,smtbv,complete,4.30449,4.3048,632168.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/80-hard.p,Larus-25012024,smtbv_old,complete,2.22273,2.22318,762972.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/80-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.96,300.075,588180.0,--,,UNK-Non,Non,UNK
+crafted-hard/80-hard.p,Larus-25012024,stl,complete,300.043,300.036,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/81-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.464169,1.42461,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/81-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.15643,2.26811,488452.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/81-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.889,300.033,206704.0,--,,UNK-Non,Non,UNK
+crafted-hard/81-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,129.144,902692.0,--,,UNK-Non,Non,UNK
+crafted-hard/81-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.386181,1.38086,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/81-hard.p,Vampire---4.8,Vampire---4.8,complete,0.310226,0.439599,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/81-hard.p,Larus-25012024,default,complete,16.5346,16.5354,1337960.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/81-hard.p,Larus-25012024,smtbv,complete,4.11214,4.11255,634648.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/81-hard.p,Larus-25012024,smtbv_old,complete,2.27609,2.27653,762244.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/81-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.89,300.036,591380.0,--,,UNK-Non,Non,UNK
+crafted-hard/81-hard.p,Larus-25012024,stl,complete,300.049,300.037,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/82-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.475939,1.43517,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/82-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.25296,2.36511,488452.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/82-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.843,300.017,207452.0,--,,UNK-Non,Non,UNK
+crafted-hard/82-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.02,128.181,970344.0,--,,UNK-Non,Non,UNK
+crafted-hard/82-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.440702,1.42057,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/82-hard.p,Vampire---4.8,Vampire---4.8,complete,0.314881,0.441875,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/82-hard.p,Larus-25012024,default,complete,15.1089,15.1087,1346908.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/82-hard.p,Larus-25012024,smtbv,complete,4.2994,4.2998,735604.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/82-hard.p,Larus-25012024,smtbv_old,complete,2.30277,2.30325,767104.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/82-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.072,594744.0,--,,UNK-Non,Non,UNK
+crafted-hard/82-hard.p,Larus-25012024,stl,timeout (cpu),300.044,300.033,122024.0,--,,UNK-Non,Non,UNK
+crafted-hard/83-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.472835,1.4374,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/83-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.30559,2.41664,496276.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/83-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.863,300.025,208212.0,--,,UNK-Non,Non,UNK
+crafted-hard/83-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,125.097,902756.0,--,,UNK-Non,Non,UNK
+crafted-hard/83-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.415817,1.39134,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/83-hard.p,Vampire---4.8,Vampire---4.8,complete,0.322077,0.45014,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/83-hard.p,Larus-25012024,default,complete,20.0279,20.0281,1360052.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/83-hard.p,Larus-25012024,smtbv,complete,4.55423,4.55521,737284.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/83-hard.p,Larus-25012024,smtbv_old,complete,6.984,6.98554,1319160.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/83-hard.p,Larus-25012024,smtufbv,complete,15.7885,15.7894,592408.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/83-hard.p,Larus-25012024,stl,timeout (cpu),300.027,300.023,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/84-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.453796,1.42502,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/84-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.40369,2.5172,496276.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/84-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.852,300.029,208900.0,--,,UNK-Non,Non,UNK
+crafted-hard/84-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.25,122.271,902948.0,--,,UNK-Non,Non,UNK
+crafted-hard/84-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.409284,1.38496,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/84-hard.p,Vampire---4.8,Vampire---4.8,complete,0.312789,0.441676,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/84-hard.p,Larus-25012024,default,complete,16.8028,16.8035,1368048.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/84-hard.p,Larus-25012024,smtbv,complete,4.37066,4.37103,743152.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/84-hard.p,Larus-25012024,smtbv_old,complete,2.78282,2.79161,775732.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/84-hard.p,Larus-25012024,smtufbv,timeout (cpu),300.03,300.096,602084.0,--,,UNK-Non,Non,UNK
+crafted-hard/84-hard.p,Larus-25012024,stl,timeout (wallclock),300.016,300.018,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/85-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.468414,1.43074,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/85-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.55177,2.66345,504100.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/85-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.89,300.066,210160.0,--,,UNK-Non,Non,UNK
+crafted-hard/85-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.22,126.493,902500.0,--,,UNK-Non,Non,UNK
+crafted-hard/85-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.434097,1.41262,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/85-hard.p,Vampire---4.8,Vampire---4.8,complete,0.322451,0.448852,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/85-hard.p,Larus-25012024,default,complete,21.4427,21.4418,1626496.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/85-hard.p,Larus-25012024,smtbv,complete,4.66324,4.66351,677896.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/85-hard.p,Larus-25012024,smtbv_old,complete,2.51232,2.51282,781580.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/85-hard.p,Larus-25012024,smtufbv,complete,22.4733,22.4733,599748.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/85-hard.p,Larus-25012024,stl,complete,300.042,300.035,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/86-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.449198,1.41551,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/86-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,5.26155,2.8004,508200.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/86-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.853,300.024,210932.0,--,,UNK-Non,Non,UNK
+crafted-hard/86-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.22,122.41,902692.0,--,,UNK-Non,Non,UNK
+crafted-hard/86-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.392158,1.37358,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/86-hard.p,Vampire---4.8,Vampire---4.8,complete,0.297296,0.42585,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/86-hard.p,Larus-25012024,default,complete,16.2956,16.2951,1641168.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/86-hard.p,Larus-25012024,smtbv,complete,4.9935,4.99382,747072.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/86-hard.p,Larus-25012024,smtbv_old,complete,7.50875,7.50993,1344888.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/86-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.033,300.126,607212.0,--,,UNK-Non,Non,UNK
+crafted-hard/86-hard.p,Larus-25012024,stl,timeout (cpu),300.025,300.002,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/87-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.474463,1.4399,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/87-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.71831,2.8303,516024.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/87-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.852,300.024,212056.0,--,,UNK-Non,Non,UNK
+crafted-hard/87-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.02,124.352,902820.0,--,,UNK-Non,Non,UNK
+crafted-hard/87-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.408704,1.38747,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/87-hard.p,Vampire---4.8,Vampire---4.8,complete,0.322451,0.452248,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/87-hard.p,Larus-25012024,default,complete,16.0402,16.0426,1658784.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/87-hard.p,Larus-25012024,smtbv,complete,4.94352,4.94413,749900.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/87-hard.p,Larus-25012024,smtbv_old,complete,2.9716,2.9721,785184.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/87-hard.p,Larus-25012024,smtufbv,complete,17.3998,17.3998,607544.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/87-hard.p,Larus-25012024,stl,timeout (cpu),300.047,300.042,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/88-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.485448,1.44102,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/88-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.89794,3.01071,516024.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/88-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.883,300.029,212984.0,--,,UNK-Non,Non,UNK
+crafted-hard/88-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,119.763,970536.0,--,,UNK-Non,Non,UNK
+crafted-hard/88-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.43971,1.41192,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/88-hard.p,Vampire---4.8,Vampire---4.8,complete,0.314157,0.442103,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/88-hard.p,Larus-25012024,default,complete,18.0938,18.0937,1668584.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/88-hard.p,Larus-25012024,smtbv,complete,5.20642,5.20627,686484.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/88-hard.p,Larus-25012024,smtbv_old,complete,8.32638,8.32612,1399596.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/88-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.94,300.068,617324.0,--,,UNK-Non,Non,UNK
+crafted-hard/88-hard.p,Larus-25012024,stl,timeout (cpu),300.031,300.029,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/89-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.484291,1.43433,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/89-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,2.99735,3.10867,523848.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/89-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.944,300.116,214120.0,--,,UNK-Non,Non,UNK
+crafted-hard/89-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,121.551,970600.0,--,,UNK-Non,Non,UNK
+crafted-hard/89-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.439755,1.417,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/89-hard.p,Vampire---4.8,Vampire---4.8,complete,0.317403,0.445327,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/89-hard.p,Larus-25012024,default,complete,22.1796,22.1801,1679928.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/89-hard.p,Larus-25012024,smtbv,complete,5.27448,5.27477,689668.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/89-hard.p,Larus-25012024,smtbv_old,complete,2.80425,2.80468,790280.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/89-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.91,300.049,616016.0,--,,UNK-Non,Non,UNK
+crafted-hard/89-hard.p,Larus-25012024,stl,timeout (cpu),300.025,300.024,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/9-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.454524,1.43115,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/9-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,0.408787,0.518792,119284.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/9-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.968,300.093,140896.0,--,,UNK-Non,Non,UNK
+crafted-hard/9-hard.p,Goeland---1.0.0,Goeland---1.0.0,complete,1.15815,0.938473,829584.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/9-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.380093,1.37892,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/9-hard.p,Vampire---4.8,Vampire---4.8,complete,0.314711,0.440702,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/9-hard.p,Larus-25012024,default,complete,0.472903,0.475131,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/9-hard.p,Larus-25012024,smtbv,complete,0.197839,0.198263,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/9-hard.p,Larus-25012024,smtbv_old,complete,0.213208,0.213957,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/9-hard.p,Larus-25012024,smtufbv,complete,0.278081,0.279403,113176.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/9-hard.p,Larus-25012024,stl,complete,299.999,300.007,121756.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/90-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.498162,1.46341,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/90-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.0748,3.1871,523848.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/90-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.874,300.027,215156.0,--,,UNK-Non,Non,UNK
+crafted-hard/90-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.15,125.175,971048.0,--,,UNK-Non,Non,UNK
+crafted-hard/90-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.411547,1.3852,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/90-hard.p,Vampire---4.8,Vampire---4.8,complete,0.320669,0.448065,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/90-hard.p,Larus-25012024,default,complete,16.5964,16.5989,1688380.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/90-hard.p,Larus-25012024,smtbv,complete,5.48181,5.48179,759436.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/90-hard.p,Larus-25012024,smtbv_old,complete,2.66482,2.66503,792136.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/90-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.93,300.043,694636.0,--,,UNK-Non,Non,UNK
+crafted-hard/90-hard.p,Larus-25012024,stl,timeout (cpu),300.031,300.03,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/91-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.507124,1.46202,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/91-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.23666,3.34926,531672.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/91-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.853,300.019,216444.0,--,,UNK-Non,Non,UNK
+crafted-hard/91-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,118.097,970792.0,--,,UNK-Non,Non,UNK
+crafted-hard/91-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.400191,1.3781,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/91-hard.p,Vampire---4.8,Vampire---4.8,complete,0.34284,0.467208,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/91-hard.p,Larus-25012024,default,complete,17.9697,17.9702,1700700.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/91-hard.p,Larus-25012024,smtbv,complete,5.45507,5.45567,762764.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/91-hard.p,Larus-25012024,smtbv_old,complete,17.9655,17.9653,2132284.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/91-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.89,300.043,657948.0,--,,UNK-Non,Non,UNK
+crafted-hard/91-hard.p,Larus-25012024,stl,complete,300.03,300.047,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/92-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.49284,1.43572,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/92-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.42193,3.5323,531672.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/92-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.879,300.05,217560.0,--,,UNK-Non,Non,UNK
+crafted-hard/92-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.1,120.094,970600.0,--,,UNK-Non,Non,UNK
+crafted-hard/92-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.404515,1.38369,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/92-hard.p,Vampire---4.8,Vampire---4.8,complete,0.322786,0.449923,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/92-hard.p,Larus-25012024,default,complete,21.1052,21.1142,1704476.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/92-hard.p,Larus-25012024,smtbv,complete,5.53939,5.54206,766412.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/92-hard.p,Larus-25012024,smtbv_old,complete,8.6417,8.64812,1562312.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/92-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.044,668340.0,--,,UNK-Non,Non,UNK
+crafted-hard/92-hard.p,Larus-25012024,stl,timeout (cpu),300.054,300.029,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/93-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.538562,1.47948,722928.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/93-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.47043,3.58046,539496.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/93-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.861,300.061,218336.0,--,,UNK-Non,Non,UNK
+crafted-hard/93-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,119.822,970792.0,--,,UNK-Non,Non,UNK
+crafted-hard/93-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.431673,1.40188,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/93-hard.p,Vampire---4.8,Vampire---4.8,complete,0.333277,0.459901,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/93-hard.p,Larus-25012024,default,complete,23.7048,23.7101,1717036.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/93-hard.p,Larus-25012024,smtbv,complete,5.45641,5.45704,773212.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/93-hard.p,Larus-25012024,smtbv_old,complete,3.24713,3.2476,1046052.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/93-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.096,666052.0,--,,UNK-Non,Non,UNK
+crafted-hard/93-hard.p,Larus-25012024,stl,complete,300.039,300.045,122020.0,TimeOut,,UNK-Non,Non,UNK
+crafted-hard/94-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.494835,1.46676,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/94-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.58672,3.69866,535396.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/94-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.927,300.081,219436.0,--,,UNK-Non,Non,UNK
+crafted-hard/94-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,117.4,970536.0,--,,UNK-Non,Non,UNK
+crafted-hard/94-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.421881,1.39532,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/94-hard.p,Vampire---4.8,Vampire---4.8,complete,0.330968,0.458553,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/94-hard.p,Larus-25012024,default,complete,18.4133,18.412,1757376.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/94-hard.p,Larus-25012024,smtbv,complete,5.78226,5.78263,773440.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/94-hard.p,Larus-25012024,smtbv_old,complete,3.43314,3.4333,1047012.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/94-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.108,675176.0,--,,UNK-Non,Non,UNK
+crafted-hard/94-hard.p,Larus-25012024,stl,timeout (cpu),300.044,300.036,122024.0,--,,UNK-Non,Non,UNK
+crafted-hard/95-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.45596,1.41664,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/95-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.53351,3.64626,543220.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/95-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),300.0,300.109,220428.0,--,,UNK-Non,Non,UNK
+crafted-hard/95-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,118.271,971112.0,--,,UNK-Non,Non,UNK
+crafted-hard/95-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.320125,1.33495,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/95-hard.p,Vampire---4.8,Vampire---4.8,complete,0.353714,0.483506,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/95-hard.p,Larus-25012024,default,complete,20.4734,20.4775,1765048.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/95-hard.p,Larus-25012024,smtbv,complete,6.14251,6.14255,777036.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/95-hard.p,Larus-25012024,smtbv_old,complete,3.44463,3.44516,1049820.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/95-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.0,300.084,675172.0,--,,UNK-Non,Non,UNK
+crafted-hard/95-hard.p,Larus-25012024,stl,timeout (cpu),300.05,300.028,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/96-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.493392,1.44116,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/96-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.83837,3.94825,543220.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/96-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.866,300.027,221536.0,--,,UNK-Non,Non,UNK
+crafted-hard/96-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,121.609,970792.0,--,,UNK-Non,Non,UNK
+crafted-hard/96-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.388685,1.37493,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/96-hard.p,Vampire---4.8,Vampire---4.8,complete,0.295738,0.42342,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/96-hard.p,Larus-25012024,default,complete,20.1057,20.1053,1773036.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/96-hard.p,Larus-25012024,smtbv,complete,6.1798,6.17994,780316.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/96-hard.p,Larus-25012024,smtbv_old,complete,4.12263,4.12343,1052148.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/96-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.9,300.035,678568.0,--,,UNK-Non,Non,UNK
+crafted-hard/96-hard.p,Larus-25012024,stl,timeout (cpu),300.053,300.026,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/97-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.478076,1.44652,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/97-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,3.94482,4.05543,551044.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/97-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.901,300.066,223016.0,--,,UNK-Non,Non,UNK
+crafted-hard/97-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,120.939,971496.0,--,,UNK-Non,Non,UNK
+crafted-hard/97-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.44939,1.40844,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/97-hard.p,Vampire---4.8,Vampire---4.8,complete,0.24252,0.377923,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/97-hard.p,Larus-25012024,default,complete,27.7679,27.7692,1784960.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/97-hard.p,Larus-25012024,smtbv,complete,6.36465,6.36475,784236.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/97-hard.p,Larus-25012024,smtbv_old,complete,3.40572,3.40615,1055732.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/97-hard.p,Larus-25012024,smtufbv,complete,24.6405,24.6399,678428.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/97-hard.p,Larus-25012024,stl,timeout (cpu),300.024,300.015,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/98-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.510282,1.4533,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/98-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,4.54125,4.65648,558868.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/98-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.846,300.017,224164.0,--,,UNK-Non,Non,UNK
+crafted-hard/98-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.09,114.004,971432.0,--,,UNK-Non,Non,UNK
+crafted-hard/98-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.417177,1.38612,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/98-hard.p,Vampire---4.8,Vampire---4.8,complete,0.319756,0.449656,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/98-hard.p,Larus-25012024,default,complete,20.7359,20.7351,1792948.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/98-hard.p,Larus-25012024,smtbv,complete,6.40499,6.40699,790904.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/98-hard.p,Larus-25012024,smtbv_old,complete,3.61561,3.61602,1069476.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/98-hard.p,Larus-25012024,smtufbv,timeout (wallclock),300.01,300.047,691192.0,--,,UNK-Non,Non,UNK
+crafted-hard/98-hard.p,Larus-25012024,stl,timeout (cpu),300.022,300.039,122020.0,--,,UNK-Non,Non,UNK
+crafted-hard/99-hard.p,leanCoP---2.2,leanCoP---2.2,complete,0.483798,1.44162,453588.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/99-hard.p,Zenon---1.7.1,Zenon---0.7.1,complete,4.19882,4.31359,558868.0,Unsatisfiable,,UNS-Prf,Prf,UNS
+crafted-hard/99-hard.p,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.834,300.023,225764.0,--,,UNK-Non,Non,UNK
+crafted-hard/99-hard.p,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,116.191,970920.0,--,,UNK-Non,Non,UNK
+crafted-hard/99-hard.p,nanoCoP---2.0,nanoCoP---2.0,complete,0.428206,1.39305,340412.0,--,,UNK-Non,Non,UNK
+crafted-hard/99-hard.p,Vampire---4.8,Vampire---4.8,complete,0.318009,0.445865,119284.0,Theorem,,THM-Prf,Prf,THM
+crafted-hard/99-hard.p,Larus-25012024,default,complete,21.5709,21.5715,1802220.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/99-hard.p,Larus-25012024,smtbv,complete,6.4415,6.4418,800736.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/99-hard.p,Larus-25012024,smtbv_old,complete,3.52763,3.52799,1076364.0,Theorem,,THM-Ass,Ass,THM
+crafted-hard/99-hard.p,Larus-25012024,smtufbv,timeout (wallclock),299.92,300.054,701832.0,--,,UNK-Non,Non,UNK
+crafted-hard/99-hard.p,Larus-25012024,stl,timeout (cpu),300.05,300.051,122024.0,TimeOut,,UNK-Non,Non,UNK
