@@ -1,0 +1,134 @@
+%------------------------------------------------------------------------------
+% File     : GEO209+1 : TPTP v8.2.0. Released v3.3.0.
+% Domain   : Geometry (Constructive)
+% Problem  : Pont and three parallel lines
+% Version  : [vPl95] axioms : Especial.
+% English  : If the point A is apart from the line L, but incident with the
+%            lines M and N, and L is parallel to M and N, then M and N are
+%            equal.
+
+% Refs     : [vPl95] von Plato (1995), The Axioms of Constructive Geometry
+%          : [ROK06] Raths et al. (2006), The ILTP Problem Library for Intu
+% Source   : [ILTP]
+% Names    : Theorem 7.4 [vPl95]
+
+% Status   : Theorem
+% Rating   : 0.00 v6.1.0, 0.04 v6.0.0, 0.25 v5.5.0, 0.08 v5.4.0, 0.09 v5.3.0, 0.17 v5.2.0, 0.14 v5.0.0, 0.05 v4.1.0, 0.06 v4.0.1, 0.05 v3.7.0, 0.00 v3.3.0
+% Syntax   : Number of formulae    :   18 (   5 unt;   0 def)
+%            Number of atoms       :   47 (   0 equ)
+%            Maximal formula atoms :    6 (   2 avg)
+%            Number of connectives :   43 (  14   ~;  11   |;   5   &)
+%                                         (   0 <=>;  13  =>;   0  <=;   0 <~>)
+%            Maximal formula depth :   11 (   6 avg)
+%            Maximal term depth    :    2 (   1 avg)
+%            Number of predicates  :    4 (   4 usr;   0 prp; 2-2 aty)
+%            Number of functors    :    3 (   3 usr;   0 con; 2-2 aty)
+%            Number of variables   :   44 (  44   !;   0   ?)
+% SPC      : FOF_THM_RFO_NEQ
+
+% Comments : Definitions unfolded, hence Especial.
+%          : tptp2X 
+%------------------------------------------------------------------------------
+fof(apart1,axiom,(
+    ! [X] : 
+      ~ distinct_points(X,X) )).
+
+fof(apart2,axiom,(
+    ! [X] : 
+      ~ distinct_lines(X,X) )).
+
+fof(apart3,axiom,(
+    ! [X] : 
+      ~ convergent_lines(X,X) )).
+
+fof(apart4,axiom,(
+    ! [X,Y,Z] : 
+      ( distinct_points(X,Y)
+     => ( distinct_points(X,Z)
+        | distinct_points(Y,Z) ) ) )).
+
+fof(apart5,axiom,(
+    ! [X,Y,Z] : 
+      ( distinct_lines(X,Y)
+     => ( distinct_lines(X,Z)
+        | distinct_lines(Y,Z) ) ) )).
+
+fof(ax6,axiom,(
+    ! [X,Y,Z] : 
+      ( convergent_lines(X,Y)
+     => ( convergent_lines(X,Z)
+        | convergent_lines(Y,Z) ) ) )).
+
+fof(ci1,axiom,(
+    ! [X,Y] : 
+      ( distinct_points(X,Y)
+     => ~ apart_point_and_line(X,line_connecting(X,Y)) ) )).
+
+fof(ci2,axiom,(
+    ! [X,Y] : 
+      ( distinct_points(X,Y)
+     => ~ apart_point_and_line(Y,line_connecting(X,Y)) ) )).
+
+fof(ci3,axiom,(
+    ! [X,Y] : 
+      ( convergent_lines(X,Y)
+     => ~ apart_point_and_line(intersection_point(X,Y),X) ) )).
+
+fof(ci4,axiom,(
+    ! [X,Y] : 
+      ( convergent_lines(X,Y)
+     => ~ apart_point_and_line(intersection_point(X,Y),Y) ) )).
+
+fof(cu1,axiom,
+    ! [X,Y,U,V] :
+      ( ( distinct_points(X,Y)
+        & distinct_lines(U,V)
+& ~apart_point_and_line(X,U)
+& ~apart_point_and_line(X,V)
+& ~apart_point_and_line(Y,U)
+& ~apart_point_and_line(Y,V)
+        )
+     => $false ) ).
+
+fof(ceq1,axiom,(
+    ! [X,Y,Z] : 
+      ( apart_point_and_line(X,Y)
+     => ( distinct_points(X,Z)
+        | apart_point_and_line(Z,Y) ) ) )).
+
+fof(ceq2,axiom,(
+    ! [X,Y,Z] : 
+      ( apart_point_and_line(X,Y)
+     => ( distinct_lines(Y,Z)
+        | apart_point_and_line(X,Z) ) ) )).
+
+fof(ceq3,axiom,(
+    ! [X,Y,Z] : 
+      ( convergent_lines(X,Y)
+     => ( distinct_lines(Y,Z)
+        | convergent_lines(X,Z) ) ) )).
+
+fof(cp1,axiom,(
+    ! [X,Y] : 
+      ~ convergent_lines(parallel_through_point(Y,X),Y) )).
+
+fof(cp2,axiom,(
+    ! [X,Y] : 
+      ~ apart_point_and_line(X,parallel_through_point(Y,X)) )).
+
+fof(cup1,axiom,(
+    ! [X,Y,Z] : 
+      ( distinct_lines(Y,Z)
+     => ( apart_point_and_line(X,Y)
+        | apart_point_and_line(X,Z)
+        | convergent_lines(Y,Z) ) ) )).
+
+fof(con,conjecture,(
+    ! [A,L,M,N] : 
+      ( ( apart_point_and_line(A,L)
+        & ~ apart_point_and_line(A,M)
+        & ~ apart_point_and_line(A,N)
+        & ~ convergent_lines(M,L)
+        & ~ convergent_lines(N,L) )
+     => ~ distinct_lines(M,N) ) )).
+%------------------------------------------------------------------------------

@@ -1,0 +1,135 @@
+%------------------------------------------------------------------------------
+% File     : GEO075-2 : TPTP v8.2.0. Released v1.0.0.
+% Domain   : Geometry
+% Problem  : Show reflexivity for equidistance is dependent
+% Version  : [Qua89] axioms.
+% English  : All of the axioms in GEO003.ax are known to be independent
+%            except A1 and A7. Tarski and his students have been unable
+%            to establish their status.
+
+% Refs     : [SST83] Schwabbauser et al. (1983), Metamathematische Methoden
+%          : [Qua89] Quaife (1989), Automated Development of Tarski's Geome
+% Source   : [Qua89]
+% Names    : Q3.1 [Qua89]
+
+% Status   : Open
+% Rating   : 1.00 v2.0.0
+% Syntax   : Number of formulae    :   18 (   6 unit)
+%            Number of atoms       :   56 (   7 equality)
+%            Maximal formula depth :   15 (   6 average)
+%            Number of connectives :   41 (   3   ~;   7   |;  19   &)
+%                                         (   0 <=>;  12  =>;   0  <=;   0 <~>)
+%                                         (   0  ~|;   0  ~&)
+%            Number of predicates  :    3 (   0 propositional; 2-4 arity)
+%            Number of functors    :   10 (   5 constant; 0-6 arity)
+%            Number of variables   :   69 (   0 sgn;  69   !;   0   ?)
+%            Maximal term depth    :    2 (   1 average)
+% SPC      : CNF_OPN_RFO_SEQ_NHN
+
+% Comments : Infinox says this has no finite (counter-) models.
+%          : tptp2X 
+%------------------------------------------------------------------------------
+fof(transitivity_for_equidistance,axiom,(
+    ! [W,V2,V,Z,Y,X] : 
+      ( ( equidistant(X,Y,Z,V)
+        & equidistant(X,Y,V2,W) )
+     => equidistant(Z,V,V2,W) ) )).
+
+fof(identity_for_equidistance,axiom,(
+    ! [Z,Y,X] : 
+      ( equidistant(X,Y,Z,Z)
+     => X = Y ) )).
+
+fof(segment_construction1,axiom,(
+    ! [V,W,Y,X] : between(X,Y,extension(X,Y,W,V)) )).
+
+fof(segment_construction2,axiom,(
+    ! [V,W,X,Y] : equidistant(Y,extension(X,Y,W,V),W,V) )).
+
+fof(outer_five_segment,axiom,(
+    ! [V1,V,Z1,Z,Y1,X1,Y,X] : 
+      ( ( equidistant(X,Y,X1,Y1)
+        & equidistant(Y,Z,Y1,Z1)
+        & equidistant(X,V,X1,V1)
+        & equidistant(Y,V,Y1,V1)
+        & between(X,Y,Z)
+        & between(X1,Y1,Z1) )
+     => ( X = Y
+        | equidistant(Z,V,Z1,V1) ) ) )).
+
+fof(identity_for_betweeness,axiom,(
+    ! [Y,X] : 
+      ( between(X,Y,X)
+     => X = Y ) )).
+
+fof(inner_pasch1,axiom,(
+    ! [X,Y,W,V,U] : 
+      ( ( between(U,V,W)
+        & between(Y,X,W) )
+     => between(V,inner_pasch(U,V,W,X,Y),Y) ) )).
+
+fof(inner_pasch2,axiom,(
+    ! [X,Y,W,V,U] : 
+      ( ( between(U,V,W)
+        & between(Y,X,W) )
+     => between(X,inner_pasch(U,V,W,X,Y),U) ) )).
+
+fof(lower_dimension1,axiom,(
+    ~ between(lower_dimension_point_1,lower_dimension_point_2,lower_dimension_point_3) )).
+
+fof(lower_dimension2,axiom,(
+    ~ between(lower_dimension_point_2,lower_dimension_point_3,lower_dimension_point_1) )).
+
+fof(lower_dimension3,axiom,(
+    ~ between(lower_dimension_point_3,lower_dimension_point_1,lower_dimension_point_2) )).
+
+fof(upper_dimension,axiom,(
+    ! [Z,Y,V,W,X] : 
+      ( ( equidistant(X,W,X,V)
+        & equidistant(Y,W,Y,V)
+        & equidistant(Z,W,Z,V) )
+     => ( between(X,Y,Z)
+        | between(Y,Z,X)
+        | between(Z,X,Y)
+        | W = V ) ) )).
+
+fof(euclid1,axiom,(
+    ! [X,V,Y,W,U] : 
+      ( ( between(U,W,Y)
+        & between(V,W,X) )
+     => ( U = W
+        | between(U,V,euclid1(U,V,W,X,Y)) ) ) )).
+
+fof(euclid2,axiom,(
+    ! [X,V,Y,W,U] : 
+      ( ( between(U,W,Y)
+        & between(V,W,X) )
+     => ( U = W
+        | between(U,X,euclid2(U,V,W,X,Y)) ) ) )).
+
+fof(euclid3,axiom,(
+    ! [X,V,Y,W,U] : 
+      ( ( between(U,W,Y)
+        & between(V,W,X) )
+     => ( U = W
+        | between(euclid1(U,V,W,X,Y),Y,euclid2(U,V,W,X,Y)) ) ) )).
+
+fof(continuity1,axiom,(
+    ! [W,X1,X,V1,V,U] : 
+      ( ( equidistant(U,V,U,V1)
+        & equidistant(U,X,U,X1)
+        & between(U,V,X)
+        & between(V,W,X) )
+     => between(V1,continuous(U,V,V1,W,X,X1),X1) ) )).
+
+fof(continuity2,axiom,(
+    ! [W,X1,X,V1,V,U] : 
+      ( ( equidistant(U,V,U,V1)
+        & equidistant(U,X,U,X1)
+        & between(U,V,X)
+        & between(V,W,X) )
+     => equidistant(U,W,U,continuous(U,V,V1,W,X,X1)) ) )).
+
+fof(prove_reflexivity,conjecture,(
+    equidistant(u,v,v,u) )).
+%------------------------------------------------------------------------------
