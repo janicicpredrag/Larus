@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./larus -l$STAREXEC_WALLCLOCK_LIMIT -esmtbv -m24 -n3 -h -r'./vampire --mode casc --proof tptp --output_axiom_names on #' -t $1
