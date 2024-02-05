@@ -1,260 +1,223 @@
 benchmark,solver,configuration,status,cpu time,wallclock time,memory usage,result,expected,SZSResult,SZSOutput,SZSStatus
-GEOfofsel/GEO075-2+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.93,300.034,508336.0,--,Open,UNK-Non,Non,UNK
-GEOfofsel/GEO075-2+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.866,300.027,130648.0,--,Open,UNK-Non,Non,UNK
-GEOfofsel/GEO075-2+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,0.150651,0.133992,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
-GEOfofsel/GEO075-2+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.116719,0.104939,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
-GEOfofsel/GEO075-2+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.153136,0.136448,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
-GEOfofsel/GEO075-2+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,timeout (cpu),300.56,43.1733,1409240.0,--,Open,UNK-Non,Non,UNK
-GEOfofsel/GEO075-2+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.147881,0.131658,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
-GEOfofsel/GEO167+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,3.50503,3.50512,438136.0,Theorem,Theorem,THM-Ass,Ass,THM
-GEOfofsel/GEO167+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.913,300.028,140020.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO167+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,40.6202,971368.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO167+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,timeout (cpu),300.09,281.136,988404.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO167+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,timeout (cpu),300.07,279.647,875356.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO167+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,timeout (cpu),300.27,43.1966,2151820.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO167+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),299.997,300.149,3850228.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO168+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,2.80223,2.80271,437448.0,Theorem,Theorem,THM-Ass,Ass,THM
-GEOfofsel/GEO168+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.903,300.028,134488.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO168+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.23,40.4546,971560.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO168+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,timeout (cpu),300.06,288.362,988404.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO168+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,timeout (cpu),300.04,287.898,875320.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO168+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,59.05,8.79398,729732.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO168+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),299.931,300.086,1184716.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO170+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.98,300.075,492144.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO170+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.245605,0.37402,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO170+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,3.59916,1.48463,829584.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO170+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.354882,1.38535,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO170+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.401156,1.40048,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO170+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.309268,0.437222,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO170+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.405237,0.517038,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO171+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.928,300.04,488240.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO171+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.225643,0.354729,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO171+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.69,45.9256,910772.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO171+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.464786,1.44239,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO171+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.389263,1.38737,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO171+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.316717,0.44319,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO171+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.390708,0.501754,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO172+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.99,300.062,494116.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO172+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.278143,0.406711,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO172+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,53.458,21.4401,831440.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO172+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.462108,1.43053,720468.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO172+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.399633,1.38187,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO172+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.315245,0.44183,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO172+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.417079,0.527747,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO173+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.94,300.055,495624.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO173+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.352086,0.48223,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO173+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,3.81379,1.98074,829584.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO173+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.457529,1.44344,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO173+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.417273,1.40618,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO173+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.3139,0.440287,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO173+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.432624,0.543847,406376.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO175+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.976,300.049,493768.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO175+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.252581,0.380835,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO175+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,77.1232,29.9009,832336.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO175+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.486798,1.44475,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO175+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.392443,1.38132,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO175+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.303111,0.430649,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO175+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.335369,0.461437,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,10.0811,10.0817,443740.0,Theorem,Theorem,THM-Ass,Ass,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.260104,0.387272,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,38.2433,7.10526,832144.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.461133,1.43772,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.322598,1.36444,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO178+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.310156,0.439646,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO178+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.412636,0.52166,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO179+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.042,490668.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO179+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.322101,0.450696,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO179+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,47.8992,906548.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO179+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.55847,1.44642,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO179+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.520018,1.40012,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO179+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.332699,0.457994,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO179+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.418836,0.545235,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO184+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.99,300.07,495472.0,TimeOut,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO184+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.297417,0.43434,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO184+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,3.71371,1.89672,829584.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO184+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.472778,1.44323,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO184+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.392825,1.38714,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO184+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.310599,0.436814,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO184+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.401116,0.511349,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO186+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.06,300.074,494664.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO186+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.295327,0.424173,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO186+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,86.5089,32.0141,832528.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO186+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.465361,1.43726,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO186+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.289644,1.32822,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO186+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.309637,0.439587,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO186+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.422069,0.532729,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO187+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.02,300.072,497600.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO187+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.447485,0.583598,122696.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO187+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.08,41.1667,905908.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO187+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.495201,1.45165,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO187+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.45765,1.38593,608312.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO187+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.314036,0.441532,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO187+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.531714,0.640909,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO188+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.062,496432.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO188+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.653155,0.786386,122572.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO188+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.37,62.7677,837328.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO188+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.65572,1.44871,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO188+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.864576,1.34217,608312.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO188+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.314085,0.443919,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO188+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.462092,0.575743,406376.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO189+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.91,300.036,497688.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO189+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.281097,0.412549,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO189+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,60.6272,905428.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO189+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.438312,1.41236,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO189+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.392734,1.39014,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO189+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.340938,0.466569,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO189+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.406945,0.519179,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO190+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.97,300.051,497552.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO190+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.319499,0.448695,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO190+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,55.2268,905428.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO190+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.308561,1.35216,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO190+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.419729,1.4034,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO190+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.327692,0.453355,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO190+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.42016,0.529959,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO196+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.99,300.053,497216.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO196+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.66719,1.79476,122916.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO196+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.24,44.926,905396.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO196+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.528481,1.43314,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO196+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.48803,1.38139,608312.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO196+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.286938,0.413809,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO196+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.732213,0.862717,414584.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO197+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.91,300.034,494520.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO197+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.45122,1.57904,122796.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO197+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,70.1822,836304.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO197+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.612373,1.42658,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO197+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,1.18287,1.36685,608312.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO197+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.195316,0.332576,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO197+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.357051,0.483926,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO198+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.02,300.073,497176.0,TimeOut,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO198+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.81696,0.944743,122684.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO198+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.57,75.5086,905172.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO198+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.41847,1.4226,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO198+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.39787,1.38814,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO198+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.309485,0.435408,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO198+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.487094,0.596723,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO199+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.97,300.052,495112.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO199+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.319194,0.446661,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO199+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,90.7431,837968.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO199+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.479616,1.44556,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO199+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.426619,1.39518,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO199+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.311836,0.437089,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO199+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.466348,0.576196,355508.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO201+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.04,300.081,487852.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO201+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.402996,0.541416,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO201+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,133.518,837200.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO201+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.459751,1.44153,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO201+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.415121,1.39128,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO201+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.315221,0.44138,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO201+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.406917,0.515894,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO202+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,299.947,300.058,494764.0,TimeOut,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO202+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,264.335,264.449,127768.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO202+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.23,106.736,838416.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO202+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.443112,1.41558,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO202+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.404625,1.38965,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO202+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.301159,0.429165,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO202+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.288241,0.413331,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO203+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.034,491508.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO203+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.86332,1.99117,123104.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO203+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,175.182,836944.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO203+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.379415,1.40443,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO203+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.407063,1.39661,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO203+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.311827,0.438854,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO203+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.627365,0.737388,406756.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO204+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.048,491404.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO204+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.297071,0.425048,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO204+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.61,42.6209,973544.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO204+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.362984,1.38027,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO204+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.407351,1.38881,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO204+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.313096,0.4402,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO204+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.38845,0.499288,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO205+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.985,300.035,491256.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO205+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.377733,0.506157,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO205+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,81.443,907732.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO205+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.480703,1.44831,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO205+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.409769,1.39942,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO205+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.31376,0.4408,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO205+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.433449,0.544071,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO206+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,246.369,246.407,506668.0,Unknown,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO206+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.423458,0.552476,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO206+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,39.9632,978216.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO206+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.460552,1.43567,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO206+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.356735,1.35423,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO206+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.314941,0.440889,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO206+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.404051,0.51613,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,0.242172,0.24245,113176.0,Theorem,Theorem,THM-Ass,Ass,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.23555,0.363977,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,0.274847,0.40071,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.43545,1.4165,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.398481,1.39883,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO207+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.318707,0.444894,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO207+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.400014,0.510978,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO208+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,211.739,212.354,508104.0,Unknown,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO208+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.265102,0.394149,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO208+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.25,44.6649,978216.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO208+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.450477,1.42676,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO208+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.410195,1.40645,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO208+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.298875,0.426859,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO208+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.394419,0.507656,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO209+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.92,300.051,512704.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO209+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,5.09289,5.2241,123188.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO209+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,45.1233,974568.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO209+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.460818,1.43165,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO209+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.337266,1.3599,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO209+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.315444,0.441997,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO209+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.403483,0.514117,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO210+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.01,300.092,547520.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO210+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,11.1533,11.2821,123216.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO210+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.19,39.0383,1047924.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO210+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.436299,1.40471,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO210+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.402833,1.39461,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO210+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.246507,0.383827,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO210+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.402086,0.512699,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO211+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,3.62354,3.62386,454108.0,Theorem,Theorem,THM-Ass,Ass,THM
-GEOfofsel/GEO211+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.238617,0.366113,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO211+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,41.6845,1049780.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO211+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.457246,1.4382,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO211+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.394634,1.38458,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO211+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.311008,0.436541,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO211+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.388268,0.497902,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO212+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.02,300.093,537136.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO212+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.716121,0.843925,122588.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO212+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.34,42.3069,1051572.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO212+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.747331,1.43509,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO212+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.459834,1.39312,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO212+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.320417,0.447327,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO212+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.468277,0.580941,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO213+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.04,300.113,541744.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO213+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.3453,1.48064,122584.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO213+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.14,40.9231,1051124.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO213+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.756976,1.44257,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO213+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,1.41292,2.42755,608344.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO213+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.322331,0.447054,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO213+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.450203,0.560747,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO214+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.02,300.104,535780.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO214+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.386931,0.516876,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO214+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,44.4542,1052212.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO214+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.470474,1.43604,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO214+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.400722,1.39854,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO214+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.322088,0.448868,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO214+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.62403,0.523834,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO215+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.112,535904.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO215+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.596976,0.727362,122464.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO215+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.17,43.6987,909492.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO215+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.479437,1.44462,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO215+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.401218,1.38867,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO215+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.325897,0.454608,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO215+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,1.00059,1.11307,423556.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO221+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.96,300.065,535884.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO221+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.932,300.047,126128.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO221+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.3,38.984,1119076.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO221+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.432113,1.41296,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO221+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,0.409624,1.39706,340412.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO221+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.313781,0.439483,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO221+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),299.937,300.092,1424956.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO222+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.97,300.068,539652.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO222+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,7.59282,7.72133,123104.0,Theorem,Theorem,THM-Ref,Ref,THM
-GEOfofsel/GEO222+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.24,42.5556,910580.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO222+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,4.20461,4.55549,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO222+1+fof_obvious.tptp,nanoCoP---2.0,nanoCoP---2.0,complete,4.47641,5.46906,608344.0,--,Theorem,UNK-Non,Non,UNK
-GEOfofsel/GEO222+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.324547,0.451161,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
-GEOfofsel/GEO222+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,103.627,103.749,992368.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO075-2+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.01,300.045,506440.0,--,Open,UNK-Non,Non,UNK
+GEOfofsel/GEO075-2+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.908,300.046,130648.0,--,Open,UNK-Non,Non,UNK
+GEOfofsel/GEO075-2+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,0.106481,0.0968889,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
+GEOfofsel/GEO075-2+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.108172,0.0969739,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
+GEOfofsel/GEO075-2+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,timeout (cpu),300.4,43.3862,1442524.0,--,Open,UNK-Non,Non,UNK
+GEOfofsel/GEO075-2+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.155416,0.139144,119284.0,Inappropriate,Open,IAP-Non,Non,IAP
+GEOfofsel/GEO167+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,2.69353,2.69377,438136.0,Theorem,Theorem,THM-Ass,Ass,THM
+GEOfofsel/GEO167+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.948,300.079,140168.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO167+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,39.5407,972520.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO167+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,timeout (cpu),300.06,287.902,988404.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO167+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,timeout (cpu),300.18,43.1593,2012752.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO167+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),300.032,300.18,3811124.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO168+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,2.73138,2.73202,437456.0,Theorem,Theorem,THM-Ass,Ass,THM
+GEOfofsel/GEO168+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.881,300.02,134488.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO168+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.47,43.4711,972336.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO168+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,timeout (cpu),300.07,288.303,988400.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO168+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,39.17,5.95767,737692.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO168+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),299.878,300.019,1161256.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO170+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.007,300.034,483948.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO170+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.213752,0.344614,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO170+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,17.0419,3.21495,830608.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO170+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.439942,1.46571,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO170+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.335538,0.46163,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO170+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.426426,0.535014,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO171+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.9,300.035,521480.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO171+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.235051,0.363539,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO171+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,61.5594,841040.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO171+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.477932,1.45549,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO171+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.217119,0.353561,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO171+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.450365,0.560537,238568.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO172+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.09,532356.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO172+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.291868,0.41928,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO172+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,238.012,89.2019,835856.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO172+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.478764,1.44979,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO172+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.322565,0.449448,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO172+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.407822,0.517453,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO173+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.087,534680.0,TimeOut,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO173+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.369481,0.497392,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO173+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,85.807,15.1589,831248.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO173+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.48058,1.44388,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO173+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.30883,0.436909,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO173+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.413912,0.525682,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO175+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.88,300.041,536976.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO175+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.299674,0.426942,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO175+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,106.3,836688.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO175+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,1.02427,1.42465,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO175+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.315755,0.442237,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO175+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.397581,0.508594,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO178+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,300.012,300.048,477556.0,TimeOut,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO178+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.245862,0.373626,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO178+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,69.0257,11.8948,833552.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO178+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.458058,1.43916,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO178+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.320846,0.446941,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO178+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.411547,0.523061,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO179+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.92,300.036,528316.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO179+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.363641,0.494345,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO179+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.6,43.6993,906932.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO179+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.504916,1.42946,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO179+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.305186,0.432426,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO179+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,2.28494,2.39229,456640.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO184+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.045,486004.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO184+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.366236,0.494559,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO184+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,40.3435,13.3034,831120.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO184+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.434546,1.41649,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO184+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.244208,0.380323,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO184+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.436746,0.544943,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO186+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.054,300.084,537388.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO186+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.265081,0.393413,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO186+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,272.386,97.1898,836432.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO186+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,1.03721,1.43911,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO186+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.321138,0.449382,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO186+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.443102,0.553053,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO187+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.91,300.05,537972.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO187+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.640069,0.779158,122696.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO187+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.07,41.6499,906036.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO187+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.548429,1.45566,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO187+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.311663,0.440029,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO187+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.470781,0.580768,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO188+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.067,537748.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO188+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.647864,0.777446,122572.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO188+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,62.1036,837648.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO188+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,1.06786,1.41251,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO188+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.322263,0.448024,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO188+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.627785,0.547586,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO189+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.88,300.048,538804.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO189+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.327144,0.455162,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO189+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,67.0482,838992.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO189+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,12.6052,12.8922,875628.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO189+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.325797,0.451994,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO189+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.421837,0.532808,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO190+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.93,300.049,539268.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO190+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.320754,0.448046,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO190+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,65.9485,838416.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO190+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.479397,1.44278,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO190+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.332489,0.461403,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO190+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.620229,0.530537,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO196+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (cpu),300.04,300.108,538236.0,TimeOut,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO196+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.67435,1.81104,122916.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO196+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,47.4126,907508.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO196+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,28.8395,28.5265,988336.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO196+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.307337,0.433202,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO196+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,1.47266,1.583,431380.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO197+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.055,538124.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO197+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.45718,1.58612,122800.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO197+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.05,75.5156,837904.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO197+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,1.03352,1.45228,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO197+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.319334,0.446274,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO197+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.456866,0.565595,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO198+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.014,300.047,537556.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO198+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.821505,0.94893,122684.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO198+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.38,61.5443,904852.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO198+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.964787,1.44903,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO198+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.312317,0.439471,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO198+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.522897,0.634047,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO199+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.93,300.037,537792.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO199+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.320583,0.448317,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO199+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.13,95.7321,839056.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO199+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.55934,1.42334,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO199+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.324486,0.449514,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO199+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.449776,0.559029,406372.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO201+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.8,300.051,524860.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO201+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.522597,0.651255,122428.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO201+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.06,127.468,837456.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO201+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.517043,1.44715,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO201+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.318072,0.443863,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO201+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.414142,0.524379,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO202+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.96,300.069,535388.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO202+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,283.662,283.897,127776.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO202+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.04,122.52,838224.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO202+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,2.76425,3.52752,721456.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO202+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.32075,0.445853,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO202+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.613131,0.535324,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO203+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.96,300.035,485712.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO203+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.82585,1.95609,123100.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO203+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,150.426,835856.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO203+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.446493,1.42627,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO203+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.310567,0.438664,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO203+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.395305,0.52365,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO204+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.014,300.041,480688.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO204+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.338032,0.465039,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO204+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.11,43.4799,974440.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO204+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.52144,1.4544,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO204+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.317822,0.444124,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO204+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.417129,0.52716,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO205+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.005,300.034,481856.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO205+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.366287,0.495504,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO205+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.47,47.0417,909076.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO205+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.555301,1.44721,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO205+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.321995,0.447273,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO205+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.444067,0.55272,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO206+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,253.909,253.966,538560.0,Unknown,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO206+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.427174,0.555543,122444.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO206+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.73,39.2295,981424.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO206+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.471622,1.44538,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO206+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.248498,0.384142,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO206+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.403757,0.515367,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,0.299782,0.300214,113176.0,Theorem,Theorem,THM-Ass,Ass,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.23128,0.360237,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,complete,0.242626,0.366706,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.469249,1.44867,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.310736,0.436382,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO207+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.619374,0.529343,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO208+1+fof_obvious.tptp,Larus-31012024,smtufbv,complete,240.6,240.659,541392.0,Unknown,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO208+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.274959,0.402821,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO208+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.12,38.8773,1047476.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO208+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.485549,1.43737,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO208+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.485706,0.593801,375912.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO208+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.420049,0.53031,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO209+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),300.0,300.082,549364.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO209+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,5.95881,6.08608,123188.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO209+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.22,39.1096,1044212.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO209+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.450903,1.43678,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO209+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.32123,0.447595,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO209+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.413668,0.524382,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO210+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.86,300.053,579240.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO210+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,11.1739,11.3017,123212.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO210+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.28,38.6948,1118244.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO210+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.457796,1.44955,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO210+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.313114,0.440211,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO210+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.420425,0.530291,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO211+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.924,300.034,563984.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO211+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.233459,0.362962,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO211+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.37,39.5539,1050804.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO211+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.453727,1.42403,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO211+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.318335,0.444433,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO211+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.383512,0.494085,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO212+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.83,300.076,575836.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO212+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.707074,0.836842,122460.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO212+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.28,39.231,1051380.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO212+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.729574,1.43022,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO212+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.324637,0.450435,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO212+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.659734,0.581561,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO213+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.81,300.063,576116.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO213+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,1.41869,1.54848,122584.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO213+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.62,39.13,1050868.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO213+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.746969,1.45226,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO213+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.317722,0.445814,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO213+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.309295,0.477817,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO214+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.95,300.123,572164.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO214+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.343894,0.473898,119284.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO214+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.62,39.0515,1050548.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO214+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.451902,1.427,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO214+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.296879,0.423918,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO214+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,0.4221,0.531536,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO215+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.96,300.033,569604.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO215+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,0.570892,0.715153,122444.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO215+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.42,40.6323,907828.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO215+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.476691,1.44334,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO215+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.328432,0.453823,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO215+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,1.01192,1.1229,423556.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO221+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.91,300.075,575496.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO221+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,timeout (wallclock),299.972,300.102,125964.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO221+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.22,38.8579,1120100.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO221+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,0.475437,1.4452,453588.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO221+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.321842,0.44771,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO221+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,timeout (wallclock),299.889,300.066,1252908.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO222+1+fof_obvious.tptp,Larus-31012024,smtufbv,timeout (wallclock),299.8,300.065,566660.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO222+1+fof_obvious.tptp,Geo-III---2018C,Geo-III---2018C,complete,7.42469,7.55527,123112.0,Theorem,Theorem,THM-Ref,Ref,THM
+GEOfofsel/GEO222+1+fof_obvious.tptp,Goeland---1.0.0,Goeland---1.0.0,timeout (cpu),300.17,42.1818,910580.0,--,Theorem,UNK-Non,Non,UNK
+GEOfofsel/GEO222+1+fof_obvious.tptp,leanCoP---2.2,leanCoP---2.2,complete,3.4353,3.52368,721488.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO222+1+fof_obvious.tptp,Vampire---4.8,Vampire---4.8,complete,0.327249,0.453376,119284.0,Theorem,Theorem,THM-Prf,Prf,THM
+GEOfofsel/GEO222+1+fof_obvious.tptp,Zenon---1.7.1,Zenon---0.7.1,complete,269.845,269.997,1237268.0,Theorem,Theorem,THM-Prf,Prf,THM
