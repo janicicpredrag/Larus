@@ -6,6 +6,14 @@ encoding a proof of the theorem being proved to SAT or SMT. Encoding to SAT is p
 the tool URSA. SAT solving is done using the embedded solver clasp (https://potassco.org/clasp/). 
 Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 
+## Related publications
+
+
+- Predrag Janičić, Julien Narboux. Theorem Proving as Constraint Solving with Coherent Logic. Journal of Automated Reasoning, 2022, 66 (4), pp.689-746. [⟨10.1007/s10817-022-09629-z⟩](https://link.springer.com/article/10.1007/s10817-022-09629-z) ([bib](https://hal.science/hal-03632665/bibtex), [⟨hal-03632665⟩](https://hal.science/hal-03632665).
+- Salwa Tabet Gonzalez, Predrag Janičić, Julien Narboux. Automated Completion of Statements and Proofs in Synthetic Geometry: an Approach based on Constraint Solving. Automated Deduction in Geometry 2023, Vesna Marinkovic; Danijela Simić; Sana Stojanović Đurđević; Milan Banković, Sep 2023, Belgrade, Serbia ([bib](https://hal.science/hal-04226900/bibtex), [⟨hal-042226900⟩](https://hal.science/hal-04226900))
+- Predrag Janičić, Julien Narboux. Automated generation of illustrated proofs in geometry and beyond. Annals of Mathematics and Artificial Intelligence, 2023, . [⟨10.1007/s10472-023-09857-y⟩](https://link.springer.com/article/10.1007/s10472-023-09857-y). ([bib](https://hal.science/hal-04230795/bibtex),[⟨hal-04230795⟩](https://hal.science/hal-04230795))
+
+
 ### License
 
 This software is distributed under the licence GPLv3.
