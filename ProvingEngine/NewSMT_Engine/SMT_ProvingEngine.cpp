@@ -1316,7 +1316,7 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
     t.start();
     int rv = system(sCall.c_str());
     if (WEXITSTATUS(rv) == 127) { // Salwa Gonzalez added this check
-      cout << endl << "z3/CSP solver not found in the PATH!" << endl << flush;
+      cout << endl << "z3/CSP solver or the 'timeout' command not found in the PATH!" << endl << flush;
       return eConjectureNotProved;
     }
     cout << " reading model... " << flush;
