@@ -59,6 +59,8 @@ private:
   bool ReconstructProof(const DNFFormula &formula, CLProof& proof);
   bool ReconstructSubproof(const DNFFormula &formula, CLProof& proof,
                            unsigned& start_step, vector<Fact> &proofTrace);
+  bool ExportEncodedproof(const DNFFormula &formula, unsigned length, const string &sEncodedProofFile);
+  bool ReadProofFromEncodedProof(const string &sEncodedProofFile);
   void EliminateSpuriousConstants(Term& t);
 
   void DeclareVarBasicType(const Expression& Var, unsigned UpperLimit);

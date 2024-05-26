@@ -65,7 +65,7 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
     return;
   }
   else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-    outfile << f.GetArg(0).ToSMTString() << " <> " << f.GetArg(1).ToSMTString();
+    outfile << "\\<not>(" << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString() << ") ";
     return;
   }
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)

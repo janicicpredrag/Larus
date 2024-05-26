@@ -1331,6 +1331,11 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       return eConjectureNotProved;
     } else {
       cout << " proof FOUND! " << flush;
+      string sEncodedProofFile = "encoded_proof.txt";
+      ExportEncodedproof(formula, length, sEncodedProofFile);
+      meProof.clear();
+      meProof.resize(mnNumberOfAssumptions + length);
+      ReadProofFromEncodedProof(sEncodedProofFile);
       return eConjectureProved;
     }
 }
@@ -2432,6 +2437,98 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
 
   }
   return true;  
+}
+
+// ----------------------------------------------------------
+
+bool SMT_ProvingEngine::ExportEncodedproof(const DNFFormula &formula, unsigned length, const string &sEncodedProofFile)
+{
+    bool bComments = false;
+    ofstream encodedProof(sEncodedProofFile, ofstream::out);
+    if (bComments)
+      encodedProof << endl << endl << "/****************************** " << endl;
+
+    for (unsigned step = 0; step < mnNumberOfAssumptions + length; step++) { // ProofStep;
+        unsigned nNesting = meProof[step].Nesting;
+        unsigned nStepKind = meProof[step].StepKind;
+        unsigned nAxiom = meProof[step].AxiomApplied;
+        unsigned nBranching = meProof[step].Cases;
+
+        encodedProof << step << " " << nNesting << " " << nStepKind << " " << nAxiom << " " << nBranching << "  ";
+
+        for(unsigned j = 0; j < 2; j++) {
+            unsigned nPredicate = meProof[step].ContentsPredicate[j];
+            encodedProof << nPredicate << " ";
+            for (unsigned i = 0; i < mnMaxArity; i++) {
+                encodedProof << meProof[step].ContentsArgument[j][i] << " ";
+            }
+        }
+        if (bComments)
+          encodedProof << " /*** Nesting: " << nNesting << "; Step kind: " << nStepKind <<
+            (nStepKind == eMP ? " Axiom: " + to_string(nAxiom) : " ") <<
+            "; nBranching: " << (nBranching ? "yes" : "no");
+        encodedProof << endl;
+
+        encodedProof << "             ";
+        for (unsigned int i = 0; i < mnMaxNumberOfPremisesInAxioms; i++) {
+            encodedProof << meProof[step].From[i] << " ";
+        }
+        if (bComments)
+            encodedProof << " /*** From steps ";
+        encodedProof << endl;
+        encodedProof << "             ";
+        for (unsigned int i = 0; i < mnMaxNumberOfVarsInAxioms ; i++) {
+            encodedProof << meProof[step].Instantiation[i] << " ";
+        }
+        if (bComments)
+            encodedProof << " /*** Instantiation ";
+        encodedProof << endl;
+
+    }
+    if (bComments)
+      encodedProof << "/****************************** ";
+    encodedProof << endl << endl;
+    encodedProof.close();
+    return true;
+}
+
+// ----------------------------------------------------------
+
+bool SMT_ProvingEngine::ReadProofFromEncodedProof(const string &sEncodedProofFile)  {
+    ifstream encodedProof(sEncodedProofFile, ios::in);
+    if (!encodedProof.good())
+        return false;
+    if (encodedProof.peek() == std::ifstream::traits_type::eof()) // empty model
+        return false;
+    unsigned step = 0;
+    while (!encodedProof.eof()) {
+        encodedProof >> step;
+        encodedProof >> meProof[step].Nesting;
+        encodedProof >> meProof[step].StepKind;
+        encodedProof >> meProof[step].AxiomApplied;
+        encodedProof >> meProof[step].Cases;
+
+        if (meProof[step].ContentsArgument.size() < 2)
+            meProof[step].ContentsArgument.resize(2);
+        if (meProof[step].ContentsArgument[0].size() < mnMaxArity)
+            meProof[step].ContentsArgument[0].resize(mnMaxArity);
+        if (meProof[step].ContentsArgument[1].size() < mnMaxArity)
+            meProof[step].ContentsArgument[1].resize(mnMaxArity);
+        if (meProof[step].From.size() < mnMaxNumberOfPremisesInAxioms)
+          meProof[step].From.resize(mnMaxNumberOfPremisesInAxioms);
+        for(unsigned j = 0; j < 2; j++) {
+            encodedProof >> meProof[step].ContentsPredicate[j];
+            for (unsigned int i = 0; i < mnMaxArity; i++)
+                encodedProof >> meProof[step].ContentsArgument[j][i];
+        }
+        for (unsigned int i = 0; i < mnMaxNumberOfPremisesInAxioms; i++)
+            encodedProof >> meProof[step].From[i];
+        for (unsigned int i = 0; i < mnMaxNumberOfVarsInAxioms; i++)
+            encodedProof >> meProof[step].Instantiation[i];
+
+    }
+    encodedProof.close();
+    return true;
 }
 
 // ----------------------------------------------------------
