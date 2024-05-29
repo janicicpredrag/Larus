@@ -274,11 +274,11 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
          c |= IsMPstepByAxiom(s,ax);
       } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
-        c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1)));
+        c |= (IsMPstepByAxiom(s,ax) /*& (IsQEDStep(s+1))*/);
       }
     }
     if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it TODO
-      if (mParams.mbNativeEQsub  && !mParams.mbInlineAxioms) // inlining give better proofs without native eq support
+      if (mParams.mbNativeEQsub /* && !mParams.mbInlineAxioms*/) // inlining give better proofs without native eq support
         c |= IsMPbyEqSub(s);
 
     // canonization
@@ -1331,11 +1331,12 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       return eConjectureNotProved;
     } else {
       cout << " proof FOUND! " << flush;
+      /* grounds for sequences of integers:
       string sEncodedProofFile = "encoded_proof.txt";
       ExportEncodedproof(formula, length, sEncodedProofFile);
       meProof.clear();
       meProof.resize(mnNumberOfAssumptions + length);
-      ReadProofFromEncodedProof(sEncodedProofFile);
+      ReadProofFromEncodedProof(sEncodedProofFile); */
       return eConjectureProved;
     }
 }

@@ -1,6 +1,5 @@
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
-#include "ProofExport/ProofExport.h"
 #include "ProofExport/ProofExport2Coq.h"
 #include "ProofExport/ProofExport2Mizar.h"
 #include "ProofExport/ProofExport2GCLC.h"

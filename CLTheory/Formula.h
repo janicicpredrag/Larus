@@ -326,9 +326,9 @@ inline ostream &operator<<(ostream &os, const Term &t) {
 
 // ---------------------------------------------------------------------------------------
 inline ostream &operator<<(ostream &os, const Fact &f) {
-  if (f.GetName() == "false" || f.GetName() == "bot") {
+  if (f.GetName() == "false" || f.GetName() == "bot" || f.GetName() == PREFIX_NEGATED + "top") {
     os << "$false";
-  } else if (f.GetName() == "true" || f.GetName() == "top") {
+  } else if (f.GetName() == "true" || f.GetName() == "top" || f.GetName() == PREFIX_NEGATED + "bot") {
     os << "$true";
   } else if (f.GetName() == EQ_NATIVE_NAME) {
     if (USING_ORIGINAL_SIGNATURE_EQ)
