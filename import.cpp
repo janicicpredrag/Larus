@@ -574,11 +574,19 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         string sFileName3("proofs/PROOF" + fileName + ".thy");
         exisa.ToFile(T, proof, sFileName3, params);
         if (!params.sIsaLarusFolder.empty()) {
-          string sFileName4(params.sIsaLarusFolder + "LarusSession/Larus.thy");
+          // if params.sIsaLarusFolder is not empty, proof verification is invoked
+          // a value for params.sIsaLarusFolder should be given after "-visa" argument
+          // the value for params.sIsaLarusFolder should the folder where the isabelle
+          // is installed, eg. /home/Isabelle/bin
+          // There must be a folder for isabelle sessions:
+          // proofs/LarusSession
+          // You must prepare it beforehand:
+          // > /home/Isabelle/bin/isabelle mkroot proofs/LarusSession
+          string sFileName4("proofs/LarusSession/Larus.thy");
           string sCopyFile = "cp " + sFileName3 + " " + sFileName4;
           system(sCopyFile.c_str());
           cout << "Verifying Isabelle proof ... " << flush;
-          string s = params.sIsaLarusFolder  + "isabelle build -D " + params.sIsaLarusFolder + "LarusSession";
+          string s = params.sIsaLarusFolder + "/isabelle build -D " + "proofs/LarusSession";
           int rv = system(s.c_str());
           if (!rv)
             cout << "IsabelleCorrect!";

@@ -268,6 +268,8 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
     if (p.GetMP(i).axiomName == "eq_refl" ||
         p.GetMP(i).axiomName == "eq_sym" ||
         p.GetMP(i).axiomName == "trivial" ||
+        p.GetMP(i).axiomName == "eq_excluded_middle" ||
+        p.GetMP(i).axiomName == "eq_neg_elim" ||
         p.GetMP(i).axiomName.find("ExcludedMiddle") != string::npos ||
         p.GetMP(i).axiomName.find("EqSub") != string::npos ||
         p.GetMP(i).axiomName.find("NegElim") != string::npos) {
@@ -314,7 +316,7 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
       outfile << Indent(level) << "next" << endl;
   }
   outfile << Indent(level) << "qed" << endl;
-  if (level > 0 || !mbNeedGen)
+  if (level > 0 /*|| !mbNeedGen*/)
     outfile << Indent(level) << "from this show ";
   else
     outfile << Indent(level) << "from this have ";
@@ -366,14 +368,17 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
                                           unsigned level) {
   outfile << Indent(level);
   if (mbHasImplication || mbNeedGen) {
-    if (level > 0 && mbNeedGen) {
+    if (level > 0 /*&& mbNeedGen*/) {
       outfile << "from this show \"";
-      OutputDNF(outfile, mInstantiatedGoal);
+      if (mbNeedGen)
+        OutputDNF(outfile, mInstantiatedGoal);
+      else
+        outfile << "?thesis";
     }
     else {
       outfile << "from this have \"";
       if (mbNeedGen)
-        OutputDNF(outfile, mInstantiatedGoal);
+         OutputDNF(outfile, mInstantiatedGoal);
       else
         outfile << "?thesis";
     }
