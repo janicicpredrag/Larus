@@ -274,7 +274,9 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
          c |= IsMPstepByAxiom(s,ax);
       } else if (s+1 < mnNumberOfAssumptions + mProofLength) {
-        c |= (IsMPstepByAxiom(s,ax) /*& (IsQEDStep(s+1))*/);
+        // if inlining, allow simple axioms in one step before QED only
+        // because inlining does not work within QED steps
+        c |= (IsMPstepByAxiom(s,ax) & (IsQEDStep(s+1)));
       }
     }
     if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it TODO
