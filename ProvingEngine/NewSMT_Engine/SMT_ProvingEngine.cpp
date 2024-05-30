@@ -810,7 +810,7 @@ Expression SMT_ProvingEngine::IsQEDbyEFQ(unsigned s)
     }
     else if (s == mnNumberOfAssumptions) {
       c = False();
-      for (unsigned int ss=0; ss < s; ss++) {  // check is an assumption is
+      for (unsigned int ss=0; ss < s; ss++) {  // check is an assumption is "bot"
          c |= ((StepKind(s) == QEDbyEFQ())
             &  (   mSMT_theory == eSMTUFBV_ProvingEngine ?
                    Contents(ss,0) == Bot() :

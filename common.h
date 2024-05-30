@@ -142,6 +142,7 @@ typedef struct proverParams {
   bool mbInlineAxioms;
   unsigned number_of_abducts;
   bool show;
+  string args;
 } proverParams;
 
 string itos(unsigned int i);

@@ -200,7 +200,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\VerbatimFootnotes" << endl;
   outfile << "\\noindent{\\em Proof:}";
   outfile << "\\footnote{The prover was invoked as: \\newline" << endl;
-  outfile << "\\verb|" << msParams << "|}" << endl << endl ;
+  outfile << "\\verb|" << params.args << "|}" << endl << endl ;
 
   outfile << "\\vspace{5pt}" << endl << endl;
 

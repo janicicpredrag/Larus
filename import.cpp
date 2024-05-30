@@ -18,16 +18,14 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
                                Theory &T, CLFormula &theorem,
                                string &theoremName, vector<tHint> &hints);
 
-ReturnValue SetUpEngineAndProveConjecture(string sParams,
-                                          proverParams &params, Theory &T,
+ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
                                           CLFormula &theorem,
                                           string &theoremName,
                                           const string &theoremFileName,
                                           vector<tHint> &hints);
 ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
                         string &theoremName);
-ReturnValue ProveTheorem(string sParams,
-                         proverParams &params, Theory &T, ProvingEngine &engine,
+ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints);
@@ -309,8 +307,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue SetUpEngineAndProveConjecture(string sParams,
-                                          proverParams &params, Theory &T,
+ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
                                           CLFormula &theorem,
                                           string &theoremName,
                                           const string &theoremFileName,
@@ -354,7 +351,7 @@ ReturnValue SetUpEngineAndProveConjecture(string sParams,
       thm.TakeUnivVars(theorem);
 
       ReturnValue r =
-          ProveTheorem(sParams, params, T1, *engine, thm, theoremName + itos(i),
+          ProveTheorem(params, T1, *engine, thm, theoremName + itos(i),
                        theoremFileName + itos(i), hints);
       delete engine;
       if (r != eConjectureProved)
@@ -383,7 +380,7 @@ ReturnValue SetUpEngineAndProveConjecture(string sParams,
       engine = new SMT_ProvingEngine(&T, params);
     else // default
       engine = new STL_ProvingEngine(&T, params);
-    ReturnValue r = ProveTheorem(sParams, params, T, *engine, theorem, theoremName,
+    ReturnValue r = ProveTheorem(params, T, *engine, theorem, theoremName,
                                  theoremFileName, hints);
     delete engine;
     return r;
@@ -393,7 +390,7 @@ ReturnValue SetUpEngineAndProveConjecture(string sParams,
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, ProvingEngine &engine,
+ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints) {
@@ -552,17 +549,17 @@ ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, Provin
 
       ProofExport2LaTeX ex(fileName);
       string sFileName("proofs/PROOF" + fileName + to_string(nbAbducts) + ".tex");
-      ex.ToFile(sParams, T, proof, sFileName, params);
+      ex.ToFile(T, proof, sFileName, params);
 
       if (params.show){
          ProofExport2Text ex(fileName);
          string sFileName("std::cout");
-         ex.ToFile(sParams, T, proof, sFileName, params);
+         ex.ToFile(T, proof, sFileName, params);
       }
       if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
         string sFileName3("proofs/PROOF" + fileName + ".v");
-        excoq.ToFile(sParams, T, proof, sFileName3, params);
+        excoq.ToFile(T, proof, sFileName3, params);
         cout << "Verifying Coq proof ... " << flush;
         string s = "coqc -R proofs src -q  " + sFileName3;
         int rv = system(s.c_str());
@@ -575,7 +572,7 @@ ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, Provin
       if (params.mbIsa && params.number_of_abducts == 0) {
         ProofExport2Isabelle exisa;
         string sFileName3("proofs/PROOF" + fileName + ".thy");
-        exisa.ToFile(sParams, T, proof, sFileName3, params);
+        exisa.ToFile(T, proof, sFileName3, params);
         if (!params.sIsaLarusFolder.empty()) {
           // if params.sIsaLarusFolder is not empty, proof verification is invoked
           // a value for params.sIsaLarusFolder should be given after "-visa" argument
@@ -601,7 +598,7 @@ ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, Provin
       if (params.mbMizar && params.number_of_abducts == 0) {
         ProofExport2Mizar exMizar;
         string sFileName3("proofs/PROOF" + fileName + ".miz");
-        exMizar.ToFile(sParams, T, proof, sFileName3, params);
+        exMizar.ToFile(T, proof, sFileName3, params);
         cout << "Verifying Mizar proof ... " << flush;
         string s = "accom " + sFileName3;
         int rv = system(s.c_str());
@@ -616,13 +613,13 @@ ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, Provin
       if (params.mbGCLCaxioms) {
         ProofExport2GCLC exisa;
         string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
-        exisa.ToFile(sParams, T, proof, sFileName3, params);
+        exisa.ToFile(T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }
       if (params.mbGCLCpredicates) {
         ProofExport2GCLC_predicates exisa;
         string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
-        exisa.ToFile(sParams, T, proof, sFileName3, params);
+        exisa.ToFile(T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }
     }

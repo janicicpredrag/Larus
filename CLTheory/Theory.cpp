@@ -105,7 +105,7 @@ void Theory::AddEqNegElimAxioms() {
   conc0.Add(b);
 
   Fact c;
-  c.SetName(sTOP);
+  c.SetName(sBOT);
   conc1.Add(c);
   conclusion.Add(conc1);
   CLFormula axiom(conc0, conclusion);
