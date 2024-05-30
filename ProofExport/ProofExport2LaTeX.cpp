@@ -136,6 +136,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\documentclass{article}" << endl;
   outfile << "\\usepackage{argoclp}" << endl;
   outfile << "\\usepackage{tikz}" << endl;
+  outfile << "\\usepackage{fancyvrb}" << endl;
   outfile << "\\usepackage{amssymb}" << endl << endl;
   outfile << "\\newtheorem{theorem}{Theorem}" << endl << endl;
   outfile << "\\begin{document}" << endl << endl;
@@ -143,6 +144,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\title{Proof of theorem ,," << latexize(p.GetTheoremName())
           << "``}" << endl;
   outfile << "\\author{CLprover}" << endl;
+
   outfile << "\\maketitle" << endl << endl;
 
   if (T.NumberOfOriginalAxioms() > 0) {
@@ -195,7 +197,11 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "\\newcounter{proofstepnum}" << endl;
   outfile << "\\setcounter{proofstepnum}{0}" << endl << endl;
 
-  outfile << "\\noindent{\\em Proof:}" << endl;
+  outfile << "\\VerbatimFootnotes" << endl;
+  outfile << "\\noindent{\\em Proof:}";
+  outfile << "\\footnote{The prover was invoked as: \\newline" << endl;
+  outfile << "\\verb|" << msParams << "|}" << endl << endl ;
+
   outfile << "\\vspace{5pt}" << endl << endl;
 
   DNFFormula fout;
@@ -274,9 +280,6 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
   outfile << endl << "\\vspace{5pt}" << endl << "\\noindent" << endl << endl;
   outfile << "\% \\input{PROOF" + mFileName + "_illustration.tkz}" << endl
           << endl;
-
-  outfile << "\\noindent {\\scriptsize Proved invoked as:} \\newline" << endl;
-  outfile << "\\noindent {\\scriptsize\\verb|" << msParams << "|}" << endl << endl << endl;
 
   outfile << "\\end{document}" << endl;
 }
