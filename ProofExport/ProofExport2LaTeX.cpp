@@ -220,7 +220,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
       outfile << " such that: ";
     else
       outfile << "\\noindent The assumptions are: " << endl;
-    outfile << "\\begin{itemize} " << endl << endl;
+    outfile << endl << "\\begin{itemize} " << endl;
     for (unsigned i = 0; i < cf.GetSize(); i++) {
       outfile << "\\item ";
       T.InstantiateFact(p.GetTheorem(), cf.GetElement(i), inst, factout, false);
@@ -232,7 +232,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
         outfile << "$, ";
       outfile << endl;
     }
-    outfile << "\\end{itemize} "  << endl;
+    outfile << "\\end{itemize} " << endl << endl;
   } else if (p.GetTheorem().GetNumOfUnivVars() > 0)
     outfile << ". ";
 
@@ -267,7 +267,7 @@ void ProofExport2LaTeX::OutputPrologue(ofstream &outfile, Theory &T,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
-  outfile << "\\begin{flushright}" << endl;
+  outfile << endl << "\\begin{flushright}" << endl;
   outfile << "$\\Box$" << endl;
   outfile << "\\end{flushright}" << endl;
 
