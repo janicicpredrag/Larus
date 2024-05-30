@@ -18,7 +18,8 @@ extern ReturnValue ReadTPTPConjecture(const string inputFile,
                                       vector<tHint> &hints);
 extern ReturnValue SetUpAxioms(proverParams &params, Theory &T,
                                CLFormula &theorem, string &theoremName);
-extern ReturnValue SetUpEngineAndProveConjecture(proverParams &params,
+extern ReturnValue SetUpEngineAndProveConjecture(string sParams,
+                                                 proverParams &params,
                                                  Theory &T, CLFormula &theorem,
                                                  string &theoremName,
                                                  const string &theoremFileName,
@@ -323,6 +324,13 @@ int main(int argc, char **argv) {
   vector<tHint> hints;
   ReturnValue rv;
 
+  string sParams;
+  for (int i = 0; i < argc; i++) {
+      sParams += " ";
+      sParams += argv[i];
+  }
+  cout << "ulaz " << sParams;
+
   timer.start();
   if ((rv = ReadTPTPConjecture(inputFilename, params,
                                T, theorem, theoremName, hints)) == eOK) {
@@ -337,7 +345,7 @@ int main(int argc, char **argv) {
         return 0;
       }
 
-      rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName,
+      rv = SetUpEngineAndProveConjecture(sParams, params, T, theorem, theoremName,
                                          inputFilename, hints);
     }
   }

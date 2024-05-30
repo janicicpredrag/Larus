@@ -18,14 +18,16 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
                                Theory &T, CLFormula &theorem,
                                string &theoremName, vector<tHint> &hints);
 
-ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
+ReturnValue SetUpEngineAndProveConjecture(string sParams,
+                                          proverParams &params, Theory &T,
                                           CLFormula &theorem,
                                           string &theoremName,
                                           const string &theoremFileName,
                                           vector<tHint> &hints);
 ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
                         string &theoremName);
-ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
+ReturnValue ProveTheorem(string sParams,
+                         proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints);
@@ -307,7 +309,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
+ReturnValue SetUpEngineAndProveConjecture(string sParams,
+                                          proverParams &params, Theory &T,
                                           CLFormula &theorem,
                                           string &theoremName,
                                           const string &theoremFileName,
@@ -351,7 +354,7 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       thm.TakeUnivVars(theorem);
 
       ReturnValue r =
-          ProveTheorem(params, T1, *engine, thm, theoremName + itos(i),
+          ProveTheorem(sParams, params, T1, *engine, thm, theoremName + itos(i),
                        theoremFileName + itos(i), hints);
       delete engine;
       if (r != eConjectureProved)
@@ -380,7 +383,7 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       engine = new SMT_ProvingEngine(&T, params);
     else // default
       engine = new STL_ProvingEngine(&T, params);
-    ReturnValue r = ProveTheorem(params, T, *engine, theorem, theoremName,
+    ReturnValue r = ProveTheorem(sParams, params, T, *engine, theorem, theoremName,
                                  theoremFileName, hints);
     delete engine;
     return r;
@@ -390,7 +393,7 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
+ReturnValue ProveTheorem(string sParams, proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
                          const vector<tHint> &hints) {
@@ -527,17 +530,17 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         if (vret == eVampireUnsat) {
           cout << "Abducts inconsistent!" << endl;
           nbInconsistentAbducts++;
-	  nbAbducts++;
+          nbAbducts++;
         }
         else if (vret == eVampireSat) {
           cout << "Abducts CONSISTENT!" << endl;
           nbConsistentAbducts++;
-	  nbAbducts++;
+          nbAbducts++;
         }
         else {
           cout << "Abducts unknown consistency" << endl;
           nbUnknownStatusAbducts++;
-	  nbAbducts++;
+          nbAbducts++;
         }
         cout << "Number of abducts found so far:" << endl << "Inconsistent : " << nbInconsistentAbducts << " Consistent : " << nbConsistentAbducts << " Unknown Status : " << nbUnknownStatusAbducts << endl;
         //for(unsigned j = 0; j < params.number_of_abducts; j++) {
@@ -549,17 +552,17 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
       ProofExport2LaTeX ex(fileName);
       string sFileName("proofs/PROOF" + fileName + to_string(nbAbducts) + ".tex");
-      ex.ToFile(T, proof, sFileName, params);
+      ex.ToFile(sParams, T, proof, sFileName, params);
 
       if (params.show){
-	ProofExport2Text ex(fileName);
-	string sFileName("std::cout");
-	ex.ToFile(T, proof, sFileName, params);
+         ProofExport2Text ex(fileName);
+         string sFileName("std::cout");
+         ex.ToFile(sParams, T, proof, sFileName, params);
       }
       if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
         string sFileName3("proofs/PROOF" + fileName + ".v");
-        excoq.ToFile(T, proof, sFileName3, params);
+        excoq.ToFile(sParams, T, proof, sFileName3, params);
         cout << "Verifying Coq proof ... " << flush;
         string s = "coqc -R proofs src -q  " + sFileName3;
         int rv = system(s.c_str());
@@ -572,7 +575,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       if (params.mbIsa && params.number_of_abducts == 0) {
         ProofExport2Isabelle exisa;
         string sFileName3("proofs/PROOF" + fileName + ".thy");
-        exisa.ToFile(T, proof, sFileName3, params);
+        exisa.ToFile(sParams, T, proof, sFileName3, params);
         if (!params.sIsaLarusFolder.empty()) {
           // if params.sIsaLarusFolder is not empty, proof verification is invoked
           // a value for params.sIsaLarusFolder should be given after "-visa" argument
@@ -598,7 +601,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       if (params.mbMizar && params.number_of_abducts == 0) {
         ProofExport2Mizar exMizar;
         string sFileName3("proofs/PROOF" + fileName + ".miz");
-        exMizar.ToFile(T, proof, sFileName3, params);
+        exMizar.ToFile(sParams, T, proof, sFileName3, params);
         cout << "Verifying Mizar proof ... " << flush;
         string s = "accom " + sFileName3;
         int rv = system(s.c_str());
@@ -613,13 +616,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       if (params.mbGCLCaxioms) {
         ProofExport2GCLC exisa;
         string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
-        exisa.ToFile(T, proof, sFileName3, params);
+        exisa.ToFile(sParams, T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }
       if (params.mbGCLCpredicates) {
         ProofExport2GCLC_predicates exisa;
         string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
-        exisa.ToFile(T, proof, sFileName3, params);
+        exisa.ToFile(sParams, T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }
     }

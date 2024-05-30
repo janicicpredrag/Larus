@@ -11,19 +11,21 @@ public:
     ProofExport() {}
     virtual ~ProofExport() {}
 
-    void ToFile(Theory& T, const CLProof& proof, string sFileName, proverParams& params)
+    void ToFile(string sParams, Theory& T, const CLProof& proof, string sFileName, proverParams& params)
     {
         std::streambuf * buf;
-	std::ofstream outfile;
-	
-	if (sFileName != "std::cout")
-	{
-	  outfile.open(sFileName);
-	  buf = outfile.rdbuf();
-	} else {
-	  buf = std::cout.rdbuf();
-	}
-	std::ostream out(buf);
+        std::ofstream outfile;
+
+        msParams = sParams;
+
+        if (sFileName != "std::cout")
+        {
+           outfile.open(sFileName);
+           buf = outfile.rdbuf();
+        } else {
+           buf = std::cout.rdbuf();
+        }
+        std::ostream out(buf);
         if (!outfile)
         {   
             cout << "Failed to open output file:" << sFileName << endl;
@@ -98,6 +100,9 @@ public:
     virtual void OutputProofEnd(ofstream& outfile, const ByAssumption* ba, unsigned level) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const EFQ* efq, unsigned level) = 0;
     virtual void OutputProofEnd(ofstream& outfile, const ByNegIntro* ni, unsigned level) = 0;
+
+protected:
+    string msParams;
 
 };
 
