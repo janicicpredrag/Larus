@@ -39,9 +39,9 @@ void ProofExport2Text::OutputCLFormula (ofstream &outfile, const CLFormula &cl,
 // ---------------------------------------------------------------------------------
 
 void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
-  if (f.GetName() == "false" || f.GetName() == "bot")
+  if (f.GetName() == "false" || f.GetName() == sBOT)
     cout << "\u22a5 ";
-  else if (f.GetName() == "true" || f.GetName() == "top")
+  else if (f.GetName() == "true" || f.GetName() == sTOP)
     cout << "\u22a4 ";
   else {
     if (f.GetName() == EQ_NATIVE_NAME) {

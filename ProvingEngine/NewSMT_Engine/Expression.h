@@ -22,18 +22,18 @@ class Expression
         ExpressionNode(const string& s) : mO(eVar), mS(s), mLeft(nullptr), mRight(nullptr) {
             mO = eVar;
             if (s == "true")
-              mS = "top";
+              mS = sTOP;
             else if (s == "false")
-              mS = "bot";
+              mS = sBOT;
             else
               mS = s;
         }
         ExpressionNode(const char* s) : mO(eVar), mS(s), mLeft(nullptr), mRight(nullptr) {
             mO = eVar;
             if (!strcmp(s, "true"))
-              mS = "top";
+              mS = sTOP;
             else if (!strcmp(s, "false"))
-              mS = "bot";
+              mS = sBOT;
             else {
               string str(s);
               mS = str;

@@ -16,8 +16,8 @@ void Theory::Reset() {
   miConstantsCounter = 0;
   mConstants.clear();
   mConstantsPermissible.clear();
-  AddPredicateSymbol("bot", 0);
-  AddPredicateSymbol("top", 0);
+  AddPredicateSymbol(sBOT, 0);
+  AddPredicateSymbol(sTOP, 0);
 }
 
 // --------------------------------------------------------------
@@ -105,7 +105,7 @@ void Theory::AddEqNegElimAxioms() {
   conc0.Add(b);
 
   Fact c;
-  c.SetName("bot");
+  c.SetName(sTOP);
   conc1.Add(c);
   conclusion.Add(conc1);
   CLFormula axiom(conc0, conclusion);
@@ -148,7 +148,7 @@ void Theory::AddNegElimAxioms() {
     premises.Add(a);
     a.SetName(mSignatureP[i + 1].first);
     premises.Add(a);
-    b.SetName("bot");
+    b.SetName(sBOT);
     conc0.Add(b);
     conclusion.Add(conc0);
     CLFormula axiom(premises, conclusion);
@@ -446,9 +446,9 @@ void Theory::AddPredicateSymbol(const string &pp, unsigned arity) {
     }
   }
 
-  if (p == "bot" || p == "top") {
-    mSignatureP.push_back(pair<string, unsigned>("bot", 0));
-    mSignatureP.push_back(pair<string, unsigned>("top", 0));
+  if (p == sBOT || p == sTOP) {
+    mSignatureP.push_back(pair<string, unsigned>(sBOT, 0));
+    mSignatureP.push_back(pair<string, unsigned>(sTOP, 0));
   } else if (p.size() > 3 && p.substr(0, 3) == PREFIX_NEGATED) {
     mSignatureP.push_back(
         pair<string, unsigned>(p.substr(3, p.size() - 3), arity));

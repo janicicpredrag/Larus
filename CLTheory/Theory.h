@@ -24,8 +24,8 @@ class Theory {
 public:
   Theory() {
     miConstantsCounter = 0;
-    AddPredicateSymbol("bot", 0);
-    AddPredicateSymbol("top", 0);
+    AddPredicateSymbol(sBOT, 0);
+    AddPredicateSymbol(sTOP, 0);
     mbUseNativeEq = false;
   }
 

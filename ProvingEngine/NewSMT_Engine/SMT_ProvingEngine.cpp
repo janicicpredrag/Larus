@@ -404,7 +404,7 @@ Expression SMT_ProvingEngine::MatchAllPremises(unsigned s, unsigned ax)
 Expression SMT_ProvingEngine::MatchPremiseToSomeStep(unsigned s, unsigned ax, unsigned i)
 {
     Expression c = False();
-    if (GetAxiom(ax).GetPremises().GetElement(i).GetName() == "top") {
+    if (GetAxiom(ax).GetPremises().GetElement(i).GetName() == sTOP) {
       c = (From(s,i) == s); // special case, where there is no "from"
     } else {
       for(unsigned ss=0; ss < s; ss++) {
@@ -479,7 +479,7 @@ Expression SMT_ProvingEngine::MatchPremiseInline(unsigned s, unsigned ax, unsign
         Expression cOneOfInlinePremises = False();
         cOneOfInlinePremises = False();
         if (GetAxiom(axInl).GetPremises().GetSize() == 0 ||
-            GetAxiom(axInl).GetPremises().GetElement(0).GetName() == "top") {
+            GetAxiom(axInl).GetPremises().GetElement(0).GetName() == sTOP) {
                cOneOfInlinePremises = (From(s,i) == s); // special case, where there is no "from"
         } else {
           // Match the premise in the inline axiom:
@@ -773,8 +773,8 @@ Expression SMT_ProvingEngine::IsQEDbyAssumption(unsigned s)
 {
     Expression c;
     if (s == 0) {
-      if (mGoal.GetElement(0).GetElement(0).GetName() == "top" ||
-         (mGoal.GetSize()>1 && mGoal.GetElement(1).GetElement(0).GetName() == "top")) {
+      if (mGoal.GetElement(0).GetElement(0).GetName() == sTOP ||
+         (mGoal.GetSize()>1 && mGoal.GetElement(1).GetElement(0).GetName() == sTOP)) {
         c = ((StepKind(s) == QEDbyAssumption())
           & (Nesting(s) == 1u));
       }
@@ -810,7 +810,7 @@ Expression SMT_ProvingEngine::IsQEDbyEFQ(unsigned s)
     }
     else if (s == mnNumberOfAssumptions) {
       c = False();
-      for (unsigned int ss=0; ss < s; ss++) {  // check is an assumption is "bot"
+      for (unsigned int ss=0; ss < s; ss++) {  // check is an assumption is
          c |= ((StepKind(s) == QEDbyEFQ())
             &  (   mSMT_theory == eSMTUFBV_ProvingEngine ?
                    Contents(ss,0) == Bot() :
@@ -961,11 +961,11 @@ Expression SMT_ProvingEngine::QEDbyEFQ()
 
 Expression SMT_ProvingEngine::Bot()
 {
-    return string("bot");
+    return sBOT;
 }
 Expression SMT_ProvingEngine::Top()
 {
-    return string("top");
+    return sTOP;
 }
 
 // ----------------------------------------------------------
@@ -1479,8 +1479,9 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       mSMTfile << ")" << endl;
 
     } else { // mSMT_theory != eSMTUFBV_ProvingEngine
-      for (size_t i = 0; i < mpT->mSignatureP.size(); i++)
-        DeclareVarBasicType(ToUpper(mpT->mSignatureP[i].first), mpT->mSignatureP.size());
+        for (size_t i = 0; i < mpT->mSignatureP.size(); i++) {
+           DeclareVarBasicType(ToUpper(mpT->mSignatureP[i].first), mpT->mSignatureP.size());
+        }
 
       for (vector<string>::const_iterator it = mpT->mConstants.begin();
            it != mpT->mConstants.end(); it++)
@@ -2057,7 +2058,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
     s = s.substr(s.find("_r_") + strlen("_r_"), s.size());
   }
 
-  if (strVarName[0] == 'b' && strVarName != "bot") { // boolean
+  if (strVarName[0] == 'b' && strVarName != sBOT) { // boolean
     bVal = (strVal == "true");
   }
   else if (mSMT_theory == eSMTBV_ProvingEngine ||
@@ -2288,7 +2289,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
           vector <unsigned> fromSteps;
           unsigned noPremises = bIsEqSub ? 2 : mpT->mCLaxioms[nAxiom].first.GetPremises().GetSize();
           if (noPremises == 1 &&
-              mpT->mCLaxioms[nAxiom].first.GetPremises().GetElement(1).GetName() == "top")
+              mpT->mCLaxioms[nAxiom].first.GetPremises().GetElement(1).GetName() == sTOP)
             noPremises = 0;
           size_t numOfVars = numOfUnivVars + numOfExistVars;
           for (unsigned int i = 0; i < noPremises; i++) {

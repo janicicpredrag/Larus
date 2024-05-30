@@ -370,12 +370,12 @@ bool Fact::Read() {
 
   mArgs.clear();
   if (NEXTLEXEME == "false" || NEXTLEXEME == "$false") {
-    mName = "bot";
+    mName = sBOT;
     ReadNextToken();
     return true;
   }
   if (NEXTLEXEME == "true" || NEXTLEXEME == "$true") {
-    mName = "top";
+    mName = sTOP;
     ReadNextToken();
     return true;
   }
@@ -907,10 +907,10 @@ bool CLFormula::IsSimpleImplication() const {
       return false;
 
     if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
-        GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+        GetGoal().GetElement(0).GetElement(0).GetName() == sBOT)
       return false;
 
-    if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
+    if (numPremises == 1 && GetPremises().GetElement(0).GetName() == sTOP)
       return false;
 
     for (unsigned i = 0; i < numPremises; i++) {
@@ -948,10 +948,10 @@ bool CLFormula::IsSimpleUFImplication() const {
     return false;
 
   if (numDisj == 1 && GetGoal().GetElement(0).GetSize() == 1 &&
-      GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+      GetGoal().GetElement(0).GetElement(0).GetName() == sBOT)
     return false;
 
-  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == "top")
+  if (numPremises == 1 && GetPremises().GetElement(0).GetName() == sTOP)
     return false;
 
   if (numPremises == 1 &&
@@ -975,7 +975,7 @@ bool CLFormula::IsSimpleUnivFormula() const {
       return false;
     if (GetGoal().GetElement(0).GetSize() != 1)
       return false;
-    if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+    if (GetGoal().GetElement(0).GetElement(0).GetName() == sBOT)
       return false;
   Fact f = GetGoal().GetElement(0).GetElement(0);
   for (unsigned j = 0; j < f.GetArity(); j++) {
@@ -997,7 +997,7 @@ bool CLFormula::IsSimpleUnivUFFormula() const {
     return false;
   if (GetGoal().GetElement(0).GetSize() != 1)
     return false;
-  if (GetGoal().GetElement(0).GetElement(0).GetName() == "bot")
+  if (GetGoal().GetElement(0).GetElement(0).GetName() == sBOT)
     return false;
   return true;
 }
@@ -1209,7 +1209,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
     if (GetPremises().GetSize() > 0)
       current = GetPremises().GetElement(0);
     else {
-      current.SetName("bot");
+      current.SetName(sBOT);
       current.ClearArgs();
     }
     for (size_t i = 1; i < numPremises; i++) // todo: we should reorder the
