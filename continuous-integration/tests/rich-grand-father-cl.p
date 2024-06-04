@@ -5,7 +5,7 @@ fof(poor_rich_father,axiom,(
      ( (~rich(X) & father(F,X)  )
    => (rich(F))))).
 
-fof(father_fonction,axiom,(
+fof(father_function,axiom,(
    ! [X] : (? [F] : father(F,X)))).
 
 fof(rich_rich_grand_father,conjecture,(

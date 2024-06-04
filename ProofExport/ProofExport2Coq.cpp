@@ -128,6 +128,8 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "Parameter MyT : Type." << endl;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
        it != T.mSignatureP.end(); ++it) {
+    if (it - T.mSignatureP.begin() >= T.number_of_original_predicate_symbols)
+       break;
     string name = get<0>(*it);
     if (name != sBOT && name != sTOP && name.find(PREFIX_NEGATED) != 0 &&
         name.find("eqnative") != 0)

@@ -49,6 +49,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   cout << "--- Input axioms : " << endl;
   T.printAxioms();
   T.mCLOriginalAxioms = T.mCLaxioms;
+  T.number_of_original_predicate_symbols = T.mSignatureP.size();
 
   /*
   if (params.number_of_abducts > 0) { // use this filtering only if filtering a la hammer is forbidden

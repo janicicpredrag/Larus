@@ -1,6 +1,5 @@
 #include "CLTheory/Theory.h"
 #include "common.h"
-#include <ctype.h>
 #include <iostream>
 #include <string.h>
 #include <string>

@@ -128,6 +128,8 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
   bool no_predicate=true;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
     it != T.mSignatureP.end(); ++it) {
+    if (it - T.mSignatureP.begin() >= T.number_of_original_predicate_symbols)
+       break;
     if (get<0>(*it) == sBOT || get<0>(*it) == sTOP)
        continue;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
@@ -136,19 +138,19 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
     uint arity = get<1>(*it);
     outfile << strip_(get<0>(*it)) << "[";
     for(unsigned int i = 0; i+1 < arity; i++) {
-        outfile << "object,";
+      outfile << "object,";
     }
     if (arity > 0)
       outfile << "object";
     outfile << "]";
     ++it;
-    if (it+1 != T.mSignatureP.end())
-       {
-         if (get<0>(*(it+1)).find(PREFIX_NEGATED) != string::npos)
-        outfile << " ";
-    else 
-        outfile << ", ";
-       }
+    if (it - T.mSignatureP.begin() + 1 < T.number_of_original_predicate_symbols)
+    {
+       if (get<0>(*(it+1)).find(PREFIX_NEGATED) != string::npos)
+          outfile << " ";
+       else
+          outfile << ", ";
+    }
   }
   if (!no_predicate && T.mInitialConstants.size() != 0)
       outfile << ", ";

@@ -115,6 +115,8 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   outfile << "locale larus = " << endl;
   for (vector<pair<string, unsigned>>::iterator it = T.mSignatureP.begin();
        it != T.mSignatureP.end(); ++it) {
+    if (it - T.mSignatureP.begin() > T.number_of_original_predicate_symbols)
+        break;
     if (get<0>(*it).find(PREFIX_NEGATED) != string::npos)
       continue;
     if (get<0>(*it) == sBOT || get<0>(*it) == sTOP)

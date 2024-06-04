@@ -99,6 +99,7 @@ public:
 
   vector<pair<CLFormula, string>> mCLaxioms;
   vector<pair<CLFormula, string>> mCLOriginalAxioms;
+  unsigned number_of_original_predicate_symbols;
   vector<string> mConstants;
   vector<string> mInitialConstants;
   set<string> mConstantsPermissible;
