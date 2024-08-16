@@ -586,12 +586,19 @@ bool DNFFormula::Read(CLFormula* p) {
   }
 
   ConjunctionFormula CF;
-  while (CF.Read()) {
+  while (CF.Read() /*&& NEXTTOKEN != eCLOSEB && NEXTTOKEN != eEND*/) {
     Add(CF);
     CF.Clear();
     if (NEXTTOKEN != eDISJ)
       break;
     ReadNextToken();
+    /*
+    DNFFormula d;
+    d.Read(p);
+    for (unsigned i=0; i<d.GetSize(); i++)
+       Add(d.GetElement(i));
+    ReadNextToken();*/
+
   }
   return (NEXTTOKEN == eCLOSEB || NEXTTOKEN == eEND);
 }
