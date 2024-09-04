@@ -1460,18 +1460,29 @@ void CLFormula::NormalizeGoal(
       dnf.Add(GetGoal().GetElement(i));
       definitions.push_back(pair<Fact, DNFFormula>(current, dnf));
 
-      for (size_t j = 0; j < disjuncts[i].GetArity(); j++) { // quantify only occuring variables
-        Term t;
-        t = disjuncts[i].GetArg(j);
-        for (size_t a = 0; a < t.NumArgs(); a++) {
-          bool bAlreadyThere = false;
-          for (size_t k = 0; k < axiom.mUniversalVars.size() && !bAlreadyThere; k++) {
-            if (axiom.mUniversalVars[k] == t.GetArg(a))
-              bAlreadyThere = true;
+      for (size_t k = 0; k < mUniversalVars.size(); k++) {
+        bool bVarOccurs = false;
+        for (size_t j = 0; j < disjuncts[i].GetArity(); j++) { // quantify only occurring variables
+          Term t = disjuncts[i].GetArg(j);
+          for (size_t a = 0; a < t.NumArgs() && !bVarOccurs; a++) {
+            if (t.GetArg(a) == mUniversalVars[k])
+              bVarOccurs = true;
           }
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(t.GetArg(a));
         }
+        if (bVarOccurs)
+          axiom.mUniversalVars.push_back(mUniversalVars[k]);
+      }
+      for (size_t k = 0; k < mExistentialVars.size(); k++) {
+        bool bVarOccurs = false;
+        for (size_t j = 0; j < disjuncts[i].GetArity(); j++) { // quantify only occurring variables
+          Term t = disjuncts[i].GetArg(j);
+          for (size_t a = 0; a < t.NumArgs() && !bVarOccurs; a++) {
+            if (t.GetArg(a) == mExistentialVars[k])
+              bVarOccurs = true;
+          }
+        }
+        if (bVarOccurs)
+          axiom.mUniversalVars.push_back(mExistentialVars[k]);
       }
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));
@@ -1494,18 +1505,31 @@ void CLFormula::NormalizeGoal(
       DNFFormula disj;
       disj.Add(conj1);
       CLFormula axiom(conj, disj);
-      for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
-        for (size_t k = 0; k < mUniversalVars.size(); k++) {
-          bool bAlreadyThere = false;
+      for (size_t k = 0; k < mUniversalVars.size(); k++) {
+        bool bVarOccurs = false;
+        for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
           Term t = current.GetArg(j);
-          for (size_t a = 0; a < t.NumArgs() && !bAlreadyThere; a++) {
-            if (mUniversalVars[k] == t.GetArg(a))
-              bAlreadyThere = true;
-          if (!bAlreadyThere)
-            axiom.mUniversalVars.push_back(t.GetArg(a));
+          for (size_t a = 0; a < t.NumArgs() && !bVarOccurs; a++) {
+            if (t.GetArg(a) == mUniversalVars[k])
+               bVarOccurs = true;
           }
         }
+        if (bVarOccurs)
+          axiom.mUniversalVars.push_back(mUniversalVars[k]);
       }
+      for (size_t k = 0; k < mExistentialVars.size(); k++) {
+        bool bVarOccurs = false;
+        for (size_t j = 0; j < current.GetArity(); j++) { // quantify only occurring variables
+          Term t = current.GetArg(j);
+          for (size_t a = 0; a < t.NumArgs() && !bVarOccurs; a++) {
+            if (t.GetArg(a) == mExistentialVars[k])
+              bVarOccurs = true;
+            }
+        }
+        if (bVarOccurs)
+          axiom.mUniversalVars.push_back(mExistentialVars[k]);
+      }
+
       output.push_back(pair<CLFormula, string>(
           axiom, name + "AuxGoal" + std::to_string(count_aux++)));
 

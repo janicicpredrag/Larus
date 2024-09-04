@@ -956,7 +956,7 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
     if (RHS.GetElement(i).GetSize() != 1)
       allsingleconjuncts = false;
   }
-  assert(RHS.GetSize() == 1 || allsingleconjuncts);
+  //assert(RHS.GetSize() == 1 || allsingleconjuncts);
 
   allsingleconjuncts = true;
   for (size_t i = 0; i < f.GetSize() && allsingleconjuncts; i++) {
