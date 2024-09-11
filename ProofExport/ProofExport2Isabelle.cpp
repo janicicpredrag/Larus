@@ -124,6 +124,14 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
     outfile << "  fixes " << get<0>(*it) << " :: \""
             << repeat2(get<1>(*it), "MyT \\<Rightarrow> ") << "bool\"" << endl;
   }
+
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureF.begin();
+       it != T.mSignatureF.end(); ++it) {
+    outfile << "  fixes " << get<0>(*it)  << " :: \""
+            << repeat2(get<1>(*it), "MyT \\<Rightarrow> ");
+    outfile << "MyT\"" << endl;
+  }
+
   for (vector<string>::iterator it = T.mInitialConstants.begin();
     it < T.mInitialConstants.end(); it++) {
     outfile << "  fixes " << *it << " :: \"MyT\"" << endl;
@@ -282,14 +290,14 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
            outfile << "using ";
            outfile << "simpleaxioms";
         }
-        outfile << " by blast";
+        outfile << " by ( blast | auto )";
     }
     else {
       outfile << "using " << p.GetMP(i).axiomName << " ";
       if (!mSimpleaxioms.empty()) {
         outfile << "simpleaxioms";
       }
-      outfile << " by blast";
+      outfile << " by ( blast | auto )";
     }
     outfile << endl;
   }
