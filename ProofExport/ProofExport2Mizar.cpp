@@ -14,6 +14,8 @@ static string decorateConstant(string var) {
       return var;
 }
 
+// ---------------------------------------------------------------------------------
+
 string strip_(string s) {
   string result;
   for (unsigned j = 0; j < s.size(); j++) {
@@ -74,11 +76,11 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
     return;
   }
   if (f.GetName() == EQ_NATIVE_NAME) {
-    outfile << decorateConstant(f.GetArg(0).ToSMTString()) << " = " << decorateConstant(f.GetArg(1).ToSMTString());
+    outfile << decorateConstant(f.GetArg(0).ToTPTPString()) << " = " << decorateConstant(f.GetArg(1).ToTPTPString());
     return;
   }
   else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-    outfile << decorateConstant(f.GetArg(0).ToSMTString()) << " <> " << decorateConstant(f.GetArg(1).ToSMTString());
+    outfile << decorateConstant(f.GetArg(0).ToTPTPString()) << " <> " << decorateConstant(f.GetArg(1).ToTPTPString());
     return;
   }
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)
@@ -88,7 +90,7 @@ void ProofExport2Mizar::OutputFact(ofstream &outfile, const Fact &f) {
 
   outfile << "[";
   for (size_t i = 0; i < f.GetArity(); i++) {
-    outfile << decorateConstant(f.GetArg(i).ToSMTString());
+    outfile << decorateConstant(f.GetArg(i).ToTPTPString());
     if (i+1 < f.GetArity())
         outfile << ",";
   }
@@ -152,6 +154,13 @@ void ProofExport2Mizar::OutputPrologue(ofstream &outfile, Theory &T,
           outfile << ", ";
     }
   }
+  for (vector<pair<string, unsigned>>::iterator it = T.mSignatureF.begin();
+       it != T.mSignatureF.end(); ++it) {
+      outfile << ", " << get<0>(*it)  << "("
+              << repeat2(get<1>(*it) - 1, "object, ");
+      outfile << "object) -> object";
+  }
+
   if (!no_predicate && T.mInitialConstants.size() != 0)
       outfile << ", ";
   for (vector<string>::iterator it = T.mInitialConstants.begin();

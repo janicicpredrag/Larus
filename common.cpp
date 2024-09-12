@@ -134,6 +134,15 @@ string ToUpper(const string &str) {
 
 // ---------------------------------------------------------------------------------------
 
+string repeat2(int n, string s) {
+    ostringstream os;
+    for (int i = 0; i < n; i++)
+        os << s;
+    return os.str();
+}
+
+// ---------------------------------------------------------------------------------------
+
 string replacestring(const string& str, const string& from, const string& to) {
     string resstr = str;
     size_t start_pos = resstr.find(from, 0);

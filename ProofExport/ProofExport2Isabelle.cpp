@@ -96,13 +96,6 @@ void ProofExport2Isabelle::OutputOr(ofstream &outfile) {
 }
 
 // ---------------------------------------------------------------------------------
-string repeat2(int n, string s) {
-  ostringstream os;
-  for (int i = 0; i < n; i++)
-    os << s;
-  return os.str();
-}
-// ---------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
                                           const CLProof &p,

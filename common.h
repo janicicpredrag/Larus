@@ -159,6 +159,7 @@ bool isIdentifier(const string &str);
 unsigned readNumber(const string &str);
 bool isHintArgument(const string &str);
 string ToUpper(const string &str);
+string repeat2(int n, string s);
 string replacestring(const string& str, const string& from, const string& to);
 string replaceAll(const string &s, const string &search, const string &replace );
 int Brackets(const string& s);
