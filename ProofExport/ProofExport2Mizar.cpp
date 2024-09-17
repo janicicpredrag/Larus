@@ -10,8 +10,15 @@ static string Indent(unsigned level) { return (string(2 * (level+1), ' ')); }
 static string decorateConstant(string var) {
     if (initialConstants.find(var) != initialConstants.end())
       return var + "()";
-    else
+    else {
+      for (set<string>::iterator it = initialConstants.begin(); it != initialConstants.end(); it++) {
+        var = replaceAll(var, ", " + *it + ",", ", " + *it + "()," );
+        var = replaceAll(var, "(" + *it + ",", "(" + *it + "(),");
+        var = replaceAll(var, "(" + *it + ")", "(" + *it + "())");
+        var = replaceAll(var, ", " + *it + ")", ", " + *it + "())");
+      }
       return var;
+    }
 }
 
 // ---------------------------------------------------------------------------------
