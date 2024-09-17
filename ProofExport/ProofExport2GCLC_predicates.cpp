@@ -152,35 +152,67 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     }
     outfile << endl;
 
+    string soutput;
     for (size_t j = 0; j < ax.GetPremises().GetSize(); j++) {
       const Fact &f = ax.GetPremises().GetElement(j);
-      outfile << "call draw_" << f.GetName() << " { ";
+      soutput = "call draw_" + f.GetName() + " { ";
       for (size_t k = 0; k < f.GetArity(); k++) {
         bool found_var = false;
         for (size_t l = 0; l != instantiation.size() && !found_var; l++) {
           if (instantiation[l].first == f.GetArg(k).ToSMTString()) {
-            string const_name = instantiation[l].second;
-            const_name = beautify(const_name);
-            outfile << const_name << " ";
-            found_var = true;
+             Term t;
+             t.ReadSMTlibString(instantiation[l].second);
+             //outfile << "ARG: " << t;
+
+             if (t.IsCompound()) {
+               outfile << "call compute_" + t.GetFunctionSymbol(0) << " { ";
+               outfile << "out" << k << " ";
+               soutput += "out" + itos(k) + " ";
+               for (size_t j = 0; j < t.NumArgs(); j++) {
+                 outfile << t.GetArg(j) + " ";
+               }
+               outfile << " 0 }\n";
+             } else { // not compound term
+               string const_name = instantiation[l].second;
+               const_name = beautify(const_name);
+               soutput += const_name + " ";
+             }
+             found_var = true;
           }
         }
         if (!found_var) { // this is a symbol of a constant
-            outfile << f.GetArg(k).ToSMTString() << " ";
+            soutput += (f.GetArg(k).ToSMTString() + " ");
         }
       }
-      outfile << " 0 }" << endl;
+      soutput += "0 }\n";
+      outfile << soutput;
+      soutput.clear();
     }
 
     const DNFFormula &dnf = p.GetMP(i).conclusion;
     if (dnf.GetSize() == 1) {
       for (size_t j = 0; j < dnf.GetElement(0).GetSize(); j++) {
         const Fact &f = dnf.GetElement(0).GetElement(j);
-        outfile << "call draw_" << f.GetName() << " { ";
+        soutput += "call draw_" + f.GetName() + " { ";
         for (size_t k = 0; k < f.GetArity(); k++) {
-          outfile << beautify(f.GetArg(k).ToSMTString()) << " ";
+
+            if (f.GetArg(k).IsCompound()) {
+                Term t;
+                t.ReadSMTlibString(f.GetArg(k).ToSMTString());
+                outfile << "call compute_" + t.GetFunctionSymbol(0) << " { ";
+                outfile << "out" << k << " ";
+                soutput += "out" + itos(k) + " ";
+                for (size_t j = 0; j < t.NumArgs(); j++) {
+                  outfile << t.GetArg(j) + " ";
+                }
+                outfile << " 0 }\n";
+            } else { // not compound term
+              soutput += beautify(f.GetArg(k).ToSMTString()) + " ";
+            }
         }
-        outfile << " 1 }" << endl;
+        soutput += "1 }\n";
+        outfile << soutput;
+        soutput.clear();
       }
     }
 
@@ -188,11 +220,26 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     if (dnf.GetSize() == 1) {
       for (size_t j = 0; j < dnf.GetElement(0).GetSize(); j++) {
         const Fact &f = dnf.GetElement(0).GetElement(j);
-        outfile << "call draw_" << f.GetName() << " { ";
+        soutput = "call draw_" + f.GetName() + " { ";
         for (size_t k = 0; k < f.GetArity(); k++) {
-          outfile << beautify(f.GetArg(k).ToSMTString()) << " ";
+
+            if (f.GetArg(k).IsCompound()) {
+                Term t;
+                t.ReadSMTlibString(f.GetArg(k).ToSMTString());
+                outfile << "call compute_" + t.GetFunctionSymbol(0) << " { ";
+                outfile << "out" << k << " ";
+                soutput += "out" + itos(k) + " ";
+                for (size_t j = 0; j < t.NumArgs(); j++) {
+                    outfile << t.GetArg(j) + " ";
+                }
+                outfile << " 0 }\n";
+            } else { // not compound term
+                soutput += beautify(f.GetArg(k).ToSMTString()) + " ";
+            }
         }
-        outfile << " 2 }" << endl;
+        soutput += "2 }\n";
+        outfile << soutput;
+        soutput.clear();
       }
     }
 
