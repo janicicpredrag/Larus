@@ -1087,22 +1087,24 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   }
 
   Expression oneOfSteps = False();
+  Expression oneStep;
   for(unsigned proofStep = from; proofStep <= to; proofStep++) {
-    Expression oneStep;
-    oneStep = (Expression(proofStep) < ProofSize());
-    oneStep &= (StepKind(proofStep) == MP());
-    if (AxiomUsed != -1) {
-      oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
-      for (size_t i = 0; i < justification.GetArity(); i++) {
-        int ii;
-        if (justification.GetArg(i).ToSMTString() != "?" && justification.GetArg(i).ToSMTString() != "_") {
-          if (stoi(justification.GetArg(i).ToSMTString(),ii))
-            oneStep &= (Instantiation(proofStep, i) == (unsigned)ii);
-          else
-            oneStep &= (Instantiation(proofStep, i) == justification.GetArg(i).ToSMTString());
+    if (justification.GetName() != "_") {
+      oneStep = (Expression(proofStep) < ProofSize());
+      oneStep &= (StepKind(proofStep) == MP());
+      if (AxiomUsed != -1) {
+        oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
+        for (size_t i = 0; i < justification.GetArity(); i++) {
+          int ii;
+          if (justification.GetArg(i).ToSMTString() != "?" && justification.GetArg(i).ToSMTString() != "_") {
+            if (stoi(justification.GetArg(i).ToSMTString(),ii))
+              oneStep &= (Instantiation(proofStep, i) == (unsigned)ii);
+            else
+              oneStep &= (Instantiation(proofStep, i) == justification.GetArg(i).ToSMTString());
+            }
+          }
         }
       }
-    }
 
     if (hintFormula.GetGoal().GetElement(0).GetElement(0).GetName() != "_") {
       for (size_t j = 0; j < hintFormula.GetGoal().GetSize(); j++) {
@@ -1120,8 +1122,8 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
             if (stoi(f.GetArg(i).ToSMTString(),ii)) {
               if (mSMT_theory == eSMTUFBV_ProvingEngine) {
                 assert(f.GetName() != "_"); // if there is arg given, the predicate name cannot be "_"
-                oneStep &= Expression("(sub" + f.GetName() + "_" + itos(j) + " " +
-                           ContentsArgument(proofStep,j,i).toString()) == (unsigned)ii;
+                oneStep &= Expression("(sub" + f.GetName() + "_" + itos(i) + " " +
+                           Contents(proofStep,j).toString()) == f.GetArg(i).ToSMTString();
               }
               else
                 oneStep &= (ContentsArgument(proofStep,j,i) == (unsigned)ii);
@@ -1676,8 +1678,11 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         Expression e = True();
         for(unsigned i = 0; i < formula.GetSize(); i++) {
           bool bPartiallySpecified = false;
-          if (formula.GetElement(i).GetElement(0).GetName() == "_")
+          if (formula.GetElement(i).GetElement(0).GetName() == "_") {
+            cerr << endl << "Cannot handle underspecified predicate in the goal!" << endl << endl;
             assert(false); // cannot have underspecified predicate in goals
+                           // because subterms cannot be accessed
+          }
           Fact fc;
           fc.SetName(ToUpper(formula.GetElement(i).GetElement(0).GetName()));
           e &= Expression( "((_ is " + formula.GetElement(i).GetElement(0).GetName() + ") "
@@ -1685,7 +1690,7 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
           for (size_t j = 0; j < formula.GetElement(i).GetElement(0).GetArity(); j++) {
             if (formula.GetElement(i).GetElement(0).GetArg(j).ToSMTString() == "_") {
               bPartiallySpecified = true;
-              // assert(false); // cannot have underspecified goals
+              // cannot have underspecified arguments
               continue;
             }
             Term t;
@@ -1878,8 +1883,10 @@ Expression SMT_ProvingEngine::GoalContents(const DNFFormula &formula, unsigned s
       }
     }
 
-    if (formula.GetElement(ind).GetElement(0).GetName() == "_")
+    if (formula.GetElement(ind).GetElement(0).GetName() == "_") {
+      cerr << endl << "Cannot handle underspecified predicate in the goal!" << endl << endl;
       assert(false); // cannot have underspecified predicate in goals
+    }
     e = Expression( "((_ is " + formula.GetElement(ind).GetElement(0).GetName() + ") "
                      + Contents(step, 0).toString() + ")");
     Fact fc;
