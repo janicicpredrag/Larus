@@ -90,9 +90,9 @@ otherwise:
    `-n<max nesting>`      for maximal proof depth in which a fact can be used; example: `-n3`; default: `2`
 
    `-m<starting length>`  for the size of the proof search to start with (support for smt engines only); 
-                          example: `-m4`; default: 2
+                          example: `-m4`; default: 5
 
-   `-p<max proof length>` for maximal proof length (for engines ursa/smt); example: `-p64`; default: `32`
+   `-p<max proof length>` for maximal proof length (for engines ursa/smt); example: `-p64`; default: `42`
    
    `-k<increment>`        for the step between subsequent proof lengths; example: `-k2`; default: `12`
 

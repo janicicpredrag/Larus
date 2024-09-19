@@ -419,11 +419,11 @@ void printHelp() {
   cout << "                        can be used; example: -n3; default: 2"       << endl << endl;
   cout << "   -m<starting length>  for the size of the proof search to start "  << endl;
   cout << "                        with (support for smt engines only); "       << endl;
-  cout << "                        example: -m4; default: 2"                    << endl << endl;
+  cout << "                        example: -m4; default: 5"                    << endl << endl;
   cout << "   -k<increment>        for the step between subsequent proof "      << endl;
   cout << "                        lengths; example: -k2; default: 12 "         << endl << endl; 
   cout << "   -p<max proof length> for maximal proof length (for engines "      << endl;
-  cout << "                        ursa/smt); example: -p64; default: 32"       << endl << endl;
+  cout << "                        ursa/smt); example: -p64; default: 42"       << endl << endl;
   cout << "   -nonegelim           do not use negation elimination axiom (R & ~R => false)"
        << endl << endl;
   cout << "   -noexcludedmiddle    do not use excluded middle axiom (R | ~R)"   << endl << endl;
