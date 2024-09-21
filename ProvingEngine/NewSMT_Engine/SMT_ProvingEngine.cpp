@@ -812,6 +812,7 @@ Expression SMT_ProvingEngine::IsQEDbyEFQ(unsigned s)
       c = False();
       for (unsigned int ss=0; ss < s; ss++) {  // check is an assumption is "bot"
          c |= ((StepKind(s) == QEDbyEFQ())
+            & (Cases(ss) == False())
             &  (   mSMT_theory == eSMTUFBV_ProvingEngine ?
                    Contents(ss,0) == Bot() :
                    ContentsPredicate(ss,0) == Bot()
@@ -819,6 +820,7 @@ Expression SMT_ProvingEngine::IsQEDbyEFQ(unsigned s)
       }
     } else {
       c = (StepKind(s) == QEDbyEFQ())
+      & (Cases(s-1) == False())
       & (  mSMT_theory == eSMTUFBV_ProvingEngine ?
            Contents(s-1,0) == Bot() :
            ContentsPredicate(s - 1,0) == Bot()
