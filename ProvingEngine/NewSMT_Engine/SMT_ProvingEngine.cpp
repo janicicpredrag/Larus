@@ -2284,7 +2284,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
             nPredicate1 = meProof[step].ContentsPredicate[1];
             for (size_t i = 0; i < mpT->GetSymbolArity(msPredicates[nPredicate1]); i++) {
               if (mSMT_theory == eSMTUFBV_ProvingEngine) {
-                  // TODO
+                  // TODO ; not needed?
               } else {
                 if (msConstants.find(meProof[step].ContentsArgument[1][i]) == msConstants.end() &&
                     numOfExistVars == 0)
@@ -2362,7 +2362,7 @@ bool SMT_ProvingEngine::ReconstructSubproof(const DNFFormula &formula,
                 newWitness = newWitness.substr(strlen("(witness "));
                 c = readNumber(newWitness);
                 newWitness = "witness_" + itos(c);
-                msConstants[inst[numOfUnivVars + i]+100] = newWitness;
+                msConstants[inst[numOfUnivVars + i]+100] = newWitness; // FIXME - eliminate the magic number
               }
               else
                 msConstants[inst[numOfUnivVars + i]] = newWitness;

@@ -8,6 +8,26 @@ ProofExport2Isabelle::ProofExport2Isabelle() {
   mbNeedGen = false;
 }
 
+// ---------------------------------------------------------------------------------
+
+void ProofExport2Isabelle::modifyWitnessName(string w) {
+    string s;
+    s = "w";
+    unsigned counter = mWitnesses.size();
+    while (mSymbolsTaken.find(s) != mSymbolsTaken.end())
+        s = "w" + to_string(counter++);
+    mWitnesses[w] = s;
+    mSymbolsTaken.insert(s);
+}
+
+// ---------------------------------------------------------------------------------
+
+string ProofExport2Isabelle::beautify(const string& w) {
+    if (mWitnesses.find(w) != mWitnesses.end())
+        return (mWitnesses.find(w)->second);
+    return w;
+}
+
 // ----------------------------------------------------------------------------------
 
 void ProofExport2Isabelle::OutputCLFormula(ofstream &outfile,
@@ -61,11 +81,11 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
     return;
   }
   if (f.GetName() == EQ_NATIVE_NAME) {
-    outfile << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString();
+      outfile << beautify(f.GetArg(0).ToSMTString()) << " = " << beautify(f.GetArg(1).ToSMTString());
     return;
   }
   else if (f.GetName() == PREFIX_NEGATED + EQ_NATIVE_NAME) {
-    outfile << "\\<not>(" << f.GetArg(0).ToSMTString() << " = " << f.GetArg(1).ToSMTString() << ") ";
+      outfile << "\\<not>(" << beautify(f.GetArg(0).ToSMTString()) << " = " << beautify(f.GetArg(1).ToSMTString()) << ") ";
     return;
   }
   else if (f.GetName().find(PREFIX_NEGATED) != string::npos)
@@ -74,7 +94,7 @@ void ProofExport2Isabelle::OutputFact(ofstream &outfile, const Fact &f) {
     outfile << f.GetName();
 
   for (size_t i = 0; i < f.GetArity(); i++)
-    outfile << " " << f.GetArg(i).ToSMTString();
+      outfile << " " << beautify(f.GetArg(i).ToSMTString());
 }
 
 // ---------------------------------------------------------------------------------
@@ -200,7 +220,7 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
     if (mbNeedGen) {
       outfile << Indent(0) << "fix ";
       for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-        outfile << inst.find(p.GetTheorem().GetUnivVar(i))->second;
+          outfile << beautify(inst.find(p.GetTheorem().GetUnivVar(i))->second);
         if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
           outfile << " ";
       }
@@ -256,7 +276,8 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
     if (new_witnesses.size() > 0) {
       outfile << "obtain ";
       for (size_t j = 0; j != new_witnesses.size(); j++) {
-        outfile  << new_witnesses[j].second << " ";
+          modifyWitnessName(new_witnesses[j].second);
+          outfile  << beautify(new_witnesses[j].second) << " ";
         if (j+1 != new_witnesses.size())
           outfile << ", ";
       }
@@ -319,7 +340,7 @@ void ProofExport2Isabelle::OutputProofEnd(ofstream &outfile,
       outfile << Indent(level) << "next" << endl;
   }
   outfile << Indent(level) << "qed" << endl;
-  if (level > 0 /*|| !mbNeedGen*/)
+  if (level > 0 || !mbNeedGen)
     outfile << Indent(level) << "from this show ";
   else
     outfile << Indent(level) << "from this have ";
