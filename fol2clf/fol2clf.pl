@@ -157,48 +157,51 @@ fol2clf_one(cnf(Name, negated_conjecture, F), M, FLdef2, fof(Name, axiom, Fgoal)
     fol2clf_one(fof(Name, axiom, F), M, FLdef2, fof(Name, axiom, Fgoal)).
 fol2clf_one(unknown, _, [], unknown).
 
+
 fol2clf_one(fof(Name, Ax, F), M, FLdef3, fof(Name, Ax, Fgoal)) :- 
-    nl,write('  input:          '), print(F,M),
-    deMorgan(F,F0),
-    nl,write('  deMorgan:       '), print(F0,M),
-    elimImpl(F0,F1),
-    nl,write('  elimImpl:       '), print(F1,M),      
-    standardize_apart(F1, F1a),
-    nl,write('  standardize ap: '), print(F1a,M),      
-    prenex(F1a,F2),
-    nl,write('  prenex:         '), print(F2,M),
-    group_same_quantifiers(F2,F3),
-    nl,write('  group same quan:'), print(F3,M),
-    eliminate_redundant_quantifiers(F3,F4),
-    eliminate_empty_quantifier_lists(F4,F5),
-    nl,write('  elim redu quan: '), print(F5,M),
-    deMorgan(F5,F5a),
-    simplify(F5a,F5b),
-    nl,write('  deMorgan:       '), print(F5b, M),
-    removeConstants(F5b, F5c), 
-    nl,write('  removeConstants:'), print(F5c, M),
-
-    elim_function_symbols(fof(Name, Ax, F5c), fof(Name, Ax, F6a)),
-    nl,write('  elim functions: '), print(F6a,M), 
-    elimImpl(F6a,F6),
-    nl,write('  elim impl:      '), print(F6,M), 
-
-
+    nl,write('* input:              '), print(F,M),
+    syntactic_transformation(F,F1,M),
+    nl,write('* syntactic trans:    '), print(F1,M), 
+    elim_function_symbols(fof(Name, Ax, F1), fof(Name, Ax, F6a)),
+    nl,write('* elim functions:     '), print(F6a,M), 
+    syntactic_transformation(F6a,F6,M),
+    nl,write('* syntactic trans:    '), print(F6,M),     
     transformInnerPart(fof(Name, Ax, F6), M, FLdef, fof(Name, Ax, F7)),
-    nl,write('  trans:          '), print(F7,M), nl, write('       extra:      '), print(FLdef,M), write('   '),     
-
-    
+    nl,write('* transform innerpart:'), print(F7,M), nl, write('       extra:      '), print(FLdef,M), write('   '),     
     universal_closure(fof(Name, Ax, F7), fof(Name, Ax, F8)),
-    nl,write('  univ closure:   '), print(F8,M), 
+    nl,write('* univ closure:       '), print(F8,M), 
     beautify(fof(Name, Ax, F8), fof(Name, Ax, Fgoal)),
-    nl,write('  beautify:       '), print(Fgoal,M),nl,
+    nl,write('* beautify:           '), print(Fgoal,M),nl,
     beautify(FLdef, FLdef1), write('       extra:      '), print(FLdef1,M), write('   '),     
     signature(Signature),
     retractall(signature(_)),
     assert(signature([])),
     add_new_axioms(Signature, FLdef1, FLdef2),
-    nl,write('  with ext sig:   '), print(FLdef2,M), write('   '), nl,
+    nl,write('* with ext sig:   '), print(FLdef2,M), write('   '), nl,
     fol2clf(FLdef2, FLdef3).
+
+
+syntactic_transformation(F,FF,M) :-
+    deMorgan(F,F0),
+    nl,write('    - deMorgan:       '), print(F0,M),
+    elimImpl(F0,F1),
+    nl,write('    - elimImpl:       '), print(F1,M),      
+    standardize_apart(F1, F1a),
+    nl,write('    - standardize ap: '), print(F1a,M),      
+    prenex(F1a,F2),
+    nl,write('    - prenex:         '), print(F2,M),
+    group_same_quantifiers(F2,F3),
+    nl,write('    - group same quan:'), print(F3,M),
+    eliminate_redundant_quantifiers(F3,F4),
+    eliminate_empty_quantifier_lists(F4,F5),
+    nl,write('    - elim redu quan: '), print(F5,M),
+    deMorgan(F5,F5a),
+    simplify(F5a,F5b),
+    nl,write('    - deMorgan:       '), print(F5b, M),
+    removeConstants(F5b, FF), 
+    nl,write('    - removeConstants:'), print(FF, M).
+
+
 
 % --------------------------------------
 % export CL formula to TPTP file
@@ -223,7 +226,7 @@ transformInnerPart(fof(Name, Ax, F), M, [[Fdef1, M], [Fdef2, M]], fof(Name, Ax, 
     skipExiQ(F1,V2,!U:F2),not(V2==[]),!,
     append(V1,V2,Vars),
     getNewPredicateName(P),
-    NewTerm =.. [P|Vars], write(NewTerm),
+    NewTerm =.. [P|Vars], 
     getNewAxiomName(Name, Name1),
     Fdef1 = fof(Name1, axiom, (!Vars: (!U:F2 => NewTerm))),
     getNewAxiomName(Name, Name2),
@@ -235,7 +238,7 @@ transformInnerPart(fof(Name, Ax, F), M, [[Fdef1, M], [Fdef2, M]], fof(Name, Ax, 
     skipUnivQ(F1,V2,?U:F2),not(V2==[]),!,
     append(V1,V2,Vars),
     getNewPredicateName(P),
-    NewTerm =.. [P|Vars], write(NewTerm),
+    NewTerm =.. [P|Vars], 
     getNewAxiomName(Name, Name1),
     Fdef1 = fof(Name1, axiom, (!Vars: (?U:F2 => NewTerm))),
     getNewAxiomName(Name, Name2),
@@ -243,15 +246,13 @@ transformInnerPart(fof(Name, Ax, F), M, [[Fdef1, M], [Fdef2, M]], fof(Name, Ax, 
     exportCorrectnessCondition_type1(fof(Name, Ax, F), M, [[Fdef1, M], [Fdef2, M]], fof(Name, Ax, (?V1: !V2: NewTerm))). % optional.    
 
 transformInnerPart(fof(Name, Ax, F), M, FFL, fof(Name, Ax, FF)) :-
-    deMorgan(F,F4),
-    nl,write('  deMorgan:       '), print(F4, M),         
-    distr_dnf(F4,F5),
-    nl,write('  big disj:       '), print(F5, M),
+    distr_dnf(F,F5),
+    nl,write('    - big disj:       '), print(F5, M),
     matrix(F5, UniVars, ExiVars, Matrix),
     separate(Matrix, ExiVars, L, R),
-    nl,write('  arrange:        '), write(' left: '), print(L, M), write(' right: '), print(R, M), nl,
+    nl,write('    - arrange:        '), write(' left: '), print(L, M), write(' right: '), print(R, M), 
     form_output(Name, Ax, M, UniVars, ExiVars, L, R, FFL, fof(Name, Ax, FF)),
-    nl,write('  separate:       '), print(FF, M), nl, write('       extra:      '), print(FFL,M), write('   '),
+    nl,write('    - separate:       '), print(FF, M), nl, write('       extra:      '), print(FFL,M), write('   '),
     exportCorrectnessCondition_type2(fof(Name, Ax, F), M, FFL, fof(Name, Ax, FF)). % optional    
 
 skipUnivQ((!V : F), Vars, FF) :- !,
@@ -322,7 +323,6 @@ elim_function_symbols(A, A) :-
 
 elim_function_symbols(fof(Name, Ax, F), fof(Name, Ax, FFF)) :-
     matrix_prenex(F, VarList, Matrix),
-%   matrix(F, UniVars, ExiVars, Matrix),
     getNewVarName('nVar', Vname),
     replace_compound_term(Matrix,Vname,R,Matrix2),
     R =.. [Psymbol | Args],
@@ -332,9 +332,11 @@ elim_function_symbols(fof(Name, Ax, F), fof(Name, Ax, FFF)) :-
     insert([ Psymbol , Arity], L, LL),
     assert(signature(LL)),
     add_premise(R, Matrix2, RR),
-    from_matrix_prenex_var(FF, Vname, VarList, RR),    
-%    from_matrix(FF, [Vname|UniVars], ExiVars, RR),    
-    elim_function_symbols(fof(Name, Ax, FF), fof(Name, Ax, FFF)).
+    from_matrix_(F1, VarList, ![Vname ] : RR),    
+    eliminate_empty_quantifier_lists(F1,F2),    
+%    from_matrix_prenex_var(FF, Vname, VarList, RR),    
+%%    from_matrix(FF, [Vname|UniVars], ExiVars, RR),    
+    elim_function_symbols(fof(Name, Ax, F2), fof(Name, Ax, FFF)).
 elim_function_symbols(fof(Name, Ax, F), fof(Name, Ax, F)).    
 
 add_premise(R, F1 => F2, (R & F1) => F2) :- !.
@@ -605,11 +607,13 @@ matrix_prenex(F, [UV, EV | VarList], Matrix) :-
     skipExiQ(F1,EV,F2),     
     matrix_prenex(F2, VarList, Matrix).
 
+/* 
 from_matrix_prenex_var(F, V, [U,E|T], Matrix) :- !,
   append([V],U,U2),
   from_matrix_(F,[U2,E|T], Matrix). 
 from_matrix_prenex_var(F, V, [], Matrix) :- 
   from_matrix_(F,[[V],[]], Matrix). 
+*/
 
 from_matrix_(Matrix, [], Matrix). 
 from_matrix_(!UV: ?EV: M1, [UV, EV | VarList], Matrix) :-
@@ -1108,22 +1112,22 @@ pretty_print(A - B, M) :- !,
     pretty_print(B, M).
 pretty_print(A & B, M) :- 
     more_conjunctions(A & B),!,
-    write('('),
+    write(' ('),
     print_conjuncts(A & B, M),
     write(')').
 pretty_print(A & B, M) :- !,
-    write('('),
+    write(' ('),
     pretty_print(A, M),
     write(' & '), 
     pretty_print(B, M),
     write(')').
 pretty_print(A | B, M) :- 
     more_disjunctions(A | B),!,
-    write('('),
+    write(' ('),
     print_disjuncts(A | B, M),
     write(')').
 pretty_print(A | B, M) :- !,
-    write('('),
+    write(' ('),
     pretty_print(A, M),
     write(' | '), 
     pretty_print(B, M),
@@ -1133,7 +1137,7 @@ pretty_print(A <=> B, M) :- !,
     write(' <=> '), 
     pretty_print(B, M).
 pretty_print(A => B, M) :- !,
-    write('('), 
+    write(' ('), 
     pretty_print(A, M),
     write(') => ('), 
     pretty_print(B, M),
