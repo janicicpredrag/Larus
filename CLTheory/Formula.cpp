@@ -162,7 +162,14 @@ bool Term::ReadTPTP()
           mFunctionSymbols.push_back(make_pair(function_symbol,arity));
           bFirst = false;
         } else {
-          mFunctionSymbols.pop_back();
+          // mFunctionSymbols.pop_back();
+          for(unsigned int i=0; i<mFunctionSymbols.size(); i++)
+          {
+            if (mFunctionSymbols[i].first == function_symbol) {
+              mFunctionSymbols.erase (mFunctionSymbols.begin()+i);
+              break;
+            }
+          }
           mFunctionSymbols.push_back(make_pair(function_symbol,++arity)); // TODO check if there is already
         }
         Term t;

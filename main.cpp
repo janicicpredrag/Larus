@@ -224,8 +224,10 @@ int main(int argc, char **argv) {
         params.msHammerInvoke = DEFAULT_HAMMER;
       } else {
         // for instance: -r"vampire --proof tptp --output_axiom_names on # "
-        // for instance: -r"eprover --auto -p # "
         // for instance: -r"tptp_to_ladr < # | prover9 2> /dev/null "
+        // for instance: -r"eprover --auto -p # "
+        // for instance: -r"eprover --auto-schedule # "
+        // for instance: -r" "
         params.msHammerInvoke = (argv[i] + 2);
       }
     }
