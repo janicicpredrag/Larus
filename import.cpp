@@ -202,6 +202,10 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     cout << "--- Adding substitution axioms: " << endl;
     Theory T1 = T;
     T.AddEqSubAxioms(); // no built in support
+    if (params.eEngine == eSMTUFLIA_ProvingEngine ||
+        params.eEngine == eSMTUFBV_ProvingEngine)
+        T.AddEqSubAxiomsForFunctionSymbols();
+
     T.printAxioms();
 
     if (params.msHammerInvoke != "" && vampire_succeeded) {

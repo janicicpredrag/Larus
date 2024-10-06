@@ -43,6 +43,7 @@ public:
   void AddNegElimAxioms();
   void AddExcludedMiddleAxioms();
   void AddEqSubAxioms();
+  void AddEqSubAxiomsForFunctionSymbols();
 
   size_t NumberOfAxioms() const;
   const pair<CLFormula, string> &Axiom(size_t i) const;

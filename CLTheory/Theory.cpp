@@ -247,8 +247,7 @@ void Theory::AddEqSubAxioms() {
   if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end())
     return;
 
-  // add the axiom  eq(A,B) & R(..A..) => R(..B..) false for every predicate
-  // symbol
+  // add the axiom  eq(A,B) & R(..A..) => R(..B..) for every predicate symbol
   for (size_t i = 1; i < mSignatureP.size(); i++) {
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
@@ -291,6 +290,57 @@ void Theory::AddEqSubAxioms() {
       axiom.AddUnivVar("X");
       AddAxiom(axiom, mSignatureP[i].first + "EqSub" + to_string(j));
     }
+  }
+}
+
+
+void Theory::AddEqSubAxiomsForFunctionSymbols() {
+  if (mOccuringPredicateSymbols.find(EQ_NATIVE_NAME) == mOccuringPredicateSymbols.end())
+        return;
+
+  // add the axiom  eq(A,B) => f(..A..) = f(..B..) for every function symbol
+  for (size_t i = 0; i < mSignatureF.size(); i++) {
+      for (size_t j = 0; j < mSignatureF[i].second; j++) {
+          ConjunctionFormula premises;
+          DNFFormula conclusion;
+          ConjunctionFormula conc0;
+          Fact a, c;
+          Term t;
+          a.SetName(EQ_NATIVE_NAME);
+          t.ReadNonCompoundString(string(1, 'A' + j));
+          a.SetArg(0, t);
+          t.ReadNonCompoundString("X");
+          a.SetArg(1, t);
+          premises.Add(a);
+
+          Term tc;
+          c.SetName(EQ_NATIVE_NAME);
+          string ts = "(" + mSignatureF[i].first;
+          for (size_t k = 0; k < mSignatureF[i].second; k++) {
+            ts += " " + string(1, 'A' + k);
+          }
+          ts += ")";
+          tc.ReadSMTlibString(ts);
+          c.SetArg(0, tc);
+          ts = "(" + mSignatureF[i].first;
+          for (size_t k = 0; k < mSignatureF[i].second; k++) {
+            if (k != j)
+              ts += " " + string(1, 'A' + k);
+            else
+              ts += " " + string(1, 'X');
+          }
+          ts += ")";
+          tc.ReadSMTlibString(ts);
+          c.SetArg(1, tc);
+          conc0.Add(c);
+          conclusion.Add(conc0);
+
+          CLFormula axiom(premises, conclusion);
+          for (size_t k = 0; k < mSignatureF[i].second; k++)
+              axiom.AddUnivVar(string(1, 'A' + k));
+          axiom.AddUnivVar("X");
+          AddAxiom(axiom, mSignatureF[i].first + "EqSub" + to_string(j));
+      }
   }
 }
 
