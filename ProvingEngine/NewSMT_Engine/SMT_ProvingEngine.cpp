@@ -280,7 +280,7 @@ Expression SMT_ProvingEngine::IsMPstep(unsigned s)
       }
     }
     if (mSMT_theory != eSMTUFBV_ProvingEngine) // difficult to support it TODO
-      if (mParams.mbNativeEQsub /* && !mParams.mbInlineAxioms*/) // inlining give better proofs without native eq support
+      if (mParams.mbNativeEQsub /* && !mParams.mbInlineAxioms*/) // inlining gives better proofs without native eq support
         c |= IsMPbyEqSub(s);
 
     // canonization
@@ -1091,8 +1091,8 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   Expression oneOfSteps = False();
   Expression oneStep;
   for(unsigned proofStep = from; proofStep <= to; proofStep++) {
+    oneStep = (Expression(proofStep) < ProofSize());
     if (justification.GetName() != "_") {
-      oneStep = (Expression(proofStep) < ProofSize());
       oneStep &= (StepKind(proofStep) == MP());
       if (AxiomUsed != -1) {
         oneStep &= (AxiomApplied(proofStep) == (unsigned)AxiomUsed);
