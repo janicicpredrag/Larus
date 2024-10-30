@@ -1,11 +1,16 @@
 #include "common.h"
 #include "CLTheory/Formula.h"
+#include "CLTheory/Theory.h"
 #include "hammering.h"
+
+extern ReturnValue ReadTPTPConjecture(const string inputFile,
+                                      proverParams &params, Theory &T,
+                                      CLFormula &theorem, string &theoremName,
+                                      vector<tHint> &hints);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-VampireReturnValue
-FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
+VampireReturnValue FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
                       const CLFormula &theorem, const string &hammer_invoke,
                       unsigned time_limit) {
   cout << "--- Hammer filtering: filtering out input axioms (input: "
@@ -24,7 +29,7 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   TPTPfile.close();
 
   vector<string> neededAxioms;
-  string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
+  string vampire_solution = tmpnam(NULL); // "hammeroutput.txt"; //
   string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
   const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
                        " > " + vampire_solution;
@@ -81,6 +86,59 @@ FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms,
   cout << "       Hammer filtering (failure): output size: " << axioms.size()
        << endl;
   return eVampireUnknown;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+// invoke full hammering (no proving)
+void FullHammering(const string inputFileName,
+                   proverParams &params, Theory &T,
+                   CLFormula &theorem, string &theoremName,
+                   vector<tHint> &hints) {
+    Timer timer;
+    timer.start();
+    cout << "--- Reading file: " << inputFileName << endl;
+    if (ReadTPTPConjecture(inputFileName, params, T, theorem, theoremName, hints) == eOK) {
+        cout << "--- Axioms: " << endl;
+        for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();  it != T.mCLaxioms.end(); it++)
+            cout << "       fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+        cout << "--- Theorem name: " << theoremName << endl;
+        cout << "--- Theorem to be proved: " << endl;
+        cout << "       fof(" << theoremName << ", " << " conjecture, " << theorem << ")." << endl;
+    } else {
+        cout << "Bad or missing input file." << endl << endl;
+        return;
+    }
+
+    unsigned inputSize, outputSize, i=1;
+    VampireReturnValue r;
+    do {
+        cout << "--------------------------------------------- " << endl;
+        cout << "Iteration " << i++ << endl;
+        inputSize = T.mCLaxioms.size();
+        r = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit);
+        outputSize = T.mCLaxioms.size();
+        if (r == eVampireUnsat) {
+            ofstream outputFile;
+            outputFile.open(inputFileName+"_fh");
+            for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();  it != T.mCLaxioms.end(); it++) {
+                cout << "       fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+                outputFile << "fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+            }
+            outputFile << "fof(" << theoremName  << ", conjecture, " << theorem << ")." << endl;
+            outputFile.close();
+        }
+    } while (r == eVampireUnsat && inputSize != outputSize);
+
+    if (r != eVampireUnsat) {
+        switch (r) {
+        case eVampireSat:                cout << "       Conjecture not valid! "; break;
+        case eVampireErrorReadingAxioms: cout << "       Error reading axioms! "; break;
+        default:                         cout << "       Unknown status! ";
+        }
+    }
+    cout << "--------------------------------------------- " << endl;
+    cout << "Elapsed time: " << fixed << setprecision(2) << timer.elapsed() << "s" << endl << endl;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

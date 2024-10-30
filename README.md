@@ -109,6 +109,10 @@ otherwise:
                           default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
 
    `-a<invoke>`           the way the external prover is invoked as a hammer for abduction 
+   
+   '-u'                   full-hammering - no proving, only hammering until a fixed point 
+                          is reached; the output file name is input name plus suffix '_fh'
+                          default: false
 
    `-v<prover>`           for generating and verifying the proof by an interactive theorem prover (coq, mizar);
                           example: `-vcoq`; default: none

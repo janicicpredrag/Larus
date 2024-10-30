@@ -1,14 +1,15 @@
-#include "CLTheory/Theory.h"
-#include "common.h"
 #include <iostream>
 #include <string.h>
 #include <string>
 #include <sys/time.h>
+#include "CLTheory/Theory.h"
+#include "hammering.h"
+#include "common.h"
 
 using namespace std;
 
-bool USING_ORIGINAL_SIGNATURE_EQ;
-bool USING_ORIGINAL_SIGNATURE_NEG;
+bool USING_ORIGINAL_SIGNATURE_EQ  = true;
+bool USING_ORIGINAL_SIGNATURE_NEG = true;
 
 void printHelp();
 extern ReturnValue ReadTPTPConjecture(const string inputFile,
@@ -58,8 +59,11 @@ int main(int argc, char **argv) {
   USING_ORIGINAL_SIGNATURE_NEG = false;
 
   bool wrongInput = false;
+  bool bFullHammering = false;
+  params.msHammerInvoke = DEFAULT_HAMMER;                 // for full hammering
+  params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT; // for full hammering
 
-  string inputFilename;
+  string inputFileName;
   for (int i = 1; i < argc; i++) {
 
     // choosing input format
@@ -275,22 +279,29 @@ int main(int argc, char **argv) {
     }
 
     else if (argv[i][0] != '-') {
-      inputFilename.assign(argv[i], strlen(argv[i]));
-      } else
-      wrongInput = true;
+      inputFileName.assign(argv[i], strlen(argv[i]));
     }
 
-  if (inputFilename == "")
+    else if (argv[i][0] == '-' && argv[i][1] == 'u') {
+      bFullHammering = true;
+    }
+
+    else {
+      wrongInput = true;
+    }
+  }
+
+  if (inputFileName == "")
     wrongInput = true;
 
-  if (params.mbMizar && params.mbInlineAxioms) {
+  if (!bFullHammering && params.mbMizar && params.mbInlineAxioms) {
     cout << "Verification of proof by Mizar cannot ";
     cout << "be used along with inlining of axioms.";
     cout << endl << endl;
     return 0;
   }
 
-  if (params.msHammerInvoke != "" && params.number_of_abducts > 0) {
+  if (!bFullHammering && params.msHammerInvoke != "" && params.number_of_abducts > 0) {
     cout << "Filtering by an external FOL prover cannot be used";
     cout << "along with adbuction (because it is expected that";
     cout << "the conjecture is not provable without abducts ";
@@ -299,7 +310,8 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  if (params.number_of_abducts > 0 &&
+  if (!bFullHammering &&
+      params.number_of_abducts > 0 &&
       (params.eEngine == eSTL_ProvingEngine ||
       params.eEngine == eSQL_ProvingEngine ||
       params.eEngine == eURSA_ProvingEngine ||
@@ -324,6 +336,14 @@ int main(int argc, char **argv) {
   vector<tHint> hints;
   ReturnValue rv;
 
+  // invoke full hammering (until fix-point; no proving)
+  if (bFullHammering) {
+      USING_ORIGINAL_SIGNATURE_EQ = true;
+      USING_ORIGINAL_SIGNATURE_NEG = true;
+      FullHammering(inputFileName, params, T, theorem, theoremName, hints);
+      return 0;
+  }
+
   params.args = "";
   for (int i = 0; i < argc; i++) {
       params.args += " ";
@@ -331,7 +351,7 @@ int main(int argc, char **argv) {
   }
 
   timer.start();
-  if ((rv = ReadTPTPConjecture(inputFilename, params,
+  if ((rv = ReadTPTPConjecture(inputFileName, params,
                                T, theorem, theoremName, hints)) == eOK) {
     if ((rv = SetUpAxioms(params, T, theorem, theoremName)) == eOK) {
 
@@ -345,7 +365,7 @@ int main(int argc, char **argv) {
       }
 
       rv = SetUpEngineAndProveConjecture(params, T, theorem, theoremName,
-                                         inputFilename, hints);
+                                         inputFileName, hints);
     }
   }
   double elapsed_secs = timer.elapsed();
@@ -441,6 +461,10 @@ void printHelp() {
   cout << "                        default:   'vampire --mode casc --proof tptp --output_axiom_names on '# " << endl << endl;
 
   cout << "   -a<invoke>           the way the external prover is invoked as a hammer for abduction"         << endl << endl;
+
+  cout << "   -u                   full-hammering - no proving, only hammering until a fixed point "         << endl;
+  cout << "                        is reached; the output file name is input name plus suffix _fh"           << endl;
+  cout << "                        default: false"                                                           << endl << endl;
 
   cout << "   -v<prover>           for generating and verifying the proof by "  << endl;
   cout << "                        an interactive theorem prover "              << endl

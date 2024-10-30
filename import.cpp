@@ -42,6 +42,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   if (theorem.UsesNativeEq())
     T.SetUseNativeEq(true);
   if (T.GetUseNativeEq()) {
+    USING_ORIGINAL_SIGNATURE_EQ = true;
     params.mbNativeEQ = true;
     params.mbNativeEQsub = true;
   }
@@ -70,16 +71,16 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   vampire_succeeded = true;
   if (vampire_succeeded && params.msHammerInvoke != "") {
     // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    USING_ORIGINAL_SIGNATURE_EQ = true;
-    USING_ORIGINAL_SIGNATURE_NEG = true;
+//    USING_ORIGINAL_SIGNATURE_EQ = true;
+//    USING_ORIGINAL_SIGNATURE_NEG = true;
     if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                               params.vampire_time_limit) == eVampireUnsat)
       vampire_succeeded = true;
-    USING_ORIGINAL_SIGNATURE_EQ = false;
-    USING_ORIGINAL_SIGNATURE_NEG = false;
     cout << "       After initial filtering : output size: " <<
     T.mCLaxioms.size() << endl;
     T.printAxioms();
+//    USING_ORIGINAL_SIGNATURE_EQ = false;
+//    USING_ORIGINAL_SIGNATURE_NEG = false;
   }
 
   // ************  CL -> CL2 normalization  ************
@@ -116,14 +117,14 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   vampire_succeeded = true;
   // ************ Filtering axioms a la hammer by FOL prover ************
   if (vampire_succeeded && params.msHammerInvoke != "") {
-    USING_ORIGINAL_SIGNATURE_EQ = true;
-    USING_ORIGINAL_SIGNATURE_NEG = true;
+//    USING_ORIGINAL_SIGNATURE_EQ = true;
+//    USING_ORIGINAL_SIGNATURE_NEG = true;
     if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                               params.vampire_time_limit) == eVampireUnsat)
       vampire_succeeded = true;
     T.printAxioms();
-    USING_ORIGINAL_SIGNATURE_EQ = false;
-    USING_ORIGINAL_SIGNATURE_NEG = false;
+//    USING_ORIGINAL_SIGNATURE_EQ = false;
+//    USING_ORIGINAL_SIGNATURE_NEG = false;
   }
 
   /*
@@ -156,7 +157,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     if (!params.mbNoExcludedMiddle) {
       // ************ Filtering axioms a la hammer by FOL prover ************
       if (vampire_succeeded && params.msHammerInvoke != "") {
-        USING_ORIGINAL_SIGNATURE_EQ = true;
+//        USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         VampireReturnValue rv =
             FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
@@ -179,7 +180,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       cout << "       After check of excluded middle axioms: output size: "
            << T.mCLaxioms.size() << endl;
       T.printAxioms();
-      USING_ORIGINAL_SIGNATURE_EQ = false;
+ //     USING_ORIGINAL_SIGNATURE_EQ = false;
+      USING_ORIGINAL_SIGNATURE_NEG = true;
     }
 
     // ************ Filtering by reachability ************
@@ -205,12 +207,10 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     if (params.eEngine == eSMTUFLIA_ProvingEngine ||
         params.eEngine == eSMTUFBV_ProvingEngine)
         T.AddEqSubAxiomsForFunctionSymbols();
-
+    USING_ORIGINAL_SIGNATURE_EQ = false;
     T.printAxioms();
 
     if (params.msHammerInvoke != "" && vampire_succeeded) {
-      USING_ORIGINAL_SIGNATURE_EQ = false;
-      USING_ORIGINAL_SIGNATURE_NEG = false;
       vampire_succeeded =
           (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                  params.vampire_time_limit) == eVampireUnsat);
@@ -218,10 +218,12 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         params.mbNativeEQsub = false; // do not use native EqSub support
         cout << "       (Not using native EqSub support)" << endl;
       } else if (!(params.eEngine == eURSA_ProvingEngine ||
-                 params.eEngine == eSTL_ProvingEngine)) {
+                 params.eEngine == eSTL_ProvingEngine ||
+                 params.eEngine == eSMTUFBV_ProvingEngine)) {
         T = T1;
         params.mbNativeEQsub = true;
         cout << "       (Using native EqSub support)" << endl;
+        USING_ORIGINAL_SIGNATURE_EQ = true;
       }
       T.printAxioms();
     } else {
@@ -231,9 +233,9 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         T = T1;
         params.mbNativeEQsub = true;
         cout << "      (Using native EqSub support)" << endl;
+        USING_ORIGINAL_SIGNATURE_EQ = true;
       }
     }
-
   }
 
   /*
