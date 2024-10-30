@@ -50,8 +50,7 @@
 % ---------------------------------------- 
 % rewrite rules for formula transformation
 
-rewrite_rule('rm_univ', (!V : F), ~(?V : (~F)), [quantifier_free(F)]).
-rewrite_rule('rm_redundant', (? V : F), F, [not(occurs(V,F))]).
+rewrite_rule('rm_univ', (!V : F), ~(?V : (~F)), []).
 rewrite_rule('rm_impl', F1 => F2, (~F1 | F2), []).
 rewrite_rule('rm_equiv', (F1 <=> F2), (F1 => F2) & (F2 => F1), []).
 rewrite_rule('rm_top', ~ true, false, []).
