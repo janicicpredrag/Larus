@@ -110,7 +110,7 @@ otherwise:
 
    `-a<invoke>`           the way the external prover is invoked as a hammer for abduction 
    
-   '-u'                   full-hammering - no proving, only hammering until a fixed point 
+   `-u`                   full-hammering - no proving, only hammering until a fixed point 
                           is reached; the output file name is input name plus suffix '_fh'
                           default: false
 

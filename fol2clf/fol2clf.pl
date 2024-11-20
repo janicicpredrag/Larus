@@ -72,6 +72,7 @@ rewrite_rule('st_conj_disj2', ((F2 | F3) & F1), (F2 & F1) | (F3 & F1), []).
 rewrite_rule('st_disj_conj1', (F1 | (F2 & F3)), (F1 | F2) & (F1 | F3), []).
 rewrite_rule('st_disj_conj2', ((F2 & F3) | F1), (F2 | F1) & (F3 | F1), []).
 rewrite_rule('thin_neg', (~(~(F))), F, []).
+rewrite_rule('thin_neg_eq', (~(A-B)), A=B, []).
 rewrite_rule('left_assoc_conj', (F1 & (F2 & F3)), ((F1 & F2) & F3), []).
 rewrite_rule('left_assoc_disj', (F1 | (F2 | F3)), ((F1 | F2) | F3), []).
 rewrite_rule('reduce_bool1a', (F1 & $true), F1, []).
@@ -479,7 +480,9 @@ separate(C, Vars, LL, RR) :-
     free_from_vars(C, Vars, L, R),
     simplify(L, L1),
     simplify(R, R1),
+write("ulaz") ,write(~L1), writeln(" "),
     deMorgan(~L1,L2),
+write("izlaz") ,write(L2),    writeln(" "),
     distr_dnf(L2, LL),
     distr_dnf(R1, RR),
     term_size(C, Csize),
@@ -909,7 +912,8 @@ deMorgan(F, FF) :-
     rewrite_all([
         'st_neg_conj',
         'st_neg_disj',
-        'thin_neg'
+        'thin_neg',
+        'thin_neg_eq'
         ],F,FF).
 
 % -------------------------------------
