@@ -55,12 +55,11 @@ int main(int argc, char **argv) {
   params.number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
   params.show = DEFAULT_SHOW;
 
-  USING_ORIGINAL_SIGNATURE_EQ = false;
-  USING_ORIGINAL_SIGNATURE_NEG = false;
+  USING_ORIGINAL_SIGNATURE_EQ = true;
+  USING_ORIGINAL_SIGNATURE_NEG = true;
 
   bool wrongInput = false;
   bool bFullHammering = false;
-  params.msHammerInvoke = DEFAULT_HAMMER;                 // for full hammering
   params.vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT; // for full hammering
 
   string inputFileName;
@@ -340,6 +339,8 @@ int main(int argc, char **argv) {
   if (bFullHammering) {
       USING_ORIGINAL_SIGNATURE_EQ = true;
       USING_ORIGINAL_SIGNATURE_NEG = true;
+      if (params.msHammerInvoke == "")
+          params.msHammerInvoke = DEFAULT_HAMMER;
       FullHammering(inputFileName, params, T, theorem, theoremName, hints);
       return 0;
   }

@@ -468,14 +468,8 @@ void Theory::AddPredicateSymbol(const string &pp, unsigned arity) {
   if (p == "true" || p == "$true" || p == "false"|| p == "$false")
     return;
 
-  if (pp == "_")
+  if (p == "_")
       return; // special symbol for underconstrained formulae
-
-  if (mOccuringPredicateSymbols.find(p) == mOccuringPredicateSymbols.end())
-    mOccuringPredicateSymbols.insert(p);
-/*for (std::set<std::string>::iterator it = mOccuringPredicateSymbols.begin();
-     it != mOccuringPredicateSymbols.end(); it++)
-   cout << "sadrzaj: " << *it << endl;*/
 
 // This is ugly convention: predicates with names beginning with PREFIX_NEGATED
 // are negated versions
@@ -487,6 +481,11 @@ void Theory::AddPredicateSymbol(const string &pp, unsigned arity) {
   if (p[0] == '$')
     p = p.substr(1, p.size() - 1);
 
+  if (p.size() > 3 && p.substr(0, 3) == PREFIX_NEGATED)
+     p = p.substr(3, p.size() - 3);
+  if (p == sBOT)
+    p = sTOP;
+
   for (size_t i = 0; i < mSignatureP.size(); i++) {
     if (mSignatureP[i].first == p) {
 #ifdef DEBUG_THEORY
@@ -496,13 +495,14 @@ void Theory::AddPredicateSymbol(const string &pp, unsigned arity) {
     }
   }
 
-  if (p == sBOT || p == sTOP) {
-    mSignatureP.push_back(pair<string, unsigned>(sBOT, 0));
-    mSignatureP.push_back(pair<string, unsigned>(sTOP, 0));
-  } else if (p.size() > 3 && p.substr(0, 3) == PREFIX_NEGATED) {
-    mSignatureP.push_back(
-        pair<string, unsigned>(p.substr(3, p.size() - 3), arity));
-    mSignatureP.push_back(pair<string, unsigned>(p, arity));
+  if (mOccuringPredicateSymbols.find(p) == mOccuringPredicateSymbols.end()) {
+      mOccuringPredicateSymbols.insert(p);
+      mOccuringPredicateSymbols.insert(PREFIX_NEGATED + p);
+  }
+
+  if(p == sTOP) {
+    mSignatureP.push_back(pair<string, unsigned>(sBOT, arity));
+    mSignatureP.push_back(pair<string, unsigned>(sTOP, arity));
   } else {
     mSignatureP.push_back(pair<string, unsigned>(p, arity));
     mSignatureP.push_back(pair<string, unsigned>(PREFIX_NEGATED + p, arity));

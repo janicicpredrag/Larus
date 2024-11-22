@@ -150,38 +150,37 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   if (!params.mbNoExcludedMiddle || !params.mbNoNegElim) {
     cout << "--- Adding axioms for excluded middle and negation elimination."
          << endl;
-    cout << "       Checking validity without excluded middle: size: "
-         << T.mCLaxioms.size() << endl;
     T.printAxioms();
 
     if (!params.mbNoExcludedMiddle) {
       // ************ Filtering axioms a la hammer by FOL prover ************
       if (vampire_succeeded && params.msHammerInvoke != "") {
-//        USING_ORIGINAL_SIGNATURE_EQ = true;
+        cout << "       Checking validity without excluded middle: size: "
+             << T.mCLaxioms.size() << endl;
+          //        USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         VampireReturnValue rv =
             FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                   params.vampire_time_limit);
-        if (rv == eVampireSat) {
+        if (rv != eVampireUnsat) {
           vampire_succeeded = false;
           T.AddExcludedMiddleAxioms();
+          cout << "       Filtering with excluded middle: size: "
+                 << T.mCLaxioms.size() << endl;
           if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                     params.vampire_time_limit) == eVampireUnsat)
             vampire_succeeded = true;
-        } else if (rv == eVampireUnsat)
+        } else
           vampire_succeeded = true;
-        else {
-          vampire_succeeded = false;
-          T.AddExcludedMiddleAxioms();
-        }
+
+        cout << "       After check of excluded middle axioms: output size: "
+             << T.mCLaxioms.size() << endl;
+        T.printAxioms();
+        //     USING_ORIGINAL_SIGNATURE_EQ = false;
+        USING_ORIGINAL_SIGNATURE_NEG = true;
       } else {
         T.AddExcludedMiddleAxioms();
       }
-      cout << "       After check of excluded middle axioms: output size: "
-           << T.mCLaxioms.size() << endl;
-      T.printAxioms();
- //     USING_ORIGINAL_SIGNATURE_EQ = false;
-      USING_ORIGINAL_SIGNATURE_NEG = true;
     }
 
     // ************ Filtering by reachability ************
@@ -210,7 +209,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     USING_ORIGINAL_SIGNATURE_EQ = false;
     T.printAxioms();
 
-    if (params.msHammerInvoke != "" && vampire_succeeded) {
+    if (params.msHammerInvoke != "" /*&& !vampire_succeeded*/) {
       vampire_succeeded =
           (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                  params.vampire_time_limit) == eVampireUnsat);
@@ -306,6 +305,17 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     cout << "--- Support for case splits turned ON. " << endl;
   else
     cout << "--- Support for case splits turned OFF. " << endl;
+
+  /*
+  print final axioms and the conjecture:
+  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+       it !=  T.mCLaxioms.end(); it++)
+      cout << "fof(" << it->second << ", axiom, " << it->first << ")."
+               << endl;
+  cout << "fof("
+           << "conjecture"
+           << ", conjecture, " << theorem << ")." << endl;
+  */
 
   cout << "--------------------------------------------------------------------"
        << endl;
