@@ -155,7 +155,7 @@ string replacestring(const string& str, const string& from, const string& to) {
 
 string replaceAll(const string &s, const string &search, const string &replace ) {
     string ss = s;
-    for( size_t pos = 0; ; pos += replace.length() ) {
+    for( size_t pos = 0 ; ; pos++) {
         pos = ss.find( search, pos );
         if( pos == string::npos ) break;
         ss.erase( pos, search.length() );
