@@ -168,16 +168,19 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
           cout << "       Filtering with excluded middle: size: "
                  << T.mCLaxioms.size() << endl;
           if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                    params.vampire_time_limit) == eVampireUnsat)
+                                    params.vampire_time_limit) == eVampireUnsat) {
             vampire_succeeded = true;
-        } else
+            USING_ORIGINAL_SIGNATURE_NEG = true;
+          }
+        } else {
           vampire_succeeded = true;
-
+          USING_ORIGINAL_SIGNATURE_NEG = false;
+        }
         cout << "       After check of excluded middle axioms: output size: "
              << T.mCLaxioms.size() << endl;
         T.printAxioms();
         //     USING_ORIGINAL_SIGNATURE_EQ = false;
-        USING_ORIGINAL_SIGNATURE_NEG = true;
+
       } else {
         T.AddExcludedMiddleAxioms();
       }
@@ -214,6 +217,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
           (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                  params.vampire_time_limit) == eVampireUnsat);
       if (vampire_succeeded) {
+        USING_ORIGINAL_SIGNATURE_EQ = false;
         params.mbNativeEQsub = false; // do not use native EqSub support
         cout << "       (Not using native EqSub support)" << endl;
       } else if (!(params.eEngine == eURSA_ProvingEngine ||

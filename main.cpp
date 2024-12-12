@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
       if (strlen(argv[i] + 2) == 0) {
         params.msHammerInvoke = DEFAULT_HAMMER;
       } else {
-        // for instance: -r"vampire --proof tptp --output_axiom_names on # "
+        // for instance: -r"vampire --proof tptp --cores 4 --output_axiom_names on # "
         // for instance: -r"tptp_to_ladr < # | prover9 2> /dev/null "
         // for instance: -r"eprover --auto -p # "
         // for instance: -r"eprover --auto-schedule # "
