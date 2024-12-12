@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <iostream>
-#include<cmath>
+#include <iomanip>
+#include <sstream>
+#include <cmath>
 #include "Expression.h"
 #include "common.h"
 #include "../SMTOut.h"

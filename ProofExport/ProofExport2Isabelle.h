@@ -3,7 +3,6 @@
 
 #include "ProofExport.h"
 
-
 class ProofExport2Isabelle : public ProofExport
 {
 public:

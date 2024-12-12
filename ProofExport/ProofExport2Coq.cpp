@@ -1,3 +1,4 @@
+#include <sstream>
 #include "ProofExport2Coq.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Formula.h"

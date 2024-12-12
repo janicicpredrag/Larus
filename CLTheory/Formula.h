@@ -5,7 +5,9 @@
 
 #include <vector>
 #include <ostream>
+#include <assert.h>
 #include "common.h"
+
 
 using namespace std;
 

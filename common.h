@@ -1,18 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <assert.h>
-#include <ctype.h>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <set>
-#include <sstream>
-#include <string.h>
 #include <string>
-#include <tuple>
-#include <vector>
+#include <string.h>
 #include <sys/time.h>
 
 using namespace std;
@@ -101,8 +91,8 @@ const bool DEFAULT_SHORTEST_PROOF = false;
 const bool DEFAULT_EXACT_LENGTH = false;
 const bool DEFAULT_SIMP = true;
 const bool DEFAULT_NEEDS_CASE_SPLITS = true;
-const string DEFAULT_HAMMER = "vampire --mode casc --proof tptp --output_axiom_names on # "; // --cores 4
-const string DEFAULT_HAMMER_FOR_ABDUCTS = "vampire --mode casc --proof tptp --output_axiom_names on # "; // --cores 4
+const string DEFAULT_HAMMER = "vampire --mode casc --cores 4 --proof tptp --output_axiom_names on # "; //
+const string DEFAULT_HAMMER_FOR_ABDUCTS = "vampire --mode casc --cores 4 --proof tptp --output_axiom_names on # "; //
 const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
 const bool DEFAULT_INLINE_AXIOMS = true;
 const unsigned DEFAULT_NUMBER_OF_ABDUCTS = 0;

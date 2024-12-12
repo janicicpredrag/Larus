@@ -1,6 +1,5 @@
 #include "ProvingEngine/STL_Engine/STL_FactsDatabase.h"
-#include <assert.h>
-#include <sstream>
+#include <iostream>
 
 using namespace std;
 

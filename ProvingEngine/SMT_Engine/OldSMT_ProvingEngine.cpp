@@ -1,4 +1,8 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <string>
+#include <sstream>
 #include "OldSMT_ProvingEngine.h"
 #include "CLProof/CLProof.h"
 #include "CLTheory/Theory.h"

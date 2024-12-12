@@ -1,6 +1,7 @@
 #ifndef ProofExport2GCLC_H
 #define ProofExport2GCLC_H
 
+#include <sstream>
 #include <map>
 #include <set>
 #include "ProofExport.h"

@@ -2,6 +2,7 @@
 
 // #define DEBUG_THEORY
 
+#include <iostream>
 #include <assert.h>
 
 // --------------------------------------------------------------

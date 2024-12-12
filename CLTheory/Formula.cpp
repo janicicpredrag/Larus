@@ -1,3 +1,4 @@
+#include <iostream>
 #include "CLTheory/Formula.h"
 #include <assert.h>
 

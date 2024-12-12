@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "URSA_ProvingEngine.h"
 #include "../STL_Engine/STL_FactsDatabase.h"
 #include "CLProof/CLProof.h"

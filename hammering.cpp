@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 #include "common.h"
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
