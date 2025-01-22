@@ -157,7 +157,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       if (vampire_succeeded && params.msHammerInvoke != "") {
         cout << "       Checking validity without excluded middle: size: "
              << T.mCLaxioms.size() << endl;
-          //        USING_ORIGINAL_SIGNATURE_EQ = true;
+      //USING_ORIGINAL_SIGNATURE_EQ = true;
         USING_ORIGINAL_SIGNATURE_NEG = false;
         VampireReturnValue rv =
             FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
@@ -170,11 +170,11 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
           if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                     params.vampire_time_limit) == eVampireUnsat) {
             vampire_succeeded = true;
-            USING_ORIGINAL_SIGNATURE_NEG = true;
+            USING_ORIGINAL_SIGNATURE_NEG = false;
           }
         } else {
           vampire_succeeded = true;
-          USING_ORIGINAL_SIGNATURE_NEG = false;
+          USING_ORIGINAL_SIGNATURE_NEG = true;
         }
         cout << "       After check of excluded middle axioms: output size: "
              << T.mCLaxioms.size() << endl;
