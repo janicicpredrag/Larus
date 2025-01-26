@@ -139,11 +139,11 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
 */
 
     CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
-    /* Use only if there is something specific in the axioms to be shown
+    // Use only if there is something specific in the axioms to be shown
     outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
             << " " << endl;
     outfile << "layer " << 2 * mProofSteps << endl;
-    outfile << "call " << p.GetMP(i).axiomName << " { ";
+  /*  outfile << "call " << p.GetMP(i).axiomName << " { ";
     for (size_t j = 0; j != instantiation.size(); j++) {
       string const_name = instantiation[j].second;
       const_name = beautify(const_name);
