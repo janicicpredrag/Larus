@@ -131,12 +131,15 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
     for (size_t j = 0; j != new_witnesses.size(); j++)
       modifyWitnessName(new_witnesses[j].second);
 
+    /* Use only if there is something specific in the axioms to be shown
     if (axioms_used.find(p.GetMP(i).axiomName) == axioms_used.end()) {
       outfile << endl << "include " << p.GetMP(i).axiomName << ".gcl" << endl;
       axioms_used.insert(p.GetMP(i).axiomName);
     }
+*/
 
     CLFormula &ax = mAxioms[p.GetMP(i).axiomName];
+    /* Use only if there is something specific in the axioms to be shown
     outfile << "% Application of axiom (" << p.GetMP(i).axiomName << "): " << ax
             << " " << endl;
     outfile << "layer " << 2 * mProofSteps << endl;
@@ -147,6 +150,8 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       outfile << const_name << " ";
     }
     outfile << "} " << endl;
+    */
+
     for (size_t j = 0; j != new_witnesses.size(); j++) {
       outfile << "mark_t " << beautify(new_witnesses[j].second) << endl;
     }
@@ -248,6 +253,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
       mIndividualOutputFile << "layer " << 2 * mProofSteps + k - 1 << endl;
       mIndividualOutputFile << "color " << 200 * (mAnimation - k) << " 0 0 "
                             << endl;
+/*    Use only if there is something specific in the axioms to be shown
       mIndividualOutputFile << "call " << p.GetMP(i).axiomName << " { ";
       for (size_t j = 0; j != instantiation.size(); j++) {
         string const_name = instantiation[j].second;
@@ -255,6 +261,7 @@ void ProofExport2GCLC_predicates::OutputProof(ofstream &outfile,
         mIndividualOutputFile << const_name << " ";
       }
       mIndividualOutputFile << "} " << endl;
+*/
       for (size_t j = 0; j != new_witnesses.size(); j++) {
         mIndividualOutputFile << "mark_t " << beautify(new_witnesses[j].second)
                               << endl;
