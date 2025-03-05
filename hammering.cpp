@@ -32,28 +32,42 @@ VampireReturnValue FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms
   TPTPfile.close();
 
   vector<string> neededAxioms;
-  string vampire_solution = tmpnam(NULL); // "hammeroutput.txt"; //
+  string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
   string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
   const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
                        " > " + vampire_solution;
-  // cout << sCall.c_str() << endl;
-  int rv = system(sCall.c_str());
+  // TODO: add time limit to the prover, for vampire, for example: --time_limit 200"
 
+  int rv = system(sCall.c_str());
   if (rv == 0 || rv == 512) {
-    bool bProver9 = hammer_invoke_.find("prover9") != std::string::npos;
+    bool bProver9 = (hammer_invoke_.find("prover9") != std::string::npos);
+
+    // Check validity first
+    ifstream input_file(vampire_solution);
+    if (input_file.good()) {
+      string ss;
+      while (getline(input_file, ss)) {
+        if (ss.find("Satisfiable") != std::string::npos ||      // for vampire
+            ss.find("No proof found!") != std::string::npos ||  // for eprover
+            ss.find("SEARCH FAILED") != std::string::npos) {    // for prover9
+          cout << "       Not valid! " << endl;
+          input_file.close();
+          return eVampireSat;
+        }
+      }
+    } else {
+      cout << "Error reading input file :" << vampire_solution << endl;
+      return eVampireErrorReadingAxioms;
+    }
+
     for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
          it != axioms.end(); it++) {
-      ifstream input_file(vampire_solution);
-      if (input_file.good()) {
-        string ss;
+      ifstream input_file;
+      input_file.open(vampire_solution);
+        if (input_file.good()) {
+          string ss;
         bool bProofStarted = !bProver9;
         while (getline(input_file, ss)) {
-          if (ss.find("Satisfiable") != std::string::npos ||    // for vampire
-              ss.find("SEARCH FAILED") != std::string::npos) {  // for prover9
-            cout << "       Not valid! " << endl;
-            return eVampireSat;
-          }
-
           if (bProver9 && (ss.find("=============== PROOF") != std::string::npos)) // for prover9
               bProofStarted = true;
 

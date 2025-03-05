@@ -34,23 +34,48 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
 ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
                         string &theoremName) {
-  // ************ Check if equality is used ************
-  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-       it < T.mCLaxioms.end(); it++)
-    if (it->first.UsesNativeEq())
-      T.SetUseNativeEq(true);
-  if (theorem.UsesNativeEq())
-    T.SetUseNativeEq(true);
-  if (T.GetUseNativeEq()) {
-    USING_ORIGINAL_SIGNATURE_EQ = true;
-    params.mbNativeEQ = true;
-    params.mbNativeEQsub = true;
-  }
 
-  cout << "--- Input axioms : " << endl;
+    cout << "--- Input axioms : " << endl;
   T.printAxioms();
   T.mCLOriginalAxioms = T.mCLaxioms;
   T.number_of_original_predicate_symbols = T.mSignatureP.size();
+
+  // ************ Check if equality is used ************
+  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+       it < T.mCLaxioms.end(); it++)
+      if (it->first.UsesNativeEq())
+          T.SetUseNativeEq(true);
+  if (theorem.UsesNativeEq())
+      T.SetUseNativeEq(true);
+  if (T.GetUseNativeEq()) {
+      USING_ORIGINAL_SIGNATURE_EQ = true;
+      params.mbNativeEQ = true;
+      params.mbNativeEQsub = true;
+  }
+
+  USING_ORIGINAL_SIGNATURE_EQ = true;
+  USING_ORIGINAL_SIGNATURE_NEG = true;
+  if (params.mbNoExcludedMiddle) { // if mbNoExcludedMiddle, rename neg so do not allow the hammer to use it
+    USING_ORIGINAL_SIGNATURE_NEG = false;
+    USING_ORIGINAL_SIGNATURE_EQ = false;
+  }
+
+
+  // ************ Filtering can be used in different stages ************
+  // if this variable is set to "true", futher vampire filtering is performed.
+  bool vampire_succeeded = false;
+  bool try_hammering = params.msHammerInvoke != "" &&
+                       !params.mbNoNegElim &&
+                       !params.mbNoExcludedMiddle;
+
+
+  //  ************ Early filtering ************
+  //  is to be used only in situations when we don't have dependencies, but a
+  //  global set of axioms
+  // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+  //cout << "       After filtering by reachability: output size: "
+  //     << T.mCLaxioms.size() << endl;
+  //T.printAxioms();
 
   /*
   if (params.number_of_abducts > 0) { // use this filtering only if filtering a la hammer is forbidden
@@ -61,26 +86,13 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     T.printAxioms();
   }*/
 
-  // ************ Filtering can be used in different stages ************
-  // if this variable is set to "true", futher vampire filtering is performed.
-  bool vampire_succeeded = false;
-
-  //  ************ Early filtering ************
-  //  is to be used only in situations when we don't have dependencies, but a
-  //  global set of axioms
-  vampire_succeeded = true;
-  if (vampire_succeeded && params.msHammerInvoke != "") {
-    // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-//    USING_ORIGINAL_SIGNATURE_EQ = true;
-//    USING_ORIGINAL_SIGNATURE_NEG = true;
+  if (try_hammering) {
     if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                               params.vampire_time_limit) == eVampireUnsat)
       vampire_succeeded = true;
-    cout << "       After initial filtering : output size: " <<
-    T.mCLaxioms.size() << endl;
+    cout << "       After initial filtering : output size: "
+         << T.mCLaxioms.size() << endl;
     T.printAxioms();
-//    USING_ORIGINAL_SIGNATURE_EQ = false;
-//    USING_ORIGINAL_SIGNATURE_NEG = false;
   }
 
   // ************  CL -> CL2 normalization  ************
@@ -93,10 +105,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
 
     if (output.size() > 0) {
       theorem = output[output.size() - 1].first;
-      cout << "          "
-           << "New conjecture: " << theorem << endl;
+      cout << "          New conjecture: " << theorem << endl;
     }
-
     if (output.size() > 1) {
       cout << "          Additional axioms: " << endl;
       for (size_t j = 0; j < output.size() - 1; j++) {
@@ -105,7 +115,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         cout << "                    " << j << ". " << output[j].first << endl;
       }
     }
-
     if (T.mDefinitions.size() > 0) {
       cout << "          Definitions : " << endl;
       for (unsigned i = 0; i < T.mDefinitions.size(); i++)
@@ -114,17 +123,15 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     }
   }
 
-  vampire_succeeded = true;
-  // ************ Filtering axioms a la hammer by FOL prover ************
-  if (vampire_succeeded && params.msHammerInvoke != "") {
-//    USING_ORIGINAL_SIGNATURE_EQ = true;
-//    USING_ORIGINAL_SIGNATURE_NEG = true;
+  // try hammering even if the initial hammering failed
+  // *********** Filtering CL2 axioms a la hammer by FOL prover **********
+  if (try_hammering) {
     if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                               params.vampire_time_limit) == eVampireUnsat)
       vampire_succeeded = true;
+    cout << "       After initial CL2 filtering : output size: "
+         << T.mCLaxioms.size() << endl;
     T.printAxioms();
-//    USING_ORIGINAL_SIGNATURE_EQ = false;
-//    USING_ORIGINAL_SIGNATURE_NEG = false;
   }
 
   /*
@@ -142,104 +149,97 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
     USING_ORIGINAL_SIGNATURE_NEG = false;
   } */
 
-
-  // ************ Use or not "excluded middle" and "neg elim" ************
-  if (!params.mbNoNegElim)
-    T.AddNegElimAxioms();
-
-  if (!params.mbNoExcludedMiddle || !params.mbNoNegElim) {
-    cout << "--- Adding axioms for excluded middle and negation elimination."
-         << endl;
-    T.printAxioms();
-
-    if (!params.mbNoExcludedMiddle) {
-      // ************ Filtering axioms a la hammer by FOL prover ************
-      if (vampire_succeeded && params.msHammerInvoke != "") {
-        cout << "       Checking validity without excluded middle: size: "
-             << T.mCLaxioms.size() << endl;
-      //USING_ORIGINAL_SIGNATURE_EQ = true;
-        USING_ORIGINAL_SIGNATURE_NEG = false;
-        VampireReturnValue rv =
-            FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                  params.vampire_time_limit);
-        if (rv != eVampireUnsat) {
-          vampire_succeeded = false;
-          T.AddExcludedMiddleAxioms();
-          cout << "       Filtering with excluded middle: size: "
-                 << T.mCLaxioms.size() << endl;
-          if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                    params.vampire_time_limit) == eVampireUnsat) {
-            vampire_succeeded = true;
-            USING_ORIGINAL_SIGNATURE_NEG = false;
-          }
-        } else {
-          vampire_succeeded = true;
-          USING_ORIGINAL_SIGNATURE_NEG = true;
-        }
-        cout << "       After check of excluded middle axioms: output size: "
-             << T.mCLaxioms.size() << endl;
-        T.printAxioms();
-        //     USING_ORIGINAL_SIGNATURE_EQ = false;
-
-      } else {
-        T.AddExcludedMiddleAxioms();
-      }
-    }
-
-    // ************ Filtering by reachability ************
-    // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    // cout << "       After filtering by reachability: output size: " <<
-    // T.mCLaxioms.size() << endl;
-    // T.printAxioms();
+  Theory T0 = T;
+  USING_ORIGINAL_SIGNATURE_NEG = false;
+  USING_ORIGINAL_SIGNATURE_EQ = false;
+  if (!params.mbNoNegElim) {
+      cout << "--- Adding axioms for negation elimination." << endl;
+      T.AddNegElimAxioms();
   }
-
-  // ************ If equality is used, use equality axioms ************
+  if (!params.mbNoExcludedMiddle) {
+      cout << "--- Adding axioms for excluded middle." << endl;
+      T.AddExcludedMiddleAxioms();
+  }
   if (params.mbNativeEQ) {
-    cout << "--- Adding axioms for =." << endl;
-    T.AddAxiomEqReflexive();
-    T.AddAxiomEqSymm();
-    T.AddAxiomNEqSymm();
-    T.AddEqExcludedMiddleAxiom();
-    T.AddEqNegElimAxioms();
-
-    params.mbNativeEQsub = true;
-    cout << "--- Adding substitution axioms: " << endl;
-    Theory T1 = T;
-    T.AddEqSubAxioms(); // no built in support
-    if (params.eEngine == eSMTUFLIA_ProvingEngine ||
-        params.eEngine == eSMTUFBV_ProvingEngine)
-        T.AddEqSubAxiomsForFunctionSymbols();
-    USING_ORIGINAL_SIGNATURE_EQ = false;
-    T.printAxioms();
-
-    if (params.msHammerInvoke != "" /*&& !vampire_succeeded*/) {
-      vampire_succeeded =
-          (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                 params.vampire_time_limit) == eVampireUnsat);
-      if (vampire_succeeded) {
-        USING_ORIGINAL_SIGNATURE_EQ = false;
-        params.mbNativeEQsub = false; // do not use native EqSub support
-        cout << "       (Not using native EqSub support)" << endl;
-      } else if (!(params.eEngine == eURSA_ProvingEngine ||
-                 params.eEngine == eSTL_ProvingEngine ||
-                 params.eEngine == eSMTUFBV_ProvingEngine)) {
-        T = T1;
-        params.mbNativeEQsub = true;
-        cout << "       (Using native EqSub support)" << endl;
-        USING_ORIGINAL_SIGNATURE_EQ = true;
+      cout << "--- Adding axioms for =." << endl;
+      T.AddAxiomEqReflexive();
+      T.AddAxiomEqSymm();
+      T.AddAxiomNEqSymm();
+      T.AddEqNegElimAxioms();
+      if (!params.mbNoExcludedMiddle)   { // if mbNoExcludedMiddle, do not include excluded middle for =
+          T.AddEqExcludedMiddleAxiom();
       }
+      cout << "--- Adding substitution axioms: " << endl;
+      T.AddEqSubAxioms(); // no built in support
+      if (params.eEngine == eSMTUFLIA_ProvingEngine ||
+          params.eEngine == eSMTUFBV_ProvingEngine)
+          T.AddEqSubAxiomsForFunctionSymbols();
+
       T.printAxioms();
-    } else {
-      if (!(params.eEngine == eURSA_ProvingEngine ||
-            params.eEngine == eSTL_ProvingEngine ||
-            params.eEngine == eSMTUFBV_ProvingEngine)) {
-        T = T1;
-        params.mbNativeEQsub = true;
-        cout << "      (Using native EqSub support)" << endl;
-        USING_ORIGINAL_SIGNATURE_EQ = true;
-      }
-    }
   }
+
+  // ****** Use or not native (built-in, not by axioms) support for ~ and = ******
+  if (params.mbNoNegElim || params.mbNoExcludedMiddle) {
+    // ************ Filtering axioms a la hammer by FOL prover ************
+    if (params.msHammerInvoke != "") {
+      cout << "       Filtering without native neg and eq axioms: size: "
+           << T.mCLaxioms.size() << endl;
+      T.printAxioms();
+      if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                                params.vampire_time_limit) == eVampireUnsat) {
+        params.mbNativeEQ = false;
+        params.mbNativeEQsub = false;
+      }
+      cout << "       Not using native neg and eq support: size: "
+           << T.mCLaxioms.size() << endl;
+      T.printAxioms();
+    }
+  } else {
+      if (params.msHammerInvoke != "") {
+        cout << "       Checking validity without neg and eq axioms: size: "
+             << T0.mCLaxioms.size() << endl;
+        USING_ORIGINAL_SIGNATURE_NEG = false;
+        USING_ORIGINAL_SIGNATURE_EQ = false;
+        if (FilterOutNeededAxioms(T0.mCLaxioms, theorem, params.msHammerInvoke,
+                                  params.vampire_time_limit) == eVampireUnsat)  {
+            vampire_succeeded = true;
+            params.mbNativeEQ = false;
+            params.mbNativeEQsub = false;
+            T = T0;
+        } else {
+            cout << "       Checking validity with neg and eq axioms: size: "
+                 << T.mCLaxioms.size() << endl;
+            if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                                      params.vampire_time_limit) == eVampireUnsat)  {
+              vampire_succeeded = true;
+              params.mbNativeEQ = false;
+              params.mbNativeEQsub = false;
+              cout << "       Not using native neg and eq support: size: "
+                   << T.mCLaxioms.size() << endl;
+              USING_ORIGINAL_SIGNATURE_NEG = false;
+              USING_ORIGINAL_SIGNATURE_EQ = false;
+              T.printAxioms();
+            } else {
+                T = T0;
+                vampire_succeeded = false;
+                params.mbNativeEQ = true;
+                params.mbNativeEQsub = true;
+                cout << "       Using native neg and eq support: size: "
+                     << T.mCLaxioms.size() << endl;
+                USING_ORIGINAL_SIGNATURE_NEG = true;
+                USING_ORIGINAL_SIGNATURE_EQ = true;
+                T.printAxioms();
+            }
+        }
+      }
+  }
+
+  // ************ Filtering by reachability ************
+  // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+  // cout << "       After filtering by reachability: output size: " <<
+  // T.mCLaxioms.size() << endl;
+  // T.printAxioms();
+
 
   /*
   // This does not bring benefits
@@ -255,7 +255,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       }
     T.printAxioms();
   } */
-
 
   // ************ Filtering by reachability ************
   // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
@@ -298,12 +297,14 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
 
   // ************ Use or not support for case splits ************
   params.mbNeedsCaseSplits = false;
-  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-    it != T.mCLaxioms.end(); it++) {
-      if (it->first.GetGoal().GetSize() > 1) {
-        params.mbNeedsCaseSplits = true;
-        break;
-      }
+  if (params.max_nesting_depth != 0) {
+    for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
+      it != T.mCLaxioms.end(); it++) {
+        if (it->first.GetGoal().GetSize() > 1) {
+          params.mbNeedsCaseSplits = true;
+          break;
+        }
+    }
   }
   if (params.mbNeedsCaseSplits)
     cout << "--- Support for case splits turned ON. " << endl;

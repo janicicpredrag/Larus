@@ -255,8 +255,9 @@ void Theory::AddEqSubAxioms() {
     if (mSignatureP[i].first.find('_', 0) != string::npos)
       continue;
 
-    if (mSignatureP[i].first.find(PREFIX_NEGATED, 0) != string::npos)
-      continue;
+// We could skip negated predicate symbols, but not skipping is needed for case split-free proofs
+//    if (mSignatureP[i].first.find(PREFIX_NEGATED, 0) != string::npos)
+//      continue;
 
     for (size_t j = 0; j < mSignatureP[i].second; j++) {
       ConjunctionFormula premises;
