@@ -44,7 +44,6 @@ void ProofExport2GCLC_predicates::OutputPrologue(ofstream &outfile, Theory &T,
     mAxioms[T.Axiom(j).second] = T.Axiom(j).first;
   outfile << "include predicates.gcl" << endl;
   outfile << "% ----- Proof illustration -----" << endl;
-  outfile << "double" << endl;
   outfile << "include " << p.GetTheoremName() << "_exists.gcl" << endl;
 
   map<string, string> inst = p.GetInstantiation();
