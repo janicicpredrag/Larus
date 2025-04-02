@@ -206,6 +206,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
             params.mbNativeEQ = false;
             params.mbNativeEQsub = false;
             T = T0;
+            T.printAxioms();
         } else {
             cout << "       Checking validity with neg and eq axioms: size: "
                  << T.mCLaxioms.size() << endl;

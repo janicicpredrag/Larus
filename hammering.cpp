@@ -34,9 +34,14 @@ VampireReturnValue FilterOutNeededAxioms(vector<pair<CLFormula, string>> &axioms
   vector<string> neededAxioms;
   string vampire_solution = "hammeroutput.txt"; // tmpnam(NULL); //
   string hammer_invoke_ = replacestring(hammer_invoke, "#", for_FOL_prover);
+
+  if (hammer_invoke.find("vampire") != string::npos)
+    hammer_invoke_ += " --time_limit " + itos(time_limit);
+  else if (hammer_invoke.find("eprover") != string::npos)
+    hammer_invoke_ += " --cpu-limit=" + itos(time_limit);
+
   const string sCall = "timeout " + itos(time_limit) + " " + hammer_invoke_ +
                        " > " + vampire_solution;
-  // TODO: add time limit to the prover, for vampire, for example: --time_limit 200"
 
   int rv = system(sCall.c_str());
   if (rv == 0 || rv == 512) {
