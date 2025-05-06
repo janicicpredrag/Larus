@@ -753,9 +753,11 @@ bool Theory::Saturate() {
       if (difftime(current_time, start_time) > time_limit)
         return false;
 
-      const CLFormula ax1 = mCLaxioms[i].first;
+      CLFormula ax1 = mCLaxioms[i].first;
       if (!ax1.IsSimpleImplication())
         continue;
+
+      ax1.RenameVars("V_");
       Fact fact_ax1 = ax1.GetPremises().GetElement(0);
 
       for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications and univ axioms
@@ -763,43 +765,27 @@ bool Theory::Saturate() {
         // ax1 is to be applied to RHS of ax2
         if (ax2.IsSimpleImplication() || ax2.IsSimpleUnivFormula()) {
           Fact fact_ax2 = ax2.GetGoal().GetElement(0).GetElement(0);
-          if (fact_ax2.GetName() != fact_ax1.GetName())
-            continue;
+
+          if (fact_ax1.GetName() != fact_ax2.GetName())
+              continue;
+
           map<string, string> inst;
-
-          bool no_match = false;
-          for (size_t k = 0; k < fact_ax2.GetArity() && !no_match; k++) {
-            if (IsConstant(fact_ax1.GetArg(k))) {
-              if (!IsConstant(fact_ax2.GetArg(k)) ||
-                  fact_ax1.GetArg(k).ToSMTString() != fact_ax2.GetArg(k).ToSMTString())
-                no_match = true;
-            } else if (inst.find(fact_ax1.GetArg(k).ToSMTString()) != inst.cend()) {
-              if (inst.find(fact_ax1.GetArg(k).ToSMTString())->second != fact_ax2.GetArg(k).ToSMTString())
-                no_match = true;
-            } else
-              inst[fact_ax1.GetArg(k).ToSMTString()] = fact_ax2.GetArg(k).ToSMTString();
-          }
-          if (no_match)
+          if (!Unify(fact_ax1, fact_ax2, inst))
             continue;
 
-          Fact fact_new = ax1.GetGoal().GetElement(0).GetElement(0);
-          for (size_t k = 0; k < fact_new.GetArity() && !no_match; k++) {
-            if (inst.find(fact_new.GetArg(k).ToSMTString()) != inst.cend()) {
-              Term t;
-              t.ReadNonCompoundString(inst.find(fact_new.GetArg(k).ToSMTString())->second);
-              fact_new.SetArg(k, t);
-            }
-          }
-          if (no_match)
-            continue;
+          Fact RHS = Substitute(ax1.GetGoal().GetElement(0).GetElement(0), inst);
+          Fact LHS;
 
           ConjunctionFormula cf;
           DNFFormula df;
-          cf.Add(fact_new);
+          cf.Add(RHS);
           df.Add(cf);
           CLFormula newUnivAx;
           if (ax2.IsSimpleImplication()) {
-            newUnivAx = CLFormula(ax2.GetPremises(), df);
+              LHS = Substitute(ax2.GetPremises().GetElement(0), inst);
+              ConjunctionFormula cfl;
+              cfl.Add(LHS);
+              newUnivAx = CLFormula(cfl, df);
           } else {
             ConjunctionFormula empty;
             newUnivAx = CLFormula(empty, df);
@@ -807,21 +793,21 @@ bool Theory::Saturate() {
 
           newUnivAx.TakeUnivVars(ax2);
 
-          for (size_t l = 0; l < fact_new.GetArity(); l++) {
+          for (size_t l = 0; l < RHS.GetArity(); l++) {
             bool found = false;
-            if (!IsConstant(fact_new.GetArg(l))) {
+            if (!IsConstant(RHS.GetArg(l))) {
               for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found;
                    ll++)
-                if (fact_new.GetArg(l).ToSMTString() == newUnivAx.GetUnivVar(ll))
+                if (RHS.GetArg(l).ToSMTString() == newUnivAx.GetUnivVar(ll))
                   found = true;
               if (!found)
-                newUnivAx.AddUnivVar(fact_new.GetArg(l).ToSMTString());
+                newUnivAx.AddUnivVar(RHS.GetArg(l).ToSMTString());
             }
           }
 
           bool found = false;
           if (ax2.IsSimpleImplication() &&
-              fact_new == ax2.GetPremises().GetElement(0))
+              RHS == LHS)
             found = true;
           for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
             if (sameUpToRenaming(newUnivAx, mCLaxioms[l].first))
@@ -843,6 +829,105 @@ bool Theory::Saturate() {
   } while (updated);
 
   return true;
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool Theory::Unify(const Fact& f1, const Fact& f2, map<string, string>& inst)
+{
+    list<pair<Term,Term>> p;
+    for (size_t k = 0; k < f1.GetArity(); k++) {
+       Term t1 = f1.GetArg(k);
+       p.push_back(make_pair(f1.GetArg(k),f2.GetArg(k)));
+    }
+    return Unify(p,inst);
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool Theory::Unify(list<pair<Term,Term>>& p, map<string, string>& inst)
+{
+    bool no_match = false;
+    bool change;
+
+    do {
+        change = false;
+        // factoring
+        for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); it++) {
+            for(list<pair<Term,Term>>::iterator jt = next(it); jt != p.end();) {
+            if (it->first == jt->first && it->second == jt->second) {
+              jt = p.erase(jt);
+              change = true;
+            }
+            else
+              jt++;
+          }
+        }
+        // tautology
+        for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); ) {
+          if (it->first == it->second) {
+            it = p.erase(it);
+            change = true;
+          }
+          else
+            it++;
+        }
+        // orientation
+        for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); it++ ) {
+            if (IsConstant(it->first) && !IsConstant(it->second)) {
+                Term tmp = it->first;
+                it->first = it->second;
+                it->second = tmp;
+                change = true;
+            }
+        }
+        // decomposition
+        // not needed, this is a special case, with no compount terms
+        for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); it++) {
+            if (IsConstant(it->first) && IsConstant(it->second)) {
+                return false;
+            }
+        }
+        // cycle
+        // not needed, this is a special case, with no compount terms
+
+        // application
+        for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); it++) {
+          if(!IsConstant(it->first)) {
+             for(list<pair<Term,Term>>::iterator jt = next(it); jt != p.end(); jt++) {
+                if (jt->first == it->first) {
+                    jt->first = it->second;
+                    change = true;
+                }
+                if (jt->second == it->first) {
+                    jt->second = it->second;
+                    change = true;
+                }
+            }
+          }
+        }
+    }
+    while (change);
+
+    for(list<pair<Term,Term>>::iterator it = p.begin(); it != p.end(); it++) {
+        inst[it->first.ToSMTString()] = it->second.ToSMTString();
+    }
+    return !no_match;
+}
+
+// ---------------------------------------------------------------------------------------
+
+Fact Theory::Substitute(const Fact& f, map<string, string>& inst)
+{
+    Fact result = f;
+    for (size_t k = 0; k < result.GetArity(); k++) {
+      while (inst.find(result.GetArg(k).ToSMTString()) != inst.cend()) {
+        Term t;
+        t.ReadNonCompoundString(inst.find(result.GetArg(k).ToSMTString())->second);
+        result.SetArg(k, t);
+      }
+    }
+    return result;
 }
 
 // ---------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -86,6 +87,10 @@ public:
   void normalizeToCL2();
   bool Saturate();
   bool SaturateEqSub();
+  bool Unify(const Fact& f1, const Fact& f2, map<string, string>& inst);
+  bool Unify(list<pair<Term,Term>>& p, map<string, string>& inst);
+  Fact Substitute(const Fact& f, map<string, string>& inst);
+
   void SetNumberOfAxiomsBeforeSaturation() {
     mBeforeSaturation = NumberOfAxioms();
   }

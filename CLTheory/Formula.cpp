@@ -1046,6 +1046,33 @@ bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
 
 // ---------------------------------------------------------------------------------------
 
+void CLFormula::RenameVars(const string& Prefix)
+{
+    assert(GetPremises().GetSize() <= 1);
+    assert(GetGoal().GetSize() == 1);
+    assert(GetGoal().GetElement(0).GetSize() == 1);
+    if (GetPremises().GetSize() == 1) {
+        Fact f = GetPremises().GetElement(0);
+        for (unsigned i = 0; i < f.GetArity(); i++) {
+            Term t = f.GetArg(i);
+            t.ReadNonCompoundString(Prefix + t.ToTPTPString());
+            f.SetArg(i,t);
+        }
+        mA.SetElement(0,f);
+    }
+    Fact f = GetGoal().GetElement(0).GetElement(0);
+    for (unsigned i = 0; i < f.GetArity(); i++) {
+        Term t = f.GetArg(i);
+        t.ReadNonCompoundString(Prefix + t.ToTPTPString());
+        f.SetArg(i,t);
+    }
+    ConjunctionFormula c;
+    c.Add(f);
+    mB.SetElement(0,c);
+}
+
+// ---------------------------------------------------------------------------------------
+
 bool CLFormula::hasFunctionSymbols() const
 {
     for (unsigned i = 0; i < GetPremises().GetSize(); i++) {

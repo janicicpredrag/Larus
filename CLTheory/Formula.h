@@ -304,6 +304,8 @@ public:
 
   bool IsSimpleFormulaWithoutDisjunction() const;
 
+  void RenameVars(const string& Prefix);
+
   bool hasFunctionSymbols() const;
 
   void Clear() {
