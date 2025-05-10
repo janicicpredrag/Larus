@@ -1,2 +1,2 @@
-fof(lemma_collinear4,axiom, (! [A,B,C,D] : ((col(A,B,C) & col(A,B,D) & ( A != B )) => ((col(B,C,D)))))).
-fof(lemma_collinear5,conjecture,(! [A,B,C,D,E] : ((( A != B ) & col(A,B,C) & col(A,B,D) & col(A,B,E)) => ((col(C,D,E)))))).
+fof(lemma_collinearlinear4,axiom, (! [A,B,C,D] : ((collinear(A,B,C) & collinear(A,B,D) & ( A != B )) => ((collinear(B,C,D)))))).
+fof(lemma_collinearlinear5,conjecture,(! [A,B,C,D,E] : ((( A != B ) & collinear(A,B,C) & collinear(A,B,D) & collinear(A,B,E)) => ((collinear(C,D,E)))))).
