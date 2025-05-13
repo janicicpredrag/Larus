@@ -371,6 +371,8 @@ void ProofExport2LaTeX::OutputProof(ofstream &outfile, const CLProof &p,
       }
     }
     outfile << "}) }" << endl;
+    if (p.GetMP(i).conclusion.GetSize() > 1) // case split
+        outfile << "\\proofstepnonum{" << level << "}{Consider both cases:}" << endl;
   }
   OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }
