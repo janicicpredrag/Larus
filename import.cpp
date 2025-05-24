@@ -221,7 +221,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
               USING_ORIGINAL_SIGNATURE_EQ = false;
               T.printAxioms();
             } else {
-                T = T0;
+                //T = T0;
                 vampire_succeeded = false;
                 params.mbNativeEQ = true;
                 params.mbNativeEQsub = true;

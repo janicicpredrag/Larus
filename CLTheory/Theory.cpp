@@ -555,6 +555,7 @@ string Theory::MakeNewConstant() {
     while (IsConstant(t) ||
            mOccuringPredicateSymbols.find(s) != mOccuringPredicateSymbols.end()) {
       s = ss + to_string(counter++);
+      t.ReadNonCompoundString(s);
     }
   } else {
     s = "c" + to_string(id);

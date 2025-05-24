@@ -244,9 +244,10 @@ void ProofExport2Text::OutputProof(ofstream& outfile,
       }
     }
     cout << ") " << endl;
-    cout << string(2*level,' ')+"   ";
-    if (p.GetMP(i).conclusion.GetSize() > 1) // case split
+    if (p.GetMP(i).conclusion.GetSize() > 1) { // case split
+        cout << string(2*level,' ')+"   ";
         cout << "Consider both cases:" << endl;
+    }
   }
   OutputProofEndGeneric(outfile, p.GetProofEnd(), level);
 }

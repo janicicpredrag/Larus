@@ -328,6 +328,25 @@ string Term::ToSMTString() const
 
 // ---------------------------------------------------------------------------------------
 
+set<string> Term::TermNonCompoundArguments() const
+{
+    set<string> args;
+    for(size_t k = 0; k < NumArgs(); k++) {
+        Term t;
+        t.ReadTPTPString(GetArg(k));
+        if (!t.IsCompound())
+            args.insert(t.ToTPTPString());
+        else {
+            set<string> args1 = t.TermNonCompoundArguments();
+            args.insert(args1.begin(), args1.end());
+        }
+    }
+    return args;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
 Fact::Fact(const string &s)
 {
   TEXTSTREAM = s.c_str();
@@ -1484,6 +1503,7 @@ void CLFormula::NormalizeGoal(
       for (size_t j = 1; j < numConjuncts; j++)
         current =
             MergeFacts(suffix, current, GetGoal().GetElement(i).GetElement(j));
+
       disjuncts[i] = current;
       ConjunctionFormula conj;
       conj.Add(disjuncts[i]);
@@ -1599,6 +1619,24 @@ Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
   Fact f;
   f.SetName(a.GetName() + "_" + b.GetName() + "_" + suffix);
 
+  set<string> args;
+
+  for (size_t i = 0; i < a.GetArity(); i++) {
+      set<string> args1 = a.GetArg(i).TermNonCompoundArguments();
+      args.insert(args1.begin(), args1.end());
+  }
+  for (size_t i = 0; i < b.GetArity(); i++) {
+      set<string> args1 = b.GetArg(i).TermNonCompoundArguments();
+      args.insert(args1.begin(), args1.end());
+  }
+  size_t i = 0;
+  for (set<string>::iterator it = args.begin(); it != args.end(); it++) {
+      Term t;
+      t.ReadNonCompoundString(*it);
+      f.SetArg(i++, t);
+  }
+
+  /*
   for (size_t i = 0; i < a.GetArity(); i++) {
     Term t;
     t.ReadTPTPString(a.GetArg(i).ToSMTString());
@@ -1613,7 +1651,7 @@ Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
         alreadyThere = true;
     if (!alreadyThere)
       f.SetArg(s++, b.GetArg(i));
-  }
+  }*/
   return f;
 }
 

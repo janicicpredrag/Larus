@@ -4,6 +4,7 @@
 #define NATIVE_NEG 1
 
 #include <vector>
+#include <set>
 #include <ostream>
 #include <assert.h>
 #include "../common.h"
@@ -76,7 +77,8 @@ public:
   const vector<string>& TermArguments() const {
      return mArgs;
   }
-private:
+  set<string> TermNonCompoundArguments() const;
+  private:
   string mTPTPterm;
   string mSMTlibterm;
   vector<pair<string,unsigned>> mFunctionSymbols;
