@@ -226,7 +226,7 @@ bool FilterOurNeededAxiomsByReachability(
          it != axioms.end(); it++) {
       bool bAllSymbolsReachable = true;
       for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-        if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
+          if (it->first.GetPremises().GetElement(i).GetName() != sTOP &&
             mReachablePredicateSymbols.find(
                 it->first.GetPremises().GetElement(i).GetName()) ==
                 mReachablePredicateSymbols.end()) {
@@ -248,7 +248,7 @@ bool FilterOurNeededAxiomsByReachability(
        it != axioms.end();) {
     bool bAllSymbolsReachable = true;
     for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-      if (it->first.GetPremises().GetElement(i).GetName() != "true" &&
+      if (it->first.GetPremises().GetElement(i).GetName() != sTOP &&
           mReachablePredicateSymbols.find(
               it->first.GetPremises().GetElement(i).GetName()) ==
               mReachablePredicateSymbols.end()) {

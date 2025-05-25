@@ -235,11 +235,11 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       }
   }
 
-  // ************ Filtering by reachability ************
-  // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-  // cout << "       After filtering by reachability: output size: " <<
-  // T.mCLaxioms.size() << endl;
-  // T.printAxioms();
+  /* ************ Filtering by reachability ************ */
+  FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
+  cout << "       After filtering by reachability: output size: " <<
+  T.mCLaxioms.size() << endl;
+  T.printAxioms();
 
 
   /*

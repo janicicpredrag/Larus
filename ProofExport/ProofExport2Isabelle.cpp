@@ -196,7 +196,10 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
     }
   }
 
-  outfile << "lemma " << p.GetTheoremName() << ": \"";
+  string theoremName = p.GetTheoremName();
+  if (theoremName == "lemma" || theoremName == "thm")
+     theoremName = theoremName + "_";
+  outfile << "lemma " << theoremName << ": \"";
   OutputCLFormula(outfile, p.GetTheorem(), p.GetTheoremName());
   outfile << "\"" << endl;
   outfile << "proof - " << endl;
@@ -291,6 +294,7 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
     bool builtin = false;
     if (p.GetMP(i).axiomName == "eq_refl" ||
         p.GetMP(i).axiomName == "eq_sym" ||
+        p.GetMP(i).axiomName == "not_eq_sym" ||
         p.GetMP(i).axiomName == "trivial" ||
         p.GetMP(i).axiomName == "eq_excluded_middle" ||
         p.GetMP(i).axiomName == "eq_neg_elim" ||

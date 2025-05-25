@@ -1615,7 +1615,7 @@ void CLFormula::NormalizeGoal(
 // ---------------------------------------------------------------------------------------
 
 Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
-                                      const Fact b) {
+                                      const Fact b) const {
   Fact f;
   f.SetName(a.GetName() + "_" + b.GetName() + "_" + suffix);
 
@@ -1633,9 +1633,16 @@ Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
   for (set<string>::iterator it = args.begin(); it != args.end(); it++) {
       Term t;
       t.ReadNonCompoundString(*it);
-      f.SetArg(i++, t);
+      bool bIsVarConfirmed = false;
+      for (size_t k = 0; k < mUniversalVars.size() && !bIsVarConfirmed; k++)
+        if (mUniversalVars[k] == *it)
+              bIsVarConfirmed = true;
+      for (size_t k = 0; k < mExistentialVars.size() && !bIsVarConfirmed; k++)
+          if (mExistentialVars[k] == *it)
+              bIsVarConfirmed = true;
+      if (bIsVarConfirmed)
+         f.SetArg(i++, t);
   }
-
   /*
   for (size_t i = 0; i < a.GetArity(); i++) {
     Term t;
