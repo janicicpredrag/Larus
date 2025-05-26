@@ -1340,8 +1340,10 @@ ReturnValue SMT_ProvingEngine::OneProvingAttempt(const DNFFormula& formula, unsi
       return eConjectureNotProved;
     } else {
       cout << " proof FOUND! " << flush;
-      /* grounds for sequences of integers:
+
+      /* grounds for sequences of integers: */
       string sEncodedProofFile = "encoded_proof.txt";
+      /*
       ExportEncodedproof(formula, length, sEncodedProofFile);
       meProof.clear();
       meProof.resize(mnNumberOfAssumptions + length);

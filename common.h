@@ -151,7 +151,10 @@ bool isHintArgument(const string &str);
 string ToUpper(const string &str);
 string repeat2(int n, string s);
 string replacestring(const string& str, const string& from, const string& to);
-string replaceAll(const string &s, const string &search, const string &replace );
+string replaceAll(const string &s, const string &search, const string &replace);
+string replaceAllInTPTPString(const string &s, const string &search, const string &replace);
+string replaceAllInSMTString(const string &s, const string &search, const string &replace);
+
 int Brackets(const string& s);
 string SMT2Bracketed(const string& s);
 

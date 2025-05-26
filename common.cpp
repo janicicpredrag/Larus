@@ -168,6 +168,31 @@ string replaceAll(const string &s, const string &search, const string &replace )
 
 // ---------------------------------------------------------------------------------------
 
+string replaceAllInTPTPString(const string &s, const string &search, const string &replace ) {
+    string ss = s;
+    ss = replaceAll(ss,"("+ search +")",  "("+ replace+")");
+    ss = replaceAll(ss,"("+ search +", ", "("+ replace+", ");
+    ss = replaceAll(ss,"( "+search +", ", "( "+replace+", ");
+    ss = replaceAll(ss,", "+search +", ", ", "+replace+", ");
+    ss = replaceAll(ss,", "+search +")",  ", "+replace+")");
+    return ss;
+}
+
+// ---------------------------------------------------------------------------------------
+
+string replaceAllInSMTString(const string &s, const string &search, const string &replace ) {
+    string ss = s;
+    ss = replaceAll(ss,"("+ search+")",  "("+replace+")");
+    ss = replaceAll(ss,"("+ search+" ", "("+ replace+" ");
+    ss = replaceAll(ss,"( "+search+" ", "( "+replace+" ");
+    ss = replaceAll(ss," "+ search+" ", " "+ replace+" ");
+    ss = replaceAll(ss," "+ search+")", " "+ replace+")");
+    ss = replaceAll(ss," "+ search+" )", " "+replace+" )");
+    return ss;
+}
+
+// ---------------------------------------------------------------------------------------
+
 int Brackets(const string& s)
 {
     int count = 0;

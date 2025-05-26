@@ -92,7 +92,7 @@ do
 	# tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -d -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbv.txt
 	# test_success ressmtbv.txt
     printf "SMTBV -i: "
-    tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -i -d -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbvi.txt
+    tm ./larus -l$time $maxlength $axioms1 $axioms2 $nesting -i -esmtbv -ftptp -vmizar -vcoq "$file" > ressmtbvi.txt
     test_success ressmtbvi.txt
 
 #	printf "SMTLIA:"

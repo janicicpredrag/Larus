@@ -703,11 +703,7 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
           instantiation[t.GetArg(a)] = newc;
           if (t.IsCompound()) {
             string s = t.ToTPTPString();
-            s = replaceAll(s,"("+var+")", "("+instantiation[var]+")");
-            s = replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
-            s = replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
-            s = replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
-            s = replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
+            s = replaceAllInTPTPString(s,var,instantiation[var]);
             t.Clear();
             t.ReadTPTPString(s);
           }
@@ -720,11 +716,7 @@ void Theory::InstantiateFact(const CLFormula &cl, const Fact &f,
         if (t.IsCompound()) { // term may be compound, so we have to instantiate all occurrences
             var = t.GetArg(a);
           string s = t.ToTPTPString();
-          s = replaceAll(s,"("+var+")", "("+instantiation[var]+")");
-          s = replaceAll(s,"("+var+", ", "("+instantiation[var]+", ");
-          s = replaceAll(s,"( "+var+", ", "( "+instantiation[var]+", ");
-          s = replaceAll(s,", "+var+", ", ", "+instantiation[var]+", ");
-          s = replaceAll(s,", "+var+")", ", "+instantiation[var]+")");
+          s = replaceAllInTPTPString(s,var,instantiation[var]);
           t.Clear();
           t.ReadTPTPString(s);
         }
@@ -1077,12 +1069,7 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f,
           Term t = fact.GetArg(k);
           string s = t.ToSMTString();
           for (map<string, string>::iterator it = inst.begin(); it != inst.end(); it++) {
-              s = replaceAll(s,"("+ it->first+")",  "("+ it->second+")");
-              s = replaceAll(s,"("+ it->first+" ", "("+it->second+" ");
-              s = replaceAll(s,"( "+it->first+" ", "( "+it->second+" ");
-              s = replaceAll(s," "+it->first+" ", " "+it->second+" ");
-              s = replaceAll(s," "+it->first+")", " "+it->second+")");
-              s = replaceAll(s," "+it->first+" )", " "+it->second+" )");
+              s = replaceAllInSMTString(s,it->first,it->second);
           }
           t.Clear();
           t.ReadSMTlibString(s);
