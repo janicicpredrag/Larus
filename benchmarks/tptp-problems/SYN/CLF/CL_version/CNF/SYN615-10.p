@@ -1,0 +1,89 @@
+
+
+
+
+cnf(i_0_68, plain, (rf3(X1,esk16_1(X1)))).
+cnf(i_0_62, plain, (rf5(X1,esk13_1(X1)))).
+cnf(i_0_64, plain, (rf4(X1,esk14_1(X1)))).
+cnf(i_0_56, plain, (rf12(X1,esk10_1(X1)))).
+cnf(i_0_54, plain, (rf11(X1,esk9_1(X1)))).
+cnf(i_0_76, plain, (rp13(X1,X2,esk20_2(X1,X2)))).
+cnf(i_0_74, plain, (rp7(X1,X2,esk19_2(X1,X2)))).
+cnf(i_0_72, plain, (rp2(X1,X2,esk18_2(X1,X2)))).
+cnf(i_0_70, plain, (rp15(X1,X2,esk17_2(X1,X2)))).
+cnf(i_0_66, plain, (rp19(X1,X2,esk15_2(X1,X2)))).
+cnf(i_0_58, plain, (rf6(X1,X2,esk11_2(X1,X2)))).
+cnf(i_0_60, plain, (rp20(X1,X2,esk12_2(X1,X2)))).
+cnf(i_0_48, plain, (rf17(X1,X2,esk6_2(X1,X2)))).
+cnf(i_0_50, plain, (rf16(X1,X2,esk7_2(X1,X2)))).
+cnf(i_0_52, plain, (rf14(X1,X2,esk8_2(X1,X2)))).
+cnf(i_0_46, plain, (rf9(X1,X2,esk5_2(X1,X2)))).
+cnf(i_0_44, plain, (rf8(X1,X2,esk4_2(X1,X2)))).
+cnf(i_0_42, plain, (rf10(X1,X2,esk3_2(X1,X2)))).
+cnf(i_0_40, plain, (rf18(X1,X2,esk2_2(X1,X2)))).
+cnf(i_0_82, plain, (rifeq3(X1,X2,X3,X4,esk23_4(X1,X2,X3,X4)))).
+cnf(i_0_80, plain, (rifeq2(X1,X2,X3,X4,esk22_4(X1,X2,X3,X4)))).
+cnf(i_0_78, plain, (rifeq(X1,X2,X3,X4,esk21_4(X1,X2,X3,X4)))).
+cnf(i_0_38, plain, (rtuple(X1,X2,X3,X4,esk1_4(X1,X2,X3,X4)))).
+
+cnf(i_0_35, plain, (a!=b)).
+
+cnf(i_0_67, plain, (X2=X3|~rf3(X1,X3)|~rf3(X1,X2))).
+cnf(i_0_61, plain, (X2=X3|~rf5(X1,X3)|~rf5(X1,X2))).
+cnf(i_0_63, plain, (X2=X3|~rf4(X1,X3)|~rf4(X1,X2))).
+cnf(i_0_55, plain, (X2=X3|~rf12(X1,X3)|~rf12(X1,X2))).
+cnf(i_0_53, plain, (X2=X3|~rf11(X1,X3)|~rf11(X1,X2))).
+cnf(i_0_4, plain, (X2=true|~rp13(X1,X1,X2))).
+cnf(i_0_5, plain, (X2=true|~rp7(X1,X1,X2))).
+cnf(i_0_6, plain, (X2=true|~rp2(X1,X1,X2))).
+cnf(i_0_7, plain, (X2=true|~rp15(X1,X1,X2))).
+cnf(i_0_8, plain, (X2=true|~rf3(c22,X1)|~rp2(c26,X1,X2))).
+cnf(i_0_9, plain, (X4=true|~rf3(X2,X3)|~rf4(X1,X2)|~rf5(c22,X1)|~rp19(c23,X3,X4))).
+cnf(i_0_75, plain, (X3=X4|~rp13(X1,X2,X4)|~rp13(X1,X2,X3))).
+cnf(i_0_73, plain, (X3=X4|~rp7(X1,X2,X4)|~rp7(X1,X2,X3))).
+cnf(i_0_71, plain, (X3=X4|~rp2(X1,X2,X4)|~rp2(X1,X2,X3))).
+cnf(i_0_69, plain, (X3=X4|~rp15(X1,X2,X4)|~rp15(X1,X2,X3))).
+cnf(i_0_65, plain, (X3=X4|~rp19(X1,X2,X4)|~rp19(X1,X2,X3))).
+cnf(i_0_57, plain, (X3=X4|~rf6(X1,X2,X4)|~rf6(X1,X2,X3))).
+cnf(i_0_59, plain, (X3=X4|~rp20(X1,X2,X4)|~rp20(X1,X2,X3))).
+cnf(i_0_47, plain, (X3=X4|~rf17(X1,X2,X4)|~rf17(X1,X2,X3))).
+cnf(i_0_49, plain, (X3=X4|~rf16(X1,X2,X4)|~rf16(X1,X2,X3))).
+cnf(i_0_51, plain, (X3=X4|~rf14(X1,X2,X4)|~rf14(X1,X2,X3))).
+cnf(i_0_45, plain, (X3=X4|~rf9(X1,X2,X4)|~rf9(X1,X2,X3))).
+cnf(i_0_43, plain, (X3=X4|~rf8(X1,X2,X4)|~rf8(X1,X2,X3))).
+cnf(i_0_41, plain, (X3=X4|~rf10(X1,X2,X4)|~rf10(X1,X2,X3))).
+cnf(i_0_39, plain, (X3=X4|~rf18(X1,X2,X4)|~rf18(X1,X2,X3))).
+cnf(i_0_10, plain, (X5=true|~rf3(X2,X3)|~rf4(X1,X2)|~rf5(c22,X1)|~rf6(X3,c21,X4)|~rp20(c24,X4,X5))).
+cnf(i_0_16, plain, (X4=true|~rf14(X2,c25,X3)|~rp2(c26,X3,X4)|~rf16(c28,X1,X2)|~rf17(c21,c27,X1))).
+cnf(i_0_31, plain, (X20=true|~rf3(X14,X15)|~rf3(X9,X10)|~rf3(X2,X3)|~rf4(X8,X9)|~rf4(X1,X2)|~rf12(X16,X17)|~rf11(X15,X16)|~rf11(X10,X11)|~rf11(X3,X4)|~rf5(c22,X14)|~rf5(c22,X8)|~rf5(c22,X1)|~rf11(c24,X6)|~rf9(X6,X5,X7)|~rf8(X18,X13,X19)|~rf8(X12,X7,X13)|~rf10(X17,c23,X18)|~rf10(X11,c26,X12)|~rf10(X4,c27,X5)|~rp7(c25,X19,X20))).
+cnf(i_0_1, plain, (X2=X4|~rifeq3(X1,X1,X2,X3,X4))).
+cnf(i_0_2, plain, (X2=X4|~rifeq2(X1,X1,X2,X3,X4))).
+cnf(i_0_3, plain, (X2=X4|~rifeq(X1,X1,X2,X3,X4))).
+cnf(i_0_32, plain, (X3=b|~rf3(c22,X1)|~rp2(c21,X1,X2)|~rifeq2(X2,true,a,b,X3))).
+cnf(i_0_12, plain, (X7=true|~rf3(X3,X4)|~rf3(X1,X2)|~rp2(X4,X2,X5)|~rp2(X3,X1,X6)|~rifeq3(X6,true,X5,true,X7))).
+cnf(i_0_14, plain, (X7=true|~rf5(X3,X4)|~rf5(X1,X2)|~rp2(X4,X2,X5)|~rp2(X3,X1,X6)|~rifeq3(X6,true,X5,true,X7))).
+cnf(i_0_13, plain, (X7=true|~rf4(X3,X4)|~rf4(X1,X2)|~rp2(X4,X2,X5)|~rp2(X3,X1,X6)|~rifeq3(X6,true,X5,true,X7))).
+cnf(i_0_11, plain, (X7=true|~rf12(X3,X4)|~rf12(X1,X2)|~rp7(X4,X2,X5)|~rp7(X3,X1,X6)|~rifeq3(X6,true,X5,true,X7))).
+cnf(i_0_15, plain, (X7=true|~rf11(X3,X4)|~rf11(X1,X2)|~rp7(X4,X2,X5)|~rp2(X3,X1,X6)|~rifeq3(X6,true,X5,true,X7))).
+cnf(i_0_81, plain, (X5=X6|~rifeq3(X1,X2,X3,X4,X6)|~rifeq3(X1,X2,X3,X4,X5))).
+cnf(i_0_79, plain, (X5=X6|~rifeq2(X1,X2,X3,X4,X6)|~rifeq2(X1,X2,X3,X4,X5))).
+cnf(i_0_77, plain, (X5=X6|~rifeq(X1,X2,X3,X4,X6)|~rifeq(X1,X2,X3,X4,X5))).
+cnf(i_0_37, plain, (X5=X6|~rtuple(X1,X2,X3,X4,X6)|~rtuple(X1,X2,X3,X4,X5))).
+cnf(i_0_17, plain, (X8=true|~rp13(X4,X2,X7)|~rp13(X4,X1,X5)|~rp13(X1,X2,X3)|~rifeq3(X7,true,X6,true,X8)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_18, plain, (X8=true|~rp7(X4,X2,X7)|~rp7(X4,X1,X5)|~rp7(X1,X2,X3)|~rifeq3(X7,true,X6,true,X8)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_19, plain, (X8=true|~rp2(X4,X2,X7)|~rp2(X4,X1,X5)|~rp2(X1,X2,X3)|~rifeq3(X7,true,X6,true,X8)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_20, plain, (X8=true|~rp15(X4,X2,X7)|~rp15(X4,X1,X5)|~rp15(X1,X2,X3)|~rifeq3(X7,true,X6,true,X8)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_23, plain, (X11=true|~rp13(X6,X3,X7)|~rp2(X4,X1,X8)|~rp15(X5,X2,X10)|~rf16(X4,X5,X6)|~rf16(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_29, plain, (X11=true|~rp13(X4,X1,X10)|~rp7(X5,X2,X8)|~rp2(X6,X3,X7)|~rf14(X4,X5,X6)|~rf14(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_24, plain, (X11=true|~rp7(X6,X3,X7)|~rp7(X5,X2,X10)|~rp7(X4,X1,X8)|~rf9(X4,X5,X6)|~rf9(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_25, plain, (X11=true|~rp7(X6,X3,X7)|~rp7(X5,X2,X10)|~rp7(X4,X1,X8)|~rf8(X4,X5,X6)|~rf8(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_26, plain, (X11=true|~rp7(X6,X3,X7)|~rp7(X4,X1,X8)|~rp2(X5,X2,X10)|~rf10(X4,X5,X6)|~rf10(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_27, plain, (X11=true|~rp2(X6,X3,X7)|~rp2(X5,X2,X10)|~rp2(X4,X1,X8)|~rf6(X4,X5,X6)|~rf6(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_28, plain, (X11=true|~rp2(X6,X3,X7)|~rp2(X5,X2,X10)|~rp2(X4,X1,X8)|~rf18(X4,X5,X6)|~rf18(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_30, plain, (X11=true|~rp2(X5,X2,X10)|~rp2(X4,X1,X8)|~rp15(X6,X3,X7)|~rf17(X4,X5,X6)|~rf17(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X7,true,X9))).
+cnf(i_0_22, plain, (X11=true|~rp2(X7,X2,X8)|~rp2(X4,X1,X5)|~rp19(X4,X7,X10)|~rp19(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X6,true,X9)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_21, plain, (X11=true|~rp2(X7,X1,X8)|~rp2(X4,X2,X5)|~rp20(X7,X4,X10)|~rp20(X1,X2,X3)|~rifeq3(X10,true,X9,true,X11)|~rifeq3(X8,true,X6,true,X9)|~rifeq3(X5,true,X3,true,X6))).
+cnf(i_0_33, plain, (X42=b|~rf3(X34,X35)|~rf3(X29,X30)|~rf3(X19,X20)|~rf3(X9,X10)|~rf3(X3,X4)|~rf4(X28,X29)|~rf4(X18,X19)|~rf4(X8,X9)|~rf4(X2,X3)|~rf12(X36,X37)|~rf11(X35,X36)|~rf11(X30,X31)|~rf11(X20,X21)|~rf11(X6,X23)|~rf3(c22,X13)|~rf5(c22,X34)|~rf5(c22,X28)|~rf5(c22,X18)|~rf5(c22,X8)|~rf5(c22,X2)|~rp2(X16,X13,X17)|~rp19(X11,X10,X12)|~rp20(X6,X5,X7)|~rf9(X23,X22,X24)|~rf8(X38,X33,X39)|~rf8(X32,X24,X33)|~rf10(X37,X11,X38)|~rf10(X31,X27,X32)|~rf6(X4,c21,X5)|~rf14(X26,c25,X27)|~rf14(X15,c25,X16)|~rf10(X21,c27,X22)|~rp7(c25,X39,X40)|~rf16(c28,X25,X26)|~rf16(c28,X14,X15)|~rf17(c21,c27,X25)|~rf17(c21,c27,X14)|~rtuple(X40,X17,X12,X7,X41)|~rifeq(X41,X1,a,b,X42)|~rtuple(true,true,true,true,X1))).
+cnf(i_0_34, plain, (X45=b|~rf3(X37,X38)|~rf3(X32,X33)|~rf3(X22,X23)|~rf3(X17,X18)|~rf3(X12,X13)|~rf3(X8,X9)|~rf3(X3,X4)|~rf4(X31,X32)|~rf4(X21,X22)|~rf4(X16,X17)|~rf4(X11,X12)|~rf4(X2,X3)|~rf12(X39,X40)|~rf11(X38,X39)|~rf11(X33,X34)|~rf11(X23,X24)|~rf11(X6,X26)|~rf5(c22,X37)|~rf5(c22,X31)|~rf5(c22,X21)|~rf5(c22,X16)|~rf5(c22,X11)|~rf5(c22,X8)|~rf5(c22,X2)|~rp19(X19,X18,X20)|~rp19(X14,X6,X15)|~rf6(X13,X10,X14)|~rp20(X6,X5,X7)|~rf9(X26,X25,X27)|~rf8(X41,X36,X42)|~rf8(X35,X27,X36)|~rf10(X40,X19,X41)|~rf10(X34,X30,X35)|~rf6(X4,c21,X5)|~rf14(X29,c25,X30)|~rf10(X24,c27,X25)|~rp7(c25,X42,X43)|~rf16(c28,X28,X29)|~rf18(c21,X9,X10)|~rf17(c21,c27,X28)|~rtuple(X43,X20,X15,X7,X44)|~rifeq(X44,X1,a,b,X45)|~rtuple(true,true,true,true,X1))).
+
+

@@ -1,0 +1,34 @@
+fof(clause_1,axiom, ! [Z3,Y3]: ( ( (p(cx) & q(cw) &  ~(p(Y3)))) => (q(Z3)))).
+fof(clause_2,axiom, ! [Y3,Z4]: ( ( (p(cx) & q(Z4) &  ~(p(Y3)))) => (q(cw)))).
+fof(clause_3,axiom, ! [Z3,Y4]: ( ( (p(Y4) & q(cw) &  ~(p(cx)))) => (q(Z3)))).
+fof(clause_4,axiom, ! [Z4,Y4]: ( ( (p(Y4) & q(Z4) &  ~(p(cx)))) => (q(cw)))).
+fof(clause_5,axiom, ! [Z3,X7]: ( ( (p(cx) & p(X7) & p(fy5(X7)) & q(cw))) => (q(Z3)))).
+fof(clause_6,axiom, ! [Z4,X7]: ( ( (p(cx) & p(X7) & p(fy5(X7)) & q(Z4))) => (q(cw)))).
+fof(clause_7,axiom, ! [Y3,W9]: ( ( (p(cx) & q(cw) & q(W9) & q(fz5(W9)))) => (p(Y3)))).
+fof(clause_8,axiom, ! [W4,Y1,W2]: ( ( (p(cx) & q(W2) &  ~(q(W4)) &  ~(q(fz(W4))))) => (p(Y1)))).
+fof(clause_9,axiom, ! [W4,Y1,W3]: ( ( (p(cx) & q(W3) & q(fz(W3)) &  ~(p(Y1)))) => (q(W4)))).
+fof(clause_10,axiom, ! [W3,Y1]: ( ( (p(cx) &  ~(q(cw)) &  ~(q(W3)) &  ~(q(fz(W3))))) => (p(Y1)))).
+fof(clause_11,axiom, ! [Z1,X2,X5]: ( ( (p(X5) & p(fy(X5)) & q(cw) &  ~(p(X2)))) => (q(Z1)))).
+fof(clause_12,axiom, ! [Z1,X2,X5]: ( ( (p(X5) & q(cw) &  ~(p(fy(X2))) &  ~(q(Z1)))) => (p(X2)))).
+fof(clause_13,axiom, ! [X8,Z4,X9,X2]: ( ( (p(X2) & p(fy5(X9)) & q(Z4) &  ~(p(X8)))) => (q(cw)))).
+fof(clause_14,axiom, ! [X8,Z4,X9]: ( ( (p(X9) & q(Z4) &  ~(p(fy5(X8))) &  ~(q(cw)))) => (p(X8)))).
+fof(clause_15,axiom, ! [W3,Y2]: ( ( (p(Y2) &  ~(q(cw)) &  ~(q(W3)) &  ~(q(fz(W3))))) => (p(cx)))).
+fof(clause_16,axiom, ! [W9,Y4]: ( ( (p(Y4) & q(cw) & q(W9) & q(fz5(W9)))) => (p(cx)))).
+fof(clause_17,axiom, ! [W9,W6,Y4]: ( ( (p(Y4) & q(W6) &  ~(q(W9)) &  ~(q(fz5(W9))))) => (p(cx)))).
+fof(clause_18,axiom, ! [W10,W9,Y4]: ( ( (p(Y4) & q(W9) & q(fz5(W9)) &  ~(p(cx)))) => (q(W10)))).
+fof(clause_19,axiom, ! [Z1,X1]: ( ( (q(cw) &  ~(p(X1)) &  ~(p(fy(X1))) &  ~(q(Z1)))) => (p(cx)))).
+fof(clause_20,axiom, ! [X1,Z2]: ( ( (q(Z2) &  ~(p(X1)) &  ~(p(fy(X1))) &  ~(q(cw)))) => (p(cx)))).
+fof(clause_21,axiom, ! [W3,X1]: ( ( (p(cx) & p(X1) & p(fy(X1)) & q(W3) & q(fz(W3)))) => (q(cw)))).
+fof(clause_22,axiom, ! [W3,X1]: ( ( (p(cx) & p(X1) & p(fy(X1)) &  ~(q(W3)) &  ~(q(fz(W3))))) => (q(cw)))).
+fof(clause_23,axiom, ! [W9,X7]: ( ( (p(cx) & p(X7) & p(fy5(X7)) & q(cw) & q(W9) & q(fz5(W9)))) => ($false))).
+fof(clause_24,axiom, ! [W3,X1]: ( ( (p(X1) & p(fy(X1)) & q(cw) & q(W3) & q(fz(W3)))) => (p(cx)))).
+fof(clause_25,axiom, ! [W4,X2,W1,X4]: ( ( (p(X4) & p(fy(X4)) & q(W1) &  ~(q(W4)) &  ~(q(fz(W4))))) => (p(X2)))).
+fof(clause_26,axiom, ! [W4,X2,W3,X4]: ( ( (p(X4) & p(fy(X4)) & q(W3) & q(fz(W3)) &  ~(p(X2)))) => (q(W4)))).
+fof(clause_27,axiom, ! [W4,X2,W1,X4]: ( ( (p(X4) & q(W1) &  ~(p(fy(X2))) &  ~(q(W4)) &  ~(q(fz(W4))))) => (p(X2)))).
+fof(clause_28,axiom, ! [W4,X2,W3,X4]: ( ( (p(X4) & q(W3) & q(fz(W3)) &  ~(p(fy(X2))) &  ~(q(W4)))) => (p(X2)))).
+fof(clause_29,axiom, ! [W9,X7]: ( ( (p(X7) & p(fy5(X7)) &  ~(q(cw)) &  ~(q(W9)) &  ~(q(fz5(W9))))) => (p(cx)))).
+fof(clause_30,axiom, ! [X1,W3]: ( ( (q(cw) & q(W3) & q(fz(W3)) &  ~(p(X1)) &  ~(p(fy(X1))))) => (p(cx)))).
+fof(clause_31,axiom, ! [X7,W9]: ( ( (q(W9) & q(fz5(W9)) &  ~(p(X7)) &  ~(p(fy5(X7))) &  ~(q(cw)))) => (p(cx)))).
+fof(clause_32,axiom, ! [W9,X7]: ( ( ( ~(p(X7)) &  ~(p(fy5(X7))) &  ~(q(cw)) &  ~(q(W9)) &  ~(q(fz5(W9))))) => (p(cx)))).
+fof(conj,conjecture,$false).
+

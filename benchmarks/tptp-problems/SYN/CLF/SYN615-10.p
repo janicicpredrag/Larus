@@ -1,0 +1,37 @@
+fof(ifeq_axiom,axiom, ! [C,B,A]: (ifeq3(A,A,B,C)=B)).
+fof(ifeq_axiom_001,axiom, ! [C,B,A]: (ifeq2(A,A,B,C)=B)).
+fof(ifeq_axiom_002,axiom, ! [C,B,A]: (ifeq(A,A,B,C)=B)).
+fof(p13_1,axiom, ! [X0]: (p13(X0,X0)=true)).
+fof(p7_2,axiom, ! [X43]: (p7(X43,X43)=true)).
+fof(p2_3,axiom, ! [X18]: (p2(X18,X18)=true)).
+fof(p15_4,axiom, ! [X7]: (p15(X7,X7)=true)).
+fof(p2_5,axiom,p2(c26,f3(c22))=true).
+fof(p19_7,axiom,p19(c23,f3(f4(f5(c22))))=true).
+fof(p20_8,axiom,p20(c24,f6(f3(f4(f5(c22))),c21))=true).
+fof(p7_9,axiom, ! [X53,X52]: (ifeq3(p7(X52,X53),true,p7(f12(X52),f12(X53)),true)=true)).
+fof(p2_10,axiom, ! [X30,X29]: (ifeq3(p2(X29,X30),true,p2(f3(X29),f3(X30)),true)=true)).
+fof(p2_11,axiom, ! [X32,X31]: (ifeq3(p2(X31,X32),true,p2(f4(X31),f4(X32)),true)=true)).
+fof(p2_12,axiom, ! [X34,X33]: (ifeq3(p2(X33,X34),true,p2(f5(X33),f5(X34)),true)=true)).
+fof(p7_13,axiom, ! [X51,X50]: (ifeq3(p2(X50,X51),true,p7(f11(X50),f11(X51)),true)=true)).
+fof(p2_14,axiom,p2(c26,f14(f16(c28,f17(c21,c27)),c25))=true).
+fof(p13_15,axiom, ! [X1,X2,X0]: (ifeq3(p13(X0,X2),true,ifeq3(p13(X0,X1),true,p13(X1,X2),true),true)=true)).
+fof(p7_16,axiom, ! [X44,X45,X43]: (ifeq3(p7(X43,X45),true,ifeq3(p7(X43,X44),true,p7(X44,X45),true),true)=true)).
+fof(p2_17,axiom, ! [X19,X20,X18]: (ifeq3(p2(X18,X20),true,ifeq3(p2(X18,X19),true,p2(X19,X20),true),true)=true)).
+fof(p15_18,axiom, ! [X8,X9,X7]: (ifeq3(p15(X7,X9),true,ifeq3(p15(X7,X8),true,p15(X8,X9),true),true)=true)).
+fof(p20_19,axiom, ! [X40,X39,X42,X41]: (ifeq3(p20(X41,X42),true,ifeq3(p2(X41,X39),true,ifeq3(p2(X42,X40),true,p20(X39,X40),true),true),true)=true)).
+fof(p19_20,axiom, ! [X14,X15,X17,X16]: (ifeq3(p19(X16,X17),true,ifeq3(p2(X17,X15),true,ifeq3(p2(X16,X14),true,p19(X14,X15),true),true),true)=true)).
+fof(p13_21,axiom, ! [X5,X3,X6,X4]: (ifeq3(p15(X4,X6),true,ifeq3(p2(X3,X5),true,p13(f16(X3,X4),f16(X5,X6)),true),true)=true)).
+fof(p7_22,axiom, ! [X60,X58,X61,X59]: (ifeq3(p7(X59,X61),true,ifeq3(p7(X58,X60),true,p7(f9(X58,X59),f9(X60,X61)),true),true)=true)).
+fof(p7_23,axiom, ! [X56,X54,X57,X55]: (ifeq3(p7(X55,X57),true,ifeq3(p7(X54,X56),true,p7(f8(X54,X55),f8(X56,X57)),true),true)=true)).
+fof(p7_24,axiom, ! [X48,X46,X49,X47]: (ifeq3(p2(X47,X49),true,ifeq3(p7(X46,X48),true,p7(f10(X46,X47),f10(X48,X49)),true),true)=true)).
+fof(p2_25,axiom, ! [X37,X35,X38,X36]: (ifeq3(p2(X36,X38),true,ifeq3(p2(X35,X37),true,p2(f6(X35,X36),f6(X37,X38)),true),true)=true)).
+fof(p2_26,axiom, ! [X27,X25,X28,X26]: (ifeq3(p2(X26,X28),true,ifeq3(p2(X25,X27),true,p2(f18(X25,X26),f18(X27,X28)),true),true)=true)).
+fof(p2_27,axiom, ! [X24,X22,X23,X21]: (ifeq3(p13(X21,X23),true,ifeq3(p7(X22,X24),true,p2(f14(X21,X22),f14(X23,X24)),true),true)=true)).
+fof(p15_28,axiom, ! [X12,X10,X13,X11]: (ifeq3(p2(X11,X13),true,ifeq3(p2(X10,X12),true,p15(f17(X10,X11),f17(X12,X13)),true),true)=true)).
+fof(p7_29,axiom,p7(c25,f8(f10(f12(f11(f3(f5(c22)))),c23),f8(f10(f11(f3(f4(f5(c22)))),c26),f9(f11(c24),f10(f11(f3(f4(f5(c22)))),c27)))))=true).
+fof(not_p2_6,axiom,ifeq2(p2(c21,f3(c22)),true,a,b)=b).
+fof(not_p19_30,axiom, ! [X63,X62]: (ifeq(tuple(p7(c25,f8(f10(f12(f11(f3(f5(c22)))),X62),f8(f10(f11(f3(f4(f5(c22)))),f14(f16(c28,f17(c21,c27)),c25)),f9(f11(X63),f10(f11(f3(f4(f5(c22)))),c27))))),p2(f14(f16(c28,f17(c21,c27)),c25),f3(c22)),p19(X62,f3(f4(f5(c22)))),p20(X63,f6(f3(f4(f5(c22))),c21))),tuple(true,true,true,true),a,b)=b)).
+fof(not_p19_31,axiom, ! [X63,X62]: (ifeq(tuple(p7(c25,f8(f10(f12(f11(f3(f5(c22)))),X62),f8(f10(f11(f3(f4(f5(c22)))),f14(f16(c28,f17(c21,c27)),c25)),f9(f11(X63),f10(f11(f3(f4(f5(c22)))),c27))))),p19(X62,f3(f4(f5(c22)))),p19(f6(f3(f4(f5(c22))),f18(c21,f3(f5(c22)))),X63),p20(X63,f6(f3(f4(f5(c22))),c21))),tuple(true,true,true,true),a,b)=b)).
+fof(goal,axiom,a != b).
+fof(conj,conjecture,$false).
+

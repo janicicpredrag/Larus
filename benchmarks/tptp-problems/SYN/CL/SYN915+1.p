@@ -1,0 +1,2 @@
+fof(truth,conjecture,$true).
+

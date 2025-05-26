@@ -1,0 +1,29 @@
+fof(c_1,axiom, ! [X1,X]: ( ( (s(X,f1(X,X1)) & q(X1,f1(X,X1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_2,axiom, ! [Z1,X1,X]: ( ( (s(X,f1(X,X1)) &  ~(q(f1(X,X1),Z1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_3,axiom, ! [X1,X]: ( ( (s(X,f1(X,X1)) & s(X1,X1))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_4,axiom, ! [Z,X1,X]: ( ( ( ~(s(f1(X,X1),Z)) & q(X1,f1(X,X1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_5,axiom, ! [Z1,Z,X1,X]: ( ( ( ~(s(f1(X,X1),Z)) &  ~(q(f1(X,X1),Z1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_6,axiom, ! [Z,X1,X]: ( ( ( ~(s(f1(X,X1),Z)) & s(X1,X1))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_7,axiom, ! [Z1,X1,X]: ( ( (q(Z1,Z1) & q(X1,f1(X,X1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_8,axiom, ! [Z1,X1,X]: ( ( (q(Z1,Z1) &  ~(q(f1(X,X1),Z1)))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_9,axiom, ! [Z1,X1,X]: ( ( (q(Z1,Z1) & s(X1,X1))) => (p(f1(X,X1),f1(X,X1))))).
+fof(c_10,axiom, ! [X1,X]: ( ( (p(X,X) & s(X,f1(X,X1)) & q(X1,f1(X,X1)))) => ($false))).
+fof(c_11,axiom, ! [Z1,X1,X]: ( ( (p(X,X) & s(X,f1(X,X1)))) => (q(f1(X,X1),Z1)))).
+fof(c_12,axiom, ! [X1,X]: ( ( (p(X,X) & s(X,f1(X,X1)) & s(X1,X1))) => ($false))).
+fof(c_13,axiom, ! [Z,X1,X]: ( ( (p(X,X) & q(X1,f1(X,X1)))) => (s(f1(X,X1),Z)))).
+fof(c_14,axiom, ! [Z1,Z,X1,X]: ( ( (p(X,X) &  ~(s(f1(X,X1),Z)))) => (q(f1(X,X1),Z1)))).
+fof(c_15,axiom, ! [Z,X1,X]: ( ( (p(X,X) & s(X1,X1))) => (s(f1(X,X1),Z)))).
+fof(c_16,axiom, ! [X1,Z1,X]: ( ( (p(X,X) & q(Z1,Z1) & q(X1,f1(X,X1)))) => ($false))).
+fof(c_17,axiom, ! [X1,Z1,X]: ( ( (p(X,X) & q(Z1,Z1))) => (q(f1(X,X1),Z1)))).
+fof(c_18,axiom, ! [X1,Z1,X]: ( ( (p(X,X) & q(Z1,Z1) & s(X1,X1))) => ($false))).
+fof(c_19,axiom, ! [X1,X,Z]: ( ( (s(X,f1(X,X1)) & q(X1,f1(X,X1)))) => (s(Z,X)))).
+fof(c_20,axiom, ! [Z1,X1,X,Z]: ( ( (s(X,f1(X,X1)) &  ~(q(f1(X,X1),Z1)))) => (s(Z,X)))).
+fof(c_21,axiom, ! [X1,X,Z]: ( ( (s(X,f1(X,X1)) & s(X1,X1))) => (s(Z,X)))).
+fof(c_22,axiom, ! [X1,X,Z]: ( ( ( ~(s(f1(X,X1),Z)) & q(X1,f1(X,X1)))) => (s(Z,X)))).
+fof(c_23,axiom, ! [Z1,X1,X,Z]: ( ( ( ~(s(f1(X,X1),Z)) &  ~(q(f1(X,X1),Z1)))) => (s(Z,X)))).
+fof(c_24,axiom, ! [X1,X,Z]: ( ( ( ~(s(f1(X,X1),Z)) & s(X1,X1))) => (s(Z,X)))).
+fof(c_25,axiom, ! [X1,Z1,X,Z]: ( ( (q(Z1,Z1) & q(X1,f1(X,X1)))) => (s(Z,X)))).
+fof(c_26,axiom, ! [X1,Z1,X,Z]: ( ( (q(Z1,Z1) &  ~(q(f1(X,X1),Z1)))) => (s(Z,X)))).
+fof(c_27,axiom, ! [X1,Z1,X,Z]: ( ( (q(Z1,Z1) & s(X1,X1))) => (s(Z,X)))).
+fof(conj,conjecture,$false).
+

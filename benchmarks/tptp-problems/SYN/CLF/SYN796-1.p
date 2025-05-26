@@ -1,0 +1,54 @@
+fof(clause1,axiom, ! [U]: (ssRr(skf3(U),U))).
+fof(clause2,axiom, ! [U]: (ssRr(U,skf2(U)))).
+fof(clause3,axiom, ! [V,U]: ( ( (ssRr(U,V) &  ~(ssPv1(U)) &  ~(ssPv3(U)) &  ~(ssPv4(U)))) => (ssPv3(V)))).
+fof(clause4,axiom, ! [V,U]: ( ( (ssRr(U,V) & ssPv4(U) &  ~(ssPv2(U)) &  ~(ssPv3(U)))) => (ssPv1(V)))).
+fof(clause5,axiom, ! [V,U]: ( ( (ssRr(U,V) & ssPv2(V) &  ~(ssPv1(V)) &  ~(ssPv4(V)))) => (ssPv2(U)))).
+fof(clause6,axiom, ! [V,U]: ( ( (ssRr(U,V) & ssPv4(V) &  ~(ssPv1(V)) &  ~(ssPv3(V)))) => (ssPv2(U)))).
+fof(clause7,axiom, ! [V,U]: ( ( (ssRr(U,V) & ssPv1(U) & ssPv1(V) & ssPv4(V))) => (ssPv2(V)))).
+fof(clause8,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) &  ~(ssPv2(W)) &  ~(ssPv1(V)) &  ~(ssPv2(V)))) => (ssPv4(U)))).
+fof(clause9,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(W,V) & ssPv1(V) &  ~(ssPv1(W)) &  ~(ssPv4(V)))) => (ssPv4(U)))).
+fof(clause10,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv4(U) & ssRr(W,V) &  ~(ssPv3(V)) &  ~(ssPv4(V)))) => (ssPv3(W)))).
+fof(clause11,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv1(V) & ssRr(U,W) &  ~(ssPv3(U)) &  ~(ssPv4(U)))) => (ssPv2(W)))).
+fof(clause12,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(V,W) &  ~(ssPv2(V)) &  ~(ssPv3(V)))) => (ssPv2(W)))).
+fof(clause13,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv3(V) &  ~(ssPv2(W)) &  ~(ssPv1(V)))) => (ssPv4(U)))).
+fof(clause14,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv2(V) &  ~(ssPv4(W)) &  ~(ssPv1(V)))) => (ssPv1(U)))).
+fof(clause15,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv3(U) & ssRr(W,V) &  ~(ssPv1(V)) &  ~(ssPv4(V)))) => (ssPv4(W)))).
+fof(clause16,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv1(V) & ssRr(U,W) &  ~(ssPv1(U)) &  ~(ssPv4(U)))) => (ssPv4(W)))).
+fof(clause17,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(V,W) &  ~(ssPv1(V)) &  ~(ssPv3(V)))) => (ssPv2(W)))).
+fof(clause18,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv2(V) & ssPv3(V) &  ~(ssPv4(U)))) => (ssPv2(W)))).
+fof(clause19,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(U,W) & ssPv1(U) & ssPv4(U) &  ~(ssPv4(V)))) => (ssPv3(W)))).
+fof(clause20,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(W,V) & ssPv1(V) & ssPv2(V) &  ~(ssPv3(U)))) => (ssPv2(W)))).
+fof(clause21,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv3(U) & ssRr(V,W) & ssPv4(V) &  ~(ssPv2(W)))) => (ssPv3(V)))).
+fof(clause22,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv3(V) & ssRr(U,W) & ssPv1(U) &  ~(ssPv1(W)))) => (ssPv3(U)))).
+fof(clause23,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv1(W) & ssPv4(V) &  ~(ssPv2(U)))) => (ssPv2(V)))).
+fof(clause24,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv2(W) & ssPv3(V) &  ~(ssPv2(U)))) => (ssPv2(V)))).
+fof(clause25,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv4(W) & ssPv1(V) &  ~(ssPv2(U)))) => (ssPv2(V)))).
+fof(clause26,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv2(V) & ssRr(U,W) & ssPv1(W) &  ~(ssPv2(U)))) => (ssPv3(U)))).
+fof(clause27,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv4(W) & ssPv2(V) &  ~(ssPv1(U)))) => (ssPv1(V)))).
+fof(clause28,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv4(V) & ssRr(U,W) & ssPv2(W) &  ~(ssPv1(U)))) => (ssPv2(U)))).
+fof(clause29,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv4(W) & ssPv3(V) & ssPv4(V))) => (ssPv4(U)))).
+fof(clause30,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv1(V) & ssRr(U,W) & ssPv2(U) & ssPv3(U))) => (ssPv4(W)))).
+fof(clause31,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv1(W) & ssPv1(V) & ssPv3(V))) => (ssPv3(U)))).
+fof(clause32,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv2(V) & ssRr(U,W) & ssPv1(U) & ssPv3(U))) => (ssPv1(W)))).
+fof(clause33,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv3(V) & ssRr(U,W) & ssPv1(U) & ssPv2(U))) => (ssPv1(W)))).
+fof(clause34,axiom, ! [W,V,U]: ( ( (ssRr(U,V) & ssPv2(V) & ssRr(U,W) & ssPv1(W) & ssPv1(U) & ssPv4(U))) => ($false))).
+fof(clause35,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssRr(W,V) & ssRr(V,X) & ssPv1(V) &  ~(ssPv2(W)) &  ~(ssPv4(X)))) => (ssPv3(U)))).
+fof(clause36,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(V) & ssRr(U,W) & ssRr(U,X) &  ~(ssPv2(X)) &  ~(ssPv3(U)))) => (ssPv4(W)))).
+fof(clause37,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(W,V) & ssRr(V,X) &  ~(ssPv4(X)) &  ~(ssPv2(V)))) => (ssPv4(W)))).
+fof(clause38,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv1(W) & ssRr(V,X) &  ~(ssPv4(X)) &  ~(ssPv2(V)))) => (ssPv4(U)))).
+fof(clause39,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssRr(W,V) & ssRr(V,X) & ssPv1(X) &  ~(ssPv1(W)) &  ~(ssPv1(V)))) => (ssPv3(U)))).
+fof(clause40,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv3(U) & ssRr(W,V) & ssRr(V,X) & ssPv2(X) &  ~(ssPv4(W)))) => (ssPv3(V)))).
+fof(clause41,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv1(U) & ssRr(V,W) & ssRr(V,X) & ssPv1(V) &  ~(ssPv3(W)))) => (ssPv1(X)))).
+fof(clause42,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv1(U) & ssRr(W,V) & ssRr(V,X) & ssPv4(X) &  ~(ssPv4(W)))) => (ssPv2(V)))).
+fof(clause43,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(V) & ssRr(U,W) & ssPv1(W) & ssRr(U,X) & ssPv3(U))) => (ssPv1(X)))).
+fof(clause44,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(W,V) & ssRr(V,X) & ssPv1(X) & ssPv2(V))) => (ssPv3(W)))).
+fof(clause45,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(V,W) & ssPv3(W) & ssRr(V,X) & ssPv2(V))) => (ssPv1(X)))).
+fof(clause46,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv4(U) & ssRr(W,V) & ssPv3(W) & ssRr(X,V) & ssPv1(X))) => (ssPv2(V)))).
+fof(clause47,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv3(W) & ssRr(V,X) & ssPv1(X) & ssPv1(V))) => (ssPv3(U)))).
+fof(clause48,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv4(U) & ssRr(W,V) & ssPv2(W) & ssRr(V,X) & ssPv4(V))) => (ssPv3(X)))).
+fof(clause49,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv4(U) & ssRr(W,V) & ssPv1(W) & ssRr(V,X) & ssPv1(V))) => (ssPv2(X)))).
+fof(clause50,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv4(U) & ssRr(W,V) & ssPv3(W) & ssRr(V,X) & ssPv3(X))) => (ssPv1(V)))).
+fof(clause51,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssRr(V,W) & ssPv3(W) & ssRr(V,X) & ssPv1(X) & ssPv3(V))) => (ssPv4(U)))).
+fof(clause52,axiom, ! [X,W,V,U]: ( ( (ssRr(U,V) & ssPv2(U) & ssRr(W,V) & ssPv1(W) & ssRr(V,X) & ssPv1(X) & ssPv1(V))) => ($false))).
+fof(conj,conjecture,$false).
+

@@ -1,0 +1,34 @@
+fof(ppppp,axiom, ( ( ~(p_2) &  ~(p_3) &  ~(p_4) &  ~(p_5))) => (p_1)).
+fof(ppppn,axiom, ( ( ~(p_2) &  ~(p_3) &  ~(p_4) & p_5)) => (p_1)).
+fof(pppnp,axiom, ( ( ~(p_2) &  ~(p_3) & p_4 &  ~(p_5))) => (p_1)).
+fof(pppnn,axiom, ( ( ~(p_2) &  ~(p_3) & p_4 & p_5)) => (p_1)).
+fof(ppnpp,axiom, ( ( ~(p_2) & p_3 &  ~(p_4) &  ~(p_5))) => (p_1)).
+fof(ppnpn,axiom, ( ( ~(p_2) & p_3 &  ~(p_4) & p_5)) => (p_1)).
+fof(ppnnp,axiom, ( ( ~(p_2) & p_3 & p_4 &  ~(p_5))) => (p_1)).
+fof(ppnnn,axiom, ( ( ~(p_2) & p_3 & p_4 & p_5)) => (p_1)).
+fof(pnppp,axiom, ( (p_2 &  ~(p_3) &  ~(p_4) &  ~(p_5))) => (p_1)).
+fof(pnppn,axiom, ( (p_2 &  ~(p_3) &  ~(p_4) & p_5)) => (p_1)).
+fof(pnpnp,axiom, ( (p_2 &  ~(p_3) & p_4 &  ~(p_5))) => (p_1)).
+fof(pnpnn,axiom, ( (p_2 &  ~(p_3) & p_4 & p_5)) => (p_1)).
+fof(pnnpp,axiom, ( (p_2 & p_3 &  ~(p_4) &  ~(p_5))) => (p_1)).
+fof(pnnpn,axiom, ( (p_2 & p_3 &  ~(p_4) & p_5)) => (p_1)).
+fof(pnnnp,axiom, ( (p_2 & p_3 & p_4 &  ~(p_5))) => (p_1)).
+fof(pnnnn,axiom, ( (p_2 & p_3 & p_4 & p_5)) => (p_1)).
+fof(npppp,axiom, ( (p_1 &  ~(p_3) &  ~(p_4) &  ~(p_5))) => (p_2)).
+fof(npppn,axiom, ( (p_1 &  ~(p_3) &  ~(p_4) & p_5)) => (p_2)).
+fof(nppnp,axiom, ( (p_1 &  ~(p_3) & p_4 &  ~(p_5))) => (p_2)).
+fof(nppnn,axiom, ( (p_1 &  ~(p_3) & p_4 & p_5)) => (p_2)).
+fof(npnpp,axiom, ( (p_1 & p_3 &  ~(p_4) &  ~(p_5))) => (p_2)).
+fof(npnpn,axiom, ( (p_1 & p_3 &  ~(p_4) & p_5)) => (p_2)).
+fof(npnnp,axiom, ( (p_1 & p_3 & p_4 &  ~(p_5))) => (p_2)).
+fof(npnnn,axiom, ( (p_1 & p_3 & p_4 & p_5)) => (p_2)).
+fof(nnppp,axiom, ( (p_1 & p_2 &  ~(p_4) &  ~(p_5))) => (p_3)).
+fof(nnppn,axiom, ( (p_1 & p_2 &  ~(p_4) & p_5)) => (p_3)).
+fof(nnpnp,axiom, ( (p_1 & p_2 & p_4 &  ~(p_5))) => (p_3)).
+fof(nnpnn,axiom, ( (p_1 & p_2 & p_4 & p_5)) => (p_3)).
+fof(nnnpp,axiom, ( (p_1 & p_2 & p_3 &  ~(p_4))) => (p_5)).
+fof(nnnpn,axiom, ( (p_1 & p_2 & p_3 & p_5)) => (p_4)).
+fof(nnnnp,axiom, ( (p_1 & p_2 & p_3 & p_4)) => (p_5)).
+fof(nnnnn,axiom, ( (p_1 & p_2 & p_3 & p_4 & p_5)) => ($false)).
+fof(conj,conjecture,$false).
+
