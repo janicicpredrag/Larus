@@ -1069,8 +1069,22 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const Fact f,
         nontrivial = true;
       for (size_t k = 0; k < RHS.GetElement(i).GetElement(j).GetArity(); k++) {
         if (inst.find(fact.GetArg(k).ToSMTString()) != inst.cend()) {
-          string s = inst.find(fact.GetArg(k).ToSMTString())->second;
-          Term t;
+            string s = inst.find(fact.GetArg(k).ToSMTString())->second;
+            Term t;
+            t.ReadSMTlibString(s);
+            fact.SetArg(k, t);
+        } else { // compound terms
+          Term t = fact.GetArg(k);
+          string s = t.ToSMTString();
+          for (map<string, string>::iterator it = inst.begin(); it != inst.end(); it++) {
+              s = replaceAll(s,"("+ it->first+")",  "("+ it->second+")");
+              s = replaceAll(s,"("+ it->first+" ", "("+it->second+" ");
+              s = replaceAll(s,"( "+it->first+" ", "( "+it->second+" ");
+              s = replaceAll(s," "+it->first+" ", " "+it->second+" ");
+              s = replaceAll(s," "+it->first+")", " "+it->second+")");
+              s = replaceAll(s," "+it->first+" )", " "+it->second+" )");
+          }
+          t.Clear();
           t.ReadSMTlibString(s);
           fact.SetArg(k, t);
         }

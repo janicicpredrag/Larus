@@ -221,11 +221,10 @@ void ProofExport2Isabelle::OutputPrologue(ofstream &outfile, Theory &T,
   if (mbHasImplication || mbNeedGen) {
     outfile << "{" << endl;
     if (mbNeedGen) {
-      outfile << Indent(0) << "fix ";
       for (unsigned i = 0; i < p.GetTheorem().GetNumOfUnivVars(); i++) {
-          outfile << beautify(inst.find(p.GetTheorem().GetUnivVar(i))->second);
-        if (i + 1 != p.GetTheorem().GetNumOfUnivVars())
-          outfile << " ";
+            outfile << Indent(0) << "fix ";
+            outfile << beautify(inst.find(p.GetTheorem().GetUnivVar(i))->second);
+            outfile << " :: MyT" << endl;
       }
       outfile << endl;
     }

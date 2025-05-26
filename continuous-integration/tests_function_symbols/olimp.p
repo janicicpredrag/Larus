@@ -23,5 +23,8 @@ fof(a20, axiom, (![X,Y,Z] : ((brother(X,Z) & mother(Y) = Z) => uncle(X,Y)))).
 
 fof(thm, conjecture, uncle(poseidon,apolon)).
 
+% example for completing goals
+% fof(thm, conjecture, uncle(_,apolon)).
+
 % prove using:
 % -esmtufbv -m7 -l100 -i -t -b1
