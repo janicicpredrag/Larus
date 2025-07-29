@@ -165,8 +165,10 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       T.AddAxiomEqReflexive();
       T.AddAxiomEqSymm();
       T.AddAxiomNEqSymm();
-      T.AddEqNegElimAxioms();
-      if (!params.mbNoExcludedMiddle)   { // if mbNoExcludedMiddle, do not include excluded middle for =
+      if (!params.mbNoNegElim) { // if mbNoNegElim, do not include neg elim =
+         T.AddEqNegElimAxioms();
+      }
+      if (!params.mbNoExcludedMiddle) { // if mbNoExcludedMiddle, do not include excluded middle for =
           T.AddEqExcludedMiddleAxiom();
       }
       cout << "--- Adding substitution axioms: " << endl;
