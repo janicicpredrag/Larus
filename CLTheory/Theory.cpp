@@ -172,13 +172,13 @@ void Theory::AddExcludedMiddleAxioms() {
     if (mSignatureP[i].first == EQ_NATIVE_NAME)
       continue;
 
-    // ugly convention: skip the predicate symbols with _ in their name - those
-    // were introduced during normalization
     if (mOccuringPredicateSymbols.find(PREFIX_NEGATED + mSignatureP[i].first) ==
             mOccuringPredicateSymbols.end() ||
         mOccuringPredicateSymbols.find(mSignatureP[i].first) == mOccuringPredicateSymbols.end())
       continue;
 
+    // ugly convention: skip the predicate symbols with _ in their name - those
+    // were introduced during normalization
     //if (mSignatureP[i].first.find('_', 0) != string::npos)
     //  continue;
 
@@ -252,8 +252,8 @@ void Theory::AddEqSubAxioms() {
   for (size_t i = 1; i < mSignatureP.size(); i++) {
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
-    if (mSignatureP[i].first.find('_', 0) != string::npos)
-      continue;
+    // if (mSignatureP[i].first.find('_', 0) != string::npos)
+      // continue;
 
 // We could skip negated predicate symbols, but not skipping is needed for case split-free proofs
 //    if (mSignatureP[i].first.find(PREFIX_NEGATED, 0) != string::npos)
