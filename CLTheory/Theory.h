@@ -82,7 +82,7 @@ public:
 
   vector<pair<Fact, DNFFormula>> &GetDefinitions() { return mDefinitions; }
 
-  bool sameUpToRenaming(const CLFormula &cf1, const CLFormula &cf2) const;
+  bool isMoreGeneralOrSame(const CLFormula &cf1, const CLFormula &cf2) const;
 
   void normalizeToCL2();
   bool Saturate();

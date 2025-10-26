@@ -799,12 +799,12 @@ bool Theory::Saturate() {
           }
 
           bool found = false;
-          if (ax2.IsSimpleImplication() &&
-              RHS == LHS)
+          if (ax2.IsSimpleImplication() && RHS == LHS)
             found = true;
           for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
-            if (sameUpToRenaming(newUnivAx, mCLaxioms[l].first))
+            if (isMoreGeneralOrSame(mCLaxioms[l].first,newUnivAx)) {
               found = true;
+            }
           }
           if (!found) {
             cout << "       Derived lemma (" << std::to_string(count_sat)
@@ -985,7 +985,7 @@ bool Theory::SaturateEqSub() {
         }
         bool found = false;
         for (size_t l = 0; l < mCLaxioms.size() && !found; l++) {
-          if (sameUpToRenaming(newUnivAx, mCLaxioms[l].first))
+          if (isMoreGeneralOrSame(mCLaxioms[l].first,newUnivAx))
             found = true;
         }
         if (!found) {
@@ -1162,7 +1162,7 @@ bool Theory::Rewrite(Fact LHS, DNFFormula RHS, const DNFFormula f,
 
 // ---------------------------------------------------------------------------------------
 
-bool Theory::sameUpToRenaming(const CLFormula &cf1,
+bool Theory::isMoreGeneralOrSame(const CLFormula &cf1,
                               const CLFormula &cf2) const {
   map<string, string> inst;
   if (cf1.GetPremises().GetSize() != cf2.GetPremises().GetSize())
