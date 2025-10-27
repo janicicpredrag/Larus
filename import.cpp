@@ -277,6 +277,8 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
       if (params.mbNativeEQsub)
         T.SaturateEqSub();
 
+      T.EliminateRedundant(AxiomsBeforeSaturation);
+
       cout << "       After saturation: output size: " << T.mCLaxioms.size()
            << endl;
       T.printAxioms(true);
