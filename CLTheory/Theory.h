@@ -87,6 +87,7 @@ public:
   void normalizeToCL2();
   bool Saturate();
   bool SaturateEqSub();
+  void EliminateRedundant(size_t initialAxioms);
   bool Unify(const Fact& f1, const Fact& f2, map<string, string>& inst);
   bool Unify(list<pair<Term,Term>>& p, map<string, string>& inst);
   Fact Substitute(const Fact& f, map<string, string>& inst);

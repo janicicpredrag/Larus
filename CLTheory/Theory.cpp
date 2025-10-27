@@ -826,6 +826,19 @@ bool Theory::Saturate() {
 
 // ---------------------------------------------------------------------------------------
 
+void Theory::EliminateRedundant(size_t initialAxioms) {
+    for (size_t i = initialAxioms; i < mCLaxioms.size(); i++) {
+        for (size_t j = 0; j < mCLaxioms.size(); j++) {
+            if (i!=j && isMoreGeneralOrSame(mCLaxioms[j].first,mCLaxioms[i].first)) {
+                mCLaxioms.erase(mCLaxioms.begin() + i);
+                i--;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+
 bool Theory::Unify(const Fact& f1, const Fact& f2, map<string, string>& inst)
 {
     list<pair<Term,Term>> p;
