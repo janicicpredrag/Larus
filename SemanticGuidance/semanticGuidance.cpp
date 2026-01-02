@@ -127,11 +127,11 @@ int main(int argc, char **argv) {
     Diagram diagram;
     GeometryConfiguration gc;
     if (!gc.CreateDiagram(theorem, diagram)) {
-        cout << "FAIL" << endl;
+        cout << "Diagram creation FAILED" << endl;
         return -1;
     }
 
-    LemmaGenerator lemma_guesser(diagram.GetAllPoints());
+    LemmaGenerator lemma_guesser(diagram.GetInitialPoints());
     cout << endl << "Guessing lemmas... " << endl;
 
     set<Fact> trueFacts;
@@ -226,7 +226,7 @@ int main(int argc, char **argv) {
         USING_ORIGINAL_SIGNATURE_NEG = true;
 
         StoreConjecture(inputFilename + "_sf", T.mCLaxioms, allNeededAxioms, theoremName, theorem);
-        cout << "Stored as: " << inputFilename + "_sf" << endl << endl;
+        cout << "Stored as: " << inputFilename + "_sem_fil" << endl << endl;
         break;
 
     case eInvalid:  cout << " ***** Conjecture not valid! *****" << endl; break;
@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
         for (unsigned int ii = 0; ii < T.mCLaxioms.size(); ii++ ) {
             allNeededAxioms.insert(T.mCLaxioms[ii].second);
         }
-        StoreConjecture(inputFilename + "_sl", T.mCLaxioms, allNeededAxioms, theoremName, theorem2);
+        StoreConjecture(inputFilename + "_sem_lemmas", T.mCLaxioms, allNeededAxioms, theoremName, theorem2);
         cout << endl << " ***** Try to prove the file with the learnt lemmas inserted ****";
         cout << endl << " ***** stored as: " << inputFilename + "_sl ****" << endl << endl;
     }

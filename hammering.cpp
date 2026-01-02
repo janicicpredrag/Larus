@@ -132,22 +132,56 @@ void FullHammering(const string inputFileName,
         return;
     }
 
+    // Filter out not only needed axioms, but also needed premises
+    // Store all individual premises as separate axioms
+    vector<pair<CLFormula, string>> Axioms = T.mCLaxioms;
+    ConjunctionFormula premises = theorem.GetPremises();
+    ConjunctionFormula empty;
+    for (size_t i = 0; i < premises.GetSize(); i++) {
+        CLFormula cl;
+        ConjunctionFormula conj;
+        DNFFormula dnf;
+        Fact f = premises.GetElement(i);
+        conj.Add(f);
+        dnf.Add(conj);
+        cl.SetBody(empty, dnf);
+        cl.RenameVars("npaVar");
+        Axioms.push_back(make_pair(cl, "premise_ax" + itos(i)));
+    }
+
+    CLFormula thm_current_ground = theorem;
+    thm_current_ground.SetBody(empty, theorem.GetGoal());
+    thm_current_ground.RenameVars("npaVar");
+
     unsigned inputSize, outputSize, i=1;
     VampireReturnValue r;
     do {
         cout << "--------------------------------------------- " << endl;
         cout << "Iteration " << i++ << endl;
-        inputSize = T.mCLaxioms.size();
-        r = FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke, params.vampire_time_limit);
-        outputSize = T.mCLaxioms.size();
+        inputSize = Axioms.size();
+        r = FilterOutNeededAxioms(Axioms, thm_current_ground, params.msHammerInvoke, params.vampire_time_limit);
+        outputSize = Axioms.size();
         if (r == eVampireUnsat) {
             ofstream outputFile;
-            outputFile.open(inputFileName+"_fh");
-            for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();  it != T.mCLaxioms.end(); it++) {
-                cout << "       fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
-                outputFile << "fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+            outputFile.open(inputFileName+"_filtered");
+            ConjunctionFormula premises;
+            ConjunctionFormula conj;
+
+            for (vector<pair<CLFormula, string>>::iterator it = Axioms.begin();  it != Axioms.end(); it++) {
+                if (it->second.substr(0, strlen("premise_ax")) == "premise_ax") {
+                    int index;
+                    stoi(it->second.substr(strlen("premise_ax")),index);
+                    premises.Add(theorem.GetPremises().GetElement(index));
+                } else {
+                    cout << "       fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+                    outputFile << "fof(" << it->second << ", axiom, " << it->first << ")."  << endl;
+                }
             }
-            outputFile << "fof(" << theoremName  << ", conjecture, " << theorem << ")." << endl;
+            CLFormula thm_filtered = theorem;
+            thm_filtered.SetBody(premises, theorem.GetGoal());
+            cout << "Theorem to be proved: " << endl;
+            cout << "       fof(" << theoremName  << ", conjecture, " << thm_filtered << ")." << endl;
+            outputFile << "fof(" << theoremName  << ", conjecture, " << thm_filtered << ")." << endl;
             outputFile.close();
         }
     } while (r == eVampireUnsat && inputSize != outputSize);

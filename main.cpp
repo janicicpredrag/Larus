@@ -340,8 +340,13 @@ int main(int argc, char **argv) {
 
   // invoke full hammering (until fix-point; no proving)
   if (bFullHammering) {
-      USING_ORIGINAL_SIGNATURE_EQ = true;
-      USING_ORIGINAL_SIGNATURE_NEG = true;
+      if (params.mbNoExcludedMiddle) {
+        USING_ORIGINAL_SIGNATURE_EQ = false;
+        USING_ORIGINAL_SIGNATURE_NEG = false;
+      } else {
+        USING_ORIGINAL_SIGNATURE_EQ = true;
+        USING_ORIGINAL_SIGNATURE_NEG = true;
+      }
       if (params.msHammerInvoke == "")
           params.msHammerInvoke = DEFAULT_HAMMER;
       FullHammering(inputFileName, params, T, theorem, theoremName, hints);

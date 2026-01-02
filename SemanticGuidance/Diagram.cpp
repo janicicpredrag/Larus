@@ -21,7 +21,11 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
     for(int attempts = 0; attempts < 1000; attempts++) {
         cout << endl << "Instantiation attempt " << ++attempts << ":" << endl;
         try {
+            mInitialPoints.clear();
             InstantiateOnce(construction);
+            for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++)
+                mInitialPoints.insert(*mAllPoints.find(theorem.GetUnivVar(i)));
+
             bool bOutOfCanvas = false;
             for(auto ip = mAllPoints.begin();
                 ip != mAllPoints.end() && !bOutOfCanvas; ip++) {
@@ -54,14 +58,6 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
 //---------------------------------------------------------------------
 
 bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
-    /* ConjunctionFormula premises = mTheorem.GetPremises();
-    for (size_t i = 0; i < mTheory.mCLaxioms.size(); i++) {
-        if (mTheory.mCLaxioms[i].second.substr(0,3) == "pax") {
-            premises.Add(mTheory.mCLaxioms[i].first.GetGoal().GetElement(0).GetElement(0));
-            // cout <<  mTheory.mCLaxioms[i].first.GetGoal().GetElement(0).GetElement(0)  << endl;
-        }
-    }*/
-
     mAllPoints.clear();
     mGCLC.clear();
     mGCLC += "dim 60 60\n";
@@ -445,6 +441,13 @@ bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
 
 const map<string,Point>& Diagram::GetAllPoints() const {
     return mAllPoints;
+}
+
+
+// -----------------------------------------------------------------------------------------------
+
+const map<string,Point>& Diagram::GetInitialPoints() const {
+    return mInitialPoints;
 }
 
 // -----------------------------------------------------------------------------------------------
