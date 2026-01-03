@@ -244,7 +244,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
             }
             else {
                 cout << "ERROR2!" << endl;
-                cout << it->GetName() << "not supported! " << endl;
+                cout << func << " not supported! " << endl;
             }
 
         } else {

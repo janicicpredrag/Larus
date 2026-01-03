@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
     double time_limit = 30;
     prover_name prover = eVampire;
     bool excludedmiddle = false;
+    bool declarative2procedural = false;
 
     string inputFilename;
     for (int i = 1; i < argc; i++) {
@@ -37,16 +38,24 @@ int main(int argc, char **argv) {
                 time_limit = DEFAULT_TIME_LIMIT;
         }
 
+        // setting prover (default: vampire)
         else if (argv[i][0] == '-' && argv[i][1] == 'p') {
             if (argv[i][2] == 'e') {
                 prover = eEprover;
             }
         }
 
+        // using excluded middle or not (default: no)
         else if (argv[i][0] == '-' && argv[i][1] == 'e') {
             excludedmiddle = true;
         }
 
+        // translate only: from declarative to procedural
+        else if (argv[i][0] == '-' && argv[i][1] == 't') {
+            declarative2procedural = true;
+        }
+
+        // input file
         else if (argv[i][0] != '-') {
             inputFilename.assign(argv[i], strlen(argv[i]));
         } else {
@@ -62,6 +71,27 @@ int main(int argc, char **argv) {
     if (ReadConjecture(inputFilename, T, theorem, theoremName) == eVampireErrorReadingAxioms) {
         cout << "Invalid input file." << endl;
         return -1;
+    }
+
+    Diagram diagram;
+    GeometryConfiguration gc;
+    ConjunctionFormula premises;
+    if (!gc.CreateDiagram(theorem, diagram)) {
+        cout << "Diagram creation FAILED" << endl;
+        return -1;
+    }
+
+    // Translate only: from declarative to procedural
+    // No semantic guided proving
+    if (declarative2procedural) {
+        for(int i=0; i<gc.GetProceduralDescription().size(); i++)
+            premises.Add(gc.GetProceduralDescription()[i]);
+        for(int i=0; i<gc.GetNDGs().size(); i++)
+            premises.Add(gc.GetNDGs()[i]);
+        theorem.SetBody(premises, theorem.GetGoal());
+        StoreConjecture(inputFilename + "_func", T.mCLaxioms, theoremName, theorem);
+        cout << endl << "Stored using functions as: " << inputFilename + "_func" << endl << endl;
+        return 0;
     }
 
     if (!excludedmiddle) {
@@ -123,13 +153,6 @@ int main(int argc, char **argv) {
     }
 
     timer.start();
-
-    Diagram diagram;
-    GeometryConfiguration gc;
-    if (!gc.CreateDiagram(theorem, diagram)) {
-        cout << "Diagram creation FAILED" << endl;
-        return -1;
-    }
 
     LemmaGenerator lemma_guesser(diagram.GetInitialPoints());
     cout << endl << "Guessing lemmas... " << endl;
@@ -225,8 +248,8 @@ int main(int argc, char **argv) {
         USING_ORIGINAL_SIGNATURE_EQ  = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
 
-        StoreConjecture(inputFilename + "_sf", T.mCLaxioms, allNeededAxioms, theoremName, theorem);
-        cout << "Stored as: " << inputFilename + "_sem_fil" << endl << endl;
+        StoreConjecture(inputFilename + "_sem_filter", T.mCLaxioms, allNeededAxioms, theoremName, theorem);
+        cout << "Stored as: " << inputFilename + "_sem_filter" << endl << endl;
         break;
 
     case eInvalid:  cout << " ***** Conjecture not valid! *****" << endl; break;
@@ -243,7 +266,7 @@ int main(int argc, char **argv) {
         }
         StoreConjecture(inputFilename + "_sem_lemmas", T.mCLaxioms, allNeededAxioms, theoremName, theorem2);
         cout << endl << " ***** Try to prove the file with the learnt lemmas inserted ****";
-        cout << endl << " ***** stored as: " << inputFilename + "_sl ****" << endl << endl;
+        cout << endl << " ***** stored as: " << inputFilename + "_sem_lemmas ****" << endl << endl;
     }
 
     cout << "--------------------------------------------- " << endl;
@@ -274,9 +297,10 @@ int main(int argc, char **argv) {
 void printHelp() {
     cout << "Usage: semanticGuidance -h <filename> ";
     cout << endl;
-    cout << "   -s                   for checking status of the input file" << endl;
-    cout << "   -l<time_limit>       for time limit, default: 10s"                      << endl << endl;
-    cout << "   -p<prover>           v for vampire, e for eprover, default: vampire"                      << endl << endl;
+    cout << "   -l<time_limit>       for time limit, default: 10s"          << endl;
+    cout << "   -p<prover>           v for vampire, e for eprover, default: vampire" << endl;
+    cout << "   -e                   use excluded middle axioms (default: no)" << endl;
+    cout << "   -t                   translate only: from declarative to procedural (no proving)" << endl << endl;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

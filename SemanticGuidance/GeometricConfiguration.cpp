@@ -36,7 +36,8 @@ bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& dia
         cout << "#";
         if (Declarative2ProceduralDescription(fixedPoints)
             && diagram.Instantiate(mTheorem, GetProceduralDescription(), GetNDGs())) {
-            cout << diagram.GetGCLCDescription();
+            // cout << diagram.GetGCLCDescription();
+            cout << endl << "Succesfully created a diagram. " << endl << endl;
             return true;
         }
     }
@@ -63,7 +64,7 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
 
     for (size_t j = 0; j < fixedPoints.size(); j++) {
         degreesOfFreedom[fixedPoints[j]] = 0;
-        mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(void)");
+        mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
     }
     cout << endl;
 
@@ -214,7 +215,7 @@ bool GeometryConfiguration::FactToConstraints(vector<Fact>& inputConfiguration, 
             degreesOfFreedom[A[2]]==2 && degreesOfFreedom[A[3]]>0) {
             for(unsigned int j = 0; j < 3; j++) {
                 degreesOfFreedom[A[j]] = 0;
-                mOutputConstruction.push_back(A[j] + " = freepoint(void)");
+                mOutputConstruction.push_back(A[j] + " = freepoint(null,null)");
             }
             mOutputConstruction.push_back(A[3] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
             mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
@@ -249,9 +250,9 @@ bool GeometryConfiguration::FactToConstraints(vector<Fact>& inputConfiguration, 
         if (degreesOfFreedom[A[0]]==2 && degreesOfFreedom[A[1]]==2 &&
             degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]>0) {
             degreesOfFreedom[A[0]] = 0;
-            mOutputConstruction.push_back(A[0] + " = freepoint(void)");
+            mOutputConstruction.push_back(A[0] + " = freepoint(null,null)");
             degreesOfFreedom[A[1]] = 0;
-            mOutputConstruction.push_back(A[1] + " = freepoint(void)");
+            mOutputConstruction.push_back(A[1] + " = freepoint(null,null)");
             inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
             inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
             mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
@@ -259,9 +260,9 @@ bool GeometryConfiguration::FactToConstraints(vector<Fact>& inputConfiguration, 
         } else if (degreesOfFreedom[A[0]]==2 && degreesOfFreedom[A[1]]>2 &&
                    degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]==2) {
             degreesOfFreedom[A[0]] = 0;
-            mOutputConstruction.push_back(A[0] + " = freepoint(void)");
+            mOutputConstruction.push_back(A[0] + " = freepoint(null,null)");
             degreesOfFreedom[A[3]] = 0;
-            mOutputConstruction.push_back(A[3] + " = freepoint(void)");
+            mOutputConstruction.push_back(A[3] + " = freepoint(null,null)");
             inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[0] + ", " + A[3] + ")");
             inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
             mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
