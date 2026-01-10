@@ -19,7 +19,7 @@ public:
 private:
     bool InOtherConstraints(const vector<Fact>& inputConfiguration, const vector<Fact>::const_iterator jt, const string& P);
     bool IsConfigurationOverconstrained(map<string, int>& degreesOfFreedom, Fact& f);
-    bool FactToConstructionStep(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom);
+    bool FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom);
     bool PairsOfConstraintsToFunctionalForm(vector<Fact>& inputConfiguration);
     bool CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
     bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);

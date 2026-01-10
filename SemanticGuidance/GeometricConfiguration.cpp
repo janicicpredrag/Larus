@@ -87,7 +87,7 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
                 cout << endl << "Facts to constraints:" << endl;
                 for (auto it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
                     cout << endl << " -----> Processing:  " << *it ;
-                    if (FactToConstructionStep(inputConfiguration, *it, degreesOfFreedom)) {
+                    if (FactToLocationConstraint(inputConfiguration, *it, degreesOfFreedom)) {
                         *it = null_fact;
                         cout << endl << "Update:   ";
                         printCurrentStatus(inputConfiguration, degreesOfFreedom);
@@ -186,7 +186,7 @@ bool GeometryConfiguration::IsConfigurationOverconstrained(map<string, int>& deg
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::FactToConstructionStep(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom) {
+bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom) {
     string A[6];
     for (size_t i = 0; i < f.GetArity(); i++) {
         A[i] = f.GetArg(i).ToTPTPString();
