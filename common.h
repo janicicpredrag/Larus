@@ -12,8 +12,8 @@ using namespace std;
 #define MAX_ARITY 15
 #define MAX_VARSINAXIOMS 10
 
-const string sBOT = "a01";
-const string sTOP = "a02";
+const string sBOT = "bot";
+const string sTOP = "top";
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
 
