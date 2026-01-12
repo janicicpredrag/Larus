@@ -60,7 +60,7 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
 bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
     mAllPoints.clear();
     mGCLC.clear();
-    mGCLC += "dim 60 60\n";
+    mGCLC += "dim 70 70\n";
     mGCLC += "color 200 200 200\n";
     mGCLC += "normal\n";
 
@@ -80,8 +80,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
             const string func = t.GetFunctionSymbol(0);
             if (func == "freepoint") {
                 Point p;
-                p.x = 10 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
-                p.y = 10 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
+                p.x = 5 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
+                p.y = 5 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
                 mAllPoints[sA[0]] = p;
                 mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
@@ -336,7 +336,7 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[0] + "\n";
-        } else if (f.GetName() == QUADRILATERAL || f.GetName() == PARALLELOGRAM || f.GetName() == RECTANGLE) {
+        } else if (f.GetName() == QUADRILATERAL || f.GetName() == PARALLELOGRAM || f.GetName() == RECTANGLE || f.GetName() == SQUARE) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";

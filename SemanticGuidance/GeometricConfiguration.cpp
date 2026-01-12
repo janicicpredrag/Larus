@@ -281,6 +281,16 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
             return true;
         }
 
+    } else if (f.GetName() == SQUARE) {
+        if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 &&
+            degreesOfFreedom[A[2]]==2 && degreesOfFreedom[A[3]]==2) {
+            degreesOfFreedom[A[0]] = 0;
+            degreesOfFreedom[A[1]] = 0;
+            inputConfiguration.push_back(string(CONG) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
+            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
+            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
+            return true;
+        }
     } else if (f.GetName() == COLLINEAR) {
         for(unsigned int j = 0; j < 3; j++) {
             unsigned j1 = (j+1) % 3;

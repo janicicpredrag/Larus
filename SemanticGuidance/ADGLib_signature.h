@@ -21,6 +21,7 @@ inline constexpr string_view ISOSCELES     = "isosceles";
 inline constexpr string_view QUADRILATERAL = "quadrilateral";
 inline constexpr string_view PARALLELOGRAM = "parallelogram";
 inline constexpr string_view RECTANGLE     = "rectangle";
+inline constexpr string_view SQUARE        = "square";
 
 inline constexpr string_view ON_OPP_SIDES  = "opposite_sides";
 inline constexpr string_view ON_SAME_SIDE  = "same_side";
