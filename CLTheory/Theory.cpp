@@ -779,12 +779,21 @@ bool Theory::Saturate() {
               ConjunctionFormula cfl;
               cfl.Add(LHS);
               newUnivAx = CLFormula(cfl, df);
+              for (size_t l = 0; l < LHS.GetArity(); l++) {
+                  bool found = false;
+                  if (!IsConstant(LHS.GetArg(l))) {
+                      for (size_t ll = 0; ll < newUnivAx.GetNumOfUnivVars() && !found;
+                           ll++)
+                          if (LHS.GetArg(l).ToSMTString() == newUnivAx.GetUnivVar(ll))
+                              found = true;
+                      if (!found)
+                          newUnivAx.AddUnivVar(LHS.GetArg(l).ToSMTString());
+                  }
+              }
           } else {
             ConjunctionFormula empty;
             newUnivAx = CLFormula(empty, df);
           }
-
-          newUnivAx.TakeUnivVars(ax2);
 
           for (size_t l = 0; l < RHS.GetArity(); l++) {
             bool found = false;
