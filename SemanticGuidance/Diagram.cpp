@@ -356,7 +356,7 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[0] + " " + A[2] + "\n";
         } else if (f.GetName() == BETWEEN_STRICT) {
             mGCLC += "drawsegment " + A[0] + " " + A[2] + "\n";
-        } else if (f.GetName() == BETWEEN4) {
+        } else if (f.GetName() == BETWEEN4 || f.GetName() == BETWEEN_STRICT4) {
             mGCLC += "drawline " + A[0] + " " + A[3] + "\n";
         } else if (f.GetName() == PERP) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";

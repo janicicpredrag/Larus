@@ -369,7 +369,7 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
             return true;
         }
 
-    } else if (f.GetName() == BETWEEN4) {
+    } else if (f.GetName() == BETWEEN4 || f.GetName() == BETWEEN_STRICT4) {
         if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 &&
             degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]>0) {
             inputConfiguration.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");

@@ -9,6 +9,7 @@ inline constexpr string_view COLLINEAR     = "collinear";
 inline constexpr string_view BETWEEN       = "between";
 inline constexpr string_view BETWEEN_STRICT= "between_strict";
 inline constexpr string_view BETWEEN4      = "between4";
+inline constexpr string_view BETWEEN_STRICT4 = "between_strict4";
 inline constexpr string_view CONG          = "cong";
 inline constexpr string_view CONG_ANGLES   = "congruent_angles";
 inline constexpr string_view MIDPOINT      = "midpoint";
