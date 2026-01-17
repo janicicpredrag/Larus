@@ -49,8 +49,8 @@ void line(const Point& A, const Point& B, Line& l)
 {
     if (fabs(A.x - B.x) <= EPS) {
         if (fabs(A.y - B.y) <= EPS) {
-            cout << endl << "(" << A.x << "," << A.y << ")";
-            cout << endl << "(" << B.x << "," << B.y << ")";
+            // cout << endl << "(" << A.x << "," << A.y << ")";
+            // cout << endl << "(" << B.x << "," << B.y << ")";
             throw runtime_error("\nLine cannot be determined!");
         } else {
             l.a = 1.00; l.b = 0.00; l.c = -(A.x);
@@ -160,7 +160,7 @@ void lineCircleIntersection(const Line& l, const Circle& c, Point& P1, Point& P2
 
 void circleCircleIntersection(const Circle& c1, const Circle& c2, Point& P1, Point& P2)
 {
-    double a, b, c, d, e, f, s, s1;
+    double a, b, c, d, e, f, s;
     if (fabs((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y)) < EPS) {
         throw runtime_error("No intersection!");
     } else {

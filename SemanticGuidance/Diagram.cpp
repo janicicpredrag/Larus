@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#define AREA_THRESHOLD 100
+#define DISTANCE_THRESHOLD 3
 
 //---------------------------------------------------------------------
 
@@ -18,8 +20,8 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
     auto millis = chrono::duration_cast<chrono::milliseconds>(duration).count();
     srand(static_cast<unsigned int>(millis));
 
-    for(int attempts = 0; attempts < 1000; attempts++) {
-        cout << endl << "Instantiation attempt " << ++attempts << ":" << endl;
+    for(int attempts = 1; attempts <= 1000; attempts++) {
+        cout << endl << "Instantiation attempt " << attempts << ":" << endl;
         try {
             mInitialPoints.clear();
             InstantiateOnce(construction);
@@ -31,7 +33,8 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
                 ip != mAllPoints.end() && !bOutOfCanvas; ip++) {
                 cout << " * point: " << ip->first
                      << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
-                if (ip->second.x<0 || ip->second.y<0 || ip->second.x>60 || ip->second.y>60) {
+                if (ip->second.x < 5 || ip->second.y < 5 ||
+                    ip->second.x > 65 || ip->second.y >65) {
                     bOutOfCanvas = true;
                     break;
                 }
@@ -72,8 +75,10 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
             Term t = it->GetArg(1);
             sA[0] = it->GetArg(0).ToTPTPString();
             for (unsigned i = 0; i < t.NumArgs(); i++) {
-                sA[i+1] = t.GetArg(i);
-                A[i+1] = mAllPoints[sA[i+1]];
+                if (t.GetArg(i) != "null") {
+                    sA[i+1] = t.GetArg(i);
+                    A[i+1] = mAllPoints[sA[i+1]];
+                }
             }
 
             mGCLC += "% ----- Point " + sA[0] + " := " + t.ToTPTPString() + "\n";
@@ -87,7 +92,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
+                printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FOURTH_VERTEX_OF_PARALLELOGRAM) {
                 translation(A[3], A[2], A[1], A[0]);
@@ -361,6 +366,9 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         } else if (f.GetName() == PERP) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";
+        } else if (f.GetName() == RIGHT_ANGLE) {
+            mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+            mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
         } else if (f.GetName() == PERP_AT) {
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
             mGCLC += "drawsegment " + A[3] + " " + A[4] + "\n";
@@ -405,14 +413,14 @@ bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
         if (it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))
                 throw runtime_error("~col not met!");
-            if (area(A[0], A[1], A[2]) < 100)
+            if (area(A[0], A[1], A[2]) < AREA_THRESHOLD)
                 throw runtime_error("~col/area not nice!");
 
         }   else if (it->GetName() == NOT_EQ) {
             //cout << "is eq " << A[0].x << " " << A[0].y  << " " << A[1].x << " " << A[1].y << endl;
             if (isEqual(A[0], A[1]))
                 throw runtime_error("~eq not met!");
-            if (distance(A[0], A[1]) < 3)
+            if (distance(A[0], A[1]) < DISTANCE_THRESHOLD)
                 throw runtime_error("~eq not nice!");
 
         }   else if (it->GetName() == BETWEEN) {

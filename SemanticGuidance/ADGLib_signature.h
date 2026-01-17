@@ -17,6 +17,7 @@ inline constexpr string_view FOOT          = "foot";
 inline constexpr string_view PERP          = "perpendicular";
 inline constexpr string_view PERP_AT       = "perpendicular_at";
 inline constexpr string_view PARALLEL      = "parallel";
+inline constexpr string_view RIGHT_ANGLE   = "right_angle";
 inline constexpr string_view TRIANGLE      = "triangle";
 inline constexpr string_view ISOSCELES     = "isosceles";
 inline constexpr string_view QUADRILATERAL = "quadrilateral";

@@ -439,6 +439,34 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
             }
         }
 
+
+    } else if (f.GetName() == RIGHT_ANGLE) {
+        if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[2]]==0) {
+            string O = "P"+itos(mObjCounter++);
+            mOutputConstruction.push_back(O + " = " + string(FUN_MIDPOINT) + "(" + A[0] + "," + A[2] +")");
+            degreesOfFreedom[O]=0;
+            inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[1] + ", " + O + "," + A[0] + ")");
+            degreesOfFreedom[A[1]]--;
+            mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[2] + ")");
+            return true;
+        } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0) {
+            string O = "P"+itos(mObjCounter++);
+            mOutputConstruction.push_back(O + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[1] +"," +A[1] + "," + A[2] + "))");
+            degreesOfFreedom[O]=0;
+            inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + A[1] +"," + O + ")");
+            degreesOfFreedom[A[0]]--;
+            mNDGs.push_back(string(NOT_EQ) + "(" + A[1] + ", " + O + ")");
+            return true;
+        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]>0) {
+            string O = "P"+itos(mObjCounter++);
+            mOutputConstruction.push_back(O + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[1] +"," +A[1] + "," + A[0] + "))");
+            degreesOfFreedom[O]=0;
+            inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + A[1] +"," + O + ")");
+            degreesOfFreedom[A[0]]--;
+            mNDGs.push_back(string(NOT_EQ) + "(" + A[1] + ", " + O + ")");
+            return true;
+        }
+
     } else if (f.GetName() == PARALLEL) {
         for(unsigned int j = 0; j < 2; j++) {
             if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
