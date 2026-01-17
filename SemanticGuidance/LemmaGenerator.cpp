@@ -11,8 +11,8 @@ void LemmaGenerator::GuessLemma(set<Fact> &facts, int time_limit){
     cout << endl << "--------------------------------------------- " << endl;
     GuessCongLemma(facts, time_limit);
     GuessPerpLemma(facts, time_limit);
-    //    GuessColLemma(facts, time_limit);
-    GuessCyclicLemma(facts, time_limit);
+    // GuessColLemma(facts, time_limit);
+    // GuessCyclicLemma(facts, time_limit);
     GuessEqAnglesLemma(facts, time_limit);
     //GuessEqAnglesLemma_8(facts, time_limit);
 }
@@ -174,7 +174,7 @@ void LemmaGenerator::GuessEqAnglesLemma(set<Fact> &facts, int time_limit) {
                 f.SetArg(1, R);*/
 
                                 Term t;
-                                f.SetName("eqangle6");
+                                f.SetName(string(CONG_ANGLES));
                                 t.ReadNonCompoundString((*it2).first);
                                 f.SetArg(0, t);
                                 t.ReadNonCompoundString((*it1).first);
