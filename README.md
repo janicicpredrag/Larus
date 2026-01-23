@@ -13,6 +13,8 @@ Encoding to SMT use one of four SMT theories: QF_BV, QF_LIA, QF_UFBV, QF_UFLIA.
 - Predrag Janičić, Julien Narboux. Theorem Proving as Constraint Solving with Coherent Logic. Journal of Automated Reasoning, 2022, 66 (4), pp.689-746. [⟨10.1007/s10817-022-09629-z⟩](https://link.springer.com/article/10.1007/s10817-022-09629-z) ([bib](https://hal.science/hal-03632665/bibtex), [⟨hal-03632665⟩](https://hal.science/hal-03632665).
 - Salwa Tabet Gonzalez, Predrag Janičić, Julien Narboux. Automated Completion of Statements and Proofs in Synthetic Geometry: an Approach based on Constraint Solving. Automated Deduction in Geometry 2023, Sep 2023, Belgrade, Serbia ([bib](https://hal.science/hal-04226900/bibtex), [⟨hal-042226900⟩](https://hal.science/hal-04226900))
 - Predrag Janičić, Julien Narboux. Automated generation of illustrated proofs in geometry and beyond. Annals of Mathematics and Artificial Intelligence, 2023, . [⟨10.1007/s10472-023-09857-y⟩](https://link.springer.com/article/10.1007/s10472-023-09857-y). ([bib](https://hal.science/hal-04230795/bibtex),[⟨hal-04230795⟩](https://hal.science/hal-04230795))
+- Predrag Janičić: Theorem Proving as Constraint Solving for Coherent Logic with Function Symbols. 
+Journal of Automated Reasoning, 2025, 69 (29).  [⟨0.1007/s10817-025-09742-9⟩](https://link.springer.com/article/10.1007/s10817-025-09742-9).
 
 
 ### License
@@ -104,9 +106,9 @@ otherwise:
    
    `-r<invoke>`           the way the external FOL prover is invoked as a hammer to filter out the needed 
                           axioms; '#' is to be used in place of an input file name
-                          examples: -r'vampire --mode casc --proof tptp --output_axiom_names on # ';
+                          examples: -r'vampire --mode casc --cores 0 --proof tptp --output_axiom_names on # ';
                           -r'tptp_to_ladr < # | prover9 2> /dev/null ";
-                          default:   'vampire --mode casc --proof tptp --output_axiom_names on # '
+                          default:   'vampire --mode casc --cores 0 --proof tptp --output_axiom_names on # '
 
    `-a<invoke>`           the way the external prover is invoked as a hammer for abduction 
    

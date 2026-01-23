@@ -159,7 +159,7 @@ ValidityStatus CheckValidity(prover_name prover, const string& conjectureName, c
 
   string hammer_invoke;
   if (prover == eVampire)
-    hammer_invoke = "vampire --time_limit " + to_string(time_limit) + " --cores 4 --mode casc --proof tptp --output_axiom_names on " + for_FOL_prover;
+    hammer_invoke = "vampire --time_limit " + to_string(time_limit) + " --mode casc --cores 0 --proof tptp --output_axiom_names on " + for_FOL_prover;
   else if (prover == eEprover)  
     hammer_invoke = "eprover --auto-schedule --cpu-limit=" + to_string((int)ceil(time_limit)) + " -p " + for_FOL_prover;
   else {

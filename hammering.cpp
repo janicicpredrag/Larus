@@ -119,6 +119,7 @@ void FullHammering(const string inputFileName,
                    vector<tHint> &hints) {
     Timer timer;
     timer.start();
+
     cout << "--- Reading file: " << inputFileName << endl;
     if (ReadTPTPConjecture(inputFileName, params, T, theorem, theoremName, hints) == eOK) {
         cout << "--- Axioms: " << endl;
@@ -150,6 +151,7 @@ void FullHammering(const string inputFileName,
     }
 
     CLFormula thm_current_ground = theorem;
+    thm_current_ground.ClearUnivVars();
     thm_current_ground.SetBody(empty, theorem.GetGoal());
     thm_current_ground.RenameVars("npaVar");
 
@@ -179,6 +181,7 @@ void FullHammering(const string inputFileName,
             }
             CLFormula thm_filtered = theorem;
             thm_filtered.SetBody(premises, theorem.GetGoal());
+
             cout << "Theorem to be proved: " << endl;
             cout << "       fof(" << theoremName  << ", conjecture, " << thm_filtered << ")." << endl;
             outputFile << "fof(" << theoremName  << ", conjecture, " << thm_filtered << ")." << endl;
