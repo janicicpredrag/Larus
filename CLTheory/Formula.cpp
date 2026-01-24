@@ -1067,27 +1067,29 @@ bool CLFormula::IsSimpleFormulaWithoutDisjunction() const
 
 void CLFormula::RenameVars(const string& Prefix)
 {
-    assert(GetPremises().GetSize() <= 1);
-    assert(GetGoal().GetSize() == 1);
-    assert(GetGoal().GetElement(0).GetSize() == 1);
-    if (GetPremises().GetSize() == 1) {
-        Fact f = GetPremises().GetElement(0);
-        for (unsigned i = 0; i < f.GetArity(); i++) {
-            Term t = f.GetArg(i);
+    for(unsigned i = 0; i < GetPremises().GetSize(); i++) {
+        Fact f = GetPremises().GetElement(i);
+        for (unsigned j = 0; j < f.GetArity(); j++) {
+            Term t = f.GetArg(j);
             t.ReadNonCompoundString(Prefix + t.ToTPTPString());
-            f.SetArg(i,t);
+            f.SetArg(j,t);
         }
-        mA.SetElement(0,f);
+        mA.SetElement(i,f);
     }
-    Fact f = GetGoal().GetElement(0).GetElement(0);
-    for (unsigned i = 0; i < f.GetArity(); i++) {
-        Term t = f.GetArg(i);
-        t.ReadNonCompoundString(Prefix + t.ToTPTPString());
-        f.SetArg(i,t);
+
+    for(unsigned i = 0; i < GetGoal().GetSize(); i++) {
+        ConjunctionFormula c;
+        for (unsigned j = 0; j < GetGoal().GetElement(i).GetSize(); j++) {
+            Fact f = GetGoal().GetElement(i).GetElement(j);
+            for (unsigned k = 0; k < f.GetArity(); k++) {
+                Term t = f.GetArg(k);
+                t.ReadNonCompoundString(Prefix + t.ToTPTPString());
+                f.SetArg(k,t);
+            }
+            c.Add(f);
+        }
+        mB.SetElement(i,c);
     }
-    ConjunctionFormula c;
-    c.Add(f);
-    mB.SetElement(0,c);
 }
 
 // ---------------------------------------------------------------------------------------

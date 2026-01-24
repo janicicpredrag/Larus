@@ -212,7 +212,7 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
             T.printAxioms();
         } else {
             cout << "       Checking validity with neg and eq axioms: size: "
-                 << T0.mCLaxioms.size() << endl;
+                 << T.mCLaxioms.size() << endl;
             if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                       params.vampire_time_limit) == eVampireUnsat)  {
               vampire_succeeded = true;

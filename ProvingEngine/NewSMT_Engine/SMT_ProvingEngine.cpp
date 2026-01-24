@@ -1796,8 +1796,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
       } else {
         cg[ind1] = (ContentsPredicate(i,0) == ContentsPredicate(nFinalStep,ind1));
         for(unsigned int j = 0; j < mGoal.GetElement(ind1).GetElement(0).GetArity(); j++)
-          if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j).ToSMTString()) ==
-             exi_vars.end())
+          //if (exi_vars.find(formula.GetElement(ind1).GetElement(0).GetArg(j).ToSMTString()) ==
+          //   exi_vars.end())
            cg[ind1] &= (ContentsArgument(i,0,j) == ContentsArgument(nFinalStep,ind1,j));
       }
     }

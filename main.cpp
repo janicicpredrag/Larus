@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
       if (strlen(argv[i] + 2) == 0) {
         params.msHammerInvoke = DEFAULT_HAMMER;
       } else {
-        // for instance: -r"vampire --proof tptp --cores 4 --output_axiom_names on # "
+        // for instance: -r"vampire --proof tptp --cores 4 --output_mode ucore --output_axiom_names on # "
         // for instance: -r"tptp_to_ladr < # | prover9 2> /dev/null "
         // for instance: -r"eprover --auto -p # "
         // for instance: -r"eprover --auto-schedule # "
@@ -465,9 +465,9 @@ void printHelp() {
   cout << "   -r<invoke>           the way the external FOL prover is invoked as "           << endl;
   cout << "                        a hammer to filter out the needed "                       << endl;
   cout << "                        axioms; '#' is to be used in place of an input file name" << endl;
-  cout << "                        example: -r'vampire --mode casc --cores 0 --proof tptp --output_axiom_names on #' " << endl;
+  cout << "                        example: -r'vampire --mode casc --cores 0 --proof tptp --output_mode ucore --output_axiom_names on #' " << endl;
   cout << "                        example: -r'tptp_to_ladr < # | prover9 2> /dev/null' "                    << endl;
-  cout << "                        default:   'vampire --mode casc --cores 0 --proof tptp --output_axiom_names on '# " << endl << endl;
+  cout << "                        default:   'vampire --mode casc --cores 0 --proof tptp --output_mode ucore --output_axiom_names on '# " << endl << endl;
 
   cout << "   -a<invoke>           the way the external prover is invoked as a hammer for abduction"         << endl << endl;
 

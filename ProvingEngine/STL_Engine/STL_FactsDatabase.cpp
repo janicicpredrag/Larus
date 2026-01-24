@@ -18,6 +18,7 @@ bool STLFactsDatabase::AddFact(const Fact &f) {
 // ---------------------------------------------------------------------------------------
 
 bool STLFactsDatabase::AddCases(const DNFFormula &f) {
+  cout << "Added cases " << f << endl;
   if (f.GetSize() == 1) {
     const vector<Fact> v = f.GetDNF()->begin()->GetConjunction();
     for (unsigned i = 0; i < v.size(); i++) {
