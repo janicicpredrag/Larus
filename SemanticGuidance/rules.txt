@@ -177,7 +177,7 @@ fof(cong_angles6, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3
 
 fof(cong_angles7, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A3) & dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A3,A4,O) & O = fun_random_on_angle_ray(A4,A5,A0,A1,A2) & decdof(A3)))).
 
-fof(cong_angles8, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & ~dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A5,A4,O) & O = fun_random_on_angle_ray(A4,A3,A0,A1,A2) & decdof(A5)))).
+fof(cong_angles8, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & ~dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A5,A4,O) & O = fun_random_on_angle_ray(A4,A3,A2,A1,A0) & decdof(A5)))).
 
 fof(cong_angles9, axiom, ![A0,A1,A2,A5,O] : ((congruent_angles(A0,A1,A2,A2,A1,A5) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A5) & A0!=A1 & A2!=A1 & A5!=A1) => (on_line(A2,A1,O) & O = fun_random_on_angle_bisector(A0,A1,A5) & decdof(A2)))).
 

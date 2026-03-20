@@ -269,6 +269,7 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
         if (it->Match(f,instantiation)) {
             Rule r = it->Instantiate(instantiation, degreesOfFreedom);
             if (DOFConditionsHold(r.mDOFConditions, degreesOfFreedom)) {
+                cout << endl << "Rule " << it->mName << " applied. " << endl;
                 for (size_t i = 0; i < r.mNewInput.GetSize(); i++)
                     inputConfiguration.push_back(r.mNewInput.GetElement(i));
                 for (size_t i = 0; i < r.mOutput.GetSize(); i++)
