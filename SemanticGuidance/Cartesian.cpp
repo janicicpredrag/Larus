@@ -360,7 +360,6 @@ double randomOnAngleBisector(const Point& A, const Point& B, const Point& C, Poi
 {
     double AB = distance(A,B);
     double CB = distance(C,B);
-    double AC = distance(A,C);
     double q = (AB / (AB + CB));
     Point E;
     E.x = A.x + q * (C.x - A.x);
