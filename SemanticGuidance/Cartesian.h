@@ -46,6 +46,7 @@ double randomPointOnCircle(const Point& O, const Point& X, Point& P);
 double randomOnParallelLine(const Point& A, const Point& X, const Point& Y, Point& P);
 double randomOnPerpendicularLine(const Point& A, const Point& X, const Point& Y, Point& P);
 double randomOnSegmentBisector(const Point& A, const Point& B, Point& P);
+double randomOnAngleBisector(const Point& A, const Point& B, const Point& C, Point& P);
 double randomOnRayComplement(const Point& X, const Point& Y, Point& P);
 double randomOnAngleRay(const Point& Q, const Point& R, const Point& A, const Point& B, const Point& C, Point& P);
 

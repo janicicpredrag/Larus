@@ -91,6 +91,17 @@ int main(int argc, char **argv) {
         theorem.SetBody(premises, theorem.GetGoal());
         StoreConjecture(inputFilename + "_func", T.mCLaxioms, theoremName, theorem);
         cout << endl << "Stored using functions as: " << inputFilename + "_func" << endl << endl;
+
+        ofstream GCLCfile;
+        GCLCfile.open("proofs/" + theoremName + ".gcl");
+        if (GCLCfile.good()) {
+            GCLCfile << diagram.GetGCLCDescription();
+            GCLCfile << "\n";
+            GCLCfile.close();
+            cout << "GCLC description of premises stored in the file proofs/" + theoremName + ".gcl." << endl << endl;
+        } else {
+            cout << "Cannot open output GCLC file." << endl << endl;
+        }
         return 0;
     }
 

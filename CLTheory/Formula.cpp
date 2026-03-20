@@ -660,6 +660,15 @@ bool CLFormula::UsesNativeEq() const {
 
 // ---------------------------------------------------------------------------------------
 
+bool CLFormula::Read(const string &s) {
+    TEXTSTREAM = s.c_str();
+    TEXTINDEX = 0;
+    ReadNextToken();
+    return Read();
+}
+
+// ---------------------------------------------------------------------------------------
+
 bool CLFormula::Read() {
   if (!ReadWithoutCheckingBoundness())
     return false;

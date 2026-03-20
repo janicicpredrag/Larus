@@ -4,9 +4,9 @@
 #include "GeometricConfiguration.h"
 #include "ADGLib_signature.h"
 #include "Utils.h"
+#include "TPTPSupport.h"
 
 using namespace std;
-
 
 // -----------------------------------------------------------------------------------------------
 
@@ -15,6 +15,10 @@ bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& dia
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
     cout <<         "========================================================" << endl;
+
+    cout << endl << "Reading construction rules... " << endl;
+    ReadConstructionRules();
+
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
     for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
@@ -67,6 +71,7 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
         mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
     }
     cout << endl;
+
 
     printCurrentStatus(inputConfiguration, degreesOfFreedom);
     bool update = false, overconstrained  = false;
@@ -153,7 +158,7 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
         cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
         cout << "   Transformation failed!" << endl;
     } else if (!inputConfiguration.empty()) {
-        cout << endl << " Don't know to handle ramaining constraints!";
+        cout << endl << " Don't know to handle remaining constraints!";
         cout << endl << " Transformation failed!" << endl;
     } else {
         cout << endl << "***** Success! *****" << endl;
@@ -164,7 +169,6 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
 }
 
 // -----------------------------------------------------------------------------------------------
-
 
 bool GeometryConfiguration::IsConfigurationOverconstrained(map<string, int>& degreesOfFreedom, Fact& f) {
     bool bAllFixed = true;
@@ -186,493 +190,111 @@ bool GeometryConfiguration::IsConfigurationOverconstrained(map<string, int>& deg
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom) {
-    string A[6];
-    for (size_t i = 0; i < f.GetArity(); i++) {
-        A[i] = f.GetArg(i).ToTPTPString();
+bool GeometryConfiguration::ReadConstructionRules() {
+    Theory ConstructionsTheory;
+    CLFormula thm;
+    string thmname;
+
+    if (ReadTPTPConjecture("rules.txt", ConstructionsTheory, thm, thmname)
+        != eNoConjectureGiven)
+        return false;
+
+    mRules.clear();
+    for (size_t i = 0; i < ConstructionsTheory.mCLaxioms.size(); i++) {
+        Rule r;
+        r.ReadFromCLAxiom(ConstructionsTheory.mCLaxioms[i]);
+        mRules.push_back(r);
     }
 
-    if (f.GetName() == TRIANGLE) {
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-        return true;
-
-    } else if (f.GetName() == ISOSCELES) {
-        inputConfiguration.push_back("cong(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-        return true;
-
-    } else if (f.GetName() == QUADRILATERAL) {
-        mNDGs.push_back(string(ON_OPP_SIDES) + "(" + A[0] + "," + A[2] + ","+ A[1] + ","+ A[3] + ")");
-        mNDGs.push_back(string(ON_OPP_SIDES) + "("  + A[1] + "," + A[3] + ","+ A[0] + ","+ A[1] + ")");
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[1] + "," + A[2] + ","+ A[3] + ")");
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[2] + "," + A[3] + ","+ A[0] + ")");
-        mNDGs.push_back(string(NOT_COLL) + "(" + A[3] + "," + A[0] + ","+ A[1] + ")");
-        return true;
-
-    } else if (f.GetName() == PARALLELOGRAM) {
-        if (degreesOfFreedom[A[0]]==2 && degreesOfFreedom[A[1]]==2 &&
-            degreesOfFreedom[A[2]]==2 && degreesOfFreedom[A[3]]>0) {
-            for(unsigned int j = 0; j < 3; j++) {
-                degreesOfFreedom[A[j]] = 0;
-                mOutputConstruction.push_back(A[j] + " = freepoint(null,null)");
-            }
-            mOutputConstruction.push_back(A[3] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 &&
-                   degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]>0) {
-            degreesOfFreedom[A[3]] = 0;
-            mOutputConstruction.push_back(A[3] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 &&
-                   degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]==0) {
-            degreesOfFreedom[A[2]] = 0;
-            mOutputConstruction.push_back(A[2] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[0] + "," + A[1] + "," + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[3] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 &&
-                   degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-            degreesOfFreedom[A[1]] = 0;
-            mOutputConstruction.push_back(A[1] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[0] + "," + A[2] + "," + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[2] + ","+ A[3] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 &&
-                   degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-            degreesOfFreedom[A[0]] = 0;
-            mOutputConstruction.push_back(A[0] + "= " + string(FOURTH_VERTEX_OF_PARALLELOGRAM) + "(" + A[1] + "," + A[2] + "," + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[1] + "," + A[2] + ","+ A[3] + ")");
-            return true;
-        }
-
-    } else if (f.GetName() == RECTANGLE) {
-        if (degreesOfFreedom[A[0]]==2 && degreesOfFreedom[A[1]]==2 &&
-            degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]>0) {
-            degreesOfFreedom[A[0]] = 0;
-            mOutputConstruction.push_back(A[0] + " = freepoint(null,null)");
-            degreesOfFreedom[A[1]] = 0;
-            mOutputConstruction.push_back(A[1] + " = freepoint(null,null)");
-            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
-            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==2 && degreesOfFreedom[A[1]]>2 &&
-                   degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]==2) {
-            degreesOfFreedom[A[0]] = 0;
-            mOutputConstruction.push_back(A[0] + " = freepoint(null,null)");
-            degreesOfFreedom[A[3]] = 0;
-            mOutputConstruction.push_back(A[3] + " = freepoint(null,null)");
-            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[0] + ", " + A[3] + ")");
-            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 &&
-                   degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]>0) {
-            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
-            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 &&
-                   degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]==0) {
-            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[0] + ", " + A[3] + ")");
-            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_COLL) + "(" + A[0] + "," + A[1] + ","+ A[3] + ")");
-            return true;
-        }
-
-    } else if (f.GetName() == SQUARE) {
-        if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 &&
-            degreesOfFreedom[A[2]]==2 && degreesOfFreedom[A[3]]==2) {
-            degreesOfFreedom[A[0]] = 0;
-            degreesOfFreedom[A[1]] = 0;
-            inputConfiguration.push_back(string(CONG) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
-            inputConfiguration.push_back(string(PERP) + "(" + A[0] + ", " + A[1] + ", " + A[1] + ", " + A[2] + ")");
-            inputConfiguration.push_back(string(PARALLELOGRAM) + "(" + A[0] + ", " + A[1] + ", " + A[2] + ", " + A[3] + ")");
-            return true;
-        }
-    } else if (f.GetName() == COLLINEAR) {
-        for(unsigned int j = 0; j < 3; j++) {
-            unsigned j1 = (j+1) % 3;
-            unsigned j2 = (j+2) % 3;
-            if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[j1]]==0 && degreesOfFreedom[A[j2]]==0) {
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[j] + "," + A[j1] + "," + A[j2] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[j1] + ", " + A[j2] + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-        }
-
-    } else if (f.GetName() == MIDPOINT) {
-        if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0) {
-            mOutputConstruction.push_back(A[0] + "= " + string(FUN_MIDPOINT) + "(" + A[1] + "," + A[2] + ")");
-            degreesOfFreedom[A[0]]=0;
-            return true;
-        } else if (degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[2]]==0) {
-            mOutputConstruction.push_back(A[1] + "=" + string(FUN_SYMMETRIC) + "(" + A[2] + "," + A[0] + ")");
-            degreesOfFreedom[A[1]]=0;
-            return true;
-        } else if (degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0) {
-            mOutputConstruction.push_back(A[2] + "=" + string(FUN_SYMMETRIC) + "(" + A[1] + "," + A[0] + ")");
-            degreesOfFreedom[A[2]]=0;
-            return true;
-        }
-
-    } else if (f.GetName() == INTER_L_L) {
-        if (/* degreesOfFreedom[A[0]]>0 && */ degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0 &&
-            degreesOfFreedom[A[3]]==0 && degreesOfFreedom[A[4]]==0) {
-            mOutputConstruction.push_back(f);
-            degreesOfFreedom[A[0]]=0;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[1] + ", " + A[2] + ")");
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-            return true;
-        }
-
-    } else if (f.GetName() == INTER_C_L) {
-        if (/* degreesOfFreedom[A[0]]>0 && */ degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0 &&
-            degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5]]==0) {
-            mOutputConstruction.push_back(f);
-            degreesOfFreedom[A[0]]=0;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-            return true;
-        }
-
-    } else if (f.GetName() == INTER_C_C) {
-        if (/* degreesOfFreedom[A[0]]>0 && */ degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0 &&
-            degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5]]==0) {
-            mOutputConstruction.push_back(f);
-            degreesOfFreedom[A[0]]=0;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[4] + ", " + A[5] + ")");
-            if (A[3]==A[5]) {
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[3] + ")");
-            }
-            return true;
-        }
-
-    } else if (f.GetName() == BETWEEN || f.GetName() == BETWEEN_STRICT) {
-        if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0) {
-            inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + A[1] + "," + A[2] + ")");
-            mNDGs.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            degreesOfFreedom[A[0]]--;
-            return true;
-        } else if (degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[2]]==0) {
-            inputConfiguration.push_back(string(ON_LINE) + "(" + A[1] + ", " + A[0] + "," + A[2] + ")");
-            mNDGs.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            degreesOfFreedom[A[1]]--;
-            return true;
-        } else if (degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0) {
-            inputConfiguration.push_back(string(ON_LINE) + "(" + A[2] + ", " + A[1] + "," + A[0] + ")");
-            mNDGs.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            degreesOfFreedom[A[2]]--;
-            return true;
-        }
-
-    } else if (f.GetName() == BETWEEN4 || f.GetName() == BETWEEN_STRICT4) {
-        if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 &&
-            degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]>0) {
-            inputConfiguration.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-            inputConfiguration.push_back(string(BETWEEN) + "(" + A[0] + "," + A[2] + "," + A[3] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 &&
-                   degreesOfFreedom[A[2]]>0 && degreesOfFreedom[A[3]]==0) {
-            inputConfiguration.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[3] + ")");
-            inputConfiguration.push_back(string(BETWEEN) + "(" + A[1] + "," + A[2] + "," + A[3] + ")");
-            return true;
-
-    } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 &&
-                       degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]>0) {
-        inputConfiguration.push_back(string(BETWEEN) + "(" + A[0] + "," + A[1] + "," + A[2] + ")");
-        inputConfiguration.push_back(string(BETWEEN) + "(" + A[1] + "," + A[2] + "," + A[3] + ")");
-        return true;
-    }
-
-    } else if (f.GetName() == PERP_AT) {
-        if (A[0] != A[1] && A[0] != A[2]) {
-            inputConfiguration.push_back(string(COLLINEAR) + "(" + A[0] + ", " + A[1] + "," + A[2] + "))");
-        }
-        if (A[0] != A[3] && A[0] != A[4]) {
-            inputConfiguration.push_back(string(COLLINEAR) + "(" + A[0] + ", " + A[3] + "," + A[4] + "))");
-        }
-        inputConfiguration.push_back(string(PERP) + "(" + A[1] + ", " + A[2] + "," + A[3] + "," + A[4] + "))");
-        return true;
-
-    } else if (f.GetName() == PERP) {
-        for(unsigned int j = 0; j < 2; j++) {
-            if (degreesOfFreedom[A[j]]>0 && A[j]==A[2] && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[3]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_MIDPOINT) + "(" + A[1-j] + "," + A[3] +")");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[j] + ", " + O + "," + A[1-j] + ")");
-                degreesOfFreedom[A[j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[j]]>0 && A[j]==A[3] && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_MIDPOINT) + "(" + A[1-j] + "," + A[2] +")");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[j] + ", " + O + "," + A[1-j] + ")");
-                degreesOfFreedom[A[j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[1-j] +"," +A[2] + "," + A[3] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[j] + ", " + A[1-j] +"," + O + ")");
-                degreesOfFreedom[A[j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2+j]]>0 && degreesOfFreedom[A[3-j]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O +  "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[3-j] +"," +A[0] + "," + A[1] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[2+j] + ", " + A[3-j] + "," + O + ")");
-                degreesOfFreedom[A[2+j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            }
-        }
-
-
-    } else if (f.GetName() == RIGHT_ANGLE) {
-        if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[2]]==0) {
-            string O = "P"+itos(mObjCounter++);
-            mOutputConstruction.push_back(O + " = " + string(FUN_MIDPOINT) + "(" + A[0] + "," + A[2] +")");
-            degreesOfFreedom[O]=0;
-            inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[1] + ", " + O + "," + A[0] + ")");
-            degreesOfFreedom[A[1]]--;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[2] + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0) {
-            string O = "P"+itos(mObjCounter++);
-            mOutputConstruction.push_back(O + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[1] +"," +A[1] + "," + A[2] + "))");
-            degreesOfFreedom[O]=0;
-            inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + A[1] +"," + O + ")");
-            degreesOfFreedom[A[0]]--;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[1] + ", " + O + ")");
-            return true;
-        } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]>0) {
-            string O = "P"+itos(mObjCounter++);
-            mOutputConstruction.push_back(O + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + A[1] +"," +A[1] + "," + A[0] + "))");
-            degreesOfFreedom[O]=0;
-            inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + A[1] +"," + O + ")");
-            degreesOfFreedom[A[0]]--;
-            mNDGs.push_back(string(NOT_EQ) + "(" + A[1] + ", " + O + ")");
-            return true;
-        }
-
-    } else if (f.GetName() == PARALLEL) {
-        for(unsigned int j = 0; j < 2; j++) {
-            if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_RAND_ON_PARALLEL) + "(" + A[1-j] +"," +A[2] + "," + A[3] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[j] + ", " + A[1-j] +"," + O + ")");
-                degreesOfFreedom[A[j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2+j]]>0 && degreesOfFreedom[A[3-j]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_RAND_ON_PARALLEL) + "(" + A[3-j] +"," +A[0] + "," + A[1] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[2+j] + ", " + A[3-j] + "," + O + ")");
-                degreesOfFreedom[A[2+j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[3] + ")");
-                return true;
-            }
-        }
-
-    } else if (f.GetName() == CONG) {
-        for(unsigned int j = 0; j < 2; j++) {
-            if (degreesOfFreedom[A[j]]>0 && A[j]==A[2] && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[3]]==0) {
-                string M = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(M + " = " + string(FUN_MIDPOINT) + "(" + A[1-j] +"," + A[3] + "))");
-                string P = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(P + " = " + string(FUN_RAND_ON_SEG_BIS) + "(" + A[1-j] +"," + A[3] + "))");
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[j] + ", " + M + "," + P + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[j]]>0 && A[j]==A[3] && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0) {
-                string M = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(M + " = " + string(FUN_MIDPOINT) + "(" + A[1-j] +"," + A[2] + "))");
-                string P = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(P + " = " + string(FUN_RAND_ON_SEG_BIS) + "(" + A[1-j] +"," + A[2] + "))");
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[j] + ", " + M + "," + P + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 && A[1-j]==A[2] &&
-                     degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[j] + ", " + A[1-j] + "," + A[3] + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 &&
-                     A[1-j]==A[3] &&
-                     degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[j] + ", " + A[1-j] + "," + A[2] + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[2+j]]>0 && degreesOfFreedom[A[3-j]]==0 &&
-                     A[3-j]==A[0] &&
-                     degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0) {
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[2+j] + ", " + A[3-j] + "," + A[1] + ")");
-                degreesOfFreedom[A[2+j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[2+j]]>0 && degreesOfFreedom[A[3-j]]==0 &&
-                     A[3-j]==A[1] &&
-                     degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[2+j] + ", " + A[3-j] + "," + A[0] + ")");
-                degreesOfFreedom[A[2+j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[j]]>0 && degreesOfFreedom[A[1-j]]==0 && degreesOfFreedom[A[2]]==0 && degreesOfFreedom[A[3]]==0) {
-                string T = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(T + "=" + string(FUN_TRANSLATE) + "(" +  A[2] + "," + A[3] + "," + A[1-j] + "))");
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[j] + ", " + A[1-j] + "," + T + ")");
-                degreesOfFreedom[A[j]]--;
-                return true;
-            }
-            else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2+j]]>0 && degreesOfFreedom[A[3-j]]==0) {
-                string T = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(T + "=" + string(FUN_TRANSLATE) + "(" +  A[0] + "," + A[1] + "," + A[3-j] + "))");
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[2+j] + ", " + A[3-j] + "," + T + ")");
-                degreesOfFreedom[A[2+j]]--;
-                return true;
-            }
-        }
-
-    } else if (f.GetName() == CONG_ANGLES) {
-        for(unsigned int j = 0; j < 2; j++) {
-
-            if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[2]]==0 &&
-                degreesOfFreedom[A[3]]==0 && degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_CENTER_OF_ARC_ANG) + "(" + A[0] +"," +A[2] + "," + A[3] + "," + A[4] + "," + A[5] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[1] + ", " + O +"," + A[0] + ")");
-                degreesOfFreedom[A[1]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0 &&
-                       degreesOfFreedom[A[3]]==0 && degreesOfFreedom[A[4]]>0 && degreesOfFreedom[A[5]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_CENTER_OF_ARC_ANG) + "(" + A[3] +"," +A[5] + "," + A[0] + "," + A[1] + "," + A[2] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[4] + ", " + O +"," + A[3] + ")");
-                degreesOfFreedom[A[4]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;
-/*            }   else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[2]]==0 &&
-                       degreesOfFreedom[A[3]]==0 && degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_CENTER_OF_ARC_ANG) + "(" + A[0] +"," +A[2] + "," + A[3] + "," + A[4] + "," + A[5] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[1] + ", " + O +"," + A[0] + ")");
-                degreesOfFreedom[A[1]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;*/
-
-            }   else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]>0 && degreesOfFreedom[A[2]]==0 &&
-                       degreesOfFreedom[A[4]]==0 &&
-                       A[0]==A[3] && A[2]==A[5]) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_CENTER_OF_ARC_ANG) + "(" + A[0] +"," +A[2] + "," + A[0] + "," + A[4] + "," + A[2] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_CIRCLE) + "(" + A[1] + ", " + O +"," + A[0] + ")");
-                degreesOfFreedom[A[1]]--;
-                mNDGs.push_back(string(ON_SAME_SIDE) + "(" + A[0] + ", " + A[2] +  ", " + A[1] +  ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                return true;
-
-            } else if (degreesOfFreedom[A[2*j]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2-2*j]]==0 &&
-                       degreesOfFreedom[A[3]]==0 && degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_RAND_ON_ANG_RAY) + "(" + A[1] +"," +A[2-2*j] + "," + A[3] + "," + A[4] + "," + A[5] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[2*j] + ", " + A[1] +"," + O + ")");
-                degreesOfFreedom[A[2*j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0 &&
-                       degreesOfFreedom[A[3+2*j]]>0 && degreesOfFreedom[A[4]]==0 && degreesOfFreedom[A[5-2*j]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + " = " + string(FUN_RAND_ON_ANG_RAY) + "("  + A[4] +"," +A[5-2*j] + "," + A[0] + "," + A[1] + "," + A[2] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[3+2*j] + ", " + A[4] +"," + O + ")");
-                degreesOfFreedom[A[3+2*j]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[2]]>0 && A[1]==A[4] && A[2]==A[3] &&
-                       degreesOfFreedom[A[0]]==0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[5]]==0) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_RAND_ON_ANG_BIS) + "(" + A[0] +"," +A[1] + "," + A[5] + "))");
-                degreesOfFreedom[O]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[2] + ", " + A[1] +"," + O + ")");
-                degreesOfFreedom[A[2]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[3] + ", " + A[4] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[5] + ", " + A[4] + ")");
-                return true;
-            } else if (degreesOfFreedom[A[0]]>0 && degreesOfFreedom[A[1]]==0 && degreesOfFreedom[A[2]]==0 &&
-                       ((A[0]==A[3] && A[1]==A[5] && A[2]==A[4]) ||
-                        (A[0]==A[5] && A[1]==A[3] && A[2]==A[4]))) {
-                string O = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(O + "=" + string(FUN_RAND_ON_SEG_BIS) + "(" + A[1] +"," + A[2] + "))");
-                degreesOfFreedom[O]=0;
-                string M = "P"+itos(mObjCounter++);
-                mOutputConstruction.push_back(M + "=" + string(FUN_MIDPOINT) + "(" + A[1] +"," + A[2] + "))");
-                degreesOfFreedom[M]=0;
-                inputConfiguration.push_back(string(ON_LINE) + "(" + A[0] + ", " + M +"," + O + ")");
-                degreesOfFreedom[A[0]]--;
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[0] + ", " + A[1] + ")");
-                mNDGs.push_back(string(NOT_EQ) + "(" + A[2] + ", " + A[1] + ")");
-                return true;
-            }
-        }
-
-    } else if (f.GetName() == NOT_COLL) {
-        mNDGs.push_back(f);
-        return true;
-    } else if (f.GetName() == NOT_EQ) {
-        mNDGs.push_back(f);
-        return true;
-    } else if (f.GetName() == ON_OPP_SIDES) {
-        mNDGs.push_back(f);
-        return true;
-    } else if (f.GetName() == ON_SAME_SIDE) {
-    mNDGs.push_back(f);
     return true;
 }
 
+// -----------------------------------------------------------------------------------------------
+
+unsigned GeometryConfiguration::mObjCounter = 0;
+
+// -----------------------------------------------------------------------------------------------
+
+bool GeometryConfiguration::DOFConditionsHold(const ConjunctionFormula& cond, map<string, int>& degreesOfFreedom) {
+    for (size_t i = 0; i < cond.GetSize(); i++) {
+        string factName = cond.GetElement(i).GetName();
+        string arg = cond.GetElement(i).GetArg(0).ToSMTString();
+        //  assert(factName == "dof0" || factName == "dof1" || factName == "dof2");
+        if (factName == "dof0" &&
+            degreesOfFreedom[arg] != 0)
+            return false;
+        else if (factName == "dof1" &&
+            degreesOfFreedom[arg] != 1)
+            return false;
+        else if (factName == "dof2" &&
+            degreesOfFreedom[arg] != 2)
+            return false;
+        if (factName == "nnndof0" &&
+            degreesOfFreedom[arg] == 0)
+            return false;
+        else if (factName == "nnndof1" &&
+            degreesOfFreedom[arg] == 1)
+            return false;
+        else if (factName == "nnndof2" &&
+            degreesOfFreedom[arg] == 2)
+            return false;
+    }
+    return true;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom) {
+    if (f.GetName() == EQ_NATIVE_NAME &&
+        f.GetArg(1).ToTPTPString() == "freepoint(null, null)") {
+        string P = f.GetArg(0).ToTPTPString();
+        degreesOfFreedom[P] = 0;
+        mOutputConstruction.push_back(P + " = freepoint(null,null)");
+        return true;
+    }
+
+    if (f.GetName() == NOT_EQ ||
+        f.GetName() == NOT_COLL ||
+        f.GetName() == ON_OPP_SIDES ||
+        f.GetName() == ON_SAME_SIDE) {
+        mNDGs.push_back(f);
+        return true;
+    }
+
+    for(auto it = mRules.begin(); it != mRules.end(); it++) {
+        map<string, string> instantiation;
+        map<string,int> df = degreesOfFreedom;
+        unsigned objc = mObjCounter;
+
+        if (it->Match(f,instantiation)) {
+            Rule r = it->Instantiate(instantiation, degreesOfFreedom);
+            if (DOFConditionsHold(r.mDOFConditions, degreesOfFreedom)) {
+                for (size_t i = 0; i < r.mNewInput.GetSize(); i++)
+                    inputConfiguration.push_back(r.mNewInput.GetElement(i));
+                for (size_t i = 0; i < r.mOutput.GetSize(); i++)
+                    mOutputConstruction.push_back(r.mOutput.GetElement(i));
+                for (size_t i = 0; i < r.mNDG.GetSize(); i++)
+                    mNDGs.push_back(r.mNDG.GetElement(i));
+                for (size_t i = 0; i < r.mDOFEffects.GetSize(); i++) {
+                    string factName = r.mDOFEffects.GetElement(i).GetName();
+                    string arg = r.mDOFEffects.GetElement(i).GetArg(0).ToSMTString();
+                    assert(factName == "dof0" || factName == "dof1" || factName == "dof2" || factName == "decdof");
+                    if (factName == "dof0")
+                        degreesOfFreedom[arg] = 0;
+                    else if (factName == "dof1")
+                        degreesOfFreedom[arg] = 1;
+                    else if (factName == "dof2")
+                        degreesOfFreedom[arg] = 2;
+                    else if (factName == "decdof")
+                        degreesOfFreedom[arg]--;
+                }
+                return true;
+            } else {
+                degreesOfFreedom = df;
+                mObjCounter = objc;
+            }
+        }
+    }
     return false;
 }
 
@@ -779,32 +401,6 @@ bool GeometryConfiguration::WeaklyConstrainedPointToRandom(const Fact& fact_inpu
                            fact_input.GetArg(2).ToTPTPString() + ")");
         return true;
     }
-
-    /*
-        } else if (t.GetFunctionSymbol(0)=="_perpendicular_from") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_PERP_FROM) + "(" + t.GetArg(0) +"," + t.GetArg(1) + "," + t.GetArg(2) + ")");
-            return true;
-        } else if (t.GetFunctionSymbol(0)=="_parallel") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_PARALLEL) + "(" + t.GetArg(0) +"," + t.GetArg(1) + "," + t.GetArg(2) + ")");
-            return true;
-
-        } else if (t.GetFunctionSymbol(0)=="_segment_bisector") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_SEG_BIS) + "(" + t.GetArg(0) +"," + t.GetArg(1) + ")");
-            return true;
-
-        } else if (t.GetFunctionSymbol(0)=="_ray_complement") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_RAY_COMPL) + "(" + t.GetArg(0) +"," + t.GetArg(1) + ")");
-            return true;
-
-        } else if (t.GetFunctionSymbol(0)=="_angle_bisector") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_ANG_BIS) + "(" + t.GetArg(0) + "," + t.GetArg(1) + "," + t.GetArg(2) + ")");
-            return true;
-
-        } else if (t.GetFunctionSymbol(0)=="_angle_ray") {
-            fact_output = Fact(P + "= " + string(FUN_RAND_ON_ANG_RAY) + "(" + t.GetArg(0) + "," + t.GetArg(1) + "," + t.GetArg(2) + "," + t.GetArg(3)+ "," + t.GetArg(4) + ")");
-            return true;
-        }*/
-
     return false;
 }
 

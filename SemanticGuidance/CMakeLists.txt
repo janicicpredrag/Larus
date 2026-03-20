@@ -24,6 +24,8 @@ add_executable(SemanticGuidance
     ADGLib_signature.h
     Utils.cpp
     Utils.h
+    ConstructionRules.cpp
+    ConstructionRules.h
 )
 
 include(GNUInstallDirs)

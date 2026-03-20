@@ -35,12 +35,13 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
                      << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
                 if (ip->second.x < 5 || ip->second.y < 5 ||
                     ip->second.x > 65 || ip->second.y >65) {
+                    cout << "Point " << ip->first;
                     bOutOfCanvas = true;
                     break;
                 }
             }
             if (bOutOfCanvas) {
-                cout << "Out of canvas, failed." << endl;
+                cout << " out of canvas, failed." << endl;
                 continue;
             } else if (!VerifyConditions(ndgs)) {
                 cout << "Verification failed." << ":" << endl;
@@ -186,6 +187,21 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
+            } else if (func == FUN_RAND_ON_ANG_BIS) {
+                double r = randomOnAngleBisector(A[1], A[2], A[3], A[0]);
+                mAllPoints[sA[0]] = A[0];
+                mGCLC += "bis __b " + sA[1] + " " + sA[2] + " " + sA[3] + " \n";
+                mGCLC += "line __l " + sA[1]+ " " + sA[3] + " \n";
+                mGCLC += "intersec __E __b __l \n";
+                mGCLC += "towards " + sA[0] + " " + sA[2] + " __E " + double2string(r,5) + "\n";
+                mGCLC += "drawline " + sA[2] + " " + sA[0] + "\n";
+                mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
+                mGCLC += "drawsegment " + sA[3] + " " + sA[2] + "\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                // printPoint(sA[0], mAllPoints[sA[0]]);
+
             } else if (func == FUN_RAND_ON_PERP_FROM) {
                 double r = randomOnPerpendicularLine(A[1], A[2], A[3], A[0]);
                 mAllPoints[sA[0]] = A[0];
@@ -210,9 +226,9 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_ANG_RAY) {
-                double r = randomOnAngleRay(A[1], A[2], A[3], A[4], A[5],  A[0]);
+                double r = randomOnAngleRay(A[1], A[2], A[5], A[4], A[3],  A[0]);
                 mAllPoints[sA[0]] = A[0];
-                mGCLC += "angle_o __phi " + sA[3] + " " + sA[4] + " " + sA[5] + "\n";
+                mGCLC += "angle_o __phi " + sA[5] + " " + sA[4] + " " + sA[3] + "\n";
                 mGCLC += "rotate __P " + sA[1] + " __phi " + sA[2] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
@@ -225,7 +241,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
                 centerOfArcAngle(A[1], A[2], A[3], A[4], A[5], A[0]);
                 mAllPoints[sA[0]] = A[0];
                 mGCLC += "angle_o phi " + sA[3] + " " + sA[4] + " " + sA[5] + "\n";
-                mGCLC += "expression phi' { 90-phi }\n";
+                mGCLC += "expression phi' { phi-90 }\n";
                 mGCLC += "rotate __P " + sA[1] + " phi' " + sA[2] + "\n";
                 mGCLC += "line __l1 " + sA[1]+ "  __P \n";
                 mGCLC += "med __l2 " + sA[1] + " " + sA[2] + "\n";
@@ -385,6 +401,8 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[4] + " " + A[5] +"\n";
         } else if (f.GetName() == NOT_COLL) {
         } else if (f.GetName() == NOT_EQ) {
+        } else if (f.GetName() == EQ_NATIVE_NAME
+                   && f.GetArg(1).GetFunctionSymbol(0) == "freepoint") {
         } else if (f.GetName() == ON_OPP_SIDES) {
         } else if (f.GetName() == ON_SAME_SIDE) {
         } else {

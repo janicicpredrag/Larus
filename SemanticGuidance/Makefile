@@ -9,6 +9,7 @@ SOURCES       = semanticGuidance.cpp \
 		Diagram.cpp \
 		LemmaGenerator.cpp \
 		GeometricConfiguration.cpp \
+		ConstructionRules.cpp \
 		Cartesian.cpp \
 		ADGLib_signature.cpp \
 		Utils.cpp 
@@ -28,6 +29,7 @@ sources += $(wildcard ../CLTheory/Theory.cpp)
 sources += $(wildcard ../common.cpp)
 sources += $(wildcard Cartesian.cpp)
 sources += $(wildcard GeometricConfiguration.cpp)
+sources += $(wildcard ConstructionRules.cpp)
 sources += $(wildcard Diagram.cpp)
 sources += $(wildcard LemmaGenerator.cpp)
 sources += $(wildcard TPTPSupport.cpp)

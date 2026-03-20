@@ -37,8 +37,6 @@ public:
   void ReadNonCompoundString(const string &s);
   void ReadTPTPString(const string &s);
   void ReadSMTlibString(const string &s);
-//  Term (const string &s);
-//  Term &operator=(const string &s);
   bool ReadTPTP();
   bool ReadSMTlib();
   unsigned NumArgs() const {
@@ -47,13 +45,13 @@ public:
   string GetArg(unsigned i) const {
     return mArgs[i];
   }
-  unsigned NumFunctionSymbols() {
+  unsigned NumFunctionSymbols() const {
     return mFunctionSymbols.size();
   }
-  string GetFunctionSymbol(unsigned i) {
+  string GetFunctionSymbol(unsigned i) const {
     return mFunctionSymbols[i].first;
   }
-  unsigned GetFunctionSymbolArity(unsigned i) {
+  unsigned GetFunctionSymbolArity(unsigned i) const {
     return mFunctionSymbols[i].second;
   }
   string ToTPTPString() const;
@@ -257,7 +255,7 @@ public:
             cf.mB /* && mUniversalVars == cf.mUniversalVars && mExistentialVars == cf.mExistentialVars*/);
   }
   friend ostream &operator<<(ostream &os, const CLFormula &f);
- // bool Read(const string &s);
+  bool Read(const string &s);
   bool Read();
 
   bool ReadUnivVars();

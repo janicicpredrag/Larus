@@ -285,7 +285,7 @@ double randomPointOnCircle(const Point& O, const Point& X, Point& P)
 void centerOfArcAngle(const Point& X, const Point& Y,
                       const Point& A, const Point& B, const Point& C, Point& O) {
     double phi = calculate_angle_ABC(A, B, C);
-    double phi1 = 3.14159/2 - phi;
+    double phi1 = phi - 3.14159/2;
     Point Z = rotate_point(Y, X, phi1);
     Line l1, l2;
     line(X, Z, l1);
@@ -351,6 +351,23 @@ double randomOnSegmentBisector(const Point& A, const Point& B, Point& P) {
     double r = 2*((double)rand() / RAND_MAX);
     P.x = (A.x+B.x)/2 + r * (-(A.y-B.y));
     P.y = (A.y+B.y)/2 + r * (A.x-B.x);
+    return r;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+double randomOnAngleBisector(const Point& A, const Point& B, const Point& C, Point& P)
+{
+    double AB = distance(A,B);
+    double CB = distance(C,B);
+    double AC = distance(A,C);
+    double q = (AB / (AB + CB));
+    Point E;
+    E.x = A.x + q * (C.x - A.x);
+    E.y = A.y + q * (C.y - A.y);
+    double r = ((double)rand() / RAND_MAX);
+    P.x = B.x + r * (E.x - B.x);
+    P.y = B.y + r * (E.y - B.y);
     return r;
 }
 

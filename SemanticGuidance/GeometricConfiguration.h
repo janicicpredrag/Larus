@@ -4,9 +4,9 @@
 #include <map>
 #include "../CLTheory/Theory.h"
 #include "Diagram.h"
+#include "ConstructionRules.h"
 
 using namespace std;
-
 
 class GeometryConfiguration {
 
@@ -15,8 +15,11 @@ public:
     bool Declarative2ProceduralDescription(const vector<string>& fixedPoints);
     const vector<Fact>& GetProceduralDescription() { return mOutputConstruction; }
     const vector<Fact>& GetNDGs() { return mNDGs; }
+    static unsigned mObjCounter;
 
 private:
+    bool ReadConstructionRules();
+    bool DOFConditionsHold(const ConjunctionFormula& cond, map<string, int>& degreesOfFreedom);
     bool InOtherConstraints(const vector<Fact>& inputConfiguration, const vector<Fact>::const_iterator jt, const string& P);
     bool IsConfigurationOverconstrained(map<string, int>& degreesOfFreedom, Fact& f);
     bool FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f, map<string, int>& degreesOfFreedom);
@@ -30,7 +33,8 @@ private:
     vector<Fact> mOutputConstruction;
     vector<Fact> mNDGs;
     string mGCLC;
-    unsigned int mObjCounter;
+
+    vector<Rule> mRules;
 };
 
 
