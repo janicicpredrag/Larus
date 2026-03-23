@@ -12,16 +12,16 @@ class Rule {
 public:
     friend class GeometryConfiguration;
     bool Match(const Fact& f, map<string,string>& instantiation);
-    Rule Instantiate(map<string, string> &instantiation, map<string, int>& degreesOfFreedom);
+    Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints);
     bool ReadFromCLAxiom(const pair<CLFormula,string> ax);
 
 private:
-    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, map<string, int>& degreesOfFreedom);
+    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints);
     Fact mInput;
-    ConjunctionFormula mDOFConditions;
+    set<string> mAlreadyFixed;
+    set<string> mBecomeFixed;
     ConjunctionFormula mNewInput;
     ConjunctionFormula mOutput;
-    ConjunctionFormula mDOFEffects;
     ConjunctionFormula mNDG;
     string mName;
 };

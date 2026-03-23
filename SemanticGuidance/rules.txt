@@ -9,27 +9,30 @@ fof(quadrilateral1, axiom, ![A,B,C,D] : ((quadrilateral(A,B,C,D) & opposite_side
 %*******************************************************************************
 % --- Parallelogram rules ---
 
-fof(parallelogram1, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & dof2(A) & dof2(B) & dof2(C) & dof2(D) & ~collinear(A,B,C)) => (A = freepoint(null,null) & B = freepoint(null,null) & C = freepoint(null,null) & D = fourth_vertex_of_parallelogram(A,B,C) & dof0(A) & dof0(B) & dof0(C) & dof0(D)))).
-
-fof(parallelogram2, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & dof0(A) & dof0(B) & dof0(C) & ~dof0(D) & ~collinear(A,B,C)) => (D = fourth_vertex_of_parallelogram(A,B,C) & dof0(D)))).
-
-fof(parallelogram3, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & dof0(A) & dof0(B) & ~dof0(C) & dof0(D) & ~collinear(A,B,D)) => (C = fourth_vertex_of_parallelogram(A,B,D) & dof0(C)))).
-
-fof(parallelogram4, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & dof0(A) & ~dof0(B) & dof0(C) & dof0(D) & ~collinear(A,C,D)) => (B = fourth_vertex_of_parallelogram(A,C,D) & dof0(B)))).
-
-fof(parallelogram5, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & ~dof0(A) & dof0(B) & dof0(C) & dof0(D) & ~collinear(B,C,D)) => (A = fourth_vertex_of_parallelogram(B,C,D) & dof0(A)))).
+fof(parallelogram1, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & ~collinear(A,B,C)) => (parallel(A,B,C,D) 
+& parallel(A,D,B,C)))).
+	
+%fof(parallelogram1, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & dof2(A) & dof2(B) & dof2(C) & dof2(D) & %~collinear(A,B,C)) => (A = freepoint(null,null) & B = freepoint(null,null) & C = freepoint(null,null) & D = %fourth_vertex_of_parallelogram(A,B,C) & fixed(A) & fixed(B) & fixed(C) & fixed(D)))).
+%
+%fof(parallelogram2, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & fixed(A) & fixed(B) & fixed(C) & ~fixed(D) & %~collinear(A,B,C)) => (D = fourth_vertex_of_parallelogram(A,B,C) & fixed(D)))).
+%
+%fof(parallelogram3, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & fixed(A) & fixed(B) & ~fixed(C) & fixed(D) & %~collinear(A,B,D)) => (C = fourth_vertex_of_parallelogram(A,B,D) & fixed(C)))).
+%
+%fof(parallelogram4, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & fixed(A) & ~fixed(B) & fixed(C) & fixed(D) & %~collinear(A,C,D)) => (B = fourth_vertex_of_parallelogram(A,C,D) & fixed(B)))).
+%
+%fof(parallelogram5, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & ~fixed(A) & fixed(B) & fixed(C) & fixed(D) & %~collinear(B,C,D)) => (A = fourth_vertex_of_parallelogram(B,C,D) & fixed(A)))).
 
 
 %*******************************************************************************
 % --- Rectangle and Square ---
 
-fof(rectangle1, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,C)) => (perpendicular(A,B,B,C) & parallelogram(A,B,C,D) & A = freepoint(null,null) & B = freepoint(null,null) & dof0(A) & dof0(B)))).
-
-fof(rectangle2, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,D)) => (perpendicular(A,B,A,D) & parallelogram(A,B,C,D) & A = freepoint(null,null) & D = freepoint(null,null) & dof0(A) & dof0(D)))).
+%fof(rectangle1, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,C)) => (perpendicular(A,B,B,C) & %parallelogram(A,B,C,D) & A = freepoint(null,null) & B = freepoint(null,null) & fixed(A) & fixed(B)))).
+%
+%fof(rectangle2, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,D)) => (perpendicular(A,B,A,D) & %parallelogram(A,B,C,D) & A = freepoint(null,null) & D = freepoint(null,null) & fixed(A) & fixed(D)))).
 
 fof(rectangle3, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,C)) => (perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
 
-fof(rectangle4, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,D)) => (perpendicular(A,B,A,D) & parallelogram(A,B,C,D)))).
+%fof(rectangle4, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,D)) => (perpendicular(A,B,A,D) & %parallelogram(A,B,C,D)))).
 
 fof(square1, axiom, ![A,B,C,D] : ((square(A,B,C,D) & ~collinear(A,B,D)) => (cong(A,B,B,C) & perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
 
@@ -37,28 +40,27 @@ fof(square1, axiom, ![A,B,C,D] : ((square(A,B,C,D) & ~collinear(A,B,D)) => (cong
 %*******************************************************************************
 % --- collinear rules ---
 
-fof(collinear1, axiom, ![A,B,C] : ((collinear(A,B,C) & ~dof0(A) & dof0(B) & dof0(C) & B != C) => (on_line(A,B,C) & decdof(A)))).
+fof(collinear1, axiom, ![A,B,C] : ((collinear(A,B,C) & B != C) => (on_line(A,B,C)))).
 
-fof(collinear2, axiom, ![A,B,C] : ((collinear(A,B,C) & dof0(A) & ~dof0(B) & dof0(C) & A != C) => (on_line(B,A,C) & decdof(B)))).
+fof(collinear2, axiom, ![A,B,C] : ((collinear(A,B,C) & A != C) => (on_line(B,A,C)))).
 
-fof(collinear3, axiom, ![A,B,C] : ((collinear(A,B,C) & dof0(A) & dof0(B) & ~dof0(C) & A != B) => (on_line(C,A,B) & decdof(C)))).
+fof(collinear3, axiom, ![A,B,C] : ((collinear(A,B,C) & A != B) => (on_line(C,A,B)))).
 
 % --- Midpoint rules ---
-fof(midpoint1, axiom, ![M,A,B] : ((midpoint(M,A,B) & ~dof0(M) & dof0(A) & dof0(B)) => (M = fun_midpoint(A,B) & dof0(M)))).
+fof(midpoint1, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (M = fun_midpoint(A,B))))).
 
-fof(midpoint2, axiom, ![M,A,B] : ((midpoint(M,A,B) & dof0(M) & ~dof0(A) & dof0(B)) => (A = fun_symmetric(B,M) & dof0(A)))).
+fof(midpoint2, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (A = fun_symmetric(B,M)))).
 
-fof(midpoint3, axiom, ![M,A,B] : ((midpoint(M,A,B) & dof0(M) & dof0(A) & ~dof0(B)) => (B = fun_symmetric(A,M) & dof0(B)))).
+fof(midpoint3, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (B = fun_symmetric(A,M)))).
 
 
-%*******************************************************************************
 % --- Betweenness rules ---
 
-fof(between1, axiom, ![A,B,C] : ((between(A,B,C) & ~dof0(A) & dof0(B) & dof0(C)) => (on_line(A,B,C) & decdof(A)))).
+fof(between1, axiom, ![A,B,C] : ((between(A,B,C)) => (on_line(A,B,C)))).
 
-fof(between2, axiom, ![A,B,C] : ((between(A,B,C) & dof0(A) & ~dof0(B) & dof0(C)) => (on_line(B,A,C) & decdof(B)))).
+fof(between2, axiom, ![A,B,C] : ((between(A,B,C)) => (on_line(B,A,C)))).
 
-fof(between3, axiom, ![A,B,C] : ((between(A,B,C) & dof0(A) & dof0(B) & ~dof0(C)) => (on_line(C,B,A) & decdof(C)))).
+fof(between3, axiom, ![A,B,C] : ((between(A,B,C)) => (on_line(C,B,A)))).
 
 
 %*******************************************************************************
@@ -69,11 +71,11 @@ fof(between_strict1, axiom, ![A,B,C] : ((between_strict(A,B,C) & A != B & B != C
 %*******************************************************************************
 % --- Between4 rules ---
 
-fof(between4_1, axiom, ![A,B,C,D] : ((between4(A,B,C,D) & dof0(A) & ~dof0(B) & dof0(C) & ~dof0(D)) => (between(A,B,C) & between(A,C,D)))).
+fof(between4_1, axiom, ![A,B,C,D] : ((between4(A,B,C,D)) => (between(A,B,C) & between(A,C,D)))).
 
-fof(between4_2, axiom, ![A,B,C,D] : ((between4(A,B,C,D) & ~dof0(A) & dof0(B) & ~dof0(C) & dof0(D)) => (between(A,B,D) & between(B,C,D)))).
+fof(between4_2, axiom, ![A,B,C,D] : ((between4(A,B,C,D)) => (between(A,B,D) & between(B,C,D)))).
 
-fof(between4_3, axiom, ![A,B,C,D] : ((between4(A,B,C,D) & ~dof0(A) & dof0(B) & dof0(C) & ~dof0(D)) => (between(A,B,C) & between(B,C,D)))).
+fof(between4_3, axiom, ![A,B,C,D] : ((between4(A,B,C,D))) => (between(A,B,C) & between(B,C,D)))).
 
 
 %*******************************************************************************
@@ -85,21 +87,21 @@ fof(between_strict4_1, axiom, ![A,B,C,D] : ((between_strict4(A,B,C,D)) => (betwe
 %*******************************************************************************
 % --- Perpendicular rules ---
 
-fof(perp1, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A0,A3) & ~dof0(A0) & dof0(A1) & dof0(A3) & A0 != A1 & A0 != A3 & A1 != A3) => (on_circle(A0,O,A1) & O = fun_midpoint(A1,A3) & decdof(A0)))).
+fof(perp1, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A0,A3) & A0 != A1 & A0 != A3 & A1 != A3) => (on_circle(A0,O,A1) & O = fun_midpoint(A1,A3)))).
 
-fof(perp2, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A1,A3) & ~dof0(A1) & dof0(A0) & dof0(A3) & A0 != A1 & A0 != A3 & A1 != A3) => (on_circle(A0,O,A1) & O = fun_midpoint(A0,A3) & decdof(A1)))).
+fof(perp2, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A1,A3) & A0 != A1 & A0 != A3 & A1 != A3) => (on_circle(A0,O,A1) & O = fun_midpoint(A0,A3)))).
 
-fof(perp3, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A0) & ~dof0(A0) & dof0(A1) & dof0(A2) & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) & O = fun_midpoint(A1,A2) & decdof(A0)))).
+fof(perp3, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A0) & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) & O = fun_midpoint(A1,A2))))).
 
-fof(perp4, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A1) & ~dof0(A1) & dof0(A0) & dof0(A2) & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) & O = fun_midpoint(A0,A2) & decdof(A1)))).
+fof(perp4, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A1) & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) & O = fun_midpoint(A0,A2)))).
 
-fof(perp5, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & ~dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A0,A1,O) & O = fun_random_on_perpendicular_from(A1,A2,A3) & decdof(A0)))).
+fof(perp5, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A0,A1,O) & O = fun_random_on_perpendicular_from(A1,A2,A3)))).
 
-fof(perp6, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & dof0(A0) & ~dof0(A1) & dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A1,A0,O) & O = fun_random_on_perpendicular_from(A0,A2,A3) & decdof(A1)))).
+fof(perp6, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A1,A0,O) & O = fun_random_on_perpendicular_from(A0,A2,A3)))).
 
-fof(perp7, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A2,A3,O) & O = fun_random_on_perpendicular_from(A3,A0,A1) & decdof(A2)))).
+fof(perp7, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A2,A3,O) & O = fun_random_on_perpendicular_from(A3,A0,A1)))).
 
-fof(perp8, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A3,A2,O) & O = fun_random_on_perpendicular_from(A2,A0,A1) & decdof(A3)))).
+fof(perp8, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A3,A2,O) & O = fun_random_on_perpendicular_from(A2,A0,A1)))).
 
 
 %*******************************************************************************
@@ -115,85 +117,85 @@ fof(perp_at3, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0
 %*******************************************************************************
 % --- Right angle rules ---
 
-fof(right_angle1, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & dof0(A0) & ~dof0(A1) & dof0(A2) & A0 != A2) => (on_circle(A1,O,A0) & O = fun_midpoint(A0,A2) & decdof(A1)))).
+fof(right_angle1, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & A0 != A2) => (on_circle(A1,O,A0) & O = fun_midpoint(A0,A2)))).
 
-fof(right_angle2, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & ~dof0(A0) & dof0(A1) & dof0(A2) & A1 != O) => (on_line(A0,A1,O) & O = fun_random_on_perpendicular_from(A1,A1,A2) & decdof(A0)))).
+fof(right_angle2, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & A1 != O) => (on_line(A0,A1,O) & O = fun_random_on_perpendicular_from(A1,A1,A2)))).
 
-fof(right_angle3, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & dof0(A0) & dof0(A1) & ~dof0(A2) & A1 != O) => (on_line(A2,A1,O) & O = fun_random_on_perpendicular_from(A1,A1,A0) & decdof(A2)))).
+fof(right_angle3, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & A1 != O) => (on_line(A2,A1,O) & O = fun_random_on_perpendicular_from(A1,A1,A0)))).
 
 
 %*******************************************************************************
 % --- Parallel rules ---
 
-fof(parallel1, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & ~dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A0,A1,O) & O = fun_random_on_parallel(A1,A2,A3) & decdof(A0)))).
+fof(parallel1, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A0,A1,O) & O = fun_random_on_parallel(A1,A2,A3)))).
 
-fof(parallel2, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & dof0(A0) & ~dof0(A1) & dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A1,A0,O) & O = fun_random_on_parallel(A0,A2,A3) & decdof(A1)))).
+fof(parallel2, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A1,A0,O) & O = fun_random_on_parallel(A0,A2,A3)))).
 
-fof(parallel3, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A2,A3,O) & O = fun_random_on_parallel(A3,A0,A1) & decdof(A2)))).
+fof(parallel3, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A2,A3,O) & O = fun_random_on_parallel(A3,A0,A1)))).
 
-fof(parallel4, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A3) & A0 != A1 & A2 != A3) => (on_line(A3,A2,O) & O = fun_random_on_parallel(A2,A0,A1) & decdof(A3)))).
+fof(parallel4, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & A0 != A1 & A2 != A3) => (on_line(A3,A2,O) & O = fun_random_on_parallel(A2,A0,A1)))).
 
 
 %*******************************************************************************
 % --- cong rules ---
 
-fof(cong1, axiom, ![A0,A1,A3,M,P] : ((cong(A0,A1,A0,A3) & ~dof0(A0) & dof0(A1) & dof0(A3)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A3) & P = fun_random_on_segment_bisector(A1,A3) & decdof(A0)))).
+fof(cong1, axiom, ![A0,A1,A3,M,P] : ((cong(A0,A1,A0,A3) ) => (on_line(A0,M,P) & M = fun_midpoint(A1,A3) & P = fun_random_on_segment_bisector(A1,A3)))).
 
-fof(cong2, axiom, ![A0,A1,A2,M,P] : ((cong(A0,A1,A2,A0) & ~dof0(A0) & dof0(A1) & dof0(A2)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2) & decdof(A0)))).
+fof(cong2, axiom, ![A0,A1,A2,M,P] : ((cong(A0,A1,A2,A0) ) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2)))).
 
-fof(cong3, axiom, ![A0,A1,A2,M,P] : ((cong(A1,A0,A2,A0) & ~dof0(A0) & dof0(A1) & dof0(A2)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2) & decdof(A0)))).
+fof(cong3, axiom, ![A0,A1,A2,M,P] : ((cong(A1,A0,A2,A0)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2)))).
 
-fof(cong4, axiom, ![A0,A1,A2,M,P] : ((cong(A1,A0,A0,A2) & ~dof0(A0) & dof0(A1) & dof0(A2)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2) & decdof(A0)))).
+fof(cong4, axiom, ![A0,A1,A2,M,P] : ((cong(A1,A0,A0,A2)) => (on_line(A0,M,P) & M = fun_midpoint(A1,A2) & P = fun_random_on_segment_bisector(A1,A2)))).
 
-fof(cong5, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) & dof0(A0) & ~dof0(A1) & dof0(A3)) => (on_circle(A1,A0,A3) & decdof(A1)))).
+fof(cong5, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) ) => (on_circle(A1,A0,A3)))).
 
-fof(cong6, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) & dof0(A0) & dof0(A1) & ~dof0(A3)) => (on_circle(A3,A0,A1) & decdof(A3)))).
+fof(cong6, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) ) => (on_circle(A3,A0,A1)))).
 
-fof(cong7, axiom, ![A0,A1,A2] : ((cong(A0,A1,A2,A1) & ~dof0(A0) & dof0(A1) & dof0(A2)) => (on_circle(A0,A1,A2) & decdof(A0)))).
+fof(cong7, axiom, ![A0,A1,A2] : ((cong(A0,A1,A2,A1) ) => (on_circle(A0,A1,A2)))).
 
-fof(cong8, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) & ~dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3)) => (on_circle(A0,A1,T) & T = fun_translate(A2,A3,A1) & decdof(A0)))).
+fof(cong8, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) ) => (on_circle(A0,A1,T) & T = fun_translate(A2,A3,A1)))).
 
-fof(cong9, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) & dof0(A0) & ~dof0(A1) & dof0(A2) & dof0(A3)) => (on_circle(A1,A0,T) & T = fun_translate(A2,A3,A0) & decdof(A1)))).
+fof(cong9, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) ) => (on_circle(A1,A0,T) & T = fun_translate(A2,A3,A0)))).
 
-fof(cong10, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A3)) => (on_circle(A2,A3,T) & T = fun_translate(A0,A1,A3) & decdof(A2)))).
+fof(cong10, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3)) => (on_circle(A2,A3,T) & T = fun_translate(A0,A1,A3)))).
 
-fof(cong11, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A3)) => (on_circle(A3,A2,T) & T = fun_translate(A0,A1,A2) & decdof(A3)))).
+fof(cong11, axiom, ![A0,A1,A2,A3,T] : ((cong(A0,A1,A2,A3) ) => (on_circle(A3,A2,T) & T = fun_translate(A0,A1,A2)))).
 
 
 %*******************************************************************************
 % --- cong_angles rules ---
 
-fof(cong_angles1, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & ~dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A3,A4,A5) & decdof(A1)))).
+fof(cong_angles1, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A3,A4,A5)))).
 
-fof(cong_angles2, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & ~dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_circle(A4,O,A3) & O = fun_center_of_arc_angle(A3,A5,A0,A1,A2) & decdof(A4)))).
+fof(cong_angles2, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_circle(A4,O,A3) & O = fun_center_of_arc_angle(A3,A5,A0,A1,A2)))).
 
-fof(cong_angles3, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) & dof0(A0) & ~dof0(A1) & dof0(A2) & dof0(A4) & A0!=A1 & A2!=A1  & A2!=A4 & A0!=A4 & ame_side(A0,A2,A1,A4)) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A0,A4,A2) & decdof(A1)))).
+fof(cong_angles3, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) & A0!=A1 & A2!=A1  & A2!=A4 & A0!=A4 & ame_side(A0,A2,A1,A4)) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A0,A4,A2)))).
 
-fof(cong_angles4, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A4) & A0!=A1 & A2!=A1  & A2!=A4  & A0!=A4 & ame_side(A0,A2,A1,A4)) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A0,A1,A2) & decdof(A4)))).
+fof(cong_angles4, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) & A0!=A1 & A2!=A1  & A2!=A4  & A0!=A4 & ame_side(A0,A2,A1,A4)) => (on_circle(A1,O,A0) & O = fun_center_of_arc_angle(A0,A2,A0,A1,A2)))).
 
-fof(cong_angles5, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & ~dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A0,A1,O) & O = fun_random_on_angle_ray(A1,A2,A3,A4,A5) & decdof(A0)))).
+fof(cong_angles5, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A0,A1,O) & O = fun_random_on_angle_ray(A1,A2,A3,A4,A5)))).
 
-fof(cong_angles6, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A3) & dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A2,A1,O) & O = fun_random_on_angle_ray(A1,A0,A5,A4,A3) & decdof(A2)))).
+fof(cong_angles6, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A2,A1,O) & O = fun_random_on_angle_ray(A1,A0,A5,A4,A3)))).
 
-fof(cong_angles7, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & ~dof0(A3) & dof0(A4) & dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A3,A4,O) & O = fun_random_on_angle_ray(A4,A5,A0,A1,A2) & decdof(A3)))).
+fof(cong_angles7, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A3,A4,O) & O = fun_random_on_angle_ray(A4,A5,A0,A1,A2)))).
 
-fof(cong_angles8, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & ~dof0(A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A5,A4,O) & O = fun_random_on_angle_ray(A4,A3,A2,A1,A0) & decdof(A5)))).
+fof(cong_angles8, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) => (on_line(A5,A4,O) & O = fun_random_on_angle_ray(A4,A3,A2,A1,A0)))).
 
-fof(cong_angles9, axiom, ![A0,A1,A2,A5,O] : ((congruent_angles(A0,A1,A2,A2,A1,A5) & dof0(A0) & dof0(A1) & ~dof0(A2) & dof0(A5) & A0!=A1 & A2!=A1 & A5!=A1) => (on_line(A2,A1,O) & O = fun_random_on_angle_bisector(A0,A1,A5) & decdof(A2)))).
+fof(cong_angles9, axiom, ![A0,A1,A2,A5,O] : ((congruent_angles(A0,A1,A2,A2,A1,A5) & A0!=A1 & A2!=A1 & A5!=A1) => (on_line(A2,A1,O) & O = fun_random_on_angle_bisector(A0,A1,A5)))).
 
-fof(cong_angles10, axiom, ![A0,A1,A2,O,M] : ((congruent_angles(A0,A1,A2,A1,A2,A0) & ~dof0(A0) & dof0(A1) & dof0(A2) & A0!=A1 & A2!=A1) => (on_line(A0,M,O) & O = fun_random_on_segment_bisector(A1,A2) & M = fun_midpoint(A1,A2) & decdof(A0)))).
+fof(cong_angles10, axiom, ![A0,A1,A2,O,M] : ((congruent_angles(A0,A1,A2,A1,A2,A0) & A0!=A1 & A2!=A1) => (on_line(A0,M,O) & O = fun_random_on_segment_bisector(A1,A2) & M = fun_midpoint(A1,A2)))).
 
 
 %*******************************************************************************
 % --- Intersection rules ---
 
-fof(inter_l_l1, axiom, ![A0,A1,A2,A3,A4] : ((inter_l_l(A0,A1,A2,A3,A4) & ~dof0(A0) & dof0(A1) & dof0(A2) & dof0(A3) & dof0(A4) & A1 != A2 & A3 != A4) => (A0 = fun_inter_l_l(A1,A2,A3,A4) & dof0(A0)))).
+fof(inter_l_l1, axiom, ![A0,A1,A2,A3,A4] : ((inter_l_l(A0,A1,A2,A3,A4) & A1 != A2 & A3 != A4) => (A0 = fun_inter_l_l(A1,A2,A3,A4)))).
 
-fof(inter_c_l1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_l(A0,A1,A2,A3,A4,A5) & ~dof0(A0) & dof0(A2) & dof0(A3) & dof0(A4) & dof0(A5) & A2 != A3 & A4 != A5) => (A0 = fun_inter_c_l(A1,A2,A3,A4,A5) & dof0(A0)))).
+fof(inter_c_l1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_l(A0,A1,A2,A3,A4,A5) & A2 != A3 & A4 != A5) => (A0 = fun_inter_c_l(A1,A2,A3,A4,A5) ))).
 
-fof(inter_c_c1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_c(A0,A1,A2,A3,A4,A5) & ~dof0(A0) & dof0(A2) & dof0(A3) & dof0(A4) & dof0(A5) & A2 != A3 & A4 != A5 & A3 != A5) => (A0 = fun_inter_c_c(A1,A2,A3,A4,A5) & dof0(A0)))).
+fof(inter_c_c1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_c(A0,A1,A2,A3,A4,A5) & A2 != A3 & A4 != A5 & A3 != A5) => (A0 = fun_inter_c_c(A1,A2,A3,A4,A5) ))).
 
-fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & ~dof0(A0) & dof0(A2) & dof0(A3) & dof0(A4) & A2 != A3 & A4 != A3 & A0 != A3) => (A0 = fun_inter_c_c(A1,A2,A3,A4,A3) & dof0(A0)))).
+fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & A2 != A3 & A4 != A3 & A0 != A3) => (A0 = fun_inter_c_c(A1,A2,A3,A4,A3) ))).
 
 % --- NDG Identity / Constraint Rules ---
 %fof(collinear7, axiom, ![A0,A1,A2] : ((~collinear(A0,A1,A2)) => $true)).
@@ -201,6 +203,12 @@ fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & ~dof
 %fof(on_opp_sides1, axiom, ![A0,A1,A2,A3] : ((on_opp_sides(A0,A1,A2,A3)) => $true)).
 %fof(ame_side1, axiom, ![A0,A1,A2,A3] : ((ame_side(A0,A1,A2,A3)) => $true)).
 
+%*******************************************************************************
+% --- Definitions ---
+
+fof(symmetric, axiom, ![M,A,B] : ((symmetric(B,A,M)) => (midpoint(M,A,B)))).
+
+fof(circumcenter, axiom, ![A,B,C,O] : ((circumcenter(O,A,B,C)) => (cong(O,A,O,B) & cong(O,A,O,C)))).
 
 
 

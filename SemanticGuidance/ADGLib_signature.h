@@ -13,6 +13,7 @@ inline constexpr string_view BETWEEN_STRICT4 = "between_strict4";
 inline constexpr string_view CONG          = "cong";
 inline constexpr string_view CONG_ANGLES   = "congruent_angles";
 inline constexpr string_view MIDPOINT      = "midpoint";
+inline constexpr string_view SYMMETRIC     = "symmetric";
 inline constexpr string_view FOOT          = "foot";
 inline constexpr string_view PERP          = "perpendicular";
 inline constexpr string_view PERP_AT       = "perpendicular_at";
@@ -24,6 +25,7 @@ inline constexpr string_view QUADRILATERAL = "quadrilateral";
 inline constexpr string_view PARALLELOGRAM = "parallelogram";
 inline constexpr string_view RECTANGLE     = "rectangle";
 inline constexpr string_view SQUARE        = "square";
+inline constexpr string_view CIRCUMCENTER  = "circumcenter";
 
 inline constexpr string_view ON_OPP_SIDES  = "opposite_sides";
 inline constexpr string_view ON_SAME_SIDE  = "same_side";

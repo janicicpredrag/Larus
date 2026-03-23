@@ -13,6 +13,10 @@ using namespace std;
 bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
     CLFormula cl = ax.first;
     mName = ax.second;
+
+   // for (size_t j = 0; j < cl.GetNumOfUnivVars(); j++)
+     //   mAlreadyFixed.insert(cl.GetUnivVar(j));
+
     for (size_t j = 0; j < cl.GetPremises().GetSize(); j++) {
         Fact f = cl.GetPremises().GetElement(j);
 
@@ -20,15 +24,10 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
         if (f.GetName() == BETWEEN)
             mNDG.Add(f);
 
-        if (f.GetName() == "dof0" || f.GetName() == "nnndof0" ||
-            f.GetName() == "dof1" || f.GetName() == "nnndof1" ||
-            f.GetName() == "dof2" || f.GetName() == "nnndof2") {
-            mDOFConditions.Add(f);
-        }
-        else if (f.GetName() == NOT_EQ ||
-                 f.GetName() == NOT_COLL ||
-                 f.GetName() == ON_OPP_SIDES ||
-                 f.GetName() == ON_SAME_SIDE) {
+        if (f.GetName() == NOT_EQ ||
+            f.GetName() == NOT_COLL ||
+            f.GetName() == ON_OPP_SIDES ||
+            f.GetName() == ON_SAME_SIDE) {
             mNDG.Add(f);
         }
         else
@@ -39,29 +38,40 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
         Fact f = cl.GetGoal().GetElement(0).GetElement(j);
         if (f.GetName() == "top")
             continue;
-        if (f.GetName() == "dof0" ||
-            f.GetName() == "dof1" ||
-            f.GetName() == "dof2" ||
-            f.GetName() == "decdof") {
-            mDOFEffects.Add(f);
+        else if (f.GetName() == ON_LINE || f.GetName() == ON_CIRCLE) {
+            mAlreadyFixed.insert(f.GetArg(1).ToTPTPString());
+            mAlreadyFixed.insert(f.GetArg(2).ToTPTPString());
+            mNewInput.Add(f);
         }
         else if (f.GetName() == EQ_NATIVE_NAME) { // atoms A=fun...(...)
+            mBecomeFixed.insert(f.GetArg(0).ToTPTPString());
+            mAlreadyFixed.erase(f.GetArg(0).ToTPTPString());
+            for (size_t k = 0; k < f.GetArg(1).NumArgs(); k++) {
+                mAlreadyFixed.insert(f.GetArg(1).GetArg(k));
+            }
             mOutput.Add(f);
         }
         else
             mNewInput.Add(f);
     }
 
-    /*
+/*
     cout << "Axiom: " << cl << endl;
+    cout << "name: " << mName << endl;
     cout << "Rule : input     " << mInput << endl;
-    cout << " - rule dof      " << mDOFConditions << endl;
+    cout << " - already fixed: ";
+    for(const auto& var: mAlreadyFixed)
+        cout << " " << var;
+    cout << endl;
+    cout << " - become fixed: ";
+    for(const auto& var: mBecomeFixed)
+        cout << " " << var;
+    cout << endl;
     cout << " - rule ndg      " << mNDG << endl << endl;
-    cout << " - rule dof ef   " << mDOFEffects << endl;
     cout << " - rule new input" << mNewInput << endl << endl;
     cout << " - rule out      " << mOutput   << endl;
     cout << " - rule name     " << mName << endl << endl;
-    */
+*/
 
     return true;
 }
@@ -83,7 +93,7 @@ bool Rule::Match(const Fact& f, map<string,string>& instantiation) {
 
 // -----------------------------------------------------------------------------------------------
 
-Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, map<string, int>& degreesOfFreedom) {
+Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) {
     Fact fout = f;
     for (unsigned int i = 0; i< fout.GetArity(); i++) {
         string arg = fout.GetArg(i).ToTPTPString();
@@ -102,7 +112,7 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ma
                 // introduce auxiliary point
                 string O = "P"+itos(GeometryConfiguration::mObjCounter++);
                 instantiation[arg] = O;
-                degreesOfFreedom[O]=0;
+                auxPoints.push_back(O);
                 t.ReadTPTPString(O);
             } else {
                 t.ReadNonCompoundString(instantiation.find(arg)->second);
@@ -115,19 +125,25 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ma
 
 // -----------------------------------------------------------------------------------------------
 
-Rule Rule::Instantiate(map<string, string> &instantiation, map<string, int>& degreesOfFreedom) {
+Rule Rule::Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) {
     Rule r;
-    r.mInput = InstantiateFact(mInput, instantiation, degreesOfFreedom);
+    r.mInput = InstantiateFact(mInput, instantiation, auxPoints);
     for (size_t i = 0; i < mNewInput.GetSize(); i++)
-        r.mNewInput.Add(InstantiateFact(mNewInput.GetElement(i), instantiation, degreesOfFreedom));
-    for (size_t i = 0; i < mDOFConditions.GetSize(); i++)
-        r.mDOFConditions.Add(InstantiateFact(mDOFConditions.GetElement(i), instantiation, degreesOfFreedom));
+        r.mNewInput.Add(InstantiateFact(mNewInput.GetElement(i), instantiation, auxPoints));
+    for (const auto& var: mAlreadyFixed) {
+        auto it = instantiation.find(var);
+        if (it != instantiation.end())
+            r.mAlreadyFixed.insert(it->second);
+    }
+    for (const auto& var: mBecomeFixed) {
+        auto it = instantiation.find(var);
+        if (it != instantiation.end())
+            r.mBecomeFixed.insert(it->second);
+    }
     for (size_t i = 0; i < mOutput.GetSize(); i++)
-        r.mOutput.Add(InstantiateFact(mOutput.GetElement(i), instantiation, degreesOfFreedom));
-    for (size_t i = 0; i < mDOFEffects.GetSize(); i++)
-        r.mDOFEffects.Add(InstantiateFact(mDOFEffects.GetElement(i), instantiation, degreesOfFreedom));
+        r.mOutput.Add(InstantiateFact(mOutput.GetElement(i), instantiation, auxPoints));
     for (size_t i = 0; i < mNDG.GetSize(); i++)
-        r.mNDG.Add(InstantiateFact(mNDG.GetElement(i), instantiation, degreesOfFreedom));
+        r.mNDG.Add(InstantiateFact(mNDG.GetElement(i), instantiation, auxPoints));
     return r;
 }
 
