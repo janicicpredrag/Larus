@@ -160,41 +160,57 @@ void lineCircleIntersection(const Line& l, const Circle& c, Point& P1, Point& P2
 
 void circleCircleIntersection(const Circle& c1, const Circle& c2, Point& P1, Point& P2)
 {
-    double a, b, c, d, e, f, s;
-    if (fabs((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y)) < EPS) {
+    double x1, x2, y1, y2, r1, r2, a, b, c, d, e, f, s;
+
+    x1 = c1.x;
+    y1 = c1.y;
+    r1 = c1.r;
+    x2 = c2.x;
+    y2 = c2.y;
+    r2 = c2.r;
+    Point o1, o2;
+    o1.x = x1;
+    o1.y = y1;
+    o2.x = x2;
+    o2.y = y2;
+
+    d = distance(o1, o2);
+    if (r1 >= r2) {
+        if ((d < r1 - r2) || (d > r1 + r2)) {
+            throw runtime_error("No intersection!");
+        }
+    } else {
+        if ((d < r2 - r1) || (d > r1 + r2)) {
+        throw runtime_error("No intersection!");        }
+    }
+
+    if ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) < EPS) {
         throw runtime_error("No intersection!");
     } else {
-        d = c1.r * c1.r - c2.r * c2.r + (c2.x * c2.x + c2.y * c2.y) - (c1.x * c1.x + c1.y * c1.y);
-        if (fabs(c1.x - c2.x) < EPS) {
-            e = d / (2 * c2.y - 2 * c1.y);
-            f = (2 * c1.x - 2 * c2.x) / (2 * c2.y - 2 * c1.y);
+        d = r1 * r1 - r2 * r2 + (x2 * x2 + y2 * y2) - (x1 * x1 + y1 * y1);
+        if (fabs(x1 - x2) < EPS) {
+            e = d / (2 * y2 - 2 * y1);
+            f = (2 * x1 - 2 * x2) / (2 * y2 - 2 * y1);
             a = 1 + f * f;
-            b = 2 * e * f - 2 * c1.x - 2 * f * c1.y;
-            c = e * e - 2 * e * c1.y + c1.x * c1.x + c1.y * c1.y - c1.r * c1.r;
-            s = b * b - 4 * a * c;
-            if (fabs(s) < EPS)
-                s = 0;
-            P1.x = (-b - sqrt(s)) / (2 * a);
-            P1.y = e + f * P1.x;
-            P2.x = (-b + sqrt(s)) / (2 * a);
-            P2.y = e + f * P2.x;
+            b = 2 * e * f - 2 * x1 - 2 * f * y1;
+            c = e * e - 2 * e * y1 + x1 * x1 + y1 * y1 - r1 * r1;
+            x1 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+            y1 = e + f * x1;
+            x2 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+            y2 = e + f * x2;
         } else {
-            e = d / (2 * c2.x - 2 * c1.x);
-            f = (2 * c1.y - 2 * c2.y) / (2 * c2.x - 2 * c1.x);
+            e = d / (2 * x2 - 2 * x1);
+            f = (2 * y1 - 2 * y2) / (2 * x2 - 2 * x1);
             a = 1 + f * f;
-            b = 2 * e * f - 2 * c1.y - 2 * f * c1.x;
-            c = e * e - 2 * e * c1.x + c1.x * c1.x + c1.y * c1.y - c1.r * c1.r;
-            s = b * b - 4 * a * c;
-            if (fabs(s) < EPS)
-                s = 0;
-            P1.y = (-b - sqrt(s)) / (2 * a);
-            P1.x = e + f * P1.y;
-            P2.y = (-b + sqrt(s)) / (2 * a);
-            P2.x = e + f * P2.y;
+            b = 2 * e * f - 2 * y1 - 2 * f * x1;
+            c = e * e - 2 * e * x1 + x1 * x1 + y1 * y1 - r1 * r1;
+            y1 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+            x1 = e + f * y1;
+            y2 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+            x2 = e + f * y2;
         }
     }
 }
-
 
 // ---------------------------------------------------------------------------------------------------------------------------
 

@@ -115,6 +115,13 @@ fof(perp_at3, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0
 
 
 %*******************************************************************************
+% --- Foot at rules ---
+
+fof(foot1, axiom, ![A0,A1,A2,A3] : ((foot(A0,A1,A2,A3) & A0 != A1 & A2 != A3 ) => (collinear(A0,A2,A3) & perpendicular(A0,A1,A2,A3)))).
+
+fof(foot2, axiom, ![A0,A1,A2] : ((foot(A0,A0,A1,A2) & A1 != A2 ) => (on_line(A0,A1,A2)))).
+
+%*******************************************************************************
 % --- Right angle rules ---
 
 fof(right_angle1, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & A0 != A2) => (on_circle(A1,O,A0) & O = fun_midpoint(A0,A2)))).
@@ -209,6 +216,8 @@ fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & A2 !
 fof(symmetric, axiom, ![M,A,B] : ((symmetric(B,A,M)) => (midpoint(M,A,B)))).
 
 fof(circumcenter, axiom, ![A,B,C,O] : ((circumcenter(O,A,B,C)) => (cong(O,A,O,B) & cong(O,A,O,C)))).
+
+fof(orth, axiom, ![A,B,C,H] : ((orthocenter(H,A,B,C)) => (perpendicular(A,H,B,C) & perpendicular(B,H,A,C)))).
 
 
 

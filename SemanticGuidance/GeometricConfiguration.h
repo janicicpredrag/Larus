@@ -44,6 +44,7 @@ private:
     vector<Rule> mRules;
 
     set<string> mFixed;
+    Fact null_fact;
 };
 
 

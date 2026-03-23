@@ -401,8 +401,15 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[4] + " " + A[5] +"\n";
         } else if (f.GetName() == CIRCUMCENTER) {
             mGCLC += "drawcircle " + A[0] + " " + A[1] + "\n";
+        } else if (f.GetName() == ORTHOCENTER) {
+            mGCLC += "drawline " + A[0] + " " + A[1] + "\n";
+            mGCLC += "drawline " + A[0] + " " + A[2] + "\n";
+            mGCLC += "drawline " + A[0] + " " + A[3] + "\n";
         } else if (f.GetName() == SYMMETRIC) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+        } else if (f.GetName() == FOOT) {
+            mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+            mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";
         } else if (f.GetName() == ON_CIRCLE) {
         } else if (f.GetName() == NOT_COLL) {
         } else if (f.GetName() == NOT_EQ) {

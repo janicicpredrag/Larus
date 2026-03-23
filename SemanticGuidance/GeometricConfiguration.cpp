@@ -9,8 +9,6 @@
 
 using namespace std;
 
-const Fact null_fact("null");
-
 // -----------------------------------------------------------------------------------------------
 
 bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& diagram) {
@@ -20,13 +18,18 @@ bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& dia
     cout <<         "========================================================" << endl;
 
     cout << endl << "Reading construction rules... " << endl;
-    ReadConstructionRules();
+    if (!ReadConstructionRules()) {
+        cout << endl << "Failed to read the construction rules... " << endl;
+    }
 
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
     for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
         cout << mTheorem.GetUnivVar(j) << " ";
     }
+
+    null_fact.SetName("null");
+
     cout << " ordered decreasing by the count...\n" << endl;
     vector<string> variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
 
@@ -254,12 +257,27 @@ bool GeometryConfiguration::FixityConditionsHold(const set<string>& fixedPoints)
 // -----------------------------------------------------------------------------------------------
 
 bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f) {
-    if (f.GetName() == EQ_NATIVE_NAME &&
-        f.GetArg(1).ToTPTPString() == "freepoint(null, null)") {
-        string P = f.GetArg(0).ToTPTPString();
-        setFixed(P);
-        mOutputConstruction.push_back(P + " = freepoint(null,null)");
+    if (f.GetName() == EQ_NATIVE_NAME) {
+        if (f.GetArg(1).ToTPTPString() == "freepoint(null, null)") {
+            setFixed(f.GetArg(0).ToTPTPString());
+        }
+        mOutputConstruction.push_back(f);
         return true;
+    }
+
+    if (f.GetName() == INTER_L_L ||
+        f.GetName() == INTER_C_L ||
+        f.GetName() == INTER_C_C) {
+        bool bAllFixed = true;
+        for (size_t i = 1; i < f.GetArity() && bAllFixed; i++) {
+            if (!isFixed(f.GetArg(i).ToTPTPString()))
+                bAllFixed = false;
+        }
+        if (bAllFixed) {
+            setFixed(f.GetArg(0).ToTPTPString());
+            mOutputConstruction.push_back(f);
+            return true;
+        }
     }
 
     if (f.GetName() == NOT_EQ ||
@@ -306,7 +324,6 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
 
 bool GeometryConfiguration::PairsOfConstraintsToFunctionalForm(vector<Fact>& inputConfiguration) {
     // Try to derive functional dependence for a point if it has two constraints
-    Fact null_fact("null");
     for (auto it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
         if (((it->GetName() == ON_LINE) || (it->GetName() == ON_CIRCLE))
             && isFixed(it->GetArg(1).ToTPTPString())
