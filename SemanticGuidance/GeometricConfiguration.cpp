@@ -326,6 +326,7 @@ bool GeometryConfiguration::PairsOfConstraintsToFunctionalForm(vector<Fact>& inp
     // Try to derive functional dependence for a point if it has two constraints
     for (auto it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
         if (((it->GetName() == ON_LINE) || (it->GetName() == ON_CIRCLE))
+            && !isFixed(it->GetArg(0).ToTPTPString())
             && isFixed(it->GetArg(1).ToTPTPString())
             && isFixed(it->GetArg(2).ToTPTPString())) {
             string P = it->GetArg(0).ToTPTPString();
@@ -385,7 +386,7 @@ bool GeometryConfiguration::CombineTwoConstraintsToFunctionalForm(const string& 
                       f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + "," +
                       f2.GetArg(1).ToTPTPString() + "," + f2.GetArg(2).ToTPTPString() + ")");
         if (f2.GetArg(2).ToTPTPString()==f1.GetArg(2).ToTPTPString()) {
-            mNDGs.push_back(string(NOT_EQ) + "(" + P + ", " + f2.GetArg(2).ToTPTPString() + ")");
+            mNDGs.push_back(string(NOT_EQ) + "(" + P + ", " + f1.GetArg(2).ToTPTPString() + ")");
         }
         return true;
     }

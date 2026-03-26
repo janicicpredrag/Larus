@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 #include "../CLTheory/Theory.h"
-#include "Cartesian.h"
+#include "CartesianCalculations.h"
 
 using namespace std;
 

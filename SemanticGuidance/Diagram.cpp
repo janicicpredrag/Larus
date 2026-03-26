@@ -12,7 +12,7 @@ using namespace std;
 
 //---------------------------------------------------------------------
 
-bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construction, const vector<Fact>& ndgs)  {
+bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& constructionPlan, const vector<Fact>& ndgs)  {
 
     srand(1);
     auto now = chrono::system_clock::now();
@@ -24,7 +24,7 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
         cout << endl << "Instantiation attempt " << attempts << ":" << endl;
         try {
             mInitialPoints.clear();
-            InstantiateOnce(construction);
+            InstantiateOnce(constructionPlan);
             for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++)
                 mInitialPoints.insert(*mAllPoints.find(theorem.GetUnivVar(i)));
 
@@ -61,18 +61,18 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
 
 //---------------------------------------------------------------------
 
-bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
+bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
     mAllPoints.clear();
     mGCLC.clear();
     mGCLC += "dim 70 70\n";
     mGCLC += "color 200 200 200\n";
     mGCLC += "normal\n";
 
-    for(vector<Fact>::const_iterator it=construction.begin(); it!=construction.end(); it++) {
+    for(vector<Fact>::const_iterator it=constructionPlan.begin(); it!=constructionPlan.end(); it++) {
         string sA[10];
         Point A[10];
 
-        if (it->GetName()== "eqnative") {
+        if (it->GetName()== EQ_NATIVE_NAME) {
             Term t = it->GetArg(1);
             sA[0] = it->GetArg(0).ToTPTPString();
             for (unsigned i = 0; i < t.NumArgs(); i++) {
@@ -293,12 +293,12 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
                 line(A[4], A[5], l);
                 Circle c;
                 circle(A[2], A[3], c);
-                lineCircleIntersection(l,c, A[0], A[1]);
+                lineCircleIntersection(l,c, A[1], A[0]);
                 mAllPoints[sA[0]] = A[0];
                 mAllPoints[sA[1]] = A[1];
                 mGCLC += "line l " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "circle c " + sA[2] + " " + sA[3] + "\n";
-                mGCLC += "intersec2 " + sA[0] + " " + sA[1] + " l c\n";
+                mGCLC += "intersec2 " + sA[1] + " " + sA[0] + " l c\n";
                 mGCLC += "drawline " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "drawcircle c \n";
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
@@ -336,6 +336,74 @@ bool Diagram::InstantiateOnce(const vector<Fact>& construction) {
     }
 
     return true;
+}
+
+//---------------------------------------------------------------------
+
+bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
+    cout << "Verifying conditions... ";
+    for(vector<Fact>::const_iterator it=ndgs.begin(); it!=ndgs.end(); it++) {
+        string sA[10];
+        Point A[10];
+        for (unsigned i = 0; i < it->GetArity(); i++) {
+            sA[i] = it->GetArg(i).ToTPTPString();
+            A[i] = mAllPoints[sA[i]];
+        }
+        cout << it->ToString();
+        if (it+1 != ndgs.end())
+            cout << ", ";
+
+        if (it->GetName() == NOT_COLL) {
+            if (isCol(A[0], A[1], A[2]))
+                throw runtime_error("~col not met!");
+            if (area(A[0], A[1], A[2]) < AREA_THRESHOLD)
+                throw runtime_error("~col/area not nice!");
+
+        }   else if (it->GetName() == NOT_EQ) {
+            //cout << "is eq " << A[0].x << " " << A[0].y  << " " << A[1].x << " " << A[1].y << endl;
+            if (isEqual(A[0], A[1]))
+                throw runtime_error("~eq not met!");
+            if (distance(A[0], A[1]) < DISTANCE_THRESHOLD)
+                throw runtime_error("~eq not nice!");
+
+        }   else if (it->GetName() == BETWEEN) {
+            if (!isBetween(A[0], A[1], A[2]))
+                throw runtime_error("between not met!");
+
+        } else if (it->GetName() == ON_OPP_SIDES) {
+            if (!onOppositeSides(A[0], A[1], A[2], A[3]))
+                throw runtime_error("opp-sides not met!");
+
+        } else if (it->GetName() == ON_SAME_SIDE) {
+            if (onOppositeSides(A[0], A[1], A[2], A[3]))
+                throw runtime_error("opp-sides not met!");
+
+        } else {
+            cout << "ERROR1!" << endl;
+            cout << it->GetName() << " not supported! " << endl;
+            return false;
+        }
+    }
+    cout << endl << "Verification ok " << endl << endl;
+    return true;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+const map<string,Point>& Diagram::GetAllPoints() const {
+    return mAllPoints;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+const map<string,Point>& Diagram::GetInitialPoints() const {
+    return mInitialPoints;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+const string& Diagram::GetGCLCDescription() const {
+    return mGCLC;
 }
 
 //---------------------------------------------------------------------
@@ -423,75 +491,6 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         }
     }
     mGCLC += "normal\n";
-}
-
-//---------------------------------------------------------------------
-
-bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
-    cout << "Verifying conditions... ";
-    for(vector<Fact>::const_iterator it=ndgs.begin(); it!=ndgs.end(); it++) {
-        string sA[10];
-        Point A[10];
-        for (unsigned i = 0; i < it->GetArity(); i++) {
-            sA[i] = it->GetArg(i).ToTPTPString();
-            A[i] = mAllPoints[sA[i]];
-        }
-        cout << it->ToString();
-        if (it+1 != ndgs.end())
-            cout << ", ";
-
-        if (it->GetName() == NOT_COLL) {
-            if (isCol(A[0], A[1], A[2]))
-                throw runtime_error("~col not met!");
-            if (area(A[0], A[1], A[2]) < AREA_THRESHOLD)
-                throw runtime_error("~col/area not nice!");
-
-        }   else if (it->GetName() == NOT_EQ) {
-            //cout << "is eq " << A[0].x << " " << A[0].y  << " " << A[1].x << " " << A[1].y << endl;
-            if (isEqual(A[0], A[1]))
-                throw runtime_error("~eq not met!");
-            if (distance(A[0], A[1]) < DISTANCE_THRESHOLD)
-                throw runtime_error("~eq not nice!");
-
-        }   else if (it->GetName() == BETWEEN) {
-            if (!isBetween(A[0], A[1], A[2]))
-                throw runtime_error("between not met!");
-
-        } else if (it->GetName() == ON_OPP_SIDES) {
-            if (!onOppositeSides(A[0], A[1], A[2], A[3]))
-                throw runtime_error("opp-sides not met!");
-
-        } else if (it->GetName() == ON_SAME_SIDE) {
-            if (onOppositeSides(A[0], A[1], A[2], A[3]))
-                throw runtime_error("opp-sides not met!");
-
-        } else {
-            cout << "ERROR1!" << endl;
-            cout << it->GetName() << " not supported! " << endl;
-            return false;
-        }
-    }
-    cout << endl << "Verification ok " << endl << endl;
-    return true;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-const map<string,Point>& Diagram::GetAllPoints() const {
-    return mAllPoints;
-}
-
-
-// -----------------------------------------------------------------------------------------------
-
-const map<string,Point>& Diagram::GetInitialPoints() const {
-    return mInitialPoints;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-const string& Diagram::GetGCLCDescription() const {
-    return mGCLC;
 }
 
 // -----------------------------------------------------------------------------------------------

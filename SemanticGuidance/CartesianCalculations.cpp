@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include "Cartesian.h"
+#include "CartesianCalculations.h"
 
 using namespace std;
 
@@ -194,20 +194,20 @@ void circleCircleIntersection(const Circle& c1, const Circle& c2, Point& P1, Poi
             a = 1 + f * f;
             b = 2 * e * f - 2 * x1 - 2 * f * y1;
             c = e * e - 2 * e * y1 + x1 * x1 + y1 * y1 - r1 * r1;
-            x1 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-            y1 = e + f * x1;
-            x2 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-            y2 = e + f * x2;
+            P1.x = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+            P1.y = e + f * x1;
+            P2.x = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+            P2.y = e + f * x2;
         } else {
             e = d / (2 * x2 - 2 * x1);
             f = (2 * y1 - 2 * y2) / (2 * x2 - 2 * x1);
             a = 1 + f * f;
             b = 2 * e * f - 2 * y1 - 2 * f * x1;
             c = e * e - 2 * e * x1 + x1 * x1 + y1 * y1 - r1 * r1;
-            y1 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-            x1 = e + f * y1;
-            y2 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-            x2 = e + f * y2;
+            P1.y = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+            P1.x = e + f * y1;
+            P2.y = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+            P2.x = e + f * y2;
         }
     }
 }
