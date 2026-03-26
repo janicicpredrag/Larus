@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
             premises.Add(gc.GetNDGs()[i]);
         theorem.SetBody(premises, theorem.GetGoal());
         StoreConjecture(params.inputFilename + "_func", T.mCLaxioms, theoremName, theorem);
-        cout << endl << "Stored using functions as: " << params.inputFilename + "_func" << endl << endl;
+        cout << endl << "Conjecture stored using function symbols as: " << params.inputFilename + "_func" << endl;
 
         ofstream GCLCfile;
         GCLCfile.open("proofs/" + theoremName + ".gcl");

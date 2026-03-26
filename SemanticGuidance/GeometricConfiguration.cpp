@@ -3,11 +3,14 @@
 #include <vector>
 #include <algorithm>
 #include "GeometricConfiguration.h"
+#include "CartesianCalculations.h"
 #include "ADGLib_signature.h"
 #include "Utils.h"
 #include "TPTPSupport.h"
 
 using namespace std;
+
+bool SHOW_INTERMEDIATE_RESULTS = false;
 
 // -----------------------------------------------------------------------------------------------
 
@@ -34,20 +37,30 @@ bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& dia
     vector<string> variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
 
     for (size_t i = 0; i < variations.size(); i++) {
-        cout << endl << endl << "***** Free points fixed: ";
-        cout << variations[i] << " ";
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << endl << endl << "***** Free points fixed: ";
+            cout << variations[i] << " ";
+        }
         vector<string> fixedPoints;
         for (size_t j = 0; j < variations[i].length(); j++) {
             if (variations[i][j] == '0') {
                 fixedPoints.push_back(mTheorem.GetUnivVar(j));
-                cout << mTheorem.GetUnivVar(j) << " ";
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << mTheorem.GetUnivVar(j) << " ";
+                }
             }
         }
-        cout << "#";
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << "#";
+        }
         if (Declarative2ProceduralDescription(fixedPoints)
             && diagram.Instantiate(mTheorem, GetProceduralDescription(), GetNDGs())) {
             // cout << diagram.GetGCLCDescription();
-            cout << endl << "Succesfully created a diagram. " << endl << endl;
+            cout << "Coordinates:" << endl;
+            for(auto const& p : diagram.GetAllPoints()) {
+                printPoint(p.first, p.second);
+            }
+            cout << endl << "Succesfully created a diagram. " << endl;
             return true;
         }
     }
@@ -75,9 +88,11 @@ bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<strin
         setFixed(fixedPoints[j]);
         mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
     }
-    cout << endl;
 
-    printCurrentStatus(inputConfiguration);
+    if (SHOW_INTERMEDIATE_RESULTS) {
+        cout << endl;
+        printCurrentStatus(inputConfiguration);
+    }
 
     return D2P( inputConfiguration);
 
@@ -96,36 +111,48 @@ bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
         for (const auto& constraint : inputConfiguration) {
             if (constraint.GetName() != "null" &&
                 IsConfigurationOverconstrained(constraint)) {
-                cout << "The system seems to be OVERCONSTRAINED:" << endl;
-                cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
-                cout << "   Transformation failed!" << endl;
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << "The system seems to be OVERCONSTRAINED:" << endl;
+                    cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
+                    cout << "   Transformation failed!" << endl;
+                }
                 return false;
             }
         }
 
         do {
             update = false;
-            cout << endl << "Facts to constraints:" << endl;
+            if (SHOW_INTERMEDIATE_RESULTS) {
+                cout << endl << "Facts to constraints:" << endl;
+            }
             for (auto& fact : inputConfiguration) {
                 if (fact == null_fact) continue; // Skip already nullified facts
+                if (SHOW_INTERMEDIATE_RESULTS) {
                 cout << endl << " -----> Processing:  " << fact ;
+                }
                 if (FactToLocationConstraint(inputConfiguration, fact)) {
                     fact = null_fact;
-                    cout << endl << "Update:   ";
-                    printCurrentStatus(inputConfiguration);
-                    // cout << endl << "Before compression: ";
-                    // printCurrentStatus(inputConfiguration);
-                    if (PairsOfConstraintsToFunctionalForm(inputConfiguration)) {
-                        cout << "After compression: ";
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << endl << "Update:   ";
                         printCurrentStatus(inputConfiguration);
+                        // cout << endl << "Before compression: ";
+                        // printCurrentStatus(inputConfiguration);
+                    }
+                    if (PairsOfConstraintsToFunctionalForm(inputConfiguration)) {
+                        if (SHOW_INTERMEDIATE_RESULTS) {
+                            cout << "After compression: ";
+                            printCurrentStatus(inputConfiguration);
+                        }
                     }
                     goAnotherPass = update = true;
 
                     for (const auto& constraint : inputConfiguration) {
                         if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
-                            cout << "The system seems to be OVERCONSTRAINED:" << endl;
-                            cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
-                            cout << "   Transformation failed!" << endl;
+                            if (SHOW_INTERMEDIATE_RESULTS) {
+                                cout << "The system seems to be OVERCONSTRAINED:" << endl;
+                                cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
+                                cout << "   Transformation failed!" << endl;
+                            }
                             return false;
                         }
                     }
@@ -152,13 +179,17 @@ bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
                     && WeaklyConstrainedPointToRandom(*it, output)) {
 
                     goAnotherPass = true;
-                    cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
-                    cout << "     " << *it << " -> " << output << endl;
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
+                        cout << "     " << *it << " -> " << output << endl;
+                    }
                     it = inputConfiguration.erase(it);
                     setFixed(P);
                     mOutputConstruction.push_back(output);
-                    cout << "After randomization: " << endl;
-                    printCurrentStatus(inputConfiguration);
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << "After randomization: " << endl;
+                        printCurrentStatus(inputConfiguration);
+                    }
                 } else
                     it++;
             }
@@ -174,13 +205,17 @@ bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
                     //&& !InOtherConstraints(it, P)
                     && WeaklyConstrainedPointToRandom(*it, output)) {
                     goAnotherPass = true;
-                    cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
-                    cout << "     " << *it << " -> " << output << endl;
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
+                        cout << "     " << *it << " -> " << output << endl;
+                    }
                     setFixed(P);
                     it = inputConfiguration.erase(it);
                     mOutputConstruction.push_back(output);
-                    cout << "After randomization: " << endl;
-                    printCurrentStatus(inputConfiguration);
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << "After randomization: " << endl;
+                        printCurrentStatus(inputConfiguration);
+                    }
                 } else
                     it++;
             }
@@ -189,8 +224,10 @@ bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
     } while(goAnotherPass);
 
     if (!inputConfiguration.empty()) {
-        cout << endl << " Don't know to handle remaining constraints!";
-        cout << endl << " Transformation failed!" << endl;
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << endl << " Don't know to handle remaining constraints!";
+            cout << endl << " Transformation failed!" << endl;
+        }
     } else {
         cout << endl << "***** Success! *****" << endl;
         printCurrentStatus(inputConfiguration);
@@ -299,8 +336,9 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
             for(auto& ap: auxPoints)
                 setFixed(ap);
             if (FixityConditionsHold(r.mAlreadyFixed)) {
-
-                cout << endl << "Rule " << it->mName << " applied. " << endl;
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << endl << "Rule " << it->mName << " applied. " << endl;
+                }
                 for (size_t i = 0; i < r.mNewInput.GetSize(); i++)
                     inputConfiguration.push_back(r.mNewInput.GetElement(i));
                 for (size_t i = 0; i < r.mOutput.GetSize(); i++)

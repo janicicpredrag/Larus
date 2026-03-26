@@ -4,8 +4,11 @@
 #include "Diagram.h"
 #include "Utils.h"
 #include "ADGLib_signature.h"
+#include "CartesianCalculations.h"
 
 using namespace std;
+
+extern bool SHOW_INTERMEDIATE_RESULTS;
 
 #define AREA_THRESHOLD 100
 #define DISTANCE_THRESHOLD 3
@@ -21,7 +24,9 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
     srand(static_cast<unsigned int>(millis));
 
     for(int attempts = 1; attempts <= 1000; attempts++) {
-        cout << endl << "Instantiation attempt " << attempts << ":" << endl;
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << endl << "Instantiation attempt " << attempts << ":" << endl;
+        }
         try {
             mInitialPoints.clear();
             InstantiateOnce(constructionPlan);
@@ -31,31 +36,43 @@ bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& construc
             bool bOutOfCanvas = false;
             for(auto ip = mAllPoints.begin();
                 ip != mAllPoints.end() && !bOutOfCanvas; ip++) {
-                cout << " * point: " << ip->first
-                     << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << " * point: " << ip->first
+                         << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
+                }
                 if (ip->second.x < 5 || ip->second.y < 5 ||
                     ip->second.x > 65 || ip->second.y >65) {
-                    cout << "Point " << ip->first;
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << "Point " << ip->first;
+                    }
                     bOutOfCanvas = true;
                     break;
                 }
             }
             if (bOutOfCanvas) {
-                cout << " out of canvas, failed." << endl;
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << " out of canvas, failed." << endl;
+                }
                 continue;
             } else if (!VerifyConditions(ndgs)) {
-                cout << "Verification failed." << ":" << endl;
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << "Verification failed." << ":" << endl;
+                }
                 continue;
             } else {
                 DrawBasicFigure(theorem);
                 return true;
             }
         } catch (const runtime_error& e) {
-            cout << "Instantiation failure! " << e.what() << endl << endl;
+            if (SHOW_INTERMEDIATE_RESULTS) {
+                cout << "Instantiation failure! " << e.what() << endl << endl;
+            }
             continue;
         }
     }
-    cout << "Giving up after 10 failed instantiations." << endl << endl;
+    if (SHOW_INTERMEDIATE_RESULTS) {
+        cout << "Giving up after 1000 failed instantiations." << endl << endl;
+    }
     return false;
 }
 
@@ -93,7 +110,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                printPoint(sA[0], mAllPoints[sA[0]]);
+                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FOURTH_VERTEX_OF_PARALLELOGRAM) {
                 translation(A[3], A[2], A[1], A[0]);
@@ -334,7 +351,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             }
         }
     }
-
     return true;
 }
 
