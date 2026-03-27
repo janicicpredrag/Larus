@@ -5,13 +5,20 @@
 #include "TPTPSupport.h"
 #include "Diagram.h"
 #include "GeometricConfiguration.h"
-#include "semanticGuidedProving.h"
+#include "SemanticGuidedProving.h"
 
 using namespace std;
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-void printHelp();
+void printHelp() {
+    cout << "Usage: semanticGuidance -h <filename> ";
+    cout << endl;
+    cout << "   -l<time_limit>       for time limit, default: 10s"          << endl;
+    cout << "   -p<prover>           v for vampire, e for eprover, default: vampire" << endl;
+    cout << "   -e                   use excluded middle axioms (default: no)" << endl;
+    cout << "   -t                   translate only: from declarative to procedural (no proving)" << endl << endl;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
@@ -94,7 +101,7 @@ int main(int argc, char **argv) {
             GCLCfile << diagram.GetGCLCDescription();
             GCLCfile << "\n";
             GCLCfile.close();
-            cout << "GCLC description of premises stored in the file proofs/" + theoremName + ".gcl." << endl << endl;
+            cout << "GCLC description of the premises stored in the file proofs/" + theoremName + ".gcl." << endl << endl;
         } else {
             cout << "Cannot open output GCLC file." << endl << endl;
         }
@@ -104,17 +111,6 @@ int main(int argc, char **argv) {
     semanticGuidedProving(params, T, theorem, theoremName, diagram);
 
     return 0;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-void printHelp() {
-    cout << "Usage: semanticGuidance -h <filename> ";
-    cout << endl;
-    cout << "   -l<time_limit>       for time limit, default: 10s"          << endl;
-    cout << "   -p<prover>           v for vampire, e for eprover, default: vampire" << endl;
-    cout << "   -e                   use excluded middle axioms (default: no)" << endl;
-    cout << "   -t                   translate only: from declarative to procedural (no proving)" << endl << endl;
 }
 
 // -----------------------------------------------------------------------------------------------

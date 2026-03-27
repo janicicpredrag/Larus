@@ -5,7 +5,7 @@
 #include <set>
 #include "TPTPSupport.h"
 #include "LemmaGenerator.h"
-#include "semanticGuidedProving.h"
+#include "SemanticGuidedProving.h"
 
 using namespace std;
 

@@ -1,21 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(SemanticGuidance LANGUAGES CXX)
+project(GeomtricReasoningToolkit LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(..)
 
-add_executable(SemanticGuidance
+add_executable(GeomtricReasoningToolkit
     main.cpp
     ADGLib_signature.h
     Utils.h
     Utils.cpp
     ConstructionRules.h
     ConstructionRules.cpp
-    semanticGuidedProving.h
-    semanticGuidance.cpp
+    SemanticGuidedProving.h
+    SemanticGuidedProving.cpp
     TPTPSupport.h
     TPTPSupport.cpp
     LemmaGenerator.h
@@ -26,16 +26,16 @@ add_executable(SemanticGuidance
     Diagram.cpp
     GeometricConfiguration.h
     GeometricConfiguration.cpp
-    ../common.cpp
     ../common.h
-    ../CLTheory/Formula.cpp
+    ../common.cpp
     ../CLTheory/Formula.h
-    ../CLTheory/Theory.cpp
+    ../CLTheory/Formula.cpp
     ../CLTheory/Theory.h
+    ../CLTheory/Theory.cpp
 )
 
 include(GNUInstallDirs)
-install(TARGETS SemanticGuidance
+install(TARGETS GeomtricReasoningToolkit
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
