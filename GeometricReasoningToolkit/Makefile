@@ -12,7 +12,7 @@ SOURCES  := main.cpp \
             TPTPSupport.cpp \
             Diagram.cpp \
             LemmaGenerator.cpp \
-            GeometricConfiguration.cpp \
+            ConstructionPlan.cpp \
             ConstructionRules.cpp \
             CartesianCalculations.cpp \
             Utils.cpp \
@@ -30,7 +30,7 @@ LDFLAGS  := -static-libstdc++
 ADDFLAGS ?=
 ALL_CXXFLAGS := $(CXXFLAGS) $(ADDFLAGS)
 
-vpath %.cpp $(SRCDIR) $(CL_DIR) ..
+vpath %.cpp $(SRCDIR) $(CL_DIR) $(CL_DIR)/CLTheory ..
 
 .PHONY: all clean
 
@@ -38,11 +38,9 @@ vpath %.cpp $(SRCDIR) $(CL_DIR) ..
 
 all: $(BUILD_DIR) $(TARGET)
 
-# Create the build directory
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-# Link the target
 $(TARGET): $(OBJECTS)
 	$(CXX) $(ALL_CXXFLAGS) $(LDFLAGS) -o $@ $^
 

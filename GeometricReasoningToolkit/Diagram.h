@@ -15,6 +15,7 @@ public:
     const map<string,Point>& GetAllPoints() const;
     const map<string,Point>& GetInitialPoints() const;
     const string& GetGCLCDescription() const;
+    bool CreateGCLCIllustration(const string& gclcOutputFilename);
 
 private:
     bool InstantiateOnce(const vector<Fact>& construction);

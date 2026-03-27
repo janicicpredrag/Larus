@@ -2,11 +2,8 @@
 #include <string>
 #include <algorithm>
 #include "ConstructionRules.h"
-#include "GeometricConfiguration.h"
+#include "ConstructionPlan.h"
 #include "ADGLib_signature.h"
-
-using namespace std;
-
 
 // -----------------------------------------------------------------------------------------------
 
@@ -110,7 +107,7 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ve
         } else {
             if (instantiation.find(arg) == instantiation.end()) {
                 // introduce auxiliary point
-                string O = "P"+itos(GeometryConfiguration::mObjCounter++);
+                string O = "P"+itos(ConstructionPlan::mObjCounter++);
                 instantiation[arg] = O;
                 auxPoints.push_back(O);
                 t.ReadTPTPString(O);

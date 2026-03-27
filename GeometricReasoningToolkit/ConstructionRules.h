@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class GeometryConfiguration;
+class ConstructionPlan;
 
 class Rule {
 public:
-    friend class GeometryConfiguration;
+    friend class ConstructionPlan;
     bool Match(const Fact& f, map<string,string>& instantiation);
     Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints);
     bool ReadFromCLAxiom(const pair<CLFormula,string> ax);

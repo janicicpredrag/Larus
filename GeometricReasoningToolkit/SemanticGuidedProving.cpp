@@ -3,9 +3,10 @@
 #include <iomanip>  
 #include <string>
 #include <set>
+#include "Utils.h"
+#include "Diagram.h"
 #include "TPTPSupport.h"
 #include "LemmaGenerator.h"
-#include "SemanticGuidedProving.h"
 
 using namespace std;
 
@@ -13,7 +14,6 @@ bool USING_ORIGINAL_SIGNATURE_EQ  = false;
 bool USING_ORIGINAL_SIGNATURE_NEG = false;
 
 // ---------------------------------------------------------------------------------------------------------------------------
-
 
 bool semanticGuidedProving(const parameters& params, Theory& T, const CLFormula& theorem, const string& theoremName, const Diagram& diagram) {
 

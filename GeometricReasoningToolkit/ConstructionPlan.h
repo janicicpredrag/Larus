@@ -1,18 +1,15 @@
-#ifndef _GEOCONF
-#define _GEOCONF
+#ifndef _CONSPLAN
+#define _CONSPLAN
 #include <string>
-#include <map>
 #include "../CLTheory/Theory.h"
-#include "Diagram.h"
 #include "ConstructionRules.h"
 
 using namespace std;
 
-class GeometryConfiguration {
+class ConstructionPlan {
 
 public:
-    bool CreateDiagram(const CLFormula& theorem, Diagram& diagram);
-    bool Declarative2ProceduralDescription(const vector<string>& fixedPoints);
+    bool ImportDeclarativeDescription(const CLFormula& theorem);
     const vector<Fact>& GetProceduralDescription() { return mOutputConstruction; }
     const vector<Fact>& GetNDGs() { return mNDGs; }
     static unsigned mObjCounter;
@@ -46,7 +43,5 @@ private:
     set<string> mFixed;
     Fact null_fact;
 };
-
-
 
 #endif

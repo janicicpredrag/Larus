@@ -14,7 +14,7 @@ add_executable(GeomtricReasoningToolkit
     Utils.cpp
     ConstructionRules.h
     ConstructionRules.cpp
-    SemanticGuidedProving.h
+
     SemanticGuidedProving.cpp
     TPTPSupport.h
     TPTPSupport.cpp
@@ -24,14 +24,15 @@ add_executable(GeomtricReasoningToolkit
     CartesianCalculations.cpp
     Diagram.h
     Diagram.cpp
-    GeometricConfiguration.h
-    GeometricConfiguration.cpp
+    ConstructionPlan.h
+    ConstructionPlan.cpp
     ../common.h
     ../common.cpp
     ../CLTheory/Formula.h
     ../CLTheory/Formula.cpp
     ../CLTheory/Theory.h
     ../CLTheory/Theory.cpp
+
 )
 
 include(GNUInstallDirs)

@@ -2,11 +2,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "GeometricConfiguration.h"
-#include "CartesianCalculations.h"
-#include "ADGLib_signature.h"
 #include "Utils.h"
-#include "TPTPSupport.h"
+#include "ConstructionPlan.h"
+#include "ADGLib_signature.h"
 
 using namespace std;
 
@@ -14,7 +12,7 @@ bool SHOW_INTERMEDIATE_RESULTS = false;
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& diagram) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
@@ -53,54 +51,39 @@ bool GeometryConfiguration::CreateDiagram(const CLFormula& theorem, Diagram& dia
         if (SHOW_INTERMEDIATE_RESULTS) {
             cout << "#";
         }
-        if (Declarative2ProceduralDescription(fixedPoints)
-            && diagram.Instantiate(mTheorem, GetProceduralDescription(), GetNDGs())) {
-            // cout << diagram.GetGCLCDescription();
-            cout << "Coordinates:" << endl;
-            for(auto const& p : diagram.GetAllPoints()) {
-                printPoint(p.first, p.second);
-            }
-            cout << endl << "Succesfully created a diagram. " << endl;
-            return true;
+
+        vector<Fact> inputConfiguration;
+        inputConfiguration.reserve(1000);
+
+        mOutputConstruction.clear();
+        mNDGs.clear();
+        mObjCounter = 0;
+        mFixed.clear();
+
+        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
+            inputConfiguration.push_back(mTheorem.GetPremises().GetElement(j));
+        //    for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++)
+        //        degreesOfFreedom.insert(make_pair(mTheorem.GetUnivVar(j),2));
+
+        for (size_t j = 0; j < fixedPoints.size(); j++) {
+            setFixed(fixedPoints[j]);
+            mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
         }
+
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << endl;
+            printCurrentStatus(inputConfiguration);
+        }
+
+        if (D2P( inputConfiguration))
+            return true;
     }
-    cout  << endl << "Failed to create a diagram. " << endl << endl;
     return false;
 }
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::Declarative2ProceduralDescription(const vector<string>& fixedPoints) {
-    vector<Fact> inputConfiguration;
-    inputConfiguration.reserve(1000);
-
-    mOutputConstruction.clear();
-    mNDGs.clear();
-    mObjCounter = 0;
-    mFixed.clear();
-
-    for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
-        inputConfiguration.push_back(mTheorem.GetPremises().GetElement(j));
-//    for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++)
-//        degreesOfFreedom.insert(make_pair(mTheorem.GetUnivVar(j),2));
-
-    for (size_t j = 0; j < fixedPoints.size(); j++) {
-        setFixed(fixedPoints[j]);
-        mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
-    }
-
-    if (SHOW_INTERMEDIATE_RESULTS) {
-        cout << endl;
-        printCurrentStatus(inputConfiguration);
-    }
-
-    return D2P( inputConfiguration);
-
-}
-
-// -----------------------------------------------------------------------------------------------
-
-bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
+bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
 
     bool update = false, overconstrained  = false;
     bool goAnotherPass = false;
@@ -239,7 +222,7 @@ bool GeometryConfiguration::D2P(vector<Fact>& inputConfiguration) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::IsConfigurationOverconstrained(const Fact& f) {
+bool ConstructionPlan::IsConfigurationOverconstrained(const Fact& f) {
 
     if (f.GetName() == TRIANGLE ||
         f.GetName() == NOT_EQ ||
@@ -258,12 +241,12 @@ bool GeometryConfiguration::IsConfigurationOverconstrained(const Fact& f) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::ReadConstructionRules() {
+bool ConstructionPlan::ReadConstructionRules() {
     Theory ConstructionsTheory;
     CLFormula thm;
     string thmname;
 
-    if (ReadTPTPConjecture("rules.txt", ConstructionsTheory, thm, thmname)
+    if (ReadTPTPConjecture("construction_rules.p", ConstructionsTheory, thm, thmname)
         != eNoConjectureGiven)
         return false;
 
@@ -279,11 +262,11 @@ bool GeometryConfiguration::ReadConstructionRules() {
 
 // -----------------------------------------------------------------------------------------------
 
-unsigned GeometryConfiguration::mObjCounter = 0;
+unsigned ConstructionPlan::mObjCounter = 0;
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::FixityConditionsHold(const set<string>& fixedPoints) {
+bool ConstructionPlan::FixityConditionsHold(const set<string>& fixedPoints) {
     for (const auto& var: fixedPoints) {
         if (!isFixed(var))
             return false;
@@ -293,7 +276,7 @@ bool GeometryConfiguration::FixityConditionsHold(const set<string>& fixedPoints)
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f) {
+bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f) {
     if (f.GetName() == EQ_NATIVE_NAME) {
         if (f.GetArg(1).ToTPTPString() == "freepoint(null, null)") {
             setFixed(f.GetArg(0).ToTPTPString());
@@ -360,7 +343,7 @@ bool GeometryConfiguration::FactToLocationConstraint(vector<Fact>& inputConfigur
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::PairsOfConstraintsToFunctionalForm(vector<Fact>& inputConfiguration) {
+bool ConstructionPlan::PairsOfConstraintsToFunctionalForm(vector<Fact>& inputConfiguration) {
     // Try to derive functional dependence for a point if it has two constraints
     for (auto it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
         if (((it->GetName() == ON_LINE) || (it->GetName() == ON_CIRCLE))
@@ -390,7 +373,7 @@ bool GeometryConfiguration::PairsOfConstraintsToFunctionalForm(vector<Fact>& inp
 
 // -----------------------------------------------------------------------------------------------
 
-bool GeometryConfiguration::CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result) {
+bool ConstructionPlan::CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result) {
     Fact f1, f2;
     // Move _circle to f2 to avoid considering two cases
     if ((fact1.GetName()==ON_CIRCLE && fact2.GetName()!=ON_CIRCLE)) {
@@ -433,7 +416,7 @@ bool GeometryConfiguration::CombineTwoConstraintsToFunctionalForm(const string& 
 
 //---------------------------------------------------------------------
 
-bool GeometryConfiguration::InOtherConstraints(const vector<Fact>& inputConfiguration, const vector<Fact>::const_iterator jt, const string& P) {
+bool ConstructionPlan::InOtherConstraints(const vector<Fact>& inputConfiguration, const vector<Fact>::const_iterator jt, const string& P) {
     for (vector<Fact>::const_iterator it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
         if (it != jt) {
             for (size_t i = 0; i < it->GetArity(); i++) {
@@ -447,7 +430,7 @@ bool GeometryConfiguration::InOtherConstraints(const vector<Fact>& inputConfigur
 
 //---------------------------------------------------------------------
 
-bool GeometryConfiguration::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output) {
+bool ConstructionPlan::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output) {
     // If there are points with one constraint only, use random such points
     if (fact_input.GetName() == ON_LINE) {
         string P = fact_input.GetArg(0).ToTPTPString();
@@ -468,7 +451,7 @@ bool GeometryConfiguration::WeaklyConstrainedPointToRandom(const Fact& fact_inpu
 
 //---------------------------------------------------------------------
 
-void GeometryConfiguration::printCurrentStatus(const vector<Fact>& inputConfiguration)
+void ConstructionPlan::printCurrentStatus(const vector<Fact>& inputConfiguration)
 {
     cout << endl << "* Current status:" << endl;
     cout << "-- Input premises:" << endl;

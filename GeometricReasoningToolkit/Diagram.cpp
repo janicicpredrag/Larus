@@ -1,8 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <chrono>
-#include "Diagram.h"
 #include "Utils.h"
+#include "Diagram.h"
 #include "ADGLib_signature.h"
 #include "CartesianCalculations.h"
 
@@ -507,6 +508,19 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         }
     }
     mGCLC += "normal\n";
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool Diagram::CreateGCLCIllustration(const string& gclcOutputFilename) {
+    ofstream GCLCfile;
+    GCLCfile.open(gclcOutputFilename);
+    if (!GCLCfile.good())
+        return false;
+    GCLCfile << GetGCLCDescription();
+    GCLCfile << "\n";
+    GCLCfile.close();
+    return true;
 }
 
 // -----------------------------------------------------------------------------------------------

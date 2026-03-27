@@ -50,3 +50,16 @@ vector<string> generateBinaryVariations(int n) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+
+string GetBaseName(const string& fileName) {
+    string baseName = fileName;
+    size_t lastChar = baseName.find('.');
+    if (lastChar != string::npos)
+        baseName = baseName.substr(0, lastChar);
+    lastChar = baseName.find('/');
+    if (lastChar != string::npos)
+        baseName = baseName.substr(lastChar);
+    return baseName;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
