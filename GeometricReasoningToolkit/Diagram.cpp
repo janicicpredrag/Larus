@@ -358,7 +358,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
 //---------------------------------------------------------------------
 
 bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
-    cout << "Verifying conditions... ";
+    if (SHOW_INTERMEDIATE_RESULTS)
+        cout << "Verifying conditions... ";
     for(vector<Fact>::const_iterator it=ndgs.begin(); it!=ndgs.end(); it++) {
         string sA[10];
         Point A[10];
@@ -366,9 +367,11 @@ bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
             sA[i] = it->GetArg(i).ToTPTPString();
             A[i] = mAllPoints[sA[i]];
         }
-        cout << it->ToString();
-        if (it+1 != ndgs.end())
-            cout << ", ";
+        if (SHOW_INTERMEDIATE_RESULTS) {
+            cout << it->ToString();
+            if (it+1 != ndgs.end())
+                cout << ", ";
+        }
 
         if (it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))

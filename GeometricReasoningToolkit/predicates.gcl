@@ -1,0 +1,104 @@
+	procedure draw_top { S } {
+	}
+
+	procedure draw_bot { S } {
+	}
+
+	procedure draw_perpendicular { A B C D S } {
+	   color 100 100 100 
+	   drawline A B
+	   drawline C D
+	   color 0 0 0 
+	}
+
+	procedure draw_parallel { A B C D S } {
+	   color 100 100 100 
+	   drawline A B
+	   drawline C D
+	   color 0 0 0 
+	}
+	
+	procedure draw_parallelogram { A B C D S } {
+	   color 100 100 100 
+	   drawline A B
+  	   drawline B C
+	   drawline C D
+	   drawline D A	   
+	   color 0 0 0 
+	}
+	
+	procedure draw_collinear { A B C S } {
+	   drawline A B
+	}
+
+	procedure draw_right_angle { A B C S } {
+	   color 100 100 100 
+	   drawline A B
+	   drawline B C
+	   color 0 0 0 
+	}
+
+
+	procedure draw_between_strict { A B C S } {
+	   drawsegment A C
+	}
+
+	procedure draw_between { A B C S } {
+	   drawsegment A C
+	}
+
+	procedure draw_congruent_angles { A B C D E F S } {
+	   drawsegment A B 
+	   drawsegment B C 
+	   drawsegment D E
+	   drawsegment E F 
+	}
+
+	procedure draw_eqnative { A B S } {
+	}
+
+	procedure draw_nnneqnative { A B S } {
+	}
+
+	procedure draw_nnncollinear { A B C S } {
+	}
+
+	procedure draw_opposite_sides { X Y A B S } {
+           drawline X Y 
+           drawsegment A B
+	}
+
+	procedure draw_nnnopposite_sides { X Y A B S } {
+           drawline X Y 
+           drawsegment A B
+	}
+
+	procedure draw_cong { A B C D S } {
+	   drawsegment A B
+	   drawsegment C D
+	}
+
+	procedure draw_midpoint { M A B S } {
+	   drawsegment A B
+	}
+
+	procedure draw_congruent_triangles { A B C D E F S } {
+	   drawsegment A B 
+	   drawsegment B C
+	   drawsegment C A    
+	   drawsegment D E
+	   drawsegment E F
+	   drawsegment F D
+	}
+
+	procedure draw_isosceles { A B C S } {
+	   drawsegment A B 
+	   drawsegment B C
+	   drawsegment C A    
+	}
+
+
+
+
+
+

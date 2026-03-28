@@ -577,7 +577,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
 
       ProofExport2LaTeX ex(fileName);
-      string sFileName("proofs/PROOF" + fileName + to_string(nbAbducts) + ".tex");
+      string sFileName(OUTPUT_FOLDER + "PROOF" + fileName + to_string(nbAbducts) + ".tex");
       ex.ToFile(T, proof, sFileName, params);
 
       if (params.show){
@@ -587,7 +587,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
       if (params.mbCoq && params.number_of_abducts == 0) {
         ProofExport2Coq excoq;
-        string sFileName3("proofs/PROOF" + fileName + ".v");
+        string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + ".v");
         excoq.ToFile(T, proof, sFileName3, params);
         cout << "Verifying Coq proof ... " << flush;
         string s = "coqc -R proofs src -q  " + sFileName3;
@@ -600,7 +600,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
       if (params.mbIsa && params.number_of_abducts == 0) {
         ProofExport2Isabelle exisa;
-        string sFileName3("proofs/PROOF" + fileName + ".thy");
+        string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + ".thy");
         exisa.ToFile(T, proof, sFileName3, params);
         if (!params.sIsaLarusFolder.empty()) {
           // if params.sIsaLarusFolder is not empty, proof verification is invoked
@@ -626,7 +626,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       }
       if (params.mbMizar && params.number_of_abducts == 0) {
         ProofExport2Mizar exMizar;
-        string sFileName3("proofs/PROOF" + fileName + ".miz");
+        string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + ".miz");
         exMizar.ToFile(T, proof, sFileName3, params);
         cout << "Verifying Mizar proof ... " << flush;
         string s = "accom " + sFileName3;
@@ -641,13 +641,13 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
 
       if (params.mbGCLCaxioms) {
         ProofExport2GCLC exisa;
-        string sFileName3("proofs/PROOF" + fileName + "_illustration_axioms.gcl");
+        string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + "_illustration_axioms.gcl");
         exisa.ToFile(T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }
       if (params.mbGCLCpredicates) {
         ProofExport2GCLC_predicates exisa;
-        string sFileName3("proofs/PROOF" + fileName + "_illustration_predicates.gcl");
+        string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + "_illustration_predicates.gcl");
         exisa.ToFile(T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
       }

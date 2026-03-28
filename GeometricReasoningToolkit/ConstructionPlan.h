@@ -3,13 +3,14 @@
 #include <string>
 #include "../CLTheory/Formula.h"
 #include "ConstructionRules.h"
+#include "Diagram.h"
 
 using namespace std;
 
 class ConstructionPlan {
 
 public:
-    bool ImportDeclarativeDescription(const CLFormula& theorem);
+    bool ImportDeclarativeDescription(const CLFormula& theorem, Diagram& diagram);
     const vector<Fact>& GetProceduralDescription() { return mOutputConstruction; }
     const vector<Fact>& GetNDGs() { return mNDGs; }
     static unsigned mObjCounter;

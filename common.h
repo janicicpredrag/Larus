@@ -12,8 +12,10 @@ using namespace std;
 #define MAX_ARITY 15
 #define MAX_VARSINAXIOMS 10
 
-const string sBOT = "bot";
-const string sTOP = "top";
+inline const string sBOT = "bot";
+inline const string sTOP = "top";
+
+inline const string OUTPUT_FOLDER = "proofs/";
 
 typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
 

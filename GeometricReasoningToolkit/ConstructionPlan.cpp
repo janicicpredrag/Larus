@@ -9,11 +9,11 @@
 
 using namespace std;
 
-bool SHOW_INTERMEDIATE_RESULTS = false;
+bool SHOW_INTERMEDIATE_RESULTS = true;
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, Diagram& diagram) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
@@ -76,8 +76,18 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem) {
             printCurrentStatus(inputConfiguration);
         }
 
-        if (D2P( inputConfiguration))
-            return true;
+        if (D2P(inputConfiguration)) {
+            if (diagram.InstantiateConstructionPlan(theorem, GetProceduralDescription(), GetNDGs())) {
+                cout << "Coordinates:" << endl;
+                for(auto const& p : diagram.GetAllPoints()) {
+                    printPoint(p.first, p.second);
+                }
+                cout << endl << "Succesfully created a diagram. " << endl;
+                return true;
+            }
+        }
+
+
     }
     return false;
 }
@@ -213,10 +223,11 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
             cout << endl << " Transformation failed!" << endl;
         }
     } else {
-        cout << endl << "***** Success! *****" << endl;
+        cout << endl << "Succesfully created a construction plan" << endl;
         printCurrentStatus(inputConfiguration);
         return true;
     }
+
     return false;
 
 }

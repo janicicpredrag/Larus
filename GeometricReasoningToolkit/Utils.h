@@ -16,6 +16,8 @@ struct parameters {
     bool excludedmiddle;
 };
 
+inline const std::string GRT_OUTPUT_FOLDER = "proofs/";
+
 string double2string(double value, int precision);
 void generateKOnes(int n, int index, int ones_left, string& current_s, vector<string>& results);
 vector<string> generateBinaryVariations(int n);

@@ -71,14 +71,14 @@ void ProofExport2GCLC::OutputPrologue(ofstream &outfile, Theory &T,
   mFunctionParams << " } ";
   mFunctionParamsExists << " } ";
 
-  mIndividualOutputFile.open("proofs/" + p.GetTheoremName() + ".gcl");
+  mIndividualOutputFile.open(OUTPUT_FOLDER + p.GetTheoremName() + ".gcl");
   if (!mIndividualOutputFile)
     return;
   mIndividualOutputFile << "procedure " << mFunctionParams.str() << " { "
                         << endl;
 
   ofstream premisesExistTPTP;
-  premisesExistTPTP.open(p.GetTheoremName() + "_exists.p");
+  premisesExistTPTP.open(OUTPUT_FOLDER + p.GetTheoremName() + "_exists.p");
   if (!premisesExistTPTP)
     return;
   premisesExistTPTP << "fof(" << p.GetTheoremName()
