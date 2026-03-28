@@ -174,8 +174,8 @@ bool semanticGuidedProving(const parameters& params, Theory& T, const CLFormula&
         USING_ORIGINAL_SIGNATURE_EQ  = true;
         USING_ORIGINAL_SIGNATURE_NEG = true;
 
-        StoreConjecture(OUTPUT_FOLDER + params.inputFilename + "_sem_filter", T.mCLaxioms, allNeededAxioms, theoremName, theorem);
-        cout << "Stored as: " << OUTPUT_FOLDER + params.inputFilename + "_sem_filter" << endl << endl;
+        StoreConjecture(GRT_OUTPUT_FOLDER + params.inputFilename + "_sem_filter", T.mCLaxioms, allNeededAxioms, theoremName, theorem);
+        cout << "Stored as: " << GRT_OUTPUT_FOLDER + params.inputFilename + "_sem_filter" << endl << endl;
         break;
 
     case eInvalid:  cout << " ***** Conjecture not valid! *****" << endl; break;
@@ -190,9 +190,9 @@ bool semanticGuidedProving(const parameters& params, Theory& T, const CLFormula&
         for (unsigned int ii = 0; ii < T.mCLaxioms.size(); ii++ ) {
             allNeededAxioms.insert(T.mCLaxioms[ii].second);
         }
-        StoreConjecture(OUTPUT_FOLDER + params.inputFilename + "_sem_lemmas", T.mCLaxioms, allNeededAxioms, theoremName, theorem2);
+        StoreConjecture(GRT_OUTPUT_FOLDER + params.inputFilename + "_sem_lemmas", T.mCLaxioms, allNeededAxioms, theoremName, theorem2);
         cout << endl << " ***** Try to prove the file with the learnt lemmas inserted ****";
-        cout << endl << " ***** stored as: " << OUTPUT_FOLDER + params.inputFilename + "_sem_lemmas ****" << endl << endl;
+        cout << endl << " ***** stored as: " << GRT_OUTPUT_FOLDER + params.inputFilename + "_sem_lemmas ****" << endl << endl;
     }
 
     cout << "--------------------------------------------- " << endl;

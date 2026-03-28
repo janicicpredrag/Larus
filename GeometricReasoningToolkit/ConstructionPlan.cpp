@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool SHOW_INTERMEDIATE_RESULTS = true;
+bool SHOW_INTERMEDIATE_RESULTS = false;
 
 // -----------------------------------------------------------------------------------------------
 
