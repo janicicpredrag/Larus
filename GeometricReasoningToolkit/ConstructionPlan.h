@@ -1,7 +1,7 @@
 #ifndef _CONSPLAN
 #define _CONSPLAN
 #include <string>
-#include "../CLTheory/Theory.h"
+#include "../CLTheory/Formula.h"
 #include "ConstructionRules.h"
 
 using namespace std;
@@ -14,13 +14,6 @@ public:
     const vector<Fact>& GetNDGs() { return mNDGs; }
     static unsigned mObjCounter;
 
-    bool isFixed(const string& point) {
-        return mFixed.find(point) != mFixed.end();
-    }
-    void setFixed(const string& point) {
-        mFixed.insert(point);
-    }
-
 private:
     bool ReadConstructionRules();
     bool FixityConditionsHold(const set<string>& fixedPoints);
@@ -31,6 +24,9 @@ private:
     bool CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
     bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);
     bool D2P(vector<Fact>& inputConfiguration);
+    bool isFixed(const string& point);
+    void setFixed(const string& point);
+
     void printCurrentStatus(const vector<Fact>& inputConfiguration);
 
     CLFormula mTheorem;

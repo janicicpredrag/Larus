@@ -2,7 +2,7 @@
 #define _TPTPSupport_H  
 
 #include <string>
-#include "../CLTheory/Theory.h"
+#include "../CLTheory/Formula.h"
 
 using namespace std;
 

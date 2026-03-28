@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "ConstructionPlan.h"
 #include "ADGLib_signature.h"
+#include "../CLTheory/Theory.h"
 
 using namespace std;
 
@@ -468,6 +469,18 @@ void ConstructionPlan::printCurrentStatus(const vector<Fact>& inputConfiguration
     for (const auto& elem : mFixed)
         cout << elem << " ";
     cout << endl << "-----------------" << endl;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool ConstructionPlan::isFixed(const string& point) {
+    return mFixed.find(point) != mFixed.end();
+}
+
+// -----------------------------------------------------------------------------------------------
+
+void ConstructionPlan::setFixed(const string& point) {
+    mFixed.insert(point);
 }
 
 // -----------------------------------------------------------------------------------------------

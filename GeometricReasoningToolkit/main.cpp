@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include "Utils.h"
 #include "Diagram.h"
 #include "ConstructionPlan.h"
 #include "../CLTheory/Theory.h"
 
+namespace fs = std::filesystem;
 using namespace std;
 
 bool CreateGCLCIllustration(const Diagram& diagram, const string& gclcOutputFilename);
@@ -13,7 +15,7 @@ bool semanticGuidedProving(const parameters& paramsconst, Theory& T, const CLFor
 // ---------------------------------------------------------------------------------------------------------------------------
 
 void printHelp() {
-    cout << "Usage: semanticGuidance -h <filename> ";
+    cout << "Usage: geometricReasoningToolkit -h <filename> ";
     cout << endl;
     cout << "   -t                   translate from declarative to procedural" << endl << endl;
     cout << "   -i                   create GCLC illustration for the premises" << endl << endl;
@@ -48,7 +50,7 @@ int main(int argc, char **argv) {
         }
 
         // semantic guider proving
-        else if (argv[i][0] == '-' && argv[i][1] == 'i') {
+        else if (argv[i][0] == '-' && argv[i][1] == 's') {
             params.semanticGuidedProving = true;
         }
         // setting time limit
@@ -79,7 +81,6 @@ int main(int argc, char **argv) {
             return -1;
         }
     }
-    string baseName = GetBaseName(params.inputFilename);
 
     Theory T;
     CLFormula theorem;
@@ -102,7 +103,7 @@ int main(int argc, char **argv) {
             return -1;
         }
 
-        if (diagram.Instantiate(theorem, cp.GetProceduralDescription(), cp.GetNDGs())) {
+        if (diagram.InstantiateConstructionPlan(theorem, cp.GetProceduralDescription(), cp.GetNDGs())) {
             cout << "Coordinates:" << endl;
             for(auto const& p : diagram.GetAllPoints()) {
                 printPoint(p.first, p.second);
@@ -121,8 +122,14 @@ int main(int argc, char **argv) {
             cout << endl << "Conjecture stored using function symbols as: " << params.inputFilename + "_func" << endl;
         }
 
+        // string baseName = GetBaseName(params.inputFilename);
+        fs::path p = params.inputFilename;
+        string baseName = p.stem();
+        cout << "Basenmae " << baseName << endl;
+
+
         if (params.createGCLCillustration) {
-            if (diagram.CreateGCLCIllustration("proofs/" + baseName + ".gcl"))
+            if (diagram.StoreGCLCIllustration("proofs/" + baseName + ".gcl"))
                 cout << "GCLC description of the premises stored in the file proofs/" + baseName + ".gcl." << endl << endl;
             else {
                 cout << "Cannot open output GCLC file" << baseName << "." << endl << endl;
@@ -132,6 +139,13 @@ int main(int argc, char **argv) {
 
         if (params.semanticGuidedProving) {
             semanticGuidedProving(params, T, theorem, theoremName, diagram);
+
+            cout << "Ime : " << "proofs/" + baseName + "_exists.gcl" << endl;
+
+            if (diagram.StoreGCLCExistProcedure("proofs/" + baseName + "_exists.gcl", theorem, theoremName))
+                cout << "GCLC description of existence of premises stored in the file proofs/" + baseName + "_exists.gcl." << endl << endl;
+            else
+                cout << "Cannot open output GCLC file." << endl << endl;
         }
     }
 

@@ -7,6 +7,7 @@
 #include "Diagram.h"
 #include "TPTPSupport.h"
 #include "LemmaGenerator.h"
+#include "../CLTheory/Theory.h"
 
 using namespace std;
 
@@ -198,22 +199,6 @@ bool semanticGuidedProving(const parameters& params, Theory& T, const CLFormula&
     cout << "--------------------------------------------- " << endl;
     cout << "Elapsed time: " << fixed << setprecision(2) << timer.elapsed() << "s"  << endl;
     cout << "--------------------------------------------- " << endl << endl;
-
-    ofstream GCLCfile;
-    GCLCfile.open("proofs/" + theoremName + "_exists.gcl");
-    if (GCLCfile.good()) {
-        GCLCfile << "procedure " + theoremName + "_exists { ";
-        for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++) {
-            GCLCfile << theorem.GetUnivVar(i) << " ";
-        }
-        GCLCfile << "}\n{\n";
-        GCLCfile << diagram.GetGCLCDescription();
-        GCLCfile << "}\n\n";
-        GCLCfile.close();
-        cout << "GCLC description of premises stored in the file proofs/" + theoremName + "_exists.gcl." << endl << endl;
-    } else {
-        cout << "Cannot open output GCLC file." << endl << endl;
-    }
 
     return 0;
 }

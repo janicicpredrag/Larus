@@ -58,7 +58,7 @@ string GetBaseName(const string& fileName) {
         baseName = baseName.substr(0, lastChar);
     lastChar = baseName.find('/');
     if (lastChar != string::npos)
-        baseName = baseName.substr(lastChar);
+        baseName = baseName.substr(lastChar+1);
     return baseName;
 }
 

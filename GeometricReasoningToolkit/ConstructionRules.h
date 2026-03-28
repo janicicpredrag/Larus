@@ -2,7 +2,7 @@
 #define _CONSRULES
 #include <string>
 #include <map>
-#include "../CLTheory/Theory.h"
+#include "../CLTheory/Formula.h"
 
 using namespace std;
 
@@ -11,9 +11,10 @@ class ConstructionPlan;
 class Rule {
 public:
     friend class ConstructionPlan;
+
+    bool ReadFromCLAxiom(const pair<CLFormula,string> ax);
     bool Match(const Fact& f, map<string,string>& instantiation);
     Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints);
-    bool ReadFromCLAxiom(const pair<CLFormula,string> ax);
 
 private:
     Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints);

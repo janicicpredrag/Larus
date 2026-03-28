@@ -16,7 +16,7 @@ extern bool SHOW_INTERMEDIATE_RESULTS;
 
 //---------------------------------------------------------------------
 
-bool Diagram::Instantiate(const CLFormula& theorem, const vector<Fact>& constructionPlan, const vector<Fact>& ndgs)  {
+bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector<Fact>& constructionPlan, const vector<Fact>& ndgs)  {
 
     srand(1);
     auto now = chrono::system_clock::now();
@@ -512,13 +512,32 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool Diagram::CreateGCLCIllustration(const string& gclcOutputFilename) {
+bool Diagram::StoreGCLCIllustration(const string& gclcOutputFilename) const {
     ofstream GCLCfile;
     GCLCfile.open(gclcOutputFilename);
     if (!GCLCfile.good())
         return false;
     GCLCfile << GetGCLCDescription();
     GCLCfile << "\n";
+    GCLCfile.close();
+    return true;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool Diagram::StoreGCLCExistProcedure(const string& gclcOutputFilename, const CLFormula& theorem, const string& theoremName) const {
+    ofstream GCLCfile;
+    GCLCfile.open(gclcOutputFilename);
+    if (!GCLCfile.good())
+        return false;
+
+    GCLCfile << "procedure " + theoremName + "_exists { ";
+    for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++) {
+        GCLCfile << theorem.GetUnivVar(i) << " ";
+    }
+    GCLCfile << "}\n{\n";
+    GCLCfile << GetGCLCDescription();
+    GCLCfile << "}\n\n";
     GCLCfile.close();
     return true;
 }

@@ -2,7 +2,7 @@
 #define _LEMMAGENERATOR
 #include <string>
 #include <map>
-#include "../CLTheory/Theory.h"
+#include "../CLTheory/Formula.h"
 #include "CartesianCalculations.h"
 
 using namespace std;
