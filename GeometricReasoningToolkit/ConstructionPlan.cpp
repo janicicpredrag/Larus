@@ -9,11 +9,11 @@
 
 using namespace std;
 
-bool SHOW_INTERMEDIATE_RESULTS = false;
+bool SHOW_INTERMEDIATE_RESULTS = true;
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, Diagram& diagram) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool noFixedPoints, Diagram& diagram) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
@@ -32,8 +32,15 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, Di
 
     null_fact.SetName("null");
 
-    cout << " ordered decreasing by the count...\n" << endl;
-    vector<string> variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
+    vector<string> variations;
+    if (noFixedPoints) {
+        // only one variation considered - without additional fixed points
+        variations.resize(1);
+        variations[0] = string(mTheorem.GetNumOfUnivVars(), '1');
+    } else {
+        cout << " ordered decreasing by the count...\n" << endl;
+        variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
+    }
 
     for (size_t i = 0; i < variations.size(); i++) {
         if (SHOW_INTERMEDIATE_RESULTS) {
@@ -97,10 +104,10 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, Di
 bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
 
     bool update = false, overconstrained  = false;
-    bool goAnotherPass = false;
+    bool outer_update = false;
     Fact constraint;
     do {
-        goAnotherPass = false;
+        outer_update = false;
 
         for (const auto& constraint : inputConfiguration) {
             if (constraint.GetName() != "null" &&
@@ -138,7 +145,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                             printCurrentStatus(inputConfiguration);
                         }
                     }
-                    goAnotherPass = update = true;
+                    outer_update = update = true;
 
                     for (const auto& constraint : inputConfiguration) {
                         if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
@@ -162,7 +169,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
 
         if (!inputConfiguration.empty()) {
 
-            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !goAnotherPass; )  {
+            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !outer_update; )  {
                 string P = it->GetArg(0).ToTPTPString();
                 Fact output;
                 if ((it->GetName() == ON_LINE || it->GetName() == ON_CIRCLE)
@@ -172,7 +179,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                     && !InOtherConstraints(inputConfiguration, it, P)
                     && WeaklyConstrainedPointToRandom(*it, output)) {
 
-                    goAnotherPass = true;
+                    outer_update = true;
                     if (SHOW_INTERMEDIATE_RESULTS) {
                         cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
                         cout << "     " << *it << " -> " << output << endl;
@@ -189,7 +196,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
             }
 
 
-            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !goAnotherPass; )  {
+            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !outer_update; )  {
                 string P = it->GetArg(0).ToTPTPString();
                 Fact output;
                 if ((it->GetName() == ON_LINE || it->GetName() == ON_CIRCLE)
@@ -198,7 +205,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                     && !isFixed(P)
                     //&& !InOtherConstraints(it, P)
                     && WeaklyConstrainedPointToRandom(*it, output)) {
-                    goAnotherPass = true;
+                    outer_update = true;
                     if (SHOW_INTERMEDIATE_RESULTS) {
                         cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
                         cout << "     " << *it << " -> " << output << endl;
@@ -215,7 +222,7 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
             }
         }
 
-    } while(goAnotherPass);
+    } while(outer_update);
 
     if (!inputConfiguration.empty()) {
         if (SHOW_INTERMEDIATE_RESULTS) {
@@ -290,11 +297,12 @@ bool ConstructionPlan::FixityConditionsHold(const set<string>& fixedPoints) {
 
 bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f) {
     if (f.GetName() == EQ_NATIVE_NAME) {
-        if (f.GetArg(1).ToTPTPString() == "freepoint(null, null)") {
+        if (f.GetArg(1).ToTPTPString() == "freepoint(null, null)" &&
+            !isFixed(f.GetArg(0).ToTPTPString())) {
             setFixed(f.GetArg(0).ToTPTPString());
+            mOutputConstruction.push_back(f);
         }
-        mOutputConstruction.push_back(f);
-        return true;
+                return true;
     }
 
     if (f.GetName() == INTER_L_L ||

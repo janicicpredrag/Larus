@@ -10,7 +10,7 @@ using namespace std;
 class ConstructionPlan {
 
 public:
-    bool ImportDeclarativeDescription(const CLFormula& theorem, Diagram& diagram);
+    bool ImportDeclarativeDescription(const CLFormula& theorem, bool noFixedPoints, Diagram& diagram);
     const vector<Fact>& GetProceduralDescription() { return mOutputConstruction; }
     const vector<Fact>& GetNDGs() { return mNDGs; }
     static unsigned mObjCounter;

@@ -19,6 +19,7 @@ void printHelp() {
     cout << endl;
     cout << "   -t                   translate from declarative to procedural" << endl << endl;
     cout << "   -i                   create GCLC illustration for the premises" << endl << endl;
+    cout << "   -f                   no fixed points" << endl << endl;
     cout << "   -s                   use semantic guided proving" << endl;
     cout << "   -l<time_limit>       for time limit, default: 10s" << endl;
     cout << "   -p<prover>           v for vampire, e for eprover, default: vampire" << endl;
@@ -32,6 +33,7 @@ int main(int argc, char **argv) {
 
     params.declarative2procedural = false;
     params.createGCLCillustration = false;
+    params.noFixedPoints = false;
     params.semanticGuidedProving = false;
     params.time_limit = 30;
     params.prover = eVampire;
@@ -47,6 +49,11 @@ int main(int argc, char **argv) {
         // create GCLC illustration
         else if (argv[i][0] == '-' && argv[i][1] == 'i') {
             params.createGCLCillustration = true;
+        }
+
+        // don't introduce fixed points (apart from given ones)
+        else if (argv[i][0] == '-' && argv[i][1] == 'f') {
+            params.noFixedPoints = true;
         }
 
         // semantic guider proving
@@ -96,7 +103,7 @@ int main(int argc, char **argv) {
 
     if (params.declarative2procedural || params.createGCLCillustration
         || params.semanticGuidedProving) {
-        if (cp.ImportDeclarativeDescription(theorem, diagram)) {
+        if (cp.ImportDeclarativeDescription(theorem, params.noFixedPoints, diagram)) {
             cout << endl << "Succesfully created a construction plan. " << endl;
         } else {
             cout  << endl << "Failed to create a construction plan. " << endl << endl;

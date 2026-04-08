@@ -10,6 +10,7 @@ struct parameters {
     string inputFilename;
     bool declarative2procedural;
     bool createGCLCillustration;
+    bool noFixedPoints;
     bool semanticGuidedProving;
     double time_limit;
     prover_name prover;
