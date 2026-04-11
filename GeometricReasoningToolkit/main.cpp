@@ -112,10 +112,10 @@ int main(int argc, char **argv) {
 
         if (params.declarative2procedural) {
             ConjunctionFormula premises;
-            for(unsigned i=0; i < cp.GetProceduralDescription().size(); i++)
-                premises.Add(cp.GetProceduralDescription()[i]);
-            for(unsigned i=0; i < cp.GetNDGs().size(); i++)
-                premises.Add(cp.GetNDGs()[i]);
+            for(const auto& f : cp.GetProceduralDescription())
+                premises.Add(f);
+            for(const auto& ndg : cp.GetNDGs())
+                premises.Add(ndg);
             theorem.SetBody(premises, theorem.GetGoal());
             StoreConjecture(GRT_OUTPUT_FOLDER + params.inputFilename + "_func", T.mCLaxioms, theoremName, theorem);
             cout << endl << "Conjecture stored using function symbols as: " << params.inputFilename + "_func" << endl;

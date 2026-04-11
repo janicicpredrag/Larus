@@ -16,7 +16,7 @@ extern bool SHOW_INTERMEDIATE_RESULTS;
 
 //---------------------------------------------------------------------
 
-bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector<Fact>& constructionPlan, const vector<Fact>& ndgs)  {
+bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector<Fact>& constructionPlan, const set<Fact>& ndgs)  {
 
     srand(1);
     auto now = chrono::system_clock::now();
@@ -357,10 +357,10 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
 
 //---------------------------------------------------------------------
 
-bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
+bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
     if (SHOW_INTERMEDIATE_RESULTS)
         cout << "Verifying conditions... ";
-    for(vector<Fact>::const_iterator it=ndgs.begin(); it!=ndgs.end(); it++) {
+    for(auto it=ndgs.begin(); it!=ndgs.end(); it++) {
         string sA[10];
         Point A[10];
         for (unsigned i = 0; i < it->GetArity(); i++) {
@@ -368,9 +368,9 @@ bool Diagram::VerifyConditions(const vector<Fact> &ndgs) {
             A[i] = mAllPoints[sA[i]];
         }
         if (SHOW_INTERMEDIATE_RESULTS) {
-            cout << it->ToString();
-            if (it+1 != ndgs.end())
-                cout << ", ";
+            printLog(it->ToString());
+            if (next(it) != ndgs.end())
+                printLog(", ");
         }
 
         if (it->GetName() == NOT_COLL) {

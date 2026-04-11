@@ -33,7 +33,7 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
 
     for (size_t j = 0; j < cl.GetGoal().GetElement(0).GetSize(); j++) {
         Fact f = cl.GetGoal().GetElement(0).GetElement(j);
-        if (f.GetName() == "top")
+        if (f.GetName() == sTOP)
             continue;
         else if (f.GetName() == ON_LINE || f.GetName() == ON_CIRCLE) {
             mAlreadyFixed.insert(f.GetArg(1).ToTPTPString());

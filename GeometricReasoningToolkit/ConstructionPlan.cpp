@@ -3,13 +3,12 @@
 #include <vector>
 #include <algorithm>
 #include "Utils.h"
+#include "TPTPSupport.h"
 #include "ConstructionPlan.h"
 #include "ADGLib_signature.h"
 #include "../CLTheory/Theory.h"
 
 using namespace std;
-
-bool SHOW_INTERMEDIATE_RESULTS = true;
 
 // -----------------------------------------------------------------------------------------------
 
@@ -23,6 +22,13 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     if (!ReadConstructionRules()) {
         cout << endl << "Failed to read the construction rules... " << endl;
     }
+
+    CLFormula thm_;
+    string thmname_;
+    cout << endl << "Reading deduction rules... " << endl;
+    if (ReadTPTPConjecture("deduction_rules.p", mDeductionRules, thm_, thmname_)
+        != eNoConjectureGiven)
+        return false;
 
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
@@ -43,22 +49,17 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     }
 
     for (size_t i = 0; i < variations.size(); i++) {
-        if (SHOW_INTERMEDIATE_RESULTS) {
-            cout << endl << endl << "***** Free points fixed: ";
-            cout << variations[i] << " ";
-        }
+        printLog("\n\n***** Free points fixed: ");
+        printLog(variations[i] + " ");
+
         vector<string> fixedPoints;
         for (size_t j = 0; j < variations[i].length(); j++) {
             if (variations[i][j] == '0') {
                 fixedPoints.push_back(mTheorem.GetUnivVar(j));
-                if (SHOW_INTERMEDIATE_RESULTS) {
-                    cout << mTheorem.GetUnivVar(j) << " ";
-                }
+                printLog(mTheorem.GetUnivVar(j) + " ");
             }
         }
-        if (SHOW_INTERMEDIATE_RESULTS) {
-            cout << "#";
-        }
+        printLog("#");
 
         vector<Fact> inputConfiguration;
         inputConfiguration.reserve(1000);
@@ -78,10 +79,8 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
             mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
         }
 
-        if (SHOW_INTERMEDIATE_RESULTS) {
-            cout << endl;
-            printCurrentStatus(inputConfiguration);
-        }
+        cout << endl;
+        printCurrentStatus(inputConfiguration);
 
         if (D2P(inputConfiguration)) {
             if (diagram.InstantiateConstructionPlan(theorem, GetProceduralDescription(), GetNDGs())) {
@@ -93,8 +92,6 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
                 return true;
             }
         }
-
-
     }
     return false;
 }
@@ -109,28 +106,43 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
     do {
         outer_update = false;
 
-        for (const auto& constraint : inputConfiguration) {
-            if (constraint.GetName() != "null" &&
-                IsConfigurationOverconstrained(constraint)) {
-                if (SHOW_INTERMEDIATE_RESULTS) {
-                    cout << "The system seems to be OVERCONSTRAINED:" << endl;
-                    cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
-                    cout << "   Transformation failed!" << endl;
+        for (auto& constraint : inputConfiguration) {
+            if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
+                if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
+                    printLog("\nValid fact, nothing to do, deleted.\n");
+                    constraint = null_fact;
+                } else {
+                    printLog("The system seems to be OVERCONSTRAINED:\n");
+                    printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
+                    printLog("   Transformation failed!\n");
+                    return false;
                 }
-                return false;
             }
         }
 
         do {
             update = false;
-            if (SHOW_INTERMEDIATE_RESULTS) {
-                cout << endl << "Facts to constraints:" << endl;
-            }
+            printLog("\nFacts to constraints:\n");
+
             for (auto& fact : inputConfiguration) {
                 if (fact == null_fact) continue; // Skip already nullified facts
-                if (SHOW_INTERMEDIATE_RESULTS) {
-                cout << endl << " -----> Processing:  " << fact ;
+                printLog("\n -----> Processing:  " + fact.ToString());
+
+
+                if (IsConfigurationOverconstrained(fact)) {
+                    if (isConsequence(mOutputConstruction, mNDGs, fact)) {
+                        printLog("\nValid fact, nothing to do, deleted.\n");
+                        fact = null_fact;
+                    } else {
+                        printLog("The system seems to be OVERCONSTRAINED:\n");
+                        printLog("   Constraint (with all points fixed) critical:  " + fact.ToString() + "\n");
+                        printLog("   Transformation failed!\n");
+                        return false;
+                    }
                 }
+
+
+
                 if (FactToLocationConstraint(inputConfiguration, fact)) {
                     fact = null_fact;
                     if (SHOW_INTERMEDIATE_RESULTS) {
@@ -146,18 +158,24 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                         }
                     }
                     outer_update = update = true;
+                }
 
-                    for (const auto& constraint : inputConfiguration) {
+                    /*
+                    for (auto& constraint : inputConfiguration) {
                         if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
-                            if (SHOW_INTERMEDIATE_RESULTS) {
-                                cout << "The system seems to be OVERCONSTRAINED:" << endl;
-                                cout << "   Constraint (with all points fixed) critical:  " << constraint << endl;
-                                cout << "   Transformation failed!" << endl;
+                            if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
+                                printLog("\nValid fact, nothing to do, deleted.\n");
+                                constraint = null_fact;
+                            } else {
+                                printLog("The system seems to be OVERCONSTRAINED:\n");
+                                printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
+                                printLog("   Transformation failed!\n");
+                                return false;
                             }
-                            return false;
                         }
                     }
-                }
+                    */
+
             }
             // Clear all redundant constraints
             inputConfiguration.erase(
@@ -180,10 +198,9 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                     && WeaklyConstrainedPointToRandom(*it, output)) {
 
                     outer_update = true;
-                    if (SHOW_INTERMEDIATE_RESULTS) {
-                        cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
-                        cout << "     " << *it << " -> " << output << endl;
-                    }
+                    printLog("\n\nWeakly constrained points " + P + " randomized: \n");
+                    printLog("     " + it->ToString() + " -> " + output.ToString() + "\n");
+
                     it = inputConfiguration.erase(it);
                     setFixed(P);
                     mOutputConstruction.push_back(output);
@@ -194,6 +211,22 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                 } else
                     it++;
             }
+
+/*
+            for (auto& constraint : inputConfiguration) {
+                if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
+                    if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
+                        printLog("\nValid fact, nothing to do, deleted.\n");
+                        constraint = null_fact;
+                    } else {
+                        printLog("The system seems to be OVERCONSTRAINED:\n");
+                        printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
+                        printLog("   Transformation failed!\n");
+                        return false;
+                    }
+                }
+            }
+*/
 
 
             for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !outer_update; )  {
@@ -206,10 +239,8 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
                     //&& !InOtherConstraints(it, P)
                     && WeaklyConstrainedPointToRandom(*it, output)) {
                     outer_update = true;
-                    if (SHOW_INTERMEDIATE_RESULTS) {
-                        cout << endl << endl << "Weakly constrained points " << P << " randomized: " << endl;
-                        cout << "     " << *it << " -> " << output << endl;
-                    }
+                    printLog("\n\nWeakly constrained points " + P + " randomized: \n");
+                    printLog("     " + it->ToString() + " -> " + output.ToString() + "\n");
                     setFixed(P);
                     it = inputConfiguration.erase(it);
                     mOutputConstruction.push_back(output);
@@ -225,10 +256,8 @@ bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
     } while(outer_update);
 
     if (!inputConfiguration.empty()) {
-        if (SHOW_INTERMEDIATE_RESULTS) {
-            cout << endl << " Don't know to handle remaining constraints!";
-            cout << endl << " Transformation failed!" << endl;
-        }
+        cout << endl << " Don't know to handle remaining constraints!";
+        cout << endl << " Transformation failed!" << endl;
     } else {
         cout << endl << "Succesfully created a construction plan" << endl;
         printCurrentStatus(inputConfiguration);
@@ -261,18 +290,17 @@ bool ConstructionPlan::IsConfigurationOverconstrained(const Fact& f) {
 // -----------------------------------------------------------------------------------------------
 
 bool ConstructionPlan::ReadConstructionRules() {
-    Theory ConstructionsTheory;
     CLFormula thm;
     string thmname;
 
-    if (ReadTPTPConjecture("construction_rules.p", ConstructionsTheory, thm, thmname)
+    if (ReadTPTPConjecture("construction_rules.p", mConstructionsTheory, thm, thmname)
         != eNoConjectureGiven)
         return false;
 
     mRules.clear();
-    for (size_t i = 0; i < ConstructionsTheory.mCLaxioms.size(); i++) {
+    for (size_t i = 0; i < mConstructionsTheory.mCLaxioms.size(); i++) {
         Rule r;
-        r.ReadFromCLAxiom(ConstructionsTheory.mCLaxioms[i]);
+        r.ReadFromCLAxiom(mConstructionsTheory.mCLaxioms[i]);
         mRules.push_back(r);
     }
 
@@ -302,7 +330,7 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
             setFixed(f.GetArg(0).ToTPTPString());
             mOutputConstruction.push_back(f);
         }
-                return true;
+        return true;
     }
 
     if (f.GetName() == INTER_L_L ||
@@ -324,9 +352,16 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
         f.GetName() == NOT_COLL ||
         f.GetName() == ON_OPP_SIDES ||
         f.GetName() == ON_SAME_SIDE) {
-        mNDGs.push_back(f);
+        mNDGs.insert(f);
         return true;
     }
+
+//    vector<Fact> v;
+//    if (isConsequence(v, v, f)) {
+//        if (SHOW_INTERMEDIATE_RESULTS)
+//            cout << endl << "Valid fact, nothing to do, deleted." << endl;
+//        return true;
+//    }
 
     for(auto it = mRules.begin(); it != mRules.end(); it++) {
         map<string, string> instantiation;
@@ -336,6 +371,7 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
         if (it->Match(f,instantiation)) {
             vector<string> auxPoints;
             Rule r = it->Instantiate(instantiation, auxPoints);
+
             for(auto& ap: auxPoints)
                 setFixed(ap);
             if (FixityConditionsHold(r.mAlreadyFixed)) {
@@ -347,7 +383,7 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
                 for (size_t i = 0; i < r.mOutput.GetSize(); i++)
                     mOutputConstruction.push_back(r.mOutput.GetElement(i));
                 for (size_t i = 0; i < r.mNDG.GetSize(); i++)
-                    mNDGs.push_back(r.mNDG.GetElement(i));
+                    mNDGs.insert(r.mNDG.GetElement(i));
 
                 for (const auto& var: r.mBecomeFixed)
                     setFixed(var);
@@ -417,7 +453,7 @@ bool ConstructionPlan::CombineTwoConstraintsToFunctionalForm(const string& P, co
                           f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + ")");
             if (f2.GetArg(2).ToTPTPString()==f1.GetArg(1).ToTPTPString() ||
                 f2.GetArg(2).ToTPTPString()==f1.GetArg(2).ToTPTPString()) {
-                mNDGs.push_back(string(NOT_EQ) + "(" + P + ", " + f2.GetArg(2).ToTPTPString() + ")");
+                mNDGs.insert(string(NOT_EQ) + "(" + P + ", " + f2.GetArg(2).ToTPTPString() + ")");
             }
             return true;
         }
@@ -427,7 +463,7 @@ bool ConstructionPlan::CombineTwoConstraintsToFunctionalForm(const string& P, co
                       f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + "," +
                       f2.GetArg(1).ToTPTPString() + "," + f2.GetArg(2).ToTPTPString() + ")");
         if (f2.GetArg(2).ToTPTPString()==f1.GetArg(2).ToTPTPString()) {
-            mNDGs.push_back(string(NOT_EQ) + "(" + P + ", " + f1.GetArg(2).ToTPTPString() + ")");
+            mNDGs.insert(string(NOT_EQ) + "(" + P + ", " + f1.GetArg(2).ToTPTPString() + ")");
         }
         return true;
     }
@@ -467,6 +503,46 @@ bool ConstructionPlan::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fa
         return true;
     }
     return false;
+}
+
+//---------------------------------------------------------------------
+
+bool ConstructionPlan::isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f) {
+    vector<string> usedAxioms;
+    CLFormula conjecture;
+    set<string> vars;
+
+    ConjunctionFormula goal_cf;
+    DNFFormula goal;
+    goal_cf.Add(f);
+    goal.Add(goal_cf);
+
+    ConjunctionFormula premises;
+    for(const auto& p : con) {
+        premises.Add(p);
+        if (p.GetName() == EQ_NATIVE_NAME)
+            vars.insert(p.GetArg(0).ToTPTPString());
+        else for (size_t l = 0; l < p.GetArity(); l++)
+            vars.insert(p.GetArg(l).ToTPTPString());
+    }
+    for(const auto& p : ndg) {
+        premises.Add(p);
+        for (size_t l = 0; l < p.GetArity(); l++)
+            vars.insert(p.GetArg(l).ToTPTPString());
+    }
+
+    for (size_t l = 0; l < f.GetArity(); l++)
+        vars.insert(f.GetArg(l).ToTPTPString());
+
+    conjecture.SetBody(premises, goal);
+    for(const auto& v : vars)
+        conjecture.AddUnivVar(v);
+
+    // cout << endl << "Trying to prove " << conjecture << endl;
+
+    return (CheckValidity(eVampire, "currentFact",
+               mDeductionRules.mCLaxioms,conjecture, 10, usedAxioms) == eValid);
+
 }
 
 //---------------------------------------------------------------------

@@ -19,9 +19,14 @@ struct parameters {
 
 inline const std::string GRT_OUTPUT_FOLDER = "proofs/";
 
+extern bool SHOW_INTERMEDIATE_RESULTS;
+
 string double2string(double value, int precision);
 void generateKOnes(int n, int index, int ones_left, string& current_s, vector<string>& results);
 vector<string> generateBinaryVariations(int n);
 string GetBaseName(const string& fileName);
+void printLog(const string& s);
+
+//---------------------------------------------------------------------
 
 #endif

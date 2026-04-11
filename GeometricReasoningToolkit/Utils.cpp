@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <algorithm>
 #include <iomanip>
@@ -5,6 +6,8 @@
 #include "Utils.h"
 
 using namespace std;
+
+bool SHOW_INTERMEDIATE_RESULTS = true;
 
 //---------------------------------------------------------------------
 
@@ -60,6 +63,14 @@ string GetBaseName(const string& fileName) {
     if (lastChar != string::npos)
         baseName = baseName.substr(lastChar+1);
     return baseName;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+
+void printLog(const string& s)
+{
+    if (SHOW_INTERMEDIATE_RESULTS)
+        cout << s;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

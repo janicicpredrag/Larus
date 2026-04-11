@@ -10,7 +10,7 @@ using namespace std;
 class Diagram {
 
 public:
-    bool InstantiateConstructionPlan(const CLFormula& theorem, const vector<Fact>& constructionPlan, const vector<Fact>& ndgs);
+    bool InstantiateConstructionPlan(const CLFormula& theorem, const vector<Fact>& constructionPlan, const set<Fact>& ndgs);
     const map<string,Point>& GetAllPoints() const;
     const map<string,Point>& GetInitialPoints() const;
     bool StoreGCLCIllustration(const string& gclcOutputFilename) const;
@@ -18,7 +18,7 @@ public:
 
 private:
     bool InstantiateOnce(const vector<Fact>& construction);
-    bool VerifyConditions(const vector<Fact>& ndgs);
+    bool VerifyConditions(const set<Fact>& ndgs);
     void DrawBasicFigure(const CLFormula& theorem);
     const string& GetGCLCDescription() const;
 
