@@ -618,9 +618,7 @@ bool Theory::IsConstant(Term t) const {
        it != mConstants.end(); it++)
     if (*it == s)
       return true;
-  for (set<string>::iterator it = mConstantsPermissible.begin();
-       it != mConstantsPermissible.end(); it++)
-    if (*it == s)
+  if (mConstantsPermissible.find(s) != mConstantsPermissible.end())
       return true;
   return false;
 }
@@ -654,7 +652,7 @@ void Theory::InstantiateGoal(const CLFormula &cl,
   fout = f;
   size_t size = f.GetSize();
   for (size_t i = 0; i < size; i++) {
-    InstantiateGoalDisj(cl, i, instantiation, cnf, bInstantiateVars);
+        InstantiateGoalDisj(cl, i, instantiation, cnf, bInstantiateVars);
     fout.SetElement(i, cnf);
   }
 }

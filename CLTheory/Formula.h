@@ -188,7 +188,7 @@ public:
   void Clear() { mConjunction.clear(); }
   static bool less(const ConjunctionFormula &lhs,
                    const ConjunctionFormula &rhs);
-  const vector<Fact> &GetConjunction() const { return mConjunction; }
+  const vector<Fact>& GetConjunction() const { return mConjunction; }
   bool Equals(const ConjunctionFormula &f) const;
   bool UsesNativeEq() const;
 
@@ -213,7 +213,7 @@ public:
   //bool Read(const string &s);
   bool Read(CLFormula* p = NULL);
   
-  const vector<ConjunctionFormula> *GetDNF() const { return &mDNF; }
+  const vector<ConjunctionFormula>& GetDNF() const { return mDNF; }
   bool Equals(const DNFFormula &f) const;
   void Clear() { mDNF.clear(); }
 

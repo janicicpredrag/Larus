@@ -18,23 +18,25 @@ public:
   bool ProveFromPremises(const DNFFormula &formula, CLProof &proof);
   virtual void SetTimeLimit(unsigned timeLimit) {
     mParams.time_limit = timeLimit;
-    mpDB->SetTimeLimit(timeLimit);
+    mpDB.SetTimeLimit(timeLimit);
   }
   virtual PROVING_ENGINE GetKind() { return eSTL_ProvingEngine; }
 
   bool ApplyAxiom(const CLFormula &ax, ConjunctionFormula &fin, DNFFormula &mp,
-                  vector<pair<string, string>> &instantiation) {
-    return mpDB->ApplyAxiom(ax, fin, mp, instantiation);
+                  vector<pair<string, string>>& instantiation) {
+    return mpDB.ApplyAxiom(ax, fin, mp, instantiation);
   }
-  bool ApplyExcludedMiddle(DNFFormula &mp);
+//  bool ApplyExcludedMiddle(DNFFormula &mp);
   bool ApplyEFQ();
   bool ApplyByAssumption(const DNFFormula &f, ConjunctionFormula &fin);
   bool ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs);
-  FactsDatabase *GetDatabase() { return mpDB; }
+  FactsDatabase& GetDatabase() { return mpDB; }
 
 private:
-  STLFactsDatabase *mpDB;
+  STLFactsDatabase mpDB;
   Timer mTimer;
+
+  set<string> mExi_vars;
 };
 
 #endif // STLPROVINGENGINE_H

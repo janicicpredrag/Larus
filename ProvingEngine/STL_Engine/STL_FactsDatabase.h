@@ -3,6 +3,7 @@
 
 #include <set>
 #include <map>
+#include <queue>
 #include <vector>
 #include "CLTheory/Formula.h"
 #include "CLTheory/Theory.h"
@@ -17,34 +18,44 @@ class STLFactsDatabase : public FactsDatabase
 {
 public:
     STLFactsDatabase(Theory* T) : FactsDatabase(T) {}
+
     bool AddFact(const Fact& f);
     bool AddCases(const DNFFormula& f);
+    bool ApplyAxiom(const CLFormula& axiom,  ConjunctionFormula& premises_inst, DNFFormula& fout, vector< pair<string,string> >& orderedInstantiation);
+    bool GoalReached(const DNFFormula &dnf, const set<string>& exi_vars, ConjunctionFormula& cf);
 
-    bool ApplyAxiom(const CLFormula& cl,  ConjunctionFormula& fin, DNFFormula& fout, vector< pair<string,string> >& orderedInstantiation);
-    bool ApplyExcludedMiddle(DNFFormula& fout);
-
-    bool HoldsDisjunction(const DNFFormula& dnf, ConjunctionFormula& fin, vector<Fact>& AuxFacts);
-
-    set<Fact>* GetDatabase() { return &mDatabase; }
+    set<Fact>& GetDatabase() { return mDatabase; }
     void SetDatabase(set<Fact>& db) { mDatabase = db; }
-    vector<pair<DNFFormula, unsigned> >* GetDatabaseCases() { return &mDatabaseCases; }
+    deque<pair<DNFFormula, unsigned> >& GetDatabaseCases() { return mDatabaseCases; }
+    void SetDatabaseCases(const deque<pair<DNFFormula, unsigned> >& db) { mDatabaseCases = db; }
 
 private:
-    bool FindFact(const Fact& );
-    bool FindInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation);
-    bool NextInstantiationOfUnivVars(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string, set<string>::iterator>& VarsNotInPremises, map<string,string>& instantiation);
-    bool PremisesTrueInInstantiation(const CLFormula& cl, ConjunctionFormula& conj_inst, vector<std::set<Fact>::iterator>& current, map<string,string>& instantiation);
 
-    bool MatchConjunction(const ConjunctionFormula& conj, ConjunctionFormula& conj_inst, size_t
-                          i, map<string,string>& instantiation, bool checkingPremises, vector<Fact>& AuxFacts);
-    bool MatchFact(const Fact& f1, const Fact& f2, map<string,string>& instantiation, bool checkingPremises,vector<Fact>& AuxFacts);
-    bool PartialMatchFact(const Fact& f1, const Fact& f2, map<string,string>& instantiation) const;
+    bool InstantiateAxiom(const CLFormula& axiom, ConjunctionFormula& conj_inst, DNFFormula& goal_inst, map<string,string>& instantiation, const set<string>& VarsNotInPremises);
+    bool MatchAllPremises(const CLFormula &axiom,
+                          unsigned current_index, ConjunctionFormula &premises_inst, DNFFormula& goal_inst,
+                          map<string, string> &instantiation, const set<string>& varsNotInPremises );
+
+    bool DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation);
+    bool ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation);
+    bool FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation);
+    bool MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation);
+
+    bool GoalConjunctionHolds(const ConjunctionFormula &conjf, const set<string>& exi_vars);
+    bool GoalFactHolds(const Fact& fact, const set<string>& exi_vars, map<string, string>& instantiation);
+    bool MatchGoalFact(const Fact &f, const set<string>& exi_vars, const Fact &db_fact, map<string, string>& instantiation);
+
+    bool SubstvarsNotInPremises(const CLFormula &axiom,
+        ConjunctionFormula &premises_inst, DNFFormula &goal_inst,
+        map<string, string>& instantiation, const set<string>& varsNotInPremises);
+
+    bool FactExists(const Fact&);
+
     bool Equal(string a, string b, vector<Fact>& AuxFacts) const;
     Fact Canonize(const Fact& f) const;
 
     set<Fact> mDatabase;
-    vector< pair<DNFFormula, unsigned> > mDatabaseCases;
-
+    deque< pair<DNFFormula, unsigned> > mDatabaseCases;
 
 };
 

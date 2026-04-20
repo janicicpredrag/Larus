@@ -252,7 +252,7 @@ void ProofExport2Isabelle::OutputProof(ofstream &outfile, const CLProof &p,
   if (size > 0) {
     outfile << "assume ";
   }
-  for (size_t i = 0, size = p.NumOfAssumptions(); i < size; i++) {
+  for (size_t i = 0, size = p.NumOfCLAssumptions(); i < size; i++) {
     outfile << "\"";
     OutputDNF(outfile, p.GetCLAssumption(i));
     outfile << "\" ";
