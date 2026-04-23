@@ -12,9 +12,10 @@ struct parameters {
     bool createGCLCillustration;
     bool noFixedPoints;
     bool semanticGuidedProving;
-    double time_limit;
+    bool deducingNewFacts;
     prover_name prover;
     bool excludedmiddle;
+    double time_limit;
 };
 
 inline const std::string GRT_OUTPUT_FOLDER = "proofs/";

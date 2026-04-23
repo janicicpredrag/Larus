@@ -32,7 +32,8 @@ add_executable(GeomtricReasoningToolkit
     ../CLTheory/Formula.cpp
     ../CLTheory/Theory.h
     ../CLTheory/Theory.cpp
-
+    ../ProvingEngine/STL_Engine/STL_FactsDatabase.h
+    ../ProvingEngine/STL_Engine/STL_FactsDatabase.cpp
 )
 
 include(GNUInstallDirs)

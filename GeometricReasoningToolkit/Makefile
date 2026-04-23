@@ -18,7 +18,8 @@ SOURCES  := main.cpp \
             Utils.cpp \
             $(CL_DIR)/common.cpp \
             $(CL_DIR)/CLTheory/Formula.cpp \
-            $(CL_DIR)/CLTheory/Theory.cpp
+            $(CL_DIR)/CLTheory/Theory.cpp \
+            $(CL_DIR)/ProvingEngine/STL_Engine/STL_FactsDatabase.cpp 
 
 OBJECTS  := $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.cpp=.o)))
 DEPS     := $(OBJECTS:.o=.d)
@@ -30,7 +31,7 @@ LDFLAGS  := -static-libstdc++
 ADDFLAGS ?=
 ALL_CXXFLAGS := $(CXXFLAGS) $(ADDFLAGS)
 
-vpath %.cpp $(SRCDIR) $(CL_DIR) $(CL_DIR)/CLTheory ..
+vpath %.cpp $(SRCDIR) $(CL_DIR) $(CL_DIR)/CLTheory $(CL_DIR)/ProvingEngine/STL_Engine
 
 .PHONY: all clean
 

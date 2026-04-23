@@ -21,9 +21,10 @@ void printHelp() {
     cout << "   -i                   create GCLC illustration for the premises" << endl << endl;
     cout << "   -f                   no fixed points" << endl << endl;
     cout << "   -s                   use semantic guided proving" << endl;
-    cout << "   -l<time_limit>       for time limit, default: 10s" << endl;
     cout << "   -p<prover>           v for vampire, e for eprover, default: vampire" << endl;
+    cout << "   -d                   deducing new facts (default: no)" << endl;
     cout << "   -e                   use excluded middle axioms (default: no)" << endl;
+    cout << "   -l<time_limit>       for time limit, default: 10s" << endl;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -35,9 +36,10 @@ int main(int argc, char **argv) {
     params.createGCLCillustration = false;
     params.noFixedPoints = false;
     params.semanticGuidedProving = false;
-    params.time_limit = 30;
     params.prover = eVampire;
+    params.deducingNewFacts = false;
     params.excludedmiddle = false;
+    params.time_limit = 30;
 
     for (int i = 1; i < argc; i++) {
 
@@ -80,6 +82,12 @@ int main(int argc, char **argv) {
             params.excludedmiddle = true;
         }
 
+        // using deducing new facts (default: no)
+        else if (argv[i][0] == '-' && argv[i][1] == 'd') {
+            params.deducingNewFacts = false;
+        }
+
+
         // input file
         else if (argv[i][0] != '-') {
             params.inputFilename.assign(argv[i], strlen(argv[i]));
@@ -103,10 +111,10 @@ int main(int argc, char **argv) {
 
     if (params.declarative2procedural || params.createGCLCillustration
         || params.semanticGuidedProving) {
-        if (cp.ImportDeclarativeDescription(theorem, params.noFixedPoints, diagram)) {
+        if (cp.ImportDeclarativeDescription(theorem, params.noFixedPoints, params.deducingNewFacts, diagram)) {
             cout << endl << "Succesfully created a construction plan. " << endl;
         } else {
-            cout  << endl << "Failed to create a construction plan. " << endl << endl;
+            cout << endl << "Failed to create a construction plan. " << endl << endl;
             return -1;
         }
 

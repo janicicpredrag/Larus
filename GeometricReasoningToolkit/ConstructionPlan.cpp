@@ -6,13 +6,15 @@
 #include "TPTPSupport.h"
 #include "ConstructionPlan.h"
 #include "ADGLib_signature.h"
+#include "../common.h"
 #include "../CLTheory/Theory.h"
+
 
 using namespace std;
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool noFixedPoints, Diagram& diagram) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool noFixedPoints, bool deducingNewFacts, Diagram& diagram) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
@@ -27,16 +29,21 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     string thmname_;
     cout << endl << "Reading deduction rules... " << endl;
     if (ReadTPTPConjecture("deduction_rules.p", mDeductionRules, thm_, thmname_)
-        != eNoConjectureGiven)
+        != eNoConjectureGiven) {
+        cout << endl << "Failed to read the deduction rules... " << endl;
         return false;
+    }
+
+    for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
+        mDeductionRules.AddConstant(mTheorem.GetUnivVar(j));
+    }
+    while (mDeductionRules.MakeNextConstantPermissible()) {};
 
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
     for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
         cout << mTheorem.GetUnivVar(j) << " ";
     }
-
-    null_fact.SetName("null");
 
     vector<string> variations;
     if (noFixedPoints) {
@@ -61,18 +68,14 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         }
         printLog("#");
 
-        vector<Fact> inputConfiguration;
-        inputConfiguration.reserve(1000);
-
+        mInputConstruction.clear();
         mOutputConstruction.clear();
         mNDGs.clear();
         mObjCounter = 0;
         mFixed.clear();
 
         for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
-            inputConfiguration.push_back(mTheorem.GetPremises().GetElement(j));
-        //    for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++)
-        //        degreesOfFreedom.insert(make_pair(mTheorem.GetUnivVar(j),2));
+            mInputConstruction.push_back(mTheorem.GetPremises().GetElement(j));
 
         for (size_t j = 0; j < fixedPoints.size(); j++) {
             setFixed(fixedPoints[j]);
@@ -80,9 +83,9 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         }
 
         cout << endl;
-        printCurrentStatus(inputConfiguration);
+        printCurrentStatus();
 
-        if (D2P(inputConfiguration)) {
+        if (D2P(deducingNewFacts)) {
             if (diagram.InstantiateConstructionPlan(theorem, GetProceduralDescription(), GetNDGs())) {
                 cout << "Coordinates:" << endl;
                 for(auto const& p : diagram.GetAllPoints()) {
@@ -93,179 +96,160 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
             }
         }
     }
+
+    cout << endl << "Transformation failed!" << endl;
     return false;
 }
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::D2P(vector<Fact>& inputConfiguration) {
+bool ConstructionPlan::D2P(bool deducingNewFacts) {
 
-    bool update = false, overconstrained  = false;
-    bool outer_update = false;
-    Fact constraint;
-    do {
-        outer_update = false;
+    STLFactsDatabase db(&mDeductionRules);
+    set<Fact> db_initial;
+    if (deducingNewFacts) {
+        for (const auto& f : mInputConstruction)
+            db.AddFact(f);
+        db_initial = db.GetDatabase();
+        cout << endl << "Derive everything ..." << endl;
+        DeriveAllFacts(db, 100); // 100s - for time being
+    }
 
-        for (auto& constraint : inputConfiguration) {
-            if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
-                if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
+    while(true) {
+        if (IsOverconstrained(db))
+            return false;
+
+        bool update = false;
+        printLog("\nFacts to location constraints:\n");
+        for (size_t i = 0; i < mInputConstruction.size(); ) {
+            Fact& currentFact = mInputConstruction[i];
+            printLog("\n -----> Processing:  " + currentFact.ToString());
+
+            if (IsConfigurationOverconstrained(currentFact)) {
+                cout << "Constraint " << currentFact << " is overconstrained " << endl;
+                // if (db.GetDatabase().find(fact)!=db.GetDatabase().end()) {
+                if (isConsequence(mOutputConstruction, mNDGs, currentFact)) {
                     printLog("\nValid fact, nothing to do, deleted.\n");
-                    constraint = null_fact;
+                    mInputConstruction.erase(mInputConstruction.begin() + i);
+                    continue;
                 } else {
                     printLog("The system seems to be OVERCONSTRAINED:\n");
-                    printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
-                    printLog("   Transformation failed!\n");
+                    printLog("   Constraint (with all points fixed) critical:  " + currentFact.ToString() + "\n\n");
                     return false;
                 }
             }
-        }
 
-        do {
-            update = false;
-            printLog("\nFacts to constraints:\n");
-
-            for (auto& fact : inputConfiguration) {
-                if (fact == null_fact) continue; // Skip already nullified facts
-                printLog("\n -----> Processing:  " + fact.ToString());
-
-
-                if (IsConfigurationOverconstrained(fact)) {
-                    if (isConsequence(mOutputConstruction, mNDGs, fact)) {
-                        printLog("\nValid fact, nothing to do, deleted.\n");
-                        fact = null_fact;
-                    } else {
-                        printLog("The system seems to be OVERCONSTRAINED:\n");
-                        printLog("   Constraint (with all points fixed) critical:  " + fact.ToString() + "\n");
-                        printLog("   Transformation failed!\n");
-                        return false;
+            if (FactToLocationConstraint(mInputConstruction, currentFact)) {
+                update = true;
+                mInputConstruction.erase(mInputConstruction.begin() + i);
+                if (SHOW_INTERMEDIATE_RESULTS) {
+                    cout << endl << "Update:   ";
+                    printCurrentStatus();
+                    // cout << endl << "Before compression: ";
+                    // printCurrentStatus(inputConfiguration);
+                }
+                if (PairOfLocationConstraintsToFunctionalForm()) {
+                    if (SHOW_INTERMEDIATE_RESULTS) {
+                        cout << "After compression: ";
+                        printCurrentStatus();
                     }
                 }
-
-
-
-                if (FactToLocationConstraint(inputConfiguration, fact)) {
-                    fact = null_fact;
-                    if (SHOW_INTERMEDIATE_RESULTS) {
-                        cout << endl << "Update:   ";
-                        printCurrentStatus(inputConfiguration);
-                        // cout << endl << "Before compression: ";
-                        // printCurrentStatus(inputConfiguration);
-                    }
-                    if (PairsOfConstraintsToFunctionalForm(inputConfiguration)) {
-                        if (SHOW_INTERMEDIATE_RESULTS) {
-                            cout << "After compression: ";
-                            printCurrentStatus(inputConfiguration);
-                        }
-                    }
-                    outer_update = update = true;
-                }
-
-                    /*
-                    for (auto& constraint : inputConfiguration) {
-                        if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
-                            if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
-                                printLog("\nValid fact, nothing to do, deleted.\n");
-                                constraint = null_fact;
-                            } else {
-                                printLog("The system seems to be OVERCONSTRAINED:\n");
-                                printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
-                                printLog("   Transformation failed!\n");
-                                return false;
-                            }
-                        }
-                    }
-                    */
-
+                continue;
             }
-            // Clear all redundant constraints
-            inputConfiguration.erase(
-                remove(inputConfiguration.begin(), inputConfiguration.end(), null_fact),
-                inputConfiguration.end()
-                );
+            i++;
         }
-        while (update);
+        if (update)
+            continue;
 
-        if (!inputConfiguration.empty()) {
+        if (deducingNewFacts && !mInputConstruction.empty() && DeduceAndUseNewFact(db_initial, db))
+            continue;
 
-            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !outer_update; )  {
-                string P = it->GetArg(0).ToTPTPString();
-                Fact output;
-                if ((it->GetName() == ON_LINE || it->GetName() == ON_CIRCLE)
-                    && isFixed(it->GetArg(1).ToTPTPString())
-                    && isFixed(it->GetArg(2).ToTPTPString())
-                    && !isFixed(P)
-                    && !InOtherConstraints(inputConfiguration, it, P)
-                    && WeaklyConstrainedPointToRandom(*it, output)) {
+        if (PickParticallyLocatedPoint(false)) // Do not allow "in other constraints"
+            continue;
 
-                    outer_update = true;
-                    printLog("\n\nWeakly constrained points " + P + " randomized: \n");
-                    printLog("     " + it->ToString() + " -> " + output.ToString() + "\n");
+        if (PickParticallyLocatedPoint(true)) // Do allow "in other constraints"
+            continue;
 
-                    it = inputConfiguration.erase(it);
-                    setFixed(P);
-                    mOutputConstruction.push_back(output);
-                    if (SHOW_INTERMEDIATE_RESULTS) {
-                        cout << "After randomization: " << endl;
-                        printCurrentStatus(inputConfiguration);
-                    }
-                } else
-                    it++;
-            }
-
-/*
-            for (auto& constraint : inputConfiguration) {
-                if (constraint.GetName() != "null" && IsConfigurationOverconstrained(constraint)) {
-                    if (isConsequence(mOutputConstruction, mNDGs, constraint)) {
-                        printLog("\nValid fact, nothing to do, deleted.\n");
-                        constraint = null_fact;
-                    } else {
-                        printLog("The system seems to be OVERCONSTRAINED:\n");
-                        printLog("   Constraint (with all points fixed) critical:  " + constraint.ToString() + "\n");
-                        printLog("   Transformation failed!\n");
-                        return false;
-                    }
-                }
-            }
-*/
-
-
-            for (auto it = inputConfiguration.begin(); it != inputConfiguration.end() && !outer_update; )  {
-                string P = it->GetArg(0).ToTPTPString();
-                Fact output;
-                if ((it->GetName() == ON_LINE || it->GetName() == ON_CIRCLE)
-                    && isFixed(it->GetArg(1).ToTPTPString())
-                    && isFixed(it->GetArg(2).ToTPTPString())
-                    && !isFixed(P)
-                    //&& !InOtherConstraints(it, P)
-                    && WeaklyConstrainedPointToRandom(*it, output)) {
-                    outer_update = true;
-                    printLog("\n\nWeakly constrained points " + P + " randomized: \n");
-                    printLog("     " + it->ToString() + " -> " + output.ToString() + "\n");
-                    setFixed(P);
-                    it = inputConfiguration.erase(it);
-                    mOutputConstruction.push_back(output);
-                    if (SHOW_INTERMEDIATE_RESULTS) {
-                        cout << "After randomization: " << endl;
-                        printCurrentStatus(inputConfiguration);
-                    }
-                } else
-                    it++;
-            }
-        }
-
-    } while(outer_update);
-
-    if (!inputConfiguration.empty()) {
-        cout << endl << " Don't know to handle remaining constraints!";
-        cout << endl << " Transformation failed!" << endl;
-    } else {
-        cout << endl << "Succesfully created a construction plan" << endl;
-        printCurrentStatus(inputConfiguration);
-        return true;
+        break;
     }
 
-    return false;
+    if (mInputConstruction.empty()) {
+        cout << endl << "Succesfully created a construction plan" << endl;
+        printCurrentStatus();
+        return true;
+    } else { // !inputConfiguration.empty()
+        cout << endl << " Don't know to handle remaining constraints!";
+        return false;
+    }
+}
 
+
+// -----------------------------------------------------------------------------------------------
+
+bool ConstructionPlan::IsOverconstrained(STLFactsDatabase& db)
+{
+    for (vector<Fact>::iterator it=mInputConstruction.begin(); it!=mInputConstruction.end();) {
+        if (IsConfigurationOverconstrained(*it)) {
+            cout << "Constraint " << *it << " is overconstrained " << endl;
+            // if (db.GetDatabase().find(fact)!=db.GetDatabase().end()) {
+            if (isConsequence(mOutputConstruction, mNDGs, *it)) {
+                printLog("\nValid fact, nothing to do, deleted.\n");
+                it = mInputConstruction.erase(it);
+            } else {
+                printLog("The system seems to be OVERCONSTRAINED:\n");
+                printLog("   Constraint (with all points fixed) critical:  " + it->ToString() + "\n\n");
+                printLog("   Transformation failed!\n\n");
+                return true;
+            }
+        } else {
+            it++;
+        }
+    }
+    return false;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool ConstructionPlan::DeduceAndUseNewFact(const set<Fact>& db_initial,
+                                           STLFactsDatabase& db)
+{
+    for (const auto& f : db.GetDatabase()) {
+        if (db_initial.find(f) == db_initial.end()) {
+            if (f.GetName() != string(PREFIX_NEGATED) + string(COLLINEAR) &&
+                f.GetName() != string(PREFIX_NEGATED) + string(EQ_NATIVE_NAME) &&
+                f.GetName() != COLLINEAR &&
+                f.GetName() != ON_LINE &&
+                f.GetName() != ON_CIRCLE) {
+                cout << "Trying fact " << f << endl;
+                vector<Fact> ic_pre = mInputConstruction;
+                vector<Fact> oc_pre = mOutputConstruction;
+                set<Fact> ndgs_pre = mNDGs;
+
+                if (FactToLocationConstraint(mInputConstruction, f)) {
+                    cout << "Fact " << f << " worked!" << endl;
+                    for (int i = mInputConstruction.size(); i>=ic_pre.size(); i--) {
+                        if (mInputConstruction[i].GetName() == ON_LINE ||
+                            mInputConstruction[i].GetName() == ON_CIRCLE) {
+                            cout << "Fact " << f << " REALLY worked!" << endl;
+                            db.GetDatabase().erase(f);
+
+                            if (PairOfLocationConstraintsToFunctionalForm()) {
+                                if (SHOW_INTERMEDIATE_RESULTS) {
+                                    cout << "After compression: ";
+                                    printCurrentStatus();
+                                }
+                            }
+                            return true;
+                        }
+                    }
+                }
+                mInputConstruction = ic_pre;
+                mOutputConstruction = oc_pre;
+                mNDGs = ndgs_pre;
+            }
+        }
+    }
+    return false;
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -289,6 +273,39 @@ bool ConstructionPlan::IsConfigurationOverconstrained(const Fact& f) {
 
 // -----------------------------------------------------------------------------------------------
 
+bool ConstructionPlan::PickParticallyLocatedPoint(bool bNotInOtherConstraints)
+{
+    for (vector<Fact>::iterator it = mInputConstruction.begin(); it != mInputConstruction.end(); )  {
+        string P = it->GetArg(0).ToTPTPString();
+        Fact output;
+        if ((it->GetName() == ON_LINE || it->GetName() == ON_CIRCLE)
+            && isFixed(it->GetArg(1).ToTPTPString())
+            && isFixed(it->GetArg(2).ToTPTPString())
+            && !isFixed(P)
+            && (!bNotInOtherConstraints ||
+                !InOtherConstraints(*it,P))
+            && WeaklyConstrainedPointToRandom(*it, output)) {
+
+            printLog("\n\nWeakly constrained points " + P + " randomized: \n");
+            printLog("     " + it->ToString() + " -> " + output.ToString() + "\n");
+
+            it = mInputConstruction.erase(it);
+            setFixed(P);
+            mOutputConstruction.push_back(output);
+            if (SHOW_INTERMEDIATE_RESULTS) {
+                cout << "After randomization: " << endl;
+                printCurrentStatus();
+            }
+            return true;
+        } else {
+            it++;
+        }
+    }
+    return false;
+}
+
+// -----------------------------------------------------------------------------------------------
+
 bool ConstructionPlan::ReadConstructionRules() {
     CLFormula thm;
     string thmname;
@@ -297,11 +314,11 @@ bool ConstructionPlan::ReadConstructionRules() {
         != eNoConjectureGiven)
         return false;
 
-    mRules.clear();
+    mConstructionRules.clear();
     for (size_t i = 0; i < mConstructionsTheory.mCLaxioms.size(); i++) {
         Rule r;
         r.ReadFromCLAxiom(mConstructionsTheory.mCLaxioms[i]);
-        mRules.push_back(r);
+        mConstructionRules.push_back(r);
     }
 
     return true;
@@ -356,27 +373,20 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
         return true;
     }
 
-//    vector<Fact> v;
-//    if (isConsequence(v, v, f)) {
-//        if (SHOW_INTERMEDIATE_RESULTS)
-//            cout << endl << "Valid fact, nothing to do, deleted." << endl;
-//        return true;
-//    }
-
-    for(auto it = mRules.begin(); it != mRules.end(); it++) {
+    for(const auto& rule : mConstructionRules) {
         map<string, string> instantiation;
         set<string> fixed_temp = mFixed;
         unsigned objc = mObjCounter;
 
-        if (it->Match(f,instantiation)) {
+        if (rule.Match(f,instantiation)) {
             vector<string> auxPoints;
-            Rule r = it->Instantiate(instantiation, auxPoints);
+            Rule r = rule.Instantiate(instantiation, auxPoints);
 
             for(auto& ap: auxPoints)
                 setFixed(ap);
             if (FixityConditionsHold(r.mAlreadyFixed)) {
                 if (SHOW_INTERMEDIATE_RESULTS) {
-                    cout << endl << "Rule " << it->mName << " applied. " << endl;
+                    cout << endl << "Rule " << rule.mName << " applied. " << endl;
                 }
                 for (size_t i = 0; i < r.mNewInput.GetSize(); i++)
                     inputConfiguration.push_back(r.mNewInput.GetElement(i));
@@ -399,25 +409,27 @@ bool ConstructionPlan::FactToLocationConstraint(vector<Fact>& inputConfiguration
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::PairsOfConstraintsToFunctionalForm(vector<Fact>& inputConfiguration) {
+bool ConstructionPlan::PairOfLocationConstraintsToFunctionalForm() {
     // Try to derive functional dependence for a point if it has two constraints
-    for (auto it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
-        if (((it->GetName() == ON_LINE) || (it->GetName() == ON_CIRCLE))
-            && !isFixed(it->GetArg(0).ToTPTPString())
-            && isFixed(it->GetArg(1).ToTPTPString())
-            && isFixed(it->GetArg(2).ToTPTPString())) {
-            string P = it->GetArg(0).ToTPTPString();
-            for(auto it0 = inputConfiguration.begin(); it0 != it; it0++) {
-                if (((it0->GetName() == ON_LINE) || (it0->GetName() == ON_CIRCLE))
-                    && it0->GetArg(0).ToTPTPString() == P
-                    && isFixed(it0->GetArg(1).ToTPTPString())
-                    && isFixed(it0->GetArg(2).ToTPTPString())) {
+    for (vector<Fact>::iterator it1=mInputConstruction.begin(); it1!=mInputConstruction.end(); it1++)  {
+        if (((it1->GetName() == ON_LINE) || (it1->GetName() == ON_CIRCLE))
+            && !isFixed(it1->GetArg(0).ToTPTPString())
+            && isFixed(it1->GetArg(1).ToTPTPString())
+            && isFixed(it1->GetArg(2).ToTPTPString())) {
+            string P = it1->GetArg(0).ToTPTPString();
+            for (vector<Fact>::iterator it2=mInputConstruction.begin(); it2!=mInputConstruction.end(); it2++)  {
+                if (it1 == it2)
+                    continue;
+                if (((it2->GetName() == ON_LINE) || (it2->GetName() == ON_CIRCLE))
+                    && it2->GetArg(0).ToTPTPString() == P
+                    && isFixed(it2->GetArg(1).ToTPTPString())
+                    && isFixed(it2->GetArg(2).ToTPTPString())) {
                     Fact resultFact;
-                    if (CombineTwoConstraintsToFunctionalForm(P, *it, *it0, resultFact)) {
+                    if (CombineTwoConstraintsToFunctionalForm(P, *it1, *it2, resultFact)) {
                         setFixed(P);
                         mOutputConstruction.push_back(resultFact);
-                        *it0 = null_fact;
-                        *it = null_fact;
+                        it1 = mInputConstruction.erase(it1);
+                        it2 = mInputConstruction.erase(it2);
                         return true;
                     }
                 }
@@ -472,11 +484,11 @@ bool ConstructionPlan::CombineTwoConstraintsToFunctionalForm(const string& P, co
 
 //---------------------------------------------------------------------
 
-bool ConstructionPlan::InOtherConstraints(const vector<Fact>& inputConfiguration, const vector<Fact>::const_iterator jt, const string& P) {
-    for (vector<Fact>::const_iterator it = inputConfiguration.begin(); it != inputConfiguration.end(); it++)  {
-        if (it != jt) {
-            for (size_t i = 0; i < it->GetArity(); i++) {
-                if (it->GetArg(i).ToTPTPString() == P)
+bool ConstructionPlan::InOtherConstraints(const Fact& fact, const string& P) {
+    for (const auto& constraint : mInputConstruction)  {
+        if (!(fact == constraint)) {
+            for (size_t i = 0; i < constraint.GetArity(); i++) {
+                if (constraint.GetArg(i).ToTPTPString() == P)
                     return true;
             }
         }
@@ -508,6 +520,8 @@ bool ConstructionPlan::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fa
 //---------------------------------------------------------------------
 
 bool ConstructionPlan::isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f) {
+
+    return false;
     vector<string> usedAxioms;
     CLFormula conjecture;
     set<string> vars;
@@ -547,11 +561,11 @@ bool ConstructionPlan::isConsequence(const vector<Fact>& con, const set<Fact>& n
 
 //---------------------------------------------------------------------
 
-void ConstructionPlan::printCurrentStatus(const vector<Fact>& inputConfiguration)
+void ConstructionPlan::printCurrentStatus()
 {
     cout << endl << "* Current status:" << endl;
     cout << "-- Input premises:" << endl;
-    for (auto jt = inputConfiguration.begin(); jt != inputConfiguration.end(); jt++)
+    for (auto jt = mInputConstruction.begin(); jt != mInputConstruction.end(); jt++)
         cout << "     " << *jt << endl;
     cout << "-- Output construction plan:" << endl;
     for (auto jt = mOutputConstruction.begin(); jt != mOutputConstruction.end(); jt++)
@@ -576,6 +590,53 @@ bool ConstructionPlan::isFixed(const string& point) {
 
 void ConstructionPlan::setFixed(const string& point) {
     mFixed.insert(point);
+}
+
+// ---------------------------------------------------------------------------------------
+
+bool ConstructionPlan::DeriveAllFacts(STLFactsDatabase& db, double time_limit)
+{
+    Timer timer;
+    timer.start();
+    bool success;
+    do {
+
+        if (timer.elapsed() > time_limit) {
+#ifdef DEBUG_OUTPUT
+            cout << "Time limit exceeded " << endl;
+#endif
+            return false;
+        }
+
+        success = false;
+
+        DNFFormula mp;
+        ConjunctionFormula from;
+        vector<unsigned> fromSteps;
+        vector<pair<string, string>> instantiation;
+
+        for (const auto& [ax, ax_name] : mDeductionRules.mCLaxioms) {
+            if (ax.GetNumOfExistVars() == 0 &&
+                ax.GetGoal().GetSize() == 1) {
+#ifdef DEBUG_OUTPUT
+                cout << "Trying ax " << ax_name << endl;
+#endif
+                instantiation.clear();
+                if (db.ApplyAxiom(ax, from, mp, instantiation)) {
+#ifdef DEBUG_OUTPUT
+                    cout << "Non-branching, non-exi " << mp << " from: " << from
+                         << "(ax: " << ax_name<< ")" << endl;
+#endif
+                    success = true;
+                    db.AddCases(mp);
+                    cout << "derived : " << mp << "by " << ax_name << endl;
+                }
+            }
+        }
+
+    } while (success);
+
+    return false;
 }
 
 // -----------------------------------------------------------------------------------------------

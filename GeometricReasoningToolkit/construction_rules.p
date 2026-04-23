@@ -110,7 +110,7 @@ fof(perp8, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & A0 != A1 & A
 % --- Perpendicular at rules ---
 
 fof(perp_at4, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A0,A2,A3,A4) & A0 != A2 & A0 != A3 & A0 != A4) => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
-fof(perp_at5, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A2,A0,A3,A4) & A0 != A2 & A0 != A3 & A0 != A4) => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4) & perpendicular(A0,A2,A0,A4) & perpendicular(A0,A2,A3,A0)  ))).
+fof(perp_at5, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A2,A0,A3,A4) & A0 != A2 & A0 != A3 & A0 != A4) => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
 fof(perp_at6, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A3,A4,A0,A2) & A0 != A2 & A0 != A3 & A0 != A4) => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
 fof(perp_at7, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A3,A4,A2,A0) & A0 != A2 & A0 != A3 & A0 != A4) => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
 
@@ -126,7 +126,7 @@ fof(perp_at3, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0
 %*******************************************************************************
 % --- Foot at rules ---
 
-fof(foot1, axiom, ![A0,A1,A2,A3] : ((foot(A0,A1,A2,A3) & A0 != A1 & A2 != A3 ) => (collinear(A0,A2,A3) & perpendicular(A0,A1,A2,A3)))).
+fof(foot1, axiom, ![A0,A1,A2,A3] : ((foot(A0,A1,A2,A3) & A0 != A1 & A2 != A3 ) => (perpendicular_at(A0,A0,A1,A2,A3)))).
 
 fof(foot2, axiom, ![A0,A1,A2] : ((foot(A0,A0,A1,A2) & A1 != A2 ) => (on_line(A0,A1,A2)))).
 

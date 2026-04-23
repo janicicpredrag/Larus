@@ -75,7 +75,7 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool Rule::Match(const Fact& f, map<string,string>& instantiation) {
+bool Rule::Match(const Fact& f, map<string,string>& instantiation) const {
     if (mInput.GetName() != f.GetName())
         return false;
     for (unsigned int i = 0; i< mInput.GetArity(); i++) {
@@ -90,7 +90,7 @@ bool Rule::Match(const Fact& f, map<string,string>& instantiation) {
 
 // -----------------------------------------------------------------------------------------------
 
-Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) {
+Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) const {
     Fact fout = f;
     for (unsigned int i = 0; i< fout.GetArity(); i++) {
         string arg = fout.GetArg(i).ToTPTPString();
@@ -122,7 +122,7 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ve
 
 // -----------------------------------------------------------------------------------------------
 
-Rule Rule::Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) {
+Rule Rule::Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) const {
     Rule r;
     r.mInput = InstantiateFact(mInput, instantiation, auxPoints);
     for (size_t i = 0; i < mNewInput.GetSize(); i++)

@@ -56,8 +56,6 @@ private:
 
     set<Fact> mDatabase;
     deque< pair<DNFFormula, unsigned> > mDatabaseCases;
-
 };
-
 
 #endif // STLFACTSDATABASE_H

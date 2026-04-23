@@ -13,11 +13,11 @@ public:
     friend class ConstructionPlan;
 
     bool ReadFromCLAxiom(const pair<CLFormula,string> ax);
-    bool Match(const Fact& f, map<string,string>& instantiation);
-    Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints);
+    bool Match(const Fact& f, map<string,string>& instantiation) const;
+    Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) const;
 
 private:
-    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints);
+    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) const;
     Fact mInput;
     set<string> mAlreadyFixed;
     set<string> mBecomeFixed;

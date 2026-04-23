@@ -71,7 +71,7 @@ bool STLFactsDatabase::ApplyAxiom(
     for(const auto& fact : axiom.GetPremises().GetConjunction()) {
         for(unsigned i = 0; i < fact.GetArity(); i++) {
             Term arg = fact.GetArg(i);
-            if (!mpT->IsConstant(arg))
+            //if (!mpT->IsConstant(arg))
                 varsNotInPremises.erase(arg.ToTPTPString());
         }
     }
@@ -133,8 +133,9 @@ bool STLFactsDatabase::MatchAllPremises(
         return MatchAllPremises(axiom, current_index+1,
                     premises_inst, goal_inst, instantiation, varsNotInPremises);
     } else {
-        map<string, string> instantiation_start = instantiation;
+
         for (const auto& db_fact : mDatabase) {
+            map<string, string> instantiation_start = instantiation;
             if (MatchFact(axiom,current_premise, db_fact, instantiation)) {
                 premises_inst.SetElement(current_index, db_fact);
                 if (MatchAllPremises(axiom, current_index+1,
@@ -231,13 +232,14 @@ bool STLFactsDatabase::MatchGoalFact(const Fact &f, const set<string>& exi_vars,
         t.ReadNonCompoundString(arg);
 
         bool bExiVar = (exi_vars.find(arg) != exi_vars.end());
+        //bool UniVar = (uni_vars.find(arg) != uni_vars.end());
 
-        if (mpT->IsConstant(t) && !bExiVar && arg != db_arg)
-            return false;
         auto it = instantiation.find(arg);
         if (it != instantiation.end() && it->second != db_arg)
             return false;
-        if (it == instantiation.end() && arg != db_arg)
+        if (it == instantiation.end() && !bExiVar && arg != db_arg)
+            return false;
+        if (it == instantiation.end() && bExiVar /*arg != db_arg*/)
             instantiation[arg] = db_arg;
     }
     return true;
@@ -266,7 +268,7 @@ bool STLFactsDatabase::ConjunctionHolds(const CLFormula &axiom, const Conjunctio
 // ---------------------------------------------------------------------------------------
 
 bool STLFactsDatabase::FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation) {
-    if (fact.GetName() == "true")
+    if (fact.GetName() == sTOP)
         return true;
     for (const auto& db_fact : mDatabase) {
         if (MatchFact(axiom, fact, db_fact, instantiation))
@@ -288,17 +290,21 @@ bool STLFactsDatabase::MatchFact(const CLFormula &axiom, const Fact &f, const Fa
         Term t;
         t.ReadNonCompoundString(arg);
 
-        bool bExiVar = false;
+        bool bUniVar=false, bExiVar = false;
         for(size_t i=0; i<axiom.GetNumOfExistVars(); i++)
             if (axiom.GetExistVar(i) == arg)
                 bExiVar = true;
+        for(size_t i=0; i<axiom.GetNumOfUnivVars(); i++)
+            if (axiom.GetUnivVar(i) == arg)
+                bUniVar = true;
 
-        if (mpT->IsConstant(t) && !bExiVar && arg != db_arg)
+        if (!bUniVar && !bExiVar && arg != db_arg)
             return false;
         auto it = instantiation.find(arg);
         if (it != instantiation.end() && it->second != db_arg)
             return false;
-        if (it == instantiation.end() && arg != db_arg)
+        if (it == instantiation.end() && (bUniVar || bExiVar)
+            /*&& arg != db_arg*/)
             instantiation[arg] = db_arg;
     }
     return true;
