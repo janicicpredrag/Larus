@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 
         // using deducing new facts (default: no)
         else if (argv[i][0] == '-' && argv[i][1] == 'd') {
-            params.deducingNewFacts = false;
+            params.deducingNewFacts = true;
         }
 
 

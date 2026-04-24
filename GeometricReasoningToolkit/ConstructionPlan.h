@@ -27,12 +27,12 @@ private:
     bool PairOfLocationConstraintsToFunctionalForm();
     bool CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
     bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);
-    bool D2P(bool deducingNewFacts);
+    bool D2P(bool deducingNewFacts, STLFactsDatabase& db);
     bool isFixed(const string& point);
     void setFixed(const string& point);
 
     bool DeriveAllFacts(STLFactsDatabase& db, double time_limit);
-    bool DeduceAndUseNewFact(const set<Fact>& db_initial, STLFactsDatabase& db);
+    bool UseDeducedFact(STLFactsDatabase& db);
 
     bool IsOverconstrained(STLFactsDatabase& db);
 

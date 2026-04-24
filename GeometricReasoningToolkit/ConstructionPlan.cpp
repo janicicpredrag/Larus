@@ -38,6 +38,30 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         mDeductionRules.AddConstant(mTheorem.GetUnivVar(j));
     }
     while (mDeductionRules.MakeNextConstantPermissible()) {};
+    STLFactsDatabase db(&mDeductionRules);
+    if (deducingNewFacts) {
+
+        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
+            mInputConstruction.push_back(mTheorem.GetPremises().GetElement(j));
+        for (const auto& f : mInputConstruction)
+            db.AddFact(f);
+
+        set<Fact> db_initial = db.GetDatabase();
+        cout << endl << "Derive everything ..." << endl;
+        DeriveAllFacts(db, 100); // 100s - for time being
+        for (set<Fact>::iterator it=db.GetDatabase().begin();  it!=db.GetDatabase().end();) {
+            if (db_initial.find(*it) != db_initial.end() ||
+                it->GetName() == string(PREFIX_NEGATED) + string(COLLINEAR) ||
+                it->GetName() == string(PREFIX_NEGATED) + string(EQ_NATIVE_NAME) ||
+                it->GetName() == COLLINEAR ||
+                it->GetName() == ON_LINE ||
+                it->GetName() == ON_CIRCLE) {
+                it = db.GetDatabase().erase(it);
+            } else {
+                it++;
+            }
+        }
+    }
 
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
@@ -85,7 +109,7 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         cout << endl;
         printCurrentStatus();
 
-        if (D2P(deducingNewFacts)) {
+        if (D2P(deducingNewFacts, db)) {
             if (diagram.InstantiateConstructionPlan(theorem, GetProceduralDescription(), GetNDGs())) {
                 cout << "Coordinates:" << endl;
                 for(auto const& p : diagram.GetAllPoints()) {
@@ -103,40 +127,34 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::D2P(bool deducingNewFacts) {
-
-    STLFactsDatabase db(&mDeductionRules);
-    set<Fact> db_initial;
-    if (deducingNewFacts) {
-        for (const auto& f : mInputConstruction)
-            db.AddFact(f);
-        db_initial = db.GetDatabase();
-        cout << endl << "Derive everything ..." << endl;
-        DeriveAllFacts(db, 100); // 100s - for time being
-    }
+bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
 
     while(true) {
-        if (IsOverconstrained(db))
-            return false;
-
         bool update = false;
-        printLog("\nFacts to location constraints:\n");
+        printLog("\nTrying to transform facts to location constraints ...\n");
         for (size_t i = 0; i < mInputConstruction.size(); ) {
             Fact& currentFact = mInputConstruction[i];
             printLog("\n -----> Processing:  " + currentFact.ToString());
 
-            if (IsConfigurationOverconstrained(currentFact)) {
-                cout << "Constraint " << currentFact << " is overconstrained " << endl;
-                // if (db.GetDatabase().find(fact)!=db.GetDatabase().end()) {
-                if (isConsequence(mOutputConstruction, mNDGs, currentFact)) {
+            if (deducingNewFacts) {
+                //  if (db.GetDatabase().find(currentFact)!=db.GetDatabase().end()) {
+                vector<Fact> premises = mOutputConstruction;
+                for (const Fact& f : mInputConstruction) {
+                    if (!(f == currentFact))
+                        premises.push_back(f);
+                }
+                if (isConsequence(premises, mNDGs, currentFact)) {
                     printLog("\nValid fact, nothing to do, deleted.\n");
                     mInputConstruction.erase(mInputConstruction.begin() + i);
                     continue;
-                } else {
-                    printLog("The system seems to be OVERCONSTRAINED:\n");
-                    printLog("   Constraint (with all points fixed) critical:  " + currentFact.ToString() + "\n\n");
-                    return false;
                 }
+            }
+
+            if (IsConfigurationOverconstrained(currentFact)) {
+                cout << "Constraint " << currentFact << " is overconstrained " << endl;
+                printLog("The system seems to be OVERCONSTRAINED:\n");
+                printLog("   Constraint (with all points fixed) critical:  " + currentFact.ToString() + "\n\n");
+                return false;
             }
 
             if (FactToLocationConstraint(mInputConstruction, currentFact)) {
@@ -161,7 +179,7 @@ bool ConstructionPlan::D2P(bool deducingNewFacts) {
         if (update)
             continue;
 
-        if (deducingNewFacts && !mInputConstruction.empty() && DeduceAndUseNewFact(db_initial, db))
+        if (deducingNewFacts && !mInputConstruction.empty() && UseDeducedFact(db))
             continue;
 
         if (PickParticallyLocatedPoint(false)) // Do not allow "in other constraints"
@@ -182,7 +200,6 @@ bool ConstructionPlan::D2P(bool deducingNewFacts) {
         return false;
     }
 }
-
 
 // -----------------------------------------------------------------------------------------------
 
@@ -210,44 +227,37 @@ bool ConstructionPlan::IsOverconstrained(STLFactsDatabase& db)
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::DeduceAndUseNewFact(const set<Fact>& db_initial,
-                                           STLFactsDatabase& db)
+bool ConstructionPlan::UseDeducedFact(STLFactsDatabase& db)
 {
+    cout << endl << endl;
+    cout << "Trying to use derived facts ... " << endl;
     for (const auto& f : db.GetDatabase()) {
-        if (db_initial.find(f) == db_initial.end()) {
-            if (f.GetName() != string(PREFIX_NEGATED) + string(COLLINEAR) &&
-                f.GetName() != string(PREFIX_NEGATED) + string(EQ_NATIVE_NAME) &&
-                f.GetName() != COLLINEAR &&
-                f.GetName() != ON_LINE &&
-                f.GetName() != ON_CIRCLE) {
-                cout << "Trying fact " << f << endl;
-                vector<Fact> ic_pre = mInputConstruction;
-                vector<Fact> oc_pre = mOutputConstruction;
-                set<Fact> ndgs_pre = mNDGs;
+        // cout << "Trying derived fact " << f << endl;
+        vector<Fact> ic_pre = mInputConstruction;
+        vector<Fact> oc_pre = mOutputConstruction;
+        set<Fact> ndgs_pre = mNDGs;
 
-                if (FactToLocationConstraint(mInputConstruction, f)) {
-                    cout << "Fact " << f << " worked!" << endl;
-                    for (int i = mInputConstruction.size(); i>=ic_pre.size(); i--) {
-                        if (mInputConstruction[i].GetName() == ON_LINE ||
-                            mInputConstruction[i].GetName() == ON_CIRCLE) {
-                            cout << "Fact " << f << " REALLY worked!" << endl;
-                            db.GetDatabase().erase(f);
+        if (FactToLocationConstraint(mInputConstruction, f)) {
+            // cout << "Fact " << f << " worked!" << endl;
+            for (int i = mInputConstruction.size()-1; i>=ic_pre.size(); i--) {
+                if (mInputConstruction[i].GetName() == ON_LINE ||
+                    mInputConstruction[i].GetName() == ON_CIRCLE) {
+                    cout << "Fact " << f << " successfully derives: " << mInputConstruction[i] << endl;
+                    db.GetDatabase().erase(f);
 
-                            if (PairOfLocationConstraintsToFunctionalForm()) {
-                                if (SHOW_INTERMEDIATE_RESULTS) {
-                                    cout << "After compression: ";
-                                    printCurrentStatus();
-                                }
-                            }
-                            return true;
+                    if (PairOfLocationConstraintsToFunctionalForm()) {
+                        if (SHOW_INTERMEDIATE_RESULTS) {
+                            cout << "After compression: ";
+                            printCurrentStatus();
                         }
                     }
+                    return true;
                 }
-                mInputConstruction = ic_pre;
-                mOutputConstruction = oc_pre;
-                mNDGs = ndgs_pre;
             }
         }
+        mInputConstruction = ic_pre;
+        mOutputConstruction = oc_pre;
+        mNDGs = ndgs_pre;
     }
     return false;
 }
@@ -520,8 +530,6 @@ bool ConstructionPlan::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fa
 //---------------------------------------------------------------------
 
 bool ConstructionPlan::isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f) {
-
-    return false;
     vector<string> usedAxioms;
     CLFormula conjecture;
     set<string> vars;

@@ -27,7 +27,9 @@ fof(d_perp_col2, axiom, ![A,B,C,D,E] : ((perpendicular(A,B,C,D) & C!=D & perpend
 fof(d_inter, axiom, ![A,B,C,D,F] : 
  	(intersection_line_line(F,A,B,C,D) => (collinear(F,A,B) & collinear(F,C,D)))).
  
-fof(d_perp_fun1, axiom, ![A,B,C,F] : (F = fun_random_on_perpendicular_from(A, B, C) => (perpendicular(F,A,B,C)))).
+fof(d_perp_fun1, axiom, ![A,B,C,F] : ((F = fun_random_on_perpendicular_from(A, B, C)
+& nnneqnative( F, A ))
+=> (perpendicular(F,A,B,C)))).
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -83,7 +85,7 @@ fof(collinear2, axiom, ![A,B,C] : ((collinear(A,B,C) & A != C) => (on_line(B,A,C
 
 fof(collinear3, axiom, ![A,B,C] : ((collinear(A,B,C) & A != B) => (on_line(C,A,B)))).
 
-
+fof(collinear4, axiom, (! [A,B,C] : ((on_line(A,B,C) ) => ((collinear(A,B,C)))))).
 
 % --- Betweenness rules ---
 
