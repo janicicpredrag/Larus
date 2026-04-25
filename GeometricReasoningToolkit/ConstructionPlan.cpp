@@ -21,17 +21,13 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     cout <<         "========================================================" << endl;
 
     cout << endl << "Reading construction rules... " << endl;
-    if (!ReadConstructionRules()) {
+    if (!ReadConstructionRules("construction_rules.p")) {
         cout << endl << "Failed to read the construction rules... " << endl;
     }
 
-    CLFormula thm_;
-    string thmname_;
     cout << endl << "Reading deduction rules... " << endl;
-    if (ReadTPTPConjecture("deduction_rules.p", mDeductionRules, thm_, thmname_)
-        != eNoConjectureGiven) {
-        cout << endl << "Failed to read the deduction rules... " << endl;
-        return false;
+    if (!ReadDeductionRules("deduction_rules.p")) {
+        cout << endl << "Failed to read the construction rules... " << endl;
     }
 
     for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
@@ -41,14 +37,15 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     STLFactsDatabase db(&mDeductionRules);
     if (deducingNewFacts) {
 
-        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
+        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++) {
             mInputConstruction.push_back(mTheorem.GetPremises().GetElement(j));
-        for (const auto& f : mInputConstruction)
-            db.AddFact(f);
+            db.AddFact(mTheorem.GetPremises().GetElement(j));
+        }
 
         set<Fact> db_initial = db.GetDatabase();
         cout << endl << "Derive everything ..." << endl;
         DeriveAllFacts(db, 100); // 100s - for time being
+        // Keep only some of the derived facts
         for (set<Fact>::iterator it=db.GetDatabase().begin();  it!=db.GetDatabase().end();) {
             if (db_initial.find(*it) != db_initial.end() ||
                 it->GetName() == string(PREFIX_NEGATED) + string(COLLINEAR) ||
@@ -98,14 +95,13 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         mObjCounter = 0;
         mFixed.clear();
 
-        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++)
+        for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++) {
             mInputConstruction.push_back(mTheorem.GetPremises().GetElement(j));
-
+        }
         for (size_t j = 0; j < fixedPoints.size(); j++) {
             setFixed(fixedPoints[j]);
             mOutputConstruction.push_back(fixedPoints[j] + " = freepoint(null,null)");
         }
-
         cout << endl;
         printCurrentStatus();
 
@@ -133,16 +129,18 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
         bool update = false;
         printLog("\nTrying to transform facts to location constraints ...\n");
         for (size_t i = 0; i < mInputConstruction.size(); ) {
+
             Fact& currentFact = mInputConstruction[i];
             printLog("\n -----> Processing:  " + currentFact.ToString());
 
+            // check if the constraint can be derived from the remaining constraints
             if (deducingNewFacts) {
-                //  if (db.GetDatabase().find(currentFact)!=db.GetDatabase().end()) {
                 vector<Fact> premises = mOutputConstruction;
                 for (const Fact& f : mInputConstruction) {
                     if (!(f == currentFact))
                         premises.push_back(f);
                 }
+                //  if (db.GetDatabase().find(currentFact)!=db.GetDatabase().end()) {
                 if (isConsequence(premises, mNDGs, currentFact)) {
                     printLog("\nValid fact, nothing to do, deleted.\n");
                     mInputConstruction.erase(mInputConstruction.begin() + i);
@@ -150,6 +148,7 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
                 }
             }
 
+            // check if the constraint is overconstrained
             if (IsConfigurationOverconstrained(currentFact)) {
                 cout << "Constraint " << currentFact << " is overconstrained " << endl;
                 printLog("The system seems to be OVERCONSTRAINED:\n");
@@ -157,6 +156,7 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
                 return false;
             }
 
+            // try to transform the constraint into a location constraint
             if (FactToLocationConstraint(mInputConstruction, currentFact)) {
                 update = true;
                 mInputConstruction.erase(mInputConstruction.begin() + i);
@@ -179,12 +179,15 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
         if (update)
             continue;
 
+        // if the above failed, try to use some of the derived facts
         if (deducingNewFacts && !mInputConstruction.empty() && UseDeducedFact(db))
             continue;
 
+        // if the above failed, take randomly one points that is not fully constrained
         if (PickParticallyLocatedPoint(false)) // Do not allow "in other constraints"
             continue;
 
+        // if the above failed, take randomly one points that is not fully constrained
         if (PickParticallyLocatedPoint(true)) // Do allow "in other constraints"
             continue;
 
@@ -316,11 +319,10 @@ bool ConstructionPlan::PickParticallyLocatedPoint(bool bNotInOtherConstraints)
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ReadConstructionRules() {
+bool ConstructionPlan::ReadConstructionRules(const string& fileName) {
     CLFormula thm;
     string thmname;
-
-    if (ReadTPTPConjecture("construction_rules.p", mConstructionsTheory, thm, thmname)
+    if (ReadTPTPConjecture(fileName, mConstructionsTheory, thm, thmname)
         != eNoConjectureGiven)
         return false;
 
@@ -330,7 +332,18 @@ bool ConstructionPlan::ReadConstructionRules() {
         r.ReadFromCLAxiom(mConstructionsTheory.mCLaxioms[i]);
         mConstructionRules.push_back(r);
     }
+    return true;
+}
 
+// -----------------------------------------------------------------------------------------------
+
+bool ConstructionPlan::ReadDeductionRules(const string& fileName) {
+    CLFormula thm;
+    string thmname;
+    if (ReadTPTPConjecture(fileName, mDeductionRules, thm, thmname)
+        != eNoConjectureGiven) {
+        return false;
+    }
     return true;
 }
 

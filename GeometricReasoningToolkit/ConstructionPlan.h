@@ -18,7 +18,9 @@ public:
     static unsigned mObjCounter;
 
 private:
-    bool ReadConstructionRules();
+    bool ReadConstructionRules(const string& fileName);
+    bool ReadDeductionRules(const string& fileName);
+
     bool FixityConditionsHold(const set<string>& fixedPoints);
     bool InOtherConstraints(const Fact& fact, const string& P);
     bool isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f);
