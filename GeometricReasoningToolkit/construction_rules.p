@@ -213,6 +213,13 @@ fof(inter_c_c1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_c(A0,A1,A2,A3,A4,A5) & A
 
 fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & A2 != A3 & A4 != A3 & A0 != A3) => (A0 = fun_inter_c_c(A1,A2,A3,A4,A3) ))).
 
+
+fof(midpoint11, axiom, ![A0,A1,A2,M,P] : ((midpoint(A0,M,A2) & A0 != A1 & P != A2) => 
+(parallel(A0,A1,A2,P) & (P = fun_symmetric(A1,M))))).
+
+
+
+
 % --- NDG Identity / Constraint Rules ---
 %fof(collinear7, axiom, ![A0,A1,A2] : ((~collinear(A0,A1,A2)) => $true)).
 %fof(not_eq1, axiom, ![A0,A1] : ((A0 != A1) => $true)).
@@ -227,5 +234,6 @@ fof(symmetric, axiom, ![M,A,B] : ((symmetric(B,A,M)) => (midpoint(M,A,B)))).
 fof(circumcenter, axiom, ![A,B,C,O] : ((circumcenter(O,A,B,C)) => (cong(O,A,O,B) & cong(O,A,O,C)))).
 
 fof(orth, axiom, ![A,B,C,H] : ((orthocenter(H,A,B,C)) => (perpendicular(A,H,B,C) & perpendicular(B,H,A,C)))).
+
 
 

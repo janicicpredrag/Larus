@@ -29,7 +29,7 @@ private:
     bool PairOfLocationConstraintsToFunctionalForm();
     bool CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
     bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);
-    bool D2P(bool deducingNewFacts, STLFactsDatabase& db);
+    bool D2P(STLFactsDatabase& db);
     bool isFixed(const string& point);
     void setFixed(const string& point);
 
@@ -54,6 +54,7 @@ private:
     vector<Fact> mOutputConstruction;
     set<Fact> mNDGs;
 
+    bool m_deducingNewFacts;
     string mGCLC;
 
 };

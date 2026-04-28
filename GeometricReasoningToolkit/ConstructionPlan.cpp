@@ -25,9 +25,11 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         cout << endl << "Failed to read the construction rules... " << endl;
     }
 
+    m_deducingNewFacts = deducingNewFacts;
+
     cout << endl << "Reading deduction rules... " << endl;
     if (!ReadDeductionRules("deduction_rules.p")) {
-        cout << endl << "Failed to read the construction rules... " << endl;
+        cout << endl << "Failed to read the deduction rules... " << endl;
     }
 
     for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
@@ -35,7 +37,7 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     }
     while (mDeductionRules.MakeNextConstantPermissible()) {};
     STLFactsDatabase db(&mDeductionRules);
-    if (deducingNewFacts) {
+    if (m_deducingNewFacts) {
 
         for (size_t j = 0; j < mTheorem.GetPremises().GetSize(); j++) {
             mInputConstruction.push_back(mTheorem.GetPremises().GetElement(j));
@@ -105,7 +107,7 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         cout << endl;
         printCurrentStatus();
 
-        if (D2P(deducingNewFacts, db)) {
+        if (D2P(db)) {
             if (diagram.InstantiateConstructionPlan(theorem, GetProceduralDescription(), GetNDGs())) {
                 cout << "Coordinates:" << endl;
                 for(auto const& p : diagram.GetAllPoints()) {
@@ -123,7 +125,7 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
+bool ConstructionPlan::D2P(STLFactsDatabase& db) {
 
     while(true) {
         bool update = false;
@@ -134,7 +136,7 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
             printLog("\n -----> Processing:  " + currentFact.ToString());
 
             // check if the constraint can be derived from the remaining constraints
-            if (deducingNewFacts) {
+            if (m_deducingNewFacts) {
                 vector<Fact> premises = mOutputConstruction;
                 for (const Fact& f : mInputConstruction) {
                     if (!(f == currentFact))
@@ -180,7 +182,7 @@ bool ConstructionPlan::D2P(bool deducingNewFacts, STLFactsDatabase& db) {
             continue;
 
         // if the above failed, try to use some of the derived facts
-        if (deducingNewFacts && !mInputConstruction.empty() && UseDeducedFact(db))
+        if (m_deducingNewFacts && !mInputConstruction.empty() && UseDeducedFact(db))
             continue;
 
         // if the above failed, take randomly one points that is not fully constrained
@@ -246,6 +248,21 @@ bool ConstructionPlan::UseDeducedFact(STLFactsDatabase& db)
                 if (mInputConstruction[i].GetName() == ON_LINE ||
                     mInputConstruction[i].GetName() == ON_CIRCLE) {
                     cout << "Fact " << f << " successfully derives: " << mInputConstruction[i] << endl;
+
+                   /* if (m_deducingNewFacts) {
+                        vector<Fact> premises = mOutputConstruction;
+                        for (const Fact& f : mInputConstruction) {
+                            if (!(f == mInputConstruction[i]))
+                                premises.push_back(f);
+                        }
+                        //  if (db.GetDatabase().find(currentFact)!=db.GetDatabase().end()) {
+                        if (isConsequence(premises, mNDGs, mInputConstruction[i])) {
+                            printLog("\nValid fact, nothing to add, deleted.\n");
+                            mInputConstruction.erase(mInputConstruction.begin() + i);
+                            return false;
+                        }
+                    }*/
+
                     db.GetDatabase().erase(f);
 
                     if (PairOfLocationConstraintsToFunctionalForm()) {
