@@ -55,30 +55,4 @@ inline constexpr string_view FUN_RAND_ON_ANG_BIS   = "fun_random_on_angle_bisect
 inline constexpr string_view FUN_RAND_ON_ANG_RAY   = "fun_random_on_angle_ray";
 
 
-/*
-map<string, string> sig = {
-    { "TRIANGLE" , "triangle" },
-    { "COLL" , "collinear" },
-    { "INTER" , "inter" },
-    { "PERP" , "perpendicular" },
-    { "PERPNS" , "perpendicularNS" },
-    { "CONG" , "cong" } ,
-    { "MIDPOINTS",  "midpoint" } ,
-    { "MIDPOINT",  "midpoint" } ,
-    { "REFLECTION",  "reflection" } ,
-    { "ORTHOCENTER",  "orthocenter" } ,
-    { "BETWEEN",  "between" } ,
-    { "BETWEENS",  "between_strict" } ,
-    { "ONCIRCLE",  "onCircle" } ,
-    { "FOOT",  "foot" },
-    { "FOOTS",  "footS" },
-    { "CYCLIC", "cyclic" },
-    { "REFL", "reflection" },
-    { "EQANGLES",  "eqangles" },
-    { "ANGLE3",  "ang3" },
-    { "CIRCLE", "circle" },
-    };
-*/
-
-
 #endif

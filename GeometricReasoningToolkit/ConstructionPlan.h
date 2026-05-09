@@ -6,8 +6,15 @@
 #include "ConstructionRules.h"
 #include "Diagram.h"
 #include "../ProvingEngine/STL_Engine/STL_FactsDatabase.h"
+#include "Utils.h"
 
 using namespace std;
+
+enum class ProcessResult {
+    NoProgress,
+    ProgressMade,
+    Overconstrained
+};
 
 class ConstructionPlan {
 
@@ -21,38 +28,40 @@ private:
     bool ReadConstructionRules(const string& fileName);
     bool ReadDeductionRules(const string& fileName);
 
-    bool FixityConditionsHold(const set<string>& fixedPoints);
-    bool InOtherConstraints(const Fact& fact, const string& P);
+    bool D2P();
+    ProcessResult TryProcessSingleInputConstraint();
+    bool TryProcessPairsOfInputConstraints();
+    bool TryToDeriveSuitableConstraint();
+    bool ApplyConstructionRule(RuleKind eRruleKind, STLFactsDatabase& db, double time_limit);
+
+    bool CompressPairOfLocationConstraintsToFunctionalForm();
+    bool CombineTwoLocationConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
+    bool IsOverconstrained(const Fact& f);
     bool isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f);
-    bool IsConfigurationOverconstrained(const Fact& f);
-    bool FactToLocationConstraint(vector<Fact>& inputConfiguration, const Fact& f);
-    bool PairOfLocationConstraintsToFunctionalForm();
-    bool CombineTwoConstraintsToFunctionalForm(const string& P, const Fact& fact1, const Fact& fact2, Fact& result);
-    bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);
-    bool D2P(STLFactsDatabase& db);
-    bool isFixed(const string& point);
-    void setFixed(const string& point);
-
-    bool DeriveAllFacts(STLFactsDatabase& db, double time_limit);
-    bool UseDeducedFact(STLFactsDatabase& db);
-
-    bool IsOverconstrained(STLFactsDatabase& db);
+    void DeriveAllFacts(STLFactsDatabase& db, double time_limit);
 
     bool PickParticallyLocatedPoint(bool bNotInOtherConstraints);
+    bool WeaklyConstrainedPointToRandom(const Fact& fact_input, Fact& fact_output);
+    bool InOtherConstraints(const Fact& fact, const string& P);
+
+    bool isFixed(const string& point) const;
+    void setFixed(const string& point);
+    bool AreAllArgumentsFixed(const Term& t, size_t startIndex) const;
+    bool AreAllArgumentsFixed(const Fact& fact, size_t startIndex) const;
+    bool FixityConditionsHold(const set<string>& fixedPoints);
 
     void printCurrentStatus();
 
     Theory mConstructionsTheory;
     vector<Rule> mConstructionRules;
-    Theory mDeductionRules;
-    set<string> mFixed;
-
+    Theory mGeometryTheory;
     CLFormula mTheorem;
     string mTheoremName;
 
     vector<Fact> mInputConstruction;
     vector<Fact> mOutputConstruction;
     set<Fact> mNDGs;
+    set<string> mFixed;
 
     bool m_deducingNewFacts;
     string mGCLC;

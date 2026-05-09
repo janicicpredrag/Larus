@@ -8,14 +8,15 @@
 // -----------------------------------------------------------------------------------------------
 
 bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
-    CLFormula cl = ax.first;
+
+    mCLFormula = ax.first;
     mName = ax.second;
 
-   // for (size_t j = 0; j < cl.GetNumOfUnivVars(); j++)
-     //   mAlreadyFixed.insert(cl.GetUnivVar(j));
+//    for (size_t j = 0; j < ax.first.GetNumOfUnivVars(); j++)
+  //     mPoints.insert(ax.first.GetUnivVar(j));
 
-    for (size_t j = 0; j < cl.GetPremises().GetSize(); j++) {
-        Fact f = cl.GetPremises().GetElement(j);
+    for (size_t j = 0; j < mCLFormula.GetPremises().GetSize(); j++) {
+        Fact f = mCLFormula.GetPremises().GetElement(j);
 
         // process it as usual, but keep it as NDG
         if (f.GetName() == BETWEEN)
@@ -27,29 +28,44 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
             f.GetName() == ON_SAME_SIDE) {
             mNDG.Add(f);
         }
-        else
-            mInput = f;
+        else {
+         //   mInput = f;
+
+            if (f.GetName() == EQ_NATIVE_NAME) {
+                mDefs.Add(f);
+                mDefPoints.insert(f.GetArg(0).ToTPTPString());
+                //mPoints.erase(f.GetArg(0).ToTPTPString());
+
+                Term t = f.GetArg(1);
+                for(const auto& arg : t.TermArguments())
+                    mNeededPoints.insert(arg);
+
+            } else {
+                mConstraints.Add(f);
+            }
+        }
     }
 
-    for (size_t j = 0; j < cl.GetGoal().GetElement(0).GetSize(); j++) {
-        Fact f = cl.GetGoal().GetElement(0).GetElement(j);
+    for (size_t j = 0; j < mCLFormula.GetGoal().GetElement(0).GetSize(); j++) {
+        Fact f = mCLFormula.GetGoal().GetElement(0).GetElement(j);
         if (f.GetName() == sTOP)
             continue;
         else if (f.GetName() == ON_LINE || f.GetName() == ON_CIRCLE) {
-            mAlreadyFixed.insert(f.GetArg(1).ToTPTPString());
-            mAlreadyFixed.insert(f.GetArg(2).ToTPTPString());
-            mNewInput.Add(f);
+            mOutput.Add(f);
+            for(int i = 1; i<f.GetArity(); i++) { // skip the constructed point
+                mNeededPoints.insert(f.GetArg(i).ToTPTPString());
+            }
         }
         else if (f.GetName() == EQ_NATIVE_NAME) { // atoms A=fun...(...)
-            mBecomeFixed.insert(f.GetArg(0).ToTPTPString());
-            mAlreadyFixed.erase(f.GetArg(0).ToTPTPString());
             for (size_t k = 0; k < f.GetArg(1).NumArgs(); k++) {
-                mAlreadyFixed.insert(f.GetArg(1).GetArg(k));
+  //              mAlreadyFixed.insert(f.GetArg(1).GetArg(k));
+                mNeededPoints.insert(f.GetArg(1).GetArg(k));
             }
             mOutput.Add(f);
         }
-        else
-            mNewInput.Add(f);
+        else {
+            mOutput.Add(f);
+        }
     }
 
 /*
@@ -75,30 +91,15 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool Rule::Match(const Fact& f, map<string,string>& instantiation) const {
-    if (mInput.GetName() != f.GetName())
-        return false;
-    for (unsigned int i = 0; i< mInput.GetArity(); i++) {
-        string arg = mInput.GetArg(i).ToTPTPString();
-        if (instantiation.find(arg) == instantiation.end())
-           instantiation[arg] = f.GetArg(i).ToTPTPString();
-        else if (instantiation[arg] != f.GetArg(i).ToTPTPString())
-            return false;
-    }
-    return true;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) const {
+Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation) const {
     Fact fout = f;
     for (unsigned int i = 0; i< fout.GetArity(); i++) {
         string arg = fout.GetArg(i).ToTPTPString();
         Term t;
         if (fout.GetArg(i).IsCompound()) {
             string s = fout.GetArg(i).ToTPTPString();
-            for (auto it = instantiation.begin(); it != instantiation.end(); it++) {
-                s = replaceAllInTPTPString(s, it->first, "#" + it->second);
+            for (const auto& sub : instantiation) {
+                s = replaceAllInTPTPString(s, sub.first, "#" + sub.second);
             }
             // Avoid replacement that affect each other
             // s = replaceAllInTPTPString(s, "#", "");
@@ -109,7 +110,7 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ve
                 // introduce auxiliary point
                 string O = "P"+itos(ConstructionPlan::mObjCounter++);
                 instantiation[arg] = O;
-                auxPoints.push_back(O);
+                //mDefPoints.insert(O);
                 t.ReadTPTPString(O);
             } else {
                 t.ReadNonCompoundString(instantiation.find(arg)->second);
@@ -122,25 +123,31 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation, ve
 
 // -----------------------------------------------------------------------------------------------
 
-Rule Rule::Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) const {
+Rule Rule::Instantiate(map<string, string> &instantiation) const {
     Rule r;
-    r.mInput = InstantiateFact(mInput, instantiation, auxPoints);
-    for (size_t i = 0; i < mNewInput.GetSize(); i++)
-        r.mNewInput.Add(InstantiateFact(mNewInput.GetElement(i), instantiation, auxPoints));
-    for (const auto& var: mAlreadyFixed) {
-        auto it = instantiation.find(var);
-        if (it != instantiation.end())
-            r.mAlreadyFixed.insert(it->second);
-    }
-    for (const auto& var: mBecomeFixed) {
-        auto it = instantiation.find(var);
-        if (it != instantiation.end())
-            r.mBecomeFixed.insert(it->second);
-    }
     for (size_t i = 0; i < mOutput.GetSize(); i++)
-        r.mOutput.Add(InstantiateFact(mOutput.GetElement(i), instantiation, auxPoints));
+        r.mOutput.Add(InstantiateFact(mOutput.GetElement(i), instantiation));
     for (size_t i = 0; i < mNDG.GetSize(); i++)
-        r.mNDG.Add(InstantiateFact(mNDG.GetElement(i), instantiation, auxPoints));
+        r.mNDG.Add(InstantiateFact(mNDG.GetElement(i), instantiation));
+    for (size_t i = 0; i < mConstraints.GetSize(); i++)
+        r.mConstraints.Add(InstantiateFact(mConstraints.GetElement(i), instantiation));
+    for (size_t i = 0; i < mDefs.GetSize(); i++) {
+        r.mDefs.Add(InstantiateFact(mDefs.GetElement(i), instantiation));
+    }
+
+    for (const auto& var: mDefPoints) {
+        auto it = instantiation.find(var);
+        if (it != instantiation.end())
+            r.mDefPoints.insert(it->second);
+    }
+    for (const auto& var: mNeededPoints) {
+        auto it = instantiation.find(var);
+        if (it != instantiation.end())
+            r.mNeededPoints.insert(it->second);
+    }
+
+
+
     return r;
 }
 

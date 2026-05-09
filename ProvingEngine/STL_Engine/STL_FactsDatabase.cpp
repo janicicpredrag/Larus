@@ -30,7 +30,7 @@ bool STLFactsDatabase::AddFact(const Fact &f) {
         return false;
     }
     mDatabase.insert(canonized);
-    cout << "Added fact " << canonized << endl;
+    // cout << "Added fact " << canonized;
     return true;
 }
 

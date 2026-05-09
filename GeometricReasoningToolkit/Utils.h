@@ -6,6 +6,8 @@
 
 using namespace std;
 
+enum RuleKind { eOnePremiseNoNewVars, eOnePremiseNewVars, eMorePremisesNewVars, eMorePremisesNoNewVars };
+
 struct parameters {
     string inputFilename;
     bool declarative2procedural;

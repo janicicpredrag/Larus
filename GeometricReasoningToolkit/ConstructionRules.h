@@ -11,20 +11,21 @@ class ConstructionPlan;
 class Rule {
 public:
     friend class ConstructionPlan;
-
     bool ReadFromCLAxiom(const pair<CLFormula,string> ax);
-    bool Match(const Fact& f, map<string,string>& instantiation) const;
-    Rule Instantiate(map<string, string> &instantiation, vector<string>& auxPoints) const;
 
 private:
-    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation, vector<string>& auxPoints) const;
-    Fact mInput;
-    set<string> mAlreadyFixed;
-    set<string> mBecomeFixed;
-    ConjunctionFormula mNewInput;
+    Rule Instantiate(map<string, string> &instantiation) const;
+    Fact InstantiateFact(const Fact& f, map<string, string> &instantiation) const;
+    CLFormula mCLFormula;
+    string mName;
+
+    ConjunctionFormula mConstraints;
+    ConjunctionFormula mDefs;
     ConjunctionFormula mOutput;
     ConjunctionFormula mNDG;
-    string mName;
+
+    set<string> mDefPoints;
+    set<string> mNeededPoints;
 };
 
 
