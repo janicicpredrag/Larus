@@ -141,89 +141,22 @@ bool ConstructionPlan::D2P() {
     }
 
     if (mInputConstruction.empty()) {
-        cout << endl << "Succesfully created a construction plan" << endl;
+        for (unsigned i = 0; i < mTheorem.GetNumOfUnivVars(); i++) {
+            if (!isFixed(mTheorem.GetUnivVar(i))) {
+                cout << endl << "\nThe system is underconstrained. No output construction plan!";
+                return false;
+            }
+        }
+        cout << endl << "\nSuccesfully created a construction plan" << endl;
         printCurrentStatus();
         return true;
     } else {
-        cout << endl << " Don't know to handle remaining constraints!";
+        cout << endl << "\nDon't know to handle remaining constraints!";
         return false;
     }
 }
 
 // -----------------------------------------------------------------------------------------------
-/*
-ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
-    for (auto it = mInputConstruction.begin(); it != mInputConstruction.end();) {
-        //if (SHOW_INTERMEDIATE_RESULTS) {
-        //    printCurrentStatus();
-        //}
-        Fact& currentFact = *it;
-        printLog("\n -----> Processing:  " + currentFact.ToString() + "\n");
-
-        if (m_deducingNewFacts) {
-            printLog("Is the constraint a logical consequence? ");
-            std::vector<Fact> premises = mOutputConstruction;
-            for (const Fact& f : mNDGs) if (!(f == currentFact)) premises.push_back(f);
-            for (const Fact& f : mInputConstruction) if (!(f == currentFact)) premises.push_back(f);
-            if (isConsequence(premises, mNDGs, currentFact)) {
-                printLog(" Yes, valid and redundant fact, nothing to do, deleted.\n");
-                it = mInputConstruction.erase(it);
-                continue;
-            }
-            printLog("No;   ");
-        }
-
-        printLog("Is the constraint a NDG condition? ");
-        if (isNDGpredicate(currentFact.GetName())) {
-            printLog(" Yes, just move to NDGs.\n");
-            mNDGs.insert(currentFact);
-            it = mInputConstruction.erase(it);
-            continue;
-        }
-        printLog("No;   ");
-
-        printLog("Is the fact overconstrained? ");
-        if (IsOverconstrained(currentFact)) {
-            return ProcessResult::Overconstrained;
-        }
-        printLog("No;   ");
-
-        printLog("\nDoes constraint gives a point by functional term with fixed points? ");
-        bool isEqFunctional = currentFact.GetName() == EQ_NATIVE_NAME &&
-                              (currentFact.GetArg(1).ToTPTPString() == "freepoint(null, null)" || AreAllArgumentsFixed(currentFact.GetArg(1), 0));
-
-        bool isInterFunctional = (currentFact.GetName() == INTER_L_L || currentFact.GetName() == INTER_C_L || currentFact.GetName() == INTER_C_C) &&
-                                 AreAllArgumentsFixed(currentFact, 1);
-
-        if (isEqFunctional || isInterFunctional) {
-            printLog("Yes, functional term, just move to output.\n");
-            setFixed(currentFact.GetArg(0).ToTPTPString());
-            mOutputConstruction.push_back(currentFact);
-            it = mInputConstruction.erase(it);
-            return ProcessResult::ProgressMade;
-        }
-        printLog("No;   ");
-
-        printLog("\nTry to apply construction rules. ");
-        STLFactsDatabase dbase(&mGeometryTheory);
-        dbase.AddFact(currentFact);
-        for (size_t j = 0; j < currentFact.GetArity(); j++) {
-            mGeometryTheory.AddConstant(currentFact.GetArg(j).ToTPTPString());
-        }
-        while (mGeometryTheory.MakeNextConstantPermissible()) {}
-
-        if (ApplyConstructionRule(eOnePremiseNoNewVars, dbase, 10) ||
-            ApplyConstructionRule(eOnePremiseNewVars, dbase, 10)) {
-            printLog("\n\n");
-            it = mInputConstruction.erase(it);
-            return ProcessResult::ProgressMade;
-        }
-        printLog("No progress;   \n\n");
-        ++it;
-    }
-    return ProcessResult::NoProgress;
-}
-*/
 
 ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
     for (size_t i = 0; i < mInputConstruction.size(); ) {
@@ -256,12 +189,6 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         }
         printLog("No;   ");
 
-        printLog("Is the fact overconstrained? ");
-        if (IsOverconstrained(currentFact)) {
-            return ProcessResult::Overconstrained;
-        }
-        printLog("No;   ");
-
         printLog("\nDoes constraint gives a point by functional term with fixed points? ");
         bool isEqFunctional = currentFact.GetName() == EQ_NATIVE_NAME &&
                               (currentFact.GetArg(1).ToTPTPString() == "freepoint(null, null)" || AreAllArgumentsFixed(currentFact.GetArg(1), 0));
@@ -275,6 +202,12 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
             mOutputConstruction.push_back(currentFact);
             mInputConstruction.erase(mInputConstruction.begin() + i);
             return ProcessResult::ProgressMade;
+        }
+        printLog("No;   ");
+
+        printLog("Is the fact overconstrained? ");
+        if (IsOverconstrained(currentFact)) {
+            return ProcessResult::Overconstrained;
         }
         printLog("No;   ");
 
