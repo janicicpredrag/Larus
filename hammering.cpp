@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <iomanip>
 #include "common.h"
 #include "CLTheory/Formula.h"
@@ -249,46 +250,54 @@ VampireReturnValue SatStatus(const vector<pair<CLFormula, string>>& axioms,
 bool FilterOurNeededAxiomsByReachability(
     vector<pair<CLFormula, string>> &axioms, const CLFormula &theorem) {
   set<string> mReachablePredicateSymbols;
-  cout << "--- Reachability filtering: filtering out input axioms (input: "
+    cout << "--- Reachability filtering: filtering out input axioms (input: "
        << axioms.size() << ")" << endl;
 
-  for (size_t i = 0; i < theorem.GetPremises().GetSize(); i++)
-    mReachablePredicateSymbols.insert(
-        theorem.GetPremises().GetElement(i).GetName());
+  for (size_t i = 0; i < theorem.GetPremises().GetSize(); i++) {
+      string pName = theorem.GetPremises().GetElement(i).GetName();
+      if (pName.rfind(PREFIX_NEGATED, 0) == 0)
+          pName.erase(0, PREFIX_NEGATED.length());
+      mReachablePredicateSymbols.insert(pName);
+  }
 
   size_t RCount;
   do {
     RCount = mReachablePredicateSymbols.size();
-    for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-         it != axioms.end(); it++) {
+    for (const auto& ax: axioms) {
+      size_t size = ax.first.GetPremises().GetSize();
       bool bAllSymbolsReachable = true;
-      for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-          if (it->first.GetPremises().GetElement(i).GetName() != sTOP &&
-            mReachablePredicateSymbols.find(
-                it->first.GetPremises().GetElement(i).GetName()) ==
-                mReachablePredicateSymbols.end()) {
-          bAllSymbolsReachable = false;
-          break;
-        }
+      for (size_t i = 0; i < size; i++) {
+          string pName = ax.first.GetPremises().GetElement(i).GetName();
+          if (pName.rfind(PREFIX_NEGATED, 0) == 0)
+              pName.erase(0, PREFIX_NEGATED.length());
+          if (pName != sTOP &&
+             mReachablePredicateSymbols.find(pName) == mReachablePredicateSymbols.end()) {
+            bAllSymbolsReachable = false;
+              break;
+          }
       }
       if (bAllSymbolsReachable) {
-        for (size_t j = 0; j < it->first.GetGoal().GetSize(); j++)
-          for (size_t k = 0; k < it->first.GetGoal().GetElement(j).GetSize();
-               k++)
-            mReachablePredicateSymbols.insert(
-                it->first.GetGoal().GetElement(j).GetElement(k).GetName());
+          for (size_t j = 0; j < ax.first.GetGoal().GetSize(); j++) {
+            for (size_t k = 0; k < ax.first.GetGoal().GetElement(j).GetSize(); k++) {
+               string pName = ax.first.GetGoal().GetElement(j).GetElement(k).GetName();
+               if (pName.rfind(PREFIX_NEGATED, 0) == 0)
+                    pName.erase(0, PREFIX_NEGATED.length());
+               mReachablePredicateSymbols.insert(pName);
+            }
+         }
       }
     }
   } while (mReachablePredicateSymbols.size() != RCount);
 
-  for (vector<pair<CLFormula, string>>::iterator it = axioms.begin();
-       it != axioms.end();) {
+  for (auto it = axioms.begin(); it != axioms.end();) {
+    size_t size = it->first.GetPremises().GetSize();
     bool bAllSymbolsReachable = true;
-    for (size_t i = 0; i < it->first.GetPremises().GetSize(); i++) {
-      if (it->first.GetPremises().GetElement(i).GetName() != sTOP &&
-          mReachablePredicateSymbols.find(
-              it->first.GetPremises().GetElement(i).GetName()) ==
-              mReachablePredicateSymbols.end()) {
+    for (size_t i = 0; i < size; i++) {
+      string pName = it->first.GetPremises().GetElement(i).GetName();
+      if (pName.rfind(PREFIX_NEGATED, 0) == 0)
+          pName.erase(0, PREFIX_NEGATED.length());
+      if (pName != sTOP &&
+          mReachablePredicateSymbols.find(pName) == mReachablePredicateSymbols.end()) {
         bAllSymbolsReachable = false;
         break;
       }
