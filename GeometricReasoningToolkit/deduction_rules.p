@@ -2,23 +2,11 @@
 % --- Deduction rules ---
 %*******************************************************************************
 
-% --- triangle and quadrilateral rules -----------------------------------------------------
-fof(triangle, axiom, (! [A,B,C] : ((triangle(A,B,C)) => ((~collinear(A,B,C)))))).
-fof(isosceles, axiom, ![A,B,C] : ((isosceles(A,B,C) & ~collinear(A,B,C)) => cong(A,B,B,C))).
-fof(quadrilateral, axiom, ![A,B,C,D] : ((quadrilateral(A,B,C,D)) 
-    => (opposite_sides(A,C,B,D) & opposite_sides(B,D,A,C) & ~collinear(A,B,C) 
-        & ~collinear(B,C,D) & ~collinear(C,D,A) & ~collinear(D,A,B)))).
-fof(parallelogram, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) & ~collinear(A,B,C)) 
-    => (parallel(A,B,C,D) & parallel(A,D,B,C)))).
-fof(rectangle, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) & ~collinear(A,B,C)) 
-    => (perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
-fof(square, axiom, ![A,B,C,D] : ((square(A,B,C,D) & ~collinear(A,B,D)) 
-    => (cong(A,B,B,C) & perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
-
 % --- collinear rules -----------------------------------------------------
-fof(collinear1, axiom, ![A,B] : (collinear(A,B,A))).
-fof(collinear2, axiom, ![A,B] : (collinear(A,A,B))).
-fof(collinear3, axiom, ![A,B] : (collinear(B,A,A))).
+%fof(collinear1, axiom, ![A,B] : (collinear(A,B,A))).
+%fof(collinear2, axiom, ![A,B] : (collinear(A,A,B))).
+%fof(collinear3, axiom, ![A,B] : (collinear(B,A,A))).
+
 fof(collinear4, axiom, ![A,B,C] : ((collinear(A,B,C) ) => (collinear(A,C,B)))).
 fof(collinear5, axiom, ![A,B,C] : ((collinear(A,B,C) ) => (collinear(C,B,A)))).
 fof(collinear6, axiom, (! [A,B,C] : ((~collinear(A,B,C)) => (A!=B & B!=C & C!=A)))).
@@ -46,9 +34,9 @@ fof(perp4, axiom, ![A,B,C,D,E] : ((perpendicular(A,B,C,D) & C!=D & perpendicular
  	=> collinear(C,D,E) )). 
 fof(perp5, axiom, ![A,B,C,D,F] : (intersection_line_line(F,A,B,C,D) 
         => (collinear(F,A,B) & collinear(F,C,D)))).
-fof(perp6, axiom, ![A,B,C,F] : ((F = fun_random_on_perpendicular_from(A, B, C)) 
+fof(perp6, axiom, ![A,B,C,F] : ((F = fun_random_on_perpendicular_from(A, B, C) & F!=A)  
         => (perpendicular(F,A,B,C) & collinear(F,A)))).
-fof(perp7, axiom, ![A,B,C,F,X] : ((F = fun_random_on_perpendicular_from(A, B, C) & collinear(F,A,X)) 
+fof(perp7, axiom, ![A,B,C,F,X] : ((F = fun_random_on_perpendicular_from(A, B, C) & collinear(F,A,X) & F!=X) 
         => (perpendicular(F,X,B,C)  & perpendicular(X,A,B,C) ))).
 fof(perp8, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A0,A2,A3,A4) & A0 != A2 ) 
         => (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
@@ -76,6 +64,10 @@ fof(cong1, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) ) => (on_circle(A1,A0,A3))))
 fof(cong2, axiom, ![A0,A1,A3] : ((cong(A0,A1,A0,A3) ) => (on_circle(A3,A0,A1)))).
 fof(cong3, axiom, ![A0,A1,A2] : ((cong(A0,A1,A2,A1) ) => (on_circle(A0,A1,A2)))).
 
+fof(cong4, axiom, ![A0,A1,A2,A3] : ((cong(A0,A1,A2,A3) ) => (cong(A1,A0,A2,A3)))).
+fof(cong5, axiom, ![A0,A1,A2,A3] : ((cong(A0,A1,A2,A3) ) => (cong(A2,A3,A0,A1)))).
+fof(cong4, axiom, ![A0,A1,A2,A3] : ((cong(A0,A1,A2,A3) ) => (cong(A2,A3,A0,A1)))).
+
 % --- midpoint rules ------------------------------------------------
 fof(midpoint1, axiom, ![M,A,B] : ((symmetric(B,A,M)) => (midpoint(M,A,B)))).
 fof(midpoint2, axiom, ![M,A,B] : ((B=fun_symmetric(A,M)) => (midpoint(M,A,B)))).
@@ -93,4 +85,31 @@ fof(circumcenter, axiom, ![A,B,C,O] : ((circumcenter(O,A,B,C)) => (cong(O,A,O,B)
 fof(orth, axiom, ![A,B,C,H] : ((orthocenter(H,A,B,C)) => (perpendicular(A,H,B,C) & perpendicular(B,H,A,C)))).
 
 
+fof(midpoint1a, axiom, ![O,A,B,C] : ((cong(O,A,O,B) & cong(O,A,O,C)) => cong(O,B,O,C))).
+
+fof(midpoint10a, axiom, ![O,X,A,B] : ((cong(O,A,O,B) & cong(X,A,X,B) & O!=X & A!=B ) => perpendicular(O,X,A,B))).
+
+fof(midpoint10b, axiom, ![O,M,A,B] : ((cong(O,A,O,B) & midpoint(M,A,B) & M!=O) => perpendicular(O,M,A,B))).
+fof(midpoint10c, axiom, ![O,M,A,B] : ((cong(O,A,O,B) & midpoint(M,A,B) & M!=O) => perpendicular(O,M,M,B))).
+fof(midpoint10d, axiom, ![O,A,B] : ((cong(O,A,O,B) => on_circle(A,O,B)))).
+fof(midpoint10e, axiom, ![O,A,B] : ((on_circle(A,O,B) => cong(O,A,O,B)))).
+fof(midpoint10f, axiom, ![M,A,B] : ((midpoint(M,B,A)) => (cong(A,M,B,M)))).
+
+fof(midpoint3, axiom, ![M,A,B] : ((midpoint(M,B,A)) => (collinear(M,A,B)))).
+
+fof(midpoint1a, axiom, ![O,M,B,C] : ((perpendicular(O,M,B,C) & collinear(M,B,C) & M!=B) => perpendicular(O,M,M,B))).
+
+
+fof(midpoint1a, axiom, ![O,M,A,B] : ((perpendicular(O,M,M,B) & midpoint(M,A,B) & M!=O) => cong(O,A,O,B))).
+fof(inter_c_l1, axiom, ![X,A0,A1,A2,A4,A5] : ((intersection_circle_line(X,A0,A1,A2,A4,A5) => collinear(X,A4,A5)))).
+fof(inter_c_l1, axiom, ![X,A1,A2,A4,A5] : ((intersection_circle_line(X,A1,A1,A2,A4,A5) => cong(X,A1,A1,A2)))). 
+
+fof(perp6, axiom, ![A,B,C,F] : (((F = fun_random_on_perpendicular_from(A, B, C)) & midpoint(A,B,C)) 
+        => ( cong(F,B,F,C)))).
+
+
 fof(d_neq, axiom, (! [A,B] : ((nnneqnative(A,B)) => ((nnneqnative(B,A)))))).
+
+
+
+

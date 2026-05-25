@@ -21,18 +21,21 @@ bool isNDGpredicate(const string& p) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool noFixedPoints, bool deducingNewFacts, Diagram& diagram) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool deducingNewFacts, Diagram& diagram) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
     cout <<         "========================================================" << endl;
 
+    cout << endl << "Reading definitions... " << endl;
+    if (!ReadDefinitions("definitions.p")) {
+        cout << endl << "Failed to read the definitions ... " << endl;
+    }
+
     cout << endl << "Reading construction rules... " << endl;
     if (!ReadConstructionRules("construction_rules.p")) {
         cout << endl << "Failed to read the construction rules... " << endl;
     }
-
-    m_deducingNewFacts = deducingNewFacts;
 
     cout << endl << "Reading deduction rules... " << endl;
     if (!ReadDeductionRules("deduction_rules.p")) {
@@ -40,19 +43,13 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     }
 
     vector<string> variations;
-    if (noFixedPoints) {
-        // only one variation considered - without additional fixed points
-        variations.resize(1);
-        variations[0] = string(mTheorem.GetNumOfUnivVars(), '1');
-    } else {
-        cout << endl << "Generating all subsets of the set of "
-             << mTheorem.GetNumOfUnivVars() << " points: ";
-        for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
-            cout << mTheorem.GetUnivVar(j) << " ";
-        }
-        cout << " ordered decreasing by the count...\n" << endl;
-        variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
+    cout << endl << "Generating all subsets of the set of "
+         << mTheorem.GetNumOfUnivVars() << " points: ";
+    for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++) {
+        cout << mTheorem.GetUnivVar(j) << " ";
     }
+    cout << " ordered decreasing by the count...\n" << endl;
+    variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
 
     for (size_t i = 0; i < variations.size(); i++) {
         printLog("\n\n***** Free points fixed: ");
@@ -102,39 +99,32 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
 
 bool ConstructionPlan::D2P() {
     printLog("\nTrying to transform input constraints to location constraints ...\n");
+
     while(true) {
         printCurrentStatus();
+
+        if (mInputConstruction.empty())
+            break;
 
         if (CompressPairOfLocationConstraintsToFunctionalForm()) {
             printLog("\nCompression successful: \n");
             continue;
         }
 
-        // 1. Try single input constraints
+        // Try single input constraints
         ProcessResult singleStatus = TryProcessSingleInputConstraint();
         if (singleStatus == ProcessResult::Overconstrained) {
-            return false; // Fatal error
-        }
-        if (singleStatus == ProcessResult::ProgressMade) {
-            continue; // Restarts the while loop
-        }
-
-        // 2. Try two input constraints
-        if (TryProcessPairsOfInputConstraints()) {
-            continue; // Restarts the while loop
-        }
-
-        // 3. Fallback to database derivation of suitable constraints
-        if (TryToDeriveSuitableConstraint()) {
+            return false;
+        } else if (singleStatus == ProcessResult::ProgressMade) {
             continue; // Restarts the while loop
         }
 
         // if the above failed, take randomly one points that is not fully constrained
-        if (PickParticallyLocatedPoint(false)) // Do not allow "in other constraints"
+        if (PickPartiallyLocatedPoint(false)) // Do not allow "in other constraints"
             continue; // Restarts the while loop
 
         // if the above failed, take randomly one points that is not fully constrained
-        if (PickParticallyLocatedPoint(true)) // Do allow "in other constraints"
+        if (PickPartiallyLocatedPoint(true)) // Do allow "in other constraints"
             continue; // Restarts the while loop
 
         break;
@@ -159,22 +149,37 @@ bool ConstructionPlan::D2P() {
 // -----------------------------------------------------------------------------------------------
 
 ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
+    ProcessResult r = ProcessResult::NoProgress;
     for (size_t i = 0; i < mInputConstruction.size(); ) {
-        // We use a reference, but we must be careful: if the vector grows,
-        // this reference might become invalid. We re-fetch if needed.
         Fact currentFact = mInputConstruction[i];
         printLog("\n -----> Processing:  " + currentFact.ToString() + "\n");
 
-        if (m_deducingNewFacts) {
+        if (false) { // Check if the constraint is a consequence
             printLog("Is the constraint a logical consequence? ");
-            std::vector<Fact> premises = mOutputConstruction;
-            for (const Fact& f : mNDGs) if (!(f == currentFact)) premises.push_back(f);
-            for (const Fact& f : mInputConstruction) if (!(f == currentFact)) premises.push_back(f);
+            std::vector<Fact> premises;
+
+            for (const Fact& f : mInputConstruction) {
+                if (f == currentFact)
+                    continue;
+                if (f.GetName()==EQ_NATIVE_NAME && f.GetArg(1).ToTPTPString()!="freepoint(null, null)")
+                    continue;
+                premises.push_back(f);
+            }
+            for (const Fact& f : mOutputConstruction) {
+                if (f == currentFact)
+                    continue;
+                if (f.GetName()==EQ_NATIVE_NAME && f.GetArg(1).ToTPTPString()!="freepoint(null, null)")
+                    continue;
+                premises.push_back(f);
+            }
+            for (const Fact& f : mNDGs)
+                if (!(f == currentFact)) premises.push_back(f);
 
             if (isConsequence(premises, mNDGs, currentFact)) {
                 printLog(" Yes, valid and redundant fact, nothing to do, deleted.\n");
                 mInputConstruction.erase(mInputConstruction.begin() + i);
                 // Do not increment i, because the next element shifted into this position
+                r = ProcessResult::ProgressMade;
                 continue;
             }
             printLog("No;   ");
@@ -185,6 +190,7 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
             printLog(" Yes, just move to NDGs.\n");
             mNDGs.insert(currentFact);
             mInputConstruction.erase(mInputConstruction.begin() + i);
+            r = ProcessResult::ProgressMade;
             continue;
         }
         printLog("No;   ");
@@ -211,7 +217,7 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         }
         printLog("No;   ");
 
-        printLog("\nTry to apply construction rules. ");
+        printLog("\nTry to apply definitions/construction rules. ");
         STLFactsDatabase dbase(&mGeometryTheory);
         dbase.AddFact(currentFact);
         for (size_t j = 0; j < currentFact.GetArity(); j++) {
@@ -219,11 +225,15 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         }
         while (mGeometryTheory.MakeNextConstantPermissible()) {}
 
-        if (ApplyConstructionRule(eOnePremiseNoNewVars, dbase, 10) ||
-            ApplyConstructionRule(eOnePremiseNewVars, dbase, 10)) {
+        if (ApplyRule(true, eOnePremiseNoNewVars, dbase, 10)) {
             printLog("\n\n");
-            // Since ApplyConstructionRule pushed back to the vector, we must
-            // erase using the index and then return immediately to reset the loop logic in D2P()
+            mInputConstruction.erase(mInputConstruction.begin() + i);
+            return ProcessResult::ProgressMade;
+        }
+
+        if (ApplyRule(false, eOnePremiseNoNewVars, dbase, 10) ||
+            ApplyRule(false, eOnePremiseNewVars, dbase, 10)) {
+            printLog("\n\n");
             mInputConstruction.erase(mInputConstruction.begin() + i);
             return ProcessResult::ProgressMade;
         }
@@ -231,73 +241,8 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         printLog("No progress;   \n\n");
         ++i; // Only increment if we didn't erase anything
     }
-    return ProcessResult::NoProgress;
-}
 
-// -----------------------------------------------------------------------------------------------
-
-bool ConstructionPlan::TryProcessPairsOfInputConstraints() {
-    printLog("\nTry to apply construction rules with two premises.\n");
-    for (size_t i = 0; i < mInputConstruction.size(); i++) {
-        for (size_t j = 0; j < mInputConstruction.size(); j++) {
-            if (i == j) continue;
-            STLFactsDatabase dbase2(&mGeometryTheory);
-            dbase2.AddFact(mInputConstruction[i]);
-            dbase2.AddFact(mInputConstruction[j]);
-            ostringstream oss;
-            oss << "(" << mInputConstruction[i] << ", " << mInputConstruction[j] << ")" << endl;
-            printLog(oss.str());
-            if (ApplyConstructionRule(eMorePremisesNoNewVars, dbase2, 10) ||
-                ApplyConstructionRule(eMorePremisesNewVars, dbase2, 10)) {
-                printLog("\nOutput update:\n");
-                return true;
-            }
-        }
-    }
-    printLog("Failed.");
-    return false;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-bool ConstructionPlan::TryToDeriveSuitableConstraint() {
-    if (mInputConstruction.empty() || !m_deducingNewFacts) {
-        return false;
-    }
-
-    STLFactsDatabase dbase2(&mGeometryTheory);
-    for (const auto& f : mInputConstruction) dbase2.AddFact(f);
-    for (const auto& f : mNDGs) dbase2.AddFact(f);
-
-    std::set<Fact> db_initial = dbase2.GetDatabase();
-
-    std::cout << "\n\nDerive everything ...\n";
-    DeriveAllFacts(dbase2, 100);
-
-    // Filter and process new facts safely without mutating the set while iterating
-    for (const auto& f : dbase2.GetDatabase()) {
-        // Skip facts that were already in the initial DB
-        if (db_initial.find(f) != db_initial.end()) continue;
-
-        // Skip ignored constraint names
-        std::string name = f.GetName();
-        if (name == std::string(PREFIX_NEGATED) + std::string(COLLINEAR) ||
-            name == std::string(PREFIX_NEGATED) + std::string(EQ_NATIVE_NAME) ||
-            name == COLLINEAR ||
-            name == ON_LINE ||
-            name == ON_CIRCLE) {
-            continue;
-        }
-
-        STLFactsDatabase dbase3(&mGeometryTheory);
-        dbase3.AddFact(f);
-        std::cout << "Keep and try: " << f << "\n";
-        if (ApplyConstructionRule(eOnePremiseNewVars, dbase3, 10)) {
-            printLog("\nOutput update:\n");
-            return true;
-        }
-    }
-    return false;
+    return r;
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -325,7 +270,7 @@ bool ConstructionPlan::IsOverconstrained(const Fact& f) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::PickParticallyLocatedPoint(bool bNotInOtherConstraints)
+bool ConstructionPlan::PickPartiallyLocatedPoint(bool bNotInOtherConstraints)
 {
     for (vector<Fact>::iterator it = mInputConstruction.begin(); it != mInputConstruction.end(); )  {
         string P = it->GetArg(0).ToTPTPString();
@@ -354,6 +299,25 @@ bool ConstructionPlan::PickParticallyLocatedPoint(bool bNotInOtherConstraints)
         }
     }
     return false;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool ConstructionPlan::ReadDefinitions(const string& fileName) {
+    CLFormula thm;
+    Theory t;
+    string thmname;
+    if (ReadTPTPConjecture(fileName, t, thm, thmname)
+        != eNoConjectureGiven)
+        return false;
+
+    mDefinitions.clear();
+    for (size_t i = 0; i < t.mCLaxioms.size(); i++) {
+        Rule r;
+        r.ReadFromCLAxiom(t.mCLaxioms[i]);
+        mDefinitions.push_back(r);
+    }
+    return true;
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -401,38 +365,6 @@ bool ConstructionPlan::FixityConditionsHold(const set<string>& fixedPoints) {
 }
 
 // -----------------------------------------------------------------------------------------------
-
-/*
-bool ConstructionPlan::CompressPairOfLocationConstraintsToFunctionalForm() {
-    // Try to derive functional dependence for a point if it has two constraints
-    for (vector<Fact>::iterator it1=mInputConstruction.begin(); it1!=mInputConstruction.end(); it1++)  {
-        if (((it1->GetName() == ON_LINE) || (it1->GetName() == ON_CIRCLE))
-            && !isFixed(it1->GetArg(0).ToTPTPString())
-            && isFixed(it1->GetArg(1).ToTPTPString())
-            && isFixed(it1->GetArg(2).ToTPTPString())) {
-            string P = it1->GetArg(0).ToTPTPString();
-            for (vector<Fact>::iterator it2=mInputConstruction.begin(); it2!=mInputConstruction.end(); it2++)  {
-                if (it1 == it2)
-                    continue;
-                if (((it2->GetName() == ON_LINE) || (it2->GetName() == ON_CIRCLE))
-                    && it2->GetArg(0).ToTPTPString() == P
-                    && isFixed(it2->GetArg(1).ToTPTPString())
-                    && isFixed(it2->GetArg(2).ToTPTPString())) {
-                    Fact resultFact;
-                    if (CombineTwoLocationConstraintsToFunctionalForm(P, *it1, *it2, resultFact)) {
-                        setFixed(P);
-                        mOutputConstruction.push_back(resultFact);
-                        it1 = mInputConstruction.erase(it1);
-                        it2 = mInputConstruction.erase(it2);
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
-}
-*/
 
 bool ConstructionPlan::CompressPairOfLocationConstraintsToFunctionalForm() {
     for (size_t i = 0; i < mInputConstruction.size(); ++i) {
@@ -498,7 +430,8 @@ bool ConstructionPlan::CombineTwoLocationConstraintsToFunctionalForm(const strin
             return true;
         } else if (f2.GetName() == ON_CIRCLE) {
             string P2 = "P"+itos(mObjCounter++);
-            result = Fact(string(INTER_C_L) + "(" + P + ", " + P2 + "," +
+            result = Fact(string(INTER_C_L) + "(" + P + ", " +
+                          P2 + "," +
                           f2.GetArg(1).ToTPTPString() + "," + f2.GetArg(2).ToTPTPString() + "," +
                           f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + ")");
             if (f2.GetArg(2).ToTPTPString()==f1.GetArg(1).ToTPTPString() ||
@@ -651,7 +584,7 @@ bool ConstructionPlan::AreAllArgumentsFixed(const Fact& fact, size_t startIndex)
 
 // ---------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ApplyConstructionRule(RuleKind eRruleKind, STLFactsDatabase& db, double time_limit)
+bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDatabase& db, double time_limit)
 {
     Timer timer;
     timer.start();
@@ -662,7 +595,9 @@ bool ConstructionPlan::ApplyConstructionRule(RuleKind eRruleKind, STLFactsDataba
     vector<pair<string, string>> ordered_instantiation;
     map<string, string> instantiation;
 
-    for (const auto& rule : mConstructionRules) {
+    const vector<Rule>& rules = (bDefs ? mDefinitions : mConstructionRules);
+
+    for (const auto& rule : rules) {
 
         if (false && timer.elapsed() > time_limit)
         {
@@ -706,7 +641,7 @@ bool ConstructionPlan::ApplyConstructionRule(RuleKind eRruleKind, STLFactsDataba
             // for(const auto& p : r.mNeededPoints)
             //     cout << p << ";";
 
-            if (FixityConditionsHold(r.mNeededPoints)) {
+            if (bDefs || FixityConditionsHold(r.mNeededPoints)) {
                 ostringstream oss;
                 oss << "Derived " << r.mOutput << " by rule " << rule.mName << endl;
                 printLog(oss.str());
@@ -731,47 +666,7 @@ bool ConstructionPlan::ApplyConstructionRule(RuleKind eRruleKind, STLFactsDataba
             }
         }
     }
-
     return false;
-}
-
-
-// ---------------------------------------------------------------------------------------
-
-void ConstructionPlan::DeriveAllFacts(STLFactsDatabase& db, double time_limit)
-{
-    Timer timer;
-    timer.start();
-    bool success;
-    do {
-        DNFFormula mp;
-        ConjunctionFormula from;
-        vector<unsigned> fromSteps;
-        vector<pair<string, string>> instantiation;
-
-        success = false;
-        for (const auto& [ax, ax_name] : mGeometryTheory.mCLaxioms) {
-
-            if (timer.elapsed() > time_limit) {
-                printLog("Time limit exceeded! \n");
-                return;
-            }
-
-            if (ax.GetNumOfExistVars() == 0 &&
-                ax.GetGoal().GetSize() == 1) {
-                //printLog("Trying ax " + ax_name + "\n");
-                instantiation.clear();
-                if (db.ApplyAxiom(ax, from, mp, instantiation)) {
-                    // skip ..=fun_... because Larus stl cannot handle function symbols
-                    if (mp.GetElement(0).GetElement(0).GetName() != EQ_NATIVE_NAME) {
-                        db.AddCases(mp);
-                        // cout << "Derived: " << mp << " by axiom: " << ax_name << endl;
-                        success = true;
-                    }
-                }
-            }
-        }
-    } while (success);
 }
 
 // -----------------------------------------------------------------------------------------------

@@ -12,9 +12,6 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
     mCLFormula = ax.first;
     mName = ax.second;
 
-//    for (size_t j = 0; j < ax.first.GetNumOfUnivVars(); j++)
-  //     mPoints.insert(ax.first.GetUnivVar(j));
-
     for (size_t j = 0; j < mCLFormula.GetPremises().GetSize(); j++) {
         Fact f = mCLFormula.GetPremises().GetElement(j);
 
@@ -29,13 +26,9 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
             mNDG.Add(f);
         }
         else {
-         //   mInput = f;
-
             if (f.GetName() == EQ_NATIVE_NAME) {
                 mDefs.Add(f);
                 mDefPoints.insert(f.GetArg(0).ToTPTPString());
-                //mPoints.erase(f.GetArg(0).ToTPTPString());
-
                 Term t = f.GetArg(1);
                 for(const auto& arg : t.TermArguments())
                     mNeededPoints.insert(arg);
@@ -58,7 +51,6 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
         }
         else if (f.GetName() == EQ_NATIVE_NAME) { // atoms A=fun...(...)
             for (size_t k = 0; k < f.GetArg(1).NumArgs(); k++) {
-  //              mAlreadyFixed.insert(f.GetArg(1).GetArg(k));
                 mNeededPoints.insert(f.GetArg(1).GetArg(k));
             }
             mOutput.Add(f);
@@ -67,7 +59,6 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
             mOutput.Add(f);
         }
     }
-
 /*
     cout << "Axiom: " << cl << endl;
     cout << "name: " << mName << endl;
@@ -85,7 +76,6 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
     cout << " - rule out      " << mOutput   << endl;
     cout << " - rule name     " << mName << endl << endl;
 */
-
     return true;
 }
 
@@ -145,9 +135,6 @@ Rule Rule::Instantiate(map<string, string> &instantiation) const {
         if (it != instantiation.end())
             r.mNeededPoints.insert(it->second);
     }
-
-
-
     return r;
 }
 

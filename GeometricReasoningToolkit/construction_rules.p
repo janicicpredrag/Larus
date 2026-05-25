@@ -1,21 +1,6 @@
 %*******************************************************************************
-% --- Definitions ---
-
-fof(symmetric, axiom, ![M,A,B] : ((symmetric(B,A,M)) => (midpoint(M,A,B)))).
-fof(circumcenter, axiom, ![A,B,C,O] : ((circumcenter(O,A,B,C)) => (cong(O,A,O,B) & cong(O,A,O,C)))).
-fof(orthocenter, axiom, ![A,B,C,H] : ((orthocenter(H,A,B,C)) => (perpendicular(A,H,B,C) & perpendicular(B,H,A,C)))).
-
-% --- Triangle and quadrilateral definitions ---
-fof(triangle1, axiom, ![A,B,C] : ((triangle(A,B,C) ) =>  ~collinear(A,B,C))).
-fof(isosceles1, axiom, ![A,B,C] : ((isosceles(A,B,C) ) => (~collinear(A,B,C) & cong(A,B,B,C)))).
-fof(quadrilateral1, axiom, ![A,B,C,D] : ((quadrilateral(A,B,C,D) ) => (~collinear(A,B,C) & ~collinear(B,C,D) &
-    ~collinear(C,D,A) & ~collinear(D,A,B) & opposite_sides(A,C,B,D) & opposite_sides(B,D,A,C)))). 
-fof(parallelogram1, axiom, ![A,B,C,D] : ((parallelogram(A,B,C,D) ) => (
-    ~collinear(A,B,C) & parallel(A,B,C,D) & parallel(A,D,B,C)))).
-fof(rectangle1, axiom, ![A,B,C,D] : ((rectangle(A,B,C,D) ) => (
-    ~collinear(A,B,C) & perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
-fof(square1, axiom, ![A,B,C,D] : ((square(A,B,C,D)) => (
-    ~collinear(A,B,D) & cong(A,B,B,C) & perpendicular(A,B,B,C) & parallelogram(A,B,C,D)))).
+% Construction rules
+%*******************************************************************************
 
 
 %*******************************************************************************
@@ -24,7 +9,8 @@ fof(collinear1, axiom, ![A,B,C] : ((collinear(A,B,C) & B != C) => (on_line(A,B,C
 fof(collinear2, axiom, ![A,B,C] : ((collinear(A,B,C) & A != C) => (on_line(B,A,C)))).
 fof(collinear3, axiom, ![A,B,C] : ((collinear(A,B,C) & A != B) => (on_line(C,A,B)))).
 
-% --- Midpoint rules ---
+%*******************************************************************************
+% --- midpoint rules ---
 fof(midpoint1, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (M = fun_midpoint(A,B)))).
 fof(midpoint2, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (A = fun_symmetric(B,M)))).
 fof(midpoint3, axiom, ![M,A,B] : ((midpoint(M,A,B)) => (B = fun_symmetric(A,M)))).
@@ -35,20 +21,8 @@ fof(between1, axiom, ![A,B,C] : ((between(A,B,C) & B!=C) => (on_line(A,B,C)))).
 fof(between2, axiom, ![A,B,C] : ((between(A,B,C) & A!=C) => (on_line(B,A,C)))).
 fof(between3, axiom, ![A,B,C] : ((between(A,B,C) & B!=A) => (on_line(C,B,A)))).
 
-% --- Strict betweenness rules ---
-fof(between_strict1, axiom, ![A,B,C] : ((between_strict(A,B,C) & A != B & B != C & A != C) => (between(A,B,C)))).
-
-% --- Between4 rules ---
-fof(between4_1, axiom, ![A,B,C,D] : ((between4(A,B,C,D)) => (between(A,B,C) & between(A,C,D)))).
-fof(between4_2, axiom, ![A,B,C,D] : ((between4(A,B,C,D)) => (between(A,B,D) & between(B,C,D)))).
-fof(between4_3, axiom, ![A,B,C,D] : ((between4(A,B,C,D)) => (between(A,B,C) & between(B,C,D)))).
-
-% --- Between_strict4 rules ---
-fof(between_strict4_1, axiom, ![A,B,C,D] : ((between_strict4(A,B,C,D)) => (between_strict(A,B,C) & between_strict(A,C,D)))).
-
 %*******************************************************************************
 % --- Perpendicular rules ---
-
 fof(perp1, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A0,A3) & O = fun_midpoint(A1,A3)
     & A0 != A1 & A0 != A3 & A1 != A3) => (on_circle(A0,O,A1) ))).
 fof(perp2, axiom, ![A0,A1,A3,O] : ((perpendicular(A0,A1,A1,A3) & O = fun_midpoint(A0,A3)
@@ -57,6 +31,7 @@ fof(perp3, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A0) & O = fun_midpoin
     & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) ))).
 fof(perp4, axiom, ![A0,A1,A2,O] : ((perpendicular(A0,A1,A2,A1) & O = fun_midpoint(A0,A2)
     & A0 != A1 & A0 != A2 & A1 != A2) => (on_circle(A0,O,A1) ))).
+
 fof(perp5, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & O = fun_random_on_perpendicular_from(A1,A2,A3)
     & A0 != A1 & A2 != A3 & O!=A1) => (on_line(A0,A1,O) ))).
 fof(perp6, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & O = fun_random_on_perpendicular_from(A0,A2,A3)
@@ -65,35 +40,9 @@ fof(perp7, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & O = fun_rand
     & A0 != A1 & A2 != A3  & O!=A3)  => (on_line(A2,A3,O) ))).
 fof(perp8, axiom, ![A0,A1,A2,A3,O] : ((perpendicular(A0,A1,A2,A3) & O = fun_random_on_perpendicular_from(A2,A0,A1)
     & A0 != A1 & A2 != A3 & O!=A2) => (on_line(A3,A2,O)))).
-
-%*******************************************************************************
-% --- Perpendicular at rules ---
-
-fof(perp_at4, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A0,A2,A3,A4) & A0 != A2 & A0 != A3 & A0 != A4) =>
-    (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
-fof(perp_at5, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A2,A0,A3,A4) & A0 != A2 & A0 != A3 & A0 != A4) =>
-    (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
-fof(perp_at6, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A3,A4,A0,A2) & A0 != A2 & A0 != A3 & A0 != A4) =>
-    (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
-fof(perp_at7, axiom, ![A0,A2,A3,A4] : ((perpendicular_at(A0,A3,A4,A2,A0) & A0 != A2 & A0 != A3 & A0 != A4) =>
-    (collinear(A0,A3,A4) & perpendicular(A0,A2,A3,A4)))).
-
-fof(perp_at1, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0 != A1 & A0 != A2 & A0 != A3 & A0 != A4) =>
-    (collinear(A0,A1,A2) & collinear(A0,A3,A4) & perpendicular(A1,A2,A3,A4)))).
-fof(perp_at2, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0 != A1 & A0 != A2) => 
-    (collinear(A0,A1,A2) & perpendicular(A1,A2,A3,A4)))).
-fof(perp_at3, axiom, ![A0,A1,A2,A3,A4] : ((perpendicular_at(A0,A1,A2,A3,A4) & A0 != A3 & A0 != A4) => 
-    (collinear(A0,A3,A4) & perpendicular(A1,A2,A3,A4)))).
-
-%*******************************************************************************
-% --- Foot at rules ---
-
-fof(foot1, axiom, ![A0,A1,A2,A3] : ((foot(A0,A1,A2,A3) & A0 != A1 & A2 != A3 ) => (perpendicular_at(A0,A0,A1,A2,A3)))).
-fof(foot2, axiom, ![A0,A1,A2] : ((foot(A0,A0,A1,A2) & A1 != A2 ) => (on_line(A0,A1,A2)))).
-
+                                                                   
 %*******************************************************************************
 % --- Right angle rules ---
-
 fof(right_angle1, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & O = fun_midpoint(A0,A2) & A0 != A2) =>
     (on_circle(A1,O,A0) ))).
 fof(right_angle2, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & O = fun_random_on_perpendicular_from(A1,A1,A2) & A1!=O) =>
@@ -178,19 +127,23 @@ fof(inter_c_c1, axiom, ![A0,A1,A2,A3,A4,A5] : ((inter_c_c(A0,A1,A2,A3,A4,A5) & A
 fof(inter_c_c2, axiom, ![A0,A1,A2,A3,A4] : ((inter_c_c(A0,A1,A2,A3,A4,A3) & A2 != A3 & A4 != A3 & A0 != A3) 
     => (A0 = fun_inter_c_c(A1,A2,A3,A4,A3) ))).
 
+%*******************************************************************************
 
-fof(midpoint11a, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(A1,B1,C1) & midpoint(B1,M,B2) 
+fof(midpoint11a, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(A1,B1,C1) & midpoint(M,B1,B2) 
     & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
     => (parallel(A1,C1,A2,C2)))).
-fof(midpoint11b, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(B1,A1,C1) & midpoint(B1,M,B2) 
-    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
+fof(midpoint11b, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(B1,A1,C1) & midpoint(M,B1,B2) 
+    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1 & A1 != M & B1 != M & C1 != M) 
     => (parallel(A1,C1,A2,C2)))).
-fof(midpoint11c, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(C1,A1,B1) & midpoint(B1,M,B2)
-    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
+fof(midpoint11c, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(C1,A1,B1) & midpoint(M,B1,B2)
+    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1 & A1 != M & B1 != M & C1 != M) 
     => (parallel(A1,C1,A2,C2)))).
-fof(midpoint12, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((collinear(A1,B1,C1) & midpoint(B1,M,B2) 
-    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
+fof(midpoint12, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((collinear(A1,B1,C1) & midpoint(M,B1,B2) 
+    & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1 & A1 != M & B1 != M & C1 != M) 
     => (parallel(A1,C1,A2,C2)))).
+
+%fof(midpoint11g, axiom, ![A1,B1,A2,B2,M] : ((midpoint(M,B1,B2) & A2 = fun_symmetric(A1,M) & A1 != M &  B1 != M) 
+%    => (parallel(A1,B1,A2,B2)))).
 
 
 
