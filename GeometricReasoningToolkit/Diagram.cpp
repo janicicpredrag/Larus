@@ -2,17 +2,19 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-#include "Utils.h"
+#include "common.h"
 #include "Diagram.h"
 #include "ADGLib_signature.h"
 #include "CartesianCalculations.h"
 
 using namespace std;
 
-extern bool SHOW_INTERMEDIATE_RESULTS;
+bool SHOW_INTERMEDIATE_RESULTS = true;
 
 #define AREA_THRESHOLD 100
 #define DISTANCE_THRESHOLD 3
+#define DIM 70
+#define STEP 2
 
 //---------------------------------------------------------------------
 
@@ -24,15 +26,17 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
     auto millis = chrono::duration_cast<chrono::milliseconds>(duration).count();
     srand(static_cast<unsigned int>(millis));
 
-    for(int attempts = 1; attempts <= 1000; attempts++) {
+    for(int attempts = 1; attempts <= 200; attempts++) {
         if (SHOW_INTERMEDIATE_RESULTS) {
             cout << endl << "Instantiation attempt " << attempts << ":" << endl;
         }
         try {
             mInitialPoints.clear();
             InstantiateOnce(constructionPlan);
-            for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++)
-                mInitialPoints.insert(*mAllPoints.find(theorem.GetUnivVar(i)));
+            for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++) {
+                if (mAllPoints.find(theorem.GetUnivVar(i)) != mAllPoints.end())
+                    mInitialPoints.insert(*mAllPoints.find(theorem.GetUnivVar(i)));
+            }
 
             bool bOutOfCanvas = false;
             for(auto ip = mAllPoints.begin();
@@ -41,8 +45,8 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
                     cout << " * point: " << ip->first
                          << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
                 }
-                if (ip->second.x < 5 || ip->second.y < 5 ||
-                    ip->second.x > 65 || ip->second.y >65) {
+                if (ip->second.x < STEP || ip->second.y < STEP ||
+                    ip->second.x > DIM-STEP || ip->second.y >DIM-STEP) {
                     if (SHOW_INTERMEDIATE_RESULTS) {
                         cout << "Point " << ip->first;
                     }
@@ -102,10 +106,10 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
 
             mGCLC += "% ----- Point " + sA[0] + " := " + t.ToTPTPString() + "\n";
             const string func = t.GetFunctionSymbol(0);
-            if (func == "freepoint") {
+            if (func == FREEPOINT) {
                 Point p;
-                p.x = 5 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
-                p.y = 5 + 5 * (int)(12 * ((double)rand() / RAND_MAX));
+                p.x = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
+                p.y = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
                 mAllPoints[sA[0]] = p;
                 mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
@@ -280,8 +284,31 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
-            }
-            else {
+
+
+        } else if (func == FUN_RATIO3_2 ||
+                   func == FUN_RATIO2_m1 ||
+                   func == FUN_RATIO1_m2 ||
+                   func == FUN_RATIO3_2 ||
+                   func == FUN_RATIO2_3 ||
+                   func == FUN_RATIO2_m3) {
+            double ratio;
+            if (func == FUN_RATIO3_2) ratio = 3.0/2;
+            else if (func == FUN_RATIO2_m1) ratio = -2.0/1;
+            else if (func == FUN_RATIO1_m2) ratio = -1.0/2;
+            else if (func == FUN_RATIO3_2) ratio = 3.0/2;
+            else if (func == FUN_RATIO2_3) ratio = 2.0/3;
+            else /* if (func == FUN_RATIO2_m3)*/ ratio = -2.0/3;
+            towards(A[1], A[2], ratio, A[0]);
+            mAllPoints[sA[0]] = A[0];
+            mGCLC += "towards " + sA[0] + " " + sA[1] + " " + sA[2] + " " + double2string(ratio,5) + "\n";
+            mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
+            mGCLC += "cmark_lb " + sA[0] + "\n\n";
+            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+            // printPoint(sA[0], mAllPoints[sA[0]]);
+
+        } else {
                 cout << "ERROR2!" << endl;
                 cout << func << " not supported! " << endl;
             }
@@ -326,6 +353,27 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                          + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
+            } else if (it->GetName() == INTER_C_L1) {
+                Line l;
+                Point X;
+                line(A[3], A[4], l);
+                Circle c;
+                circle(A[1], A[2], c);
+                lineCircleIntersection(l,c, A[0], X);
+                mAllPoints[sA[0]] = A[0];
+                mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
+                mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
+                mGCLC += "intersec2 " + sA[0] + " __P l c\n";
+                mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
+                mGCLC += "drawcircle c \n";
+                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
+                         + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
+                // printPoint(sA[0], mAllPoints[sA[0]]);
+
+
             } else if (it->GetName() == INTER_C_C) {
                 Circle c1, c2;
                 circle(A[2], A[3], c1);
@@ -367,11 +415,11 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
             sA[i] = it->GetArg(i).ToTPTPString();
             A[i] = mAllPoints[sA[i]];
         }
-        if (SHOW_INTERMEDIATE_RESULTS) {
+/*        if (SHOW_INTERMEDIATE_RESULTS) {
             printLog(it->ToString());
             if (next(it) != ndgs.end())
                 printLog(", ");
-        }
+        }*/
 
         if (it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))
@@ -489,6 +537,10 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[4] + " " + A[5] +"\n";
         } else if (f.GetName() == CIRCUMCENTER) {
             mGCLC += "drawcircle " + A[0] + " " + A[1] + "\n";
+        } else if (f.GetName() == BARYCENTER) {
+            mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+            mGCLC += "drawsegment " + A[0] + " " + A[2] + "\n";
+            mGCLC += "drawsegment " + A[0] + " " + A[3] + "\n";
         } else if (f.GetName() == ORTHOCENTER) {
             mGCLC += "drawline " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawline " + A[0] + " " + A[2] + "\n";
@@ -505,6 +557,7 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
                    && f.GetArg(1).GetFunctionSymbol(0) == "freepoint") {
         } else if (f.GetName() == ON_OPP_SIDES) {
         } else if (f.GetName() == ON_SAME_SIDE) {
+        } else if (f.GetName() == FREEPOINT) {
         } else {
             cout << "ERROR34" << endl;
             cout << f.GetName() << " not supported! " << endl;

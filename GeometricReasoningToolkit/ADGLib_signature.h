@@ -27,6 +27,7 @@ inline constexpr string_view RECTANGLE     = "rectangle";
 inline constexpr string_view SQUARE        = "square";
 inline constexpr string_view CIRCUMCENTER  = "circumcenter";
 inline constexpr string_view ORTHOCENTER   = "orthocenter";
+inline constexpr string_view BARYCENTER    = "barycenter";
 
 inline constexpr string_view ON_OPP_SIDES  = "opposite_sides";
 inline constexpr string_view ON_SAME_SIDE  = "same_side";
@@ -36,9 +37,12 @@ inline constexpr string_view NOT_COLL      = "nnncollinear";
 inline constexpr string_view ON_LINE       = "on_line";
 inline constexpr string_view ON_CIRCLE     = "on_circle";
 
+inline constexpr string_view FREEPOINT             = "freepoint";
 inline constexpr string_view INTER_L_L             = "intersection_line_line";
 inline constexpr string_view INTER_C_L             = "intersection_circle_line";
 inline constexpr string_view INTER_C_C             = "intersection_circle_circle";
+inline constexpr string_view INTER_C_L1             = "intersection_circle_line1";
+inline constexpr string_view INTER_C_C1             = "intersection_circle_circle1";
 inline constexpr string_view FOURTH_VERTEX_OF_PARALLELOGRAM = "fourth_vertex_of_parallelogram";
 inline constexpr string_view FUN_MIDPOINT          = "fun_midpoint";
 inline constexpr string_view FUN_SYMMETRIC         = "fun_symmetric";
@@ -54,5 +58,10 @@ inline constexpr string_view FUN_RAND_ON_RAY_COMPL = "fun_random_on_ray_compleme
 inline constexpr string_view FUN_RAND_ON_ANG_BIS   = "fun_random_on_angle_bisector";
 inline constexpr string_view FUN_RAND_ON_ANG_RAY   = "fun_random_on_angle_ray";
 
+inline constexpr string_view FUN_RATIO2_m1         = "fun_ratio2_m1";
+inline constexpr string_view FUN_RATIO1_m2         = "fun_ratio1_m2";
+inline constexpr string_view FUN_RATIO3_2          = "fun_ratio3_2";
+inline constexpr string_view FUN_RATIO2_3          = "fun_ratio3_2";
+inline constexpr string_view FUN_RATIO2_m3         = "fun_ratio2_m3";
 
 #endif

@@ -35,6 +35,17 @@ string itohexs(unsigned int u)
   return stream.str();
 }
 
+
+//---------------------------------------------------------------------
+
+string double2string(double value, int precision) {
+    stringstream ss;
+    ss << fixed
+       << setprecision(precision)
+       << value;
+    return ss.str();
+}
+
 // ---------------------------------------------------------------------------------------------------------------------------
 
 bool stoi(string s, int &i) {

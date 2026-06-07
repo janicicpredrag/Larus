@@ -29,6 +29,7 @@ private:
     bool ReadConstructionRules(const string& fileName);
     bool ReadDeductionRules(const string& fileName);
 
+    bool dD2P();
     bool D2P();
     ProcessResult TryProcessSingleInputConstraint();
     bool ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDatabase& db, double time_limit);

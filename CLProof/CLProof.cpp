@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <queue>
 
 using namespace std;
 
@@ -316,6 +317,7 @@ void CLProof::SimplifyByFormulae() {
 // ---------------------------------------------------------------------------------
 
 void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
+
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
   if (pe) {
     for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
@@ -335,65 +337,56 @@ void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
         MakeRelevant(relevant, Fact(sBOT));
     }
   }
+
+  queue<Fact> rel;
   if (mMPs.size() > 0) { // last step is always relevant
-    ConjunctionFormula cf = (mMPs[mMPs.size() - 1]).from;
+    //ConjunctionFormula cf = (mMPs[mMPs.size() - 1]).from;
     DNFFormula dnf = (mMPs[mMPs.size() - 1]).conclusion;
     MakeRelevant(relevant, dnf.GetElement(0));
+    for(size_t j=0; j<dnf.GetElement(0).GetSize(); j++)
+        rel.push(dnf.GetElement(0).GetElement(j));
   }
 
-  // Simplify the sequence of modus ponenses
-  size_t size = mMPs.size();
-  for (int i = size; i > 0; i--) {
-    // std::cout << endl << " MP  : " << i << endl;
-    ConjunctionFormula cf = mMPs[i - 1].from;
-    DNFFormula dnf = mMPs[i - 1].conclusion;
-    /*if (dnf.GetSize()==1) {
-        if (Relevant(relevant, dnf.GetElement(0)))
-            MakeRelevant(relevant, cf);
-        else
-            mMP.erase(mMP.begin()+i-1);
-    }*/
-
-    bool bRelevant = false;
-    for (size_t j = 0; j < dnf.GetSize() && !bRelevant; j++) {
-      // std::cout << "Testing Relevant : " << cf << endl;
-      if (Relevant(relevant, dnf.GetElement(j))) {
-        MakeRelevant(relevant, cf);
-        bRelevant = true;
-        // std::cout << " Relevant : " << cf << endl;
+  set<int> needed_steps;
+  while (!rel.empty()) {
+      Fact f = rel.front();
+      rel.pop();
+      bool found = false;
+      for (size_t i = 0; i < mMPs.size() && !found; i++) {
+          DNFFormula dnf = mMPs[i].conclusion;
+          for (size_t j = 0; j < mMPs[i].conclusion.GetElement(0).GetSize() && !found; j++) {
+              if (f == mMPs[i].conclusion.GetElement(0).GetElement(j)) {
+                  needed_steps.insert(i);
+                  ConjunctionFormula cf = mMPs[i].from;
+                  for(size_t k=0; k < cf.GetSize(); k++) {
+                      rel.push(cf.GetElement(k));
+                  }
+                  found = true;
+              }
+          }
       }
-    }
-    if (!bRelevant)
-      mMPs.erase(mMPs.begin() + i - 1);
   }
 
-  for (int i = size; i > 0; i--) {
-    DNFFormula dnf = mMPs[i - 1].conclusion;
-    if (dnf.GetSize() == 1 && dnf.GetElement(0).GetSize() == 1) {
-      for (int j = i - 1; j > 0; j--) {
-        DNFFormula dnf2 = mMPs[j - 1].conclusion;
-        if (dnf2.GetSize() == 1 && dnf2.GetElement(0).GetSize() == 1 &&
-            dnf.GetElement(0).GetElement(0) ==
-                dnf2.GetElement(0).GetElement(0)) {
-          mMPs.erase(mMPs.begin() + i - 1);
-          break;
-        }
-      }
-    }
+  vector<MP_Step> MP_simplified;
+
+  for (const auto& i : needed_steps) {
+    MP_simplified.push_back(mMPs[i]);
   }
+  mMPs = MP_simplified;
+
 }
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Relevant(const set<Fact> &relevant, const Fact &f) {
+bool CLProof::IsRelevant(const set<Fact> &relevant, const Fact &f) {
   return (relevant.find(f) != relevant.end());
 }
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Relevant(const set<Fact> &relevant, const ConjunctionFormula &f) {
+bool CLProof::IsRelevant(const set<Fact> &relevant, const ConjunctionFormula &f) {
   for (size_t i = 0; i < f.GetSize(); i++) {
-    if (Relevant(relevant, f.GetElement(i)))
+    if (IsRelevant(relevant, f.GetElement(i)))
       return true;
   }
   return false;
@@ -410,6 +403,20 @@ void CLProof::MakeRelevant(set<Fact> &relevant, const Fact &f) {
 void CLProof::MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f) {
   for (size_t i = 0; i < f.GetSize(); i++)
     MakeRelevant(relevant, f.GetElement(i));
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::MakeIrrelevant(set<Fact> &relevant, const Fact &f) {
+    cout << "relevant: " << f << endl;
+    relevant.erase(f);
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::MakeIrrelevant(set<Fact> &relevant, const ConjunctionFormula &f) {
+    for (size_t i = 0; i < f.GetSize(); i++)
+        MakeIrrelevant(relevant, f.GetElement(i));
 }
 
 // ---------------------------------------------------------------------------------------

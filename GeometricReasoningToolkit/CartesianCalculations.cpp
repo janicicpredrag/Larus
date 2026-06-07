@@ -30,6 +30,13 @@ void translation(const Point& A, const Point& X, const Point& Y, Point& P) {
 
 // -----------------------------------------------------------------------------------------------
 
+void towards(const Point& X, const Point& Y, double r, Point& P) {
+    P.x = X.x + r*(Y.x-X.x);
+    P.y = X.y + r*(Y.y-X.y);
+}
+
+// -----------------------------------------------------------------------------------------------
+
 void perp(const Point& A, const Line& l, Line& p)
 {
     if (fabs(l.b) > EPS) {
@@ -160,7 +167,7 @@ void lineCircleIntersection(const Line& l, const Circle& c, Point& P1, Point& P2
 
 void circleCircleIntersection(const Circle& c1, const Circle& c2, Point& P1, Point& P2)
 {
-    double x1, x2, y1, y2, r1, r2, a, b, c, d, e, f, s;
+    double x1, x2, y1, y2, r1, r2, a, b, c, d, e, f;
 
     x1 = c1.x;
     y1 = c1.y;

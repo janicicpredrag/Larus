@@ -13,6 +13,7 @@
 #include "ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h"
 #include "common.h"
 #include "hammering.h"
+#include "GeometricReasoningToolkit/Declarative2Procedural.h"
 
 ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
                                Theory &T, CLFormula &theorem,
@@ -650,6 +651,12 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         string sFileName3(OUTPUT_FOLDER + "PROOF" + fileName + "_illustration_predicates.gcl");
         exisa.ToFile(T, proof, sFileName3, params);
         cout << "Generating illustration ... " << endl << flush;
+      }
+
+      if (params.mbADGLibConstruction) {
+          string sFileName1(OUTPUT_FOLDER + "PROOF" + fileName + ".gcl");
+          string sFileName2(OUTPUT_FOLDER + "PROOF" + fileName + ".p_correctness");
+          TransformDeclarativeConstructionToProcedural(theorem, theoremName, instantiation, InstantiatedPremises, T, proof, sFileName1, sFileName2, params);
       }
     }
   } while (proved == eConjectureProved && params.number_of_abducts > 0);

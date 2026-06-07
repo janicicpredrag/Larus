@@ -56,10 +56,12 @@ public:
 
   void SimplifyByFormulae();
   void SimplifyByFormulae(set<Fact> &relevant);
-  bool Relevant(const set<Fact> &relevant, const Fact &f);
-  bool Relevant(const set<Fact> &relevant, const ConjunctionFormula &f);
+  bool IsRelevant(const set<Fact> &relevant, const Fact &f);
+  bool IsRelevant(const set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeRelevant(set<Fact> &relevant, const Fact &f);
   void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
+  void MakeIrrelevant(set<Fact> &relevant, const Fact &f);
+  void MakeIrrelevant(set<Fact> &relevant, const ConjunctionFormula &f);
 
   void SimplifyByProofSteps();
   void RedirectRepeatedSteps();

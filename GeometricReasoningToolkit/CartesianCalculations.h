@@ -20,6 +20,7 @@ struct Circle {
 void midpoint(const Point& A, const Point& B, Point& M);
 void reflection(const Point& O, const Point& A, Point& R);
 void translation(const Point& A, const Point& X, const Point& Y, Point& P);
+void towards(const Point& X, const Point& Y, double r, Point& P);
 void perp(const Point& A, const Line& l, Line& p);
 void line(const Point& A, const Point& B, Line& l);
 void circle(const Point& A, const Point& B, Circle& c);

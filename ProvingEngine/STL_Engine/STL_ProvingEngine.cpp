@@ -92,7 +92,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
         if (ax.GetNumOfExistVars() == 0 &&
           ax.GetGoal().GetSize() == 1) {
 #ifdef DEBUG_OUTPUT
-            cout << "Trying ax " << ax_name << endl;
+//            cout << "Trying ax " << ax_name << endl;
 #endif
         instantiation.clear();
         if (ApplyAxiom(ax, from, mp, instantiation)) {
@@ -113,7 +113,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
         if (ax.GetNumOfExistVars() == 0 /*|| mpDB.mConstants.empty()*/ &&
             ax.GetGoal().GetSize() > 1) {
 #ifdef DEBUG_OUTPUT
-      cout << "Trying ax " << ax_name << endl;
+//      cout << "Trying ax " << ax_name << endl;
 #endif
           instantiation.clear();
           if (mpDB.GetDatabaseCases().size() == 0 &&
@@ -188,7 +188,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
               ax.GetNumOfExistVars() != 0 /*|| mpDB.mConstants.empty()*/ &&
               ax.GetGoal().GetSize() > 1) {
 #ifdef DEBUG_OUTPUT
-            cout << "Trying ax " << ax_name << endl;
+//            cout << "Trying ax " << ax_name << endl;
 #endif
             instantiation.clear();
             if (mpDB.GetDatabaseCases().size() == 0 &&
@@ -220,7 +220,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
               ax.GetNumOfUnivVars() != 0 &&
               ax.GetNumOfExistVars() != 0 /*|| mpDB.mConstants.empty() && it->first.GetGoal().GetSize()>1*/) {
 #ifdef DEBUG_OUTPUT
-            cout << "Trying ax " << ax_name << endl;
+//            cout << "Trying ax " << ax_name << endl;
 #endif
             instantiation.clear();
             if (mpDB.GetDatabaseCases().size() == 0 &&
@@ -262,7 +262,7 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
               ax.GetNumOfExistVars() !=
                   0 /*|| mpDB.mConstants.empty() && it->first.GetGoal().GetSize()>1*/) {
 #ifdef DEBUG_OUTPUT
-            cout << "Trying ax " << ax_name << endl;
+//            cout << "Trying ax " << ax_name << endl;
 #endif
             instantiation.clear();
             if (mpDB.GetDatabaseCases().size() == 0 &&

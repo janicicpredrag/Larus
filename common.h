@@ -98,6 +98,7 @@ const string DEFAULT_HAMMER_FOR_ABDUCTS = "vampire --mode casc --cores 0 --proof
 const unsigned DEFAULT_VAMPIRE_TIME_LIMIT = 18;
 const bool DEFAULT_INLINE_AXIOMS = true;
 const unsigned DEFAULT_NUMBER_OF_ABDUCTS = 0;
+const bool DEFAULT_ADGLIB_CONSTRUCTION = false;
 const bool DEFAULT_SHOW = false;
 
 const unsigned SATURATION_TIME_LIMIT = 5;
@@ -133,6 +134,7 @@ typedef struct proverParams {
   unsigned vampire_time_limit;
   bool mbInlineAxioms;
   unsigned number_of_abducts;
+  bool mbADGLibConstruction;
   bool show;
   string args;
 } proverParams;
@@ -140,6 +142,7 @@ typedef struct proverParams {
 string itos(unsigned int i);
 string itos(PROVING_ENGINE T, unsigned int i);
 string itohexs(unsigned int i);
+string double2string(double value, int precision);
 bool stoi(string s, int &i);
 bool stou(string s, unsigned &i);
 bool isNumber(string n);

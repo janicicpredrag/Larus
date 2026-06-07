@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
   params.mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
   params.exact_length = DEFAULT_EXACT_LENGTH;
   params.number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
+  params.mbADGLibConstruction = DEFAULT_ADGLIB_CONSTRUCTION;
   params.show = DEFAULT_SHOW;
 
   USING_ORIGINAL_SIGNATURE_EQ = true;
@@ -286,6 +287,10 @@ int main(int argc, char **argv) {
 
     else if (argv[i][0] == '-' && argv[i][1] == 'u') {
       bFullHammering = true;
+    }
+
+    else if (argv[i][0] == '-' && !strcmp(argv[i] + 1, "constr")) {
+        params.mbADGLibConstruction = true;
     }
 
     else {

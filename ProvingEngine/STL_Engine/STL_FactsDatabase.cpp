@@ -174,6 +174,10 @@ bool STLFactsDatabase::SubstvarsNotInPremises(const CLFormula &axiom,
         if (!DisjunctionHolds(axiom, goal_inst, instantiation)) {
             for (const auto& f : auxFacts)
                 premises_inst.Add(f);
+
+            for(size_t j=0; j<axiom.GetNumOfExistVars(); j++)
+                instantiation[axiom.GetExistVar(j) ] = mpT->MakeNewConstant();
+
             mpT->InstantiateGoal(axiom, instantiation, goal_inst, true);
             return true;
         }
@@ -270,9 +274,11 @@ bool STLFactsDatabase::ConjunctionHolds(const CLFormula &axiom, const Conjunctio
 bool STLFactsDatabase::FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation) {
     if (fact.GetName() == sTOP)
         return true;
+    const map<string, string> inst0 = instantiation;
     for (const auto& db_fact : mDatabase) {
         if (MatchFact(axiom, fact, db_fact, instantiation))
             return true;
+        instantiation = inst0;
     }
     return false;
 }
@@ -282,7 +288,8 @@ bool STLFactsDatabase::FactHolds(const CLFormula &axiom, const Fact& fact, map<s
 bool STLFactsDatabase::MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation)
 {
     if (f.GetArity() != db_fact.GetArity() ||
-        f.GetName() != db_fact.GetName()) return false;
+        f.GetName() != db_fact.GetName())
+        return false;
 
     for (size_t j = 0; j < f.GetArity(); ++j) {
         string arg = f.GetArg(j).ToSMTString();
@@ -301,11 +308,16 @@ bool STLFactsDatabase::MatchFact(const CLFormula &axiom, const Fact &f, const Fa
         if (!bUniVar && !bExiVar && arg != db_arg)
             return false;
         auto it = instantiation.find(arg);
+
         if (it != instantiation.end() && it->second != db_arg)
+            return false;
+        if (bUniVar && mpT->mConstantsPermissible.find(db_arg) == mpT->mConstantsPermissible.end())
             return false;
         if (it == instantiation.end() && (bUniVar || bExiVar)
             /*&& arg != db_arg*/)
             instantiation[arg] = db_arg;
+
+        // cout << arg << " ->" << db_arg << "; ";
     }
     return true;
 }

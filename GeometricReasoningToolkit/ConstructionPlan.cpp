@@ -97,6 +97,57 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
 
 // -----------------------------------------------------------------------------------------------
 
+bool ConstructionPlan::dD2P() {
+    printLog("\nDeductive approach...\n");
+
+    while(true) {
+        printCurrentStatus();
+
+        if (mInputConstruction.empty())
+            break;
+
+        if (CompressPairOfLocationConstraintsToFunctionalForm()) {
+            printLog("\nCompression successful: \n");
+            continue;
+        }
+
+        // Try single input constraints
+        ProcessResult singleStatus = TryProcessSingleInputConstraint();
+        if (singleStatus == ProcessResult::Overconstrained) {
+            return false;
+        } else if (singleStatus == ProcessResult::ProgressMade) {
+            continue; // Restarts the while loop
+        }
+
+        // if the above failed, take randomly one points that is not fully constrained
+        if (PickPartiallyLocatedPoint(false)) // Do not allow "in other constraints"
+            continue; // Restarts the while loop
+
+        // if the above failed, take randomly one points that is not fully constrained
+        if (PickPartiallyLocatedPoint(true)) // Do allow "in other constraints"
+            continue; // Restarts the while loop
+
+        break;
+    }
+
+    if (mInputConstruction.empty()) {
+        for (unsigned i = 0; i < mTheorem.GetNumOfUnivVars(); i++) {
+            if (!isFixed(mTheorem.GetUnivVar(i))) {
+                cout << endl << "\nThe system is underconstrained. No output construction plan!";
+                return false;
+            }
+        }
+        cout << endl << "\nSuccesfully created a construction plan" << endl;
+        printCurrentStatus();
+        return true;
+    } else {
+        cout << endl << "\nDon't know to handle remaining constraints!";
+        return false;
+    }
+}
+
+// -----------------------------------------------------------------------------------------------
+
 bool ConstructionPlan::D2P() {
     printLog("\nTrying to transform input constraints to location constraints ...\n");
 
