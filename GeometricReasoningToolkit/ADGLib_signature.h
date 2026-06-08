@@ -61,7 +61,7 @@ inline constexpr string_view FUN_RAND_ON_ANG_RAY   = "fun_random_on_angle_ray";
 inline constexpr string_view FUN_RATIO2_m1         = "fun_ratio2_m1";
 inline constexpr string_view FUN_RATIO1_m2         = "fun_ratio1_m2";
 inline constexpr string_view FUN_RATIO3_2          = "fun_ratio3_2";
-inline constexpr string_view FUN_RATIO2_3          = "fun_ratio3_2";
+inline constexpr string_view FUN_RATIO2_3          = "fun_ratio2_3";
 inline constexpr string_view FUN_RATIO2_m3         = "fun_ratio2_m3";
 
 #endif

@@ -310,21 +310,14 @@ void CLProof::DecreaseFromInfoFromStep(unsigned s)
 // ---------------------------------------------------------------------------------
 
 void CLProof::SimplifyByFormulae() {
-  set<Fact> relevant;
-  CLProof::SimplifyByFormulae(relevant);
-}
 
-// ---------------------------------------------------------------------------------
+  queue<Fact> relevant;
 
-void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
-
+  /*
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
   if (pe) {
     for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
       pe->SimplifySubproof(relevant, i);
-      /* for(size_t i=0; i<pe->mCases.GetSize(); i++)
-           for(size_t k=0; k < pe->mCases.GetElement(i).GetSize(); k++)
-               MakeRelevant(relevant,pe->mCases.GetElement(i).GetElement(k));*/
       MakeRelevant(relevant, pe->GetCases()[i].GetElement(0));
     }
   } else {
@@ -337,20 +330,21 @@ void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
         MakeRelevant(relevant, Fact(sBOT));
     }
   }
+  */
 
-  queue<Fact> rel;
   if (mMPs.size() > 0) { // last step is always relevant
-    //ConjunctionFormula cf = (mMPs[mMPs.size() - 1]).from;
     DNFFormula dnf = (mMPs[mMPs.size() - 1]).conclusion;
-    MakeRelevant(relevant, dnf.GetElement(0));
     for(size_t j=0; j<dnf.GetElement(0).GetSize(); j++)
-        rel.push(dnf.GetElement(0).GetElement(j));
+        relevant.push(dnf.GetElement(0).GetElement(j));
   }
 
   set<int> needed_steps;
-  while (!rel.empty()) {
-      Fact f = rel.front();
-      rel.pop();
+  set<Fact> processed_facts;
+
+  while (!relevant.empty()) {
+      Fact f = relevant.front();
+      processed_facts.insert(f);
+      relevant.pop();
       bool found = false;
       for (size_t i = 0; i < mMPs.size() && !found; i++) {
           DNFFormula dnf = mMPs[i].conclusion;
@@ -359,12 +353,21 @@ void CLProof::SimplifyByFormulae(set<Fact> &relevant) {
                   needed_steps.insert(i);
                   ConjunctionFormula cf = mMPs[i].from;
                   for(size_t k=0; k < cf.GetSize(); k++) {
-                      rel.push(cf.GetElement(k));
+                      if (processed_facts.find(cf.GetElement(k)) == processed_facts.end()) {
+                        relevant.push(cf.GetElement(k));
+                        processed_facts.insert(cf.GetElement(k));
+                      }
                   }
                   found = true;
               }
           }
       }
+      for (size_t i = 0; i < mAssumptions.size() && !found; i++) {
+          if (f == mAssumptions[i]) {
+             found = true;
+          }
+      }
+      assert(found);
   }
 
   vector<MP_Step> MP_simplified;

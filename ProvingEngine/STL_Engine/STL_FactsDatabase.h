@@ -37,7 +37,7 @@ private:
                           map<string, string> &instantiation, const set<string>& varsNotInPremises );
 
     bool DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation);
-    bool ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation);
+    bool ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation, size_t index);
     bool FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation);
     bool MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation);
 

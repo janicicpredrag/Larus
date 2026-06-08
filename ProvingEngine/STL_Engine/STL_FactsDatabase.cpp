@@ -252,21 +252,34 @@ bool STLFactsDatabase::MatchGoalFact(const Fact &f, const set<string>& exi_vars,
 // ---------------------------------------------------------------------------------------
 
 bool STLFactsDatabase::DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation) {
+    const map<string, string> inst0 = instantiation;
     for (const auto& conjf : dnf.GetDNF()) {
-        if (ConjunctionHolds(axiom, conjf, instantiation))
+        if (ConjunctionHolds(axiom, conjf, instantiation, 0))
             return true;
+        instantiation = inst0;
     }
     return false;
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool STLFactsDatabase::ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation) {
-    for (const auto& fact : conjf.GetConjunction()) {
-        if (!FactHolds(axiom, fact, instantiation))
-            return false;
+bool STLFactsDatabase::ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation, size_t index) {
+    if (index == conjf.GetSize())
+        return true;
+
+    const map<string, string> inst0 = instantiation;
+    Fact fact = conjf.GetElement(index);
+
+    if (fact.GetName() == sTOP)
+        return true;
+    for (const auto& db_fact : mDatabase) {
+        if (MatchFact(axiom, fact, db_fact, instantiation))
+            if (ConjunctionHolds(axiom, conjf, instantiation, index+1))
+                return true;
+        instantiation = inst0;
     }
-    return true;
+    instantiation = inst0;
+    return false;
 }
 
 // ---------------------------------------------------------------------------------------

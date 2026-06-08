@@ -52,6 +52,9 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
       }
   }
 
+  for (const auto& f : mpDB.GetDatabase())
+      proof.AddAssumption(f);
+
   do {
 
     if (mTimer.elapsed() >= mParams.time_limit) {

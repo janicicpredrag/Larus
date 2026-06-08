@@ -55,7 +55,6 @@ public:
   void SetProofEnd(CLProofEnd *p);
 
   void SimplifyByFormulae();
-  void SimplifyByFormulae(set<Fact> &relevant);
   bool IsRelevant(const set<Fact> &relevant, const Fact &f);
   bool IsRelevant(const set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeRelevant(set<Fact> &relevant, const Fact &f);
@@ -144,7 +143,7 @@ public:
   }
   void SimplifySubproof(set<Fact> &relevant, size_t i) {
     assert(i < mCases.size());
-    mSubproofs[i].SimplifyByFormulae(relevant);
+    // mSubproofs[i].SimplifyByFormulae(relevant);
   }
 
   void SetCases(const vector<DNFFormula> &dnf) { mCases = dnf; }
