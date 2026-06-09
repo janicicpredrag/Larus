@@ -1,5 +1,6 @@
 #include "ProvingEngine/STL_Engine/STL_FactsDatabase.h"
 #include <iostream>
+#include "GeometricReasoningToolkit/ADGLib_signature.h"
 
 using namespace std;
 
@@ -271,7 +272,8 @@ bool STLFactsDatabase::ConjunctionHolds(const CLFormula &axiom, const Conjunctio
     Fact fact = conjf.GetElement(index);
 
     if (fact.GetName() == sTOP)
-        return true;
+        if (ConjunctionHolds(axiom, conjf, instantiation, index+1))
+            return true;
     for (const auto& db_fact : mDatabase) {
         if (MatchFact(axiom, fact, db_fact, instantiation))
             if (ConjunctionHolds(axiom, conjf, instantiation, index+1))

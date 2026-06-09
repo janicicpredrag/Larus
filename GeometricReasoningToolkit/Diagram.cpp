@@ -111,10 +111,12 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 p.x = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
                 p.y = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
                 mAllPoints[sA[0]] = p;
+                mGCLC += "color 200 0 0\n";
                 mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                mGCLC += "color 0 0 0\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FOURTH_VERTEX_OF_PARALLELOGRAM) {
@@ -479,7 +481,6 @@ const string& Diagram::GetGCLCDescription() const {
 void Diagram::DrawBasicFigure(const CLFormula& theorem) {
 
     mGCLC += "color 0 0 0 \n";
-    mGCLC += "linethickness -3\n";
     for (size_t j = 0; j < theorem.GetNumOfUnivVars(); j++)
         mGCLC += "cmark_lb " + theorem.GetUnivVar(j) + "\n";
 
@@ -490,9 +491,11 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             A[i] = f.GetArg(i).ToTPTPString();
         }
         if (f.GetName() == TRIANGLE || f.GetName() == ISOSCELES) {
+            mGCLC += "linethickness -3\n";
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[0] + "\n";
+            mGCLC += "normal\n";
         } else if (f.GetName() == QUADRILATERAL || f.GetName() == PARALLELOGRAM || f.GetName() == RECTANGLE || f.GetName() == SQUARE) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
@@ -554,7 +557,7 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         } else if (f.GetName() == NOT_COLL) {
         } else if (f.GetName() == NOT_EQ) {
         } else if (f.GetName() == EQ_NATIVE_NAME
-                   && f.GetArg(1).GetFunctionSymbol(0) == "freepoint") {
+                   && f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT) {
         } else if (f.GetName() == ON_OPP_SIDES) {
         } else if (f.GetName() == ON_SAME_SIDE) {
         } else if (f.GetName() == FREEPOINT) {
