@@ -87,7 +87,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
     mAllPoints.clear();
     mGCLC.clear();
     mGCLC += "dim 70 70\n";
-    mGCLC += "color 200 200 200\n";
+    mGCLC += "color 220 220 220\n";
     mGCLC += "normal\n";
 
     for(vector<Fact>::const_iterator it=constructionPlan.begin(); it!=constructionPlan.end(); it++) {
@@ -147,7 +147,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 translation(A[3], A[1], A[2], A[0]);
                 mAllPoints[sA[0]] = A[0];
                 mGCLC += "translate " + sA[0] + " " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
-                mGCLC += "drawcircle " + sA[3] + " " + sA[0] + "\n";
+                mGCLC += "drawsegment " + sA[3] + " " + sA[0] + "\n";
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
@@ -158,7 +158,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mAllPoints[sA[0]] = A[0];
                 mGCLC += "symmetrical " + sA[0] + " " + sA[2] + " " + sA[1] + "\n";
                 mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -170,7 +170,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "foot " + sA[0] + " " + sA[1] + " l\n";
                 mGCLC += "drawline " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[1] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -178,9 +178,11 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_RAND_ON_LINE) {
                 double r = randomOnLine(A[1], A[2], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " " + sA[2]+ " " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -188,11 +190,13 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_RAND_ON_PARALLEL) {
                 double r = randomOnParallelLine(A[1], A[2], A[3], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "towards __P " + sA[2] + " " + sA[3]+ " " + double2string(r,5) + "\n";
                 mGCLC += "translate " + sA[0] + " " + sA[2] + " __P " + sA[1] + "\n";
                 mGCLC += "drawline " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawline " + sA[0] + " " + sA[1] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -200,13 +204,15 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_RAND_ON_SEG_BIS) {
                 double r = randomOnSegmentBisector(A[1], A[2], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "midpoint __P1 " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "rotate __P2 __P1 90 " + sA[1] + " \n";
                 mGCLC += "towards " + sA[0] + " __P1 __P2 " + double2string(r,5) + "\n";
                 mGCLC += "drawline __P1 " + sA[0] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[1] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -214,6 +220,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_RAND_ON_ANG_BIS) {
                 double r = randomOnAngleBisector(A[1], A[2], A[3], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "bis __b " + sA[1] + " " + sA[2] + " " + sA[3] + " \n";
                 mGCLC += "line __l " + sA[1]+ " " + sA[3] + " \n";
                 mGCLC += "intersec __E __b __l \n";
@@ -224,39 +231,47 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                mGCLC += "color 0 0 0\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_PERP_FROM) {
                 double r = randomOnPerpendicularLine(A[1], A[2], A[3], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "rotate __P1 " + sA[2] + " 90 " + sA[3] + "\n";
                 mGCLC += "towards __P2 " + sA[2] + " __P1 " + double2string(r,5) + "\n";
                 mGCLC += "translate " + sA[0] + " " + sA[2] + " __P2 " + sA[1] + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                         + double2string(mAllPoints[sA[0]].y,2) + "\n";
+
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_RAY_COMPL) {
                 double r = randomOnRayComplement(A[1], A[2], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "sim __P " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                         + double2string(mAllPoints[sA[0]].y,2) + "\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_ANG_RAY) {
                 double r = randomOnAngleRay(A[1], A[2], A[5], A[4], A[3],  A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "angle_o __phi " + sA[5] + " " + sA[4] + " " + sA[3] + "\n";
                 mGCLC += "rotate __P " + sA[1] + " __phi " + sA[2] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 200\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -264,6 +279,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_CENTER_OF_ARC_ANG) {
                 centerOfArcAngle(A[1], A[2], A[3], A[4], A[5], A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "angle_o phi " + sA[3] + " " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "expression phi' { phi-90 }\n";
                 mGCLC += "rotate __P " + sA[1] + " phi' " + sA[2] + "\n";
@@ -272,7 +288,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "intersec " + sA[0] + " __l1 __l2\n";
                 mGCLC += "drawsegment " + sA[3] + " " + sA[4] + "\n";
                 mGCLC += "drawsegment " + sA[4] + " " + sA[5] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -280,9 +297,11 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             } else if (func == FUN_RAND_ON_CIRCLE) {
                 double r = randomPointOnCircle(A[1],A[2],A[0]);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "rotate " + sA[0] + " " + sA[1] + " " + double2string(r,5) + " " + sA[2] + "\n";
                 mGCLC += "drawcircle " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
@@ -343,12 +362,14 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 lineCircleIntersection(l,c, A[1], A[0]);
                 mAllPoints[sA[0]] = A[0];
                 mAllPoints[sA[1]] = A[1];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "line l " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "circle c " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "intersec2 " + sA[1] + " " + sA[0] + " l c\n";
                 mGCLC += "drawline " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "drawcircle c \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
@@ -363,12 +384,14 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 circle(A[1], A[2], c);
                 lineCircleIntersection(l,c, A[0], X);
                 mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
                 mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "intersec2 " + sA[0] + " __P l c\n";
                 mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
                 mGCLC += "drawcircle c \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
@@ -383,12 +406,14 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 circleCircleIntersection(c1, c2, A[0], A[1]);
                 mAllPoints[sA[0]] = A[0];
                 mAllPoints[sA[1]] = A[1];
+                mGCLC += "color 220 220 220\n";
                 mGCLC += "circle c1 " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "circle c2 " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "intersec2 " + sA[0] + " " + sA[1] + " c1 c2\n";
                 mGCLC += "drawcircle c1 \n";
                 mGCLC += "drawcircle c2 \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 220 220 220\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
@@ -481,8 +506,8 @@ const string& Diagram::GetGCLCDescription() const {
 void Diagram::DrawBasicFigure(const CLFormula& theorem) {
 
     mGCLC += "color 0 0 0 \n";
-    for (size_t j = 0; j < theorem.GetNumOfUnivVars(); j++)
-        mGCLC += "cmark_lb " + theorem.GetUnivVar(j) + "\n";
+   // for (size_t j = 0; j < theorem.GetNumOfUnivVars(); j++)
+   //     mGCLC += "cmark_lb " + theorem.GetUnivVar(j) + "\n";
 
     for (size_t j = 0; j < theorem.GetPremises().GetSize(); j++) {
         Fact f = theorem.GetPremises().GetElement(j);
