@@ -356,6 +356,34 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                      + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
             // printPoint(sA[0], mAllPoints[sA[0]]);
 
+        } else if (func == FUN_RAND_INTER_C_C) {
+            Circle c1, c2;
+            Point X;
+            circle(A[1], A[2], c1);
+            circle(A[3], A[4], c2);
+            bool bFirstIntersection = (rand() % 2);
+            if (bFirstIntersection)
+                circleCircleIntersection(c1, c2, A[0], X);
+            else
+                circleCircleIntersection(c1, c2, X, A[0]);
+            mAllPoints[sA[0]] = A[0];
+            mGCLC += "color 220 220 220\n";
+            mGCLC += "circle c1 " + sA[3] + " " + sA[5] + "\n";
+            mGCLC += "circle c2 " + sA[2] + " " + sA[3] + "\n";
+            if (bFirstIntersection)
+                mGCLC += "intersec2 " + sA[0] + " __P c1 c2\n";
+            else
+                mGCLC += "intersec2 __P " + sA[0] + " c1 c2\n";
+            mGCLC += "drawcircle c1 \n";
+            mGCLC += "drawcircle c2 \n";
+            mGCLC += "cmark_lb " + sA[0] + "\n";
+            mGCLC += "color 220 220 220\n\n";
+            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+            // printPoint(sA[0], mAllPoints[sA[0]]);
+            // printPoint(sA[1], mAllPoints[sA[1]]);
+
+
 
         } else {
                 cout << "ERROR2!" << endl;
