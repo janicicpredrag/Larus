@@ -15,8 +15,8 @@ const unordered_set<string> constructionFunctionSymbols = {
     string(INTER_L_L),
     string(INTER_C_L),
     string(INTER_C_C),
-    string(INTER_C_L1),
-    string(INTER_C_C1),
+    "rel_"+string(FUN_RAND_INTER_C_L),
+    "rel_"+string(FUN_RAND_INTER_C_C),
     "rel_"+string(FOURTH_VERTEX_OF_PARALLELOGRAM),
     "rel_"+string(FUN_MIDPOINT),
     "rel_"+string(FUN_SYMMETRIC),
@@ -141,6 +141,9 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
         const ConjunctionFormula cf = proof.GetMP(i).conclusion.GetElement(0);
         for (unsigned j = 0; j < cf.GetSize(); j++) {
             // cout << "proofstep: " << cf.GetElement(j) << endl;
+            if (isNDG_Fact(cf.GetElement(j)))
+                NDGs.insert(instantiateFact(cf.GetElement(j), inverted_inst));
+
             Fact result;
             if (predicate2functional(cf.GetElement(j), result))
                 constructionPlan.push_back(instantiateFact(result, inverted_inst));
@@ -149,6 +152,10 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
 
     cout << "----- Construction plan: -----" << endl;
     for(const auto& f : constructionPlan) {
+        cout << f << endl;
+    }
+    cout << "------ NDG conditions: ------" << endl;
+    for(const auto& f : NDGs) {
         cout << f << endl;
     }
 

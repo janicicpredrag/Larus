@@ -329,6 +329,34 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                      + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
             // printPoint(sA[0], mAllPoints[sA[0]]);
 
+        } else if (func == FUN_RAND_INTER_C_L) {
+            Line l;
+            Point X;
+            line(A[3], A[4], l);
+            Circle c;
+            circle(A[1], A[2], c);
+            bool bFirstIntersection = (rand() % 2);
+            if (bFirstIntersection)
+                lineCircleIntersection(l,c, A[0], X);
+            else
+                lineCircleIntersection(l,c, X, A[0]);
+            mAllPoints[sA[0]] = A[0];
+            mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
+            mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
+            if (bFirstIntersection)
+                mGCLC += "intersec2 " + sA[0] + " __P l c\n";
+            else
+                mGCLC += "intersec2 __P " + sA[0] + " l c\n";
+            mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
+            mGCLC += "drawcircle c \n";
+            mGCLC += "cmark_lb " + sA[0] + "\n";
+            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+            mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
+                     + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
+            // printPoint(sA[0], mAllPoints[sA[0]]);
+
+
         } else {
                 cout << "ERROR2!" << endl;
                 cout << func << " not supported! " << endl;
@@ -375,29 +403,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
                          + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
-
-            } else if (it->GetName() == INTER_C_L1) {
-                Line l;
-                Point X;
-                line(A[3], A[4], l);
-                Circle c;
-                circle(A[1], A[2], c);
-                lineCircleIntersection(l,c, A[0], X);
-                mAllPoints[sA[0]] = A[0];
-                mGCLC += "color 220 220 220\n";
-                mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
-                mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "intersec2 " + sA[0] + " __P l c\n";
-                mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
-                mGCLC += "drawcircle c \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
-                         + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
-
 
             } else if (it->GetName() == INTER_C_C) {
                 Circle c1, c2;
