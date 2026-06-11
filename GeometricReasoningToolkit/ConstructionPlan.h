@@ -67,7 +67,6 @@ private:
 
     bool m_deducingNewFacts;
     string mGCLC;
-
 };
 
 #endif

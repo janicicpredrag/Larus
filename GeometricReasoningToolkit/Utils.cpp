@@ -7,19 +7,7 @@
 
 using namespace std;
 
-bool SHOW_INTERMEDIATE_RESULTS = true;
-
 //---------------------------------------------------------------------
-
-string double2string(double value, int precision) {
-    stringstream ss;
-    ss << fixed
-       << setprecision(precision)
-       << value;
-    return ss.str();
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------
 
 void generateKOnes(int n, int index, int ones_left, string& current_s, vector<string>& results) {
     if (index == n) {
@@ -67,10 +55,3 @@ string GetBaseName(const string& fileName) {
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
-void printLog(const string& s)
-{
-    if (SHOW_INTERMEDIATE_RESULTS)
-        cout << s;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------------

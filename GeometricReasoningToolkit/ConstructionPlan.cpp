@@ -12,11 +12,21 @@
 
 using namespace std;
 
+bool SHOW_INTERMEDIATE_RESULTS = true;
+
 // -----------------------------------------------------------------------------------------------
 
 bool isNDGpredicate(const string& p) {
     return ((p == ON_OPP_SIDES) || (p == ON_SAME_SIDE) ||
             (p == NOT_EQ) || (p == NOT_COLL));
+}
+
+// -----------------------------------------------------------------------------------------------
+
+void printLog(const string& s)
+{
+    if (SHOW_INTERMEDIATE_RESULTS)
+        cout << s;
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -721,5 +731,3 @@ bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDataba
 }
 
 // -----------------------------------------------------------------------------------------------
-
-

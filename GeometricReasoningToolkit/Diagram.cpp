@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool SHOW_INTERMEDIATE_RESULTS = true;
+static bool SHOW_INTERMEDIATE_RESULTS = true;
 
 #define AREA_THRESHOLD 100
 #define DISTANCE_THRESHOLD 3
