@@ -46,6 +46,7 @@ public:
 
   unsigned Size() const;
   void AddAssumption(const Fact &f);
+  void ClearAssumptions() { mAssumptions.clear(); }
   void AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
                  string name,
                  const vector<unsigned> &fromStep,
@@ -61,6 +62,7 @@ public:
   void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeIrrelevant(set<Fact> &relevant, const Fact &f);
   void MakeIrrelevant(set<Fact> &relevant, const ConjunctionFormula &f);
+  bool Uses(const Fact& fact);
 
   void SimplifyByProofSteps();
   void RedirectRepeatedSteps();

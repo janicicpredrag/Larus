@@ -172,7 +172,7 @@ bool STLFactsDatabase::SubstvarsNotInPremises(const CLFormula &axiom,
         goal_inst = axiom.GetGoal();
         ConjunctionFormula conj;
         vector<Fact> auxFacts;
-        if (!DisjunctionHolds(axiom, goal_inst, instantiation)) {
+        if (DisjunctionHolds(axiom, goal_inst, instantiation)==-1) {
             for (const auto& f : auxFacts)
                 premises_inst.Add(f);
 
@@ -190,76 +190,43 @@ bool STLFactsDatabase::SubstvarsNotInPremises(const CLFormula &axiom,
 // ---------------------------------------------------------------------------------------
 
 bool STLFactsDatabase::GoalReached(const DNFFormula &dnf, const set<string>& exi_vars, ConjunctionFormula& cf) {
-    for (const auto& conjf : dnf.GetDNF()) {
-        if (GoalConjunctionHolds(conjf, exi_vars)) {
-            cf = conjf;
-            return true;
-        }
-    }
-    return false;
-}
-
-
-// ---------------------------------------------------------------------------------------
-
-bool STLFactsDatabase::GoalConjunctionHolds(const ConjunctionFormula &conjf, const set<string>& exi_vars) {
-    for (const auto& fact : conjf.GetConjunction()) {
-        map<string, string> instantiation;
-        if (!GoalFactHolds(fact, exi_vars, instantiation))
-            return false;
-    }
-    return true;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool STLFactsDatabase::GoalFactHolds(const Fact& fact, const set<string>& exi_vars, map<string, string>& instantiation) {
-    if (fact.GetName() == sTOP)
-        return true;
-    for (const auto& db_fact : mDatabase) {
-        if (MatchGoalFact(fact, exi_vars, db_fact, instantiation))
-            return true;
-    }
-    return false;
-}
-
-// ---------------------------------------------------------------------------------------
-
-bool STLFactsDatabase::MatchGoalFact(const Fact &f, const set<string>& exi_vars, const Fact &db_fact, map<string, string>& instantiation) {
-    if (f.GetArity() != db_fact.GetArity() ||
-        f.GetName() != db_fact.GetName())
+    map<string,string> instantiation;
+    vector<string> uv;
+    CLFormula skeleton; // only to carry quantifiers
+    skeleton.SetUnivVars(uv);
+    for(const auto& ev : exi_vars)
+        skeleton.AddExistVar(ev);
+    int r = DisjunctionHolds(skeleton, dnf, instantiation);
+    if (r < 0)
         return false;
 
-    for (size_t j = 0; j < f.GetArity(); ++j) {
-        string arg = f.GetArg(j).ToSMTString();
-        string db_arg = db_fact.GetArg(j).ToSMTString();
-        Term t;
-        t.ReadNonCompoundString(arg);
-
-        bool bExiVar = (exi_vars.find(arg) != exi_vars.end());
-        //bool UniVar = (uni_vars.find(arg) != uni_vars.end());
-
-        auto it = instantiation.find(arg);
-        if (it != instantiation.end() && it->second != db_arg)
-            return false;
-        if (it == instantiation.end() && !bExiVar && arg != db_arg)
-            return false;
-        if (it == instantiation.end() && bExiVar /*arg != db_arg*/)
-            instantiation[arg] = db_arg;
+    for (size_t j = 0; j < dnf.GetElement(r).GetSize(); j++) {
+        Fact fact = dnf.GetElement(r).GetElement(j);
+        Fact fout = fact;
+        for (size_t i = 0; i < fact.GetArity(); i++) {
+            Term t = fact.GetArg(i);
+            assert(t.NumArgs()==1);
+            string var = t.GetArg(0);
+            if (exi_vars.find(var) != exi_vars.end()) {
+                t.ReadNonCompoundString(instantiation[var]);
+                fout.SetArg(i, t);
+            }
+        }
+        cf.Add(fout);
     }
     return true;
 }
 
 // ---------------------------------------------------------------------------------------
 
-bool STLFactsDatabase::DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation) {
+int STLFactsDatabase::DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation) {
     const map<string, string> inst0 = instantiation;
-    for (const auto& conjf : dnf.GetDNF()) {
-        if (ConjunctionHolds(axiom, conjf, instantiation, 0))
-            return true;
+    for (size_t i = 0; i < dnf.GetDNF().size(); i++) {
+        if (ConjunctionHolds(axiom, dnf.GetElement(i), instantiation, 0))
+            return i;
         instantiation = inst0;
     }
-    return false;
+    return -1;
 }
 
 // ---------------------------------------------------------------------------------------

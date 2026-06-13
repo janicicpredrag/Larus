@@ -123,6 +123,7 @@ void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
                         const vector<pair<string, string>> &new_witnesses,
                         int step)
 {
+  static int STEP;
   MP_Step m;
   m.from = from;
   m.conclusion = mp;
@@ -130,7 +131,10 @@ void CLProof::AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
   m.fromSteps = fromStep;
   m.instantiation = instantiation;
   m.new_witnesses = new_witnesses;
-  m.step = step;
+  if (step == -1)
+      m.step = STEP++;
+  else
+      m.step = step;
   mMPs.push_back(m);
 }
 
@@ -194,7 +198,6 @@ void CLProof::AddToAllSteps(set<unsigned> &allSteps, unsigned s) {
   allSteps.insert(s);
 }
 
-
 // ---------------------------------------------------------------------------------
 
 void CLProof::SimplifyByProofSteps()
@@ -242,6 +245,27 @@ void CLProof::ReplaceFromInfo(unsigned s1, unsigned s2)
              mMPs[i].fromSteps[k] = s2;
       }
     }
+}
+
+// ---------------------------------------------------------------------------------
+
+bool CLProof::Uses(const Fact& fact)
+{
+    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+    if (pe) {
+        for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
+            if (pe->GetSubproof(i).Uses(fact))
+                return true;
+        }
+    }
+
+    for (int i = 0; i < mMPs.size(); i++) {
+        for (unsigned j = 0; j < mMPs[i].from.GetSize(); j++) {
+            if (mMPs[i].from.GetElement(j) == fact)
+                return true;
+        }
+    }
+    return false;
 }
 
 // ---------------------------------------------------------------------------------
@@ -313,7 +337,7 @@ void CLProof::SimplifyByFormulae() {
 
   queue<Fact> relevant;
 
-  /*
+  /* TODO
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
   if (pe) {
     for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {

@@ -31,7 +31,7 @@ inline constexpr string_view BARYCENTER    = "barycenter";
 
 inline constexpr string_view ON_OPP_SIDES  = "opposite_sides";
 inline constexpr string_view ON_SAME_SIDE  = "same_side";
-inline constexpr string_view NOT_EQ        = "nnneqnative";
+inline constexpr string_view NOT_EQ        = "nneqnative"; // TODO: to avoid =
 inline constexpr string_view NOT_COLL      = "nnncollinear";
 
 inline constexpr string_view ON_LINE       = "on_line";

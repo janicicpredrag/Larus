@@ -13,7 +13,7 @@ static bool SHOW_INTERMEDIATE_RESULTS = true;
 
 #define AREA_THRESHOLD 100
 #define DISTANCE_THRESHOLD 3
-#define DIM 70
+#define DIM 100
 #define STEP 2
 
 //---------------------------------------------------------------------
@@ -45,8 +45,8 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
                     cout << " * point: " << ip->first
                          << " (" << ip->second.x << "," << ip->second.y << ")" << endl;
                 }
-                if (ip->second.x < STEP || ip->second.y < STEP ||
-                    ip->second.x > DIM-STEP || ip->second.y >DIM-STEP) {
+                if (ip->second.x < 0 || ip->second.y < 0 ||
+                    ip->second.x > DIM || ip->second.y >DIM) {
                     if (SHOW_INTERMEDIATE_RESULTS) {
                         cout << "Point " << ip->first;
                     }
@@ -86,7 +86,7 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
 bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
     mAllPoints.clear();
     mGCLC.clear();
-    mGCLC += "dim 70 70\n";
+    mGCLC += "dim 100 100\n";
     mGCLC += "color 220 220 220\n";
     mGCLC += "normal\n";
 
@@ -108,8 +108,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             const string func = t.GetFunctionSymbol(0);
             if (func == FREEPOINT) {
                 Point p;
-                p.x = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
-                p.y = STEP + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
+                p.x = 20 + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
+                p.y = 20 + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
                 mAllPoints[sA[0]] = p;
                 mGCLC += "color 200 0 0\n";
                 mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";

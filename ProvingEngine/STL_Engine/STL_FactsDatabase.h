@@ -36,14 +36,10 @@ private:
                           unsigned current_index, ConjunctionFormula &premises_inst, DNFFormula& goal_inst,
                           map<string, string> &instantiation, const set<string>& varsNotInPremises );
 
-    bool DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation);
+    int DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation);
     bool ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation, size_t index);
     bool FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation);
     bool MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation);
-
-    bool GoalConjunctionHolds(const ConjunctionFormula &conjf, const set<string>& exi_vars);
-    bool GoalFactHolds(const Fact& fact, const set<string>& exi_vars, map<string, string>& instantiation);
-    bool MatchGoalFact(const Fact &f, const set<string>& exi_vars, const Fact &db_fact, map<string, string>& instantiation);
 
     bool SubstvarsNotInPremises(const CLFormula &axiom,
         ConjunctionFormula &premises_inst, DNFFormula &goal_inst,

@@ -37,19 +37,23 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
   bool success;
 
   for(unsigned k = 0; k < formula.GetSize(); k++) {
-      for (size_t i = 0; i < formula.GetElement(k).GetElement(0).GetArity(); i++) {
-          if (formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString() != "_") {
-              string var = formula.GetElement(k).GetElement(0).GetArg(i).ToSMTString();
+    for (size_t j = 0; j < formula.GetElement(k).GetSize(); j++) {
+      for (size_t i = 0; i < formula.GetElement(k).GetElement(j).GetArity(); i++) {
+          if (formula.GetElement(k).GetElement(j).GetArg(i).ToSMTString() != "_") {
+              string var = formula.GetElement(k).GetElement(j).GetArg(i).ToSMTString();
               bool bIsConstant = false;
               for(const auto& c : mpT->mConstants) {
                   if (var == c)
                       bIsConstant = true;
               }
+              if (mpT->mConstantsPermissible.find(var) != mpT->mConstantsPermissible.end())
+                bIsConstant = true;
               if (!bIsConstant && mExi_vars.find(var) == mExi_vars.end()) {
                   mExi_vars.insert(var);
               }
           }
       }
+    }
   }
 
   for (const auto& f : mpDB.GetDatabase())
@@ -313,7 +317,7 @@ bool STL_ProvingEngine::ApplyEFQ() {
 
 bool STL_ProvingEngine::ApplyByAssumption(const DNFFormula &f, ConjunctionFormula &fin) {
   vector<Fact> AuxFacts;
-    if (mpDB.GoalReached(f, mExi_vars, fin)) {
+  if (mpDB.GoalReached(f, mExi_vars, fin)) {
     for (const auto& fact : AuxFacts)
       fin.Add(fact);
     return true;
@@ -348,13 +352,15 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
 // cout << "counter: " << it->second << endl;
 #endif
 
+
   for (const auto& conj_f : dnf.GetDNF()) {
-#ifdef DEBUG_OUTPUT
-    cout << "proving the case: " << conj_f << endl;
-#endif
 
     auto db_tmp = mpDB.GetDatabase();
     auto dbc_tmp = mpDB.GetDatabaseCases();
+
+#ifdef DEBUG_OUTPUT
+    cout << "proving the case: " << conj_f << endl;
+#endif
 
     CLProof proof;
     for (const auto& fact : conj_f.GetConjunction()) {
@@ -363,10 +369,33 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
     }
 
     bool bProved = ProveFromPremises(formula, proof);
-    mpDB.SetDatabase(db_tmp);
-    mpDB.SetDatabaseCases(dbc_tmp);
     if (bProved) {
+        set<unsigned> allSteps;
+        set<unsigned> relevant;
+        proof.AnnotateRelevantSteps(allSteps, relevant);
+
+        // proof.PrettyPrint();
+        proof.SimplifyByFormulae();
+        // proof.PrettyPrint();
+
+        // TODO: simplify if the case split is not relevant
+        /*bool bCaseSplitIsRelevant = false;
+        for (const auto& fact : conj_f.GetConjunction()) {
+            if (proof.Uses(fact))
+                bCaseSplitIsRelevant = true;
+        }*/
+
+        // all derived fact were treated as assumptions and now are deleted
+        proof.ClearAssumptions();
+        for (const auto& fact : conj_f.GetConjunction()) {
+            proof.AddAssumption(fact);
+        }
+
         (*pcs)->AddSubproof(proof);
+
+        mpDB.SetDatabase(db_tmp);
+        mpDB.SetDatabaseCases(dbc_tmp);
+
     } else
       return false;
   }
