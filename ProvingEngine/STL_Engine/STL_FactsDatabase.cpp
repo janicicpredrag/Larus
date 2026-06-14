@@ -295,8 +295,7 @@ bool STLFactsDatabase::MatchFact(const CLFormula &axiom, const Fact &f, const Fa
             return false;
         if (bUniVar && mpT->mConstantsPermissible.find(db_arg) == mpT->mConstantsPermissible.end())
             return false;
-        if (it == instantiation.end() && (bUniVar || bExiVar)
-            /*&& arg != db_arg*/)
+        if (it == instantiation.end() && (bUniVar || bExiVar))
             instantiation[arg] = db_arg;
 
         // cout << arg << " ->" << db_arg << "; ";

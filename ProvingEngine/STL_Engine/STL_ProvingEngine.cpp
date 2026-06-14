@@ -370,10 +370,6 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
 
     bool bProved = ProveFromPremises(formula, proof);
     if (bProved) {
-        set<unsigned> allSteps;
-        set<unsigned> relevant;
-        proof.AnnotateRelevantSteps(allSteps, relevant);
-
         // proof.PrettyPrint();
         proof.SimplifyByFormulae();
         // proof.PrettyPrint();
