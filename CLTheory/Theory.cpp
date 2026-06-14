@@ -119,7 +119,11 @@ void Theory::AddEqNegElimAxioms() {
 
 void Theory::AddNegElimAxioms() {
   // add the axiom  R(...) & nR(...) => false for every predicate symbol
-  for (size_t i = 2; i < mSignatureP.size(); i += 2) {
+
+  // for (size_t i = 2; i < mSignatureP.size(); i += 2) {
+  // skip newly defined predicate symbols
+  for (size_t i = 2; i < number_of_original_predicate_symbols; i += 2) {
+
     // skip false
     // ugly convention: skip the predicate symbols with _ in their name - those
     // were introduced during normalization
@@ -166,7 +170,10 @@ void Theory::AddNegElimAxioms() {
 void Theory::AddExcludedMiddleAxioms() {
   // add the axiom  R(...) | nR(...) for every predicate symbol (skip false |
   // true)
-  for (size_t i = 2; i < mSignatureP.size(); i += 2) {
+
+  // for (size_t i = 2; i < mSignatureP.size(); i += 2) {
+  // skip newly defined predicate symbols
+  for (size_t i = 2; i < number_of_original_predicate_symbols; i += 2) {
     // skip false
 
     if (mSignatureP[i].first == EQ_NATIVE_NAME)

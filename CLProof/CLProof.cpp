@@ -370,6 +370,9 @@ void CLProof::SimplifyByFormulae() {
       processed_facts.insert(f);
       relevant.pop();
       bool found = false;
+      if (f == sTOP)
+        found = true;
+      else
       for (size_t i = 0; i < mMPs.size() && !found; i++) {
           DNFFormula dnf = mMPs[i].conclusion;
           for (size_t j = 0; j < mMPs[i].conclusion.GetElement(0).GetSize() && !found; j++) {
