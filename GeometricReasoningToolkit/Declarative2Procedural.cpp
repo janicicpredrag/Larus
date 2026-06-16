@@ -123,7 +123,7 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
             constructionPlan.push_back(instantiateFact(result, inverted_inst));
         if (isNDG_Fact(fact))
             NDGs.insert(instantiateFact(result, inverted_inst));
-        else
+        else if (fact.GetName() != FREEPOINT)
             correctnessGoal.push_back(instantiateFact(result, inverted_inst));
     }
 
@@ -159,18 +159,7 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
         cout << f << endl;
     }
 
-    vector<Fact> premises = constructionPlan;
-    for(const auto& f : NDGs)
-        premises.push_back(f);
-    DNFFormula correctnessDNF;
-    correctnessDNF.Add(correctnessGoal);
-    CLFormula conjecture(premises, correctnessDNF);
-    string conjectureName = theoremName + "_correctness";
-    for(size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
-        conjecture.AddUnivVar(theorem.GetUnivVar(i));
-    for(size_t i = 0; i < WITNESS_COUNTER; i++)
-        conjecture.AddUnivVar("W" + to_string(i));
-
+    // *********** Diagram ***********
     Diagram diagram;
     if (diagram.InstantiateConstructionPlan(theorem, constructionPlan, NDGs)) {
         cout << "Coordinates:" << endl;
@@ -182,8 +171,60 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
         cout << "Stored as " << sFileName1 << " gclc file. " << endl;
     }
 
+    // *********** Correctness ***********
+    // ax:  constraints       => construction_plan_correct
+    // thm: construction_plan => construction_plan_correct
+    vector<Fact> constructionPlan_premises;
+    for(const auto& f : constructionPlan) {
+        if (f.GetName() == EQ_NATIVE_NAME) {
+            Term l = f.GetArg(0);
+            if (f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT)
+                continue;
+            Fact fout;
+            fout.SetName("rel_" + f.GetArg(1).GetFunctionSymbol(0));
+            fout.SetArg(0,l);
+            for (unsigned k = 0; k < f.GetArg(1).NumArgs(); k++) {
+                l.ReadTPTPString(f.GetArg(1).GetArg(k));
+                fout.SetArg(k+1, l);
+            }
+            constructionPlan_premises.push_back(fout);
+        } else
+            constructionPlan_premises.push_back(f);
+    }
+    for(const auto& f : NDGs)
+        constructionPlan_premises.push_back(f);
+
+    DNFFormula construction_plan_correct;
+    Fact fact_ax;
+    fact_ax.SetName("construction_plan_correct");
+    for(size_t i = 0; i < theorem.GetNumOfUnivVars(); i++) {
+        Term arg;
+        arg.ReadTPTPString(theorem.GetUnivVar(i));
+        fact_ax.SetArg(i, arg);
+    }
+    ConjunctionFormula cf_ax;
+    cf_ax.Add(fact_ax);
+    construction_plan_correct.Add(cf_ax);
+
     vector<pair<CLFormula, string>> axioms;
-    StoreConjecture(sFileName2, axioms, conjectureName, conjecture);
+    CLFormula conjecture_ax(correctnessGoal, construction_plan_correct);
+    string conjecture_ax_name = theoremName + "_correctness_ax";
+    for(size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
+        conjecture_ax.AddUnivVar(theorem.GetUnivVar(i));
+    axioms.push_back(make_pair(conjecture_ax, conjecture_ax_name));
+
+    CLFormula conjecture(constructionPlan_premises, construction_plan_correct);
+    string conjectureName = theoremName + "_correctness";
+    for(size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
+        conjecture.AddUnivVar(theorem.GetUnivVar(i));
+
+    ofstream TPTPfile;
+    TPTPfile.open(sFileName2);
+    TPTPfile << "include('../cons_theory.p')." << endl << endl;
+    TPTPfile.close();
+
+    StoreConjecture(sFileName2, axioms, conjectureName, conjecture, true);
+
     cout << endl << "Correctness condition stored as " << sFileName2 << ". " << endl;
 
     return true;

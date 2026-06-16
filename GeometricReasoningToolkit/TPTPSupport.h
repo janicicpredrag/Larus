@@ -14,7 +14,7 @@ VampireReturnValue ReadConjecture(const string& inputFileName, Theory& T, CLForm
 ValidityStatus CheckValidity(prover_name prover, const string& conjectureName, const vector<pair<CLFormula, string>>& axioms,
    const CLFormula& conjecture, double time_limit, vector<string>& usedAxioms);
 void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string>>& axioms, const set<string>& usedAxioms, const string& conjectureName, const CLFormula& conjecture);
-void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string>>& axioms, const string& conjectureName, const CLFormula& conjecture);
+void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string>>& axioms, const string& conjectureName, const CLFormula& conjecture, bool bAppend=false);
 
 bool isNegatedFact(const string& s);
 void beautify(CLFormula& f); 

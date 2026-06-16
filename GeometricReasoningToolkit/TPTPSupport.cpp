@@ -221,10 +221,13 @@ void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string
 
 // -----------------------------------------------------------------------------------------------
 
-void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string>>& axioms, const string& conjectureName, const CLFormula& conjecture)
+void StoreConjecture(const string& fileName, const vector<pair<CLFormula, string>>& axioms, const string& conjectureName, const CLFormula& conjecture, bool bAppend)
 { 
   ofstream TPTPfile;
-  TPTPfile.open(fileName);
+  if (bAppend)
+    TPTPfile.open(fileName,ios::app);
+  else
+    TPTPfile.open(fileName);
   for (vector<pair<CLFormula, string>>::const_iterator it = axioms.begin(); it != axioms.end(); it++) {
     CLFormula cl = it->first;
     beautify(cl);
