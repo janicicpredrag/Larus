@@ -50,6 +50,7 @@ double randomOnSegmentBisector(const Point& A, const Point& B, Point& P);
 double randomOnAngleBisector(const Point& A, const Point& B, const Point& C, Point& P);
 double randomOnRayComplement(const Point& X, const Point& Y, Point& P);
 double randomOnAngleRay(const Point& Q, const Point& R, const Point& A, const Point& B, const Point& C, Point& P);
+double randomOnSymRay(const Point& A, const Point& B, const Point& C, Point& P);
 
 double distance(const Point& A, const Point& B);
 double cos(const Point& A, const Point& B, const Point& C);
@@ -64,6 +65,7 @@ bool areEqAngles(const Point& A, const Point& B, const Point& C,
                  const Point& D, const Point& E, const Point& F);
 bool areEqAngles(const Point& A, const Point& B, const Point& C, const Point& D, 
                 const Point& E, const Point& F, const Point& G, const Point& H);
+bool onSamePointSide(const Point& P, const Point& A, const Point& B);
 
 double area(const Point& A, const Point& B, const Point& C);
 

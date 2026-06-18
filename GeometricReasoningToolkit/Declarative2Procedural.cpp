@@ -30,6 +30,7 @@ const unordered_set<string> constructionFunctionSymbols = {
     "rel_"+string(FUN_RAND_ON_SEG_BIS),
     "rel_"+string(FUN_RAND_ON_RAY_COMPL),
     "rel_"+string(FUN_RAND_ON_ANG_BIS),
+    "rel_"+string(FUN_RAND_ON_SYM_RAY),
     "rel_"+string(FUN_RAND_ON_ANG_RAY),
     "rel_"+string(FUN_RATIO2_m1),
     "rel_"+string(FUN_RATIO1_m2),
@@ -40,11 +41,13 @@ const unordered_set<string> constructionFunctionSymbols = {
 //---------------------------------------------------------------------
 
 bool isNDG_Fact(const Fact &f) {
-    return (f.GetName() == NOT_COLL ||
+    return (f.GetName() == TRIANGLE ||
+            f.GetName() == NOT_COLL ||
             f.GetName() == NOT_EQ ||
             f.GetName() == BETWEEN  ||
             f.GetName() == ON_OPP_SIDES ||
-            f.GetName() == ON_SAME_SIDE);
+            f.GetName() == ON_SAME_SIDE ||
+            f.GetName() == ON_SAME_POINT_SIDE);
 }
 
 //---------------------------------------------------------------------

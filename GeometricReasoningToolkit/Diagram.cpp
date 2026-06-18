@@ -234,6 +234,21 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n";
                 // printPoint(sA[0], mAllPoints[sA[0]]);
 
+            } else if (func == FUN_RAND_ON_SYM_RAY) {
+                double r = randomOnSymRay(A[1], A[2], A[3], A[0]);
+                mAllPoints[sA[0]] = A[0];
+                mGCLC += "color 220 220 220\n";
+                mGCLC += "angle_o __phi " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
+                mGCLC += "rotate __P " + sA[2] + " __phi " + sA[3] + "\n";
+                mGCLC += "towards " + sA[0] + " " + sA[2] + " __P " + double2string(r,5) + "\n";
+                mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
+                mGCLC += "cmark_lb " + sA[0] + "\n";
+                mGCLC += "color 0 0 200\n\n";
+                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
+                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                // printPoint(sA[0], mAllPoints[sA[0]]);
+
+
             } else if (func == FUN_RAND_ON_PERP_FROM) {
                 double r = randomOnPerpendicularLine(A[1], A[2], A[3], A[0]);
                 mAllPoints[sA[0]] = A[0];
@@ -368,8 +383,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 circleCircleIntersection(c1, c2, X, A[0]);
             mAllPoints[sA[0]] = A[0];
             mGCLC += "color 220 220 220\n";
-            mGCLC += "circle c1 " + sA[3] + " " + sA[5] + "\n";
-            mGCLC += "circle c2 " + sA[2] + " " + sA[3] + "\n";
+            mGCLC += "circle c1 " + sA[1] + " " + sA[2] + "\n";
+            mGCLC += "circle c2 " + sA[3] + " " + sA[4] + "\n";
             if (bFirstIntersection)
                 mGCLC += "intersec2 " + sA[0] + " __P c1 c2\n";
             else
@@ -481,7 +496,7 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
                 printLog(", ");
         }*/
 
-        if (it->GetName() == NOT_COLL) {
+        if (it->GetName() == TRIANGLE || it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))
                 throw runtime_error("~col not met!");
             if (area(A[0], A[1], A[2]) < AREA_THRESHOLD)
@@ -504,7 +519,11 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
 
         } else if (it->GetName() == ON_SAME_SIDE) {
             if (onOppositeSides(A[0], A[1], A[2], A[3]))
-                throw runtime_error("opp-sides not met!");
+                throw runtime_error("on_same_side not met!");
+
+        } else if (it->GetName() == ON_SAME_POINT_SIDE) {
+            if (!onSamePointSide(A[0], A[1], A[2]))
+                throw runtime_error("on same point side not met");
 
         } else {
             cout << "ERROR1!" << endl;
@@ -598,6 +617,10 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[4] + " " + A[5] +"\n";
         } else if (f.GetName() == CIRCUMCENTER) {
             mGCLC += "drawcircle " + A[0] + " " + A[1] + "\n";
+        } else if (f.GetName() == INCENTER) {
+            mGCLC += "line __p " + A[1] + " " + A[2] + "\n";
+            mGCLC += "foot __P " + A[0] + " __p \n";
+            mGCLC += "drawcircle " + A[0] + " __P\n";
         } else if (f.GetName() == BARYCENTER) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[0] + " " + A[2] + "\n";
@@ -611,13 +634,18 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         } else if (f.GetName() == FOOT) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";
+        } else if (f.GetName() == ANGLE_BISECTOR_FOOT) {
+            mGCLC += "drawsegment " + A[0] + " " + A[2] + "\n";
+        } else if (f.GetName() == N_POINT) {
+            mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+
         } else if (f.GetName() == ON_CIRCLE) {
         } else if (f.GetName() == NOT_COLL) {
         } else if (f.GetName() == NOT_EQ) {
         } else if (f.GetName() == EQ_NATIVE_NAME
                    && f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT) {
         } else if (f.GetName() == ON_OPP_SIDES) {
-        } else if (f.GetName() == ON_SAME_SIDE) {
+        } else if (f.GetName() == ON_SAME_SIDE) {            
         } else if (f.GetName() == FREEPOINT) {
         } else {
             cout << "ERROR34" << endl;

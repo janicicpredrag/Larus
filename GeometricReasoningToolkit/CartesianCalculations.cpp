@@ -370,6 +370,12 @@ double randomOnAngleRay(const Point& Q, const Point& R, const Point& A, const Po
 
 // -----------------------------------------------------------------------------------------------
 
+double randomOnSymRay(const Point& A, const Point& B, const Point& C, Point& P) {
+    return randomOnAngleRay(B,C,A,B,C,P);
+}
+
+// -----------------------------------------------------------------------------------------------
+
 double randomOnSegmentBisector(const Point& A, const Point& B, Point& P) {
     double r = 2*((double)rand() / RAND_MAX);
     P.x = (A.x+B.x)/2 + r * (-(A.y-B.y));
@@ -493,7 +499,7 @@ bool isEqual(const Point& A, const Point& B)
     return (distance(A, B) < EPS);
 }
 
-    // -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 
 bool onOppositeSides(const Point& A, const Point& B, const Point& X, const Point& Y) {
     Line l1, l2;
@@ -502,6 +508,12 @@ bool onOppositeSides(const Point& A, const Point& B, const Point& X, const Point
     line(X,Y,l2);
     linesIntersection(l1,l2,P);
     return isBetween(X,P,Y);
+}
+
+// -----------------------------------------------------------------------------------------------
+
+bool onSamePointSide(const Point& P, const Point& A, const Point& B) {
+    return !isBetween(A,P,B);
 }
 
 // -----------------------------------------------------------------------------------------------

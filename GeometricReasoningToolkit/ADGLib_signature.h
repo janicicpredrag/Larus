@@ -26,11 +26,15 @@ inline constexpr string_view PARALLELOGRAM = "parallelogram";
 inline constexpr string_view RECTANGLE     = "rectangle";
 inline constexpr string_view SQUARE        = "square";
 inline constexpr string_view CIRCUMCENTER  = "circumcenter";
+inline constexpr string_view INCENTER      = "incenter";
 inline constexpr string_view ORTHOCENTER   = "orthocenter";
 inline constexpr string_view BARYCENTER    = "barycenter";
+inline constexpr string_view N_POINT       = "n_point";
+inline constexpr string_view ANGLE_BISECTOR_FOOT = "angle_bisector_foot";
 
 inline constexpr string_view ON_OPP_SIDES  = "opposite_sides";
 inline constexpr string_view ON_SAME_SIDE  = "same_side";
+inline constexpr string_view ON_SAME_POINT_SIDE = "same_point_side";
 inline constexpr string_view NOT_EQ        = "nneqnative"; // TODO: to avoid =
 inline constexpr string_view NOT_COLL      = "nnncollinear";
 
@@ -56,6 +60,7 @@ inline constexpr string_view FUN_RAND_ON_PARALLEL  = "fun_random_on_parallel";
 inline constexpr string_view FUN_RAND_ON_SEG_BIS   = "fun_random_on_segment_bisector";
 inline constexpr string_view FUN_RAND_ON_RAY_COMPL = "fun_random_on_ray_complement";
 inline constexpr string_view FUN_RAND_ON_ANG_BIS   = "fun_random_on_angle_bisector";
+inline constexpr string_view FUN_RAND_ON_SYM_RAY   = "fun_random_on_symmmetric_ray";
 inline constexpr string_view FUN_RAND_ON_ANG_RAY   = "fun_random_on_angle_ray";
 
 inline constexpr string_view FUN_RATIO2_m1         = "fun_ratio2_m1";
