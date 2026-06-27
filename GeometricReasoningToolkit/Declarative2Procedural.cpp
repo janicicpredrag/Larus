@@ -45,6 +45,9 @@ bool isNDG_Fact(const Fact &f) {
             f.GetName() == NOT_COLL ||
             f.GetName() == NOT_EQ ||
             f.GetName() == BETWEEN  ||
+            f.GetName() == BETWEEN_STRICT ||
+            f.GetName() == BETWEEN4  ||
+            f.GetName() == BETWEEN_STRICT4 ||
             f.GetName() == ON_OPP_SIDES ||
             f.GetName() == ON_SAME_SIDE ||
             f.GetName() == ON_SAME_POINT_SIDE);
@@ -124,7 +127,7 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
         Fact result;
         if (predicate2functional(fact, result))
             constructionPlan.push_back(instantiateFact(result, inverted_inst));
-        if (isNDG_Fact(fact))
+        else if (isNDG_Fact(fact))
             NDGs.insert(instantiateFact(result, inverted_inst));
         else if (fact.GetName() != FREEPOINT)
             correctnessGoal.push_back(instantiateFact(result, inverted_inst));

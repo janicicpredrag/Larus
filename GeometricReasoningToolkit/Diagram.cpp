@@ -509,8 +509,16 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
             if (distance(A[0], A[1]) < DISTANCE_THRESHOLD)
                 throw runtime_error("~eq not nice!");
 
-        }   else if (it->GetName() == BETWEEN) {
+        }   else if (it->GetName() == BETWEEN || it->GetName() == BETWEEN_STRICT) {
             if (!isBetween(A[0], A[1], A[2]))
+                throw runtime_error("between not met!");
+
+        }   else if (it->GetName() == BETWEEN4 || it->GetName() == BETWEEN_STRICT4) {
+            if (!isBetween(A[0], A[1], A[2]))
+                throw runtime_error("between not met!");
+            if (!isBetween(A[0], A[1], A[3]))
+                throw runtime_error("between not met!");
+            if (!isBetween(A[1], A[2], A[3]))
                 throw runtime_error("between not met!");
 
         } else if (it->GetName() == ON_OPP_SIDES) {
