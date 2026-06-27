@@ -325,6 +325,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
         } else if (func == FUN_RATIO3_2 ||
                    func == FUN_RATIO2_m1 ||
                    func == FUN_RATIO1_m2 ||
+                   func == FUN_RATIO1_2 ||
                    func == FUN_RATIO3_2 ||
                    func == FUN_RATIO2_3 ||
                    func == FUN_RATIO2_m3) {
@@ -332,6 +333,7 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             if (func == FUN_RATIO3_2) ratio = 3.0/2;
             else if (func == FUN_RATIO2_m1) ratio = -2.0/1;
             else if (func == FUN_RATIO1_m2) ratio = -1.0/2;
+            else if (func == FUN_RATIO1_2) ratio = 1.0/2;
             else if (func == FUN_RATIO3_2) ratio = 3.0/2;
             else if (func == FUN_RATIO2_3) ratio = 2.0/3;
             else /* if (func == FUN_RATIO2_m3)*/ ratio = -2.0/3;

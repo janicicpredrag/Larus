@@ -34,6 +34,7 @@ const unordered_set<string> constructionFunctionSymbols = {
     "rel_"+string(FUN_RAND_ON_ANG_RAY),
     "rel_"+string(FUN_RATIO2_m1),
     "rel_"+string(FUN_RATIO1_m2),
+    "rel_"+string(FUN_RATIO1_2),
     "rel_"+string(FUN_RATIO3_2),
     "rel_"+string(FUN_RATIO2_3),
     "rel_"+string(FUN_RATIO2_m3) };
