@@ -135,13 +135,15 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
     }
 
     size_t WITNESS_COUNTER = 0;
+    vector<string> witnesses;
     for (size_t i = 0, size = proof.NumOfMPs(); i < size; i++) {
         vector<pair<string, string>> new_witnesses = proof.GetMP(i).new_witnesses;
-
         if (new_witnesses.size() > 0) {
             for (size_t j = 0; j != new_witnesses.size(); j++) {
                 // cout << "new: " << new_witnesses[j].second << endl;
-                inverted_inst[new_witnesses[j].second] = "W" + to_string(WITNESS_COUNTER++);
+                inverted_inst[new_witnesses[j].second] = "W" + to_string(WITNESS_COUNTER);
+                witnesses.push_back("W" + to_string(WITNESS_COUNTER));
+                WITNESS_COUNTER++;
             }
         }
         assert(proof.GetMP(i).conclusion.GetSize() == 1);
@@ -224,6 +226,8 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
     string conjectureName = theoremName + "_correctness";
     for(size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
         conjecture.AddUnivVar(theorem.GetUnivVar(i));
+    for(const auto& w : witnesses)
+        conjecture.AddUnivVar(w);
 
     ofstream TPTPfile;
     TPTPfile.open(sFileName2);
