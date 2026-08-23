@@ -232,7 +232,8 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
 
     ofstream TPTPfile;
     TPTPfile.open(sFileName2);
-    TPTPfile << "include('../cons_theory.p')." << endl << endl;
+    TPTPfile << "include('../cons_theory.p')." << endl;
+    TPTPfile << "include('../cons_correctness_theory.p')." << endl << endl;
     TPTPfile.close();
 
     StoreConjecture(sFileName2, axioms, conjectureName, conjecture, true);
