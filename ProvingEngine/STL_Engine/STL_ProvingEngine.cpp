@@ -149,7 +149,11 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
       }
     }
 
-    size_t l = 5;
+    // l is the value that controls introduction of new constants:
+    // if there are >=l constants already introduced and still
+    // not made permissible, then do not introduce new constants
+    size_t l = 15;
+
     while (!success && l < 100) {
        if (mTimer.elapsed() >= mParams.time_limit) {
     #ifdef DEBUG_OUTPUT
@@ -255,9 +259,10 @@ bool STL_ProvingEngine::ProveFromPremises(const DNFFormula &formula, CLProof &pr
       }
 
       if (!success && mpT->NumberOfConstantsWaiting() > 0) {
-        success = mpT->MakeNextConstantPermissible();
+        string con;
+        success = mpT->MakeNextConstantPermissible(con);
 #ifdef DEBUG_OUTPUT
-        cout << " New permissible constant added " << endl;
+        cout << " New permissible constant added: " << con << endl;
 #endif
       }
 

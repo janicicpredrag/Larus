@@ -632,8 +632,9 @@ bool Theory::IsConstant(Term t) const {
 
 // --------------------------------------------------------------
 
-bool Theory::MakeNextConstantPermissible() {
+bool Theory::MakeNextConstantPermissible(string& s) {
   if (mConstants.begin() != mConstants.end()) {
+    s = *mConstants.begin();
     mConstantsPermissible.insert(*mConstants.begin());
     mConstants.erase(mConstants.begin());
     return true;

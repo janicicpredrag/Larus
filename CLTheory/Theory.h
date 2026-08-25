@@ -56,7 +56,7 @@ public:
   string GetConstantName(unsigned id) const;
   bool IsConstant(Term t) const;
   size_t NumberOfConstantsWaiting();
-  bool MakeNextConstantPermissible();
+  bool MakeNextConstantPermissible(string& s);
   void StoreInitialConstants();
 
   void AddPredicateSymbol(const string &p, unsigned arity);
