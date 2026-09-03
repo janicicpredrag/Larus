@@ -37,6 +37,7 @@ inline constexpr string_view ON_SAME_SIDE  = "same_side";
 inline constexpr string_view ON_SAME_POINT_SIDE = "same_point_side";
 inline constexpr string_view NOT_EQ        = "nneqnative"; // TODO: to avoid =
 inline constexpr string_view NOT_COLL      = "nnncollinear";
+inline constexpr string_view NOT_PERP      = "nnnperpendicular";
 
 inline constexpr string_view ON_LINE       = "on_line";
 inline constexpr string_view ON_CIRCLE     = "on_circle";

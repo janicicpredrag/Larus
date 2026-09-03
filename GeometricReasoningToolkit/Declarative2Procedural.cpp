@@ -46,6 +46,7 @@ bool isNDG_Fact(const Fact &f) {
     return (f.GetName() == TRIANGLE ||
             f.GetName() == NOT_COLL ||
             f.GetName() == NOT_EQ ||
+            f.GetName() == NOT_PERP ||
             f.GetName() == BETWEEN  ||
             f.GetName() == BETWEEN_STRICT ||
             f.GetName() == BETWEEN4  ||
