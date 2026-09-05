@@ -26,7 +26,8 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
     auto millis = chrono::duration_cast<chrono::milliseconds>(duration).count();
     srand(static_cast<unsigned int>(millis));
 
-    for(int attempts = 1; attempts <= 200; attempts++) {
+    int nAttempts = 200;
+    for(int attempts = 1; attempts <= nAttempts; attempts++) {
         if (SHOW_INTERMEDIATE_RESULTS) {
             cout << endl << "Instantiation attempt " << attempts << ":" << endl;
         }
@@ -76,7 +77,7 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
         }
     }
     if (SHOW_INTERMEDIATE_RESULTS) {
-        cout << "Giving up after 1000 failed instantiations." << endl << endl;
+        cout << "Giving up after " << nAttempts << " failed instantiations." << endl << endl;
     }
     return false;
 }
@@ -108,8 +109,8 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             const string func = t.GetFunctionSymbol(0);
             if (func == FREEPOINT) {
                 Point p;
-                p.x = 20 + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
-                p.y = 20 + STEP * (int)(60/STEP * ((double)rand() / RAND_MAX));
+                p.x = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
+                p.y = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
                 mAllPoints[sA[0]] = p;
                 mGCLC += "color 200 0 0\n";
                 mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";
@@ -503,15 +504,21 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
         if (it->GetName() == TRIANGLE || it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))
                 throw runtime_error("~col not met!");
-            if (area(A[0], A[1], A[2]) < AREA_THRESHOLD)
-                throw runtime_error("~col/area not nice!");
+            if (area(A[0], A[1], A[2]) < AREA_THRESHOLD) {
+                string s = "(" + sA[0] + "," + sA[1] + "," + sA[2]+ ")";
+                throw runtime_error("~col/area not nice! " + s);
+            }
 
         }   else if (it->GetName() == NOT_EQ) {
             //cout << "is eq " << A[0].x << " " << A[0].y  << " " << A[1].x << " " << A[1].y << endl;
-            if (isEqual(A[0], A[1]))
-                throw runtime_error("~eq not met!");
-            if (distance(A[0], A[1]) < DISTANCE_THRESHOLD)
-                throw runtime_error("~eq not nice!");
+            if (isEqual(A[0], A[1])) {
+                string s = "(" + sA[0] + "," + sA[1] + ")";
+                throw runtime_error("~eq not met! " + s);
+            }
+            if (distance(A[0], A[1]) < DISTANCE_THRESHOLD) {
+                string s = "(" + sA[0] + "," + sA[1] + ")";
+                throw runtime_error("~eq not nice! " + s);
+            }
 
         }   else if (it->GetName() == BETWEEN || it->GetName() == BETWEEN_STRICT) {
             if (!isBetween(A[0], A[1], A[2]))
@@ -536,6 +543,10 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
         } else if (it->GetName() == ON_SAME_POINT_SIDE) {
             if (!onSamePointSide(A[0], A[1], A[2]))
                 throw runtime_error("on same point side not met");
+
+        } else if (it->GetName() == NOT_PERP) { // todo
+            if (false)
+                throw runtime_error(it->GetName());
 
         } else {
             cout << "ERROR1!" << endl;
@@ -654,6 +665,7 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         } else if (f.GetName() == ON_CIRCLE) {
         } else if (f.GetName() == NOT_COLL) {
         } else if (f.GetName() == NOT_EQ) {
+        } else if (f.GetName() == NOT_PERP) {
         } else if (f.GetName() == EQ_NATIVE_NAME
                    && f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT) {
         } else if (f.GetName() == ON_OPP_SIDES) {
