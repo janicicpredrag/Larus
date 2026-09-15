@@ -58,6 +58,38 @@ bool isNDG_Fact(const Fact &f) {
 
 //---------------------------------------------------------------------
 
+bool isIntro_Fact(const Fact &f) {
+    return (f.GetName() == string(INTER_L_L) ||
+    f.GetName() == string(INTER_C_L) ||
+    f.GetName() == string(INTER_C_C) ||
+    f.GetName() == "rel_"+string(FUN_RAND_INTER_C_L) ||
+    f.GetName() == "rel_"+string(FUN_RAND_INTER_C_C) ||
+    f.GetName() == "rel_"+string(FOURTH_VERTEX_OF_PARALLELOGRAM) ||
+    f.GetName() == "rel_"+string(FUN_MIDPOINT) ||
+    f.GetName() == "rel_"+string(FUN_SYMMETRIC) ||
+    f.GetName() == "rel_"+string(FUN_FOOT) ||
+    f.GetName() == "rel_"+string(FUN_TRANSLATE) ||
+    f.GetName() == "rel_"+string(FUN_CENTER_OF_ARC_ANG) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_LINE) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_CIRCLE) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_PERP_FROM) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_PARALLEL) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_SEG_BIS) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_RAY_COMPL) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_ANG_BIS) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_SYM_RAY) ||
+    f.GetName() == "rel_"+string(FUN_RAND_ON_ANG_RAY) ||
+    f.GetName() == "rel_"+string(FUN_RATIO2_m1) ||
+    f.GetName() == "rel_"+string(FUN_RATIO1_m2) ||
+    f.GetName() == "rel_"+string(FUN_RATIO1_2) ||
+    f.GetName() == "rel_"+string(FUN_RATIO2_1) ||
+    f.GetName() == "rel_"+string(FUN_RATIO3_2) ||
+    f.GetName() == "rel_"+string(FUN_RATIO2_3) ||
+    f.GetName() == "rel_"+string(FUN_RATIO2_m3)) ;
+}
+
+//---------------------------------------------------------------------
+
 bool predicate2functional(const Fact& fact, Fact& result)
 {
     result = fact;
@@ -138,6 +170,19 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
 
     size_t WITNESS_COUNTER = 0;
     vector<string> witnesses;
+    set<string> witnesses_init;
+
+    set<string> constructed;
+    for (size_t i = 0, size = proof.NumOfMPs(); i < size; i++) {
+        const ConjunctionFormula cf = proof.GetMP(i).conclusion.GetElement(0);
+        for (unsigned j = 0; j < cf.GetSize(); j++) {
+            if (isIntro_Fact(cf.GetElement(j))) {
+                constructed.insert(cf.GetElement(j).GetArg(0).ToTPTPString());
+            }
+        }
+    }
+
+
     for (size_t i = 0, size = proof.NumOfMPs(); i < size; i++) {
         vector<pair<string, string>> new_witnesses = proof.GetMP(i).new_witnesses;
         if (new_witnesses.size() > 0) {
@@ -145,16 +190,26 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
                 // cout << "new: " << new_witnesses[j].second << endl;
                 inverted_inst[new_witnesses[j].second] = "W" + to_string(WITNESS_COUNTER);
                 witnesses.push_back("W" + to_string(WITNESS_COUNTER));
+                witnesses_init.insert(new_witnesses[j].second);
                 WITNESS_COUNTER++;
             }
         }
         assert(proof.GetMP(i).conclusion.GetSize() == 1);
         const ConjunctionFormula cf = proof.GetMP(i).conclusion.GetElement(0);
-        for (unsigned j = 0; j < cf.GetSize(); j++) {
-            // cout << "proofstep: " << cf.GetElement(j) << endl;
-            if (isNDG_Fact(cf.GetElement(j)))
-                NDGs.insert(instantiateFact(cf.GetElement(j), inverted_inst));
 
+        for (unsigned j = 0; j < cf.GetSize(); j++) {
+            if (isNDG_Fact(cf.GetElement(j))) {
+                bool bSomeIsNewConstant = false;
+                for (unsigned k = 0; k < cf.GetElement(j).GetArity(); k++) {
+                    if(constructed.find(cf.GetElement(j).GetArg(k).ToTPTPString()) != constructed.end()) {
+                        bSomeIsNewConstant = true;
+                    }
+                }
+                // Add only NDG facts about constructed points
+                if (bSomeIsNewConstant) {
+                    NDGs.insert(instantiateFact(cf.GetElement(j), inverted_inst));
+                }
+            }
             Fact result;
             if (predicate2functional(cf.GetElement(j), result))
                 constructionPlan.push_back(instantiateFact(result, inverted_inst));
