@@ -53,13 +53,13 @@ fof(right_angle3, axiom, ![A0,A1,A2,O] : ((right_angle(A0,A1,A2) & O = fun_rando
 %*******************************************************************************
 % --- Parallel rules ---
 
-fof(parallel1, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel(A1,A2,A3) & A0!=A1 & A2!=A3) =>
+fof(parallel1, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel_from(A1,A2,A3) & A0!=A1 & A2!=A3) =>
     (on_line(A0,A1,O) ))).
-fof(parallel2, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel(A0,A2,A3) & A0!=A1 & A2!=A3) =>
+fof(parallel2, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel_from(A0,A2,A3) & A0!=A1 & A2!=A3) =>
     (on_line(A1,A0,O) ))).
-fof(parallel3, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel(A3,A0,A1) & A0!=A1 & A2!=A3) =>
+fof(parallel3, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel_from(A3,A0,A1) & A0!=A1 & A2!=A3) =>
     (on_line(A2,A3,O) ))).
-fof(parallel4, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel(A2,A0,A1) & A0!=A1 & A2!=A3) =>
+fof(parallel4, axiom, ![A0,A1,A2,A3,O] : ((parallel(A0,A1,A2,A3) & O = fun_random_on_parallel_from(A2,A0,A1) & A0!=A1 & A2!=A3) =>
     (on_line(A3,A2,O) ))).
 
 %*******************************************************************************

@@ -597,10 +597,12 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
             mGCLC += "drawsegment " + A[2] + " " + A[0] + "\n";
             mGCLC += "normal\n";
         } else if (f.GetName() == QUADRILATERAL || f.GetName() == PARALLELOGRAM || f.GetName() == RECTANGLE || f.GetName() == SQUARE) {
+            mGCLC += "linethickness -3\n";
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
             mGCLC += "drawsegment " + A[1] + " " + A[2] + "\n";
             mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";
             mGCLC += "drawsegment " + A[3] + " " + A[0] + "\n";
+            mGCLC += "normal\n";
         } else if (f.GetName() == COLLINEAR) {
             mGCLC += "drawline " + A[0] + " " + A[1] + "\n";
         } else if (f.GetName() == MIDPOINT) {

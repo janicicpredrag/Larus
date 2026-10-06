@@ -12,18 +12,23 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
     mCLFormula = ax.first;
     mName = ax.second;
 
+    set<string> LHSVars;
+
     for (size_t j = 0; j < mCLFormula.GetPremises().GetSize(); j++) {
         Fact f = mCLFormula.GetPremises().GetElement(j);
+
+        for (size_t k = 0; k < f.GetArity(); k++)
+            LHSVars.insert(f.GetArg(k).ToTPTPString());
 
         // process it as usual, but keep it as NDG
         if (f.GetName() == BETWEEN)
             mNDG.Add(f);
 
-        if (f.GetName() == NOT_EQ ||
+        if (isNotEq(f.GetName()) ||
             f.GetName() == NOT_COLL ||
             f.GetName() == ON_OPP_SIDES ||
             f.GetName() == ON_SAME_SIDE) {
-            mNDG.Add(f);
+            mNDG.Add(normalizeNotEq(f));
         }
         else {
             if (f.GetName() == EQ_NATIVE_NAME) {
@@ -53,7 +58,13 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
             for (size_t k = 0; k < f.GetArg(1).NumArgs(); k++) {
                 mNeededPoints.insert(f.GetArg(1).GetArg(k));
             }
-            mOutput.Add(f);
+            // a fresh point (not in premises) is an auxiliary definition, not an output
+            if (LHSVars.find(f.GetArg(0).ToTPTPString()) == LHSVars.end()) {
+                mDefs.Add(f);
+                mDefPoints.insert(f.GetArg(0).ToTPTPString());
+            } else {
+                mOutput.Add(f);
+            }
         }
         else {
             mOutput.Add(f);

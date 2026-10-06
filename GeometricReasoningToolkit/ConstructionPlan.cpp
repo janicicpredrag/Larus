@@ -18,7 +18,7 @@ bool SHOW_INTERMEDIATE_RESULTS = true;
 
 bool isNDGpredicate(const string& p) {
     return ((p == ON_OPP_SIDES) || (p == ON_SAME_SIDE) ||
-            (p == NOT_EQ) || (p == NOT_COLL));
+            isNotEq(p) || (p == NOT_COLL));
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         printLog("Is the constraint a NDG condition? ");
         if (isNDGpredicate(currentFact.GetName())) {
             printLog(" Yes, just move to NDGs.\n");
-            mNDGs.insert(currentFact);
+            mNDGs.insert(normalizeNotEq(currentFact));
             mInputConstruction.erase(mInputConstruction.begin() + i);
             r = ProcessResult::ProgressMade;
             continue;
@@ -281,10 +281,11 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         printLog("\nTry to apply definitions/construction rules. ");
         STLFactsDatabase dbase(&mGeometryTheory);
         dbase.AddFact(currentFact);
+        string sConstant;
         for (size_t j = 0; j < currentFact.GetArity(); j++) {
             mGeometryTheory.AddConstant(currentFact.GetArg(j).ToTPTPString());
         }
-        while (mGeometryTheory.MakeNextConstantPermissible()) {}
+        while (mGeometryTheory.MakeNextConstantPermissible(sConstant)) {}
 
         if (ApplyRule(true, eOnePremiseNoNewVars, dbase, 10)) {
             printLog("\n\n");
@@ -311,7 +312,7 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
 bool ConstructionPlan::IsOverconstrained(const Fact& f) {
     assert(f.GetName() != EQ_NATIVE_NAME);
 
-    if (f.GetName() == NOT_EQ ||
+    if (isNotEq(f.GetName()) ||
         f.GetName() == NOT_COLL ||
         f.GetName() == ON_OPP_SIDES ||
         f.GetName() == ON_SAME_SIDE)
@@ -694,6 +695,16 @@ bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDataba
 
             set<string> fixed_temp = mFixed;
             unsigned objc = mObjCounter;
+
+            // reject the rule if it would redefine an already constructed point
+            bool bRedefines = false;
+            for (size_t i = 0; i < r.mOutput.GetSize(); i++) {
+                const Fact& f = r.mOutput.GetElement(i);
+                if (f.GetName() == EQ_NATIVE_NAME && isFixed(f.GetArg(0).ToTPTPString()))
+                    bRedefines = true;
+            }
+            if (bRedefines)
+                continue;
 
             for(auto& ap: r.mDefPoints)
                 setFixed(ap);
