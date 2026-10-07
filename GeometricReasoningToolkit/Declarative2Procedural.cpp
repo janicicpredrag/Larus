@@ -43,7 +43,7 @@ const unordered_set<string> constructionFunctionSymbols = {
 //---------------------------------------------------------------------
 
 bool isNDG_Fact(const Fact &f) {
-    return (f.GetName() == TRIANGLE ||
+    return (//f.GetName() == TRIANGLE ||
             f.GetName() == NOT_COLL ||
             f.GetName() == NOT_EQ ||
             f.GetName() == NOT_PERP ||
