@@ -91,10 +91,10 @@ fof(cong_angles2, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3
     & O = fun_center_of_arc_angle(A3,A5,A0,A1,A2) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) 
     => (on_circle(A4,O,A3) ))).
 fof(cong_angles3, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) 
-    & O = fun_center_of_arc_angle(A0,A2,A0,A4,A2) & A0!=A1 & A2!=A1 & A2!=A4 & A0!=A4 & ame_side(A0,A2,A1,A4)) 
+    & O = fun_center_of_arc_angle(A0,A2,A0,A4,A2) & A0!=A1 & A2!=A1 & A2!=A4 & A0!=A4 & same_side(A0,A2,A1,A4)) 
     => (on_circle(A1,O,A0) ))).
 fof(cong_angles4, axiom, ![A0,A1,A2,A4,O] : ((congruent_angles(A0,A1,A2,A0,A4,A2) 
-    & O = fun_center_of_arc_angle(A0,A2,A0,A1,A2) & A0!=A1 & A2!=A1 & A2!=A4 & A0!=A4 & ame_side(A0,A2,A1,A4)) 
+    & O = fun_center_of_arc_angle(A0,A2,A0,A1,A2) & A0!=A1 & A2!=A1 & A2!=A4 & A0!=A4 & same_side(A0,A2,A1,A4)) 
     => (on_circle(A1,O,A0) ))).
 fof(cong_angles5, axiom, ![A0,A1,A2,A3,A4,A5,O] : ((congruent_angles(A0,A1,A2,A3,A4,A5) 
     & O = fun_random_on_angle_ray(A1,A2,A3,A4,A5) & A0!=A1 & A2!=A1 & A3!=A4 & A5!=A4) 
@@ -145,9 +145,7 @@ fof(midpoint12, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((collinear(A1,B1,C1) & midpoint
 %fof(midpoint11g, axiom, ![A1,B1,A2,B2,M] : ((midpoint(M,B1,B2) & A2 = fun_symmetric(A1,M) & A1 != M &  B1 != M) 
 %    => (parallel(A1,B1,A2,B2)))).
 
-
-
-fof(midpoint12, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(B1,A1,C1) & midpoint(M,B1,B2) 
+fof(midpoint11f, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(B1,A1,C1) & midpoint(M,B1,B2) 
     & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
     => (collinear(B1,M,B2) & on_line(B2,A2,C2)))).
 
