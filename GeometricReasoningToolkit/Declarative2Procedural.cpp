@@ -10,35 +10,38 @@
 
 using namespace std;
 
+// prefix of the predicate representing the graph of a construction function
+const string FP_PREFIX = "p";
+
 const unordered_set<string> constructionFunctionSymbols = {
     string(FREEPOINT),
     string(INTER_L_L),
     string(INTER_C_L),
     string(INTER_C_C),
-    "rel_"+string(FUN_RAND_INTER_C_L),
-    "rel_"+string(FUN_RAND_INTER_C_C),
-    "rel_"+string(FOURTH_VERTEX_OF_PARALLELOGRAM),
-    "rel_"+string(FUN_MIDPOINT),
-    "rel_"+string(FUN_SYMMETRIC),
-    "rel_"+string(FUN_FOOT),
-    "rel_"+string(FUN_TRANSLATE),
-    "rel_"+string(FUN_CENTER_OF_ARC_ANG),
-    "rel_"+string(FUN_RAND_ON_LINE),
-    "rel_"+string(FUN_RAND_ON_CIRCLE),
-    "rel_"+string(FUN_RAND_ON_PERP_FROM),
-    "rel_"+string(FUN_RAND_ON_PARALLEL),
-    "rel_"+string(FUN_RAND_ON_SEG_BIS),
-    "rel_"+string(FUN_RAND_ON_RAY_COMPL),
-    "rel_"+string(FUN_RAND_ON_ANG_BIS),
-    "rel_"+string(FUN_RAND_ON_SYM_RAY),
-    "rel_"+string(FUN_RAND_ON_ANG_RAY),
-    "rel_"+string(FUN_RATIO2_m1),
-    "rel_"+string(FUN_RATIO1_m2),
-    "rel_"+string(FUN_RATIO1_2),
-    "rel_"+string(FUN_RATIO2_1),
-    "rel_"+string(FUN_RATIO3_2),
-    "rel_"+string(FUN_RATIO2_3),
-    "rel_"+string(FUN_RATIO2_m3) };
+    FP_PREFIX+string(FUN_RAND_INTER_C_L),
+    FP_PREFIX+string(FUN_RAND_INTER_C_C),
+    FP_PREFIX+string(FOURTH_VERTEX_OF_PARALLELOGRAM),
+    FP_PREFIX+string(FUN_MIDPOINT),
+    FP_PREFIX+string(FUN_SYMMETRIC),
+    FP_PREFIX+string(FUN_FOOT),
+    FP_PREFIX+string(FUN_TRANSLATE),
+    FP_PREFIX+string(FUN_CENTER_OF_ARC_ANG),
+    FP_PREFIX+string(FUN_RAND_ON_LINE),
+    FP_PREFIX+string(FUN_RAND_ON_CIRCLE),
+    FP_PREFIX+string(FUN_RAND_ON_PERP_FROM),
+    FP_PREFIX+string(FUN_RAND_ON_PARALLEL),
+    FP_PREFIX+string(FUN_RAND_ON_SEG_BIS),
+    FP_PREFIX+string(FUN_RAND_ON_RAY_COMPL),
+    FP_PREFIX+string(FUN_RAND_ON_ANG_BIS),
+    FP_PREFIX+string(FUN_RAND_ON_SYM_RAY),
+    FP_PREFIX+string(FUN_RAND_ON_ANG_RAY),
+    FP_PREFIX+string(FUN_RATIO2_m1),
+    FP_PREFIX+string(FUN_RATIO1_m2),
+    FP_PREFIX+string(FUN_RATIO1_2),
+    FP_PREFIX+string(FUN_RATIO2_1),
+    FP_PREFIX+string(FUN_RATIO3_2),
+    FP_PREFIX+string(FUN_RATIO2_3),
+    FP_PREFIX+string(FUN_RATIO2_m3) };
 
 //---------------------------------------------------------------------
 
@@ -62,30 +65,30 @@ bool isIntro_Fact(const Fact &f) {
     return (f.GetName() == string(INTER_L_L) ||
     f.GetName() == string(INTER_C_L) ||
     f.GetName() == string(INTER_C_C) ||
-    f.GetName() == "rel_"+string(FUN_RAND_INTER_C_L) ||
-    f.GetName() == "rel_"+string(FUN_RAND_INTER_C_C) ||
-    f.GetName() == "rel_"+string(FOURTH_VERTEX_OF_PARALLELOGRAM) ||
-    f.GetName() == "rel_"+string(FUN_MIDPOINT) ||
-    f.GetName() == "rel_"+string(FUN_SYMMETRIC) ||
-    f.GetName() == "rel_"+string(FUN_FOOT) ||
-    f.GetName() == "rel_"+string(FUN_TRANSLATE) ||
-    f.GetName() == "rel_"+string(FUN_CENTER_OF_ARC_ANG) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_LINE) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_CIRCLE) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_PERP_FROM) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_PARALLEL) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_SEG_BIS) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_RAY_COMPL) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_ANG_BIS) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_SYM_RAY) ||
-    f.GetName() == "rel_"+string(FUN_RAND_ON_ANG_RAY) ||
-    f.GetName() == "rel_"+string(FUN_RATIO2_m1) ||
-    f.GetName() == "rel_"+string(FUN_RATIO1_m2) ||
-    f.GetName() == "rel_"+string(FUN_RATIO1_2) ||
-    f.GetName() == "rel_"+string(FUN_RATIO2_1) ||
-    f.GetName() == "rel_"+string(FUN_RATIO3_2) ||
-    f.GetName() == "rel_"+string(FUN_RATIO2_3) ||
-    f.GetName() == "rel_"+string(FUN_RATIO2_m3)) ;
+    f.GetName() == FP_PREFIX+string(FUN_RAND_INTER_C_L) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_INTER_C_C) ||
+    f.GetName() == FP_PREFIX+string(FOURTH_VERTEX_OF_PARALLELOGRAM) ||
+    f.GetName() == FP_PREFIX+string(FUN_MIDPOINT) ||
+    f.GetName() == FP_PREFIX+string(FUN_SYMMETRIC) ||
+    f.GetName() == FP_PREFIX+string(FUN_FOOT) ||
+    f.GetName() == FP_PREFIX+string(FUN_TRANSLATE) ||
+    f.GetName() == FP_PREFIX+string(FUN_CENTER_OF_ARC_ANG) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_LINE) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_CIRCLE) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_PERP_FROM) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_PARALLEL) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_SEG_BIS) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_RAY_COMPL) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_ANG_BIS) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_SYM_RAY) ||
+    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_ANG_RAY) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO2_m1) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO1_m2) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO1_2) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO2_1) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO3_2) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO2_3) ||
+    f.GetName() == FP_PREFIX+string(FUN_RATIO2_m3)) ;
 }
 
 //---------------------------------------------------------------------
@@ -100,11 +103,11 @@ bool predicate2functional(const Fact& fact, Fact& result)
         return false;
 
     Term l = fact.GetArg(0);
-    string prefix = fact.GetName().substr(0, 4);
-    if (prefix == "rel_" || fact.GetName() == FREEPOINT) {
+    string prefix = fact.GetName().substr(0, FP_PREFIX.size());
+    if (prefix == FP_PREFIX || fact.GetName() == FREEPOINT) {
         string s = fact.GetName() + "(";
-        if (prefix == "rel_")
-            s = fact.GetName().substr(4) + "("; // skip "rel_"
+        if (prefix == FP_PREFIX)
+            s = fact.GetName().substr(FP_PREFIX.size()) + "("; // skip prefix
         for (unsigned k = 1; k < fact.GetArity()-1; k++) {
             s += fact.GetArg(k).ToTPTPString() + ",";
         }
@@ -247,7 +250,7 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
             if (f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT)
                 continue;
             Fact fout;
-            fout.SetName("rel_" + f.GetArg(1).GetFunctionSymbol(0));
+            fout.SetName(FP_PREFIX + f.GetArg(1).GetFunctionSymbol(0));
             fout.SetArg(0,l);
             for (unsigned k = 0; k < f.GetArg(1).NumArgs(); k++) {
                 l.ReadTPTPString(f.GetArg(1).GetArg(k));
