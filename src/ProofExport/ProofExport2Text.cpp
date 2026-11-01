@@ -31,14 +31,14 @@ string ProofExport2Text::beautify(string w) {
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputCLFormula (ofstream &outfile, const CLFormula &cl,
-					 const string &name) {
+void ProofExport2Text::OutputCLFormula (ofstream & /*outfile*/, const CLFormula & /*cl*/,
+					 const string & /*name*/) {
   cout << endl;
 }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
+void ProofExport2Text::OutputFact(ofstream& /*outfile*/, const Fact &f) {
   if (f.GetName() == "false" || f.GetName() == sBOT)
     cout << "\u22a5 ";
   else if (f.GetName() == "true" || f.GetName() == sTOP)
@@ -67,17 +67,17 @@ void ProofExport2Text::OutputFact(ofstream& outfile, const Fact &f) {
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputImplication(ofstream& outfile) {
+void ProofExport2Text::OutputImplication(ofstream& /*outfile*/) {
   cout << " \u21d2 ";
 }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputAnd(ofstream& outfile) { cout << " \u2227 "; }
+void ProofExport2Text::OutputAnd(ofstream& /*outfile*/) { cout << " \u2227 "; }
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputOr(ofstream& outfile) { cout << " \u2228 "; }
+void ProofExport2Text::OutputOr(ofstream& /*outfile*/) { cout << " \u2228 "; }
 
 // ---------------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ void ProofExport2Text::OutputPrologue(ofstream& outfile,
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputEpilogue(ofstream& outfile) {
+void ProofExport2Text::OutputEpilogue(ofstream& /*outfile*/) {
   cout << "==============================================" << endl;
   cout << endl;
 }
@@ -271,7 +271,7 @@ void ProofExport2Text::OutputProofEnd(ofstream& outfile,
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputProofEnd(ofstream& outfile,
+void ProofExport2Text::OutputProofEnd(ofstream& /*outfile*/,
 				      const ByAssumption * /*ba*/,
                                        unsigned level) {
   cout << proofstep(level)
@@ -283,7 +283,7 @@ void ProofExport2Text::OutputProofEnd(ofstream& outfile,
 
 // ---------------------------------------------------------------------------------
 
-void ProofExport2Text::OutputProofEnd(ofstream& outfile,
+void ProofExport2Text::OutputProofEnd(ofstream& /*outfile*/,
 				      const EFQ * /*efq*/,
                                        unsigned level) {
   cout << proofstep(level)

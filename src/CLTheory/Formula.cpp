@@ -29,8 +29,6 @@ bool onlyClosedBrackets() {
 
 void ReadNextToken() {
 #ifdef DEBUG_PARSER
-//   cout << "Currently Reading text: ";
-//   printf("%s\n", TEXTSTREAM+TEXTINDEX);
 #endif
 
   if (TEXTSTREAM[TEXTINDEX] == '\0') {
@@ -163,7 +161,6 @@ bool Term::ReadTPTP()
           mFunctionSymbols.push_back(make_pair(function_symbol,arity));
           bFirst = false;
         } else {
-          // mFunctionSymbols.pop_back();
           for(unsigned int i=0; i<mFunctionSymbols.size(); i++)
           {
             if (mFunctionSymbols[i].first == function_symbol) {
@@ -448,7 +445,6 @@ bool Fact::Read() {
       } else
         ReadNextToken();
     }
-    //if (NEXTTOKEN != eEQ && NEXTTOKEN != eNEQ)
     return true;
   }
 
@@ -488,28 +484,6 @@ bool Fact::Read() {
   return true;
 
 
-/*
-  if (NEXTTOKEN == eEQ) {
-    mArgs.push_back(mName);
-    mName = EQ_NATIVE_NAME;
-    ReadNextToken();
-    if (NEXTTOKEN != eID)
-      return false;
-    mArgs.push_back(NEXTLEXEME);
-    ReadNextToken();
-    return true;
-  }
-
-  if (NEXTTOKEN == eNEQ) {
-    mArgs.push_back(mName);
-    mName = PREFIX_NEGATED + EQ_NATIVE_NAME;
-    ReadNextToken();
-    if (NEXTTOKEN != eID)
-      return false;
-    mArgs.push_back(NEXTLEXEME);
-    ReadNextToken();
-    return true;
-  }*/
   return true;
 }
 
@@ -619,12 +593,6 @@ bool DNFFormula::Read(CLFormula* p) {
     if (NEXTTOKEN != eDISJ)
       break;
     ReadNextToken();
-    /*
-    DNFFormula d;
-    d.Read(p);
-    for (unsigned i=0; i<d.GetSize(); i++)
-       Add(d.GetElement(i));
-    ReadNextToken();*/
 
   }
   return (NEXTTOKEN == eCLOSEB || NEXTTOKEN == eEND);
@@ -1050,9 +1018,6 @@ bool CLFormula::IsSimpleUnivUFFormula() const {
 bool CLFormula::IsSimpleFormula() const
 {
     return IsSimpleImplication() || IsSimpleUnivFormula();
-/*  return (GetNumOfExistVars() == 0)
-           && (GetGoal().GetSize() == 1)
-           && (GetPremises().GetSize() <= 1);*/
 }
 
 // ----------------------------------------------------------
@@ -1188,7 +1153,6 @@ bool CLFormula::ReadTPTPStatement(const string &s, string &name,
   }
 
   ss = ss.substr(pos2 + 1, ss.size() - pos2 - 2);
-  // cout << "text: " << name << " : " << ss << endl;
   if (type == eHint) {
     string arg[3];
     int BracketsOpen = 0;
@@ -1218,9 +1182,6 @@ bool CLFormula::ReadTPTPStatement(const string &s, string &name,
     TEXTINDEX = 0;
     ReadNextToken();
     Fact hfact;
-    //if (!ReadWithoutCheckingBoundness())
-    //  return false;
-    //if (!(GetGoal().GetSize()==1 && GetGoal().GetElement(0).GetSize()==1)) {
     if (!hfact.Read()) {
       cout << "Input error " << s << ": hint formula can be only fact." << endl;
       return false;
@@ -1235,7 +1196,6 @@ bool CLFormula::ReadTPTPStatement(const string &s, string &name,
     TEXTINDEX = 0;
     ReadNextToken();
     if (!justification.Read()) {
-//    if (!justification.Read(arg[2])) {
       cout << "Input error " << s << ": hint justification (fifth argument) cannot be read." << endl;
       return false;
     }
@@ -1243,13 +1203,10 @@ bool CLFormula::ReadTPTPStatement(const string &s, string &name,
   } else {
   
     ordinal = "";
-    // justification = "";
     TEXTSTREAM = ss.c_str();
     TEXTINDEX = 0;
     ReadNextToken();
     if (Read()) {
-    // cout << "Ax: " << cl;
-    // cout << endl;
       return true;
     } else {
       cout << "Input error: axiom: " << name << " : " << *this;
@@ -1265,10 +1222,7 @@ void CLFormula::Normalize(const string &name, const string &suffix,
                           vector<pair<CLFormula, string>> &output,
                           vector<pair<Fact, DNFFormula>> &definitions) const {
   unsigned count_aux = 0;
-  // cout << "Premises: " << GetPremises().GetSize() << endl;
-  // cout << "Dijuncts: " << GetGoal().GetSize() << endl;
 
-  // output.clear();
 
   /* F1 & F2 & F3 & F4 => Goal  gives  axioms: F1 & F2 => F12, F12 & F3 => F123,
    * F123 & F4 => Goal */
@@ -1322,7 +1276,6 @@ void CLFormula::Normalize(const string &name, const string &suffix,
     }
     premises.Clear();
     premises.Add(current);
-    //       premises.Add(GetPremises().GetElement(numPremises-1));
   }
 
   /* P => (C1 & C2 & C3) | ... gives  axioms: C123 => C1, C123 => C2 ... */
@@ -1339,42 +1292,10 @@ void CLFormula::Normalize(const string &name, const string &suffix,
         DNFFormula disj;
         disj.Add(conj1);
         CLFormula axiom(conj, disj);
-        /*Fact current = GetGoal().GetElement(0).GetElement(j);
-
-        for (size_t jj = 0; jj < current.GetArity();
-             jj++) { // quantify only occuring variables
-          if (UnivVarOrdinalNumber(current.GetArg(jj)) != -1 ||
-              ExistVarOrdinalNumber(current.GetArg(jj)) != -1) {
-            bool bAlreadyThere = false;
-            for (size_t k = 0;
-                 k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-              if (axiom.mUniversalVars[k] == current.GetArg(jj))
-                bAlreadyThere = true;
-            if (!bAlreadyThere)
-              axiom.mUniversalVars.push_back(current.GetArg(jj));
-          }
-        }
-        for (size_t kk = 0; kk < GetPremises().GetSize(); kk++) {
-          Fact current = GetPremises().GetElement(kk);
-          for (size_t jj = 0; jj < current.GetArity();
-               jj++) { // quantify only occuring variables
-            if (UnivVarOrdinalNumber(current.GetArg(jj)) != -1 ||
-                ExistVarOrdinalNumber(current.GetArg(jj)) != -1) {
-              bool bAlreadyThere = false;
-              for (size_t k = 0;
-                   k < axiom.mUniversalVars.size() && !bAlreadyThere; k++)
-                if (axiom.mUniversalVars[k] == current.GetArg(jj))
-                  bAlreadyThere = true;
-              if (!bAlreadyThere)
-                axiom.mUniversalVars.push_back(current.GetArg(jj));
-            }
-          }
-        }*/
         axiom.mUniversalVars = mUniversalVars;
         axiom.mExistentialVars = mExistentialVars;
         output.push_back(pair<CLFormula, string>(
             axiom, name + "AuxConjConcl" + std::to_string(count_aux++)));
-        // output.push_back(pair<CLFormula,string>(axiom, name));
         count_aux++;
       }
       return;
@@ -1429,8 +1350,6 @@ void CLFormula::Normalize(const string &name, const string &suffix,
 
   if (numGoalDisjuncts > 2) {
     /* P => C1 | C2 | C3 gives  axioms: P => C12 | C3, C12 => C1 | C2 */
-    // Fact current = disjuncts[0];
-    // for (size_t i = 1; i < numGoalDisjuncts - 1; i++) {
     Fact current = disjuncts[numGoalDisjuncts - 1];
     for (size_t i = numGoalDisjuncts - 2; i > 0; i--) {
 
@@ -1469,7 +1388,6 @@ void CLFormula::Normalize(const string &name, const string &suffix,
     ConjunctionFormula conj1;
     conj1.Add(current);
     ConjunctionFormula conj2;
-    // conj2.Add(disjuncts[numGoalDisjuncts - 1]);
     conj2.Add(disjuncts[0]);
     DNFFormula goal;
 
@@ -1654,22 +1572,6 @@ Fact CLFormula::CLFormula::MergeFacts(const string &suffix, const Fact a,
       if (bIsVarConfirmed)
          f.SetArg(i++, t);
   }
-  /*
-  for (size_t i = 0; i < a.GetArity(); i++) {
-    Term t;
-    t.ReadTPTPString(a.GetArg(i).ToSMTString());
-    f.SetArg(i, t);
-  }
-
-  size_t s = f.GetArity();
-  for (size_t i = 0; i < b.GetArity(); i++) {
-    bool alreadyThere = false;
-    for (size_t j = 0; j < f.GetArity() && !alreadyThere; j++)
-      if (f.GetArg(j).ToSMTString() == b.GetArg(i).ToSMTString())
-        alreadyThere = true;
-    if (!alreadyThere)
-      f.SetArg(s++, b.GetArg(i));
-  }*/
   return f;
 }
 

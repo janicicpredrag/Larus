@@ -7,8 +7,6 @@
 
 using namespace std;
 
-extern string itos(unsigned int i);
-
 class ProvingEngine
 {
 public:

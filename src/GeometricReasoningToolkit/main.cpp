@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
     if (params.declarative2procedural || params.createGCLCillustration
         || params.semanticGuidedProving) {
         if (cp.ImportDeclarativeDescription(theorem, params.deducingNewFacts, diagram)) {
-            cout << endl << "Succesfully created a construction plan. " << endl;
+            cout << endl << "Successfully created a construction plan. " << endl;
         } else {
             cout << endl << "Failed to create a construction plan. " << endl << endl;
             return -1;

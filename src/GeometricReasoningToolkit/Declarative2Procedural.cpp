@@ -151,7 +151,7 @@ Fact instantiateFact(const Fact &f, map<string, string> &instantiation) {
 
 //---------------------------------------------------------------------
 
-bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, const string& theoremName, map<string, string> instantiation, const vector<Fact>& InstantiatedPremises, Theory& T, const CLProof& proof, string sFileName1, string sFileName2, proverParams& params) {
+bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, const string& theoremName, map<string, string> instantiation, const vector<Fact>& InstantiatedPremises, const CLProof& proof, string sFileName1, string sFileName2) {
     vector<Fact> constructionPlan;
     set<Fact> NDGs;
     vector<Fact> correctnessGoal;
@@ -235,7 +235,7 @@ bool TransformDeclarativeConstructionToProcedural(const CLFormula& theorem, cons
         for(auto const& p : diagram.GetAllPoints()) {
             printPoint(p.first, p.second);
         }
-        cout << endl << "Succesfully created a diagram. ";
+        cout << endl << "Successfully created a diagram. ";
         diagram.StoreGCLCIllustration(sFileName1);
         cout << "Stored as " << sFileName1 << " gclc file. " << endl;
     }

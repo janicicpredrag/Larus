@@ -65,7 +65,6 @@ public:
   void MakeRelevant(set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeIrrelevant(set<Fact> &relevant, const Fact &f);
   void MakeIrrelevant(set<Fact> &relevant, const ConjunctionFormula &f);
-  bool Uses(const Fact& fact);
 
   void SimplifyByProofSteps();
   void RedirectRepeatedSteps();

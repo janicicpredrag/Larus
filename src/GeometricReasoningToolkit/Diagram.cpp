@@ -118,7 +118,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "color 0 0 0\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FOURTH_VERTEX_OF_PARALLELOGRAM) {
                 translation(A[3], A[2], A[1], A[0]);
@@ -132,7 +131,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_MIDPOINT) {
                 midpoint(A[1], A[2], A[0]);
@@ -142,7 +140,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_TRANSLATE) {
                 translation(A[3], A[1], A[2], A[0]);
@@ -152,7 +149,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_SYMMETRIC) {
                 reflection(A[1], A[2], A[0]);
@@ -162,7 +158,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_FOOT) {
                 foot(A[1], A[2], A[3], A[0]);
@@ -174,7 +169,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_LINE) {
                 double r = randomOnLine(A[1], A[2], A[0]);
@@ -186,7 +180,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_PARALLEL) {
                 double r = randomOnParallelLine(A[1], A[2], A[3], A[0]);
@@ -200,7 +193,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_SEG_BIS) {
                 double r = randomOnSegmentBisector(A[1], A[2], A[0]);
@@ -216,7 +208,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_ANG_BIS) {
                 double r = randomOnAngleBisector(A[1], A[2], A[3], A[0]);
@@ -233,7 +224,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "color 0 0 0\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_SYM_RAY) {
                 double r = randomOnSymRay(A[1], A[2], A[3], A[0]);
@@ -247,7 +237,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 200\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
 
             } else if (func == FUN_RAND_ON_PERP_FROM) {
@@ -263,8 +252,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n";
 
-                // printPoint(sA[0], mAllPoints[sA[0]]);
-
             } else if (func == FUN_RAND_ON_RAY_COMPL) {
                 double r = randomOnRayComplement(A[1], A[2], A[0]);
                 mAllPoints[sA[0]] = A[0];
@@ -276,7 +263,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_ANG_RAY) {
                 double r = randomOnAngleRay(A[1], A[2], A[5], A[4], A[3],  A[0]);
@@ -290,7 +276,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 200\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_CENTER_OF_ARC_ANG) {
                 centerOfArcAngle(A[1], A[2], A[3], A[4], A[5], A[0]);
@@ -308,7 +293,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (func == FUN_RAND_ON_CIRCLE) {
                 double r = randomPointOnCircle(A[1],A[2],A[0]);
@@ -320,7 +304,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "color 0 0 0\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
 
         } else if (func == FUN_RATIO3_2 ||
@@ -347,7 +330,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             mGCLC += "cmark_lb " + sA[0] + "\n\n";
             mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                      + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-            // printPoint(sA[0], mAllPoints[sA[0]]);
 
         } else if (func == FUN_RAND_INTER_C_L) {
             Line l;
@@ -374,7 +356,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                      + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
             mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
                      + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
-            // printPoint(sA[0], mAllPoints[sA[0]]);
 
         } else if (func == FUN_RAND_INTER_C_C) {
             Circle c1, c2;
@@ -400,8 +381,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             mGCLC += "color 220 220 220\n\n";
             mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                      + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-            // printPoint(sA[0], mAllPoints[sA[0]]);
-            // printPoint(sA[1], mAllPoints[sA[1]]);
 
 
 
@@ -428,7 +407,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "cmark_lb " + sA[0] + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                // printPoint(sA[4], mAllPoints[sA[4]]);
 
             } else if (it->GetName() == INTER_C_L) {
                 Line l;
@@ -450,7 +428,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
                          + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
 
             } else if (it->GetName() == INTER_C_C) {
                 Circle c1, c2;
@@ -471,8 +448,6 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                          + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
                 mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
                          + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
-                // printPoint(sA[0], mAllPoints[sA[0]]);
-                // printPoint(sA[1], mAllPoints[sA[1]]);
 
             } else {
                 cout << "ERROR3!" << endl;
@@ -495,11 +470,6 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
             sA[i] = it->GetArg(i).ToTPTPString();
             A[i] = mAllPoints[sA[i]];
         }
-/*        if (SHOW_INTERMEDIATE_RESULTS) {
-            printLog(it->ToString());
-            if (next(it) != ndgs.end())
-                printLog(", ");
-        }*/
 
         if (it->GetName() == TRIANGLE || it->GetName() == NOT_COLL) {
             if (isCol(A[0], A[1], A[2]))
@@ -510,7 +480,6 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
             }
 
         }   else if (it->GetName() == NOT_EQ) {
-            //cout << "is eq " << A[0].x << " " << A[0].y  << " " << A[1].x << " " << A[1].y << endl;
             if (isEqual(A[0], A[1])) {
                 string s = "(" + sA[0] + "," + sA[1] + ")";
                 throw runtime_error("~eq not met! " + s);
@@ -581,8 +550,6 @@ const string& Diagram::GetGCLCDescription() const {
 void Diagram::DrawBasicFigure(const CLFormula& theorem) {
 
     mGCLC += "color 0 0 0 \n";
-   // for (size_t j = 0; j < theorem.GetNumOfUnivVars(); j++)
-   //     mGCLC += "cmark_lb " + theorem.GetUnivVar(j) + "\n";
 
     for (size_t j = 0; j < theorem.GetPremises().GetSize(); j++) {
         Fact f = theorem.GetPremises().GetElement(j);

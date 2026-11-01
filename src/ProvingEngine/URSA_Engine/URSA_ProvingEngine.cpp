@@ -377,7 +377,7 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
         if (system(sCall.c_str())) // Find a proof
           return false;
         if (!proof.DecodeProof(formula, "sat-proof.txt")) {
-          mParams.starting_proof_length += 12;
+          mParams.starting_proof_length += mParams.step;
           cout << ", " << flush;
         } else {
           cout << " (found), " << flush;

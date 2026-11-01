@@ -12,19 +12,9 @@
 #include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
 #include "common.h"
 #include "hammering.h"
+#include "import.h"
 #include "GeometricReasoningToolkit/Declarative2Procedural.h"
 
-ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
-                               Theory &T, CLFormula &theorem,
-                               string &theoremName, vector<tHint> &hints);
-
-ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
-                                          CLFormula &theorem,
-                                          string &theoremName,
-                                          const string &theoremFileName,
-                                          vector<tHint> &hints);
-ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
-                        string &theoremName);
 ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
                          CLFormula &theorem, const string &theoremName,
                          const string &theoremFileName,
@@ -62,34 +52,15 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
 
 
   // ************ Filtering can be used in different stages ************
-  // if this variable is set to "true", futher vampire filtering is performed.
-  bool vampire_succeeded = false;
   bool try_hammering = params.msHammerInvoke != "" &&
                        !params.mbNoNegElim &&
                        !params.mbNoExcludedMiddle;
 
 
-  //  ************ Early filtering ************
-  //  is to be used only in situations when we don't have dependencies, but a
-  //  global set of axioms
-  // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-  //cout << "       After filtering by reachability: output size: "
-  //     << T.mCLaxioms.size() << endl;
-  //T.printAxioms();
-
-  /*
-  if (params.number_of_abducts > 0) { // use this filtering only if filtering a la hammer is forbidden
-  // ************ Filtering by reachability ************
-    FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-    cout << "       After filtering by reachability: output size: " <<
-    T.mCLaxioms.size() << endl;
-    T.printAxioms();
-  }*/
 
   if (try_hammering) {
-    if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                              params.vampire_time_limit) == eVampireUnsat)
-      vampire_succeeded = true;
+    FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                          params.vampire_time_limit);
     cout << "       After initial filtering : output size: "
          << T.mCLaxioms.size() << endl;
     T.printAxioms();
@@ -126,28 +97,12 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   // try hammering even if the initial hammering failed
   // *********** Filtering CL2 axioms a la hammer by FOL prover **********
   if (try_hammering) {
-    if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                              params.vampire_time_limit) == eVampireUnsat)
-      vampire_succeeded = true;
+    FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
+                          params.vampire_time_limit);
     cout << "       After initial CL2 filtering : output size: "
          << T.mCLaxioms.size() << endl;
     T.printAxioms();
   }
-
-  /*
-  // This does not bring benefits:
-  // ************ Yet another round of hammering 1 ************
-  if (params.msHammerInvoke != "" && vampire_succeeded) {
-    cout << "Yet another round of hammering" << endl;
-    USING_ORIGINAL_SIGNATURE_EQ = true;
-    USING_ORIGINAL_SIGNATURE_NEG = true;
-    vampire_succeeded =
-        (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                 params.vampire_time_limit) == eVampireUnsat);
-    T.printAxioms();
-    USING_ORIGINAL_SIGNATURE_EQ = false;
-    USING_ORIGINAL_SIGNATURE_NEG = false;
-  } */
 
   Theory T0 = T;
   USING_ORIGINAL_SIGNATURE_NEG = false;
@@ -205,7 +160,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
         USING_ORIGINAL_SIGNATURE_EQ = false;
         if (FilterOutNeededAxioms(T0.mCLaxioms, theorem, params.msHammerInvoke,
                                   params.vampire_time_limit) == eVampireUnsat)  {
-            vampire_succeeded = true;
             params.mbNativeEQ = false;
             params.mbNativeEQsub = false;
             T = T0;
@@ -215,7 +169,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
                  << T.mCLaxioms.size() << endl;
             if (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
                                       params.vampire_time_limit) == eVampireUnsat)  {
-              vampire_succeeded = true;
               params.mbNativeEQ = false;
               params.mbNativeEQsub = false;
               cout << "       Not using native neg and eq support: size: "
@@ -224,8 +177,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
               USING_ORIGINAL_SIGNATURE_EQ = false;
               T.printAxioms();
             } else {
-                //T = T0;
-                vampire_succeeded = false;
                 params.mbNativeEQ = true;
                 params.mbNativeEQsub = true;
                 cout << "       Using native neg and eq support: size: "
@@ -245,26 +196,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   T.printAxioms();
 
 
-  /*
-  // This does not bring benefits
-  // ************ Yet another round of hammering 2 ************
-  if (params.msHammerInvoke != "" && vampire_succeeded) {
-    cout << "Yet another round of hammering" << endl;
-    // USING_ORIGINAL_SIGNATURE_EQ = false;
-    // USING_ORIGINAL_SIGNATURE_NEG = false;
-    vampire_succeeded =
-        (FilterOutNeededAxioms(T.mCLaxioms, theorem, params.msHammerInvoke,
-                                 params.vampire_time_limit) == eVampireUnsat);
-      if (vampire_succeeded) {
-      }
-    T.printAxioms();
-  } */
-
-  // ************ Filtering by reachability ************
-  // FilterOurNeededAxiomsByReachability(T.mCLaxioms, theorem);
-  // cout << "       After filtering by reachability: output size: " <<
-  // T.mCLaxioms.size() << endl;
-  // T.printAxioms();
 
   if (!(params.eEngine == eSTL_ProvingEngine ||
         params.eEngine == eURSA_ProvingEngine
@@ -317,16 +248,6 @@ ReturnValue SetUpAxioms(proverParams &params, Theory &T, CLFormula &theorem,
   else
     cout << "--- Support for case splits turned OFF. " << endl;
 
-  /*
-  print final axioms and the conjecture:
-  for (vector<pair<CLFormula, string>>::iterator it = T.mCLaxioms.begin();
-       it !=  T.mCLaxioms.end(); it++)
-      cout << "fof(" << it->second << ", axiom, " << it->first << ")."
-               << endl;
-  cout << "fof("
-           << "conjecture"
-           << ", conjecture, " << theorem << ")." << endl;
-  */
 
   cout << "--------------------------------------------------------------------"
        << endl;
@@ -342,7 +263,6 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
                                           vector<tHint> &hints) {
   size_t numberOfCases = theorem.GetGoal().GetSize();
   size_t numberOfConjInCases = theorem.GetGoal().GetElement(0).GetSize();
-  // assert(numberOfCases <= 2 && numberOfConjInCases <= 2);
   if (numberOfCases == 1 && numberOfConjInCases > 1 &&
       theorem.GetNumOfExistVars() ==
           0) { // if there are more conjuncts in the goal
@@ -383,8 +303,6 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
     ProvingEngine *engine;
     if (params.eEngine == eSTL_ProvingEngine)
       engine = new STL_ProvingEngine(&T, params);
-    else if (params.eEngine == eSQL_ProvingEngine)
-      assert(false); // not implemented yet
     else if (params.eEngine == eURSA_ProvingEngine)
       engine = new URSA_ProvingEngine(&T, params);
 
@@ -454,41 +372,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       engine.AddAbduct();
     }
 
-    /*
-    if (false && theorem.GetGoal().GetSize() == 1 &&
-        theorem.GetGoal().GetElement(0).GetSize() == 1 &&
-        theorem.GetNumOfExistVars() ==
-            0) { // Try proving by refutation if the goal is ~Something
-      Fact f = theorem.GetGoal().GetElement(0).GetElement(0);
-      unsigned len = string(PREFIX_NEGATED).size();
-      if (f.GetName().substr(0, len) == PREFIX_NEGATED &&
-          f.GetName().find('_') == string::npos) {
-        f.SetName(f.GetName().substr(len, f.GetName().size() - len));
-        Fact premiseFactInstantiated;
-        T.AddSymbol(f.GetName(), f.GetArity());
-        T.InstantiateFact(theorem, f, instantiation, premiseFactInstantiated,
-                          true);
-        engine.AddPremise(premiseFactInstantiated);
-        proof.AddAssumption(premiseFactInstantiated);
-
-        Fact b;
-        b.SetName("false");
-        ConjunctionFormula conj;
-        conj.Add(b);
-        ConjunctionFormula A = theorem.GetPremises();
-        DNFFormula B = theorem.GetGoal();
-        A.Add(f);
-        B.Clear();
-        B.Add(conj);
-        CLFormula thm(A, B);
-        for (size_t i = 0; i < theorem.GetNumOfUnivVars(); i++)
-          thm.AddUnivVar(theorem.GetUnivVar(i));
-        for (size_t i = 0; i < theorem.GetNumOfExistVars(); i++)
-          thm.AddExistVar(theorem.GetExistVar(i));
-        theorem = thm;
-        proof.SetByRefutation(true);
-      }
-    } */
 
     engine.SetMaxNestingDepth(params.max_nesting_depth);
     engine.SetHints(&hints);
@@ -498,7 +381,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
     if (engine.ProveFromPremises(goalInstantiated, proof, ExistingAbducts)) {
       proved = eConjectureProved;
       std::size_t found = theoremFileName.find_last_of("/\\");
-      // string path = theoremFileName.substr(0,found);
       string isminproof = params.shortest_proof ? "min" : "";
       string fileName =
           theoremFileName.substr(found + 1) + engine.mName + isminproof;
@@ -534,7 +416,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         cout << ExistingAbducts.size() << ". set:" << endl;
         unsigned int lastAbductSet = ExistingAbducts.size()-1;
         for(unsigned j = 0; j < params.number_of_abducts; j++) {
-          // cout << "  " << j+1 << ". " << ExistingAbducts[lastAbductSet][j] << endl;
           cout << "  " << j+1 << ". " << proof.GetCLAssumption(proof.NumOfAssumptions()-params.number_of_abducts+j) << endl;
           InstantiatedPremises.push_back(ExistingAbducts[lastAbductSet][j]);
         }
@@ -557,9 +438,6 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           nbAbducts++;
         }
         cout << "Number of abducts found so far:" << endl << "Inconsistent : " << nbInconsistentAbducts << " Consistent : " << nbConsistentAbducts << " Unknown Status : " << nbUnknownStatusAbducts << endl;
-        //for(unsigned j = 0; j < params.number_of_abducts; j++) {
-        //  InstantiatedPremises.pop_back();
-        //}
         InstantiatedPremises.clear();
         cout << "--------------------- " << endl << endl;
       }
@@ -649,7 +527,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
       if (params.mbADGLibConstruction) {
           string sFileName1(OUTPUT_FOLDER + "PROOF" + fileName + ".gcl");
           string sFileName2(OUTPUT_FOLDER + "PROOF" + fileName + ".p_correctness");
-          TransformDeclarativeConstructionToProcedural(theorem, theoremName, instantiation, InstantiatedPremises, T, proof, sFileName1, sFileName2, params);
+          TransformDeclarativeConstructionToProcedural(theorem, theoremName, instantiation, InstantiatedPremises, proof, sFileName1, sFileName2);
       }
     }
   } while (proved == eConjectureProved && params.number_of_abducts > 0);
@@ -695,11 +573,9 @@ ReturnValue ReadTPTPConjecture(const string inputFile, proverParams &params,
             if (input_file.good()) {
               string ss;
               while (getline(input_file, ss)) {
-                // cout << "Debug:" << ss << endl;
                 if (ss != "" && ss.at(0) != '%')
                   str += ss;
               }
-              // cout << "Debug:" << str << endl;
             } else {
               cout << "Error reading input file :" << filename << endl;
               return eBadOrMissingInputFile;

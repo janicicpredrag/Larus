@@ -22,12 +22,6 @@ class DNFFormula;
 class Term {
 public:
   Term() {}
-  Term (const Term &t) {
-    mTPTPterm = t.mTPTPterm;
-    mSMTlibterm = t.mSMTlibterm;
-    mFunctionSymbols = t.mFunctionSymbols;
-    mArgs = t.mArgs;
-  }
   void Clear() {
     mTPTPterm = "";
     mSMTlibterm = "";
@@ -56,13 +50,6 @@ public:
   }
   string ToTPTPString() const;
   string ToSMTString() const;
-  Term &operator=(const Term &t) {
-    mTPTPterm = t.mTPTPterm;
-    mSMTlibterm = t.mSMTlibterm;
-    mFunctionSymbols = t.mFunctionSymbols;
-    mArgs = t.mArgs;
-    return *this;
-  }
   bool IsCompound() const {
     return (mSMTlibterm.find(' ') != string::npos);
   }
@@ -93,15 +80,6 @@ public:
     mArgs.resize(a.size());
     for(unsigned i = 0; i < a.size(); i++)
       mArgs[i].ReadTPTPString(a[i]);
-  }
-  Fact(const Fact &f) {
-    mName = f.mName;
-    mArgs = f.mArgs;
-  }
-  Fact &operator=(const Fact &f) {
-    mName = f.mName;
-    mArgs = f.mArgs;
-    return *this;
   }
   bool operator==(const Fact &f) const {
     if (mName != f.mName || mArgs.size() != f.mArgs.size())

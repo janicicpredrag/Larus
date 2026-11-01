@@ -70,7 +70,7 @@ otherwise:
 
 ## Usage 
 
-`larus -l<time limit> -f<format> -s -e<stl|sql|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -vcoq filename `
+`larus -l<time limit> -f<format> -s -e<stl|ursa|smtlia|smtbv> -n<max nesting> -p<max proof length> -vcoq filename `
 
    `-l<time limit>`       for time limit; example: -l10; default: 10s
 
@@ -84,7 +84,7 @@ otherwise:
 
    `-x`                   find a proof of length equal to the given length; default is false = length <= n
 
-   `-e<engine>`           for proving engine (stl, sql, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
+   `-e<engine>`           for proving engine (stl, ursa, smtlia, smtbv, smtuflia, smtufbv, minizinc); 
                           when using minizinc, the solver or-tools is used;
                           function symbols within formula can be used only with smtufbv;
                           examples: `-eursa`; default: `smtbv`
@@ -120,7 +120,7 @@ otherwise:
                           example: `-vcoq`; default: none
  
    `-b<number of abducts>` number of abducts; default: 0
-                          (support for abducts is not implemented for stl/sql/ursa proving engines)
+                          (support for abducts is not implemented for stl/ursa proving engines)
  
    `-gclca`               for generating a GCLC illustration of the proof based on illustrations of axioms.      
                           default is false

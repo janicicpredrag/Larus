@@ -257,27 +257,6 @@ void CLProof::ReplaceFromInfo(unsigned s1, unsigned s2)
 
 // ---------------------------------------------------------------------------------
 
-bool CLProof::Uses(const Fact& fact)
-{
-    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
-    if (pe) {
-        for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
-            if (pe->GetSubproof(i).Uses(fact))
-                return true;
-        }
-    }
-
-    for (int i = 0; i < mMPs.size(); i++) {
-        for (unsigned j = 0; j < mMPs[i].from.GetSize(); j++) {
-            if (mMPs[i].from.GetElement(j) == fact)
-                return true;
-        }
-    }
-    return false;
-}
-
-// ---------------------------------------------------------------------------------
-
 void CLProof::AnnotateRelevantSteps(set<unsigned> &allSteps, set<unsigned> &relevant)
 {
   CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);

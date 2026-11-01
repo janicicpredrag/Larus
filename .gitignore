@@ -73,6 +73,10 @@ sat-proof.txt
 *~
 \#*#
 
+# output of proof export and of the test scripts
+/proofs/
+/continuous-integration/results/
+
 # kept outside this repository (declarative2procedural has its own)
 /declarative2procedural/
 /razno/

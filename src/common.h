@@ -3,7 +3,7 @@
 
 #include <string>
 #include <string.h>
-#include <sys/time.h>
+#include <chrono>
 
 using namespace std;
 
@@ -21,7 +21,6 @@ typedef enum tagINPUT_FORMAT { eTPTP, NumberOfFormats } INPUT_FORMAT;
 
 enum PROVING_ENGINE {
   eSTL_ProvingEngine,
-  eSQL_ProvingEngine,
   eURSA_ProvingEngine,
   eSMTLIA_ProvingEngine,
   eSMTBV_ProvingEngine,
@@ -104,35 +103,35 @@ const string PREFIX_NEGATED = "nnn";
 const string URSA_NUM_PREFIX = "n"; // DO NOT CHANGE!
 
 typedef struct proverParams {
-  INPUT_FORMAT input_format;
-  PROVING_ENGINE eEngine;
-  double time_limit;
-  unsigned max_nesting_depth;
-  unsigned starting_proof_length;
-  unsigned max_proof_length;
-  unsigned step;
-  bool exact_length;
-  bool shortest_proof;
-  bool mbNoNegElim;
-  bool mbNoExcludedMiddle;
-  bool mbNativeEQ;
-  bool mbNativeEQsub;
-  bool mbCoq;
-  bool mbIsa;
+  INPUT_FORMAT input_format = DEFAULT_INPUT_FORMAT;
+  PROVING_ENGINE eEngine = DEFAULT_ENGINE;
+  double time_limit = DEFAULT_TIME_LIMIT;
+  unsigned max_nesting_depth = DEFAULT_MAX_NESTING_DEPTH;
+  unsigned starting_proof_length = DEFAULT_STARTING_PROOF_LENGTH;
+  unsigned max_proof_length = DEFAULT_MAX_PROOF_LENGTH;
+  unsigned step = DEFAULT_STEP;
+  bool exact_length = DEFAULT_EXACT_LENGTH;
+  bool shortest_proof = DEFAULT_SHORTEST_PROOF;
+  bool mbNoNegElim = DEFAULT_NO_NEG_ELIM;
+  bool mbNoExcludedMiddle = DEFAULT_NO_EXCLUDED_MIDDLE;
+  bool mbNativeEQ = DEFAULT_NATIVE_EQ;
+  bool mbNativeEQsub = DEFAULT_NATIVE_EQ_SUB;
+  bool mbCoq = DEFAULT_COQ;
+  bool mbIsa = DEFAULT_ISA;
   string sIsaLarusFolder;
-  bool mbMizar;
-  bool mbGCLCaxioms;
-  bool mbGCLCpredicates;
-  bool mbSimp;
-  bool mbNeedsCaseSplits;
+  bool mbMizar = DEFAULT_MIZAR;
+  bool mbGCLCaxioms = DEFAULT_GCLC;
+  bool mbGCLCpredicates = DEFAULT_GCLC;
+  bool mbSimp = DEFAULT_SIMP;
+  bool mbNeedsCaseSplits = DEFAULT_NEEDS_CASE_SPLITS;
   string msHammerInvoke;
-  string msHammerInvokeForAbducts;
-  unsigned vampire_time_limit;
-  bool mbInlineAxioms;
-  unsigned number_of_abducts;
-  bool mbADGLibConstruction;
-  bool show;
-  bool mbVerificationFailed;
+  string msHammerInvokeForAbducts = DEFAULT_HAMMER_FOR_ABDUCTS;
+  unsigned vampire_time_limit = DEFAULT_VAMPIRE_TIME_LIMIT;
+  bool mbInlineAxioms = DEFAULT_INLINE_AXIOMS;
+  unsigned number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
+  bool mbADGLibConstruction = DEFAULT_ADGLIB_CONSTRUCTION;
+  bool show = DEFAULT_SHOW;
+  bool mbVerificationFailed = false;
   string args;
 } proverParams;
 
@@ -146,11 +145,9 @@ bool isNumber(string n);
 string SkipChar(const string &str, char c);
 string ToUpper(const string &str);
 string dirnameOf(const string &fname);
-string SkipChar(const string &str, char c);
 bool isIdentifier(const string &str);
 unsigned readNumber(const string &str);
 bool isHintArgument(const string &str);
-string ToUpper(const string &str);
 string repeat2(int n, string s);
 string replacestring(const string& str, const string& from, const string& to);
 string replaceAll(const string &s, const string &search, const string &replace);
@@ -164,18 +161,13 @@ extern bool USING_ORIGINAL_SIGNATURE_EQ;
 extern bool USING_ORIGINAL_SIGNATURE_NEG;
 
 class Timer {
-  struct timeval mStartTime;
+  chrono::steady_clock::time_point mStartTime;
 public:
   void start() {
-    gettimeofday(&mStartTime, NULL);
+    mStartTime = chrono::steady_clock::now();
   }
   double elapsed() {
-    struct timeval end;
-    double elapsed_secs;
-    gettimeofday(&end, NULL);
-    elapsed_secs = (end.tv_sec - mStartTime.tv_sec) * 1e6;
-    elapsed_secs = (elapsed_secs + (end.tv_usec - mStartTime.tv_usec)) * 1e-6;
-    return elapsed_secs;
+    return chrono::duration<double>(chrono::steady_clock::now() - mStartTime).count();
   }
 };
 

@@ -18,7 +18,7 @@ cd "$work" || exit 1
 failures=0
 
 status() { # engine file
-    "$larus" -l5 -e"$1" "$2" 2>/dev/null | grep -a 'SZS status' | tail -1 | awk '{print $4}'
+    "$larus" -l10 -e"$1" "$2" 2>/dev/null | grep -a 'SZS status' | tail -1 | awk '{print $4}'
 }
 
 for engine in "$@"; do

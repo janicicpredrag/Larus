@@ -96,7 +96,7 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
                 for(auto const& p : diagram.GetAllPoints()) {
                     printPoint(p.first, p.second);
                 }
-                cout << endl << "Succesfully created a diagram. " << endl;
+                cout << endl << "Successfully created a diagram. " << endl;
                 return true;
             }
         }
@@ -147,7 +147,7 @@ bool ConstructionPlan::dD2P() {
                 return false;
             }
         }
-        cout << endl << "\nSuccesfully created a construction plan" << endl;
+        cout << endl << "\nSuccessfully created a construction plan" << endl;
         printCurrentStatus();
         return true;
     } else {
@@ -198,7 +198,7 @@ bool ConstructionPlan::D2P() {
                 return false;
             }
         }
-        cout << endl << "\nSuccesfully created a construction plan" << endl;
+        cout << endl << "\nSuccessfully created a construction plan" << endl;
         printCurrentStatus();
         return true;
     } else {

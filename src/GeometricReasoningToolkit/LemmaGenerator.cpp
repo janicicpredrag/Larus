@@ -11,24 +11,18 @@ void LemmaGenerator::GuessLemma(set<Fact> &facts, int time_limit){
     cout << endl << "--------------------------------------------- " << endl;
     GuessCongLemma(facts, time_limit);
     GuessPerpLemma(facts, time_limit);
-    // GuessColLemma(facts, time_limit);
-    // GuessCyclicLemma(facts, time_limit);
     GuessEqAnglesLemma(facts, time_limit);
-    //GuessEqAnglesLemma_8(facts, time_limit);
 }
 
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessCongLemma(set<Fact> &facts, int time_limit) {
-    // cout << "Cong pairs: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = next(it1, 1); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = it1; it3 != mAllPoints.end(); it3++) {
                 for (map<string,Point>::iterator it4 = next(it3, 1); it4 != mAllPoints.end(); it4++) {
                     if (isCong((*it1).second, (*it2).second, (*it3).second, (*it4).second)
                         && !(it1 == it3 && it2 == it4)) {
-                        // cout << "(" << (*it1).first << "," << (*it2).first << ") = (" <<
-                        //  (*it3).first << "," << (*it4).first << ")" << endl;
                         Fact f;
                         f.SetName(string(CONG));
                         Term t;
@@ -51,14 +45,11 @@ void LemmaGenerator::GuessCongLemma(set<Fact> &facts, int time_limit) {
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessColLemma(set<Fact> &facts, int time_limit) {
-    // cout << "Col triples: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = mAllPoints.begin(); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = mAllPoints.begin(); it3 != mAllPoints.end(); it3++) {
                 if (isCol((*it1).second, (*it2).second, (*it3).second)
                     && !(it1 == it2 || it1 == it3 || it2 == it3)) {
-                    // cout << "(" << (*it1).first << "," << (*it2).first << ") = (" <<
-                    //   (*it3).first << ")" << endl;
                     Fact f;
                     f.SetName(string(COLLINEAR));
                     Term t;
@@ -78,15 +69,12 @@ void LemmaGenerator::GuessColLemma(set<Fact> &facts, int time_limit) {
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessPerpLemma(set<Fact> &facts, int time_limit) {
-    // cout << "Perp pairs: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = next(it1, 1); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = mAllPoints.begin(); it3 != mAllPoints.end(); it3++) {
                 for (map<string,Point>::iterator it4 = next(it3, 1); it4 != mAllPoints.end(); it4++) {
                     if (isPerp((*it1).second, (*it2).second, (*it3).second, (*it4).second)
                         && !(it1 == it2 && it3 == it4)) {
-                        // cout << "(" << (*it1).first << "," << (*it2).first << ") _|_ (" <<
-                        //   (*it3).first << "," << (*it4).first << ")" << endl;
                         Fact f;
                         f.SetName(string(PERP));
                         Term t;
@@ -109,17 +97,13 @@ void LemmaGenerator::GuessPerpLemma(set<Fact> &facts, int time_limit) {
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessCyclicLemma(set<Fact> &facts, int time_limit) {
-    // cout << "Cong pairs: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = next(it1); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = next(it1); it3 != mAllPoints.end(); it3++) {
                 for (map<string,Point>::iterator it4 = next(it3); it4 != mAllPoints.end(); it4++) {
                     if (it2 == it3) continue;
                     if (it2 == it4) continue;
-                    /* cout << "cyclic (" << (*it1).first << "," << (*it2).first << ", " <<
-          (*it3).first << "," << (*it4).first << ")" << endl;*/
                     if (isCyclic((*it1).second, (*it2).second, (*it3).second, (*it4).second) ) {
-                        // cout << "CYCLIC" << endl;
 
                         Fact f;
                         f.SetName("cyclic");
@@ -144,7 +128,6 @@ void LemmaGenerator::GuessCyclicLemma(set<Fact> &facts, int time_limit) {
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessEqAnglesLemma(set<Fact> &facts, int time_limit) {
-    // cout << "Cong pairs: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = next(it1, 1); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = next(it2); it3 != mAllPoints.end(); it3++) {
@@ -155,23 +138,7 @@ void LemmaGenerator::GuessEqAnglesLemma(set<Fact> &facts, int time_limit) {
                                 && areEqAngles((*it2).second, (*it1).second, (*it3).second,
                                                (*it5).second, (*it4).second, (*it6).second)
                                 && !(it1 == it4 && it2 == it5 && it3 == it6)) {
-
-                                /*cout << " prvi : " << cos((*it2).second, (*it1).second, (*it3).second) << endl;
-                cout << " drugi: " << cos((*it5).second, (*it4).second, (*it6).second) << endl;
-                    
-                cout << "ang3(" << (*it2).first << "," << (*it1).first << "," << (*it3).first 
-                                << ") = (" 
-                                << (*it5).first << "," << (*it4).first << "," << (*it6).first 
-                                << ")" << endl;*/
                                 Fact f;
-                                /*f.SetName("eqnative");
-                Term L, R;
-                L.ReadTPTPString(("ANGLE3"] + "(" +
-                  (*it2).first + "," + (*it1).first + "," + (*it3).first + ")"));
-                R.ReadTPTPString((sig["ANGLE3"] + "(" +
-                  (*it5).first + "," + (*it4).first + "," + (*it6).first + ")"));
-                f.SetArg(0, L);
-                f.SetArg(1, R);*/
 
                                 Term t;
                                 f.SetName(string(CONG_ANGLES));
@@ -188,8 +155,6 @@ void LemmaGenerator::GuessEqAnglesLemma(set<Fact> &facts, int time_limit) {
                                 t.ReadNonCompoundString((*it6).first);
                                 f.SetArg(5, t);
                                 facts.insert(f);
-
-                                // cout << "sad i ovako: " << f << endl;
                             }
                         }
                     }
@@ -203,7 +168,6 @@ void LemmaGenerator::GuessEqAnglesLemma(set<Fact> &facts, int time_limit) {
 // -----------------------------------------------------------------------------------------------
 
 void LemmaGenerator::GuessEqAnglesLemma_8(set<Fact> &facts, int time_limit) {
-    // cout << "Cong pairs: " << endl;
     for (map<string,Point>::iterator it1 = mAllPoints.begin(); it1 != mAllPoints.end(); it1++) {
         for (map<string,Point>::iterator it2 = next(it1, 1); it2 != mAllPoints.end(); it2++) {
             for (map<string,Point>::iterator it3 = mAllPoints.begin(); it3 != mAllPoints.end(); it3++) {
@@ -222,23 +186,7 @@ void LemmaGenerator::GuessEqAnglesLemma_8(set<Fact> &facts, int time_limit) {
                                         && !(it1 == it3 && it2 == it4)
                                         && !(it5 == it7 && it6 == it8)
                                         ) {
-
-                                        /*cout << " prvi : " << cos((*it2).second, (*it1).second, (*it3).second) << endl;
-                cout << " drugi: " << cos((*it5).second, (*it4).second, (*it6).second) << endl;
-                    
-                cout << "ang3(" << (*it2).first << "," << (*it1).first << "," << (*it3).first 
-                                << ") = (" 
-                                << (*it5).first << "," << (*it4).first << "," << (*it6).first 
-                                << ")" << endl;*/
                                         Fact f;
-                                        /*f.SetName("eqnative");
-                Term L, R;
-                L.ReadTPTPString((sig["ANGLE3"] + "(" +
-                  (*it2).first + "," + (*it1).first + "," + (*it3).first + ")"));
-                R.ReadTPTPString((sig["ANGLE3"] + "(" +
-                  (*it5).first + "," + (*it4).first + "," + (*it6).first + ")"));
-                f.SetArg(0, L);
-                f.SetArg(1, R);*/
 
                                         Term t;
                                         f.SetName(string(CONG_ANGLES));

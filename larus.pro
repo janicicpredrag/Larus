@@ -67,7 +67,8 @@ HEADERS += \
     src/ProofExport/ProofExport2Text.h \
     src/GeometricReasoningToolkit/Declarative2Procedural.h \
     src/GeometricReasoningToolkit/ADGLib_signature.h \
-    src/hammering.h
+    src/hammering.h \
+    src/import.h
 
 DISTFILES += \
     README.md
