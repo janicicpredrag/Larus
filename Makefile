@@ -8,7 +8,7 @@ CXX      ?= g++
 CXXFLAGS ?=
 LDFLAGS  ?=
 
-BASE_FLAGS := -std=c++17 -Wall -Wextra -I.
+BASE_FLAGS := -std=c++17 -Wall -Wextra -Isrc
 
 ifeq ($(MODE),release)
   # NDEBUG stays off: the assertions guard proof reconstruction.
@@ -29,9 +29,10 @@ endif
 # Objects live in build/obj. The rest of build/ belongs to Qt Creator.
 BUILD_ROOT := build/obj
 OBJDIR     := $(BUILD_ROOT)/$(MODE)
+SRCDIR     := src
 TOOLKIT    := GeometricReasoningToolkit
 
-# --- Source files ---
+# --- Source files (relative to src/) ---
 SOURCES := main.cpp \
            common.cpp \
            import.cpp \
@@ -72,7 +73,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
-$(OBJDIR)/%.o: %.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(BASE_FLAGS) $(MODE_FLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
@@ -85,7 +86,7 @@ asan:
 	$(MAKE) MODE=asan
 
 toolkit:
-	$(MAKE) -C $(TOOLKIT)
+	$(MAKE) -C $(SRCDIR)/$(TOOLKIT)
 
 # Compiles only the tactics; generated proofs in proofs/ are left alone.
 coq:
@@ -95,7 +96,7 @@ check: all
 	sh continuous-integration/check.sh ./$(TARGET) $(ENGINES)
 
 clean:
-	rm -rf $(BUILD_ROOT) larus larus-debug larus-asan $(TOOLKIT)/geometricReasoningToolkit
+	rm -rf $(BUILD_ROOT) larus larus-debug larus-asan $(SRCDIR)/$(TOOLKIT)/geometricReasoningToolkit
 
 help:
 	@echo "make            build ./larus (optimized)"

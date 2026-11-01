@@ -50,9 +50,9 @@ time-of-build-pretty.log
 /larus
 /larus-debug
 /larus-asan
-/GeometricReasoningToolkit/build/
-/GeometricReasoningToolkit/Build/
-/GeometricReasoningToolkit/geometricReasoningToolkit
+/src/GeometricReasoningToolkit/build/
+/src/GeometricReasoningToolkit/Build/
+/src/GeometricReasoningToolkit/geometricReasoningToolkit
 *.d
 *.dep
 
@@ -72,3 +72,7 @@ sat-proof.txt
 *.user.*
 *~
 \#*#
+
+# kept outside this repository (declarative2procedural has its own)
+/declarative2procedural/
+/razno/

@@ -5,7 +5,7 @@
 TARGET   := geometricReasoningToolkit
 SRCDIR   := .
 CL_DIR   := ..
-BUILD_DIR := ../build/obj/toolkit
+BUILD_DIR := ../../build/obj/toolkit
 
 SOURCES  := main.cpp \
             SemanticGuidedProving.cpp \
