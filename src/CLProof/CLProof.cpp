@@ -449,25 +449,6 @@ void CLProof::SimplifyByFormulae(const DNFFormula &goal) {
 
   queue<Fact> relevant;
 
-  /* TODO
-  CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
-  if (pe) {
-    for (size_t i = 0, size = pe->GetNumOfCases(); i < size; i++) {
-      pe->SimplifySubproof(relevant, i);
-      MakeRelevant(relevant, pe->GetCases()[i].GetElement(0));
-    }
-  } else {
-    ByAssumption *ba = dynamic_cast<ByAssumption *>(mpProofEnd);
-    if (ba) {
-      MakeRelevant(relevant, ba->GetConjunctionFormula());
-    } else {
-      EFQ *efq = dynamic_cast<EFQ *>(mpProofEnd);
-      if (efq)
-        MakeRelevant(relevant, Fact(sBOT));
-    }
-  }
-  */
-
   set<int> needed_steps;
   set<Fact> processed_facts;
 

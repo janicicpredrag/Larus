@@ -146,10 +146,6 @@ public:
   void AddSubproof(const CLProof &proof) {
     mSubproofs.push_back(proof);
   }
-  void SimplifySubproof(set<Fact> &relevant, size_t i) {
-    assert(i < mCases.size());
-    // mSubproofs[i].SimplifyByFormulae(relevant);
-  }
 
   void SetCases(const vector<DNFFormula> &dnf) { mCases = dnf; }
   void SetCase(size_t i, const DNFFormula &dnf) { mCases[i] = dnf; }
