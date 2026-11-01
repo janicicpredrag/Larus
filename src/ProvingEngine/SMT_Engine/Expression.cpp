@@ -5,7 +5,6 @@
 #include <cmath>
 #include "Expression.h"
 #include "common.h"
-#include "../SMTOut.h"
 
 
 // ---------------------------------------------------------------------------------------
@@ -275,12 +274,16 @@ string Expression::toString(shared_ptr<ExpressionNode> node)
 
 // ---------------------------------------------------------------------------------------
 
+static bool isBitVector(PROVING_ENGINE th) {
+    return th == eSMTBV_ProvingEngine || th == eSMTUFBV_ProvingEngine;
+}
+
+// ---------------------------------------------------------------------------------------
+
 string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op)
 {
     stringstream stream;
-    SMTOut s;
     string sOp;
-    s.SetTheory(th);
 
     switch (node->mO) {
     case eNull:
@@ -314,9 +317,9 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
     case eAdd: return
                 (op == eAdd) ?
                    print_to_SMT(node->mLeft, th, eAdd) + " " + print_to_SMT(node->mRight, th, eAdd)
-                : s.smt_sum(print_to_SMT(node->mLeft, th, eAdd), print_to_SMT(node->mRight, th, eAdd));
+                : "(" + string(isBitVector(th) ? "bvadd" : "+") + " " + print_to_SMT(node->mLeft, th, eAdd) + " " + print_to_SMT(node->mRight, th, eAdd) + ")";
     case eMul: return
-                s.smt_prod(print_to_SMT(node->mLeft, th, eMul), print_to_SMT(node->mRight, th, eMul));
+                "(" + string(isBitVector(th) ? "bvmul" : "*") + " " + print_to_SMT(node->mLeft, th, eMul) + " " + print_to_SMT(node->mRight, th, eMul) + ")";
     case eEq: return "  (= " + print_to_SMT(node->mLeft, th, eEq) + " " + print_to_SMT(node->mRight, th, eEq) + ")"
                 + (op == eNull ? "" : "\n");
     case eNeq: return "  (not (= " + print_to_SMT(node->mLeft, th, eNeq) + " " + print_to_SMT(node->mRight, th, eNeq) + ")) "
@@ -369,9 +372,6 @@ string Expression::print_to_SMT(const shared_ptr<ExpressionNode> node, PROVING_E
 
 string Expression::print_to_MiniZinc(const shared_ptr<ExpressionNode> node, PROVING_ENGINE th, enum OPERATOR op)
 {
-    SMTOut s;
-    s.SetTheory(th);
-
     switch (node->mO) {
     case eNull:
         return "";

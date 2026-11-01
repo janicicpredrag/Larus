@@ -40,7 +40,6 @@ SOURCES := main.cpp \
            CLTheory/Formula.cpp \
            CLTheory/Theory.cpp \
            CLProof/CLProof.cpp \
-           ProvingEngine/SMTOut.cpp \
            ProvingEngine/SMT_Engine/Expression.cpp \
            ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
            ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \

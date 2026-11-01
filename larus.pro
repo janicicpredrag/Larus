@@ -26,7 +26,6 @@ SOURCES += src/main.cpp \
     src/GeometricReasoningToolkit/TPTPSupport.cpp \
     src/ProvingEngine/SMT_Engine/Expression.cpp \
     src/ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
-    src/ProvingEngine/SMTOut.cpp \
     src/ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
     src/ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
     src/ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
@@ -54,7 +53,6 @@ HEADERS += \
     src/ProvingEngine/SMT_Engine/Expression.h \
     src/ProvingEngine/SMT_Engine/SMT_ProvingEngine.h \
     src/ProvingEngine/ProvingEngine.h \
-    src/ProvingEngine/SMTOut.h \
     src/ProvingEngine/URSA_Engine/URSA_ProvingEngine.h \
     src/ProvingEngine/STL_Engine/STL_FactsDatabase.h \
     src/ProvingEngine/STL_Engine/STL_ProvingEngine.h \
