@@ -1,65 +1,107 @@
-# --- Compiler and Flags ---
-CXX      := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -O3 -I.
-LDFLAGS  := 
+# Larus build. Run `make help` for the available targets.
 
-# --- Target Binary ---
-TARGET   := larus
+# --- Build mode ---
+# Each mode has its own objects and binary, so switching never mixes them.
+MODE ?= release
 
-# --- Source Files ---
-# (Duplicates like import.cpp are handled cleanly by using unique object paths)
-SOURCES  := main.cpp \
-            CLTheory/Formula.cpp \
-            CLTheory/Theory.cpp \
-            CLProof/CLProof.cpp \
-            ProvingEngine/NewSMT_Engine/Expression.cpp \
-            ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp \
-            ProvingEngine/SMTOut.cpp \
-            ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp \
-            ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
-            ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
-            ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
-            ProofExport/ProofExport2Coq.cpp \
-            ProofExport/ProofExport2Isabelle.cpp \
-            ProofExport/ProofExport2LaTeX.cpp \
-            ProofExport/ProofExport2GCLC.cpp \
-            ProofExport/ProofExport2GCLC_predicates.cpp \
-            common.cpp \
-            import.cpp \
-            ProofExport/ProofExport2Mizar.cpp \
-            ProofExport/ProofExport2Text.cpp \
-            GeometricReasoningToolkit/Declarative2Procedural.cpp \
-            GeometricReasoningToolkit/CartesianCalculations.cpp \
-            GeometricReasoningToolkit/TPTPSupport.cpp \
-            GeometricReasoningToolkit/Diagram.cpp \
-            hammering.cpp
+CXX      ?= g++
+CXXFLAGS ?=
+LDFLAGS  ?=
 
-# --- Object and Dependency Mapping ---
-OBJDIR   := obj
-OBJECTS  := $(SOURCES:%.cpp=$(OBJDIR)/%.o)
-DEPS     := $(OBJECTS:%.o=%.d)
+BASE_FLAGS := -std=c++17 -Wall -Wextra -I.
 
-# --- Build Rules ---
-.PHONY: all clean
+ifeq ($(MODE),release)
+  # NDEBUG stays off: the assertions guard proof reconstruction.
+  MODE_FLAGS :=  -O3
+  TARGET     := larus
+else ifeq ($(MODE),debug)
+  MODE_FLAGS := -O0 -g
+  TARGET     := larus-debug
+else ifeq ($(MODE),asan)
+  MODE_FLAGS := -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined
+  LDFLAGS    += -fsanitize=address,undefined
+  TARGET     := larus-asan
+else
+  $(error Unknown MODE '$(MODE)': use release, debug or asan)
+endif
+
+# --- Layout ---
+# Objects live in build/obj. The rest of build/ belongs to Qt Creator.
+BUILD_ROOT := build/obj
+OBJDIR     := $(BUILD_ROOT)/$(MODE)
+TOOLKIT    := GeometricReasoningToolkit
+
+# --- Source files ---
+SOURCES := main.cpp \
+           common.cpp \
+           import.cpp \
+           hammering.cpp \
+           CLTheory/Formula.cpp \
+           CLTheory/Theory.cpp \
+           CLProof/CLProof.cpp \
+           ProvingEngine/SMTOut.cpp \
+           ProvingEngine/NewSMT_Engine/Expression.cpp \
+           ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp \
+           ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp \
+           ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
+           ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
+           ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \
+           ProofExport/ProofExport2Coq.cpp \
+           ProofExport/ProofExport2Isabelle.cpp \
+           ProofExport/ProofExport2LaTeX.cpp \
+           ProofExport/ProofExport2GCLC.cpp \
+           ProofExport/ProofExport2GCLC_predicates.cpp \
+           ProofExport/ProofExport2Mizar.cpp \
+           ProofExport/ProofExport2Text.cpp \
+           $(TOOLKIT)/Declarative2Procedural.cpp \
+           $(TOOLKIT)/CartesianCalculations.cpp \
+           $(TOOLKIT)/TPTPSupport.cpp \
+           $(TOOLKIT)/Diagram.cpp
+
+OBJECTS := $(SOURCES:%.cpp=$(OBJDIR)/%.o)
+DEPS    := $(OBJECTS:%.o=%.d)
+
+# Engines exercised by `make check`; stl needs no external solver.
+ENGINES ?= stl
+
+# --- Targets ---
+.PHONY: all debug asan toolkit coq check clean help
 
 all: $(TARGET)
 
-# Link the final executable
 $(TARGET): $(OBJECTS)
-	@echo "Linking target: $@"
 	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
-# Compile source files into objects (includes auto-dependency generation flags)
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	@echo "Compiling: $<"
-	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+	$(CXX) $(BASE_FLAGS) $(MODE_FLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-# Include generated dependency files (ignores them if they don't exist yet)
 -include $(DEPS)
 
-# Clean up build artifacts
+debug:
+	$(MAKE) MODE=debug
+
+asan:
+	$(MAKE) MODE=asan
+
+toolkit:
+	$(MAKE) -C $(TOOLKIT)
+
+# Compiles only the tactics; generated proofs in proofs/ are left alone.
+coq:
+	coqc -R proofs src -q proofs/general_tactics.v
+
+check: all
+	sh continuous-integration/check.sh ./$(TARGET) $(ENGINES)
+
 clean:
-	@echo "Cleaning up..."
-	rm -rf $(OBJDIR) $(TARGET)
-	
+	rm -rf $(BUILD_ROOT) larus larus-debug larus-asan $(TOOLKIT)/geometricReasoningToolkit
+
+help:
+	@echo "make            build ./larus (optimized)"
+	@echo "make debug      build ./larus-debug"
+	@echo "make asan       build ./larus-asan (address + UB sanitizers)"
+	@echo "make toolkit    build the geometric reasoning toolkit"
+	@echo "make coq        compile the Coq tactics needed by -vcoq"
+	@echo "make check      run the smoke tests (ENGINES=\"stl smtbv\" to choose)"
+	@echo "make clean      remove objects and binaries"

@@ -5,7 +5,7 @@
 TARGET   := geometricReasoningToolkit
 SRCDIR   := .
 CL_DIR   := ..
-BUILD_DIR := Build
+BUILD_DIR := ../build/obj/toolkit
 
 SOURCES  := main.cpp \
             SemanticGuidedProving.cpp \
@@ -32,8 +32,6 @@ ADDFLAGS ?=
 ALL_CXXFLAGS := $(CXXFLAGS) $(ADDFLAGS)
 
 vpath %.cpp $(SRCDIR) $(CL_DIR) $(CL_DIR)/CLTheory $(CL_DIR)/ProvingEngine/STL_Engine
-
-.PHONY: all clean
 
 .PHONY: all clean
 

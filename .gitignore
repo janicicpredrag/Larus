@@ -43,3 +43,32 @@ time-of-build-after.log
 time-of-build-before.log
 time-of-build-both.log
 time-of-build-pretty.log
+
+# build output
+/build/
+/obj/
+/larus
+/larus-debug
+/larus-asan
+/GeometricReasoningToolkit/build/
+/GeometricReasoningToolkit/Build/
+/GeometricReasoningToolkit/geometricReasoningToolkit
+*.d
+*.dep
+
+# files larus and its solvers write to the working directory
+constraints_for_proof*.smt
+constraints_for_proof*.mzn
+model_for_proof.txt
+encoded_proof.txt
+hammeroutput.txt
+tptpfile*.txt
+vampire_abduct.txt
+prove.urs
+sat-proof.txt
+
+# editors
+*.user
+*.user.*
+*~
+\#*#
