@@ -65,6 +65,14 @@ void CLProof::Clear() {
 
 // ---------------------------------------------------------------------------------
 
+void CLProof::ClearSteps() {
+  mMPs.clear();
+  delete mpProofEnd;
+  mpProofEnd = nullptr;
+}
+
+// ---------------------------------------------------------------------------------
+
 void CLProof::SetTheory(Theory *pT)
 {
   mpT = pT;

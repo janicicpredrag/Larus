@@ -12,6 +12,8 @@
 
 using namespace std;
 
+const unsigned MAX_INSTANTIATION_VARS = 200;
+
 typedef struct EncodedProofStep {
     unsigned StepKind;
     unsigned ContentsPredicate[2];
@@ -21,8 +23,8 @@ typedef struct EncodedProofStep {
     unsigned isGoal;
     unsigned AxiomApplied;
     vector<unsigned> From;
-    unsigned Instantiation[200];
-    string InstantiationString[200];
+    unsigned Instantiation[MAX_INSTANTIATION_VARS];
+    string InstantiationString[MAX_INSTANTIATION_VARS];
     unsigned Cases;
 } EncodedProofStep;
 

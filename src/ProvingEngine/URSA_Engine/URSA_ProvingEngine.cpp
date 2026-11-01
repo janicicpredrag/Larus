@@ -376,7 +376,6 @@ bool URSA_ProvingEngine::ProveFromPremises(const DNFFormula &formula,
                              " ursa < prove.urs -q -c -l12 -sclasp >/dev/null";
         if (system(sCall.c_str())) // Find a proof
           return false;
-        /*int rv =*/system(sCall.c_str());
         if (!proof.DecodeProof(formula, "sat-proof.txt")) {
           mParams.starting_proof_length += 12;
           cout << ", " << flush;
@@ -681,7 +680,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "          bMatchOnePremise ||= "
               "(nPredicate[nAxiom][nPremisesCounter] == " +
                   URSA_NUM_PREFIX +
-                  "true && nFrom[nProofStep][nPremisesCounter] == 99); "
+                  sTOP + " && nFrom[nProofStep][nPremisesCounter] == 99); "
            << endl;
   ursaFile << "          for (n_from = 0; n_from < nProofStep; n_from++) { "
            << endl;
@@ -839,7 +838,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << "                    && (nAxiomApplied[nProofStep] == nNegIntro) "
            << endl;
   ursaFile << "                    && (nP[nProofStep][0] != " +
-                  URSA_NUM_PREFIX + "false) "
+                  URSA_NUM_PREFIX + sBOT + ") "
            << endl;
   ursaFile
       << "                    && (nP[nProofStep][0]+1 == nP[nFinalStep][0]);  "
@@ -947,8 +946,8 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
            << endl;
   ursaFile << endl;
   ursaFile << "   bTrivGoalReached = (nP[nFinalStep][0]==" + URSA_NUM_PREFIX +
-                  "true || nP[nFinalStep][1]==" + URSA_NUM_PREFIX +
-                  "true && bCases[nFinalStep]); "
+                  sTOP + " || nP[nFinalStep][1]==" + URSA_NUM_PREFIX +
+                  sTOP + " && bCases[nFinalStep]); "
            << endl;
   ursaFile << endl;
   ursaFile << "   bQEDbyAssumptionStep = (((nProofStep == 0 && "
@@ -968,7 +967,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
            << endl;
   ursaFile << endl;
   ursaFile << "   bQEDbyEFQStep = ((nProofStep>0) && nP[nProofStep-1][0] == " +
-                  URSA_NUM_PREFIX + "false "
+                  URSA_NUM_PREFIX + sBOT + " "
            << endl;
   ursaFile << "                     && (nNesting[nProofStep-1] == "
               "nNesting[nProofStep]) "
@@ -1003,7 +1002,7 @@ void URSA_ProvingEngine::EncodeProof(const DNFFormula &formula) {
   ursaFile << endl;
   ursaFile
       << "   bQEDbyNegIntroStep = ((nProofStep>0) && nP[nProofStep-1][0] == " +
-             URSA_NUM_PREFIX + "false "
+             URSA_NUM_PREFIX + sBOT + " "
       << endl;
   ursaFile << "                     && ((nNesting[nProofStep-1] >> 1) == "
               "nNesting[nProofStep]) "

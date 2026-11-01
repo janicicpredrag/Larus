@@ -90,6 +90,7 @@ public:
   Fact() {}
   Fact(string &n, const vector<string> &a) {
     mName = n;
+    mArgs.resize(a.size());
     for(unsigned i = 0; i < a.size(); i++)
       mArgs[i].ReadTPTPString(a[i]);
   }
@@ -103,7 +104,7 @@ public:
     return *this;
   }
   bool operator==(const Fact &f) const {
-    if (mName != f.mName)
+    if (mName != f.mName || mArgs.size() != f.mArgs.size())
       return false;
     for (unsigned i = 0; i<mArgs.size(); i++) {
       if (mArgs[i] != f.mArgs[i])

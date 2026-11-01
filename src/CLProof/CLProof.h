@@ -47,6 +47,7 @@ public:
   unsigned Size() const;
   void AddAssumption(const Fact &f);
   void ClearAssumptions() { mAssumptions.clear(); }
+  void ClearSteps();
   void AddMPstep(const ConjunctionFormula from, const DNFFormula &mp,
                  string name,
                  const vector<unsigned> &fromStep,

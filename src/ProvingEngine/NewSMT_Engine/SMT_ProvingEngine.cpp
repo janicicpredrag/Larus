@@ -1212,6 +1212,9 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
   bool ret = false;
   bool bTimeOut = false;
   mGoal = formula;
+  vector<Fact> initialAssumptions;
+  for (size_t i = 0; i < proof.NumOfAssumptions(); i++)
+    initialAssumptions.push_back(proof.GetAssumption(i));
 
   if (system(NULL)) {
 
@@ -1261,7 +1264,7 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
       bTimeOut = false;
       while (!bTimeOut && l <= r && l != best) {
         s = (l + r) / 2;
-        switch (OneProvingAttempt(formula, l)) {
+        switch (OneProvingAttempt(formula, s)) {
           case eTimeLimitExceeded:
             bTimeOut = true;
             break;
@@ -1281,6 +1284,12 @@ bool SMT_ProvingEngine::ProveFromPremises(const DNFFormula& formula, CLProof& pr
     if (best > 0 && best != best_start) {
       t.start();
       cout << "  --proof reconstruction..." << flush;
+      if (best_start > 0) { // replace the proof found by the first attempt
+        proof.ClearSteps();
+        proof.ClearAssumptions();
+        for (const Fact &f : initialAssumptions)
+          proof.AddAssumption(f);
+      }
       ret = ReconstructProof(formula, proof);
       assert(ret);
       mParams.time_limit = mParams.time_limit - t.elapsed();
@@ -2061,13 +2070,13 @@ bool SMT_ProvingEngine::ReadOneVarValue(ifstream& smtmodel, string& strVarName, 
 
 bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
 {
-  unsigned index[3], i = 0, nVal = 0;
+  unsigned index[3] = {0, 0, 0}, i = 0, nVal = 0;
   bool bVal = false;
   string s = strVarName;
   strVarName = strVarName.substr(0, strVarName.find("_l_")); // strip arguments
   while (s.find("_l_") != string::npos) { // collect arguments
     s = s.substr(s.find("_l_") + strlen("_l_"), s.size());
-    if (!stou(s.substr(0,s.find("_r_")), index[i++]))
+    if (i == 3 || !stou(s.substr(0,s.find("_r_")), index[i++]))
       return false;
     s = s.substr(s.find("_r_") + strlen("_r_"), s.size());
   }
@@ -2096,6 +2105,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
   } else if (strVarName == "Contents") { //  only for UFBV
     vector<string> contents;
     ParseTermArguments(strVal, contents);
+    assert(!contents.empty());
     nVal = GetPredicateSymbolOrdinal(*mpT, contents[0]);
     meProof[index[0]].ContentsPredicate[index[1]] = nVal;
     for(unsigned int ii=1; ii<contents.size(); ii++) {
@@ -2126,6 +2136,7 @@ bool SMT_ProvingEngine::StoreValueFromModel(string& strVarName, string& strVal)
         meProof[index[0]].From.resize(index[1]+1);
     meProof[index[0]].From[index[1]] = nVal;
   } else if (strVarName == "Instantiation") {
+    assert(index[1] < MAX_INSTANTIATION_VARS);
     if (mSMT_theory == eSMTUFBV_ProvingEngine) {
       meProof[index[0]].InstantiationString[index[1]] = strVal;
     }
