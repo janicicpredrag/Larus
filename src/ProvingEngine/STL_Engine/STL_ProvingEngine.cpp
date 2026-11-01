@@ -376,15 +376,8 @@ bool STL_ProvingEngine::ApplyCaseSplit(DNFFormula formula, CaseSplit **pcs) {
     bool bProved = ProveFromPremises(formula, proof);
     if (bProved) {
         // proof.PrettyPrint();
-        proof.SimplifyByFormulae();
+        proof.SimplifyByFormulae(formula);
         // proof.PrettyPrint();
-
-        // TODO: simplify if the case split is not relevant
-        /*bool bCaseSplitIsRelevant = false;
-        for (const auto& fact : conj_f.GetConjunction()) {
-            if (proof.Uses(fact))
-                bCaseSplitIsRelevant = true;
-        }*/
 
         // all derived fact were treated as assumptions and now are deleted
         proof.ClearAssumptions();

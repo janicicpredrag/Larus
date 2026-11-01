@@ -341,7 +341,111 @@ void CLProof::DecreaseFromInfoFromStep(unsigned s)
 
 // ---------------------------------------------------------------------------------
 
-void CLProof::SimplifyByFormulae() {
+// Existentially quantified variables of the goal match any argument.
+static bool MatchesGoal(const DNFFormula &goal, const Fact &f) {
+  for (size_t i = 0; i < goal.GetSize(); i++) {
+    for (size_t j = 0; j < goal.GetElement(i).GetSize(); j++) {
+      Fact g = goal.GetElement(i).GetElement(j);
+      if (g.GetName() != f.GetName() || g.GetArity() != f.GetArity())
+        continue;
+      bool bMatch = true;
+      for (size_t k = 0; k < g.GetArity() && bMatch; k++) {
+        string arg = g.GetArg(k).ToTPTPString();
+        bMatch = isupper(arg[0]) || g.GetArg(k) == f.GetArg(k);
+      }
+      if (bMatch)
+        return true;
+    }
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------------
+
+// A case split is not needed if one of its cases is already known or if the
+// subproof of one of its cases does not use that case: the proof then
+// continues with the subproof of that case.
+void CLProof::EliminateRedundantCaseSplits(const DNFFormula &goal, set<Fact> known) {
+  for (const Fact &f : mAssumptions)
+    known.insert(f);
+
+  size_t processed = 0;
+  for (;;) {
+    for (; processed < mMPs.size(); processed++) {
+      const DNFFormula &dnf = mMPs[processed].conclusion;
+      if (dnf.GetSize() == 1)
+        for (size_t j = 0; j < dnf.GetElement(0).GetSize(); j++)
+          known.insert(dnf.GetElement(0).GetElement(j));
+    }
+
+    CaseSplit *pe = dynamic_cast<CaseSplit *>(mpProofEnd);
+    if (!pe)
+      return;
+    size_t numOfCases = pe->GetNumOfCases();
+    for (size_t i = 0; i < numOfCases; i++)
+      pe->GetSubproof(i).EliminateRedundantCaseSplits(goal, known);
+    if (mMPs.empty() || mMPs.back().conclusion.GetSize() < 2 ||
+        !mMPs.back().new_witnesses.empty())
+      return;
+
+    size_t kept = numOfCases;
+    for (size_t i = 0; i < numOfCases; i++) {
+      set<Fact> used;
+      const CLProof &subproof = pe->GetSubproof(i);
+      for (const MP_Step &mp : subproof.mMPs)
+        for (size_t j = 0; j < mp.from.GetSize(); j++)
+          used.insert(mp.from.GetElement(j));
+      subproof.CollectFactsUsedAtEnd(used);
+
+      const ConjunctionFormula &cf = pe->GetCases()[i].GetElement(0);
+      bool bAllKnown = true, bUsed = false;
+      for (size_t j = 0; j < cf.GetSize(); j++) {
+        bAllKnown = bAllKnown && (known.find(cf.GetElement(j)) != known.end());
+        bUsed = bUsed || MatchesGoal(goal, cf.GetElement(j)) ||
+                (used.find(cf.GetElement(j)) != used.end());
+      }
+      if ((bAllKnown || !bUsed) &&
+          (kept == numOfCases ||
+           subproof.Size() < pe->GetSubproof(kept).Size()))
+        kept = i;
+    }
+    if (kept == numOfCases)
+      return;
+
+    CLProof &subproof = pe->GetSubproof(kept);
+    mMPs.pop_back(); // the step that gives the disjunction
+    processed = mMPs.size();
+    mMPs.insert(mMPs.end(), subproof.mMPs.begin(), subproof.mMPs.end());
+    mpProofEnd = subproof.mpProofEnd;
+    subproof.mpProofEnd = nullptr;
+    delete pe;
+  }
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::CollectFactsUsedAtEnd(set<Fact> &used) const {
+  const CaseSplit *pe = dynamic_cast<const CaseSplit *>(mpProofEnd);
+  if (pe) {
+    for (size_t i = 0, size = pe->GetNumOfSubproofs(); i < size; i++) {
+      const CLProof &subproof = pe->GetSubproof(i);
+      for (const MP_Step &mp : subproof.mMPs)
+        for (size_t j = 0; j < mp.from.GetSize(); j++)
+          used.insert(mp.from.GetElement(j));
+      subproof.CollectFactsUsedAtEnd(used);
+    }
+  } else if (dynamic_cast<const EFQ *>(mpProofEnd)) {
+    Fact bot;
+    bot.SetName(sBOT);
+    used.insert(bot);
+  }
+}
+
+// ---------------------------------------------------------------------------------
+
+void CLProof::SimplifyByFormulae(const DNFFormula &goal) {
+
+  EliminateRedundantCaseSplits(goal, set<Fact>());
 
   queue<Fact> relevant;
 
@@ -364,14 +468,31 @@ void CLProof::SimplifyByFormulae() {
   }
   */
 
-  if (mMPs.size() > 0) { // last step is always relevant
-    DNFFormula dnf = (mMPs[mMPs.size() - 1]).conclusion;
-    for(size_t j=0; j<dnf.GetElement(0).GetSize(); j++)
-        relevant.push(dnf.GetElement(0).GetElement(j));
-  }
-
   set<int> needed_steps;
   set<Fact> processed_facts;
+
+  if (mMPs.size() > 0) { // last step is always relevant
+    const MP_Step &last = mMPs[mMPs.size() - 1];
+    if (dynamic_cast<CaseSplit *>(mpProofEnd)) { // it gives the disjunction
+      needed_steps.insert(mMPs.size() - 1);
+      for (size_t k = 0; k < last.from.GetSize(); k++)
+        relevant.push(last.from.GetElement(k));
+    } else {
+      for (size_t j = 0; j < last.conclusion.GetElement(0).GetSize(); j++)
+        relevant.push(last.conclusion.GetElement(0).GetElement(j));
+    }
+  }
+
+  // facts used by the proof end; those proved there need no step here
+  set<Fact> used_at_proof_end;
+  CollectFactsUsedAtEnd(used_at_proof_end);
+  for (const Fact &f : used_at_proof_end)
+    relevant.push(f);
+  for (const MP_Step &mp : mMPs)
+    if (mp.conclusion.GetSize() == 1)
+      for (size_t j = 0; j < mp.conclusion.GetElement(0).GetSize(); j++)
+        if (MatchesGoal(goal, mp.conclusion.GetElement(0).GetElement(j)))
+          relevant.push(mp.conclusion.GetElement(0).GetElement(j));
 
   while (!relevant.empty()) {
       Fact f = relevant.front();
@@ -402,7 +523,7 @@ void CLProof::SimplifyByFormulae() {
              found = true;
           }
       }
-      assert(found);
+      assert(found || used_at_proof_end.count(f));
   }
 
   vector<MP_Step> MP_simplified;

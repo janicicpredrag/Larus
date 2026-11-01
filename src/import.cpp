@@ -523,7 +523,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
            << flush;
       if (params.mbSimp) {
         if (engine.GetKind() == eSTL_ProvingEngine)
-          proof.SimplifyByFormulae();
+          proof.SimplifyByFormulae(goalInstantiated);
         else if (!params.shortest_proof) {
           if (engine.GetKind() == eSMTBV_ProvingEngine ||
               engine.GetKind() == eSMTUFBV_ProvingEngine ||
@@ -532,7 +532,7 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
               engine.GetKind() == eMiniZinc)
               proof.SimplifyByProofSteps();
           else
-            proof.SimplifyByFormulae();
+            proof.SimplifyByFormulae(goalInstantiated);
         }
         cout << endl
              << "Done! (simplified proof length without assumptions: "

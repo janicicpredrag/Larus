@@ -56,7 +56,9 @@ public:
                  int step = -1);
   void SetProofEnd(CLProofEnd *p);
 
-  void SimplifyByFormulae();
+  void SimplifyByFormulae(const DNFFormula &goal);
+  void EliminateRedundantCaseSplits(const DNFFormula &goal, set<Fact> known);
+  void CollectFactsUsedAtEnd(set<Fact> &used) const;
   bool IsRelevant(const set<Fact> &relevant, const Fact &f);
   bool IsRelevant(const set<Fact> &relevant, const ConjunctionFormula &f);
   void MakeRelevant(set<Fact> &relevant, const Fact &f);
