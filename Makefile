@@ -41,9 +41,8 @@ SOURCES := main.cpp \
            CLTheory/Theory.cpp \
            CLProof/CLProof.cpp \
            ProvingEngine/SMTOut.cpp \
-           ProvingEngine/NewSMT_Engine/Expression.cpp \
-           ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.cpp \
-           ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.cpp \
+           ProvingEngine/SMT_Engine/Expression.cpp \
+           ProvingEngine/SMT_Engine/SMT_ProvingEngine.cpp \
            ProvingEngine/URSA_Engine/URSA_ProvingEngine.cpp \
            ProvingEngine/STL_Engine/STL_ProvingEngine.cpp \
            ProvingEngine/STL_Engine/STL_FactsDatabase.cpp \

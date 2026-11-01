@@ -16,8 +16,7 @@ string itos(unsigned int i) {
 
 string itos(PROVING_ENGINE T, unsigned int i) {
   stringstream ss;
-  if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine ||
-      T == eOldSMTBV_ProvingEngine || T == eOldSMTUFBV_ProvingEngine) {
+  if (T == eSMTBV_ProvingEngine || T == eSMTUFBV_ProvingEngine) {
     ss << setfill('0') << setw(3) << right << hex << i;
     return "#x" + ss.str();
   } else {

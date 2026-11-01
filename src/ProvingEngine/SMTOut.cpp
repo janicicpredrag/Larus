@@ -83,9 +83,7 @@ string SMTOut::appeq(string arg1, int arg2) {
 
 string SMTOut::smt_sum(string arg1, string arg2) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return "(bvadd " + arg1 + " " + arg2 + ")";
   else // (mTheory == eSMTLIA_ProvingEngine)
     return "(+ " + arg1 + " " + arg2 + ")";
@@ -95,9 +93,7 @@ string SMTOut::smt_sum(string arg1, string arg2) {
 
 string SMTOut::smt_sum(string arg1) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return "(bvadd " + arg1 + ")";
   else // (mTheory == eSMTLIA_ProvingEngine)
     return "(+ " + arg1 + ")";
@@ -107,9 +103,7 @@ string SMTOut::smt_sum(string arg1) {
 
 string SMTOut::smt_sub(string arg1, string arg2) {
  if (mTheory == eSMTBV_ProvingEngine ||
-     mTheory == eSMTUFBV_ProvingEngine ||
-     mTheory == eOldSMTBV_ProvingEngine ||
-     mTheory == eOldSMTUFBV_ProvingEngine)
+     mTheory == eSMTUFBV_ProvingEngine)
    return "(bvsub " + arg1 + " " + arg2 + ")";
  else // (mTheory == eSMTLIA_ProvingEngine)
     return "(- " + arg1 + " " + arg2 + ")";
@@ -128,9 +122,7 @@ string SMTOut::smt_sum(string arg1, int arg2) {
 
 string SMTOut::smt_prod(string arg1, string arg2) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return "(bvmul " + arg1 + " " + arg2 + ")";
   else // (mTheory == eSMTLIA_ProvingEngine)
     return "(* " + arg1 + " " + arg2 + ")";
@@ -146,9 +138,7 @@ string SMTOut::smt_prod(string arg1, int arg2) {
 
 string SMTOut::smt_geq(string arg1, string arg2) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return "(bvuge " + arg1 + " " + arg2 + ")";
   else // (mTheory == eSMTLIA_ProvingEngine)
     return "(>= " + arg1 + " " + arg2 + ")";
@@ -164,9 +154,7 @@ string SMTOut::smt_geq(string arg1, int arg2) {
 
 string SMTOut::smt_less(string arg1, string arg2) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return "(bvult " + arg1 + " " + arg2 + ")";
   else // (mTheory == eSMTLIA_ProvingEngine)
     return "(< " + arg1 + " " + arg2 + ")";
@@ -189,9 +177,7 @@ string SMTOut::smt_ite(string arg1, int arg2, int arg3) {
 
 string SMTOut::smt_odd(string arg1, unsigned max) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return appeq("(bvand " + arg1 + " " + itos(mTheory, 1) + ")", 1);
   else { // (mTheory == eSMTLIA_ProvingEngine)
     string s;
@@ -206,9 +192,7 @@ string SMTOut::smt_odd(string arg1, unsigned max) {
 
 string SMTOut::smt_even(string arg1, unsigned max) {
   if (mTheory == eSMTBV_ProvingEngine ||
-      mTheory == eSMTUFBV_ProvingEngine ||
-      mTheory == eOldSMTBV_ProvingEngine ||
-      mTheory == eOldSMTUFBV_ProvingEngine)
+      mTheory == eSMTUFBV_ProvingEngine)
     return appeq("(bvand " + arg1 + " " + itos(mTheory, 1) + ")", 0);
   else { // (mTheory == eSMTLIA_ProvingEngine)
     string s;

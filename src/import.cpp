@@ -7,10 +7,9 @@
 #include "ProofExport/ProofExport2Isabelle.h"
 #include "ProofExport/ProofExport2LaTeX.h"
 #include "ProofExport/ProofExport2Text.h"
-#include "ProvingEngine/SMT_Engine/OldSMT_ProvingEngine.h"
 #include "ProvingEngine/STL_Engine/STL_ProvingEngine.h"
 #include "ProvingEngine/URSA_Engine/URSA_ProvingEngine.h"
-#include "ProvingEngine/NewSMT_Engine/SMT_ProvingEngine.h"
+#include "ProvingEngine/SMT_Engine/SMT_ProvingEngine.h"
 #include "common.h"
 #include "hammering.h"
 #include "GeometricReasoningToolkit/Declarative2Procedural.h"
@@ -355,12 +354,6 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       else if (params.eEngine == eURSA_ProvingEngine)
         engine = new URSA_ProvingEngine(&T1, params);
 
-      else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
-               params.eEngine == eOldSMTBV_ProvingEngine ||
-               params.eEngine == eOldSMTUFLIA_ProvingEngine ||
-               params.eEngine == eOldSMTUFBV_ProvingEngine)
-        engine = new OldSMT_ProvingEngine(&T1, params);
-
       else if (params.eEngine == eSMTLIA_ProvingEngine ||
                params.eEngine == eSMTBV_ProvingEngine ||
                params.eEngine == eSMTUFLIA_ProvingEngine ||
@@ -394,12 +387,6 @@ ReturnValue SetUpEngineAndProveConjecture(proverParams &params, Theory &T,
       assert(false); // not implemented yet
     else if (params.eEngine == eURSA_ProvingEngine)
       engine = new URSA_ProvingEngine(&T, params);
-
-    else if (params.eEngine == eOldSMTLIA_ProvingEngine ||
-             params.eEngine == eOldSMTBV_ProvingEngine ||
-             params.eEngine == eOldSMTUFLIA_ProvingEngine ||
-             params.eEngine == eOldSMTUFBV_ProvingEngine)
-      engine = new OldSMT_ProvingEngine(&T, params);
 
     else if (params.eEngine == eSMTLIA_ProvingEngine ||
              params.eEngine == eSMTBV_ProvingEngine ||
