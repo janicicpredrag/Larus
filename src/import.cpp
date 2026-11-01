@@ -593,10 +593,12 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         cout << "Verifying Coq proof ... " << flush;
         string s = "coqc -R proofs src -q  " + sFileName3;
         int rv = system(s.c_str());
-        if (!rv)
+        if (!rv) {
           cout << "CoqCorrect!";
-        else
+        } else {
           cout << "CoqWrong!";
+          params.mbVerificationFailed = true;
+        }
         cout << endl << endl;
       }
       if (params.mbIsa && params.number_of_abducts == 0) {
@@ -618,10 +620,12 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
           cout << "Verifying Isabelle proof ... " << flush;
           string s = params.sIsaLarusFolder + "/isabelle build -D " + "proofs/LarusSession";
           int rv = system(s.c_str());
-          if (!rv)
+          if (!rv) {
             cout << "IsabelleCorrect!";
-          else
+          } else {
             cout << "IsabelleWrong!";
+            params.mbVerificationFailed = true;
+          }
           cout << endl << endl;
         }
       }
@@ -634,10 +638,12 @@ ReturnValue ProveTheorem(proverParams &params, Theory &T, ProvingEngine &engine,
         int rv = system(s.c_str());
         s = "verifier -l " + sFileName3;
         rv = system(s.c_str());
-        if (!rv)
+        if (!rv) {
           cout << "MizarCorrect!" << endl;
-        else
+        } else {
           cout << "MizarWrong!" << endl;
+          params.mbVerificationFailed = true;
+        }
       }
 
       if (params.mbGCLCaxioms) {

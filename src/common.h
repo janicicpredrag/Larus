@@ -136,6 +136,7 @@ typedef struct proverParams {
   unsigned number_of_abducts;
   bool mbADGLibConstruction;
   bool show;
+  bool mbVerificationFailed;
   string args;
 } proverParams;
 

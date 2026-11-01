@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
   params.number_of_abducts = DEFAULT_NUMBER_OF_ABDUCTS;
   params.mbADGLibConstruction = DEFAULT_ADGLIB_CONSTRUCTION;
   params.show = DEFAULT_SHOW;
+  params.mbVerificationFailed = false;
 
   USING_ORIGINAL_SIGNATURE_EQ = true;
   USING_ORIGINAL_SIGNATURE_NEG = true;
@@ -417,6 +418,10 @@ int main(int argc, char **argv) {
 
   case eConjectureProved:
     cout << "% SZS status Theorem" << endl;
+    if (params.mbVerificationFailed) {
+      cout << "WARNING: the proof was not accepted by the proof assistant." << endl;
+      return -1;
+    }
     return 0;
 
   case eConjectureNotProved:
