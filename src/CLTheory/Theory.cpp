@@ -756,7 +756,7 @@ bool Theory::Saturate() {
       if (!ax1.IsSimpleImplication())
         continue;
 
-      ax1.RenameVars("V_");
+      ax1.RenameUnivVars("V_"); // not RenameVars: constants must stay constants
       Fact fact_ax1 = ax1.GetPremises().GetElement(0);
 
       for (size_t j = 0; j < mCLaxioms.size(); j++) { // check simple implications and univ axioms

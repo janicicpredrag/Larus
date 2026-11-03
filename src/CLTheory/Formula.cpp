@@ -1068,6 +1068,50 @@ void CLFormula::RenameVars(const string& Prefix)
 
 // ---------------------------------------------------------------------------------------
 
+// Like RenameVars, but only the universally quantified variables get the prefix;
+// constants stay as they are.
+void CLFormula::RenameUnivVars(const string& Prefix)
+{
+    auto rename = [&](Term t) {
+        for (const string& v : mUniversalVars) {
+            if (!t.IsCompound()) {
+                if (t.ToTPTPString() == v) {
+                    t.ReadNonCompoundString(Prefix + v);
+                    break;
+                }
+            } else {
+                string s = replaceAllInTPTPString(t.ToTPTPString(), v, Prefix + v);
+                t.Clear();
+                t.ReadTPTPString(s);
+            }
+        }
+        return t;
+    };
+
+    for(unsigned i = 0; i < GetPremises().GetSize(); i++) {
+        Fact f = GetPremises().GetElement(i);
+        for (unsigned j = 0; j < f.GetArity(); j++)
+            f.SetArg(j, rename(f.GetArg(j)));
+        mA.SetElement(i,f);
+    }
+
+    for(unsigned i = 0; i < GetGoal().GetSize(); i++) {
+        ConjunctionFormula c;
+        for (unsigned j = 0; j < GetGoal().GetElement(i).GetSize(); j++) {
+            Fact f = GetGoal().GetElement(i).GetElement(j);
+            for (unsigned k = 0; k < f.GetArity(); k++)
+                f.SetArg(k, rename(f.GetArg(k)));
+            c.Add(f);
+        }
+        mB.SetElement(i,c);
+    }
+
+    for (string& v : mUniversalVars)
+        v = Prefix + v;
+}
+
+// ---------------------------------------------------------------------------------------
+
 bool CLFormula::hasFunctionSymbols() const
 {
     for (unsigned i = 0; i < GetPremises().GetSize(); i++) {
