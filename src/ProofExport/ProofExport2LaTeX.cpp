@@ -278,8 +278,11 @@ void ProofExport2LaTeX::OutputEpilogue(ofstream &outfile) {
   outfile << "\\end{flushright}" << endl;
 
   outfile << endl << "\\vspace{5pt}" << endl << "\\noindent" << endl << endl;
-  outfile << "\% \\input{PROOF" + mFileName + "_illustration.tkz}" << endl
-          << endl;
+  outfile << "\% " << endl;
+  outfile << "\\begin{center}" << endl;
+  outfile << "\\input{PROOF" + mFileName + "_illustration_predicates.tkz}" << endl;
+  outfile << "\\end{center}" << endl;
+  outfile << endl;
 
   outfile << "\\end{document}" << endl;
 }
