@@ -149,7 +149,14 @@ fof(midpoint11f, axiom, ![A1,B1,C1,M,A2,B2,C2] : ((on_line(B1,A1,C1) & midpoint(
     & A2 = fun_symmetric(A1,M) & C2 = fun_symmetric(C1,M) & A1 != C1) 
     => (collinear(B1,M,B2) & on_line(B2,A2,C2)))).
 
+% full_angle(A,B,C,D) = K with an angle constant K (deg_<n>): the missing point lies on a line at the angle K
+fof(angle_value1, axiom, ![A,B,C,D,K,X] : ((full_angle(A,B,C,D) = K & X = fun_rotate_direction(A,B,C,K)) => (on_line(D,C,X) & full_angle_val(A,B,C,D,K)))).
+fof(angle_value2, axiom, ![A,B,C,D,K,X] : ((full_angle(A,B,C,D) = K & X = fun_rotate_direction(A,B,D,K)) => (on_line(C,D,X) & full_angle_val(A,B,C,D,K)))).
+fof(angle_value3, axiom, ![A,B,C,D,K,X] : ((full_angle(A,B,C,D) = K & X = fun_rotate_direction_back(C,D,A,K)) => (on_line(B,A,X) & full_angle_val(A,B,C,D,K)))).
+fof(angle_value4, axiom, ![A,B,C,D,K,X] : ((full_angle(A,B,C,D) = K & X = fun_rotate_direction_back(C,D,B,K)) => (on_line(A,B,X) & full_angle_val(A,B,C,D,K)))).
 
-
-
-
+% ratio(length(A,B),length(C,D)) = K with a ratio constant K (r_<p>_<q>): the missing point lies on a circle
+fof(ratio_value1, axiom, ![A,B,C,D,K,X] : ((ratio(length(A,B),length(C,D)) = K & X = fun_scaled_translate(C,D,A,K)) => (on_circle(B,A,X) & ratio_val(A,B,C,D,K)))).
+fof(ratio_value2, axiom, ![A,B,C,D,K,X] : ((ratio(length(A,B),length(C,D)) = K & X = fun_scaled_translate(C,D,B,K)) => (on_circle(A,B,X) & ratio_val(A,B,C,D,K)))).
+fof(ratio_value3, axiom, ![A,B,C,D,K,X] : ((ratio(length(A,B),length(C,D)) = K & X = fun_scaled_translate_inv(A,B,C,K)) => (on_circle(D,C,X) & ratio_val(A,B,C,D,K)))).
+fof(ratio_value4, axiom, ![A,B,C,D,K,X] : ((ratio(length(A,B),length(C,D)) = K & X = fun_scaled_translate_inv(A,B,D,K)) => (on_circle(C,D,X) & ratio_val(A,B,C,D,K)))).

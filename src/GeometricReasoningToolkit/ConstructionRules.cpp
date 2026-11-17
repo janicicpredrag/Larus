@@ -24,14 +24,13 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
         if (f.GetName() == BETWEEN)
             mNDG.Add(f);
 
-        if (isNotEq(f.GetName()) ||
-            f.GetName() == NOT_COLL ||
-            f.GetName() == ON_OPP_SIDES ||
-            f.GetName() == ON_SAME_SIDE) {
+        if (isNonConstructive(f.GetName())) {
             mNDG.Add(normalizeNotEq(f));
         }
         else {
-            if (f.GetName() == EQ_NATIVE_NAME) {
+            // X = f(...) defines the point X; an equation between compound terms
+            // (e.g. full_angle(P,X,P,Y) = full_angle(Q,U,Q,V)) is an ordinary constraint
+            if (f.GetName() == EQ_NATIVE_NAME && !f.GetArg(0).IsCompound()) {
                 mDefs.Add(f);
                 mDefPoints.insert(f.GetArg(0).ToTPTPString());
                 Term t = f.GetArg(1);
@@ -40,6 +39,13 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
 
             } else {
                 mConstraints.Add(f);
+                for (size_t k = 0; k < f.GetArity(); k++) {
+                    if (f.GetArg(k).IsCompound())
+                        for (const auto& v : f.GetArg(k).TermNonCompoundArguments())
+                            mConstraintVars.insert(v);
+                    else
+                        mConstraintVars.insert(f.GetArg(k).ToTPTPString());
+                }
             }
         }
     }
@@ -70,23 +76,6 @@ bool Rule::ReadFromCLAxiom(const pair<CLFormula,string> ax) {
             mOutput.Add(f);
         }
     }
-/*
-    cout << "Axiom: " << cl << endl;
-    cout << "name: " << mName << endl;
-    cout << "Rule : input     " << mInput << endl;
-    cout << " - already fixed: ";
-    for(const auto& var: mAlreadyFixed)
-        cout << " " << var;
-    cout << endl;
-    cout << " - become fixed: ";
-    for(const auto& var: mBecomeFixed)
-        cout << " " << var;
-    cout << endl;
-    cout << " - rule ndg      " << mNDG << endl << endl;
-    cout << " - rule new input" << mNewInput << endl << endl;
-    cout << " - rule out      " << mOutput   << endl;
-    cout << " - rule name     " << mName << endl << endl;
-*/
     return true;
 }
 
@@ -109,7 +98,7 @@ Fact Rule::InstantiateFact(const Fact& f, map<string, string> &instantiation) co
         } else {
             if (instantiation.find(arg) == instantiation.end()) {
                 // introduce auxiliary point
-                string O = "P"+itos(ConstructionPlan::mObjCounter++);
+                string O = "AUXP"+itos(ConstructionPlan::mObjCounter++);   // auxiliary points: AUXP<n>, not to clash with P<n> of the problem
                 instantiation[arg] = O;
                 //mDefPoints.insert(O);
                 t.ReadTPTPString(O);

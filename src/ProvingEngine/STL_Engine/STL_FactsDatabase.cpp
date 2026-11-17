@@ -74,6 +74,10 @@ bool STLFactsDatabase::ApplyAxiom(
             Term arg = fact.GetArg(i);
             //if (!mpT->IsConstant(arg))
                 varsNotInPremises.erase(arg.ToTPTPString());
+            // variables inside a compound argument occur in the premises too
+            if (arg.IsCompound())
+                for (const auto& v : arg.TermNonCompoundArguments())
+                    varsNotInPremises.erase(v);
         }
     }
 
@@ -267,38 +271,71 @@ bool STLFactsDatabase::FactHolds(const CLFormula &axiom, const Fact& fact, map<s
 
 // ---------------------------------------------------------------------------------------
 
+// arguments that are compound terms are matched recursively (same function symbol, arguments matched
+// pairwise, variables bound consistently), so that a premise such as full_angle(P,X,P,Y) = full_angle(Q,U,Q,V)
+// matches a fact full_angle(a,b,a,c) = full_angle(d,e,d,f).  Compound terms are s-expressions "(f a1 ... an)".
+static vector<string> SplitSExp(const string& s)
+{
+    // "(f a (g b c))" -> {"f", "a", "(g b c)"}
+    vector<string> out; string cur; int depth = 0;
+    for (size_t i = 1; i + 1 < s.size(); i++) {
+        char c = s[i];
+        if (c == '(') depth++;
+        if (c == ')') depth--;
+        if (c == ' ' && depth == 0) { if (!cur.empty()) out.push_back(cur); cur.clear(); }
+        else cur += c;
+    }
+    if (!cur.empty()) out.push_back(cur);
+    return out;
+}
+
+bool STLFactsDatabase::MatchArg(const CLFormula &axiom, const string& arg, const string& db_arg, map<string, string>& instantiation)
+{
+    if (!arg.empty() && arg[0] == '(') {
+        if (db_arg.empty() || db_arg[0] != '(')
+            return false;
+        vector<string> a = SplitSExp(arg), b = SplitSExp(db_arg);
+        if (a.size() != b.size() || a.empty() || a[0] != b[0])
+            return false;
+        for (size_t k = 1; k < a.size(); k++)
+            if (!MatchArg(axiom, a[k], b[k], instantiation))
+                return false;
+        return true;
+    }
+
+    bool bUniVar=false, bExiVar = false;
+    for(size_t i=0; i<axiom.GetNumOfExistVars(); i++)
+        if (axiom.GetExistVar(i) == arg)
+            bExiVar = true;
+    for(size_t i=0; i<axiom.GetNumOfUnivVars(); i++)
+        if (axiom.GetUnivVar(i) == arg)
+            bUniVar = true;
+
+    if (!bUniVar && !bExiVar && arg != db_arg)
+        return false;
+    auto it = instantiation.find(arg);
+
+    if (it != instantiation.end() && it->second != db_arg)
+        return false;
+    if (bUniVar && mpT->mConstantsPermissible.find(db_arg) == mpT->mConstantsPermissible.end())
+        return false;
+    if (it == instantiation.end() && (bUniVar || bExiVar))
+        instantiation[arg] = db_arg;
+    return true;
+}
+
 bool STLFactsDatabase::MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation)
 {
     if (f.GetArity() != db_fact.GetArity() ||
         f.GetName() != db_fact.GetName())
         return false;
 
+    const map<string, string> inst0 = instantiation;
     for (size_t j = 0; j < f.GetArity(); ++j) {
-        string arg = f.GetArg(j).ToSMTString();
-        string db_arg = db_fact.GetArg(j).ToSMTString();
-        Term t;
-        t.ReadNonCompoundString(arg);
-
-        bool bUniVar=false, bExiVar = false;
-        for(size_t i=0; i<axiom.GetNumOfExistVars(); i++)
-            if (axiom.GetExistVar(i) == arg)
-                bExiVar = true;
-        for(size_t i=0; i<axiom.GetNumOfUnivVars(); i++)
-            if (axiom.GetUnivVar(i) == arg)
-                bUniVar = true;
-
-        if (!bUniVar && !bExiVar && arg != db_arg)
+        if (!MatchArg(axiom, f.GetArg(j).ToSMTString(), db_fact.GetArg(j).ToSMTString(), instantiation)) {
+            instantiation = inst0;
             return false;
-        auto it = instantiation.find(arg);
-
-        if (it != instantiation.end() && it->second != db_arg)
-            return false;
-        if (bUniVar && mpT->mConstantsPermissible.find(db_arg) == mpT->mConstantsPermissible.end())
-            return false;
-        if (it == instantiation.end() && (bUniVar || bExiVar))
-            instantiation[arg] = db_arg;
-
-        // cout << arg << " ->" << db_arg << "; ";
+        }
     }
     return true;
 }

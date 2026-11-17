@@ -102,3 +102,30 @@
 
 
 
+
+	% ADGlib predicates used by our Larus proofs
+	procedure draw_circumcenter { O A B C S } {
+	   color 100 100 100
+	   drawcircle O A
+	   color 0 0 0
+	}
+	procedure draw_concyclic { P A B C S } {
+	}
+	procedure draw_not_equal { A B S } {
+	}
+	procedure draw_not_collinear { A B C S } {
+	}
+	procedure draw_not_collinear4 { A B C D S } {
+	}
+	procedure draw_not_parallel { A B C D S } {
+	}
+	procedure draw_not_perpendicular { A B C D S } {
+	}
+	procedure draw_same_orientation { A B C D E F S } {
+	}
+	procedure draw_foot { X Y U Z S } {
+	   color 100 100 100
+	   drawline U Z
+	   drawsegment X Y
+	   color 0 0 0
+	}

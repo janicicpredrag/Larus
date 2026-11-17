@@ -14,10 +14,11 @@ struct parameters {
     bool createGCLCillustration;
     bool noFixedPoints;
     bool semanticGuidedProving;
-    bool deducingNewFacts;
     prover_name prover;
     bool excludedmiddle;
     double time_limit;
+    bool larusNames = false;      // -larusnames: points as Larus constants p_<x> in <theorem>_exists.gcl
+    string existsParams;          // -params=a,b,...: parameter order of <theorem>_exists (as in Larus's call)
 };
 
 inline const std::string GRT_OUTPUT_FOLDER = "proofs/";

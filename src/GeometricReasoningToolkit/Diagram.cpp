@@ -1,9 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
+#include <sstream>
 #include <chrono>
 #include "common.h"
 #include "Diagram.h"
+#include "ConstructionRules.h"
 #include "ADGLib_signature.h"
 #include "CartesianCalculations.h"
 
@@ -26,7 +29,7 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
     auto millis = chrono::duration_cast<chrono::milliseconds>(duration).count();
     srand(static_cast<unsigned int>(millis));
 
-    int nAttempts = 200;
+    int nAttempts = 2000;  // diagrams with order and orientation conditions need many attempts
     for(int attempts = 1; attempts <= nAttempts; attempts++) {
         if (SHOW_INTERMEDIATE_RESULTS) {
             cout << endl << "Instantiation attempt " << attempts << ":" << endl;
@@ -84,6 +87,22 @@ bool Diagram::InstantiateConstructionPlan(const CLFormula& theorem, const vector
 
 //---------------------------------------------------------------------
 
+// The common end of a construction step: store the point, mark and label it, back to black, and record its
+// coordinates (as a comment; scripts compare them with GCLC's).
+void Diagram::AddPoint(const string& name, const Point& p) {
+    mAllPoints[name] = p;
+    mGCLC += "cmark_lb " + name + "\n";
+    mGCLC += "color 0 0 0\n";
+    mGCLC += "% value2: " + double2string(p.x,2) + "," + double2string(p.y,2) + "\n\n";
+}
+
+// the ratio r of the constructions fun_ratio..., P = X + r (Y - X)
+static const map<string, double> RATIOS = {
+    {string(FUN_RATIO2_m1), -2.0},     {string(FUN_RATIO1_m2), -1.0/2},
+    {string(FUN_RATIO1_2),   1.0/2},   {string(FUN_RATIO2_1),   2.0},
+    {string(FUN_RATIO3_2),   3.0/2},   {string(FUN_RATIO2_3),   2.0/3},
+    {string(FUN_RATIO2_m3), -2.0/3} };
+
 bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
     mAllPoints.clear();
     mGCLC.clear();
@@ -101,117 +120,78 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
             for (unsigned i = 0; i < t.NumArgs(); i++) {
                 if (t.GetArg(i) != "null") {
                     sA[i+1] = t.GetArg(i);
-                    A[i+1] = mAllPoints[sA[i+1]];
+                    if (mAllPoints.count(sA[i+1]))   // constants (deg_30) are not points
+                        A[i+1] = mAllPoints[sA[i+1]];
                 }
             }
 
             mGCLC += "% ----- Point " + sA[0] + " := " + t.ToTPTPString() + "\n";
             const string func = t.GetFunctionSymbol(0);
             if (func == FREEPOINT) {
-                Point p;
-                p.x = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
-                p.y = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
-                mAllPoints[sA[0]] = p;
+                A[0].x = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
+                A[0].y = 25 + STEP * (int)(50/STEP * ((double)rand() / RAND_MAX));
                 mGCLC += "color 200 0 0\n";
-                mGCLC += "point " + sA[0] + " " + double2string(p.x,2) + " " + double2string(p.y,2) + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                mGCLC += "color 0 0 0\n";
+                mGCLC += "point " + sA[0] + " " + double2string(A[0].x,2) + " " + double2string(A[0].y,2) + "\n";
 
             } else if (func == FOURTH_VERTEX_OF_PARALLELOGRAM) {
                 translation(A[3], A[2], A[1], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "translate " + sA[0] + " " + sA[2] + " " + sA[1] + " " + sA[3] + "\n";
                 mGCLC += "double\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[1] + "\n";
                 mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "drawsegment " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawsegment " + sA[3] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                mGCLC += "normal\n";
 
             } else if (func == FUN_MIDPOINT) {
                 midpoint(A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "midpoint " + sA[0] + " " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_TRANSLATE) {
                 translation(A[3], A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "translate " + sA[0] + " " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawsegment " + sA[3] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_SYMMETRIC) {
                 reflection(A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "symmetrical " + sA[0] + " " + sA[2] + " " + sA[1] + "\n";
                 mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_FOOT) {
                 foot(A[1], A[2], A[3], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "line l " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "foot " + sA[0] + " " + sA[1] + " l\n";
                 mGCLC += "drawline " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[1] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_RAND_ON_LINE) {
                 double r = randomOnLine(A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " " + sA[2]+ " " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_RAND_ON_PARALLEL) {
                 double r = randomOnParallelLine(A[1], A[2], A[3], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "towards __P " + sA[2] + " " + sA[3]+ " " + double2string(r,5) + "\n";
                 mGCLC += "translate " + sA[0] + " " + sA[2] + " __P " + sA[1] + "\n";
                 mGCLC += "drawline " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "drawline " + sA[0] + " " + sA[1] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_RAND_ON_SEG_BIS) {
                 double r = randomOnSegmentBisector(A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "midpoint __P1 " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "rotate __P2 __P1 90 " + sA[1] + " \n";
-                mGCLC += "towards " + sA[0] + " __P1 __P2 " + double2string(r,5) + "\n";
+                // __P2 - __P1 is half of the C++ direction rot90(A-B), hence 2r
+                mGCLC += "towards " + sA[0] + " __P1 __P2 " + double2string(2*r,5) + "\n";
                 mGCLC += "drawline __P1 " + sA[0] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[1] + "\n";
                 mGCLC += "drawsegment " + sA[0] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_RAND_ON_ANG_BIS) {
                 double r = randomOnAngleBisector(A[1], A[2], A[3], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "bis __b " + sA[1] + " " + sA[2] + " " + sA[3] + " \n";
                 mGCLC += "line __l " + sA[1]+ " " + sA[3] + " \n";
@@ -220,66 +200,40 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "drawline " + sA[2] + " " + sA[0] + "\n";
                 mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "drawsegment " + sA[3] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                mGCLC += "color 0 0 0\n";
 
             } else if (func == FUN_RAND_ON_SYM_RAY) {
                 double r = randomOnSymRay(A[1], A[2], A[3], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "angle_o __phi " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "rotate __P " + sA[2] + " __phi " + sA[3] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[2] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 200\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-
 
             } else if (func == FUN_RAND_ON_PERP_FROM) {
                 double r = randomOnPerpendicularLine(A[1], A[2], A[3], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "rotate __P1 " + sA[2] + " 90 " + sA[3] + "\n";
                 mGCLC += "towards __P2 " + sA[2] + " __P1 " + double2string(r,5) + "\n";
                 mGCLC += "translate " + sA[0] + " " + sA[2] + " __P2 " + sA[1] + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n";
 
             } else if (func == FUN_RAND_ON_RAY_COMPL) {
                 double r = randomOnRayComplement(A[1], A[2], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "sim __P " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n";
 
             } else if (func == FUN_RAND_ON_ANG_RAY) {
                 double r = randomOnAngleRay(A[1], A[2], A[5], A[4], A[3],  A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "angle_o __phi " + sA[5] + " " + sA[4] + " " + sA[3] + "\n";
                 mGCLC += "rotate __P " + sA[1] + " __phi " + sA[2] + "\n";
                 mGCLC += "towards " + sA[0] + " " + sA[1] + " __P " + double2string(r,5) + "\n";
                 mGCLC += "drawline " + sA[1] + " " + sA[0] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 200\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_CENTER_OF_ARC_ANG) {
                 centerOfArcAngle(A[1], A[2], A[3], A[4], A[5], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "angle_o phi " + sA[3] + " " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "expression phi' { phi-90 }\n";
@@ -289,105 +243,82 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
                 mGCLC += "intersec " + sA[0] + " __l1 __l2\n";
                 mGCLC += "drawsegment " + sA[3] + " " + sA[4] + "\n";
                 mGCLC += "drawsegment " + sA[4] + " " + sA[5] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
             } else if (func == FUN_RAND_ON_CIRCLE) {
                 double r = randomPointOnCircle(A[1],A[2],A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "rotate " + sA[0] + " " + sA[1] + " " + double2string(r,5) + " " + sA[2] + "\n";
                 mGCLC += "drawcircle " + sA[1] + " " + sA[2] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
 
+            } else if (func == FUN_SCALED || func == FUN_SCALED_INV) {
+                double k = ratioConstant(sA[4]);
+                if (func == FUN_SCALED_INV) k = 1 / k;
+                scaledTranslate(A[1], A[2], A[3], k, A[0]);
+                mGCLC += "color 220 220 220\n";
+                mGCLC += "translate __T " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
+                mGCLC += "towards " + sA[0] + " " + sA[3] + " __T " + double2string(k,5) + "\n";
+                mGCLC += "drawcircle " + sA[3] + " " + sA[0] + "\n";
 
-        } else if (func == FUN_RATIO3_2 ||
-                   func == FUN_RATIO2_m1 ||
-                   func == FUN_RATIO1_m2 ||
-                   func == FUN_RATIO1_2 ||
-                   func == FUN_RATIO2_1 ||
-                   func == FUN_RATIO3_2 ||
-                   func == FUN_RATIO2_3 ||
-                   func == FUN_RATIO2_m3) {
-            double ratio;
-            if (func == FUN_RATIO3_2) ratio = 3.0/2;
-            else if (func == FUN_RATIO2_m1) ratio = -2.0/1;
-            else if (func == FUN_RATIO1_m2) ratio = -1.0/2;
-            else if (func == FUN_RATIO1_2) ratio = 1.0/2;
-            else if (func == FUN_RATIO2_1) ratio = 2.0/1;
-            else if (func == FUN_RATIO3_2) ratio = 3.0/2;
-            else if (func == FUN_RATIO2_3) ratio = 2.0/3;
-            else /* if (func == FUN_RATIO2_m3)*/ ratio = -2.0/3;
-            towards(A[1], A[2], ratio, A[0]);
-            mAllPoints[sA[0]] = A[0];
-            mGCLC += "towards " + sA[0] + " " + sA[1] + " " + sA[2] + " " + double2string(ratio,5) + "\n";
-            mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
-            mGCLC += "cmark_lb " + sA[0] + "\n\n";
-            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+            } else if (func == FUN_ROT_DIR || func == FUN_ROT_DIR_BACK) {
+                double deg = angleConstant(sA[4]) * (func == FUN_ROT_DIR ? 1 : -1);
+                rotateDirection(A[1], A[2], A[3], deg, A[0]);
+                mGCLC += "color 220 220 220\n";
+                mGCLC += "translate __T " + sA[1] + " " + sA[2] + " " + sA[3] + "\n";
+                mGCLC += "rotate " + sA[0] + " " + sA[3] + " " + double2string(deg,5) + " __T\n";
+                mGCLC += "drawline " + sA[3] + " " + sA[0] + "\n";
 
-        } else if (func == FUN_RAND_INTER_C_L) {
-            Line l;
-            Point X;
-            line(A[3], A[4], l);
-            Circle c;
-            circle(A[1], A[2], c);
-            bool bFirstIntersection = (rand() % 2);
-            if (bFirstIntersection)
-                lineCircleIntersection(l,c, A[0], X);
-            else
-                lineCircleIntersection(l,c, X, A[0]);
-            mAllPoints[sA[0]] = A[0];
-            mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
-            mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
-            if (bFirstIntersection)
-                mGCLC += "intersec2 " + sA[0] + " __P l c\n";
-            else
-                mGCLC += "intersec2 __P " + sA[0] + " l c\n";
-            mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
-            mGCLC += "drawcircle c \n";
-            mGCLC += "cmark_lb " + sA[0] + "\n";
-            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-            mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
-                     + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
+            } else if (RATIOS.count(func)) {
+                double ratio = RATIOS.at(func);
+                towards(A[1], A[2], ratio, A[0]);
+                mGCLC += "towards " + sA[0] + " " + sA[1] + " " + sA[2] + " " + double2string(ratio,5) + "\n";
+                mGCLC += "drawsegment " + sA[1] + " " + sA[2] + "\n";
 
-        } else if (func == FUN_RAND_INTER_C_C) {
-            Circle c1, c2;
-            Point X;
-            circle(A[1], A[2], c1);
-            circle(A[3], A[4], c2);
-            bool bFirstIntersection = (rand() % 2);
-            if (bFirstIntersection)
-                circleCircleIntersection(c1, c2, A[0], X);
-            else
-                circleCircleIntersection(c1, c2, X, A[0]);
-            mAllPoints[sA[0]] = A[0];
-            mGCLC += "color 220 220 220\n";
-            mGCLC += "circle c1 " + sA[1] + " " + sA[2] + "\n";
-            mGCLC += "circle c2 " + sA[3] + " " + sA[4] + "\n";
-            if (bFirstIntersection)
-                mGCLC += "intersec2 " + sA[0] + " __P c1 c2\n";
-            else
-                mGCLC += "intersec2 __P " + sA[0] + " c1 c2\n";
-            mGCLC += "drawcircle c1 \n";
-            mGCLC += "drawcircle c2 \n";
-            mGCLC += "cmark_lb " + sA[0] + "\n";
-            mGCLC += "color 220 220 220\n\n";
-            mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                     + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+            } else if (func == FUN_RAND_INTER_C_L) {
+                Line l;
+                Point X;
+                line(A[3], A[4], l);
+                Circle c;
+                circle(A[1], A[2], c);
+                bool bFirstIntersection = (rand() % 2);
+                if (bFirstIntersection)
+                    lineCircleIntersection(l,c, A[0], X);
+                else
+                    lineCircleIntersection(l,c, X, A[0]);
+                mGCLC += "line l " + sA[3] + " " + sA[4] + "\n";
+                mGCLC += "circle c " + sA[1] + " " + sA[2] + "\n";
+                if (bFirstIntersection)
+                    mGCLC += "intersec2 " + sA[0] + " __P l c\n";
+                else
+                    mGCLC += "intersec2 __P " + sA[0] + " l c\n";
+                mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
+                mGCLC += "drawcircle c \n";
 
+            } else if (func == FUN_RAND_INTER_C_C) {
+                Circle c1, c2;
+                Point X;
+                circle(A[1], A[2], c1);
+                circle(A[3], A[4], c2);
+                bool bFirstIntersection = (rand() % 2);
+                if (bFirstIntersection)
+                    circleCircleIntersection(c1, c2, A[0], X);
+                else
+                    circleCircleIntersection(c1, c2, X, A[0]);
+                mGCLC += "color 220 220 220\n";
+                mGCLC += "circle c1 " + sA[1] + " " + sA[2] + "\n";
+                mGCLC += "circle c2 " + sA[3] + " " + sA[4] + "\n";
+                if (bFirstIntersection)
+                    mGCLC += "intersec2 " + sA[0] + " __P c1 c2\n";
+                else
+                    mGCLC += "intersec2 __P " + sA[0] + " c1 c2\n";
+                mGCLC += "drawcircle c1 \n";
+                mGCLC += "drawcircle c2 \n";
 
-
-        } else {
+            } else {
                 cout << "ERROR2!" << endl;
                 cout << func << " not supported! " << endl;
+                continue;
             }
+            AddPoint(sA[0], A[0]);
 
         } else {
             for (unsigned i = 0; i < it->GetArity(); i++) {
@@ -398,56 +329,43 @@ bool Diagram::InstantiateOnce(const vector<Fact>& constructionPlan) {
 
             if (it->GetName() == INTER_L_L) {
                 linesIntersection(A[1], A[2], A[3], A[4], A[0]);
-                mAllPoints[sA[0]] = A[0];
                 mGCLC += "line _m1 " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "line _m2 " + sA[3] + " " + sA[4] + "\n";
                 mGCLC += "intersec " + sA[0] + " _m1 _m2 \n";
                 mGCLC += "drawline " + sA[1] + " " + sA[2] + "\n";
                 mGCLC += "drawline " + sA[3] + " " + sA[4] + "\n";
-                mGCLC += "cmark_lb " + sA[0] + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
+                AddPoint(sA[0], A[0]);
 
-            } else if (it->GetName() == INTER_C_L) {
+            } else if (it->GetName() == INTER_C_L) {   // two points: sA[0] and the second intersection sA[1]
                 Line l;
                 line(A[4], A[5], l);
                 Circle c;
                 circle(A[2], A[3], c);
                 lineCircleIntersection(l,c, A[1], A[0]);
-                mAllPoints[sA[0]] = A[0];
-                mAllPoints[sA[1]] = A[1];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "line l " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "circle c " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "intersec2 " + sA[1] + " " + sA[0] + " l c\n";
                 mGCLC += "drawline " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "drawcircle c \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 0 0 0\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
-                         + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
+                AddPoint(sA[0], A[0]);
+                mAllPoints[sA[1]] = A[1];
+                mGCLC += "% value2: " + double2string(A[1].x,2) + "," + double2string(A[1].y,2) + "\n\n";
 
-            } else if (it->GetName() == INTER_C_C) {
+            } else if (it->GetName() == INTER_C_C) {   // two points: sA[0] and the second intersection sA[1]
                 Circle c1, c2;
                 circle(A[2], A[3], c1);
                 circle(A[4], A[5], c2);
                 circleCircleIntersection(c1, c2, A[0], A[1]);
-                mAllPoints[sA[0]] = A[0];
-                mAllPoints[sA[1]] = A[1];
                 mGCLC += "color 220 220 220\n";
                 mGCLC += "circle c1 " + sA[4] + " " + sA[5] + "\n";
                 mGCLC += "circle c2 " + sA[2] + " " + sA[3] + "\n";
                 mGCLC += "intersec2 " + sA[0] + " " + sA[1] + " c1 c2\n";
                 mGCLC += "drawcircle c1 \n";
                 mGCLC += "drawcircle c2 \n";
-                mGCLC += "cmark_lb " + sA[0] + "\n";
-                mGCLC += "color 220 220 220\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[0]].x,2) + ","
-                         + double2string(mAllPoints[sA[0]].y,2) + "\n\n";
-                mGCLC += "% value2: " + double2string(mAllPoints[sA[1]].x,2) + ","
-                         + double2string(mAllPoints[sA[1]].y,2) + "\n\n";
+                AddPoint(sA[0], A[0]);
+                mAllPoints[sA[1]] = A[1];
+                mGCLC += "% value2: " + double2string(A[1].x,2) + "," + double2string(A[1].y,2) + "\n\n";
 
             } else {
                 cout << "ERROR3!" << endl;
@@ -468,10 +386,11 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
         Point A[10];
         for (unsigned i = 0; i < it->GetArity(); i++) {
             sA[i] = it->GetArg(i).ToTPTPString();
-            A[i] = mAllPoints[sA[i]];
+            if (mAllPoints.count(sA[i]))   // constants (deg_30) are not points
+                A[i] = mAllPoints[sA[i]];
         }
 
-        if (it->GetName() == TRIANGLE || it->GetName() == NOT_COLL) {
+        if (it->GetName() == TRIANGLE || isNotColl(it->GetName())) {
             if (isCol(A[0], A[1], A[2]))
                 throw runtime_error("~col not met!");
             if (area(A[0], A[1], A[2]) < AREA_THRESHOLD) {
@@ -479,7 +398,7 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
                 throw runtime_error("~col/area not nice! " + s);
             }
 
-        }   else if (it->GetName() == NOT_EQ) {
+        }   else if (isNotEq(it->GetName())) {
             if (isEqual(A[0], A[1])) {
                 string s = "(" + sA[0] + "," + sA[1] + ")";
                 throw runtime_error("~eq not met! " + s);
@@ -513,9 +432,60 @@ bool Diagram::VerifyConditions(const set<Fact> &ndgs) {
             if (!onSamePointSide(A[0], A[1], A[2]))
                 throw runtime_error("on same point side not met");
 
-        } else if (it->GetName() == NOT_PERP) { // todo
-            if (false)
-                throw runtime_error(it->GetName());
+        } else if (it->GetName() == FULL_ANGLE_EQ) {
+            // directed angles modulo 180 equal <=> equal tangents: (u x v)(p . q) = (u . v)(p x q)
+            double ux = A[1].x-A[0].x, uy = A[1].y-A[0].y, vx = A[3].x-A[2].x, vy = A[3].y-A[2].y;
+            double px = A[5].x-A[4].x, py = A[5].y-A[4].y, qx = A[7].x-A[6].x, qy = A[7].y-A[6].y;
+            double lhs = (ux*vy-uy*vx)*(px*qx+py*qy), rhs = (ux*vx+uy*vy)*(px*qy-py*qx);
+            double scale = sqrt((ux*ux+uy*uy)*(vx*vx+vy*vy)*(px*px+py*py)*(qx*qx+qy*qy));
+            if (fabs(lhs-rhs) > 1e-6*scale)
+                throw runtime_error("full angle equality not met!");
+
+        } else if (it->GetName() == RATIO_VAL) {
+            double cd = distance(A[2], A[3]), k = ratioConstant(sA[4]);
+            if (cd < 1e-12 || fabs(distance(A[0], A[1]) / cd - k) > 1e-6 * k)
+                throw runtime_error("ratio value not met!");
+
+        } else if (it->GetName() == FULL_ANGLE_VAL) {
+            double d = fabs(fullAngleDegrees(A[0], A[1], A[2], A[3]) - fmod(angleConstant(sA[4]), 180.0));
+            if (min(d, 180 - d) > 1e-6)
+                throw runtime_error("full angle value not met!");
+
+        } else if (it->GetName() == SAME_BETWEENNESS) {
+            // B between A and C <=> (A-B).(C-B) < 0; the same for E, D, F
+            double d1 = (A[0].x-A[1].x)*(A[2].x-A[1].x) + (A[0].y-A[1].y)*(A[2].y-A[1].y);
+            double d2 = (A[3].x-A[4].x)*(A[5].x-A[4].x) + (A[3].y-A[4].y)*(A[5].y-A[4].y);
+            if (!(d1*d2 > 0))
+                throw runtime_error("same_betweenness not met!");
+
+        } else if (it->GetName() == SAME_ORIENTATION) {
+            double s1 = (A[1].x-A[0].x)*(A[2].y-A[0].y) - (A[1].y-A[0].y)*(A[2].x-A[0].x);
+            double s2 = (A[4].x-A[3].x)*(A[5].y-A[3].y) - (A[4].y-A[3].y)*(A[5].x-A[3].x);
+            if (!(s1*s2 > 0))
+                throw runtime_error("same_orientation not met!");
+
+        } else if (it->GetName() == SAME_ANGLE_TYPE) {
+            // angles YXZ and VUW (vertex first) both acute, both right or both obtuse: same sign of the dot products
+            double d1 = (A[1].x-A[0].x)*(A[2].x-A[0].x) + (A[1].y-A[0].y)*(A[2].y-A[0].y);
+            double d2 = (A[4].x-A[3].x)*(A[5].x-A[3].x) + (A[4].y-A[3].y)*(A[5].y-A[3].y);
+            if (!(d1*d2 > 0))
+                throw runtime_error("same_angle_type not met!");
+
+        } else if (isNotPerp(it->GetName()) || isNegParallel(it->GetName())) {
+            if (it->GetName() == NEG_COLL4) {
+                if (isCol(A[0], A[1], A[2]) && isCol(A[0], A[1], A[3]) && isCol(A[0], A[2], A[3]))
+                    throw runtime_error("not_collinear4 not met!");
+            } else {
+                double ux = A[1].x - A[0].x, uy = A[1].y - A[0].y, vx = A[3].x - A[2].x, vy = A[3].y - A[2].y;
+                double n = distance(A[0], A[1]) * distance(A[2], A[3]);
+                if (n < 1e-12)
+                    throw runtime_error(string(it->GetName()) + " on a degenerate segment!");
+                // also rejected when nearly parallel / perpendicular (not a nice figure)
+                if (isNegParallel(it->GetName()) && fabs(ux * vy - uy * vx) / n < 1e-3)
+                    throw runtime_error("not_parallel not met (or not nice)!");
+                if (isNotPerp(it->GetName()) && fabs(ux * vx + uy * vy) / n < 1e-3)
+                    throw runtime_error("not_perpendicular not met (or not nice)!");
+            }
 
         } else {
             cout << "ERROR1!" << endl;
@@ -553,7 +523,8 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
 
     for (size_t j = 0; j < theorem.GetPremises().GetSize(); j++) {
         Fact f = theorem.GetPremises().GetElement(j);
-        string A[6];
+        // as many slots as the fact has arguments (at least 6; full_angle_eq has 8)
+        vector<string> A(max<size_t>(f.GetArity(), 6));
         for (size_t i = 0; i < f.GetArity(); i++) {
             A[i] = f.GetArg(i).ToTPTPString();
         }
@@ -631,12 +602,14 @@ void Diagram::DrawBasicFigure(const CLFormula& theorem) {
         } else if (f.GetName() == N_POINT) {
             mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
 
+        } else if (f.GetName() == FULL_ANGLE_EQ && f.GetArity() == 8) {
+            mGCLC += "drawsegment " + A[0] + " " + A[1] + "\n";
+            mGCLC += "drawsegment " + A[2] + " " + A[3] + "\n";
+            mGCLC += "drawsegment " + A[4] + " " + A[5] + "\n";
+            mGCLC += "drawsegment " + A[6] + " " + A[7] + "\n";
         } else if (f.GetName() == ON_CIRCLE) {
-        } else if (f.GetName() == NOT_COLL) {
-        } else if (f.GetName() == NOT_EQ) {
-        } else if (f.GetName() == NOT_PERP) {
-        } else if (f.GetName() == EQ_NATIVE_NAME
-                   && f.GetArg(1).GetFunctionSymbol(0) == FREEPOINT) {
+        } else if (isNegNDG(f.GetName())) {
+        } else if (f.GetName() == EQ_NATIVE_NAME) {   // equations (X = freepoint, angle equations): nothing to draw
         } else if (f.GetName() == ON_OPP_SIDES) {
         } else if (f.GetName() == ON_SAME_SIDE) {            
         } else if (f.GetName() == FREEPOINT) {
@@ -663,18 +636,47 @@ bool Diagram::StoreGCLCIllustration(const string& gclcOutputFilename) const {
 
 // -----------------------------------------------------------------------------------------------
 
-bool Diagram::StoreGCLCExistProcedure(const string& gclcOutputFilename, const CLFormula& theorem, const string& theoremName) const {
+// helper points (AUXP<n>, and names starting with _ such as __P1, _m1): local to the procedure, never renamed
+static bool isHelper(const string& s) { return s.rfind("AUXP", 0) == 0 || s.rfind("_", 0) == 0; }
+
+bool Diagram::StoreGCLCExistProcedure(const string& gclcOutputFilename, const CLFormula& theorem, const string& theoremName,
+                                      bool larusNames, const string& params) const {
+    // The figure of the premises as the procedure <theorem>_exists, for Larus's proof illustration (-gclcp), which
+    // includes <theorem>_exists.gcl and calls <theorem>_exists { points }.  No "dim" (the caller sets it).
+    // larusNames: points renamed to Larus's constants p_<x>, labels still show the original names.
+    // params: the parameter list exactly as in Larus's call (Larus also passes the constants of its theory).
     ofstream GCLCfile;
     GCLCfile.open(gclcOutputFilename);
     if (!GCLCfile.good())
         return false;
-
-    GCLCfile << "procedure " + theoremName + "_exists { ";
-    for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++) {
-        GCLCfile << theorem.GetUnivVar(i) << " ";
+    auto rename = [&](const string& s) -> string {
+        if (!larusNames || isHelper(s) || mAllPoints.find(s) == mAllPoints.end()) return s;
+        string r = "p_"; for (char c : s) r += (char)tolower(c); return r;
+    };
+    vector<string> ps;
+    if (!params.empty()) {
+        string cur; for (char c : params + ",") { if (c == ',') { if (!cur.empty()) ps.push_back(cur); cur.clear(); } else cur += c; }
+    } else {
+        for (unsigned i = 0; i < theorem.GetNumOfUnivVars(); i++)
+            if (!isHelper(theorem.GetUnivVar(i)) && mAllPoints.find(theorem.GetUnivVar(i)) != mAllPoints.end())
+                ps.push_back(rename(theorem.GetUnivVar(i)));
     }
+    GCLCfile << "procedure " + theoremName + "_exists { ";
+    for (const auto& p : ps) GCLCfile << p << " ";
     GCLCfile << "}\n{\n";
-    GCLCfile << GetGCLCDescription();
+    istringstream in(GetGCLCDescription()); string line;
+    while (getline(in, line)) {
+        if (line.rfind("dim ", 0) == 0) continue;
+        if (line.rfind("%", 0) == 0) { GCLCfile << line << "\n"; continue; }
+        istringstream w(line); vector<string> tok; string x; while (w >> x) tok.push_back(x);
+        if (tok.size() == 2 && tok[0].rfind("cmark_", 0) == 0 && larusNames && !isHelper(tok[1])) {
+            // label with the original name: cmark_lb A -> cmark p_a + printat_lb p_a {A}
+            GCLCfile << "cmark " << rename(tok[1]) << "\n" << "printat_" << tok[0].substr(6) << " " << rename(tok[1]) << " {" << tok[1] << "}\n";
+            continue;
+        }
+        for (size_t k = 0; k < tok.size(); k++) GCLCfile << (k ? " " : "") << (k ? rename(tok[k]) : tok[k]);
+        GCLCfile << "\n";
+    }
     GCLCfile << "}\n\n";
     GCLCfile.close();
     return true;

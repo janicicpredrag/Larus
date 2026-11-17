@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include "common.h"
 #include "ADGLib_signature.h"
+#include "ConstructionRules.h"
 #include "Declarative2Procedural.h"
 #include "Diagram.h"
 #include "TPTPSupport.h"
@@ -35,6 +36,10 @@ const unordered_set<string> constructionFunctionSymbols = {
     FP_PREFIX+string(FUN_RAND_ON_ANG_BIS),
     FP_PREFIX+string(FUN_RAND_ON_SYM_RAY),
     FP_PREFIX+string(FUN_RAND_ON_ANG_RAY),
+    FP_PREFIX+string(FUN_ROT_DIR),
+    FP_PREFIX+string(FUN_ROT_DIR_BACK),
+    FP_PREFIX+string(FUN_SCALED),
+    FP_PREFIX+string(FUN_SCALED_INV),
     FP_PREFIX+string(FUN_RATIO2_m1),
     FP_PREFIX+string(FUN_RATIO1_m2),
     FP_PREFIX+string(FUN_RATIO1_2),
@@ -45,50 +50,20 @@ const unordered_set<string> constructionFunctionSymbols = {
 
 //---------------------------------------------------------------------
 
+// in a proof the constructions are explicit, so betweenness is only a condition too
 bool isNDG_Fact(const Fact &f) {
-    return (//f.GetName() == TRIANGLE ||
-            f.GetName() == NOT_COLL ||
-            f.GetName() == NOT_EQ ||
-            f.GetName() == NOT_PERP ||
+    return (isNonConstructive(f.GetName()) ||
             f.GetName() == BETWEEN  ||
             f.GetName() == BETWEEN_STRICT ||
             f.GetName() == BETWEEN4  ||
-            f.GetName() == BETWEEN_STRICT4 ||
-            f.GetName() == ON_OPP_SIDES ||
-            f.GetName() == ON_SAME_SIDE ||
-            f.GetName() == ON_SAME_POINT_SIDE);
+            f.GetName() == BETWEEN_STRICT4);
 }
 
 //---------------------------------------------------------------------
 
+// a fact that introduces a constructed (not free) point
 bool isIntro_Fact(const Fact &f) {
-    return (f.GetName() == string(INTER_L_L) ||
-    f.GetName() == string(INTER_C_L) ||
-    f.GetName() == string(INTER_C_C) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_INTER_C_L) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_INTER_C_C) ||
-    f.GetName() == FP_PREFIX+string(FOURTH_VERTEX_OF_PARALLELOGRAM) ||
-    f.GetName() == FP_PREFIX+string(FUN_MIDPOINT) ||
-    f.GetName() == FP_PREFIX+string(FUN_SYMMETRIC) ||
-    f.GetName() == FP_PREFIX+string(FUN_FOOT) ||
-    f.GetName() == FP_PREFIX+string(FUN_TRANSLATE) ||
-    f.GetName() == FP_PREFIX+string(FUN_CENTER_OF_ARC_ANG) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_LINE) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_CIRCLE) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_PERP_FROM) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_PARALLEL) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_SEG_BIS) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_RAY_COMPL) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_ANG_BIS) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_SYM_RAY) ||
-    f.GetName() == FP_PREFIX+string(FUN_RAND_ON_ANG_RAY) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO2_m1) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO1_m2) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO1_2) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO2_1) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO3_2) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO2_3) ||
-    f.GetName() == FP_PREFIX+string(FUN_RATIO2_m3)) ;
+    return f.GetName() != FREEPOINT && constructionFunctionSymbols.count(f.GetName()) > 0;
 }
 
 //---------------------------------------------------------------------

@@ -39,6 +39,7 @@ private:
     int DisjunctionHolds(const CLFormula &axiom, const DNFFormula &dnf, map<string,string>& instantiation);
     bool ConjunctionHolds(const CLFormula &axiom, const ConjunctionFormula &conjf, map<string,string>& instantiation, size_t index);
     bool FactHolds(const CLFormula &axiom, const Fact& fact, map<string, string>& instantiation);
+    bool MatchArg(const CLFormula &axiom, const string& arg, const string& db_arg, map<string, string>& instantiation);
     bool MatchFact(const CLFormula &axiom, const Fact &f, const Fact &db_fact, map<string, string>& instantiation);
 
     bool SubstvarsNotInPremises(const CLFormula &axiom,

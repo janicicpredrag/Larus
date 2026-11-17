@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <stdexcept>
 #include "CartesianCalculations.h"
 
 using namespace std;
@@ -201,20 +203,25 @@ void circleCircleIntersection(const Circle& c1, const Circle& c2, Point& P1, Poi
             a = 1 + f * f;
             b = 2 * e * f - 2 * x1 - 2 * f * y1;
             c = e * e - 2 * e * y1 + x1 * x1 + y1 * y1 - r1 * r1;
-            P1.x = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-            P1.y = e + f * x1;
-            P2.x = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-            P2.y = e + f * x2;
+            // the line through both intersections is y = e + f x; the second coordinate of each point is
+            // taken at that point's own x (previously at the centres' x1, x2, which gave wrong points)
+            double disc = std::max(0.0, b * b - 4 * a * c);
+            P1.x = (-b - sqrt(disc)) / (2 * a);
+            P1.y = e + f * P1.x;
+            P2.x = (-b + sqrt(disc)) / (2 * a);
+            P2.y = e + f * P2.x;
         } else {
             e = d / (2 * x2 - 2 * x1);
             f = (2 * y1 - 2 * y2) / (2 * x2 - 2 * x1);
             a = 1 + f * f;
             b = 2 * e * f - 2 * y1 - 2 * f * x1;
             c = e * e - 2 * e * x1 + x1 * x1 + y1 * y1 - r1 * r1;
-            P1.y = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
-            P1.x = e + f * y1;
-            P2.y = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
-            P2.x = e + f * y2;
+            // the line through both intersections is x = e + f y (see above)
+            double disc = std::max(0.0, b * b - 4 * a * c);
+            P1.y = (-b - sqrt(disc)) / (2 * a);
+            P1.x = e + f * P1.y;
+            P2.y = (-b + sqrt(disc)) / (2 * a);
+            P2.x = e + f * P2.y;
         }
     }
 }
@@ -541,3 +548,47 @@ void printLine(const string& lineName, const Line& l)
 // -----------------------------------------------------------------------------------------------
 
 
+
+// -----------------------------------------------------------------------------------------------
+
+// the value of an angle constant deg_<n>, in degrees
+double angleConstant(const std::string& k) {
+    if (k.rfind("deg_", 0) != 0 || k.size() == 4 || k.find_first_not_of("0123456789", 4) != std::string::npos)
+        throw std::runtime_error("not an angle constant: " + k);
+    return std::stod(k.substr(4));
+}
+
+// P = C + rot(B - A) by the given angle (counterclockwise)
+void rotateDirection(const Point& A, const Point& B, const Point& C, double degrees, Point& P) {
+    double t = degrees * M_PI / 180, ux = B.x - A.x, uy = B.y - A.y;
+    P.x = C.x + ux * std::cos(t) - uy * std::sin(t);
+    P.y = C.y + ux * std::sin(t) + uy * std::cos(t);
+}
+
+// the full angle from line AB to line CD (counterclockwise), in degrees in [0,180)
+double fullAngleDegrees(const Point& A, const Point& B, const Point& C, const Point& D) {
+    double ux = B.x - A.x, uy = B.y - A.y, vx = D.x - C.x, vy = D.y - C.y;
+    double a = std::atan2(ux * vy - uy * vx, ux * vx + uy * vy) * 180 / M_PI;
+    a = std::fmod(a, 180.0);
+    return a < 0 ? a + 180 : a;
+}
+
+// -----------------------------------------------------------------------------------------------
+
+// the value p/q of a ratio constant r_<p>_<q>
+double ratioConstant(const std::string& k) {
+    size_t u = k.find('_', 2);
+    if (k.rfind("r_", 0) != 0 || u == std::string::npos)
+        throw std::runtime_error("not a ratio constant: " + k);
+    std::string p = k.substr(2, u - 2), q = k.substr(u + 1);
+    if (p.empty() || q.empty() || p.find_first_not_of("0123456789") != std::string::npos
+        || q.find_first_not_of("0123456789") != std::string::npos || std::stod(q) == 0)
+        throw std::runtime_error("not a ratio constant: " + k);
+    return std::stod(p) / std::stod(q);
+}
+
+// P = A + k (D - C)
+void scaledTranslate(const Point& C, const Point& D, const Point& A, double k, Point& P) {
+    P.x = A.x + k * (D.x - C.x);
+    P.y = A.y + k * (D.y - C.y);
+}

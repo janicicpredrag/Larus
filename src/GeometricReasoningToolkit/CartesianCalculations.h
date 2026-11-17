@@ -50,6 +50,11 @@ double randomOnSegmentBisector(const Point& A, const Point& B, Point& P);
 double randomOnAngleBisector(const Point& A, const Point& B, const Point& C, Point& P);
 double randomOnRayComplement(const Point& X, const Point& Y, Point& P);
 double randomOnAngleRay(const Point& Q, const Point& R, const Point& A, const Point& B, const Point& C, Point& P);
+double angleConstant(const std::string& k);
+void rotateDirection(const Point& A, const Point& B, const Point& C, double degrees, Point& P);
+double fullAngleDegrees(const Point& A, const Point& B, const Point& C, const Point& D);
+double ratioConstant(const std::string& k);
+void scaledTranslate(const Point& C, const Point& D, const Point& A, double k, Point& P);
 double randomOnSymRay(const Point& A, const Point& B, const Point& C, Point& P);
 
 double distance(const Point& A, const Point& B);

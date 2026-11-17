@@ -16,13 +16,6 @@ bool SHOW_INTERMEDIATE_RESULTS = true;
 
 // -----------------------------------------------------------------------------------------------
 
-bool isNDGpredicate(const string& p) {
-    return ((p == ON_OPP_SIDES) || (p == ON_SAME_SIDE) ||
-            isNotEq(p) || (p == NOT_COLL));
-}
-
-// -----------------------------------------------------------------------------------------------
-
 void printLog(const string& s)
 {
     if (SHOW_INTERMEDIATE_RESULTS)
@@ -31,7 +24,7 @@ void printLog(const string& s)
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bool deducingNewFacts, Diagram& diagram) {
+bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, Diagram& diagram) {
     mTheorem = theorem;
     cout << endl << "========================================================" << endl;
     cout <<         "  Procedural configuration -> functional configuration  " << endl;
@@ -47,11 +40,6 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
         cout << endl << "Failed to read the construction rules... " << endl;
     }
 
-    cout << endl << "Reading deduction rules... " << endl;
-    if (!ReadDeductionRules("deduction_rules.p")) {
-        cout << endl << "Failed to read the deduction rules... " << endl;
-    }
-
     vector<string> variations;
     cout << endl << "Generating all subsets of the set of "
          << mTheorem.GetNumOfUnivVars() << " points: ";
@@ -60,6 +48,18 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     }
     cout << " ordered decreasing by the count...\n" << endl;
     variations = generateBinaryVariations(mTheorem.GetNumOfUnivVars());
+    // a triangle given by not_collinear(X,Y,Z) is tried first as the set of free points
+    for (size_t k = 0; k < mTheorem.GetPremises().GetSize(); k++) {
+        const Fact& f = mTheorem.GetPremises().GetElement(k);
+        if (!isNotColl(f.GetName()) || f.GetArity() != 3) continue;
+        string pref(mTheorem.GetNumOfUnivVars(), '1');
+        for (size_t j = 0; j < mTheorem.GetNumOfUnivVars(); j++)
+            for (size_t a = 0; a < 3; a++)
+                if (f.GetArg(a).ToTPTPString() == mTheorem.GetUnivVar(j)) pref[j] = '0';
+        auto it = find(variations.begin(), variations.end(), pref);
+        if (it != variations.end()) { variations.erase(it); variations.insert(variations.begin(), pref); }
+        break;
+    }
 
     for (size_t i = 0; i < variations.size(); i++) {
         printLog("\n\n***** Free points fixed: ");
@@ -103,57 +103,6 @@ bool ConstructionPlan::ImportDeclarativeDescription(const CLFormula& theorem, bo
     }
     cout << endl << "Transformation failed!" << endl;
     return false;
-}
-
-// -----------------------------------------------------------------------------------------------
-
-bool ConstructionPlan::dD2P() {
-    printLog("\nDeductive approach...\n");
-
-    while(true) {
-        printCurrentStatus();
-
-        if (mInputConstruction.empty())
-            break;
-
-        if (CompressPairOfLocationConstraintsToFunctionalForm()) {
-            printLog("\nCompression successful: \n");
-            continue;
-        }
-
-        // Try single input constraints
-        ProcessResult singleStatus = TryProcessSingleInputConstraint();
-        if (singleStatus == ProcessResult::Overconstrained) {
-            return false;
-        } else if (singleStatus == ProcessResult::ProgressMade) {
-            continue; // Restarts the while loop
-        }
-
-        // if the above failed, take randomly one points that is not fully constrained
-        if (PickPartiallyLocatedPoint(false)) // Do not allow "in other constraints"
-            continue; // Restarts the while loop
-
-        // if the above failed, take randomly one points that is not fully constrained
-        if (PickPartiallyLocatedPoint(true)) // Do allow "in other constraints"
-            continue; // Restarts the while loop
-
-        break;
-    }
-
-    if (mInputConstruction.empty()) {
-        for (unsigned i = 0; i < mTheorem.GetNumOfUnivVars(); i++) {
-            if (!isFixed(mTheorem.GetUnivVar(i))) {
-                cout << endl << "\nThe system is underconstrained. No output construction plan!";
-                return false;
-            }
-        }
-        cout << endl << "\nSuccessfully created a construction plan" << endl;
-        printCurrentStatus();
-        return true;
-    } else {
-        cout << endl << "\nDon't know to handle remaining constraints!";
-        return false;
-    }
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -215,39 +164,8 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         Fact currentFact = mInputConstruction[i];
         printLog("\n -----> Processing:  " + currentFact.ToString() + "\n");
 
-        if (false) { // Check if the constraint is a consequence
-            printLog("Is the constraint a logical consequence? ");
-            std::vector<Fact> premises;
-
-            for (const Fact& f : mInputConstruction) {
-                if (f == currentFact)
-                    continue;
-                if (f.GetName()==EQ_NATIVE_NAME && f.GetArg(1).ToTPTPString()!="freepoint(null, null)")
-                    continue;
-                premises.push_back(f);
-            }
-            for (const Fact& f : mOutputConstruction) {
-                if (f == currentFact)
-                    continue;
-                if (f.GetName()==EQ_NATIVE_NAME && f.GetArg(1).ToTPTPString()!="freepoint(null, null)")
-                    continue;
-                premises.push_back(f);
-            }
-            for (const Fact& f : mNDGs)
-                if (!(f == currentFact)) premises.push_back(f);
-
-            if (isConsequence(premises, mNDGs, currentFact)) {
-                printLog(" Yes, valid and redundant fact, nothing to do, deleted.\n");
-                mInputConstruction.erase(mInputConstruction.begin() + i);
-                // Do not increment i, because the next element shifted into this position
-                r = ProcessResult::ProgressMade;
-                continue;
-            }
-            printLog("No;   ");
-        }
-
         printLog("Is the constraint a NDG condition? ");
-        if (isNDGpredicate(currentFact.GetName())) {
+        if (isNonConstructive(currentFact.GetName())) {
             printLog(" Yes, just move to NDGs.\n");
             mNDGs.insert(normalizeNotEq(currentFact));
             mInputConstruction.erase(mInputConstruction.begin() + i);
@@ -257,7 +175,8 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         printLog("No;   ");
 
         printLog("\nDoes constraint gives a point by functional term with fixed points? ");
-        bool isEqFunctional = currentFact.GetName() == EQ_NATIVE_NAME &&
+        // only X = f(...) with a point X on the left defines a point (not an equation between terms)
+        bool isEqFunctional = currentFact.GetName() == EQ_NATIVE_NAME && !currentFact.GetArg(0).IsCompound() &&
                               (currentFact.GetArg(1).ToTPTPString() == "freepoint(null, null)" || AreAllArgumentsFixed(currentFact.GetArg(1), 0));
 
         bool isInterFunctional = (currentFact.GetName() == INTER_L_L || currentFact.GetName() == INTER_C_L || currentFact.GetName() == INTER_C_C) &&
@@ -284,17 +203,22 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
         string sConstant;
         for (size_t j = 0; j < currentFact.GetArity(); j++) {
             mGeometryTheory.AddConstant(currentFact.GetArg(j).ToTPTPString());
+            // also the points inside a compound argument (e.g. full_angle(A,B,A,D)), so that
+            // a definition whose premise has terms with variables can bind them
+            if (currentFact.GetArg(j).IsCompound())
+                for (const auto& c : currentFact.GetArg(j).TermNonCompoundArguments())
+                    mGeometryTheory.AddConstant(c);
         }
         while (mGeometryTheory.MakeNextConstantPermissible(sConstant)) {}
 
-        if (ApplyRule(true, eOnePremiseNoNewVars, dbase, 10)) {
+        if (ApplyRule(true, eOnePremiseNoNewVars, dbase)) {
             printLog("\n\n");
             mInputConstruction.erase(mInputConstruction.begin() + i);
             return ProcessResult::ProgressMade;
         }
 
-        if (ApplyRule(false, eOnePremiseNoNewVars, dbase, 10) ||
-            ApplyRule(false, eOnePremiseNewVars, dbase, 10)) {
+        if (ApplyRule(false, eOnePremiseNoNewVars, dbase) ||
+            ApplyRule(false, eOnePremiseNewVars, dbase)) {
             printLog("\n\n");
             mInputConstruction.erase(mInputConstruction.begin() + i);
             return ProcessResult::ProgressMade;
@@ -312,10 +236,7 @@ ProcessResult ConstructionPlan::TryProcessSingleInputConstraint() {
 bool ConstructionPlan::IsOverconstrained(const Fact& f) {
     assert(f.GetName() != EQ_NATIVE_NAME);
 
-    if (isNotEq(f.GetName()) ||
-        f.GetName() == NOT_COLL ||
-        f.GetName() == ON_OPP_SIDES ||
-        f.GetName() == ON_SAME_SIDE)
+    if (isNonConstructive(f.GetName()))
         return false;
 
     if (f.GetArg(1).ToTPTPString() == "freepoint(null, null)"
@@ -402,24 +323,14 @@ bool ConstructionPlan::ReadConstructionRules(const string& fileName) {
 
 // -----------------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ReadDeductionRules(const string& fileName) {
-    CLFormula thm;
-    string thmname;
-    if (ReadTPTPConjecture(fileName, mGeometryTheory, thm, thmname)
-        != eNoConjectureGiven) {
-        return false;
-    }
-    return true;
-}
-
-// -----------------------------------------------------------------------------------------------
-
 unsigned ConstructionPlan::mObjCounter = 0;
 
 // -----------------------------------------------------------------------------------------------
 
 bool ConstructionPlan::FixityConditionsHold(const set<string>& fixedPoints) {
     for (const auto& var: fixedPoints) {
+        if (isNumericConstant(var))   // deg_<n>, r_<p>_<q>: not points, always known
+            continue;
         if (!isFixed(var))
             return false;
     }
@@ -491,7 +402,7 @@ bool ConstructionPlan::CombineTwoLocationConstraintsToFunctionalForm(const strin
                           f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + ")");
             return true;
         } else if (f2.GetName() == ON_CIRCLE) {
-            string P2 = "P"+itos(mObjCounter++);
+            string P2 = "AUXP"+itos(mObjCounter++);
             result = Fact(string(INTER_C_L) + "(" + P + ", " +
                           P2 + "," +
                           f2.GetArg(1).ToTPTPString() + "," + f2.GetArg(2).ToTPTPString() + "," +
@@ -503,7 +414,7 @@ bool ConstructionPlan::CombineTwoLocationConstraintsToFunctionalForm(const strin
             return true;
         }
     } else { // if (f1.GetName() == ON_CIRCLE)
-        string P2 = "P"+itos(mObjCounter++);
+        string P2 = "AUXP"+itos(mObjCounter++);
         result = Fact(string(INTER_C_C) + "(" + P + ", " + P2 + "," +
                       f1.GetArg(1).ToTPTPString() + "," + f1.GetArg(2).ToTPTPString() + "," +
                       f2.GetArg(1).ToTPTPString() + "," + f2.GetArg(2).ToTPTPString() + ")");
@@ -548,44 +459,6 @@ bool ConstructionPlan::WeaklyConstrainedPointToRandom(const Fact& fact_input, Fa
         return true;
     }
     return false;
-}
-
-//---------------------------------------------------------------------
-
-bool ConstructionPlan::isConsequence(const vector<Fact>& con, const set<Fact>& ndg, const Fact& f) {
-    vector<string> usedAxioms;
-    CLFormula conjecture;
-    set<string> vars;
-
-    ConjunctionFormula goal_cf;
-    DNFFormula goal;
-    goal_cf.Add(f);
-    goal.Add(goal_cf);
-
-    ConjunctionFormula premises;
-    for(const auto& p : con) {
-        premises.Add(p);
-        if (p.GetName() == EQ_NATIVE_NAME)
-            vars.insert(p.GetArg(0).ToTPTPString());
-        else for (size_t l = 0; l < p.GetArity(); l++)
-            vars.insert(p.GetArg(l).ToTPTPString());
-    }
-    for(const auto& p : ndg) {
-        premises.Add(p);
-        for (size_t l = 0; l < p.GetArity(); l++)
-            vars.insert(p.GetArg(l).ToTPTPString());
-    }
-
-    for (size_t l = 0; l < f.GetArity(); l++)
-        vars.insert(f.GetArg(l).ToTPTPString());
-
-    conjecture.SetBody(premises, goal);
-    for(const auto& v : vars)
-        conjecture.AddUnivVar(v);
-
-    return (CheckValidity(eVampire, "currentFact",
-               mGeometryTheory.mCLaxioms,conjecture, 10, usedAxioms) == eValid);
-
 }
 
 //---------------------------------------------------------------------
@@ -646,11 +519,8 @@ bool ConstructionPlan::AreAllArgumentsFixed(const Fact& fact, size_t startIndex)
 
 // ---------------------------------------------------------------------------------------
 
-bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDatabase& db, double time_limit)
+bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDatabase& db)
 {
-    Timer timer;
-    timer.start();
-
     DNFFormula output;
     ConjunctionFormula from;
     vector<unsigned> fromSteps;
@@ -660,12 +530,6 @@ bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDataba
     const vector<Rule>& rules = (bDefs ? mDefinitions : mConstructionRules);
 
     for (const auto& rule : rules) {
-
-        if (false && timer.elapsed() > time_limit)
-        {
-            printLog("Time limit exceeded\n");
-            return false;
-        }
 
         if (eRruleKind == eOnePremiseNoNewVars) {
             if (rule.mConstraints.GetSize() > 1 || rule.mDefPoints.size() != 0)
@@ -682,13 +546,16 @@ bool ConstructionPlan::ApplyRule(bool bDefs, RuleKind eRruleKind, STLFactsDataba
         }
         // printLog("Trying rule: " + rule.mName + ";");
         ordered_instantiation.clear();
+        instantiation.clear();   // no bindings left over from a rule tried before
         CLFormula clf(rule.mConstraints, rule.mCLFormula.GetGoal());
         clf.TakeUnivVars(rule.mCLFormula);
 
         if (db.ApplyAxiom(clf, from, output, ordered_instantiation)) {
 
+            // only the variables of the matched premises are bound; the others (e.g. the centre O in
+            // concyclic(X,A,B,C) => circumcenter(O,A,B,C) & ...) become new auxiliary points in Instantiate
             for(const auto& p : ordered_instantiation) {
-                if (rule.mDefPoints.find(p.first)==rule.mDefPoints.end())
+                if (rule.mConstraintVars.count(p.first) && rule.mDefPoints.find(p.first)==rule.mDefPoints.end())
                     instantiation[p.first] = p.second;
             }
             Rule r = rule.Instantiate(instantiation);

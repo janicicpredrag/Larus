@@ -61,3 +61,13 @@ fof(foot2, axiom, ![A0,A1,A2] : ((foot(A0,A0,A1,A2) & A1 != A2 ) => (on_line(A0,
 %-------------------------------------------------------------------------------
 
 
+%-------------------------------------------------------------------------------
+% --- ADGlib premises ---
+% concyclic(X,A,B,C): X lies on the circle through A, B, C; the centre O becomes an auxiliary point
+fof(concyclic1, axiom, ![X,A,B,C,O] : ((concyclic(X,A,B,C)) => (circumcenter(O,A,B,C) & cong(O,X,O,A)))).
+% an equation of full angles (directed, modulo 180): in vertex form, equal (unsigned) angles for the construction;
+% in any form, the equation itself as full_angle_eq, a condition checked in the diagram (an NDG)
+fof(full_angle1, axiom, ![P,X,Y,Q,U,V] : ((full_angle(P,X,P,Y) = full_angle(Q,U,Q,V)) =>
+    (congruent_angles(X,P,Y,U,Q,V) & full_angle_eq(P,X,P,Y,Q,U,Q,V)))).
+fof(full_angle2, axiom, ![A,B,C,D,E,F,G,H] : ((full_angle(A,B,C,D) = full_angle(E,F,G,H)) =>
+    (full_angle_eq(A,B,C,D,E,F,G,H)))).

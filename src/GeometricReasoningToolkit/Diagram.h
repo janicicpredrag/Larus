@@ -14,10 +14,12 @@ public:
     const map<string,Point>& GetAllPoints() const;
     const map<string,Point>& GetInitialPoints() const;
     bool StoreGCLCIllustration(const string& gclcOutputFilename) const;
-    bool StoreGCLCExistProcedure(const string& gclcOutputFilename, const CLFormula& theorem, const string& theoremName) const;
+    bool StoreGCLCExistProcedure(const string& gclcOutputFilename, const CLFormula& theorem, const string& theoremName,
+                                  bool larusNames = false, const string& params = "") const;
 
 private:
     bool InstantiateOnce(const vector<Fact>& construction);
+    void AddPoint(const string& name, const Point& p);
     bool VerifyConditions(const set<Fact>& ndgs);
     void DrawBasicFigure(const CLFormula& theorem);
     const string& GetGCLCDescription() const;
