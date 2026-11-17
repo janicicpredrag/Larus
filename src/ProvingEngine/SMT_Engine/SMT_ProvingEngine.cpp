@@ -1051,12 +1051,17 @@ Expression SMT_ProvingEngine::EncodeHint(const tHint &hint, unsigned index) {
   int i, AxiomUsed = -1;
 
   if (justification.GetName() != "_") {
-    Expression arg0 = stoi(justification.GetArg(0).ToSMTString(), i)
+    // arg0, arg1 are used only by leq/less (two step numbers); reading them for a named axiom with fewer than
+    // two variables (e.g. rot_rot(_)) failed the GetArg assertion (Formula.h)
+    Expression arg0, arg1;
+    if (justification.GetArity() == 2) {
+      arg0 = stoi(justification.GetArg(0).ToSMTString(), i)
                ? Expression((unsigned)i)
                : Expression(justification.GetArg(0).ToSMTString());
-    Expression arg1 = stoi(justification.GetArg(1).ToSMTString(), i)
+      arg1 = stoi(justification.GetArg(1).ToSMTString(), i)
                ? Expression((unsigned)i)
                : Expression(justification.GetArg(1).ToSMTString());
+    }
 
     if (justification.GetName() == "leq" && justification.GetArity() == 2) {
       Hints &= (arg1 >= arg0);
