@@ -268,10 +268,38 @@ Expression SMT_ProvingEngine::IsAssumptionStep(unsigned s, unsigned i)
 
 // ---------------------------------------------------------------------------------------
 
+// 2026-11-18 hint-directed encoding: the axioms that the hints fix for step s (hints with a step number and a named
+// axiom, found by exact name as in EncodeHint).  Such a hint is asserted, so it forces AxiomApplied(s) to one of these
+// axioms; the MP alternatives by other axioms need not be encoded at all.  Returns false (no restriction) if no hint
+// fixes the axiom of step s, or if some hint at step s names something that is not an axiom (leq, less, ...).
+static bool HintAxiomsForStep(const vector<tHint>* hints, const Theory* T, unsigned s, set<unsigned>& axioms)
+{
+    axioms.clear();
+    if (hints == nullptr) return false;
+    for (size_t h = 0; h < hints->size(); h++) {
+      int step;
+      if (!stoi(get<2>(hints->at(h)), step) || step < 0 || (unsigned)step != s)
+        continue;
+      const string name = get<3>(hints->at(h)).GetName();
+      if (name == "_")
+        continue;
+      bool found = false;
+      for (size_t i = 0; i < T->mCLaxioms.size(); i++)
+        if (T->mCLaxioms[i].second == name) { axioms.insert((unsigned)i); found = true; break; }
+      if (!found)
+        return false;
+    }
+    return !axioms.empty();
+}
+
 Expression SMT_ProvingEngine::IsMPstep(unsigned s)
 {
     Expression c = False();
+    set<unsigned> hintAxioms;
+    const bool restricted = HintAxiomsForStep(mpHints, mpT, s, hintAxioms);
     for(unsigned ax = 0; ax < mpT->mCLaxioms.size(); ax++) {
+      if (restricted && hintAxioms.find(ax) == hintAxioms.end())
+        continue;   // hint-directed encoding: a hint fixes another axiom for this step
       if (mpHints->size() > 0 || !mParams.mbInlineAxioms) {
         c |= IsMPstepByAxiom(s,ax);
       } else if (!GetAxiom(ax).IsSimpleFormula()) {
