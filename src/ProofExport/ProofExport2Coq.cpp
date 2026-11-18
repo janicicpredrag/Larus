@@ -159,13 +159,15 @@ void ProofExport2Coq::OutputPrologue(ofstream &outfile, Theory &T,
       OutputCLFormula(outfile, get<0>(T.OriginalAxiom(i)), name);
     }
   }
-  // outfile << endl;
-  // for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
-  //     if (get<0>(T.Axiom(i)).IsSimpleImplication() &&
-  //         get<1>(T.Axiom(i)).find("sat") == std::string::npos)
-  //             outfile << "Hint Resolve " << get<1>(T.Axiom(i)) << " : Sym."
-  //             << endl;
-  // }
+  // The axioms Larus may inline (simple, or simple up to function symbols with the UFBV engine) are hints,
+  // so that the tactics (applying, inline_lemma_solver) can redo inlined premises in Coq.
+  outfile << endl;
+  for (size_t i = 0, size = T.NumberOfOriginalAxioms(); i < size; i++) {
+    const CLFormula &ax = get<0>(T.OriginalAxiom(i));
+    std::string name = get<1>(T.OriginalAxiom(i));
+    if (name.find("sat") == std::string::npos && (ax.IsSimpleFormula() || ax.IsSimpleUFFormula()))
+      outfile << "Hint Resolve " << name << " : Sym." << endl;
+  }
   outfile << endl;
   /* for (size_t i = 0, size = T.NumberOfAxioms(); i < size; i++) {
       std::string name = get<1>(T.Axiom(i));
@@ -297,7 +299,8 @@ void ProofExport2Coq::OutputProof(ofstream &outfile, const CLProof &p,
     } else if (p.GetMP(i).axiomName.find("eqnative") != std::string::npos ||
                p.GetMP(i).axiomName.find("EqSub") != std::string::npos ||
                p.GetMP(i).axiomName.find("eq_sym") != std::string::npos) {
-      outfile << "by (congruence)";
+      // congruence alone cannot redo a premise that Larus inlined by an axiom
+      outfile << "by (congruence || inline_lemma_solver)";
     } else {
       outfile << "by applying (" << p.GetMP(i).axiomName;
       vector<pair<string, string>> inst = p.GetMP(i).instantiation;
