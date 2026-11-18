@@ -1641,7 +1641,8 @@ void SMT_ProvingEngine::EncodeProofToSMT(const DNFFormula &formula,
         if (isIdentifier(ordinal))
           DeclareVarBasicType(ordinal, 1000);
         for(unsigned i = 0; i<justification.GetArity(); i++) {
-          if (isIdentifier(justification.GetArg(i).ToSMTString()) && hintVars.find(justification.GetArg(i).ToSMTString()) == hintVars.end()) {
+          if (isIdentifier(justification.GetArg(i).ToSMTString()) && hintVars.find(justification.GetArg(i).ToSMTString()) == hintVars.end()
+              && CONSTANTS.find(justification.GetArg(i).ToSMTString()) == CONSTANTS.end()) {  // a constant is not a hint variable
             DeclareVarBasicType(justification.GetArg(i).ToSMTString(), 1000);
             hintVars.insert(justification.GetArg(i).ToSMTString());
           }
